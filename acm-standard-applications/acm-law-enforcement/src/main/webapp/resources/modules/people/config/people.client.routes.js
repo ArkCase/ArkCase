@@ -37,6 +37,21 @@ angular.module('people').config(['$stateProvider',
                 templateUrl: 'modules/people/views/components/person-details.client.view.html'
             })
 
+            .state('people.phones', {
+                url: '/:id/phones',
+                templateUrl: 'modules/people/views/components/person-phones.client.view.html'
+            })
+
+            .state('people.emails', {
+                url: '/:id/emails',
+                templateUrl: 'modules/people/views/components/person-emails.client.view.html'
+            })
+
+            .state('people.urls', {
+                url: '/:id/urls',
+                templateUrl: 'modules/people/views/components/person-urls.client.view.html'
+            })
+
             .state('people.history', {
                 url: '/:id/history',
                 templateUrl: 'modules/people/views/components/person-history.client.view.html'

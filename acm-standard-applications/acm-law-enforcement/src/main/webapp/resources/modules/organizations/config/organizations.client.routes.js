@@ -37,6 +37,21 @@ angular.module('organizations').config(['$stateProvider',
                 templateUrl: 'modules/organizations/views/components/organization-details.client.view.html'
             })
 
+            .state('organizations.phones', {
+                url: '/:id/phones',
+                templateUrl: 'modules/organizations/views/components/organization-phones.client.view.html'
+            })
+
+            .state('organizations.emails', {
+                url: '/:id/emails',
+                templateUrl: 'modules/organizations/views/components/organization-emails.client.view.html'
+            })
+
+            .state('organizations.urls', {
+                url: '/:id/urls',
+                templateUrl: 'modules/organizations/views/components/organization-urls.client.view.html'
+            })
+
             .state('organizations.history', {
                 url: '/:id/history',
                 templateUrl: 'modules/organizations/views/components/organization-history.client.view.html'

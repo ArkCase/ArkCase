@@ -1,13 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
-    , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Organization.LookupService', 'Organization.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
-    , function ($scope, $stateParams, $translate, $timeout
-        , Util, UtilDateService, ConfigService, ObjectLookupService, OrganizationLookupService, OrganizationInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
-        , SearchService, SearchQueryBuilder) {
+angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate'
+    , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService'
+    , function ($scope, $stateParams, $translate
+        , OrganizationInfoService, HelperObjectBrowserService, Util) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -21,28 +17,28 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             }
         });
 
-        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseUsers = gridHelper.getUsers();
-        var promiseConfig = ConfigService.getModuleConfig("organizations");
-
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function (component) {
-                return component.title === 'Participants';
-            });
-            $scope.config = foundComponent[0];
-        });
-
-
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
-        $scope.picker = {opened: false};
-        $scope.onPickerClick = function () {
-            $scope.picker.opened = true;
-        };
-
-
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
         };
+
+        $scope.saveOrganization = function () {
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (OrganizationInfoService.validateOrganizationInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = OrganizationInfoService.saveOrganizationInfo(objectInfo);
+                promiseSaveInfo.then(
+                    function (objectInfo) {
+                        $scope.$emit("report-object-updated", objectInfo);
+                        return objectInfo;
+                    }
+                    , function (error) {
+                        $scope.$emit("report-object-update-failed", error);
+                        return error;
+                    }
+                );
+            }
+            return promiseSaveInfo;
+        }
     }
 ]);

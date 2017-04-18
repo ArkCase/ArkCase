@@ -80,6 +80,9 @@
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "details",
+          "phones",
+          "emails",
+          "urls",
           "pictures",
           "aliases",
           "history"
@@ -94,6 +97,30 @@
         ]
       },
       {
+        "type": "p/PERSON/pho",
+        "label": "Phones",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "phones"
+        ]
+      },
+      {
+        "type": "p/PERSON/ema",
+        "label": "Emails",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "emails"
+        ]
+      },
+      {
+        "type": "p/PERSON/url",
+        "label": "URLs",
+        "icon": "fa fa-info-circle",
+        "components": [
+          "urls"
+        ]
+      },
+      {
         "type": "p/PERSON/pic",
         "label": "Pictures",
         "icon": "fa fa-info-circle",
@@ -103,7 +130,7 @@
       },
       {
         "type": "p/PERSON/ali",
-        "label": "aliases",
+        "label": "Aliases",
         "icon": "fa fa-info-circle",
         "components": [
           "aliases"
@@ -154,7 +181,7 @@
     {
       "id": "pictures",
       "title": "Pictures",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-file-image-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -291,6 +318,150 @@
           "displayName": "people.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        }
+      ]
+    },
+    {
+      "id": "phones",
+      "title": "Phone Numbers",
+      "icon": "fa fa-phone",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "people.comp.phones.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "people.comp.phones.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "people.comp.phones.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "people.comp.phones.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "people.comp.phones.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "emails",
+      "title": "Email Addresses",
+      "icon": "fa fa-address-book-o",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "people.comp.emails.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "people.comp.emails.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "people.comp.emails.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "people.comp.emails.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "people.comp.emails.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ]
+    },
+    {
+      "id": "urls",
+      "title": "URLs",
+      "icon": "fa fa-link",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "subType",
+          "displayName": "people.comp.urls.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "people.comp.urls.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "description",
+          "displayName": "people.comp.urls.table.columns.description",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "author",
+          "field": "creator",
+          "displayName": "people.comp.urls.table.columns.creator",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "created",
+          "displayName": "people.comp.urls.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
         }
       ]
     }

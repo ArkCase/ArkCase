@@ -1,70 +1,55 @@
 <div ng-controller="Organizations.InfoController">
     <div class="clearfix">
         <div class="row">
-            <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
-                    {{objectInfo.complaintTitle || "Unknown" }}</a> ({{objectInfo.status}})</h4></div>
-            <div class="col-xs-6  text-right">
-                <h4>{{objectInfo.complaintNumber}}</h4>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.complaintType" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="c.value as c.text for c in complaintTypes">{{objectInfo.complaintType ||
-                        'Unknown'}}</a>
+            <div class="col-xs-12 col-md-8">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <h4><a href="#" editable-text="objectInfo.organizationValue" onaftersave="saveOrganization()"
+                               permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                            {{objectInfo.organizationValue || "Unknown"}}</a>
+                        </h4></div>
+                    <div class="col-xs-6  text-right">
+                        <h4>{{objectInfo.id}}</h4>
+                    </div>
+
                 </div>
-                <small class="text-muted"><span translate>organizations.comp.info.type.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultPhone.value}}({{objectInfo.defaultPhone.subType}})
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.phone.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.primaryContact}}
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.primary.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.duns}}
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.duns.label</span></small>
+                    </div>
                 </div>
-                <small class="text-muted"><span translate>organizations.comp.info.created.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
-                        'Unknown'}}</a>
+                <div class="row">
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.defaultEmail.value}}({{objectInfo.defaultEmail.subType}})
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.email.label</span></small>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="h4 font-bold">
+                            {{objectInfo.status}}
+                        </div>
+                        <small class="text-muted"><span translate>organizations.comp.info.status.label</span></small>
+                    </div>
+
                 </div>
-                <small class="text-muted"><span translate>organizations.comp.info.priority.label</span></small>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
-                        <user-full-name userId="assignee" fallback="None"/>
-                    </a>
-                </div>
-                <small class="text-muted"><span translate>organizations.comp.info.assignee.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
-                        {{owningGroup || 'None'}}</a>
-                </div>
-                <small class="text-muted"><span translate>organizations.comp.info.owningGroup.label</span></small>
-            </div>
-            <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.dueDate"
-                       e-datepicker-popup="{{defaultDatePickerFormat}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
-                       e-init-date="dateInfo.dueDate"
-                       e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)"
-                       permission="editComplaint" permission-properties="objectInfo" permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
-                </div>
-                <small class="text-muted"><span translate>organizations.comp.info.dueDate.label</span></small>
-            </div>
+
         </div>
     </div>
 </div>
