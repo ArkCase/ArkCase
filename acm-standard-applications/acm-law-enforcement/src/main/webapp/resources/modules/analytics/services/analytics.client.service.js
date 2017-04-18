@@ -38,6 +38,12 @@ angular.module('analytics').factory('Analytics.BuildUrl', ['$sce', '$http', '$br
                 //var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
                 //reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
                 return $sce.trustAsResourceUrl(elkUrl);
+            },
+
+            getUrlBanana: function (params) {
+                var bananaUrl = params.slkHost + (params.slkPort ? ":" + params.slkPort : "") + params.slkDashboard;
+                return $sce.trustAsResourceUrl(bananaUrl); //https://acm-arkcase/arkcase/undefined/banana
+                //return bananaUrl;
             }
         }
     }
