@@ -28,6 +28,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -211,6 +212,10 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToOne
     @JoinColumn(name = "cm_default_alias")
     private PersonAlias defaultAlias;
+
+    @Lob
+    @Column(name = "cm_details")
+    private String details;
 
     @PrePersist
     protected void beforeInsert()
@@ -644,5 +649,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setDefaultAlias(PersonAlias defaultAlias)
     {
         this.defaultAlias = defaultAlias;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
     }
 }

@@ -1,17 +1,25 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "acm_contact_method")
@@ -51,28 +59,34 @@ public class ContactMethod implements Serializable, AcmEntity
 
     @Column(name = "cm_contact_type")
     private String type;
-    
+
+    @Column(name = "cm_contact_sub_type")
+    private String subType;
+
     @Transient
     private List<String> types;
 
     @Column(name = "cm_contact_value")
     private String value;
 
+    @Column(name = "cm_description")
+    private String description;
+
     @PrePersist
     protected void beforeInsert()
     {
-    	setData();
+        setData();
     }
-    
+
     @PreUpdate
     protected void beforeUpdate()
     {
-    	setData();
+        setData();
     }
-    
+
     private void setData()
     {
-    	if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("ACTIVE");
         }
@@ -164,16 +178,29 @@ public class ContactMethod implements Serializable, AcmEntity
     }
 
     @XmlTransient
-	public List<String> getTypes() {
-		return types;
-	}
-	
-	public void setTypes(List<String> types) {
-		this.types = types;
-	}
+    public String getSubType()
+    {
+        return subType;
+    }
+
+    public void setSubType(String subType)
+    {
+        this.subType = subType;
+    }
 
     @XmlTransient
-	public String getValue()
+    public List<String> getTypes()
+    {
+        return types;
+    }
+
+    public void setTypes(List<String> types)
+    {
+        this.types = types;
+    }
+
+    @XmlTransient
+    public String getValue()
     {
         return value;
     }
@@ -182,10 +209,20 @@ public class ContactMethod implements Serializable, AcmEntity
     {
         this.value = value;
     }
-    
-    public ContactMethod returnBase() 
+
+    public ContactMethod returnBase()
     {
-    	return this;
+        return this;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
 }

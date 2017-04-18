@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>people.comp.urls.modal.addUrl</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>people.comp.urls.modal.editUrl</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="urlForm">
+        <div>
+            <label for="urlTypes_{{::$id}}"
+                   translate>people.comp.urls.modal.type.label</label>
+        </div>
+        <select id="urlTypes_{{::$id}}"
+                ng-model="url.subType"
+                ng-options="item.type as item.name for item in urlTypes"></select>
+        <div>
+            <label for="urlTypes_{{::$id}}"
+                   translate>people.comp.urls.modal.value.label</label>
+        </div>
+        <input id="urls_{{::$id}}" type="text" ng-model="url.value">
+        <div>
+            <p translate>people.comp.urls.modal.setPrimary</p>
+            <input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>people.comp.urls.modal.yes</translate>
+            <input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>people.comp.urls.modal.no</translate>
+        </div>
+        <label for="urlDescription"/>
+        <textarea id="urlDescription" ng-model="url.description"></textarea>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>people.comp.urls.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="urlForm.$invalid">
+        <span translate>people.comp.urls.modal.btnOk.text</span>
+    </button>
+</div>

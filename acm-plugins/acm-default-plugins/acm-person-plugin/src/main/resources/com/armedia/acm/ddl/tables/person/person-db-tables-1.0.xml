@@ -892,5 +892,13 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="-5-add-details-columns-to-acm-person-table" author="dragan.simonovski">
+        <addColumn tableName="acm_person">
+            <column name="cm_details" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 
 </databaseChangeLog>

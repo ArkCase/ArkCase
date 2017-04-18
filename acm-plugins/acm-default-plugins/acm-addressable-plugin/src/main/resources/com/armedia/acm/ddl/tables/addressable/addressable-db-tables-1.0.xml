@@ -202,5 +202,14 @@
             <column name="cm_contact_method_id"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="05-add-sub-type-to-contact_method" author="dragan.simonovski">
+        <addColumn tableName="acm_contact_method">
+            <column name="cm_contact_sub_type" type="VARCHAR(128)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_description" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
 

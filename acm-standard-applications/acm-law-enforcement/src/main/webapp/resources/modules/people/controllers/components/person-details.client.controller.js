@@ -22,13 +22,23 @@ angular.module('people').controller('People.DetailsController', ['$scope', '$sta
         };
 
         $scope.saveDetails = function () {
-            var personInfo = Util.omitNg($scope.objectInfo);
-            PersonInfoService.savePersonInfo(personInfo).then(
-                function (personInfo) {
-                    MessageService.info($translate.instant("people.comp.details.informSaved"));
-                    return personInfo;
-                }
-            );
-        };
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
+                promiseSaveInfo.then(
+                    function (objectInfo) {
+                        $scope.$emit("report-object-updated", objectInfo);
+                        MessageService.info($translate.instant("people.comp.details.informSaved"));
+                        return objectInfo;
+                    }
+                    , function (error) {
+                        $scope.$emit("report-object-update-failed", error);
+                        return error;
+                    }
+                );
+            }
+            return promiseSaveInfo;
+        }
     }
 ]);
