@@ -21,7 +21,7 @@ angular.module('services').factory('Organization.ListService', ['$resource', '$t
 
         /**
          * @ngdoc method
-         * @name resetOrganizationTreeData
+         * @name resetOrganizationsTreeData
          * @methodOf services:Organization.ListService
          *
          * @description
@@ -29,7 +29,7 @@ angular.module('services').factory('Organization.ListService', ['$resource', '$t
          *
          * @returns None
          */
-        Service.resetOrganizationTreeData = function () {
+        Service.resetOrganizationsTreeData = function () {
             var cacheOrganizationList = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_LIST);
             cacheOrganizationList.reset();
         };

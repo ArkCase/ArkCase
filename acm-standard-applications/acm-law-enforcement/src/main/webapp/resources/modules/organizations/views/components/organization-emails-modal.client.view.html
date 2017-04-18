@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.emails.modal.addEmail</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.emails.modal.editEmail</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="emailForm">
+        <div>
+            <label for="emailTypes_{{::$id}}"
+                   translate>organizations.comp.emails.modal.type.label</label>
+        </div>
+        <select id="emailTypes_{{::$id}}"
+                ng-model="email.subType"
+                ng-options="item.type as item.name for item in emailTypes"></select>
+        <div>
+            <label for="emailTypes_{{::$id}}"
+                   translate>organizations.comp.emails.modal.value.label</label>
+        </div>
+        <input id="emails_{{::$id}}" type="text" ng-model="email.value">
+        <div>
+            <p translate>organizations.comp.emails.modal.setPrimary</p>
+            <input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>organizations.comp.emails.modal.yes</translate>
+            <input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>organizations.comp.emails.modal.no</translate>
+        </div>
+        <label for="emailDescription"/>
+        <textarea id="emailDescription" ng-model="email.description"></textarea>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.emails.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="emailForm.$invalid">
+        <span translate>organizations.comp.emails.modal.btnOk.text</span>
+    </button>
+</div>
