@@ -21,12 +21,21 @@ angular.module('analytics').controller('AnalyticsController', ['$scope', 'Lookup
     
         promiseServerConfig.then(function (data) {
             var elkConfig = data;
+            
+            /*
             $scope.data.elkHost = elkConfig['elk.server.url'];
             $scope.data.elkPort = elkConfig['elk.server.port'];
             $scope.data.elkUser = elkConfig['elk.server.user'];
             $scope.data.elkPassword = elkConfig['elk.server.password'];
             $scope.data.elkDashboard = elkConfig['elk.dashboard.url'];
             $scope.elkUrl = BuildUrl.getUrl($scope.data);
+             */
+
+            $scope.data.slkHost = elkConfig['slk.server.internal.url'];
+            $scope.data.slkPort = elkConfig['slk.server.internal.port'];
+            $scope.data.slkDashboard = elkConfig['slk.server.dashboard.url'];
+            $scope.bananaUrl = BuildUrl.getUrlBanana($scope.data);
+
         });
     
     }
