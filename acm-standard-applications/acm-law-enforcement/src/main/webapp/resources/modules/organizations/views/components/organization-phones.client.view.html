@@ -1,0 +1,33 @@
+<div ng-controller="Organizations.PhonesController">
+    <div class="panel panel-success panel-grid">
+        <div class="row">
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" ng-click="delete()">
+                    <span translate>organizations.comp.phones.actions.delete</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="setPrimary()">
+                    <span translate>organizations.comp.phones.actions.setPrimary</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="addNew()">
+                    <span translate>organizations.comp.phones.actions.addNew</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>organizations.comp.phones.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 ui-grid-edit
+                 ui-grid-cell-nav
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>
