@@ -1,4 +1,4 @@
-angular.module('organizations').controller('People.PhonesModalController', ['$scope', '$modalInstance', 'Object.LookupService',
+angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$modalInstance', 'Object.LookupService',
         function ($scope, $modalInstance, ObjectLookupService) {
 
             ObjectLookupService.getContactMethodTypes().then(
