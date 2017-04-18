@@ -47,6 +47,17 @@
       ]
     },
     {
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
       "name": "TASK",
       "allowedWidgets": [
         "details",

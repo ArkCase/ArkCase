@@ -6,6 +6,7 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
@@ -25,6 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -167,6 +169,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_queue_id")
     private AcmQueue queue;
+
+    @Column(name = "cm_queue_enter_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate queueEnterDate;
+
+    @Column(name = "cm_response_due_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate responseDueDate;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_previous_queue_id")
+    private AcmQueue previousQueue;
 
     @Column(name = "cm_security_field")
     private String securityField;
@@ -679,5 +695,35 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             groupName = owningGroup.getParticipantLdapId();
         }
         return groupName;
+    }
+
+    public LocalDate getQueueEnterDate()
+    {
+        return queueEnterDate;
+    }
+
+    public void setQueueEnterDate(LocalDate queueEnterDate)
+    {
+        this.queueEnterDate = queueEnterDate;
+    }
+
+    public LocalDate getResponseDueDate()
+    {
+        return responseDueDate;
+    }
+
+    public void setResponseDueDate(LocalDate responseDueDate)
+    {
+        this.responseDueDate = responseDueDate;
+    }
+
+    public AcmQueue getPreviousQueue()
+    {
+        return previousQueue;
+    }
+
+    public void setPreviousQueue(AcmQueue previousQueue)
+    {
+        this.previousQueue = previousQueue;
     }
 }

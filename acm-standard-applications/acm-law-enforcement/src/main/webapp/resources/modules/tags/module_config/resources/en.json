@@ -2,6 +2,7 @@
   "tags": {
     "title": "Tags",
     "search.btn": "Search",
+    "export.btn": "Export",
     "search.placeholder": "Search for tags",
     "menus": {
       "leftnav.item": "Tags"
@@ -14,7 +15,6 @@
           "type": "Type",
           "title": "Title",
           "parent": "Parent",
-          "assignee": "Assignee",
           "modified": "Modified"
         }
       }

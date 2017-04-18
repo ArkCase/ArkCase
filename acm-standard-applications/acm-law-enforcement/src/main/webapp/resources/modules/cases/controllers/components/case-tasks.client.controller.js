@@ -43,11 +43,6 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             retrieveGridData();
         };
 
-        //jwu: for testing, remove meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-        //$scope.isReadOnly = function (objectInfo) {
-        //    return true;
-        //};
-
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
