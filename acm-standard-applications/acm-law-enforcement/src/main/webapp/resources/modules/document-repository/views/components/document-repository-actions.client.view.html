@@ -1,28 +1,34 @@
 <div ng-controller="DocumentRepository.ActionsController">
-    <div class="col-xs-4">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
-                       permission="restrictDocumentRepository" permission-properties="objectInfo"
-                       permission-action="disabled">
-                <span translate>document-repository.comp.actions.restrict</span>
-            </label>
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
+                           permission="restrictDocumentRepository" permission-properties="objectInfo"
+                           permission-action="disabled">
+                    <span translate>document-repository.comp.actions.restrict</span>
+                </label>
+            </div>
         </div>
-    </div>
 
-    <div class="pull-right">
-        <div class="btn-group">
-            <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
-                <i class="fa fa-bullhorn"></i>
-                <span translate>document-repository.comp.actions.unsubscribe.button</span>
-            </button>
-            <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(objectInfo)">
-                <i class="fa fa-bullhorn"></i>
-                <span translate>document-repository.comp.actions.subscribe.button</span>
-            </button>
-            <button class="btn btn-sm btn-default" ng-click="refresh()">
-                <i class="fa fa-refresh"></i>
-            </button>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-default" ng-click="delete(objectInfo.id)">
+                    <i class="fa fa-trash-o"></i>
+                    <span translate>document-repository.comp.actions.delete.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-show="showBtnUnsubscribe" ng-click="unsubscribe(objectInfo)">
+                    <i class="fa fa-bullhorn"></i>
+                    <span translate>document-repository.comp.actions.unsubscribe.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-show="showBtnSubscribe" ng-click="subscribe(objectInfo)">
+                    <i class="fa fa-bullhorn"></i>
+                    <span translate>document-repository.comp.actions.subscribe.button</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="refresh()">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

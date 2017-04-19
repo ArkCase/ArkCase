@@ -88,7 +88,15 @@
     "error": {
       "nodeTitle": "pt_(Error)"
     },
-    "lockedTitle": "pt_This document is locked by "
+    "lockedTitle": "pt_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "pt_Are you sure you want to delete this folder?",
+      "body.message": "pt_The folder contains:",
+      "body.content.files": "pt_files",
+      "body.content.folders": "pt_folders",
+      "btn.delete.folder": "pt_Yes",
+      "btn.cancel.delete.folder": "pt_No"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "pt_ records above...",
@@ -206,7 +214,7 @@
   "common.directive.coreCalendar": {
     "title": "pt_Calendar",
     "start.label": "pt_Start: ",
-    "end.label": "pt_End: "pt_
+    "end.label": "pt_End: "
   },
   "common.directive.coreParticipants": {
     "title": "pt_Participants",
@@ -225,6 +233,9 @@
       "error.owninggroupUnique": "pt_Only one owning group is allowed.",
       "error.noAccessCombo": "pt_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.progressIndicator":{
+    "progressCompletion": "pt_% Complete"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "pt_For your protection, application is about to logout. Click Cancel to stay logged in."

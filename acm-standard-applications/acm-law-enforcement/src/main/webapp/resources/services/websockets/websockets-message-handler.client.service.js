@@ -6,6 +6,8 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
         Service.handleMessage = handleMessage;
 
+        Service.handleGenericMessage = handleGenericMessage;
+
         return Service;
 
         function handleMessage(message) {
@@ -21,6 +23,10 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 //we will publish message for objecttype with action
                 publishMessage(message);
             }
+        }
+
+        function handleGenericMessage(message) {
+            $rootScope.$bus.publish('generic_event', message);
         }
 
         function handleCache(message) {

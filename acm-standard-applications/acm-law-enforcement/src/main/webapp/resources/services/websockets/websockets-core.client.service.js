@@ -1,7 +1,16 @@
 'use strict';
 
-angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler',
-    function ($q, $timeout, messageHandler) {
+angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler'
+    , 'Authentication'
+    , function ($q, $timeout, messageHandler, Authentication) {
+
+        var user;
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                user = userInfo;
+                return userInfo;
+            }
+        );
 
         var service = {
             //The number of milliseconds to delay before attempting to reconnect.
@@ -14,6 +23,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
             MAX_RECONNECT_INTERVAL: 30000,
             SOCKET_URL: "/arkcase/stomp",
             LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
+            GENERIC_TOPIC: "/topic/generic/",
             MESSAGE_BROKER: "/app/print-message",
             shouldStart: true,
             socket: {
@@ -63,6 +73,10 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                         messageHandler.handleMessage(message);
                         //4 seconds delay so solr can index the object
                     }, 4000);
+                });
+                target.socket.stomp.subscribe(target.GENERIC_TOPIC + user.userId, function (data) {
+                    var message = JSON.parse(data.body);
+                    messageHandler.handleGenericMessage(message);
                 });
             }
         };

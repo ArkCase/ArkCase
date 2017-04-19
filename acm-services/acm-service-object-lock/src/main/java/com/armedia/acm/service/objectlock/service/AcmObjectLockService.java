@@ -9,6 +9,8 @@ import org.springframework.security.core.Authentication;
  */
 public interface AcmObjectLockService
 {
+    AcmObjectLock findLock(Long objectId, String objectType);
+
     AcmObjectLock createLock(Long objectId, String objectType, String lockType, Boolean lockInDB, Authentication auth);
 
     /**

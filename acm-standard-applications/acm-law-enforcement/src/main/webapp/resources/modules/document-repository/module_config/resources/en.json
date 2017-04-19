@@ -20,7 +20,8 @@
   "document-repository.comp.actions": {
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
-    "unsubscribe.button": "Unsubscribe"
+    "unsubscribe.button": "Unsubscribe",
+    "delete.button": "Delete Repository"
   },
   "document-repository.comp.details": {
     "title": "Details",

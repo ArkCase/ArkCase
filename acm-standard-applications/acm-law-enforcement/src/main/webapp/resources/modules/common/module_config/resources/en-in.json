@@ -88,7 +88,15 @@
     "error": {
       "nodeTitle": "(Error)"
     },
-    "lockedTitle": "This document is locked by "
+    "lockedTitle": "This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "Are you sure you want to delete this folder?",
+      "body.message": "The folder contains:",
+      "body.content.files": "files",
+      "body.content.folders": "folders",
+      "btn.delete.folder": "Yes",
+      "btn.cancel.delete.folder": "No"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": " records above...",
@@ -225,6 +233,9 @@
       "error.owninggroupUnique": "Only one owning group is allowed.",
       "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.progressIndicator":{
+    "progressCompletion": "% Complete"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."
