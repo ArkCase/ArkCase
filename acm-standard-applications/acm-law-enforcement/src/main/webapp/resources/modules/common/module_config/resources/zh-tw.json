@@ -88,7 +88,15 @@
     "error": {
       "nodeTitle": "zh-tw_(Error)"
     },
-    "lockedTitle": "zh-tw_This document is locked by "
+    "lockedTitle": "zh-tw_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "zh-tw_Are you sure you want to delete this folder?",
+      "body.message": "zh-tw_The folder contains:",
+      "body.content.files": "zh-tw_files",
+      "body.content.folders": "zh-tw_folders",
+      "btn.delete.folder": "zh-tw_Yes",
+      "btn.cancel.delete.folder": "zh-tw_No"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "zh-tw_ records above...",
@@ -206,7 +214,7 @@
   "common.directive.coreCalendar": {
     "title": "zh-tw_Calendar",
     "start.label": "zh-tw_Start: ",
-    "end.label": "zh-tw_End: "zh-tw_
+    "end.label": "zh-tw_End: "
   },
   "common.directive.coreParticipants": {
     "title": "zh-tw_Participants",
@@ -225,6 +233,9 @@
       "error.owninggroupUnique": "zh-tw_Only one owning group is allowed.",
       "error.noAccessCombo": "zh-tw_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.progressIndicator":{
+    "progressCompletion": "zh_tw_% Complete"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "zh-tw_For your protection, application is about to logout. Click Cancel to stay logged in."

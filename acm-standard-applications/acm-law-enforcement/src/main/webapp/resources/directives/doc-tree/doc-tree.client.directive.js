@@ -88,8 +88,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
     , 'EcmService'
     , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, UserInfoService
-        , Ecm
-    ) {
+        , Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -2709,47 +2708,80 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                         } else {
                             var cacheKey = DocTree.getCacheKeyByNode(parent);
-                            var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
-                            node.remove();
-                            if (refNode) {
-                                refNode.setActive();
-                            }
-
                             var folderId = node.data.objectId;
                             Util.serviceCall({
-                                service: Ecm.deleteFolder
+                                service: Ecm.getDeleteFolderInfo
                                 , param: {
                                     folderId: folderId
                                 }
                                 , data: {}
-                                , onSuccess: function (data) {
-                                    if (Validator.validateDeletedFolder(data)) {
-                                        if (data.deletedFolderId == folderId) {
-                                            var folderList = DocTree.cacheFolderList.get(cacheKey);
-                                            if (Validator.validateFolderList(folderList)) {
-                                                var deleted = DocTree.findFolderItemIdx(folderId, folderList);
-                                                if (0 <= deleted) {
-                                                    folderList.children.splice(deleted, 1);
-                                                    folderList.totalChildren--;
-                                                    DocTree.cacheFolderList.put(cacheKey, folderList);
-                                                    return data.deletedFolderId;
+                                , onSuccess: function (response) {
+                                    DocTree.Op.openDeleteConfirmationModal(response, function () {
+                                        Util.serviceCall({
+                                            service: Ecm.deleteFolder
+                                            , param: {
+                                                folderId: folderId
+                                            }
+                                            , data: {}
+                                            , onSuccess: function (data) {
+                                                if (Validator.validateDeletedFolder(data)) {
+                                                    if (data.deletedFolderId == folderId) {
+                                                        var refNode = node.getNextSibling() || node.getPrevSibling() || node.getParent();
+                                                        node.remove();
+                                                        if (refNode) {
+                                                            refNode.setActive();
+                                                        }
+                                                        var folderList = DocTree.cacheFolderList.get(cacheKey);
+                                                        if (Validator.validateFolderList(folderList)) {
+                                                            var deleted = DocTree.findFolderItemIdx(folderId, folderList);
+                                                            if (0 <= deleted) {
+                                                                folderList.children.splice(deleted, 1);
+                                                                folderList.totalChildren--;
+                                                                DocTree.cacheFolderList.put(cacheKey, folderList);
+                                                                return data.deletedFolderId;
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
-                                        }
-                                    }
+                                        }).then(
+                                            function (deletedFolderId) {
+                                                dfd.resolve(deletedFolderId);
+                                            }
+                                            , function (errorData) {
+                                                DocTree.markNodeError(node);
+                                                dfd.reject();
+                                            });
+                                    });
+                                    return response;
                                 }
-                            }).then(
-                                function (deletedFolderId) {
-                                    dfd.resolve(deletedFolderId);
-                                }
-                                , function (errorData) {
-                                    DocTree.markNodeError(node);
-                                    dfd.reject();
-                                }
-                            );
+                            });
                         }
                     }
                     return dfd.promise();
+                }
+                , openDeleteConfirmationModal: function (data, onClickOk) {
+                    var modalInstance = $modal.open({
+                        templateUrl: "directives/doc-tree/doc-tree.delete.confirmation.dialog.html"
+                        , controller: ['$scope', '$modalInstance', 'data', function ($scope, $modalInstance) {
+                            $scope.modalInstance = $modalInstance;
+                            $scope.subFoldersNum = data.foldersToDeleteNum;
+                            $scope.filesNum = data.filesToDeleteNum;
+                            $scope.onClickOk = function () {
+                                $modalInstance.close($scope.result);
+                            };
+
+                        }]
+                        , animation: true
+                        , size: 'sm'
+                        , resolve: {
+                            data: data
+                        }
+                    });
+
+                    modalInstance.result.then(function () {
+                        onClickOk();
+                    });
                 }
                 , deleteFile: function (node) {
                     var dfd = $.Deferred();

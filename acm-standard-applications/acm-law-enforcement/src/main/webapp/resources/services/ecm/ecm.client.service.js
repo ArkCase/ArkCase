@@ -28,6 +28,10 @@ angular.module('services').factory('EcmService', ['$resource'
                 method: 'DELETE',
                 url: 'api/latest/service/ecm/folder/:folderId'
             }
+            , getDeleteFolderInfo: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:folderId/count'
+            }
             , uploadFiles: {
                 method: 'POST',
                 url: 'api/latest/service/ecm/upload',

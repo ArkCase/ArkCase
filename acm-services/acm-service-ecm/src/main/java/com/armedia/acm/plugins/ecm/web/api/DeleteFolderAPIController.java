@@ -5,7 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmDeletedFolderDto;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.event.AcmFolderPersistenceEvent;
+import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
-/**
- * Created by marjan.stefanoski on 10.04.2015.
- */
 
 @Controller
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
@@ -49,7 +45,7 @@ public class DeleteFolderAPIController
 
         try
         {
-            getFolderService().deleteFolderIfEmpty(folderId);
+            getFolderService().deleteFolderTreeSafe(folderId, authentication);
             log.info("Folder with id: [{}] successfully deleted", folderId);
             getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, false);
             return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
@@ -63,6 +59,13 @@ public class DeleteFolderAPIController
             getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, false);
             throw e;
         }
+    }
+
+    @RequestMapping(value = "/folder/{folderId}/count", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public DeleteFolderInfo folderDocumentCountList(@PathVariable("folderId") Long folderId) throws AcmObjectNotFoundException
+    {
+        return getFolderService().getFolderToDeleteInfo(folderId);
     }
 
     private AcmDeletedFolderDto prepareResult(String msg, Long folderId)
