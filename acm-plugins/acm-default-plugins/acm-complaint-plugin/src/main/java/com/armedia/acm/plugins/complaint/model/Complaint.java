@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.complaint.model;
+    package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;

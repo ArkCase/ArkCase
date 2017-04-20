@@ -66,5 +66,18 @@ angular.module('people').config(['$stateProvider',
                 url: '/:id/aliases',
                 templateUrl: 'modules/people/views/components/person-aliases.client.view.html'
             })
+
+            .state('newPerson', {
+                url: '/newPerson',
+                templateUrl: 'modules/people/views/components/person-new-person.client.view.html',
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('people');
+                        return $translate.refresh();
+                    }]
+                }
+            })
+
     }
 ]);
