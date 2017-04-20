@@ -695,6 +695,14 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.emailConfiguration.title",
+          "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.exchangeConfiguration.title",
+          "templateName": "security-exchange-configuration"
         }
       ]
     },
