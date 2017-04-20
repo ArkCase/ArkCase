@@ -1,0 +1,100 @@
+<div class="modal-header">
+    <h3 translate>Event Details</h3>
+</div>
+<div class="modal-body">
+	<h3 translate>{{eventDetails.subject}}</h3>
+	<div class="well-sm">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<strong class="pull-right" ng-if="eventDetails.privateEvent" translate>Private</strong>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4 form-group">
+				<label translate>Start:</label>
+				<span>{{eventDetails.start | date:'MM/DD/YYYY h:MM A'}}</span>
+			</div>
+			<div class="col-sm-4">
+				<label translate>End:</label>
+				<span>{{eventDetails.end | date:'MM/DD/YYYY h:MM A'}}</span>
+			</div>
+			<div class="col-sm-4">
+				<label translate>Priority:</label>
+				<span translate>{{eventPriority}}</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-8 form-group">
+				<label translate>Occurs:</label>
+				<span>{{recurrenceDescription}}</span>
+			</div>
+			<div class="col-sm-4">
+				<label translate>Reminders:</label>
+				<span translate>{{eventReminder}}</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<textarea name="eventDetails" ng-model="eventDetails.details" class="form-control user-picker-input input-md form-control" readonly></textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-sm-12">
+				<label translate>Attachments</label>
+			</div>
+			<div class="col-sm-12 form-group" >
+				<span ng-repeat="file in eventDetails.files" class="well-sm"><i class="fa fa-file" aria-hidden="true"></i> {{file.name}}</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<label for="attendees">Invited:</label>
+				<ul name="attendees" class="list-unstyled well-sm">
+				    <li ng-repeat="invited in eventDetails.attendees">
+				        <span>{{invited.name}}</span>
+				        <span>{{invited.email}}</span>
+				    </li>
+				</ul>
+			</div>
+			<div class="col-sm-3">
+				<label for="attendees">Accepted:</label>
+				<ul name="attendees" class="list-unstyled well-sm">
+				    <li ng-repeat="person in attendeesAccepted">
+				        <span>{{person.name}}</span>
+				        <span>{{person.email}}</span>
+				    </li>
+				</ul>
+			</div>
+			<div class="col-sm-3">
+				<label for="attendees">Maybe:</label>
+				<ul name="attendees" class="list-unstyled well-sm">
+				    <li ng-repeat="person in attendeesMaybe">
+				        <span>{{person.name}}</span>
+				        <span>{{person.email}}</span>
+				    </li>
+				</ul>
+			</div>
+			<div class="col-sm-3">
+				<label for="attendees">Declined:</label>
+				<ul name="attendees" class="list-unstyled well-sm">
+				    <li ng-repeat="person in attendeesDeclined">
+				        <span>{{person.name}}</span>
+				        <span>{{person.email}}</span>
+				    </li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <br/>
+    <button type="button" class="btn btn-secondary pull-left" ng-click="cancel()" translate>
+        common.directive.coreCalendar.chooseEventAttendeesDialog.cancel.button
+    </button>
+    <button type="button" class="btn btn-secondary" ng-click="deleteEvent()" translate>
+        Delete
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="editEvent()" translate>
+        Edit Event
+    </button>
+</div>

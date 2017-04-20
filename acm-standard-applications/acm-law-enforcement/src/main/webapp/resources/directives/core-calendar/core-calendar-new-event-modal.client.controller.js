@@ -166,24 +166,6 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.eventDataModel.files.splice(fileIndex, 1);
         };
 
-        // $scope.existingEvent = {
-        //     "subject" : "test",
-        //     "location" : "Armedia",
-        //     "start" : new Date(),
-        //     "end" : new Date(),
-        //     "allDayEvent" : false,
-        //     "recurrenceDetails" : {
-        //         "recurrenceType" : "ONLY_ONCE"
-        //     },
-        //     "details" : "details",
-        //     "remindIn" : 30,
-        //     "privateEvent" : false,
-        //     "priority" : "LOW",
-        //     "sendEmails" : false,
-        //     "invitees" : [ "aron@armedia.com", "bob@armedia.com", "charlie@armedia.com" ],
-        //     "files": []
-        // };
-
         if(!$scope.existingEvent) {
             /*Set initial Event data*/
             $scope.eventDataModel = {
@@ -195,18 +177,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
                 priority: 'NORMAL',
                 allDayEvent: false,
                 privateEvent: false,
-                remindIn: 'NONE',
-                files: [
-                    {
-                        name: 'file_name_1.jpg'
-                    },
-                    {
-                        name: 'file_name_2.jpg'
-                    },
-                    {
-                        name: 'file_name_3.jpg'
-                    }
-                ]
+                remindIn: -1
             };
 
             $scope.minStartDate = new Date();
@@ -222,12 +193,10 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
 
             if($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
                 $scope.recurrentEvent = true;
-                $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel, $scope.eventDataModel.start);
+                $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel, $scope.eventDataModel.start, $scope.eventDataModel.recurrenceDetails.endBy);
             }
 
             splitAttendeesByType($scope.eventDataModel.attendees);
-
-            setInitialStartEndTime();
         }
 
         /*Form navigation*/
@@ -259,18 +228,29 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.formTitle = changeFormTitle($scope.formStep);
         };
 
-        /*Perform adding of the event to the calendar*/
-        $scope.addEvent = function() {
+        var processEventDataModel = function() {
             $scope.eventDataModel.start = DateService.dateToIso($scope.eventDataModel.start);
             $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
             $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
             $scope.eventDataModel.attendees = requiredAttendees.concat(optionalAttendees);
+        };
+        /*Perform adding of the event to the calendar*/
+        $scope.addEvent = function() {
+            processEventDataModel();
             CalendarService.createNewEvent($scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
-                //Handle success when backend service is completed
                 MessageService.succsessAction();
-                $modalInstance.close('eventAdded');
+                $modalInstance.close('ADD_EVENT');
             }, function(err) {
-                //TO DO
+                MessageService.errorAction();
+            });
+        };
+
+        $scope.editEvent = function() {
+            processEventDataModel();
+            CalendarService.editEvent($scope.eventDataModel.id, $scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
+                MessageService.succsessAction();
+                $modalInstance.close('EDIT_EVENT');
+            }, function(err) {
                 MessageService.errorAction();
             });
         };

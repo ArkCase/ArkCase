@@ -10,8 +10,8 @@
  * Utility service for core-calendar directive that includes select options, constants and utility functions.
  */
 
-angular.module('directives').factory('Directives.CalendarUtilService', ['$filter', '$translate',
-    function ($filter, $translate) {
+angular.module('directives').factory('Directives.CalendarUtilService', ['$filter', '$translate', 'UtilService',
+    function ($filter, $translate, UtilService) {
         var PRIORITY_OPTIONS = [
             {
                 'value': 'NORMAL',
@@ -29,103 +29,103 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         var REMINDER_OPTIONS = [
             {
-                'value': 'NONE',
+                'value': -1,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.none'
             },
             {
-                'value': '0',
+                'value': 0,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.0Minutes'
             },
             {
-                'value': '5',
+                'value': 5,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.5Minutes'
             },
             {
-                'value': '10',
+                'value': 10,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.10Minutes'
             },
             {
-                'value': '15',
+                'value': 15,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.15Minutes'
             },
             {
-                'value': '30',
+                'value': 30,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.30Minutes'
             },
             {
-                'value': '60',
+                'value': 60,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.1Hours'
             },
             {
-                'value': '120',
+                'value': 120,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.2Hours'
             },
             {
-                'value': '180',
+                'value': 180,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.3Hours'
             },
             {
-                'value': '240',
+                'value': 240,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.4Hours'
             },
             {
-                'value': '300',
+                'value': 300,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.5Hours'
             },
             {
-                'value': '360',
+                'value': 360,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.6Hours'
             },
             {
-                'value': '420',
+                'value': 420,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.7Hours'
             },
             {
-                'value': '480',
+                'value': 480,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.8Hours'
             },
             {
-                'value': '540',
+                'value': 540,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.9Hours'
             },
             {
-                'value': '600',
+                'value': 600,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.10Hours'
             },
             {
-                'value': '660',
+                'value': 660,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.11Hours'
             },
             {
-                'value': '720',
+                'value': 720,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.halfDay'
             },
             {
-                'value': '1080',
+                'value': 1080,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.18Hours'
             },
             {
-                'value': '1440',
+                'value': 1440,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.1Days'
             },
             {
-                'value': '4320',
+                'value': 4320,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.2Days'
             },
             {
-                'value': '5760',
+                'value': 5760,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.3Days'
             },
             {
-                'value': '7200',
+                'value': 7200,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.4Days'
             },
             {
-                'value': '10080',
+                'value': 10080,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.1Week'
             },
             {
-                'value': '20160',
+                'value': 20160,
                 'label': 'common.directive.coreCalendar.addNewEventDialog.form.reminderOptions.2Weeks'
             }
         ];
@@ -460,6 +460,17 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return bymonth;
         };
 
+        var buildPopoverTemplate = function(calendarEvent) {
+            var dateFormat = $translate.instant('MM/DD/YYYY h:MM A');
+            var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
+            var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
+            var startDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.start, dateFormat);
+            var endDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.end, dateFormat);
+            var popoverTemplate = '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
+
+            return popoverTemplate;
+        };
+
         var buildEventRecurrenceString = function(eventDetails, recurrenceStart, recurrenceEnd) {
             var recurrenceDetails = eventDetails.recurrenceDetails;
             var startDateString = '';
@@ -757,7 +768,8 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             getAbsoluteMonthlyRecurrenceRange: getAbsoluteMonthlyRecurrenceRange,
             getRelativeMonthlyRecurrenceRange: getRelativeMonthlyRecurrenceRange,
             getAbsoluteYearlyRecurrenceRange: getAbsoluteYearlyRecurrenceRange,
-            getRelativeYearlyRecurrenceRange: getRelativeYearlyRecurrenceRange
+            getRelativeYearlyRecurrenceRange: getRelativeYearlyRecurrenceRange,
+            buildPopoverTemplate: buildPopoverTemplate
 
 
         };

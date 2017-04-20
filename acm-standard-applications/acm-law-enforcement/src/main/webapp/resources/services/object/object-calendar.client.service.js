@@ -15,7 +15,7 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
         var Service = this;
         Service.SessionCacheNames = {};
         Service.CacheNames = {
-            CALENDAR_EVENTS: "CalendarEvents"
+            CALENDAR_EVENTS: 'CalendarEvents'
         };
 
 
@@ -27,11 +27,12 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          * @description
          * Delete calendar events cached items.
          *
-         * @param {String} calendarFolderId  Calendar Folder ID
+         * @param {String} objectType
+         * @param {String} objectId
          */
-        Service.resetCalendarEventsCache = function (calendarFolderId) {
+        Service.resetCalendarEventsCache = function (objectType, objectId) {
             var cacheCalendarEvents = new Store.CacheFifo(Service.CacheNames.CALENDAR_EVENTS);
-            var cacheKey = calendarFolderId;
+            var cacheKey = objectType + '_' + objectId;
             cacheCalendarEvents.remove(cacheKey);
         };
 
@@ -116,19 +117,112 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
 
         /**
          * @ngdoc method
-         * @name getEventDetails
+         * @name getCalendarEvents
          * @methodOf services:Object.CalendarService
          *
          * @description
-         * Get the details for existing event.
+         * Get list of calendar events in the given date range.
          *
-         * @param {Object} eventId  ID of the existing event
+         * @param {Date} start  start of the date range
+         * @param {Date} end  end of the date range
          *
          * @returns {Object} Promise
          */
-        Service.getEventDetails = function(eventId) {
-            //TO DO
-            //implement http call when backend service is ready
+        Service.getCalendarEvents = function(start, end) {
+            var deferred = $q.defer();
+
+            var events = [
+                {
+                    subject: 'Test Event 1',
+                    start: new Date(),
+                    end: new Date(),
+                    allDayEvent: true
+                },
+                {
+                    subject: 'Test Event 2',
+                    start: new Date(),
+                    end: new Date(),
+                    allDayEvent: false
+                }
+            ];
+            deferred.resolve(events);
+            return deferred.promise;
+        };
+
+        /**
+         * @ngdoc method
+         * @name getCalendarEventDetails
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         *
+         *
+         * @param {Date} start
+         *
+         * @returns {Object} Promise
+         */
+        Service.getCalendarEventDetails = function(eventId) {
+            var deferred = $q.defer();
+
+            var event = [
+                {
+                    'subject' : 'Test Subject',
+                    'location' : 'Armedia',
+                    'start' : moment().format('MM/DD/YYYY h:MM A'),
+                    'end' : moment().format('MM/DD/YYYY h:MM A'),
+                    'allDayEvent' : false,
+                    'recurrenceDetails' : {
+                        'recurrenceType' : 'ONLY_ONCE'
+                    },
+                    'details' : 'details',
+                    'remindIn' : 30,
+                    'privateEvent' : true,
+                    'priority' : 'LOW',
+                    'sendEmails' : false,
+                    'attendees' : [
+                        {
+                            email: 'testemail@gmail.com',
+                            type: 'REQUIRED',
+                            status: 'ACCEPTED'
+                        },
+                        {
+                            email: 'testemail2@gmail.com',
+                            type: 'OPTIONAL',
+                            status: 'DECLINED'
+                        },
+                        {
+                            email: 'testemail3@gmail.com',
+                            type: 'OPTIONAL',
+                            status: 'TENTATIVE'
+                        },
+                        {
+                            email: 'testemail4@gmail.com',
+                            type: 'OPTIONAL',
+                            status: 'NONE'
+                        },
+                        {
+                            email: 'testemail5@gmail.com',
+                            type: 'REQUIRED',
+                            status: 'ORGANIZER'
+                        }
+
+
+                    ],
+                    'files': [
+                        {
+                            name: 'file_name_1.jpg'
+                        },
+                        {
+                            name: 'file_name_2.jpg'
+                        },
+                        {
+                            name: 'file_name_3.jpg'
+                        }
+                    ]
+                }
+            ];
+            deferred.resolve(event);
+            return deferred.promise;
         };
 
         return Service;

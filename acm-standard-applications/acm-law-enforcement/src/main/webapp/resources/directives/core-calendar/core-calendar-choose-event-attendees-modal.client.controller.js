@@ -3,7 +3,7 @@
 angular.module('directives').controller('Directives.CoreCalendarChooseEventAttendeesController', ['$scope', '$modalInstance', '$config', 'attendeeType', 'attendees',
     function($scope, $modalInstance, $config, attendeeType, attendees) {
         $scope.config = $config;
-        $scope.attendees = attendees;
+        $scope.attendees = angular.copy(attendees);
         $scope.attendeeType = attendeeType;
 
         $scope.onSelectAttendee = function(selectedItems, lastSelectedItems, isSelected) {
@@ -37,8 +37,8 @@ angular.module('directives').controller('Directives.CoreCalendarChooseEventAtten
                 name: '',
                 type: $scope.attendeeType
             };
-            $scope.attendees.pop();
-            $scope.attendees.push(selectedAttendeeDataModel);
+            
+            $scope.attendees[$scope.attendees.length - 1] = selectedAttendeeDataModel;
         };
 
         $scope.addAttendees = function() {

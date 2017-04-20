@@ -50,11 +50,22 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
 
             eventDurationInMinutes = moment($scope.recurrenceTmpModel.end).diff(moment($scope.recurrenceTmpModel.start)) / 60000;
             $scope.validDuration = true;
-        };
 
-        /*=============================================================================================*/
-        /*==========Functions invoked when corresponding recurrence pattern inputs are changes.========*/
-        /*=============================================================================================*/
+            switch ($scope.recurrenceType) {
+                case 'DAILY':
+                    setDefaultDailyRecurrencePattern();
+                    break;
+                case 'WEEKLY':
+                    setDefaultWeeklyRecurrencePattern();
+                    break;
+                case 'MONTHLY':
+                    setDefaultMonthlyRecurrencePattern();
+                    break;
+                case 'YEARLY':
+                    setDefaultYearlyRecurrencePattern();
+                    break;
+            }
+        };
 
         /**
          * Invoked when some of the inputs for daily recurrence is changed. Based on their values it calculates
@@ -433,30 +444,37 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
 
             switch (recurrencePattern) {
                 case 'EVERY_DAY':
+                    recurrenceDetailsDataModel.recurrenceType = 'DAILY';
                     recurrenceDetailsDataModel.interval = $scope.dailyRecurrence.interval;
                     break;
                 case 'EVERY_WEEKDAY':
+                    recurrenceDetailsDataModel.recurrenceType = 'DAILY';
                     recurrenceDetailsDataModel.everyWeekDay = true;
                     break;
                 case 'WEEKLY':
+                    recurrenceDetailsDataModel.recurrenceType = 'WEEKLY';
                     recurrenceDetailsDataModel.interval = $scope.weeklyRecurrence.interval;
                     recurrenceDetailsDataModel.days = $scope.selectedDayOfTheWeek;
                     break;
                 case 'MONTHLY_ABSOLUTE':
+                    recurrenceDetailsDataModel.recurrenceType = 'MONTHLY';
                     recurrenceDetailsDataModel.interval = $scope.absoluteMonthlyRecurrence.interval;
                     recurrenceDetailsDataModel.day = $scope.absoluteMonthlyRecurrence.day;
                     break;
                 case 'MONTHLY_RELATIVE':
+                    recurrenceDetailsDataModel.recurrenceType = 'MONTHLY';
                     recurrenceDetailsDataModel.interval = $scope.relativeMonthlyRecurrence.interval;
                     recurrenceDetailsDataModel.weekOfMonth = $scope.relativeMonthlyRecurrence.dayOuccurrenceInMonth;
                     recurrenceDetailsDataModel.dayOfWeek = $scope.relativeMonthlyRecurrence.day;
                     break;
                 case 'YEARLY_ABSOLUTE':
+                    recurrenceDetailsDataModel.recurrenceType = 'YEARLY';
                     recurrenceDetailsDataModel.interval = $scope.yearlyRecurrence.interval;
                     recurrenceDetailsDataModel.month = $scope.absoluteYearlyRecurrence.month;
                     recurrenceDetailsDataModel.dayOfMonth = $scope.absoluteYearlyRecurrence.day;
                     break;
                 case 'YEARLY_RELATIVE':
+                    recurrenceDetailsDataModel.recurrenceType = 'YEARLY';
                     recurrenceDetailsDataModel.interval = $scope.yearlyRecurrence.interval;
                     recurrenceDetailsDataModel.month = $scope.relativeYearlyRecurrence.month;
                     recurrenceDetailsDataModel.dayOfWeek = $scope.relativeYearlyRecurrence.day;
