@@ -111,7 +111,11 @@
             <artifactId>acm-service-correspondence</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>

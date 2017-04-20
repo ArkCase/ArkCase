@@ -81,7 +81,10 @@
     </bean>
 
     <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
-    
+
+    <bean id="exchangeConfigurationService" class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationService">
+        <property name="exchangePropertiesResource" value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
+    </bean>
 
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>

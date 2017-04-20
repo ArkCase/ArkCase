@@ -206,6 +206,76 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.emailConfiguration": {
+      "title": "Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "Save",
+        "deliveryMethods.label": "Delivery Methods",
+        "enableDocumentEmail.checkbox": "Documents can be emailed",
+        "enableDocumentAttach.checkbox": "Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",        
+        "serverSettings.label": "Server Settings",
+        "serverType.placeholder": "Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
+        },
+        "serverType.configredExchange.label": "Refer to Microsoft Exchange Configuration",
+        "server.label": "Server",
+        "server.placeholder": "Enter Server Address",
+        "port.label": "Port",
+        "port.placeholder": "Enter Port",
+        "encryption.label": "Encryption",
+        "encryption.placeholder": "Choose Encryption",
+        "encryptionOptions": {
+          "off": "OFF",
+          "ssl": "SSL",
+          "tls": "TLS",
+        },        
+        "username.label": "Username",
+        "username.placeholder": "Enter Username",
+        "password.label": "Password",
+        "password.placeholder": "Enter Password",
+        "userFrom.label": "User From",
+        "userFrom.placeholder": "Enter User From",
+        "validate.label": "SMTP Validation",
+        "validate.button": "Validate",
+        "smtpValid": "SMTP settings are valid",
+        "smtpNotValid": "SMTP settings are not valid"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "Save",
+        "enableExchangeIntegration.checkbox": "Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "Exchange Server Version",
+        "exchangeServerVersion.placeholder": "Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2"
+        },
+        "enableAutodiscovery.checkbox": "Enable Autodiscovery",
+        "clientAccessServer.label": "Client Access Server",
+        "clientAccessServer.placeholder": "Enter Client Access Server",
+        "exchangeDefaultAccess.label": "Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "None",
+          "Owner": "Owner",
+          "PublishingEditor": "PublishingEditor",
+          "Editor": "Editor",
+          "PublishingAuthor": "PublishingAuthor",
+          "Author": "Author",
+          "NoneditingAuthor": "NoneditingAuthor",
+          "Reviewer": "Reviewer",
+          "Contributor": "Contributor",
+          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "Custom"   
+        }
+      }
+    },
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",

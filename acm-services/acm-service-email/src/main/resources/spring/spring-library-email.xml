@@ -8,4 +8,8 @@
         <property name="ecmFileService" ref="ecmFileService"/>
     </bean>
 
+    <bean id="emailSenderConfigurationService" class="com.armedia.acm.services.email.sender.service.EmailSenderConfigurationService">
+        <property name="emailSenderPropertiesResource" value="file:${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+    </bean>
+
 </beans>
