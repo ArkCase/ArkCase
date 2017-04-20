@@ -73,7 +73,7 @@
                                 {{option.label}}
                             </option>
                         </select>
-                        <span class="text-success" ng-if="">
+                        <span class="text-success" ng-if="emailSenderConfigDataModel.type === 'outlook'">
                             <i class="fa fa-check"></i>
                             <span translate>
                                 admin.security.emailConfiguration.emailConfigForm.serverType.configuredExchange.label

@@ -220,7 +220,7 @@
           "smtp": "SMTP",
           "outlook": "Microsoft Exchange"
         },
-        "serverType.configredExchange.label": "Refer to Microsoft Exchange Configuration",
+        "serverType.configuredExchange.label": "For details refer to Microsoft Exchange Configuration",
         "server.label": "Server",
         "server.placeholder": "Enter Server Address",
         "port.label": "Port",
