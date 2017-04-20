@@ -36,21 +36,10 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
         /*Perform validation of the email*/
         $scope.validateEmail = function(emailSenderConfiguration) {
             EmailSenderConfigurationService.validateEmailSenderConfiguration(emailSenderConfiguration).then(function(res) {
-                //TO DO
                 MessageService.succsessAction();
-                //$scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
             }, function(err) {
-                //TO DO
                 MessageService.errorAction();
-                //$scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
             });
-        };
-
-        /*Remove success/error validation message when email input is changed*/
-        $scope.systemEmailInputChanged = function(configurableObjectType) {
-            if($scope.validEmailsByObjectType[configurableObjectType.id]) {
-                $scope.validEmailsByObjectType[configurableObjectType.id] = null;
-            }
         };
         
         $scope.save = function() {
