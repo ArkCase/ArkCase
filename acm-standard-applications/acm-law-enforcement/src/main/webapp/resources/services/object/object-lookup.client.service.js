@@ -516,6 +516,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return data;
         };
 
+        /**
+         * @ngdoc method
+         * @name getIdentificationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getIdentificationTypes = function () {
+            return LookupService.getLookup("identificationTypes");
+        };
+
         return Service;
     }
 ]);
