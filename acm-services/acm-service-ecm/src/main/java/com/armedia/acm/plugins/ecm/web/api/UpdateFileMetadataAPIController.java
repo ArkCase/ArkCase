@@ -33,7 +33,6 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    //@PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile updateFile(
