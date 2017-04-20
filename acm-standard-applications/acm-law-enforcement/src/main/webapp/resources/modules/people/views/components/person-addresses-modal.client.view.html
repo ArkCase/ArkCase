@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>people.comp.addresses.modal.addAddress</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>people.comp.addresses.modal.editAddress</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="addressesForm">
+        <div class="row">
+            <div class="col-xs-6">
+                <label for="country_{{::$id}}" translate>people.comp.addresses.modal.country.label</label>
+                <input id="country_{{::$id}}" type="text" ng-model="address.country">
+            </div>
+
+            <div class="col-xs-6">
+                <label for="addressTypes_{{::$id}}" translate>people.comp.addresses.modal.addressTypes.label</label>
+                <select id="addressTypes_{{::$id}}"
+                        ng-model="address.addressType"
+                        ng-options="item.type as item.name for item in addressTypes"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <label for="streetAddress_{{::$id}}" translate>people.comp.addresses.modal.streetAddress.label</label>
+                <input type="text" id="streetAddress_{{::$id}}" ng-model="address.streetAddress">
+            </div>
+
+            <div class="col-xs-6">
+                <label for="streetAddress2_{{::$id}}" translate>people.comp.addresses.modal.streetAddress2.label</label>
+                <input type="text" id="streetAddress2_{{::$id}}" ng-model="address.streetAddress2">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6">
+                <label for="city_{{::$id}}" translate>people.comp.addresses.modal.city.label</label>
+                <input type="text" id="city_{{::$id}}" ng-model="address.city">
+            </div>
+            <div class="col-xs-3">
+                <label for="state_{{::$id}}" translate>people.comp.addresses.modal.state.label</label>
+                <input id="state_{{::$id}}" type="text" ng-model="address.state">
+            </div>
+            <div class="col-xs-3">
+                <label for="zip_{{::$id}}" translate>people.comp.addresses.modal.zip.label</label>
+                <input id="zip_{{::$id}}" type="text" ng-model="address.zip">
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>people.comp.addresses.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addressForm.$invalid">
+        <span translate>people.comp.addresses.modal.btnOk.text</span>
+    </button>
+</div>

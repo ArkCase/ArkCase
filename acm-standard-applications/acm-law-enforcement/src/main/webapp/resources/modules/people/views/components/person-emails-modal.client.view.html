@@ -17,7 +17,7 @@
                 ng-model="email.subType"
                 ng-options="item.type as item.name for item in emailTypes"></select>
         <div>
-            <label for="emailTypes_{{::$id}}"
+            <label for="emails_{{::$id}}"
                    translate>people.comp.emails.modal.value.label</label>
         </div>
         <input id="emails_{{::$id}}" type="text" ng-model="email.value">
