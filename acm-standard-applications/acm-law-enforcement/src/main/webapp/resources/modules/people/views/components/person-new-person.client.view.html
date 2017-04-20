@@ -1,0 +1,218 @@
+<div ng-controller="People.NewPersonController" class="module-content">
+    <div class="content-body">
+        <form name="personForm" ng-submit="save()">
+            <div class="module-header">
+                <h3><span translate>people.comp.editPerson.title</span></h3>
+            </div>
+            <div class="well-sm">
+                <div class="row">
+                    <div class="well-sm">
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <button type="submit" ng-disabled="personForm.$invalid || saved"
+                                        class="btn btn-primary btn-sm" data-toggle="tooltip"
+                                        id="saveButton" data-title="Save">
+                                    <i class="fa fa-floppy-o"></i>
+                                    <span translate> people.comp.editPerson.saveButton</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="well-sm">
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        <label for="familyName" translate> people.comp.editPerson.familyName </label>
+                        <input type="text" id="familyName" ng-model="person.familyName" class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.familyName.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="middleName" class="control-label">{{ 'people.comp.editPerson.middleName' |
+                            translate}}</label>
+                        <input type="text" id="middleName" ng-model="person.middleName"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.middleName.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="givenName" class="control-label">{{ 'people.comp.editPerson.givenName' |
+                            translate}}</label>
+                        <input type="text" id="givenName" ng-model="person.givenName" class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.givenName.placeholder' | translate }}">
+                    </div>
+                </div>
+
+
+                <h3 translate>people.comp.editPerson.communicationAccounts.title</h3>
+                <div id="defaultPhone" class="row">
+                    <div class="col-sm-4">
+                        <label for="defaultPhoneValue" translate>
+                            people.comp.editPerson.communicationAccounts.phone </label>
+                        <input type="text" id="defaultPhoneValue" ng-model="person.defaultPhone.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.phone.placeholder' | translate }}">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="defaultPhoneSubType" class="control-label" translate>people.comp.editPerson.communicationAccounts.phoneType</label>
+                        <select id="defaultPhoneSubType" class="form-control" ng-model="person.defaultPhone.subType">
+                            <option ng-repeat="option in phoneTypes" value="{{option.type}}">{{option.name}}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="pull-left">
+                            <label class="control-label">&nbsp;</label>
+                            <button type="button" class="btn btn-link form-control"
+                                    ng-click="addContactMethod('phone');"
+                                    ng-show="showAddAnotherContactMethod('phone')">
+                                <i class="fa fa-plus text-success"></i><span
+                                    translate>people.comp.editPerson.addAnother</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div ng-repeat="contactMethod in person.contactMethods | filter: {type:'phone'}" class="row">
+                    <div class="col-sm-4">
+                        <label translate>
+                            people.comp.editPerson.communicationAccounts.phone </label>
+                        <input type="text" ng-model="contactMethod.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.phone.placeholder' | translate }}">
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="control-label"
+                               translate>people.comp.editPerson.communicationAccounts.phoneType</label>
+                        <select ng-model="contactMethod.subType" class="form-control">
+                            <option ng-repeat="option in phoneTypes" value="{{option.type}}">{{option.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="pull-left">
+                            <label class="control-label">&nbsp;</label>
+                            <button type="button" class="btn btn-link form-control"
+                                    ng-click="removeContactMethod(contactMethod)">
+                                <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.communicationAccounts.removeContactMethod</span>
+                            </button>
+                        </div>
+                        <div class="pull-left">
+                            <label class="control-label">&nbsp;</label>
+                            <button type="button" class="btn btn-link form-control" ng-click="addContactMethod('phone')"
+                                    ng-show="$last">
+                                <i class="fa fa-plus text-success"></i><span
+                                    translate>people.comp.editPerson.addAnother</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="defaultEmail" class="row">
+                    <div class="col-sm-4">
+                        <label for="defaultEmailValue" translate>
+                            people.comp.editPerson.communicationAccounts.email </label>
+                        <input type="text" id="defaultEmailValue" ng-model="person.defaultEmail.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.email.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="defaultEmailSubType" class="control-label">
+                            {{'people.comp.editPerson.communicationAccounts.emailType'|translate}}
+                            <select id="defaultEmailSubType" ng-model="person.defaultEmail.subType">
+                                <option ng-repeat="option in emailTypes" value="{{option.type}}">{{option.name}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="" ng-click="addContactMethod('email')" ng-show="showAddAnotherContactMethod('email')">
+                            <i class="fa fa-plus">{{'people.comp.editPerson.addAnother'|translate}}</i>
+                        </a>
+                    </div>
+                </div>
+                <div ng-repeat="contactMethod in person.contactMethods |filter: {type:'email'}" class="row">
+                    <div class="col-sm-4">
+                        <label for="emailValue" translate>
+                            people.comp.editPerson.communicationAccounts.email </label>
+                        <input type="text" id="emailValue" ng-model="contactMethod.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.email.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="emailSubType" class="control-label">
+                            {{'people.comp.editPerson.communicationAccounts.emailType'|translate}}
+                            <select id="emailSubType" ng-model="contactMethod.subType">
+                                <option ng-repeat="option in emailTypes" value="{{option.type}}">{{option.name}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="" ng-click="removeContactMethod(contactMethod)">
+                            <i class="fa fa-minus">{{'people.comp.editPerson.removeContactMethod'|translate}}</i>
+                        </a>
+                        <a ng-show="$last" href="" ng-click="addContactMethod('email')">
+                            <i class="fa fa-plus">{{'people.comp.editPerson.addAnother'|translate}}</i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="urls" class="row">
+                    <div class="col-sm-4">
+                        <label for="defaultUrlValue" translate>
+                            people.comp.editPerson.communicationAccounts.url </label>
+                        <input type="text" id="defaultUrlValue" ng-model="person.defaultUrl.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.url.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="defaultUrlSubType" class="control-label">
+                            {{'people.comp.editPerson.communicationAccounts.urlType'|translate}}
+                            <select id="defaultUrlSubType" ng-model="person.defaultUrl.subType">
+                                <option ng-repeat="option in urlTypes" value="{{option.type}}">{{option.name}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="" ng-click="addContactMethod('url')" ng-show="showAddAnotherContactMethod('url')">
+                            <i class="fa fa-plus">{{'people.comp.editPerson.addAnother'|translate}}</i>
+                        </a>
+                    </div>
+                </div>
+                <div ng-repeat="contactMethod in person.contactMethods |filter: {type:'url'}" class="row">
+                    <div class="col-sm-4">
+                        <label for="urlValue" translate>
+                            people.comp.editPerson.communicationAccounts.url </label>
+                        <input type="text" id="urlValue" ng-model="contactMethod.value"
+                               class="input-md form-control"
+                               placeholder="{{ 'people.comp.editPerson.communicationAccounts.url.placeholder' | translate }}"
+                               style="background-color: white;">
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="urlSubType" class="control-label">
+                            {{'people.comp.editPerson.communicationAccounts.urlType'|translate}}
+                            <select id="urlSubType" ng-model="contactMethod.subType">
+                                <option ng-repeat="option in urlTypes" value="{{option.type}}">{{option.name}}
+                                </option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="" ng-click="removeContactMethod(contactMethod)">
+                            <i class="fa fa-minus">{{'people.comp.editPerson.removeContactMethod'|translate}}</i>
+                        </a>
+                        <a ng-show="$last" href="" ng-click="addContactMethod('url')">
+                            <i class="fa fa-plus">{{'people.comp.editPerson.addAnother'|translate}}</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

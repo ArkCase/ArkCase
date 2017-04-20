@@ -175,5 +175,30 @@
       "aliasType": "Alias Type"
     },
     "noData": "No data"
-  }
+  },
+  "people.comp.editPerson": {
+    "title": "Person",
+    "addAnother": "Add Another",
+    "familyName": "Last Name",
+    "familyName.placeholder": "Enter Last Name",
+    "givenName": "First Name",
+    "givenName.placeholder": "Enter First Name",
+    "middleName": "Middle Name",
+    "middleName.placeholder": "Enter Middle Name",
+    "saveButton": "Save Person",
+    "communicationAccounts": {
+      "title": "Communication Accounts",
+      "phone": "Phone",
+      "phone.placeholder": "Enter Phone",
+      "phoneType": "Phone Type",
+      "email": "Email",
+      "email.placeholder": "Enter Email",
+      "emailType": "Email Type",
+      "url": "URL",
+      "url.placeholder": "Enter URL",
+      "removeContactMethod": "Remove",
+      "urlType": "URL Type"
+    }
+  },
+  "people.menus.topbar.item": "New Person"
 }
