@@ -9,8 +9,8 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class UpdateFileMetadataAPIController
+public class UpdateFileMetadataAPIController implements ApplicationEventPublisherAware
 {
 
     private EcmFileService ecmFileService;
@@ -33,7 +33,6 @@ public class UpdateFileMetadataAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile updateFile(
