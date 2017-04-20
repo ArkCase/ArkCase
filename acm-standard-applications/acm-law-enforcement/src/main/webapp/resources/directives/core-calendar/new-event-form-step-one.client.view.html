@@ -120,13 +120,7 @@
         <label for="reminder">
             <span translate>common.directive.coreCalendar.addNewEventDialog.form.reminder.label</span>
         </label>
-        <select name="reminder" class="form-control" ng-model="eventDataModel.remindIn">
-            <option value="" disabled selected hidden translate>
-                common.directive.coreCalendar.addNewEventDialog.form.reminder.placeholder
-            </option>
-            <option ng-repeat="option in reminderOptions" value="{{option.value}}" translate>
-                {{option.label}}
-            </option>
+        <select name="reminder" class="form-control" ng-model="eventDataModel.remindIn" ng-options="option.value as option.label | translate for option in reminderOptions" translate>
         </select>
     </div>
 </div>

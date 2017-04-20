@@ -30,47 +30,39 @@
  </example>
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', 'UtilService', '$modal', 'ConfigService',
-    function ($compile, $translate, uiCalendarConfig, CalendarService, Util, $modal, ConfigService) {
+    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService',
+    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService) {
         return {
             restrict: 'E',
+            templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
             scope: {
                 folderId: '='
             },
-            link: function (scope) {
+            link: function(scope) {
 
-                scope.$watch('folderId', function (folderId, oldValue) {
-                    if (folderId && scope.config) {
-                        getDataAndRenderCalendar();
-                    }
-                });
-
-                /* Event source that contains calendar events */
-                scope.events = [];
+                // scope.$watch('folderId', function (folderId, oldValue) {
+                //     if (folderId && scope.config) {
+                //         getDataAndRenderCalendar();
+                //     }
+                // });
 
                 /* Event sources array */
-                scope.eventSources = [scope.events];
-
-                /* Render calendar widget */
-                scope.renderCalendar = function (calendar) {
-                    if (uiCalendarConfig.calendars[calendar]) {
-                        uiCalendarConfig.calendars[calendar].fullCalendar('render');
-                    }
-                };
+                scope.eventSources = [];
 
                 /* Render Popover */
-                scope.eventRender = function (event, element, view) {
+                scope.eventRender = function(event, element, view) {
                     element.attr({
-                        'popover-html-unsafe': event.detail,
+                        'popover-html-unsafe': event.popoverTemplate,
                         'popover-title': event.title,
                         'popover-trigger': 'mouseenter'
                     });
                     $compile(element)(scope);
                 };
 
-                ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+                ConfigService.getModuleConfig('common').then(function(moduleConfig) {
                     scope.coreCalendarConfig = moduleConfig.coreCalendar;
                 });
+
                 /* Add Event Modal */
                 scope.addNewEvent = function() {
                     var modalInstance = $modal.open({
@@ -86,11 +78,45 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         }
                     });
 
-                    modalInstance.result.then(function (data) {
-                        //TO DO modal close
-                    }, function () {
-                        // TO DO modal dismiss
+                    modalInstance.result.then(function(result) {
+                        scope.onClickRefresh();
+                    }, function() {
+
                     });
+                };
+
+                scope.eventClick = function(event, element, view) {
+                    CalendarService.getCalendarEventDetails(event.id).then(function(res) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'directives/core-calendar/core-calendar-event-details-modal.client.vew.html',
+                            controller: 'Directives.CoreCalendarEventDetailsModalController',
+                            size: 'lg',
+                            backdrop: 'static',
+                            resolve: {
+                                coreCalendarConfig: function() {
+                                    return scope.coreCalendarConfig;
+                                },
+                                eventDetails: function() {
+                                    return res[0];
+                                }
+                            }
+                        });
+
+                        modalInstance.result.then(function(result) {
+                            scope.onClickRefresh();
+                        }, function() {
+
+                        });
+                    }, function(err) {
+                        MessageService.errorAction();
+                    });
+                };
+
+                scope.onClickRefresh = function() {
+                    //reset cache first
+                    CalendarService.resetCalendarEventsCache(scope.objectType, scope.objectId);
+                    uiCalendarConfig.calendars.coreCalendar.fullCalendar('refetchEvents');
                 };
 
                 /* Calendar config object */
@@ -109,48 +135,32 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                             week: 'Week',
                             day: 'Day'
                         },
-                        eventRender: scope.eventRender
+                        eventRender: scope.eventRender,
+                        eventClick: scope.eventClick,
+                        timeFormat: 'h:MM A'
                     }
                 };
 
-                scope.onClickRefresh = function () {
-                    //reset cache first
-                    CalendarService.resetCalendarEventsCache(scope.folderId);
-                    getDataAndRenderCalendar();
+                scope.uiConfig.calendar.events = function(start, end, timezone, callback) {
+                    CalendarService.getCalendarEvents(start, end)
+                        .then(function(res) {
+                            var events = [];
+                            _.forEach(res, function(value, key) {
+                                events.push({
+                                    id: value.id,
+                                    title: value.subject,
+                                    start: value.start,
+                                    end: value.end,
+                                    className: 'b-l b-2x b-info cursor-pointer',
+                                    allDay: value.allDayEvent,
+                                    popoverTemplate: CalendarUtilService.buildPopoverTemplate(value)
+                                });
+                            });
+                            callback(events);
+                        });
                 };
 
-                var getDataAndRenderCalendar = function () {
-                    CalendarService.queryCalendarEvents(scope.folderId).then(function (calendarEvents) {
-                        if (calendarEvents.items) {
-                            scope.events.splice(0, scope.events.length);
-                            for (var i = 0; i < calendarEvents.items.length; i++) {
-                                var calendarEvent = {};
-                                calendarEvent.id = calendarEvents.items[i].id;
-                                calendarEvent.title = calendarEvents.items[i].subject;
-                                calendarEvent.start = calendarEvents.items[i].startDate;
-                                calendarEvent.end = calendarEvents.items[i].endDate;
-                                calendarEvent.detail = makeDetail(calendarEvents.items[i]);
-                                calendarEvent.className = "b-l b-2x b-info";
-                                calendarEvent.allDay = calendarEvents.items[i].allDayEvent;
-                                scope.events.push(calendarEvent);
-                            }
-                            scope.renderCalendar('coreCalendar');
-                        }
-                    });
-                };
-
-                var makeDetail = function (calendarItem) {
-                    var dateFormat = $translate.instant('common.dateFormat');
-                    var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
-                    var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
-                    var body = calendarItem.body;
-                    var startDateTime = Util.getDateTimeFromDatetime(calendarItem.startDate, dateFormat);
-                    var endDateTime = Util.getDateTimeFromDatetime(calendarItem.endDate, dateFormat);
-                    var detail = body + '</br>' + startLabel + startDateTime + '</br>' + endLabel + endDateTime;
-                    return detail;
-                };
-            },
-            templateUrl: 'directives/core-calendar/core-calendar.client.view.html'
+            }
         };
     }
 ]);
