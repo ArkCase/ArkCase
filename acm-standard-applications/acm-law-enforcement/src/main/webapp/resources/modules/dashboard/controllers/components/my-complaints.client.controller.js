@@ -1,16 +1,12 @@
 'use strict';
-
 angular.module('dashboard.my-complaints')
     .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, Authentication, DashboardService) {
-
             var vm = this;
-
             $scope.$on('component-config', applyConfig);
             $scope.$emit('req-component-config', 'myComplaints');
             vm.config = null;
             var userInfo = null;
-
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
@@ -30,7 +26,6 @@ angular.module('dashboard.my-complaints')
                 columnDefs: [],
                 onRegisterApi: function (gridApi) {
                     vm.gridApi = gridApi;
-
                     gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                         if (sortColumns.length == 0) {
                             paginationOptions.sort = null;
@@ -47,8 +42,6 @@ angular.module('dashboard.my-complaints')
                     });
                 }
             };
-
-
             function applyConfig(e, componentId, config) {
                 if (componentId == 'myComplaints') {
                     vm.config = config;
@@ -57,7 +50,6 @@ angular.module('dashboard.my-complaints')
                     vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
                     vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
                     paginationOptions.pageSize = vm.config.paginationPageSize;
-
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
                         getPage();
@@ -69,6 +61,7 @@ angular.module('dashboard.my-complaints')
             function getPage() {
                 DashboardService.queryMyComplaints({
                         userId: userInfo.userId,
+                        groupId: userInfo.groupId,
                         sortBy: paginationOptions.sortBy,
                         sortDir: paginationOptions.sortDir,
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,

@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
     function ($resource) {
         return $resource('', {}, {
@@ -11,21 +10,18 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 },
                 data: ''
             },
-
             queryCasesByQueue: {
                 method: 'GET',
                 url: 'api/v1/plugin/casefile/number/by/queue',
                 isArray: false,
                 data: ''
             },
-
             queryCasesByStatus: {
                 method: 'GET',
                 url: 'api/v1/plugin/casebystatus/:period',
                 isArray: true,
                 data: ''
             },
-
             queryNewComplaints: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:COMPLAINT+' +
@@ -33,14 +29,12 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 isArray: false,
                 data: ''
             },
-
             queryNewCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:CASE_FILE+' +
                 'AND+NOT+status_lcs\\:DELETED+AND+create_date_tdt\\:[NOW-1MONTH TO NOW]',
                 isArray: false
             },
-
             queryMyTasks: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId'
@@ -50,38 +44,35 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 isArray: false,
                 data: ''
             },
-
             queryMyComplaints: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:groupId))+' +
                 'AND+object_type_s\\:COMPLAINT+' +
                 'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
-
             queryMyCases: {
                 method: 'GET',
-                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:groupId))+' +
                 'AND+object_type_s\\:CASE_FILE+' +
-                'AND+NOT+status_lcs\\:DRAFT&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                'start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
-
             queryTeamWorkload: {
                 method: 'GET',
                 url: 'api/v1/plugin/task/getListByDueDate/:due',
                 isArray: true,
                 data: ''
             },
-            
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',
                 isArray: true,
             },
-
             saveConfig: {
                 method: 'POST',
                 url: 'api/v1/plugin/dashboard/set'
