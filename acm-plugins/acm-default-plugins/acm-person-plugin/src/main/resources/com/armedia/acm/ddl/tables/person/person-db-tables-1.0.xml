@@ -883,6 +883,8 @@
             <column name="cm_default_url" type="${fkIdType}"/>
             <column name="cm_default_address" type="${fkIdType}"/>
             <column name="cm_default_alias" type="${fkIdType}"/>
+            <column name="cm_default_identification" type="${fkIdType}"/>
+            <column name="cm_default_organization" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
 
@@ -892,13 +894,11 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="-5-add-details-columns-to-acm-person-table" author="dragan.simonovski">
+    <changeSet id="45-add-details-columns-to-acm-person-table" author="dragan.simonovski">
         <addColumn tableName="acm_person">
             <column name="cm_details" type="CLOB">
                 <constraints nullable="true"/>
             </column>
         </addColumn>
     </changeSet>
-
-
 </databaseChangeLog>

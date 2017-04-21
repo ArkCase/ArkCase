@@ -213,9 +213,24 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @JoinColumn(name = "cm_default_alias")
     private PersonAlias defaultAlias;
 
+    /**
+     * Identification which is default from identifications
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_identification")
+    private Identification defaultIdentification;
+
+    /**
+     * Organization which is default from organizations
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_organization")
+    private Organization defaultOrganization;
+
     @Lob
     @Column(name = "cm_details")
     private String details;
+
 
     @PrePersist
     protected void beforeInsert()
@@ -559,6 +574,10 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<Organization> getOrganizations()
     {
+        if (organizations == null)
+        {
+            organizations = new ArrayList<>();//just for prevention if something set this field to null
+        }
         return organizations;
     }
 
@@ -570,6 +589,10 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<Identification> getIdentifications()
     {
+        if (identifications == null)
+        {
+            identifications = new ArrayList<>();//just for prevention if something set this field to null
+        }
         return identifications;
     }
 
@@ -706,6 +729,44 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             getPersonAliases().add(defaultAlias);
         }
+    }
+
+    public Identification getDefaultIdentification()
+    {
+        return defaultIdentification;
+    }
+
+    /**
+     * if inserting default identification, same identification will be automatically added to the identifications list
+     *
+     * @param defaultIdentification
+     */
+    public void setDefaultIdentification(Identification defaultIdentification)
+    {
+        if (defaultIdentification != null && defaultIdentification.getIdentificationID() == null)
+        {
+            getIdentifications().add(defaultIdentification);
+        }
+        this.defaultIdentification = defaultIdentification;
+    }
+
+    public Organization getDefaultOrganization()
+    {
+        return defaultOrganization;
+    }
+
+    /**
+     * if inserting default organization, same organization will be automatically added to the organizations list
+     *
+     * @param defaultOrganization
+     */
+    public void setDefaultOrganization(Organization defaultOrganization)
+    {
+        if (defaultOrganization != null && defaultOrganization.getOrganizationId() == null)
+        {
+            getOrganizations().add(defaultOrganization);
+        }
+        this.defaultOrganization = defaultOrganization;
     }
 
     public String getDetails()
