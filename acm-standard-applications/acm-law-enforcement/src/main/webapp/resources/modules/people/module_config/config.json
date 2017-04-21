@@ -11,6 +11,14 @@
       "moduleId": "person",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 80
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "newPerson",
+      "menuItemTitle": "people.menus.topbar.item",
+      "moduleId": "person",
+      "iconClass": "fa fa-check-circle",
+      "position": 30
     }
   ],
   "tree": {

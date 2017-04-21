@@ -237,7 +237,7 @@ public class PersonServiceImpl implements PersonService
         AcmContainer container = new AcmContainer();
         container.setContainerObjectType(PersonConstants.PERSON_OBJECT_TYPE);
         container.setContainerObjectId(person.getId());
-        container.setContainerObjectTitle(person.getTitle());
+        container.setContainerObjectTitle(person.getGivenName() + "-" + person.getFamilyName() + "-" + person.getId());
         AcmFolder folder = new AcmFolder();
         folder.setName("ROOT");
 
