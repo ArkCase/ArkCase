@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
@@ -109,6 +110,11 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         fromDb.setCmisRepositoryId("cmisRepositoryId");
         fromDb.setFileActiveVersionMimeType(mimeType);
 
+        AcmContainer acmContainer = new AcmContainer();
+        acmContainer.setContainerObjectId(1L);
+        acmContainer.setContainerObjectType("DOC_REPO");
+        fromDb.setContainer(acmContainer);
+
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
@@ -138,13 +144,15 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         assertEquals(ecmFileId, foundEvent.getObjectId());
         assertEquals("FILE", foundEvent.getObjectType());
         assertEquals(user, foundEvent.getUserId());
+        assertEquals(acmContainer.getContainerObjectType(), foundEvent.getParentObjectType());
+        assertEquals(acmContainer.getContainerObjectId(), foundEvent.getParentObjectId());
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().startsWith(mimeType));
 
         String returned = result.getResponse().getContentAsString();
 
-        log.info("results: " + returned);
+        log.info("results: {}", returned);
 
         assertEquals(log4jsize, returned.length());
     }
@@ -171,6 +179,11 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         fromDb.setCmisRepositoryId("cmisRepositoryId");
         fromDb.setFileActiveVersionMimeType(tikaMimeType);
 
+        AcmContainer acmContainer = new AcmContainer();
+        acmContainer.setContainerObjectId(1L);
+        acmContainer.setContainerObjectType("DOC_REPO");
+        fromDb.setContainer(acmContainer);
+
         Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
@@ -200,6 +213,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         assertEquals(ecmFileId, foundEvent.getObjectId());
         assertEquals("FILE", foundEvent.getObjectType());
         assertEquals(user, foundEvent.getUserId());
+        assertEquals(acmContainer.getContainerObjectType(), foundEvent.getParentObjectType());
+        assertEquals(acmContainer.getContainerObjectId(), foundEvent.getParentObjectId());
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().equals(tikaMimeType));
