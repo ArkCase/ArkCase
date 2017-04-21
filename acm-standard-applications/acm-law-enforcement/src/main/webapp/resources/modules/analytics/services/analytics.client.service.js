@@ -41,7 +41,8 @@ angular.module('analytics').factory('Analytics.BuildUrl', ['$sce', '$http', '$br
             },
 
             getUrlBanana: function (params) {
-                var bananaUrl = params.slkHost + (params.slkPort ? ":" + params.slkPort : "") + params.slkDashboard;
+                var bananaUrl = params.slkExternalUrl + params.slkDashboard;
+                //var bananaUrl = params.slkHost + (params.slkPort ? ":" + params.slkPort : "") + params.slkDashboard;
                 return $sce.trustAsResourceUrl(bananaUrl); //https://acm-arkcase/arkcase/undefined/banana
                 //return bananaUrl;
             }
