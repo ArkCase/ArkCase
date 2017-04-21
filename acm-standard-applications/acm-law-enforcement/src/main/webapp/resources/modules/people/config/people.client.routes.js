@@ -98,5 +98,17 @@ angular.module('people').config(['$stateProvider',
             })
 
 
+            .state('newPerson', {
+                url: '/newPerson',
+                templateUrl: 'modules/people/views/components/person-new-person.client.view.html',
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('people');
+                        return $translate.refresh();
+                    }]
+                }
+            })
+
     }
 ]);
