@@ -69,36 +69,23 @@ public class FolderAndFilesUtils
 
     public String getVersionCmisId(EcmFile ecmFile, String version)
     {
-        String cmisId = null;
 
         if (StringUtils.isEmpty(version))
         {
-            cmisId = getActiveVersionCmisId(ecmFile);
-        }
-        else
-        {
-            EcmFileVersion ecmFileVersion = getVersion(ecmFile, version);
-            if (ecmFileVersion != null)
-            {
-                cmisId = ecmFileVersion.getCmisObjectId();
-            }
+            return getActiveVersionCmisId(ecmFile);
         }
 
-        return cmisId;
+        EcmFileVersion ecmFileVersion = getVersion(ecmFile, version);
+
+        return ecmFileVersion != null ? ecmFileVersion.getCmisObjectId() : getActiveVersionCmisId(ecmFile);
+
     }
 
     public EcmFileVersion getVersion(EcmFile ecmFile, String version)
     {
-        if (ecmFile != null && ecmFile.getVersions() != null)
+        if (ecmFile != null && ecmFile.getVersions() != null && version != null)
         {
-            List<EcmFileVersion> versions = ecmFile.getVersions();
-            for (EcmFileVersion ecmFileVersion : versions)
-            {
-                if (ecmFileVersion.getVersionTag().equals(version))
-                {
-                    return ecmFileVersion;
-                }
-            }
+            return ecmFile.getVersions().stream().filter(fv -> version.equals(fv.getVersionTag())).findFirst().orElse(null);
         }
 
         return null;

@@ -53,10 +53,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                                  Authentication authentication, HttpSession httpSession, HttpServletResponse response)
             throws IOException, MuleException, AcmObjectNotFoundException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Downloading file by ID '" + fileId + "' for user '" + authentication.getName() + "'");
-        }
+        log.info("Downloading file by ID '{}' for user '{}'", fileId, authentication.getName());
 
         EcmFile ecmFile = getFileDao().find(fileId);
 
@@ -70,7 +67,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             getApplicationEventPublisher().publishEvent(event);
             String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(ecmFile, version);
             download(cmisFileId, response, inline, ecmFile, version);
-        } else
+        }
+        else
         {
             fileNotFound();
         }
@@ -87,7 +85,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         if (downloadedFile.getPayload() instanceof ContentStream)
         {
             handleFilePayload((ContentStream) downloadedFile.getPayload(), response, isInline, ecmFile, version);
-        } else
+        }
+        else
         {
             fileNotFound();
         }
@@ -157,7 +156,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     response.getOutputStream().write(buffer, 0, read);
                 }
-            } while (read > 0);
+            }
+            while (read > 0);
             response.getOutputStream().flush();
         } finally
         {
@@ -168,7 +168,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                     fileIs.close();
                 } catch (IOException e)
                 {
-                    log.error("Could not close CMIS content stream: " + e.getMessage(), e);
+                    log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
                 }
             }
         }
