@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -48,6 +49,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
                                  @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
                                  @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
+                                 @RequestParam(value = "version", required = false, defaultValue = "") String version,
                                  Authentication authentication, HttpSession httpSession, HttpServletResponse response)
             throws IOException, MuleException, AcmObjectNotFoundException
     {
@@ -66,15 +68,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             event.setSucceeded(true);
 
             getApplicationEventPublisher().publishEvent(event);
-            String cmisFileId = getFolderAndFilesUtils().getActiveVersionCmisId(ecmFile);
-            download(cmisFileId, response, inline, ecmFile);
+            String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(ecmFile, version);
+            download(cmisFileId, response, inline, ecmFile, version);
         } else
         {
             fileNotFound();
         }
     }
 
-    protected void download(String fileId, HttpServletResponse response, boolean isInline, EcmFile ecmFile)
+    protected void download(String fileId, HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
             throws IOException, MuleException, AcmObjectNotFoundException
     {
 
@@ -84,7 +86,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
         if (downloadedFile.getPayload() instanceof ContentStream)
         {
-            handleFilePayload((ContentStream) downloadedFile.getPayload(), response, isInline, ecmFile);
+            handleFilePayload((ContentStream) downloadedFile.getPayload(), response, isInline, ecmFile, version);
         } else
         {
             fileNotFound();
@@ -93,25 +95,47 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called for normal processing - file was found
-    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile)
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
             throws IOException
     {
-
         String mimeType = filePayload.getMimeType();
+
+        EcmFileVersion ecmFileVersion = getFolderAndFilesUtils().getVersion(ecmFile, version);
         // OpenCMIS thinks this is an application/octet-stream since the file has no extension
         // we will use what Tika detected in such cases
-        if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFile.getFileActiveVersionMimeType())))
+        if (ecmFileVersion != null)
         {
-            mimeType = ecmFile.getFileActiveVersionMimeType();
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFileVersion.getVersionMimeType())))
+            {
+                mimeType = ecmFileVersion.getVersionMimeType();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && (mimeType == null || !mimeType.equals(ecmFile.getFileActiveVersionMimeType())))
+            {
+                mimeType = ecmFile.getFileActiveVersionMimeType();
+            }
         }
 
         String fileName = filePayload.getFileName();
         // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
         // extension... so the extension can be null.  So we have to guard against it.
-        if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
-                && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+        if (ecmFileVersion != null)
         {
-            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+            if (ecmFile != null && ecmFileVersion.getVersionFileNameExtension() != null
+                    && !fileName.endsWith(ecmFileVersion.getVersionFileNameExtension()))
+            {
+                fileName = fileName + ecmFileVersion.getVersionFileNameExtension();
+            }
+        }
+        else
+        {
+            if (ecmFile != null && ecmFile.getFileActiveVersionNameExtension() != null
+                    && !fileName.endsWith(ecmFile.getFileActiveVersionNameExtension()))
+            {
+                fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+            }
         }
 
         InputStream fileIs = null;
