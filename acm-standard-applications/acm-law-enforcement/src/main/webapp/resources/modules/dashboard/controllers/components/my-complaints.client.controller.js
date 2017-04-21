@@ -69,6 +69,7 @@ angular.module('dashboard.my-complaints')
             function getPage() {
                 DashboardService.queryMyComplaints({
                         userId: userInfo.userId,
+                        groupId: userInfo.groupId,
                         sortBy: paginationOptions.sortBy,
                         sortDir: paginationOptions.sortDir,
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,

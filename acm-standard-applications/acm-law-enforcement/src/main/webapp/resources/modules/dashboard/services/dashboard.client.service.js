@@ -54,6 +54,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryMyComplaints: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:groupId))+' +
                 'AND+object_type_s\\:COMPLAINT+' +
                 'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
@@ -62,9 +63,10 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
 
             queryMyCases: {
                 method: 'GET',
-                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
+                url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:groupId))+' +
                 'AND+object_type_s\\:CASE_FILE+' +
-                'AND+NOT+status_lcs\\:DRAFT&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                'start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },
@@ -75,7 +77,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 isArray: true,
                 data: ''
             },
-            
+
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',
