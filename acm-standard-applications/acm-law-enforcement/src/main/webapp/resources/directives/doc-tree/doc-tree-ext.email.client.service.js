@@ -17,6 +17,7 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
         LookupService.getConfig("notification").then(function (data) {
             Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
             Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
+            //TODO For Vladimir - This parameters should be taken from UI selection
             Email.allowMailFilesAsAttachments = ("true" == Util.goodValue(data["notification.allowMailFilesAsAttachments"], "true"));
             Email.allowMailFilesToExternalAddresses = ("true" == Util.goodValue(data["notification.allowMailFilesToExternalAddresses"], "true"));
         });

@@ -6,6 +6,7 @@ import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationSer
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,9 +36,9 @@ public class EmailSenderConfigurationAPIController
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration)
+    public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth)
     {
-        emailSenderConfigurationService.writeConfiguration(configuration);
+        emailSenderConfigurationService.writeConfiguration(configuration, auth);
     }
 
     /**

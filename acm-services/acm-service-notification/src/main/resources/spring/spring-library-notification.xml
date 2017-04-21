@@ -98,6 +98,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="authenticationTokenService" ref="authenticationTokenService"/>
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
@@ -119,7 +120,7 @@
     <bean id="notificationSenderFactory"
           class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
         <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
+        <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
         <property name="notificationSenderMap">
             <map>
                 <entry key="smtp" value-ref="smtpNotificationSender"></entry>

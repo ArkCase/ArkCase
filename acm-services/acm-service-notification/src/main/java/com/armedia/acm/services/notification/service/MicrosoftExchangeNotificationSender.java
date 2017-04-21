@@ -58,11 +58,10 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
-            String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
+            String userId = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null);
+            String userEmail = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
                     null);
-            String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
-                    null);
-            String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
+            String userPass = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
                     null);
 
             AcmOutlookUser outlookUser = new AcmOutlookUser(userId, userEmail, userPass);

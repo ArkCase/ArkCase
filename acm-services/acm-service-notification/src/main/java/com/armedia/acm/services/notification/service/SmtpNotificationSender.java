@@ -12,6 +12,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -98,8 +100,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
 
-        emailsDataStream.forEach(emailData ->
-        {
+        emailsDataStream.forEach(emailData -> {
             emailBuilder.buildEmail(emailData, messageProps);
             Exception exception = null;
             try
@@ -196,7 +197,8 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     }
 
     @Override
-    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication, AcmUser user) throws Exception
+    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
+            AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
@@ -240,20 +242,21 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         Map<String, Object> messageProps = new HashMap<>();
 
         messageProps.put("host",
-                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
         messageProps.put("port",
-                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
         messageProps.put("user",
-                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
         messageProps.put("password",
-                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
         messageProps.put("from",
-                getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
 
         return messageProps;
     }
 
-    protected String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication) throws AcmEncryptionException
+    protected String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
+            throws AcmEncryptionException
     {
         String body = "";
         for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())

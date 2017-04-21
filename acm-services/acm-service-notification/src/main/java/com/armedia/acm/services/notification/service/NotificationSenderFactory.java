@@ -9,7 +9,7 @@ import java.util.Map;
 public class NotificationSenderFactory
 {
     private PropertyFileManager propertyFileManager;
-    private String notificationPropertyFileLocation;
+    private String emailSenderPropertyFileLocation;
     private Map<String, NotificationSender> notificationSenderMap;
 
     public NotificationSender getNotificationSender()
@@ -17,7 +17,7 @@ public class NotificationSenderFactory
         String flowType = "smtp";
         try
         {
-            flowType = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE, "smtp");
+            flowType = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE, "smtp");
         } catch (AcmEncryptionException e)
         {
         }
@@ -34,14 +34,14 @@ public class NotificationSenderFactory
         this.propertyFileManager = propertyFileManager;
     }
 
-    public String getNotificationPropertyFileLocation()
+    public String getEmailSenderPropertyFileLocation()
     {
-        return notificationPropertyFileLocation;
+        return emailSenderPropertyFileLocation;
     }
 
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
+    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
     {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
+        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     public Map<String, NotificationSender> getNotificationSenderMap()

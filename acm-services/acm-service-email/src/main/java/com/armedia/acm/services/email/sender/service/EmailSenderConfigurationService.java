@@ -6,6 +6,7 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationPrope
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class EmailSenderConfigurationService
 
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public void writeConfiguration(EmailSenderConfiguration configuration)
+    public void writeConfiguration(EmailSenderConfiguration configuration, Authentication auth)
     {
 
         Properties emailSenderProperties = new Properties();
@@ -43,8 +44,7 @@ public class EmailSenderConfigurationService
         emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_SENDING, Boolean.toString(configuration.isAllowSending()));
         emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_ATTACHMENTS,
                 Boolean.toString(configuration.isAllowAttachments()));
-        emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_HYPERLINKS,
-                Boolean.toString(configuration.isAllowHyperlinks()));
+        emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_HYPERLINKS, Boolean.toString(configuration.isAllowHyperlinks()));
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -52,7 +52,7 @@ public class EmailSenderConfigurationService
         try
         {
             emailSenderProperties.store(new FileOutputStream(emailSenderPropertiesResource.getFile()),
-                    String.format("Updated from ", getClass().getName()));
+                    String.format("Updated by %s", auth.getName()));
         } catch (IOException e)
         {
             log.error("Could not write properties to {} file.", emailSenderPropertiesResource.getFilename());
