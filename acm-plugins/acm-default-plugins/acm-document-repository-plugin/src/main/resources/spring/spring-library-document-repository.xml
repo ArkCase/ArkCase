@@ -41,6 +41,10 @@
     <bean id="documentRepositoryServiceImpl"
           class="com.armedia.acm.plugins.documentrepository.service.impl.DocumentRepositoryServiceImpl">
         <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
+        <property name="acmFolderService" ref="acmFolderService"/>
+        <property name="noteDao" ref="noteDao"/>
+        <property name="associatedTagService" ref="associatedTagService"/>
+        <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="pipelineManager" ref="documentRepositoryPipelineManager"/>
         <property name="documentRepositoryEventPublisher" ref="documentRepositoryEventPublisher"/>
     </bean>

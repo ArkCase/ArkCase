@@ -27,7 +27,7 @@ angular.module('directives').directive('progressIndicator', ['$timeout'
             link: function (scope) {
 
                 scope.showProgress = false;
-                var eventName = "generic_event";
+                var eventName = "live_progress";
                 scope.$bus.subscribe(eventName, function (data) {
 
                     scope.$apply(function () {

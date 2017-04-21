@@ -42,6 +42,12 @@ public interface AcmFolderService
     @Transactional
     void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
+    void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
+
+    @Transactional
+    void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException;
+
+
     AcmFolder findById(Long folderId);
 
     List<AcmObject> getFolderChildren(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
@@ -67,9 +73,6 @@ public interface AcmFolderService
                                AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException;
-
-    @Transactional
-    void deleteContainer(Long containerId);
 
     /**
      * retrieves root folder

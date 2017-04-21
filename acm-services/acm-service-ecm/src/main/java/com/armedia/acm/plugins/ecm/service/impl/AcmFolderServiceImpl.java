@@ -637,7 +637,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    public void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    public void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmObjectNotFoundException,
+            AcmUserActionFailedException
     {
         AcmFolder folder = getFolderDao().find(folderId);
 
@@ -657,8 +658,10 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, String> folderContentEntries = childrenFiles.stream()
                 .collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
+
+        folderContentFolderEntries.put(acmObjectToKey.apply(folder), folder.getObjectType());
+
         folderContentEntries.putAll(folderContentFolderEntries);
-        folderContentEntries.put(acmObjectToKey.apply(folder), folder.getObjectType());
 
         log.info("Putting object locks");
         putObjectLocks(folderContentEntries, authentication);
@@ -684,17 +687,21 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
         }
 
+        deleteFolderContent(folderId, authentication.getName());
+
+        deleteAlfrescoFolderTree(folder);
+    }
+
+    public void deleteAlfrescoFolderTree(AcmFolder folder) throws AcmUserActionFailedException
+    {
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
 
         String cmisRepositoryId = getCmisRepositoryId(folder);
-
         properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         try
         {
-            deleteFolderContent(folderId, authentication.getName());
-
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_FOLDER_TREE, folder, properties);
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY))
             {
@@ -703,7 +710,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                         folder.getId(), "Folder " + folder.getName() + " was not deleted successfully", muleException);
             }
-        } catch (PersistenceException | MuleException e)
+        } catch (MuleException e)
         {
             log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -766,6 +773,114 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
+
+    @Override
+    public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
+    {
+        AcmFolder rootFolder = container.getFolder();
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        findFolderChildren(rootFolder, childrenFiles, childrenFolders);
+
+        Function<AcmObject, String> acmObjectToKey = acmObject ->
+                String.format("%s_%d", acmObject.getObjectType(), acmObject.getId());
+
+        Map<String, String> folderContentFolderEntries = childrenFolders.stream()
+                .collect(Collectors.toMap(acmObjectToKey, AcmFolder::getObjectType));
+
+        folderContentFolderEntries.put(acmObjectToKey.apply(rootFolder), rootFolder.getObjectType());
+
+        Map<String, String> folderContentEntries = childrenFiles.stream()
+                .collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
+
+        folderContentEntries.putAll(folderContentFolderEntries);
+
+        log.info("Putting object locks");
+        putObjectLocks(folderContentEntries, authentication);
+
+        log.info("Deleting container and it's content");
+        deleteContainer(container.getId(), authentication);
+
+        log.info("Removing object locks");
+        removeObjectLocks(folderContentEntries, authentication);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException
+    {
+        AcmContainer container = containerDao.find(containerId);
+        AcmFolder rootFolder = container.getFolder();
+        deleteContainerAndContent(container, authentication.getName());
+        deleteAlfrescoFolderTree(rootFolder);
+    }
+
+    private void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    {
+        for (EcmFile file : files)
+        {
+            log.info("Delete file with id: [{}]", file.getId());
+            fileDao.deleteFile(file.getId());
+
+            acmProgressIndicator.setProgress(calculateProgress(progressCounter, total));
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+            progressCounter++;
+        }
+    }
+
+    private void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    {
+        for (AcmFolder subFolder : folders)
+        {
+            log.info("Delete folder with id: [{}]", subFolder.getId());
+            folderDao.deleteFolder(subFolder.getId());
+
+            acmProgressIndicator.setProgress(calculateProgress(progressCounter, total));
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+            progressCounter++;
+        }
+    }
+
+    @Async
+    @Transactional
+    public void deleteContainerAndContent(AcmContainer container, String user)
+    {
+        AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
+        acmProgressIndicator.setObjectId(container.getId());
+        acmProgressIndicator.setObjectType(AcmFolderConstants.CONTAINER_OBJECT_TYPE);
+        acmProgressIndicator.setUser(user);
+
+        AcmFolder rootFolder = container.getFolder();
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        findFolderChildren(rootFolder, childrenFiles, childrenFolders);
+        int totalEntriesCount = childrenFiles.size() + childrenFolders.size() + 1;
+        int counter = 1;
+
+        // delete everything from the root folder first
+        // EcmFile has foreign key to the container
+        deleteFilesWithProgress(childrenFiles, acmProgressIndicator, counter, totalEntriesCount);
+
+        counter += childrenFiles.size();
+
+        // sort by latest entry to avoid constraint violation
+        childrenFolders = childrenFolders.stream()
+                .sorted(Comparator.comparing(AcmFolder::getId).reversed())
+                .collect(Collectors.toSet());
+
+        counter += childrenFolders.size();
+
+        deleteFoldersWithProgress(childrenFolders, acmProgressIndicator, counter, totalEntriesCount);
+
+        log.info("Delete container with id: [{}] and root folder with id: [{}]", container.getId(), rootFolder.getId());
+        // deleting the container will delete the ROOT folder
+        containerDao.delete(container.getId());
+        acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount)); // 100%
+        applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+    }
+
     @Async
     @Transactional
     private void deleteFolderContent(Long folderId, String user)
@@ -779,37 +894,27 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Set<EcmFile> childrenFiles = new HashSet<>();
         Set<AcmFolder> childrenFolders = new HashSet<>();
 
-        if (folder != null)
+        if (folder == null)
         {
-            findFolderChildren(folder, childrenFiles, childrenFolders);
+            return;
         }
+        findFolderChildren(folder, childrenFiles, childrenFolders);
+
         int totalEntriesCount = childrenFiles.size() + childrenFolders.size() + 1;
         int counter = 1;
 
-        for (EcmFile file : childrenFiles)
-        {
-            log.info("Delete file with id: [{}]", file.getId());
-            fileDao.deleteFile(file.getId());
+        deleteFilesWithProgress(childrenFiles, acmProgressIndicator, counter, totalEntriesCount);
 
-            acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount));
-            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
-            counter++;
-        }
+        counter += childrenFiles.size();
 
         // sort by latest entry to avoid constraint violation
         childrenFolders = childrenFolders.stream()
                 .sorted(Comparator.comparing(AcmFolder::getId).reversed())
                 .collect(Collectors.toSet());
 
-        for (AcmFolder subFolder : childrenFolders)
-        {
-            log.info("Delete folder with id: [{}]", subFolder.getId());
-            folderDao.deleteFolder(subFolder.getId());
+        counter += childrenFolders.size();
 
-            acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount));
-            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
-            counter++;
-        }
+        deleteFoldersWithProgress(childrenFolders, acmProgressIndicator, counter, totalEntriesCount);
 
         log.info("Delete root folder with id: [{}]", folderId);
         folderDao.deleteFolder(folderId);
@@ -1198,13 +1303,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             log.error("Couldn't find the container of the folder with ID {}", inputId);
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Container not found", e);
         }
-    }
-
-    @Override
-    @Transactional
-    public void deleteContainer(Long containerId)
-    {
-        containerDao.delete(containerId);
     }
 
     /**
