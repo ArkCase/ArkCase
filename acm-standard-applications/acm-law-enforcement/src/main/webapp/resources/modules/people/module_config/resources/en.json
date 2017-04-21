@@ -52,8 +52,10 @@
       "thumbnail": "Thumbnail",
       "title": "Filename",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "dialog": {
       "title": "Upload Picture",
@@ -66,14 +68,49 @@
       "browse": "Browse"
     }
   },
+  "people.comp.addresses": {
+    "title": "Addresses",
+    "table.columns": {
+      "type": "Type",
+      "streetAddress": "Address 1",
+      "streetAddress2": "Address 2",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "addNew": "Add New",
+      "map": "Map"
+    },
+    "modal": {
+      "addAddress": "Add Address",
+      "editAddress": "Edit Record",
+      "addressTypes.label": "Address Types",
+      "streetAddress.label": "Address 1",
+      "streetAddress2.label": "Address 2",
+      "city.label": "City",
+      "zip.label": "Zip",
+      "state.label": "State",
+      "country.label": "Country",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Save"
+    }
+  },
   "people.comp.phones": {
     "title": "Phones Numbers",
     "table.columns": {
       "type": "Phone Type",
       "value": "Phone Number",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -100,8 +137,10 @@
       "type": "Email Address Type",
       "value": "Emails Address",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -128,8 +167,10 @@
       "type": "Type",
       "value": "Url",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -160,8 +201,10 @@
     "table.columns": {
       "aliasValue": "Alias",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "dialog": {
       "title": "Insert New Alias",
@@ -175,6 +218,40 @@
       "aliasType": "Alias Type"
     },
     "noData": "No data"
+  },
+  "people.comp.ids": {
+    "title": "IDs",
+    "table.columns": {
+      "type": "Type",
+      "id": "ID",
+      "number": "Number",
+      "issuer": "Issuer",
+      "yearIssued": "Year Issued",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New"
+    },
+    "modal": {
+      "addID": "Add New Identification",
+      "editID": "Edit Identification",
+      "title": "Add New Identification",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "type.label": "Type",
+      "id.label": "ID",
+      "number.label": "Number",
+      "issuer.label": "Issuer",
+      "yearIssued.label": "Year Issued",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Ok"
+    }
   },
   "people.comp.editPerson": {
     "title": "Person",
