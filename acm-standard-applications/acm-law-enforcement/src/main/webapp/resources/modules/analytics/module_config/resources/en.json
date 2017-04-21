@@ -1,8 +1,8 @@
 {
   "analytics": {
-    "title": "Analytics",
+    "title": "Data Analytics",
     "menus": {
-      "leftnav.item": "Analytics"
+      "leftnav.item": "Data Analytics"
     }
   }
 }

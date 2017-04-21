@@ -33,6 +33,9 @@ angular.module('analytics').controller('AnalyticsController', ['$scope', 'Lookup
 
             $scope.data.slkHost = elkConfig['slk.server.internal.url'];
             $scope.data.slkPort = elkConfig['slk.server.internal.port'];
+
+            $scope.data.slkExternalUrl = elkConfig['slk.server.external.url'];
+
             $scope.data.slkDashboard = elkConfig['slk.server.dashboard.url'];
             $scope.bananaUrl = BuildUrl.getUrlBanana($scope.data);
 
