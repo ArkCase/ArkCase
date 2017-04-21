@@ -12,4 +12,8 @@
         <property name="emailSenderPropertiesResource" value="file:${user.home}/.arkcase/acm/acmEmailSender.properties"/>
     </bean>
 
+    <bean id="emailSenderPropertyFileLocation" class="java.lang.String">
+        <constructor-arg value="${user.home}/.arkcase/acm/acmEmailSender.properties"/>
+    </bean>
+
 </beans>

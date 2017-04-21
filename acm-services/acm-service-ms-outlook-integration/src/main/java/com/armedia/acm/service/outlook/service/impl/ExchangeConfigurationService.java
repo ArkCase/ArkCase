@@ -6,6 +6,7 @@ import com.armedia.acm.service.outlook.model.ExchangeConfigurationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.Authentication;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class ExchangeConfigurationService
 
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public void writeConfiguration(ExchangeConfiguration configuration)
+    public void writeConfiguration(ExchangeConfiguration configuration, Authentication auth)
     {
 
         Properties exchangeProperties = new Properties();
@@ -45,7 +46,7 @@ public class ExchangeConfigurationService
         try
         {
             exchangeProperties.store(new FileOutputStream(exchangePropertiesResource.getFile()),
-                    String.format("Updated from ", getClass().getName()));
+                    String.format("Updated by %s", auth.getName()));
         } catch (IOException e)
         {
             log.error("Could not write properties to {} file.", exchangePropertiesResource.getFilename());
