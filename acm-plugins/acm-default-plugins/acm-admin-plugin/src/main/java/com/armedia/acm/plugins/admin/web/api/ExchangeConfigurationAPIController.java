@@ -34,6 +34,7 @@ public class ExchangeConfigurationAPIController
     }
 
     @RequestMapping(value = "/exchange/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public void updateConfiguration(@RequestBody ExchangeConfiguration configuration)
     {
         exchangeConfigurationService.writeConfiguration(configuration);

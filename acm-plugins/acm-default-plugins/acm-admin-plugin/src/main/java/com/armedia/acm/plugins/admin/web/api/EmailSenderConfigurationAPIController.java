@@ -34,6 +34,7 @@ public class EmailSenderConfigurationAPIController
     }
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
     public void updateConfiguration(@RequestBody EmailSenderConfiguration configuration)
     {
         emailSenderConfigurationService.writeConfiguration(configuration);
