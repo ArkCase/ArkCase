@@ -1,10 +1,20 @@
 'use strict';
-angular.module('dashboard.my-complaints')
-    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
+/**
+ * @ngdoc controller
+ * @name dashboard.my-cases.controller:Dashboard.MyCasesController
+ *
+ * @description
+ *
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/controllers/components/my-cases.client.controller.js modules/dashboard/controllers/components/my-cases.client.controller.js}
+ *
+ * Loads cases in the "My Cases" widget.
+ */
+angular.module('dashboard.my-cases')
+    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
         function ($scope, $translate, Authentication, DashboardService) {
             var vm = this;
             $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'myComplaints');
+            $scope.$emit('req-component-config', 'myCases');
             vm.config = null;
             var userInfo = null;
             var paginationOptions = {
@@ -13,8 +23,22 @@ angular.module('dashboard.my-complaints')
                 sortBy: 'id',
                 sortDir: 'desc'
             };
+            /**
+             * @ngdoc method
+             * @name openViewer
+             * @methodOf dashboard.my-cases.controller:Dashboard.MyCasesController
+             *
+             * @param {Object} data from the current row of the ui-grid (including the file id)
+             *
+             * @description
+             * This method opens the selected file in the snowbound viewer
+             */
+            vm.openViewer = function (rowData) {
+                if (rowData && rowData.entity.object_id_s) {
+                    window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main', '_self');
+                }
+            };
             vm.gridOptions = {
-                appScopeProvider: vm,
                 enableColumnResizing: true,
                 enableRowSelection: true,
                 enableSelectAll: false,
@@ -43,13 +67,13 @@ angular.module('dashboard.my-complaints')
                 }
             };
             function applyConfig(e, componentId, config) {
-                if (componentId == 'myComplaints') {
+                if (componentId == 'myCases') {
                     vm.config = config;
-                    vm.gridOptions.columnDefs = vm.config.columnDefs;
-                    vm.gridOptions.enableFiltering = vm.config.enableFiltering;
-                    vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
-                    vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
-                    paginationOptions.pageSize = vm.config.paginationPageSize;
+                    vm.gridOptions.columnDefs = config.columnDefs;
+                    vm.gridOptions.enableFiltering = config.enableFiltering;
+                    vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                    vm.gridOptions.paginationPageSize = config.paginationPageSize;
+                    paginationOptions.pageSize = config.paginationPageSize;
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
                         getPage();
@@ -59,7 +83,7 @@ angular.module('dashboard.my-complaints')
             }
 
             function getPage() {
-                DashboardService.queryMyComplaints({
+                DashboardService.queryMyCases({
                         userId: userInfo.userId,
                         groupId: userInfo.groupId,
                         sortBy: paginationOptions.sortBy,
