@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
@@ -128,4 +129,10 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         return AcmContainer.class;
     }
 
+    @Transactional
+    public void delete(Long id)
+    {
+        AcmContainer container = getEm().find(getPersistenceClass(), id);
+        getEm().remove(container);
+    }
 }

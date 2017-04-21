@@ -21,7 +21,8 @@
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
-    "delete.button": "Delete Repository"
+    "delete.button": "Delete Repository",
+    "confirm.delete.documentRepository.msg": "This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "Details",

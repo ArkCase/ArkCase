@@ -31,6 +31,7 @@ public class AcmProgressNotifier implements ApplicationListener<AcmProgressEvent
         message.put("current", current);
         message.put("total", total);
         message.put("user", user);
+        message.put("eventType", "live_progress");
         Message<Map<String, Object>> progressMessage = MessageBuilder.withPayload(message).build();
         genericMessagesChannel.send(progressMessage);
     }

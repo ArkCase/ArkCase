@@ -13,7 +13,9 @@
 
         <div class="pull-right">
             <div class="btn-group">
-                <button class="btn btn-sm btn-default" ng-click="delete(objectInfo.id)">
+                <button class="btn btn-sm btn-default" ng-bootbox-confirm-action="delete(objectInfo.id)"
+                        ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
+                        {{ 'document-repository.comp.actions.confirm.delete.documentRepository.msg' | translate}}">
                     <i class="fa fa-trash-o"></i>
                     <span translate>document-repository.comp.actions.delete.button</span>
                 </button>
