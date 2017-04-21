@@ -1,0 +1,30 @@
+<div ng-controller="People.AddressesController">
+    <div class="panel panel-success panel-grid">
+        <div class="row">
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" ng-click="map()">
+                    <span translate>people.comp.addresses.actions.map</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="addNew()">
+                    <span translate>people.comp.addresses.actions.addNew</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>people.comp.addresses.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 ui-grid-edit
+                 ui-grid-cell-nav
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>
