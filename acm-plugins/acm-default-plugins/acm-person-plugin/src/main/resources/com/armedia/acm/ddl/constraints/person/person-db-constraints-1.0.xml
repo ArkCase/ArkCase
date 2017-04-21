@@ -124,5 +124,19 @@
                                  referencedColumnNames="cm_person_alias_id"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person"
+                                 baseColumnNames="cm_default_organization"
+                                 constraintName="fk_default_organization"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person"
+                                 baseColumnNames="cm_default_identification"
+                                 constraintName="fk_default_identification"
+                                 referencedTableName="acm_identification"
+                                 referencedColumnNames="cm_identification_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>
