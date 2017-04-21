@@ -50,15 +50,16 @@ public interface EcmFileService
             Long parentObjectId,
             String cmisRepositoryId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
-    /** This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
+    /**
+     * This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
      *
-     * @param fileType The application file type: roi, complaint, attachment...
-     * @param file The file to be uploaded
-     * @param authentication User who has uploaded the file
+     * @param fileType           The application file type: roi, complaint, attachment...
+     * @param file               The file to be uploaded
+     * @param authentication     User who has uploaded the file
      * @param targetCmisFolderId ID of the folder where the file should be stored
-     * @param parentObjectType Type of the object that contains this file - task, case file, complaint...
-     * @param parentObjectId ID  of the parent object
+     * @param parentObjectType   Type of the object that contains this file - task, case file, complaint...
+     * @param parentObjectId     ID  of the parent object
      * @return EcmFile object representing the uploaded file.
      * @throws AcmCreateObjectFailedException
      */
@@ -72,7 +73,6 @@ public interface EcmFileService
             Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
-     * 
      * @param ecmFile
      * @param file
      * @param authentication
@@ -80,12 +80,11 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile update(
-    		EcmFile ecmFile,
+            EcmFile ecmFile,
             MultipartFile file,
             Authentication authentication) throws AcmCreateObjectFailedException;
 
     /**
-     *
      * @param ecmFile
      * @param inputStream
      * @param authentication
@@ -98,7 +97,6 @@ public interface EcmFileService
             Authentication authentication) throws AcmCreateObjectFailedException;
 
     /**
-     * 
      * @param id - id of EcmFile
      * @return
      * @throws AcmObjectNotFoundException
@@ -107,7 +105,6 @@ public interface EcmFileService
 
 
     /**
-     *
      * @param id - id of EcmFile
      * @return InputStream from the CMIS payload
      * @throws AcmObjectNotFoundException
@@ -120,6 +117,7 @@ public interface EcmFileService
 
     /**
      * Create a folder in the CMIS repository
+     *
      * @param folderPath The path to be created.  If it already exists, the ID of the existing folder is returned.
      * @return CMIS Object ID of the new folder (if it was created), or the existing folder (if the folderPath already
      * existed).  Either way, the object ID represents the folder at the requested folderPath.
@@ -137,7 +135,6 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException If the folder could not be created.
      */
     String createFolder(String folderPath, String cmisRepositoryId) throws AcmCreateObjectFailedException;
-
 
 
     @Transactional
@@ -169,16 +166,16 @@ public interface EcmFileService
     void declareFileAsRecord(Long fileId, Authentication authentication)
             throws AcmObjectNotFoundException;
 
-    void declareFolderAsRecord(Long folderId, Authentication authentication,String parentObjectType, Long parentObjectId)
+    void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
             throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     AcmCmisObjectList allFilesForFolder(Authentication auth,
                                         AcmContainer container, Long folderId)
             throws AcmListObjectsFailedException;
 
-    EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+    EcmFile copyFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId ) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
+    EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, Long dstFolderId) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     EcmFile moveFile(Long fileId, Long targetObjectId, String targetObjectType, AcmFolder folder) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
@@ -194,13 +191,16 @@ public interface EcmFileService
 
     AcmCmisObjectList listAllSubFolderChildren(String category, Authentication auth, AcmContainer container, Long folderId, int startRow, int maxRows, String sortBy, String sortDirection) throws AcmListObjectsFailedException, AcmObjectNotFoundException;
 
-    EcmFile setFilesActiveVersion(Long fileId,String versionTag) throws PersistenceException;
+    EcmFile setFilesActiveVersion(Long fileId, String versionTag) throws PersistenceException;
 
     EcmFile copyFile(Long documentId, AcmFolder targetFolder, AcmContainer targetContainer) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     EcmFile updateFileType(Long fileId, String fileType) throws AcmObjectNotFoundException;
 
+    @Transactional
+    EcmFile updateFile(EcmFile file) throws AcmObjectNotFoundException;
+
     int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth);
-    
+
     EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException;
 }
