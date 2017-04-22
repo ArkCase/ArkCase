@@ -29,5 +29,5 @@
         <module>acm-document-repository-plugin</module>
         <module>acm-analytics-plugin</module>
         <module>acm-analytics-audit-plugin</module>
-  </modules>
+    </modules>
 </project>
