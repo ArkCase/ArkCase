@@ -1,0 +1,27 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" translate>{{widget.title}}</h4>
+</div>
+<div class="modal-body">
+  <form role="form">
+    <div class="form-group">
+      <label for="widgetTitle" ng-bind="translate('ADF_COMMON_TITLE')">Title</label>
+
+      <label for="widgetTitle" translate>{{ADF_COMMON_TITLE}}</label>
+      <label for="widgetTitle" translate>ADF_COMMON_TITLE</label>
+
+      <!--
+      <input type="text" class="form-control" id="widgetTitle" ng-model="definition.title" placeholder="Enter title" required="">
+      -->
+      <input type="text" class="form-control" id="widgetTitle" value="{{definition.title | translate}}" readonly>
+    </div>
+  </form>
+  <div ng-if="widget.edit">
+    <adf-widget-content model="definition" content="widget.edit" />
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="closeDialog()" ng-bind="translate('ADF_COMMON_CANCEL')">Cancel</button>
+  <button type="button" class="btn btn-primary" ng-click="saveDialog()" ng-bind="translate('ADF_COMMON_APPLY')">Apply</button>
+</div>
+

@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dashboard.my-cases', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('myCases', {
-                title: 'My Cases',
-                description: 'Displays my cases',
+                title: 'dashboard.widgets.myCases.title',
+                description: 'dashboard.widgets.myCases.description',
                 controller: 'Dashboard.MyCasesController',
                 controllerAs: 'myCases',
                 reload: true,

@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
+  <h4 class="modal-title" ng-bind="translate('ADF_WIDGET_ADD_HEADER')">Add new widget</h4>
+</div>
+<div class="modal-body">
+  <div style="display: inline-block;">
+    <dl class="dl-horizontal">
+      <dt ng-repeat-start="(key, widget) in widgets">
+        <a href="" ng-click="addWidget(key)">
+          <span translate>{{widget.title}}</span>
+        </a>
+      </dt>
+      <dd ng-repeat-end ng-if="widget.description">
+        <span translate>{{widget.description}}</span>
+      </dd>
+    </dl>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" ng-click="closeDialog()" ng-bind="translate('ADF_COMMON_CLOSE')">Close</button>
+</div>

@@ -1,6 +1,4 @@
 <div class="modal-header">
-    <span>__hijacked2__</span>
-    <span translate>dashboard.widgets.title</span>
     <button type="button" class="close" ng-click="closeDialog()" aria-hidden="true">&times;</button>
     <h4 class="modal-title" ng-bind="translate('ADF_COMMON_EDIT_DASHBOARD')">Edit Dashboard</h4>
 </div>
@@ -8,11 +6,14 @@
     <form role="form">
         <div class="form-group">
             <label for="dashboardTitle" ng-bind="translate('ADF_COMMON_TITLE')">Title</label>
+            <!--
             <input type="text" class="form-control" id="dashboardTitle" ng-model="copy.title" required="">
+            -->
+            <input type="text" class="form-control" id="dashboardTitle" value="{{copy.title | translate}}" readonly>
         </div>
         <div class="form-group">
             <label ng-bind="translate('ADF_EDIT_DASHBOARD_STRUCTURE_LABEL')">Structure</label>
-            <div class="radio" ng-repeat="(key, structure) in structures" class="structure">
+            <div class="radio" ng-repeat="(key, structure) in structures">
                 <label>
                     <input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)" class="{{key}}">
                     <img src="assets/img/dashboard/{{key}}.png" alt="{{key}}">{{key}}
@@ -24,3 +25,4 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="closeDialog()" ng-bind="translate('ADF_COMMON_CLOSE')">Close</button>
 </div>
+
