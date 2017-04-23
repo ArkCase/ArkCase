@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dashboard.cases-by-queue', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('casesByQueue', {
-                title: 'Cases by Queue',
-                description: 'Displays cases files by queue',
+                title: 'dashboard.widgets.casesByQueue.title',
+                description: 'dashboard.widgets.casesByQueue.description',
                 controller: 'Dashboard.CasesByQueueController',
                 controllerAs: 'casesByQueue',
                 reload: true,

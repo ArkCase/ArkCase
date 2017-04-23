@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dashboard.cases-by-status', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('casesByStatus', {
-                title: 'Cases by Status',
-                description: 'Displays cases by status',
+                title: 'dashboard.widgets.casesByStatus.title',
+                description: 'dashboard.widgets.casesByStatus.description',
                 controller: 'Dashboard.CasesByStatusController',
                 controllerAs: 'casesByStatus',
                 reload: true,
