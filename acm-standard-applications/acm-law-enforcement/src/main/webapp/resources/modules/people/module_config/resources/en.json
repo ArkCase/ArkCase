@@ -256,6 +256,7 @@
   "people.comp.editPerson": {
     "title": "Person",
     "addAnother": "Add Another",
+    "remove": "Remove",
     "familyName": "Last Name",
     "familyName.placeholder": "Enter Last Name",
     "givenName": "First Name",
@@ -275,6 +276,42 @@
       "url.placeholder": "Enter URL",
       "removeContactMethod": "Remove",
       "urlType": "URL Type"
+    },
+    "organizations": {
+      "title": "Organizations"
+    },
+    "picture": {
+      "title": "Picture"
+    },
+    "locations": {
+      "title": "Locations",
+      "country": "Country",
+      "country.placeholder": "Select Country",
+      "state": "State",
+      "state.placeholder": "Enter State",
+      "zip": "Zip",
+      "zip.placeholder": "Enter Zip",
+      "city": "City",
+      "city.placeholder": "Enter City",
+      "type": "Address Type",
+      "type.placeholder": "Select Address Type",
+      "streetAddress": "Street Address",
+      "streetAddress.placeholder": "Enter Street Address",
+      "streetAddress2": "Street Address2",
+      "streetAddress2.placeholder": "Enter Street Address2"
+    },
+    "identification": {
+      "title": "Identifications",
+      "identificationID": "Identification ID",
+      "identificationID.placeholder": "Enter Identification ID",
+      "identificationType": "Identification Type",
+      "identificationType.placeholder": "Select Identification Type",
+      "identificationNumber": "Identification Number",
+      "identificationNumber.placeholder": "Enter Identification Number",
+      "identificationIssuer": "Identification Issuer",
+      "identificationIssuer.placeholder": "Enter Identification Issuer",
+      "identificationYearIssued": "Identification Issued",
+      "identificationYearIssued.placeholder": "Select Identification Issued"
     }
   },
   "people.menus.topbar.item": "New Person"

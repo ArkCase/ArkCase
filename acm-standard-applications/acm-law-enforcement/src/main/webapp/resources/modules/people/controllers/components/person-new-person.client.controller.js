@@ -3,16 +3,19 @@
 angular.module('people').controller('People.NewPersonController', ['$scope', '$stateParams', '$translate'
     , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout'
     , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout) {
-
+        //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
             'phone': 0,
             'email': 0
         };
+
         //new person with predefined values
         $scope.person = {
             className: 'com.armedia.acm.plugins.person.model.Person',
             contactMethods: [],
+            identifications: [],
+            addresses: [],
             defaultEmail: {
                 type: 'email'
             },
@@ -24,10 +27,27 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }
         };
 
+        //contact methods subtypes types
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
-            $scope.phoneTypes = _.find(contactMethodTypes, {type: 'phone'}).subTypes;
-            $scope.emailTypes = _.find(contactMethodTypes, {type: 'email'}).subTypes;
-            $scope.urlTypes = _.find(contactMethodTypes, {type: 'url'}).subTypes;
+            $scope.cmTypes = {};
+            _.each(contactMethodTypes, function (cmType) {
+                $scope.cmTypes[cmType.type] = cmType;
+            });
+
+            //used for generating the view for communication accounts
+            $scope.communicationAccountsTypes = ['phone', 'email', 'url'];
+        });
+
+        ObjectLookupService.getIdentificationTypes().then(function (identificationTypes) {
+            $scope.identificationTypes = identificationTypes;
+        });
+
+        ObjectLookupService.getCountries().then(function (countries) {
+            $scope.countries = countries;
+        });
+
+        ObjectLookupService.getAddressTypes().then(function (addressTypes) {
+            $scope.addressTypes = addressTypes;
         });
 
         $scope.addContactMethod = function (contactType) {
@@ -50,6 +70,36 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.showAddAnotherContactMethod = function (contactType) {
             return contactMethodsCounts[contactType] < 1;
+        };
+
+        $scope.addIdentification = function () {
+            $timeout(function () {
+                //add empty identification
+                $scope.person.identifications.push({});
+            }, 0);
+        };
+
+        $scope.removeIdentification = function (identification) {
+            $timeout(function () {
+                _.remove($scope.person.identifications, function (object) {
+                    return object === identification;
+                });
+            }, 0);
+        };
+
+        $scope.addAddress = function () {
+            $timeout(function () {
+                //add empty address
+                $scope.person.addresses.push({});
+            }, 0);
+        };
+
+        $scope.removeAddress = function (address) {
+            $timeout(function () {
+                _.remove($scope.person.addresses, function (object) {
+                    return object === address;
+                });
+            }, 0);
         };
 
         $scope.save = function () {
@@ -78,8 +128,17 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             if (!person.defaultUrl.value) {
                 person.defaultUrl = null;
             }
-            //TODO do same for aliases, address, etc...
+            //TODO do same for aliases, address... all defaults
             return person;
+        }
+
+        /**
+         * capitalize first Letter in the string
+         * @param input
+         * @returns capitalized string
+         */
+        $scope.capitalizeFirstLetter = function (input) {
+            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
         }
     }
 ]);

@@ -530,6 +530,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return LookupService.getLookup("identificationTypes");
         };
 
+        /**
+         * @ngdoc method
+         * @name getCountries
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of countries
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getCountries = function () {
+            return LookupService.getLookup("countries");
+        };
+
         return Service;
     }
 ]);
