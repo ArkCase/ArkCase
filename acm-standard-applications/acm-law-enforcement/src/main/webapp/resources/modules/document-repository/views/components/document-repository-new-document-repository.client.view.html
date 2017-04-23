@@ -11,9 +11,10 @@
                             <button type="button" class="btn btn-default btn-sm" id="cancelButton" ng-click="onCancel()">
                                 <span translate>document-repository.newRepository.cancelButton</span>
                             </button>
-                            <button type="submit" ng-disabled="repository.$invalid || saved"
+                            <button type="submit" ng-disabled="repository.$invalid || loading"
                                     class="btn btn-primary btn-sm" id="saveButton">
-                                <i class="fa fa-floppy-o"></i>
+                                <i class="fa fa-floppy-o" ng-hide="loading"></i>
+                                <i class="fa fa-circle-o-notch" ng-show="loading"></i>
                                 <span translate>document-repository.newRepository.saveButton</span>
                             </button>
                         </div>

@@ -83,13 +83,10 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
-    , 'EcmService'
-    , function ($q, $translate, $modal, $filter, $log, $injector
-        , Store, Util, UtilDateService, ConfigService, UserInfoService
-        , Ecm
-    ) {
+angular.module('directives').directive('docTree', ['$rootScope', '$q', '$translate', '$modal', '$filter', '$log', '$injector'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService', 'EcmService'
+    , function ($rootScope, $q, $translate, $modal, $filter, $log, $injector
+        , Store, Util, UtilDateService, ConfigService, UserInfoService, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -821,6 +818,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
+                if(DocTree.isFolderNode(data.node)){
+                    DocTree.Op.addFolderActionBtns();
+                }
+                if(DocTree.isFileNode(data.node)){
+                    DocTree.Op.removeFolderActionBtns();
+                }
                 if (DocTree.isSpecialNode(data.node)) {
                     DocTree.Paging.doPaging(data.node);
                 }
@@ -2988,7 +2991,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-
+                , addFolderActionBtns: function () {
+                    $rootScope.$broadcast('showFolderActionBtns', {command: DocTree.Command});
+                }
+                , removeFolderActionBtns: function(){
+                    $rootScope.$broadcast('hideFolderActionBtns');
+                }
             } // end Op
 
 
