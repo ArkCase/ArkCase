@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
-    , '$modal', '$q', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService'
+    , '$modal', '$q', '$timeout', 'UtilService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
     , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , function ($scope, $stateParams, $modal, $q, $timeout, Util, ConfigService, ObjectService, ObjectLookupService
+    , function ($scope, $stateParams, $modal, $q, $timeout, Util, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
         , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin) {
 
@@ -65,7 +65,6 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
         };
-
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
