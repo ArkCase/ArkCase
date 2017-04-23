@@ -1315,3 +1315,7 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     cursor: not-allowed;
     pointer-events: none;
 }
+.user-picker-input {
+    background-color: white !important;
+    cursor: pointer;
+}

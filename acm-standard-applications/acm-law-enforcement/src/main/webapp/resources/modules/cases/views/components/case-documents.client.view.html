@@ -5,6 +5,9 @@
                 <span translate>cases.comp.documents.title</span>
 
                 <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="sendEmail()">
+                        Send Email
+                    </button>
                     <button class="btn btn-default btn-xs" ng-click="onClickRefresh()"><i
                             class="fa fa-lg fa-refresh"></i></button>
                 </div>
@@ -17,9 +20,9 @@
                       ng-if="objectInfo && treeConfig">
             </doc-tree>
             <!--<doc-tree object-type="objectType" object-id="objectId" tree-control="treeControl" file-types="fileTypes"-->
-                      <!--correspondence-forms="correspondenceForms" upload-form="uploadForm" tree-config="treeConfig"-->
-                      <!--object-info="objectInfo" on-init-tree="onInitTree" read-only="{{isReadOnly(objectInfo)}}"-->
-                      <!--ng-if="objectInfo && fileTypes && correspondenceForms && treeConfig">-->
+            <!--correspondence-forms="correspondenceForms" upload-form="uploadForm" tree-config="treeConfig"-->
+            <!--object-info="objectInfo" on-init-tree="onInitTree" read-only="{{isReadOnly(objectInfo)}}"-->
+            <!--ng-if="objectInfo && fileTypes && correspondenceForms && treeConfig">-->
             <!--</doc-tree>-->
         </div>
     </div>
