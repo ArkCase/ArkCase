@@ -149,6 +149,52 @@ public class PeopleAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{personId}/cases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String
+    getCases(Authentication auth,
+             @PathVariable("personId") Long personId,
+             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:CASE_FILE AND child_id_s:%s", personId.toString());
+
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        } catch (MuleException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve cases for person id[" + personId + "]", e);
+        }
+
+    }
+
+    @RequestMapping(value = "/{personId}/complaints", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String
+    getComplaints(Authentication auth,
+             @PathVariable("personId") Long personId,
+             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:COMPLAINT AND child_id_s:%s", personId.toString());
+
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        } catch (MuleException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve cases for person id[" + personId + "]", e);
+        }
+
+    }
+
     public void setPersonService(PersonService personService)
     {
         this.personService = personService;
