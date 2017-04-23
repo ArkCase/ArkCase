@@ -17,7 +17,7 @@
       "menuItemURL": "newPerson",
       "menuItemTitle": "people.menus.topbar.item",
       "moduleId": "person",
-      "iconClass": "fa fa-check-circle",
+      "iconClass": "fa fa-user",
       "position": 30
     }
   ],

@@ -98,6 +98,16 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
+    <bean id="countriesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/countries.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
     <bean id="securityFieldTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -366,7 +376,11 @@
                     <property name="configDescription" value="Identification Types"/>
                     <property name="json" ref="identificationTypesJsonConfig"/>
                 </bean>
-
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="countries"/>
+                    <property name="configDescription" value="Countries"/>
+                    <property name="json" ref="countriesJsonConfig"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
