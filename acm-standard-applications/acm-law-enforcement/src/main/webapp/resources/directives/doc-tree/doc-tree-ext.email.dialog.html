@@ -1,21 +1,63 @@
 <div class="modal-header">
     <h3 translate>common.directive.docTree.emailDialog.title</h3>
 </div>
-
-<div>
-    <search-modal config="config"
-                  filter='"Object Type": USER'
-                  search-control="searchControl"
-                  on-items-selected="onItemsSelected"
-            />
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="recipients">
+                <span translate>common.directive.docTree.emailDialog.recipients.label</span>
+                <span class="required-asterisk">*</span>
+            </label>
+            <textarea name="textarea" id="recipients" ng-model="recipientsStr" class="user-picker-input input-md form-control"
+                      placeholder="{{ 'common.directive.docTree.emailDialog.recipients.placeholder' | translate }}" ng-click="chooseRecipients()" readonly required></textarea>
+        </div>
+        <div class="col-sm-12 form-group">
+            <label for="subject">
+                <span translate>common.directive.docTree.emailDialog.subject.label</span>
+            </label>
+            <input name="subject" type="text" class="form-control" ng-model="emailDataModel.subject" placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
+        </div>
+        <div class="col-sm-12 form-group">
+            <summernote config="summernoteOptions" ng-model="emailDataModel.body"></summernote>
+        </div>
+        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowSending">
+            <label for="attachments">
+                <span translate>common.directive.docTree.emailDialog.attachments.label</span>
+            </label>
+            <fieldset id="attachments" class="well-sm">
+                <label ng-repeat="node in nodes" class="checkbox-inline">
+                    <input
+                            type="checkbox"
+                            value="{{node.data.objectId}}"
+                            ng-checked="emailDataModel.selectedFilesToEmail.indexOf(node.data.objectId) > -1">
+                    <span>
+                        {{node.data.name + '' + node.data.ext}}
+                    </span>
+                </label>
+            </fieldset>
+        </div>
+        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowSending">
+            <label for="deliveryMethod">
+                <span translate>common.directive.docTree.emailDialog.deliveryMethod.label</span>
+            </label>
+            <fieldset id="deliveryMethod" class="well-sm">
+                <label ng-if="emailSendConfiguration.allowAttachments" class="radio-inline">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS">
+                    <span translate>
+                    common.directive.docTree.emailDialog.sendWithAttachments.checkbox
+                </span>
+                </label>
+                <label ng-if="emailSendConfiguration.allowHyperlinks" class="radio-inline">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_HYPERLINKS">
+                    <span translate>
+                                  common.directive.docTree.emailDialog.sendWithHyperlink.checkbox
+                              </span>
+                </label>
+            </fieldset>
+        </div>
+    </div>
 </div>
-
 <div class="modal-footer">
-    <label class="pull-left">
-        <span translate>common.directive.docTree.emailDialog.recipients</span>
-    </label>
-    <textarea class="form-control input-md" ng-model="recipientsStr" ng-change="onChangeRecipients()"></textarea>
-    <br/>
     <button type="button" class="btn btn-secondary" ng-click="onClickCancel()" translate>
         common.directive.docTree.emailDialog.btnCancel.text
     </button>

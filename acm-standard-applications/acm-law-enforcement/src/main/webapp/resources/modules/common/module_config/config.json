@@ -542,17 +542,17 @@
     },
     "emailDialog": {
       "enableFiltering": false,
-      "multiSelect": false,
+      "multiSelect": true,
       "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "email_lcs",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
           "headerCellFilter": "translate"
         }
       ],

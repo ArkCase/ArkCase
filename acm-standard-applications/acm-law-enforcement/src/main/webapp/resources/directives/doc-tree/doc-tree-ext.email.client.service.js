@@ -17,9 +17,6 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
         LookupService.getConfig("notification").then(function (data) {
             Email.arkcaseUrl = Util.goodValue(data["arkcase.url"]);
             Email.arkcasePort = Util.goodValue(data["arkcase.port"]);
-            //TODO For Vladimir - This parameters should be taken from UI selection
-            Email.allowMailFilesAsAttachments = ("true" == Util.goodValue(data["notification.allowMailFilesAsAttachments"], "true"));
-            Email.allowMailFilesToExternalAddresses = ("true" == Util.goodValue(data["notification.allowMailFilesToExternalAddresses"], "true"));
         });
 
         var Email = {
@@ -55,7 +52,6 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
                     {
                         name: "email",
                         execute: function (nodes, args) {
-                            var node = nodes[0];
                             Email.openModal(DocTree, nodes);
                         }
                     }
@@ -70,7 +66,9 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
 
             , openModal: function (DocTree, nodes) {
                 var params = {
-                    config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {})
+                    config: Util.goodMapValue(DocTree.treeConfig, "emailDialog", {}),
+                    nodes: nodes,
+                    emailSendConfiguration: DocTree.treeConfig.emailSendConfiguration
                 };
 
                 var modalInstance = $modal.open({
@@ -84,19 +82,16 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
                         }
                     }
                 });
-                modalInstance.result.then(function (recipients) {
-                    if (!Util.isArrayEmpty(recipients)) {
-                        var emailAddresses = _.pluck(recipients, "email");
+                modalInstance.result.then(function (res) {
+                    var emailAddresses = _.pluck(recipients, "email");
 
-                        if (Email.allowMailFilesAsAttachments) {
-                            var emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, emailAddresses, nodes);
-                            EcmEmailService.sendEmailWithAttachments(emailData);
-                        }
-                        else {
-                            //var emailData = Email._makeEmailDataForEmailWithLinks(DocTree, emailAddresses, nodes, title);
-                            var emailData = Email._makeEmailDataForEmailWithLinks(DocTree, emailAddresses, nodes);
-                            EcmEmailService.sendEmail(emailData);
-                        }
+                    if (res.action === 'SEND_ATTACHMENTS') {
+                        var emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res.recipients, res.selectedFilesToEmail);
+                        EcmEmailService.sendEmailWithAttachments(emailData);
+                    }
+                    else if(res.action === 'SEND_HYPERLINKS') {
+                        var emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res.recipients, res.selectedFilesToEmail);
+                        EcmEmailService.sendEmail(emailData);
                     }
                 });
             }
@@ -115,32 +110,25 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
 
                 return "";
             }
-            , _makeEmailDataForEmailWithLinks: function (DocTree, emailAddresses, nodes, title) {
+            , _makeEmailDataForEmailWithLinks: function (DocTree, emailAddresses, nodeIds, title) {
                 var emailData = {};
                 emailData.subject = this._buildSubject(DocTree);
                 emailData.title = Util.goodValue(title, $translate.instant("common.directive.docTree.email.defaultTitle"));
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
                 emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
                 emailData.emailAddresses = emailAddresses;
-                emailData.fileIds = Email._extractFileIds(nodes);
+                emailData.fileIds = nodeIds;
                 emailData.baseUrl = Email._makeBaseUrl();
                 return emailData;
             }
-            , _makeEmailDataForEmailWithAttachments: function (DocTree, emailAddresses, nodes) {
+            , _makeEmailDataForEmailWithAttachments: function (DocTree, emailAddresses, nodeIds) {
                 var emailData = {};
                 emailData.subject = this._buildSubject(DocTree);
                 emailData.body = $translate.instant("common.directive.docTree.email.bodyForAttachment");
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
                 emailData.emailAddresses = emailAddresses;
-                var attachmentIds = [];
-                if (Util.isArray(nodes)) {
-                    for (var i = 0; i < nodes.length; i++) {
-                        attachmentIds.push(Util.goodMapValue(nodes[i], "data.objectId"));
-                    }
-                }
-
-                emailData.attachmentIds = attachmentIds;
+                emailData.attachmentIds = nodeIds;
                 return emailData;
             }
             , _extractFileIds: function (nodes) {
@@ -170,56 +158,75 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
 
 
 angular.module('directives').controller('directives.DocTreeEmailDialogController', ['$scope', '$modalInstance'
-        , 'UtilService', 'params'
-        , function ($scope, $modalInstance, Util, params) {
+        , 'UtilService', 'params', 'DocTreeExt.Email', '$modal'
+        , function ($scope, $modalInstance, Util, params, DocTreeExtEmail, $modal) {
             $scope.modalInstance = $modalInstance;
             $scope.config = params.config;
-
+            $scope.emailSendConfiguration = angular.copy(params.emailSendConfiguration);
+            $scope.summernoteOptions = {
+                focus: true,
+                dialogsInBody: true,
+                height: 300
+            };
+            $scope.nodes = _.filter(params.nodes, function(node) {
+                return !node.folder;
+            });
+            $scope.emailSendConfiguration.allowSending = $scope.nodes.length > 0 ? true : false;
+            $scope.emailDataModel = {};
+            $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
+            $scope.emailDataModel.deliveryMethod = 'SEND_ATTACHMENTS';
+            var processDeliveryMethods = function() {
+                if($scope.emailSendConfiguration.allowSending) {
+                    if(!$scope.emailSendConfiguration.allowAttachments && $scope.emailSendConfiguration.allowHyperlinks) {
+                        $scope.emailDataModel.deliveryMethod = 'SEND_HYPERLINKS';
+                    } else if (!$scope.emailSendConfiguration.allowAttachments && !$scope.emailSendConfiguration.allowHyperlinks) {
+                        $scope.emailSendConfiguration.allowSending = false;
+                    }
+                }
+            };
+            processDeliveryMethods();
             $scope.recipients = [];
-            $scope.onItemsSelected = function (selectedItems, lastSelectedItems, isSelected) {
-                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
-                _.each(lastSelectedItems, function (selectedItem) {
-                    var found = _.find($scope.recipients, function (recipient) {
-                        return Util.compare(selectedItem.name, recipient.name) || Util.compare(selectedItem.email_lcs, recipient.email)
-                    });
-                    if (isSelected && !found) {
-                        $scope.recipients.push({
-                            name: Util.goodValue(selectedItem.name)
-                            , email: Util.goodValue(selectedItem.email_lcs)
-                        });
-
-                    } else if (!isSelected && found) {
-                        _.remove($scope.recipients, found);
+            var buildRecipientsStr = function(recipients) {
+                var recipientsStr = '';
+                _.forEach(recipients, function(recipient, index){
+                    if(index === 0) {
+                        recipientsStr = recipient.email;
+                    } else {
+                        recipientsStr = recipientsStr + '; ' + recipient.email;
                     }
                 });
 
-                $scope.recipientsStr = _.pluck($scope.recipients, "name").join(";");
+                return recipientsStr;
             };
-            $scope.onChangeRecipients = function () {
-                var recipientsNew = [];
-                var recipientTokens = Util.goodValue($scope.recipientsStr).split(";");
-                _.each(recipientTokens, function (token) {
-                    token = token.trim();
-                    if (!Util.isEmpty(token)) {
-                        var found = _.find($scope.recipients, function (recipient) {
-                            return (token == recipient.name || token == recipient.email);
-                        });
-                        if (found) {
-                            recipientsNew.push(found);
-                        } else {
-                            var recipientUserTyped = {name: token, email: token};
-                            recipientsNew.push(recipientUserTyped);
+            $scope.chooseRecipients = function() {
+                var modalInstance = $modal.open({
+                    templateUrl: 'directives/doc-tree/doc-tree-ext.email-recipients.dialog.html'
+                    , controller: 'directives.DocTreeEmailRecipientsDialogController'
+                    , animation: true
+                    , size: 'lg'
+                    , resolve: {
+                        config: function() {
+                            return $scope.config;
+                        },
+                        recipients: function () {
+                            return $scope.recipients;
                         }
                     }
                 });
-                $scope.recipients = recipientsNew;
+
+                modalInstance.result.then(function(recipients) {
+                    $scope.recipients = recipients;
+                    $scope.recipientsStr = buildRecipientsStr(recipients);
+                });
             };
+
             $scope.onClickCancel = function () {
                 $modalInstance.close(false);
             };
             $scope.onClickOk = function () {
-                //var a = $scope.searchControl.getSelectedItems();
-                $modalInstance.close($scope.recipients);
+                $scope.emailDataModel.action = !$scope.emailSendConfiguration.allowSending ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
+                $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
+                $modalInstance.close($scope.emailDataModel);
             };
             $scope.disableOk = function () {
                 return Util.isEmpty($scope.recipientsStr);
@@ -229,6 +236,51 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
     ]
 );
 
+angular.module('directives').controller('directives.DocTreeEmailRecipientsDialogController', ['$scope', '$modalInstance', 'DocTreeExt.Email', 'config', 'recipients',
+    function($scope, $modalInstance, DocTreeExtEmail, config, recipients) {
+        $scope.config = config;
+        $scope.recipients = angular.copy(recipients);
+
+        $scope.onSelectRecipient = function(selectedItems, lastSelectedItems, isSelected) {
+            var selectedRecipientEmail = lastSelectedItems[0].email_lcs;
+            var isRecipientSelected = _.find($scope.recipients, function(recipient) {
+                return recipient.email === selectedRecipientEmail;
+            });
+
+            var selectedRecipientDataModel = {
+                email: lastSelectedItems[0].email_lcs
+            };
+
+            if (isRecipientSelected) {
+                if (!isSelected) {
+                    _.remove($scope.recipients, function(recipient) {
+                        return recipient.email === isRecipientSelected.email;
+                    });
+                }
+            } else {
+                if (isSelected) {
+                    $scope.recipients.push(selectedRecipientDataModel);
+                }
+            }
+        };
+
+        $scope.addAdditionalRecipients = function(tag) {
+            var selectedRecipientDataModel = {
+                email: tag.email
+            };
+
+            $scope.recipients[$scope.recipients.length - 1] = selectedRecipientDataModel;
+        };
+
+        $scope.addRecipients = function() {
+            $modalInstance.close($scope.recipients);
+        };
+
+        $scope.cancel = function() {
+            $modalInstance.dismiss();
+        };
+    }
+]);
 
 
 //, validateSentEmails: function (data) {

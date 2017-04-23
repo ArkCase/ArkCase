@@ -69,9 +69,24 @@
     },
     "emailDialog": {
       "title": "Email",
-      "recipients": "Recipients:",
+      "recipients.label": "Recipients:",
+      "recipients.placeholder": "Choose recipients",
+      "subject.label": "Subject:",
+      "subject.placeholder": "Enter subject",
+      "attachments.label": "Attachments:",
+      "deliveryMethod.label": "Delivery Method:",
+      "sendWithAttachments.checkbox": "Send Email with Attachment",
+      "sendWithHyperlink.checkbox": "Send Email with Hyperlink",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Send Email",
+      "btnOk.text": "Send Email"
+    },
+    "recipientsDialog":{
+      "title": "Choose Recipients",
+      "search.placeholder": "Search Recipients",
+      "recipients.label": "Recipients:",
+      "externalRecipients.placeholder": "Enter external email addresses",
+      "cancel.button": "Cancel",
+      "addRecipients.button": "Add Recipients",
       "gridColumns": {
         "name": "Name",
         "email": "Email"
