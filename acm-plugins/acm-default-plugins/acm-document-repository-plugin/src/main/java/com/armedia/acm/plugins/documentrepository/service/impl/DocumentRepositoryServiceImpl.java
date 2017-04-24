@@ -105,6 +105,8 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public void delete(Long id, Authentication authentication) throws AcmUserActionFailedException
     {
         DocumentRepository documentRepository = documentRepositoryDao.find(id);
+        log.info("Deleting Document Repository: {} with id: {}", documentRepository.getName(), id);
+        documentRepositoryDao.deleteDocumentRepository(id);
         String docRepoName = documentRepository.getName();
         AcmContainer docRepoContainer = documentRepository.getContainer();
         List<Note> docRepoNoteList = noteDao.listNotes(NoteConstants.NOTE_GENERAL, id, DocumentRepositoryConstants.OBJECT_TYPE);
@@ -143,9 +145,6 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
         log.info("Deleting container with id: {} within Document Repository: {} with id: {}", docRepoContainer.getId(),
                 documentRepository.getName(), id);
         getAcmFolderService().deleteContainerSafe(docRepoContainer, authentication);
-
-        log.info("Deleting Document Repository: {} with id: {}", documentRepository.getName(), id);
-        documentRepositoryDao.deleteDocumentRepository(id);
     }
 
     public DocumentRepositoryDao getDocumentRepositoryDao()

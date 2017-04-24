@@ -73,6 +73,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         if (lockInDB)
         {
+            log.info("Saving lock [{}] for object [{}:{}]", ol.getLockType(), ol.getObjectType(), ol.getObjectId());
             AcmObjectLock lock = acmObjectLockDao.save(ol);
             AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
             getApplicationEventPublisher().publishEvent(event);

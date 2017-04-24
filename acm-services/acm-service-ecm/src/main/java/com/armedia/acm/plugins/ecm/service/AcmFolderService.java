@@ -11,7 +11,6 @@ import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,13 +38,13 @@ public interface AcmFolderService
 
     void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
-    @Transactional
     void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
     void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
 
-    @Transactional
     void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException;
+
+    void deleteContainerAndContent(AcmContainer container, String username);
 
 
     AcmFolder findById(Long folderId);
