@@ -31,7 +31,8 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email"
   },
   "document-repository.comp.participants": {
     "title": "Participants",

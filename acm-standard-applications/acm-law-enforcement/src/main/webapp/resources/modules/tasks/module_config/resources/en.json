@@ -82,10 +82,12 @@
   },
   "tasks.comp.parentdocs": {
     "title": "Parent Documents",
-    "noParentDataMessage": "No parent documents for standalone task"
+    "noParentDataMessage": "No parent documents for standalone task",
+    "sendEmail": "Send Email"
   },
   "tasks.comp.attachments": {
-    "title": "Attachments"
+    "title": "Attachments",
+    "sendEmail": "Send Email"
   },
   "tasks.comp.notes": {
     "title": "Notes",
