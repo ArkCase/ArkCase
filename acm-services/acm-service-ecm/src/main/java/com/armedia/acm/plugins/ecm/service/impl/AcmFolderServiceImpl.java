@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -699,7 +698,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         String cmisRepositoryId = getCmisRepositoryId(folder);
         properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
-
         try
         {
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_FOLDER_TREE, folder, properties);
@@ -803,7 +801,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         deleteContainer(container.getId(), authentication);
 
         log.info("Removing object locks");
-        removeObjectLocks(folderContentEntries, authentication);
+        removeObjectLocks(folderContentFolderEntries, authentication);
     }
 
     @Override
@@ -816,7 +814,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         deleteAlfrescoFolderTree(rootFolder);
     }
 
-    private void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    public void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator,
+                                        int progressCounter, int total)
     {
         for (EcmFile file : files)
         {
@@ -829,7 +828,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    private void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator, int progressCounter, int total)
+    public void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator,
+                                          int progressCounter, int total)
     {
         for (AcmFolder subFolder : folders)
         {
@@ -842,8 +842,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    @Async
-    @Transactional
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteContainerAndContent(AcmContainer container, String user)
     {
         AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
@@ -870,18 +871,22 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 .sorted(Comparator.comparing(AcmFolder::getId).reversed())
                 .collect(Collectors.toSet());
 
-        counter += childrenFolders.size();
-
         deleteFoldersWithProgress(childrenFolders, acmProgressIndicator, counter, totalEntriesCount);
 
-        log.info("Delete container with id: [{}] and root folder with id: [{}]", container.getId(), rootFolder.getId());
+        // somehow deleting folders and deleting container below are not in the same persistence context
+        // must flush here, otherwise deleting container fails on reference (any sub-folders) to the ROOT folder
+        // of the container
+        getFolderDao().getEm().flush();
+
+        counter += childrenFolders.size();
+
         // deleting the container will delete the ROOT folder
+        log.info("Delete container with id: [{}]", container.getId());
         containerDao.delete(container.getId());
         acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount)); // 100%
         applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
     }
 
-    @Async
     @Transactional
     private void deleteFolderContent(Long folderId, String user)
     {
@@ -1435,4 +1440,5 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         this.objectLockService = objectLockService;
     }
+
 }
