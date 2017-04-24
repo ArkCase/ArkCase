@@ -2,10 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.model.*;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -119,7 +116,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
-        expect(mockFolderAndFilesUtils.getActiveVersionCmisId(fromDb)).andReturn(cmisId);
+        expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
+        expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
@@ -136,6 +134,81 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         replayAll();
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/ecm/download" + "?ecmFileId=" + ecmFileId).principal(mockAuthentication).session(mockHttpSession))
+                .andReturn();
+
+        verifyAll();
+
+        EcmFileDownloadedEvent foundEvent = capturedEvent.getValue();
+        assertEquals(ecmFileId, foundEvent.getObjectId());
+        assertEquals("FILE", foundEvent.getObjectType());
+        assertEquals(user, foundEvent.getUserId());
+        assertEquals(acmContainer.getContainerObjectType(), foundEvent.getParentObjectType());
+        assertEquals(acmContainer.getContainerObjectId(), foundEvent.getParentObjectId());
+
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType().startsWith(mimeType));
+
+        String returned = result.getResponse().getContentAsString();
+
+        log.info("results: {}", returned);
+
+        assertEquals(log4jsize, returned.length());
+    }
+
+    @Test
+    public void downloadFileByIdAndVersion_successful() throws Exception
+    {
+        Long ecmFileId = 500L;
+        String user = "user";
+        String cmisId = "cmisId";
+        String mimeType = "mimeType";
+        String fileName = "fileName";
+        String fileNameExtension = ".extension";
+        String version = "2.0";
+
+        Resource log4j = new ClassPathResource("/spring/spring-library-ecm-plugin-test-mule.xml");
+        long log4jsize = log4j.getFile().length();
+        InputStream log4jis = log4j.getInputStream();
+
+        EcmFile fromDb = new EcmFile();
+        fromDb.setFileId(ecmFileId);
+        fromDb.setVersionSeriesId(cmisId);
+        fromDb.setFileActiveVersionNameExtension(fileNameExtension);
+        fromDb.setCmisRepositoryId("cmisRepositoryId");
+        fromDb.setFileActiveVersionMimeType(mimeType);
+
+        AcmContainer acmContainer = new AcmContainer();
+        acmContainer.setContainerObjectId(1L);
+        acmContainer.setContainerObjectType("DOC_REPO");
+        fromDb.setContainer(acmContainer);
+
+        EcmFileVersion ecmFileVersion = new EcmFileVersion();
+        ecmFileVersion.setVersionTag(version);
+        ecmFileVersion.setVersionMimeType(mimeType);
+        ecmFileVersion.setVersionFileNameExtension(fileNameExtension);
+
+        Capture<EcmFileDownloadedEvent> capturedEvent = new Capture<>();
+
+        expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
+        expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
+        expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, version)).andReturn(cmisId);
+        expect(mockFolderAndFilesUtils.getVersion(fromDb, version)).andReturn(ecmFileVersion);
+        expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
+        expect(mockContentStream.getMimeType()).andReturn(mimeType);
+        expect(mockContentStream.getFileName()).andReturn(fileName);
+        expect(ecmFileVersion.getVersionFileNameExtension()).andReturn(fileNameExtension).anyTimes();
+        expect(mockContentStream.getStream()).andReturn(log4jis);
+        mockEventPublisher.publishEvent(capture(capturedEvent));
+
+        CMISCloudConnectorConnectionManager cmisConfig = new CMISCloudConnectorConnectionManager();
+        expect(mockCmisConfigUtils.getCmisConfiguration(fromDb.getCmisRepositoryId())).andReturn(cmisConfig);
+        Map<String, Object> messageProps = new HashMap<>();
+        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfig);
+        expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
+
+        replayAll();
+        MvcResult result = mockMvc.perform(
+                get("/api/v1/plugin/ecm/download" + "?ecmFileId={ecmFileId}&version={version}",ecmFileId, version).principal(mockAuthentication).session(mockHttpSession))
                 .andReturn();
 
         verifyAll();
@@ -188,7 +261,8 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
 
         expect(mockAuthentication.getName()).andReturn(user).atLeastOnce();
         expect(mockFileDao.find(ecmFileId)).andReturn(fromDb);
-        expect(mockFolderAndFilesUtils.getActiveVersionCmisId(fromDb)).andReturn(cmisId);
+        expect(mockFolderAndFilesUtils.getVersionCmisId(fromDb, "")).andReturn(cmisId);
+        expect(mockFolderAndFilesUtils.getVersion(fromDb, "")).andReturn(null);
         expect(mockMuleMessage.getPayload()).andReturn(mockContentStream).anyTimes();
         expect(mockContentStream.getMimeType()).andReturn(mimeType);
         expect(mockContentStream.getFileName()).andReturn(fileName);
