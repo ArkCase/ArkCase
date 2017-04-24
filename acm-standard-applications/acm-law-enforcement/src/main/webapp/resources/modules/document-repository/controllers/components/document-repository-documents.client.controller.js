@@ -3,10 +3,10 @@
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
     , '$modal', '$q', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $modal, $q, $timeout, Util, ConfigService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -69,6 +69,12 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
+        };
+
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
         };
 
     }
