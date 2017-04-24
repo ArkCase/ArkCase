@@ -83,9 +83,9 @@
  </file>
  </example>
  */
-angular.module('directives').directive('docTree', ['$rootScope', '$q', '$translate', '$modal', '$filter', '$log', '$injector'
+angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService', 'EcmService'
-    , function ($rootScope, $q, $translate, $modal, $filter, $log, $injector
+    , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, UserInfoService, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
@@ -2992,10 +2992,10 @@ angular.module('directives').directive('docTree', ['$rootScope', '$q', '$transla
                     return dfd.promise();
                 }
                 , addFolderActionBtns: function () {
-                    $rootScope.$broadcast('showFolderActionBtns', {command: DocTree.Command});
+                    DocTree.scope.$bus.publish('showFolderActionBtns', {command: DocTree.Command});
                 }
                 , removeFolderActionBtns: function(){
-                    $rootScope.$broadcast('hideFolderActionBtns');
+                    DocTree.scope.$bus.publish('hideFolderActionBtns');
                 }
             } // end Op
 
