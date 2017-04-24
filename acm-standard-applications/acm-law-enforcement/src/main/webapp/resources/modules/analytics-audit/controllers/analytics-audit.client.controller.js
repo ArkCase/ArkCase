@@ -15,9 +15,9 @@ angular.module('analytics-audit').controller('AnalyticsAuditController', ['$scop
     , function ($scope, LookupService, BuildUrl) {
 
         $scope.data = {};
-    
-        // Retrieves the properties from the acm-elk-config.properties file
-        var promiseServerConfig = LookupService.getConfig("acm-elk-config");
+
+        // Retrieves the properties from the acm-analytics-config.properties file
+        var promiseServerConfig = LookupService.getConfig("acm-analytics-config");
     
         promiseServerConfig.then(function (data) {
             var elkConfig = data;

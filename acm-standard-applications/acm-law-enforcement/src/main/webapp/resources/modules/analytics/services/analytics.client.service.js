@@ -6,7 +6,7 @@
  *
  * @description
  *
- * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/reports/services/reports.client.service.js modules/reports/services/reports.client.service.js}
+ * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/analytics/services/analytics.client.service.js modules/analytics/services/analytics.client.service.js}
  *
  * The BuildUrl is used for building ELK analytics url with given parameters.
  */
@@ -40,6 +40,17 @@ angular.module('analytics').factory('Analytics.BuildUrl', ['$sce', '$http', '$br
                 return $sce.trustAsResourceUrl(elkUrl);
             },
 
+            /**
+             * @ngdoc method
+             * @name getUrlBanana
+             * @methodOf analytics.service:Analytics.BuildUrl
+             *
+             * @description
+             * This function builds url of Banana visualization for Data Analytics with given parameters
+             * @param {String} params.slkExternalUrl The ArkCase url (assuming proxy config)
+             * @param {String} params.slkDashboard The Banana url for the dashboard
+             * @returns {Object} Object assigned as trusted for angular to display the Banana url in an iFrame
+             */
             getUrlBanana: function (params) {
                 var bananaUrl = params.slkExternalUrl + params.slkDashboard;
                 //var bananaUrl = params.slkHost + (params.slkPort ? ":" + params.slkPort : "") + params.slkDashboard;
