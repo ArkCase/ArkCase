@@ -88,7 +88,12 @@
     "error": {
       "nodeTitle": "de_(Error)"
     },
-    "lockedTitle": "de_This document is locked by "
+    "lockedTitle": "de_This document is locked by ",
+    "fileTypesDialog": {
+      "header": "de_Please select type of the Document",
+      "btnOK": "de_OK",
+      "btnCancel": "de_Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "de_ records above...",
@@ -206,7 +211,7 @@
   "common.directive.coreCalendar": {
     "title": "de_Calendar",
     "start.label": "de_Start: ",
-    "end.label": "de_End: "de_
+    "end.label": "de_End: "
   },
   "common.directive.coreParticipants": {
     "title": "de_Participants",
@@ -225,6 +230,10 @@
       "error.owninggroupUnique": "de_Only one owning group is allowed.",
       "error.noAccessCombo": "de_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "de_Add File",
+    "button.addFolder": "de_Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "de_For your protection, application is about to logout. Click Cancel to stay logged in."
