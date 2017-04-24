@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc directive
- * @name global.directive:progressIndicator
+ * @name global.directive:folderActions
  * @restrict E
  *
  * @description
@@ -34,14 +34,14 @@ angular.module('directives').directive('folderActions', ['ConfigService', '$moda
                 });
 
                 scope.showFolderActions = false;
-                scope.$on('showFolderActionBtns', function (e, ctx) {
+                scope.$bus.subscribe('showFolderActionBtns', function (ctx) {
                     context = ctx;
                     scope.$apply(function () {
                         scope.showFolderActions = true;
                     });
                 });
 
-                scope.$on('hideFolderActionBtns', function(e){
+                scope.$bus.subscribe('hideFolderActionBtns', function(e){
                     scope.$apply(function () {
                         scope.showFolderActions = false;
                     });
