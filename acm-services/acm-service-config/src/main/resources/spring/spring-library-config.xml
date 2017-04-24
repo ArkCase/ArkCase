@@ -296,8 +296,8 @@
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="acm-elk-config"/>
-                    <property name="configDescription" value="Acm ELK Analytics Server config"/>
+                    <property name="configName" value="acm-analytics-config"/>
+                    <property name="configDescription" value="Acm ELK/SILK Analytics Server config"/>
                     <property name="properties" ref="analyticsServerConfigurationProperties"/>
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>

@@ -15,27 +15,15 @@ angular.module('analytics').controller('AnalyticsController', ['$scope', 'Lookup
     , function ($scope, LookupService, BuildUrl) {
 
         $scope.data = {};
-    
-        // Retrieves the properties from the acm-elk-config.properties file
-        var promiseServerConfig = LookupService.getConfig("acm-elk-config");
+        // Retrieves the properties from the acm-analytics-config.properties file
+        var promiseServerConfig = LookupService.getConfig("acm-analytics-config");
     
         promiseServerConfig.then(function (data) {
             var elkConfig = data;
-            
-            /*
-            $scope.data.elkHost = elkConfig['elk.server.url'];
-            $scope.data.elkPort = elkConfig['elk.server.port'];
-            $scope.data.elkUser = elkConfig['elk.server.user'];
-            $scope.data.elkPassword = elkConfig['elk.server.password'];
-            $scope.data.elkDashboard = elkConfig['elk.dashboard.url'];
-            $scope.elkUrl = BuildUrl.getUrl($scope.data);
-             */
 
             $scope.data.slkHost = elkConfig['slk.server.internal.url'];
             $scope.data.slkPort = elkConfig['slk.server.internal.port'];
-
             $scope.data.slkExternalUrl = elkConfig['slk.server.external.url'];
-
             $scope.data.slkDashboard = elkConfig['slk.server.dashboard.url'];
             $scope.bananaUrl = BuildUrl.getUrlBanana($scope.data);
 
