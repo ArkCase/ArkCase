@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -165,7 +166,7 @@ public class AcmCalendarAPIController
      */
     private ZonedDateTime toZonedDate(String date)
     {
-        return null;
+        return ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
     }
 
     /**

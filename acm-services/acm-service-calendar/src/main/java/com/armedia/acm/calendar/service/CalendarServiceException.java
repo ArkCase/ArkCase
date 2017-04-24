@@ -9,4 +9,17 @@ public class CalendarServiceException extends Exception
 
     private static final long serialVersionUID = 1L;
 
+    public CalendarServiceException(String message)
+    {
+        super(message);
+    }
+
+    /**
+     * @param e
+     */
+    public CalendarServiceException(Throwable t)
+    {
+        super(t);
+    }
+
 }

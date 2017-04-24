@@ -51,7 +51,8 @@
         <module>acm-service-users</module>
         <module>acm-service-webdav</module>
         <module>acm-service-calendar</module>
-    </modules>
+        <module>acm-service-calendar-integration-exchange</module>
+  </modules>
 
 
 </project>

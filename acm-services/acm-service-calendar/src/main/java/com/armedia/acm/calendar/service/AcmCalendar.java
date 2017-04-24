@@ -13,15 +13,15 @@ public interface AcmCalendar
     AcmCalendarInfo getInfo();
 
     /**
-     * @param zonedDate
-     * @param zonedDate2
+     * @param after
+     * @param before
      * @param sort
      * @param sortDirection
      * @param start
      * @param maxItems
      * @return
      */
-    List<AcmCalendarEventInfo> listItems(ZonedDateTime zonedDate, ZonedDateTime zonedDate2, String sort, String sortDirection, int start,
+    List<AcmCalendarEventInfo> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
             int maxItems);
 
     /**

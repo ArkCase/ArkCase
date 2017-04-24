@@ -1,9 +1,13 @@
 package com.armedia.acm.calendar.service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 6, 2017
  *
  */
+@JsonInclude(Include.NON_NULL)
 public class Attendee
 {
 

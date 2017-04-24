@@ -23,6 +23,11 @@ public class AcmCalendarEvent
         LOW, NORMAL, HIGH;
     }
 
+    public static enum Sensitivity
+    {
+        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL;
+    }
+
     private String eventId;
 
     private String calendarId;
@@ -51,7 +56,7 @@ public class AcmCalendarEvent
 
     private int remindIn;
 
-    private boolean privateEvent;
+    private Sensitivity sensitivity = Sensitivity.NORMAL;
 
     private Priority priority = Priority.LOW;
 
@@ -268,18 +273,18 @@ public class AcmCalendarEvent
     /**
      * @return the privateEvent
      */
-    public boolean isPrivateEvent()
+    public Sensitivity getSensitivity()
     {
-        return privateEvent;
+        return sensitivity;
     }
 
     /**
-     * @param privateEvent
-     *            the privateEvent to set
+     * @param sensitivity
+     *            the sensitivity to set
      */
-    public void setPrivateEvent(boolean privateEvent)
+    public void setSensitivity(Sensitivity sensitivity)
     {
-        this.privateEvent = privateEvent;
+        this.sensitivity = sensitivity;
     }
 
     /**
