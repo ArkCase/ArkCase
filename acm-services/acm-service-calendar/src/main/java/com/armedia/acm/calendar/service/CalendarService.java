@@ -21,8 +21,10 @@ public interface CalendarService
      * @param objectType
      * @param objectId
      * @return
+     * @throws CalendarServiceException
      */
-    Optional<AcmCalendar> retrieveCalendar(AcmUser user, Authentication auth, String objectType, String objectId);
+    Optional<AcmCalendar> retrieveCalendar(AcmUser user, Authentication auth, String objectType, String objectId)
+            throws CalendarServiceException;
 
     /**
      * @param user
@@ -33,9 +35,10 @@ public interface CalendarService
      * @param sort
      * @param objectType
      * @return
+     * @throws CalendarServiceException
      */
     List<AcmCalendarInfo> listCalendars(AcmUser user, Authentication auth, String objectType, String sort, String sortDirection, int start,
-            int maxItems);
+            int maxItems) throws CalendarServiceException;
 
     /**
      * @param user
@@ -43,24 +46,28 @@ public interface CalendarService
      * @param calendarId
      * @param calendarEvent
      * @param attachments
+     * @throws CalendarServiceException
      */
-    void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent,
-            MultipartFile[] attachments);
+    void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
+            throws CalendarServiceException;
 
     /**
      * @param user
      * @param auth
      * @param calendarEvent
      * @param attachments
+     * @throws CalendarServiceException
      */
-    void updateCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments);
+    void updateCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
+            throws CalendarServiceException;
 
     /**
      * @param user
      * @param auth
      * @param calendarEventId
+     * @throws CalendarServiceException
      */
-    void deleteCalendarEvent(AcmUser user, Authentication auth, String calendarEventId);
+    void deleteCalendarEvent(AcmUser user, Authentication auth, String calendarEventId) throws CalendarServiceException;
 
     <CSE extends CalendarServiceException> CalendarExceptionMapper<CSE> getExceptionMapper(CalendarServiceException e);
 

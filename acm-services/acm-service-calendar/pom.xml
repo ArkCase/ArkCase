@@ -12,8 +12,8 @@
     
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-calendar</artifactId>
-    <name>ACM Service: Calendar Configuration Service</name>
-    <description>Service for configuring calendar properties.</description>
+    <name>ACM Service: Calendar Service</name>
+    <description>Service for configuring calendar properties, and API for interfacing calendaring system.</description>
     <packaging>jar</packaging>
     
     <dependencies>
