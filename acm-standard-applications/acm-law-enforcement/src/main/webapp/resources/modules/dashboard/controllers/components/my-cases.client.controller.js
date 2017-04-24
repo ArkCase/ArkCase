@@ -17,6 +17,9 @@ angular.module('dashboard.my-cases')
             $scope.$emit('req-component-config', 'myCases');
             vm.config = null;
             var userInfo = null;
+            var userGroups = null;
+            var userGroupList = null;
+
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
@@ -76,6 +79,12 @@ angular.module('dashboard.my-cases')
                     paginationOptions.pageSize = config.paginationPageSize;
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
+                        userGroups = responseUserInfo.authorities;
+                        userGroupList = responseUserInfo.authorities[0];
+                        _.forEach(userGroups, function (group) {
+                            userGroupList = userGroupList + " OR " + group;
+                        })
+                        userGroupList = "(" + userGroupList + ")";
                         getPage();
                         return userInfo;
                     });
@@ -85,7 +94,7 @@ angular.module('dashboard.my-cases')
             function getPage() {
                 DashboardService.queryMyCases({
                         userId: userInfo.userId,
-                        groupId: userInfo.groupId,
+                        userGroupList: userGroupList,
                         sortBy: paginationOptions.sortBy,
                         sortDir: paginationOptions.sortDir,
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
