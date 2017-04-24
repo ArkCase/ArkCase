@@ -88,7 +88,12 @@
     "error": {
       "nodeTitle": "zh-tw_(Error)"
     },
-    "lockedTitle": "zh-tw_This document is locked by "
+    "lockedTitle": "zh-tw_This document is locked by ",
+    "fileTypesDialog": {
+      "header": "zh-tw_Please select type of the Document",
+      "btnOK": "zh-tw_OK",
+      "btnCancel": "zh-tw_Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "zh-tw_ records above...",
@@ -206,7 +211,7 @@
   "common.directive.coreCalendar": {
     "title": "zh-tw_Calendar",
     "start.label": "zh-tw_Start: ",
-    "end.label": "zh-tw_End: "zh-tw_
+    "end.label": "zh-tw_End: "
   },
   "common.directive.coreParticipants": {
     "title": "zh-tw_Participants",
@@ -225,6 +230,10 @@
       "error.owninggroupUnique": "zh-tw_Only one owning group is allowed.",
       "error.noAccessCombo": "zh-tw_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "zh-tw_Add File",
+    "button.addFolder": "zh-tw_Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "zh-tw_For your protection, application is about to logout. Click Cancel to stay logged in."
