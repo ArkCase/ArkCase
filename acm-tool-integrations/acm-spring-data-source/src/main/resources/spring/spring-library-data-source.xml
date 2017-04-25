@@ -160,6 +160,8 @@
     <!-- Channel for sending all acm object changes, it can have as many subscribers to that channel-->
     <task:executor id="channelExecutor" pool-size="4"/>
     <int:publish-subscribe-channel id="objectEventChannel" task-executor="channelExecutor" min-subscribers="1"/>
+    <!-- Channel for sending simple generic messages for general purposes -->
+    <int:publish-subscribe-channel id="genericMessagesChannel" task-executor="channelExecutor" min-subscribers="1"/>
 
     <bean id="acmObjectChangeNotifier" class="com.armedia.acm.data.AcmObjectChangedNotifier">
         <property name="objectEventChannel" ref="objectEventChannel"/>
@@ -168,6 +170,10 @@
 
 
     <int:service-activator ref="acmObjectChangedLogger" input-channel="objectEventChannel" method="logObject"/>
+
+    <bean id="acmProgressNotifier" class="com.armedia.acm.data.AcmProgressNotifier">
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
 
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>

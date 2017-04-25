@@ -57,4 +57,11 @@ public class DocumentRepositoryDao extends AcmAbstractDao<DocumentRepository> im
             return null;
         }
     }
+
+    @Transactional
+    public void deleteDocumentRepository(Long id)
+    {
+        DocumentRepository documentRepository = getEm().find(getPersistenceClass(), id);
+        getEm().remove(documentRepository);
+    }
 }

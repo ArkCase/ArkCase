@@ -30,6 +30,12 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
+    public AcmObjectLock findLock(Long objectId, String objectType)
+    {
+        return acmObjectLockDao.findLock(objectId, objectType);
+    }
+
+    @Override
     @Transactional
     public AcmObjectLock createLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
@@ -67,6 +73,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         if (lockInDB)
         {
+            log.info("Saving lock [{}] for object [{}:{}]", ol.getLockType(), ol.getObjectType(), ol.getObjectId());
             AcmObjectLock lock = acmObjectLockDao.save(ol);
             AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
             getApplicationEventPublisher().publishEvent(event);
@@ -110,7 +117,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                       String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -131,7 +138,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                 String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");
@@ -154,10 +161,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             throws MuleException
     {
         if (!StringUtils.isEmpty(fqParams))
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, firstRow, maxRows,
                     sort, fqParams);
         else
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, firstRow, maxRows,
                     sort);
     }
 

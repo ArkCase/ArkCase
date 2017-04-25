@@ -89,6 +89,14 @@
       "nodeTitle": "de_(Error)"
     },
     "lockedTitle": "de_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "de_Are you sure you want to delete this folder?",
+      "body.message": "de_The folder contains:",
+      "body.content.files": "de_files",
+      "body.content.folders": "de_folders",
+      "btn.delete.folder": "de_Yes",
+      "btn.cancel.delete.folder": "de_No"
+    },
     "fileTypesDialog": {
       "header": "de_Please select type of the Document",
       "btnOK": "de_OK",
@@ -231,7 +239,10 @@
       "error.noAccessCombo": "de_The combination of No Access and Assignee is not allowed."
     }
   },
-  "common.directive.folderActions":{
+  "common.directive.progressIndicator": {
+    "progressCompletion": "de_% Complete"
+  },
+  "common.directive.folderActions": {
     "button.addFile": "de_Add File",
     "button.addFolder": "de_Add Folder"
   },
