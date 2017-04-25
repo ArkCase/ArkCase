@@ -240,10 +240,10 @@
       "error.noAccessCombo": "pt_The combination of No Access and Assignee is not allowed."
     }
   },
-  "common.directive.progressIndicator":{
+  "common.directive.progressIndicator": {
     "progressCompletion": "pt_% Complete"
   },
-  "common.directive.folderActions":{
+  "common.directive.folderActions": {
     "button.addFile": "pt_Add File",
     "button.addFolder": "pt_Add Folder"
   },

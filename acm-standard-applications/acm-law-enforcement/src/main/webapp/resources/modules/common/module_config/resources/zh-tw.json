@@ -239,10 +239,10 @@
       "error.noAccessCombo": "zh-tw_The combination of No Access and Assignee is not allowed."
     }
   },
-  "common.directive.progressIndicator":{
+  "common.directive.progressIndicator": {
     "progressCompletion": "zh_tw_% Complete"
   },
-  "common.directive.folderActions":{
+  "common.directive.folderActions": {
     "button.addFile": "zh-tw_Add File",
     "button.addFolder": "zh-tw_Add Folder"
   },

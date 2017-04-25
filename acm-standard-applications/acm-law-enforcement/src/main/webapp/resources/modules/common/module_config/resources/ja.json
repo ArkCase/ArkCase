@@ -239,10 +239,10 @@
       "error.noAccessCombo": "ja_The combination of No Access and Assignee is not allowed."
     }
   },
-  "common.directive.progressIndicator":{
+  "common.directive.progressIndicator": {
     "progressCompletion": "ja_% Complete"
   },
-  "common.directive.folderActions":{
+  "common.directive.folderActions": {
     "button.addFile": "ja_Add File",
     "button.addFolder": "ja_Add Folder"
   },
