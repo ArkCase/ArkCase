@@ -79,11 +79,12 @@ angular.module('dashboard.my-cases')
                     paginationOptions.pageSize = config.paginationPageSize;
                     Authentication.queryUserInfo().then(function (responseUserInfo) {
                         userInfo = responseUserInfo;
-                        userGroups = responseUserInfo.authorities;
-                        userGroupList = responseUserInfo.authorities[0];
-                        _.forEach(userGroups, function (group) {
-                            userGroupList = userGroupList + " OR " + group;
-                        })
+
+                        var userGroups = _.filter(responseUserInfo.authorities, function (userGroup) {
+                            return _.startsWith(userGroup, 'ROLE') == false;
+                        });
+
+                        userGroupList = userGroups.join(" OR ");
                         userGroupList = "(" + userGroupList + ")";
                         getPage();
                         return userInfo;
