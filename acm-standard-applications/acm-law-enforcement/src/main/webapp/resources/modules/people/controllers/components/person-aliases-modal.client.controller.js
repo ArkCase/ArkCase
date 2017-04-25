@@ -1,4 +1,4 @@
-angular.module('people').controller('Person.AliasesNewAliasDialogController', ['$scope', '$modalInstance', 'Object.LookupService',
+angular.module('people').controller('Person.AliasesModalController', ['$scope', '$modalInstance', 'Object.LookupService',
         function ($scope, $modalInstance, ObjectLookupService) {
             $scope.alias = null;
             ObjectLookupService.getAliasTypes().then(function (response) {

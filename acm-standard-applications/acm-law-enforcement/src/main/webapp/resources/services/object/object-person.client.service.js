@@ -53,8 +53,24 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
                 url: 'api/latest/plugin/personAssociation/delete/:personAssociationId',
                 cache: false
             }
+
+            , _getPersonCases: {
+                method: 'GET',
+                url: 'api/latest/plugin/people/:id/cases',
+                cache: false
+            }
+
+            , _getPersonComplaints: {
+                method: 'GET',
+                url: 'api/latest/plugin/people/:id/complaints',
+                cache: false
+            }
         });
 
+        Service.SessionCacheNames = {
+            "PERSON_CASES_DATA": "PersonCasesData",
+            "PERSON_COMPLAINTS_DATA": "PersonComplaintsData"
+        };
 
         /**
          * @ngdoc method
@@ -99,6 +115,72 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
                 , data: {}
                 , onSuccess: function (data) {
                     if (Service.validateDeletedPersonAssociation(data)) {
+                        return data;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getPersonCases
+         * @methodOf services:Object.PersonService
+         *
+         * @description
+         * Query cases data for an object.
+         *
+         * @param {Number} id  Object ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getPesonCases = function (id) {
+            var cacheData = new Store.CacheFifo(Service.SessionCacheNames.PERSON_CASES_DATA);
+            var cacheKey = id;
+            var casesData = cacheData.get(cacheKey);
+
+            return Util.serviceCall({
+                service: Service._getPersonCases
+                , param: {
+                    id: id
+                }
+                , result: casesData
+                , onSuccess: function (data) {
+                    if (Service.validatePersonCasesData(data)) {
+                        casesData = data;
+                        cacheData.put(cacheKey, data);
+                        return data;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getPesonComplaints
+         * @methodOf services:Object.PersonService
+         *
+         * @description
+         * Query complaints data for an object.
+         *
+         * @param {Number} id  Object ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getPesonComplaints = function (id) {
+            var cacheData = new Store.CacheFifo(Service.SessionCacheNames.PERSON_COMPLAINTS_DATA);
+            var cacheKey = id;
+            var complaintsData = cacheData.get(cacheKey);
+
+            return Util.serviceCall({
+                service: Service._getPersonComplaints
+                , param: {
+                    id: id
+                }
+                , result: complaintsData
+                , onSuccess: function (data) {
+                    if (Service.validatePersonComplaintsData(data)) {
+                        complaintsData = data;
+                        cacheData.put(cacheKey, data);
                         return data;
                     }
                 }
@@ -193,6 +275,45 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
             }
             return true;
         };
+
+        /**
+         * @ngdoc method
+         * @name validateCasesData
+         * @methodOf services:Object.PersonService
+         *
+         * @description
+         * Validate list of cases
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validatePersonCasesData = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validatePersonComplaintsData
+         * @methodOf services:Object.PersonService
+         *
+         * @description
+         * Validate list of cases
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validatePersonComplaintsData = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        };
+
 
         return Service;
     }

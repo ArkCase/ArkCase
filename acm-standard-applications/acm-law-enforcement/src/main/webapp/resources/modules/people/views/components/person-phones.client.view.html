@@ -1,21 +1,12 @@
 <div ng-controller="People.PhonesController">
     <div class="panel panel-success panel-grid">
-        <div class="row">
-            <div class="btn-group pull-right">
-                <button class="btn btn-sm btn-default" ng-click="delete()">
-                    <span translate>people.comp.phones.actions.delete</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="setPrimary()">
-                    <span translate>people.comp.phones.actions.setPrimary</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="addNew()">
-                    <span translate>people.comp.phones.actions.addNew</span>
-                </button>
-            </div>
-        </div>
         <div class="panel-heading">
             <div class="panel-title">
                 <span translate>people.comp.phones.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
+                        <i class="fa fa-lg fa-plus"></i></button>
+                </div>
             </div>
         </div>
         <div class="panel-body">

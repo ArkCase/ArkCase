@@ -98,6 +98,26 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
+    <bean id="personRelationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/personRelationTypes.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="organizationRelationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/organizationRelationTypes.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
     <bean id="countriesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -377,6 +397,16 @@
                     <property name="json" ref="identificationTypesJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="personRelationTypes"/>
+                    <property name="configDescription" value="Person Relationship Types"/>
+                    <property name="json" ref="personRelationTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="organizationRelationTypes"/>
+                    <property name="configDescription" value="Organization Relationship Types"/>
+                    <property name="json" ref="organizationRelationTypesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="countries"/>
                     <property name="configDescription" value="Countries"/>
                     <property name="json" ref="countriesJsonConfig"/>
@@ -384,5 +414,4 @@
             </list>
         </constructor-arg>
     </bean>
-
 </beans>
