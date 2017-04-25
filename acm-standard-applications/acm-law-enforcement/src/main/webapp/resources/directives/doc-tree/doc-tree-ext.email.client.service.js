@@ -124,7 +124,7 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
             , _makeEmailDataForEmailWithAttachments: function (DocTree, emailModel) {
                 var emailData = {};
                 emailData.subject = Util.goodValue(emailModel.subject, this._buildSubject(DocTree));
-                emailData.title = $translate.instant("common.directive.docTree.email.defaultTitle");
+                //emailData.title = $translate.instant("common.directive.docTree.email.defaultTitle");
                 emailData.body = Util.goodValue(emailModel.body, $translate.instant("common.directive.docTree.email.bodyForAttachment"));
                 emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
                 emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
