@@ -122,10 +122,23 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
                 phone.subType = data.phone.subType;
                 phone.value = data.phone.value;
                 phone.description = data.phone.description;
+
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(phone);
+                    if (data.isDefault) {
+                        $scope.objectInfo.defaultPhone = phone;
+                    }
+                    else {
+                        //if phones is empty then we will not add it to the array
+                        //but we will set it as default
+                        var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
+                        if (phones.length > 0) {
+                            $scope.objectInfo.contactMethods.push(phone);
+                        } else {
+                            $scope.objectInfo.defaultPhone = phone;
+                        }
+                    }
                 }
-                if (data.isDefault) {
+                else if (data.isDefault) {
                     $scope.objectInfo.defaultPhone = phone;
                 }
                 saveObjectInfoAndRefresh();
