@@ -29,6 +29,7 @@
                     <input
                             type="checkbox"
                             value="{{node.data.objectId}}"
+                            ng-click="onSelectFile(node.data.objectId)"
                             ng-checked="emailDataModel.selectedFilesToEmail.indexOf(node.data.objectId) > -1">
                     <span>
                         {{node.data.name + '' + node.data.ext}}

@@ -50,6 +50,14 @@ public class MessageBodyFactory
         return buildMessageBodyFromTemplate(model);
     }
 
+    public String buildMessageBodyWithoutHeaderFromTemplate(String body, String footer)
+    {
+        Map<String, Object> model = new HashMap<>();
+        model.put("body", body);
+        model.put("footer", footer);
+        return buildMessageBodyFromTemplate(model);
+    }
+
     /**
      * Builds message body string with bound model content from template
      * 
