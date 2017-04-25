@@ -11,6 +11,14 @@
       "moduleId": "organization",
       "iconClass": "fa fa-exclamation-triangle",
       "position": 90
+    },
+    {
+      "menuId": "topbar",
+      "menuItemURL": "newOrganization",
+      "menuItemTitle": "organizations.menus.topbar.item",
+      "moduleId": "organization",
+      "iconClass": "fa fa-building",
+      "position": 40
     }
   ],
   "tree": {

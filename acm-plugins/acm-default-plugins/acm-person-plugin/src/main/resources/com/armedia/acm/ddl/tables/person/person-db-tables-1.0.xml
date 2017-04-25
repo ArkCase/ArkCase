@@ -901,4 +901,19 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="46-acm_organization-add-columns-for-default-values-and-details" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_default_phone" type="${fkIdType}"/>
+            <column name="cm_default_email" type="${fkIdType}"/>
+            <column name="cm_default_url" type="${fkIdType}"/>
+            <column name="cm_default_fax" type="${fkIdType}"/>
+            <column name="cm_default_address" type="${fkIdType}"/>
+            <column name="cm_default_identification" type="${fkIdType}"/>
+            <column name="cm_details" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -57,5 +57,16 @@ angular.module('organizations').config(['$stateProvider',
                 templateUrl: 'modules/organizations/views/components/organization-history.client.view.html'
             })
 
+            .state('newOrganization', {
+                url: '/newOrganization',
+                templateUrl: 'modules/organizations/views/components/organization-new-organizations.client.view.html',
+                resolve: {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                        $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('organizations');
+                        return $translate.refresh();
+                    }]
+                }
+            })
     }
 ]);

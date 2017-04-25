@@ -97,7 +97,6 @@ angular.module('people').config(['$stateProvider',
                 templateUrl: 'modules/people/views/components/person-history.client.view.html'
             })
 
-
             .state('newPerson', {
                 url: '/newPerson',
                 templateUrl: 'modules/people/views/components/person-new-person.client.view.html',
