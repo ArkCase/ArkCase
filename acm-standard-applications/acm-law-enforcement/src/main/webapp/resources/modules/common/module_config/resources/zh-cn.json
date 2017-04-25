@@ -88,7 +88,12 @@
     "error": {
       "nodeTitle": "zh-cn_(Error)"
     },
-    "lockedTitle": "zh-cn_This document is locked by "
+    "lockedTitle": "zh-cn_This document is locked by ",
+    "fileTypesDialog": {
+      "header": "zh-cn_Please select type of the Document",
+      "btnOK": "zh-cn_OK",
+      "btnCancel": "zh-cn_Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "zh-cn_ records above...",
@@ -206,7 +211,7 @@
   "common.directive.coreCalendar": {
     "title": "zh-cn_Calendar",
     "start.label": "zh-cn_Start: ",
-    "end.label": "zh-cn_End: "zh-cn_
+    "end.label": "zh-cn_End: "
   },
   "common.directive.coreParticipants": {
     "title": "zh-cn_Participants",
@@ -225,6 +230,10 @@
       "error.owninggroupUnique": "zh-cn_Only one owning group is allowed.",
       "error.noAccessCombo": "zh-cn_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "zh-cn_Add File",
+    "button.addFolder": "zh-cn_Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "zh-cn_For your protection, application is about to logout. Click Cancel to stay logged in."
