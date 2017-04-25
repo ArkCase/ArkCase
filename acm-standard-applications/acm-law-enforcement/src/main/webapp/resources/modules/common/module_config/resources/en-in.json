@@ -96,7 +96,7 @@
       "body.content.folders": "folders",
       "btn.delete.folder": "Yes",
       "btn.cancel.delete.folder": "No"
-    }
+    },
     "fileTypesDialog": {
       "header": "Please select type of the Document",
       "btnOK": "OK",

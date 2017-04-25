@@ -96,7 +96,7 @@
       "body.content.folders": "pt_folders",
       "btn.delete.folder": "pt_Yes",
       "btn.cancel.delete.folder": "pt_No"
-    }
+    },
     "lockedTitle": "pt_This document is locked by ",
     "fileTypesDialog": {
       "header": "pt_Please select type of the Document",
