@@ -37,13 +37,9 @@
     "moreItemsTooltip": "Load more items",
     "moreItemsBegin": "More items...",
     "email": {
-      "defaultTitle": "ArkCase Documents",
-      "headerForLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
-      "footerForLinks": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "subjectForAttachment": "Documents from ArkCase",
-      "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
-      "headerForAttachment": "Hello,",
-      "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
+      "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
+      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
     },
     "menu": {
       "noop": "(Select Item)",

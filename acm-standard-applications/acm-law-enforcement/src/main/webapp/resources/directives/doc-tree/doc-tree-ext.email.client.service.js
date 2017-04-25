@@ -84,12 +84,16 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
                     }
                 });
                 modalInstance.result.then(function (res) {
+                    var emailData = {};
                     if (res.action === 'SEND_ATTACHMENTS') {
-                        var emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
+                        emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
                         EcmEmailService.sendEmailWithAttachments(emailData);
                     }
                     else if(res.action === 'SEND_HYPERLINKS') {
-                        var emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res);
+                        emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res);
+                        EcmEmailService.sendEmail(emailData);
+                    } else {
+                        emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
                         EcmEmailService.sendEmail(emailData);
                     }
                 });
@@ -111,11 +115,9 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
             }
             , _makeEmailDataForEmailWithLinks: function (DocTree, emailModel) {
                 var emailData = {};
-                emailData.subject = Util.goodValue(emailModel.subject, this._buildSubject(DocTree));
-                emailData.title = $translate.instant("common.directive.docTree.email.defaultTitle");
+                emailData.subject = emailModel.subject;
                 emailData.body = emailModel.body;
-                emailData.header = $translate.instant("common.directive.docTree.email.headerForLinks");
-                emailData.footer = "\n\n" + $translate.instant("common.directive.docTree.email.footerForLinks");
+                emailData.footer = '\n\n' + emailModel.footer;
                 emailData.emailAddresses = emailModel.recipients;
                 emailData.fileIds = emailModel.selectedFilesToEmail;
                 emailData.baseUrl = Email._makeBaseUrl();
@@ -123,19 +125,18 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
             }
             , _makeEmailDataForEmailWithAttachments: function (DocTree, emailModel) {
                 var emailData = {};
-                emailData.subject = Util.goodValue(emailModel.subject, this._buildSubject(DocTree));
-                //emailData.title = $translate.instant("common.directive.docTree.email.defaultTitle");
-                emailData.body = Util.goodValue(emailModel.body, $translate.instant("common.directive.docTree.email.bodyForAttachment"));
-                emailData.header = $translate.instant("common.directive.docTree.email.headerForAttachment");
-                emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
+                emailData.subject = emailModel.subject;
+                emailData.body = emailModel.body;
+                emailData.footer = '\n\n' + emailModel.footer;
                 emailData.emailAddresses = emailModel.recipients;
                 emailData.attachmentIds = emailModel.selectedFilesToEmail;
                 return emailData;
             }
             , _makeEmailDataForPlainEmail: function (DocTree, emailModel) {
                 var emailData = {};
-                emailData.subject = Util.goodValue(emailModel.subject, this._buildSubject(DocTree));
-                emailData.footer = $translate.instant("common.directive.docTree.email.footerForAttachment");
+                emailData.subject = emailModel.subject;
+                emailData.body = emailModel.body;
+                emailData.footer = '\n\n' + emailModel.footer;
                 emailData.emailAddresses = emailModel.recipients;
                 return emailData;
             }
@@ -166,8 +167,8 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
 
 
 angular.module('directives').controller('directives.DocTreeEmailDialogController', ['$scope', '$modalInstance'
-        , 'UtilService', 'params', 'DocTreeExt.Email', '$modal'
-        , function ($scope, $modalInstance, Util, params, DocTreeExtEmail, $modal) {
+        , 'UtilService', 'params', 'DocTreeExt.Email', '$modal', '$translate'
+        , function ($scope, $modalInstance, Util, params, DocTreeExtEmail, $modal, $translate) {
             $scope.modalInstance = $modalInstance;
             $scope.config = params.config;
             $scope.DocTree = params.DocTree;
@@ -181,7 +182,6 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 return !node.folder;
             });
             $scope.emailDataModel = {};
-            $scope.emailDataModel.subject = DocTreeExtEmail._buildSubject($scope.DocTree);
             $scope.emailDataModel.selectedFilesToEmail = DocTreeExtEmail._extractFileIds($scope.nodes);
             $scope.emailDataModel.deliveryMethod = 'SEND_ATTACHMENTS';
             $scope.recipients = [];
@@ -198,6 +198,23 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             };
 
             processDeliveryMethods();
+
+            var processDefaultEmailValues = function() {
+                var emailAction = !$scope.emailSendConfiguration.allowSending ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
+                $scope.emailDataModel.subject = DocTreeExtEmail._buildSubject($scope.DocTree);
+                $scope.emailDataModel.footer = $translate.instant('common.directive.docTree.email.defaultFooter');
+
+                switch(emailAction) {
+                    case 'SEND_ATTACHMENTS':
+                        $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyAttachments');
+                        break;
+                    case 'SEND_HYPERLINKS':
+                        $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyLinks');
+                        break;
+                }
+            };
+
+            processDefaultEmailValues();
 
             var buildRecipientsStr = function(recipients) {
                 var recipientsStr = '';
@@ -232,6 +249,21 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                     $scope.recipients = recipients;
                     $scope.recipientsStr = buildRecipientsStr(recipients);
                 });
+            };
+
+            $scope.onDeliveryMethodChange = function(deliveryMethod) {
+                var emailBodyIsPristine = $scope.emailBodyForm.emailBody.$pristine;
+
+                if(emailBodyIsPristine) {
+                    switch(deliveryMethod) {
+                        case 'SEND_ATTACHMENTS':
+                            $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyAttachments');
+                            break;
+                        case 'SEND_HYPERLINKS':
+                            $scope.emailDataModel.body = $translate.instant('common.directive.docTree.email.defaultBodyLinks');
+                            break;
+                    }
+                }
             };
 
             $scope.onClickCancel = function () {

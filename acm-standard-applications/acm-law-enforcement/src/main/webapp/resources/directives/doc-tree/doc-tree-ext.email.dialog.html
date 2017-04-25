@@ -17,8 +17,8 @@
             </label>
             <input name="subject" type="text" class="form-control" ng-model="emailDataModel.subject" placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
         </div>
-        <div class="col-sm-12 form-group">
-            <summernote config="summernoteOptions" ng-model="emailDataModel.body"></summernote>
+        <div class="col-sm-12 form-group" ng-form="emailBodyForm">
+            <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
         </div>
         <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowSending">
             <label for="attachments">
@@ -42,13 +42,13 @@
             </label>
             <fieldset id="deliveryMethod" class="well-sm">
                 <label ng-if="emailSendConfiguration.allowAttachments" class="radio-inline">
-                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS" ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
                     <span translate>
                     common.directive.docTree.emailDialog.sendWithAttachments.checkbox
                 </span>
                 </label>
                 <label ng-if="emailSendConfiguration.allowHyperlinks" class="radio-inline">
-                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_HYPERLINKS">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_HYPERLINKS" ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
                     <span translate>
                                   common.directive.docTree.emailDialog.sendWithHyperlink.checkbox
                               </span>
