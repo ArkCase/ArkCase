@@ -69,7 +69,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
+            messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyWithoutHeaderFromTemplate(messageBody, "");
             MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");

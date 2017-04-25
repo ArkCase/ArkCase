@@ -266,6 +266,16 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 }
             };
 
+            $scope.onSelectFile = function(fileId) {
+                var idx = $scope.emailDataModel.selectedFilesToEmail.indexOf(fileId);
+
+                if (idx > -1) {
+                    $scope.emailDataModel.selectedFilesToEmail.splice(idx, 1);
+                } else {
+                    $scope.emailDataModel.selectedFilesToEmail.push(fileId);
+                }
+            };
+            
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss();
             };

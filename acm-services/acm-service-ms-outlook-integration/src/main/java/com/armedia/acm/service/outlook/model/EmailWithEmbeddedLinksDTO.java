@@ -26,6 +26,11 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
         return buildMessageBodyFromTemplate(body, getHeader(), getFooter());
     }
 
+    public String buildMessageBodyWithoutHeaderFromTemplate(String body)
+    {
+        return buildMessageBodyWithoutHeaderFromTemplate(body, getFooter());
+    }
+
     public String getSubject()
     {
         return subject;
@@ -96,11 +101,13 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
         this.baseUrl = baseUrl;
     }
 
-    public String getBody() {
+    public String getBody()
+    {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(String body)
+    {
         this.body = body;
     }
 }
