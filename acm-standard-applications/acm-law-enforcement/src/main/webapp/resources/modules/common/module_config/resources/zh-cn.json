@@ -97,6 +97,11 @@
       "btn.delete.folder": "zh-cn_Yes",
       "btn.cancel.delete.folder": "zh-cn_No"
     }
+    "fileTypesDialog": {
+      "header": "zh-cn_Please select type of the Document",
+      "btnOK": "zh-cn_OK",
+      "btnCancel": "zh-cn_Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "zh-cn_ records above...",
@@ -236,6 +241,10 @@
   },
   "common.directive.progressIndicator":{
     "progressCompletion": "zh-cn_% Complete"
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "zh-cn_Add File",
+    "button.addFolder": "zh-cn_Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "zh-cn_For your protection, application is about to logout. Click Cancel to stay logged in."

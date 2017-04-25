@@ -97,6 +97,11 @@
       "btn.delete.folder": "fr_Yes",
       "btn.cancel.delete.folder": "fr_No"
     }
+    "fileTypesDialog": {
+      "header": "fr_Please select type of the Document",
+      "btnOK": "fr_OK",
+      "btnCancel": "fr_Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": "fr_ records above...",
@@ -233,6 +238,10 @@
       "error.owninggroupUnique": "fr_Only one owning group is allowed.",
       "error.noAccessCombo": "fr_The combination of No Access and Assignee is not allowed."
     }
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "fr_Add File",
+    "button.addFolder": "fr_Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "fr_For your protection, application is about to logout. Click Cancel to stay logged in."

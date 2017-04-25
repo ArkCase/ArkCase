@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h4 translate>common.directive.docTree.fileTypesDialog.header</h4>
+</div>
+<div class="modal-body">
+    <select class="form-control" ng-model="fileType.selected">
+        <option ng-repeat="type in fileTypes" value="{{type.cmd}}">{{type.title}}</option>
+    </select>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate>
+        common.directive.docTree.fileTypesDialog.btnOK
+    </button>
+    <button type="button" class="btn btn-secondary" ng-click="$dismiss()" translate>
+        common.directive.docTree.fileTypesDialog.btnCancel
+    </button>
+</div>
