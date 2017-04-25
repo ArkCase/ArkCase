@@ -14,7 +14,7 @@ angular.module('people').controller('People.UrlsModalController', ['$scope', '$m
                 $modalInstance.close(
                     {
                         url: $scope.url,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );

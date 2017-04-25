@@ -119,10 +119,22 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
                 identification.identificationNumber = data.identification.identificationNumber;
                 identification.identificationIssuer = data.identification.identificationIssuer;
                 identification.identificationYearIssued = data.identification.identificationYearIssued;
+
                 if (!data.isEdit) {
-                    $scope.objectInfo.identifications.push(identification);
+                    if (data.isDefault) {
+                        $scope.objectInfo.defaultIdentification = identification;
+                    }
+                    else {
+                        //if identifications is empty then we will not add it to the array
+                        //but we will set it as default
+                        if ($scope.objectInfo.identifications.length > 0) {
+                            $scope.objectInfo.identifications.push(identification);
+                        } else {
+                            $scope.objectInfo.defaultIdentification = identification;
+                        }
+                    }
                 }
-                if (data.isDefault) {
+                else if (data.isDefault) {
                     $scope.objectInfo.defaultIdentification = identification;
                 }
                 saveObjectInfoAndRefresh();

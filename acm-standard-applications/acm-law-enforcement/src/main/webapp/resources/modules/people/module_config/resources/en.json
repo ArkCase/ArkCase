@@ -14,7 +14,7 @@
     "email.label": "Email",
     "status.label": "Status",
     "organization.label": "Organization",
-    "organizationId.label": "ID"
+    "identification.label": "ID"
   },
   "people.comp.actions": {
     "export.button": "Export",
@@ -90,13 +90,20 @@
     "modal": {
       "addAddress": "Add Address",
       "editAddress": "Edit Record",
-      "addressTypes.label": "Address Types",
+      "type.label": "Address Type",
+      "type.placeholder": "Enter Address Type",
       "streetAddress.label": "Address 1",
+      "streetAddress.placeholder": "Enter Address 1",
       "streetAddress2.label": "Address 2",
+      "streetAddress2.placeholder": "Enter Address 2",
       "city.label": "City",
+      "city.placeholder": "Enter City",
       "zip.label": "Zip",
+      "zip.placeholder": "Enter Zip",
       "state.label": "State",
+      "state.placeholder": "Enter State",
       "country.label": "Country",
+      "country.placeholder": "Enter Country",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Save"
     }
@@ -251,6 +258,24 @@
       "yearIssued.label": "Year Issued",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Ok"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "type": "Type",
+      "id": "ID",
+      "value": "Organization",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New",
+      "addExisting": "Add New"
     }
   },
   "people.comp.editPerson": {

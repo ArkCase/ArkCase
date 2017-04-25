@@ -14,7 +14,7 @@ angular.module('people').controller('People.EmailsModalController', ['$scope', '
                 $modalInstance.close(
                     {
                         email: $scope.email,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );

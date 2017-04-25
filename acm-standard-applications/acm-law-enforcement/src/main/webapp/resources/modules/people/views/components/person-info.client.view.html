@@ -2,7 +2,8 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-12 col-md-3">
-                <img ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'>
+                <img ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'
+                     ng-style="{ width : 200, height : 100 }">
             </div>
             <div class="col-xs-12 col-md-8">
                 <div class="row">
@@ -33,9 +34,9 @@
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
-                            {{objectInfo.organizations[0].id}}
+                            {{objectInfo.defaultIdentification.identificationNumber}}
                         </div>
-                        <small class="text-muted"><span translate>people.comp.info.organizationId.label</span></small>
+                        <small class="text-muted"><span translate>people.comp.info.identification.label</span></small>
                     </div>
                 </div>
                 <div class="row">

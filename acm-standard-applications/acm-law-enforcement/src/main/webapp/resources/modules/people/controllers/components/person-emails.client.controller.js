@@ -122,10 +122,23 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
                 email.subType = data.email.subType;
                 email.value = data.email.value;
                 email.description = data.email.description;
+
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(email);
+                    if (data.isDefault) {
+                        $scope.objectInfo.defaultEmail = email;
+                    }
+                    else {
+                        //if emails is empty then we will not add it to the array
+                        //but we will set it as default
+                        var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
+                        if (emails.length > 0) {
+                            $scope.objectInfo.contactMethods.push(email);
+                        } else {
+                            $scope.objectInfo.defaultEmail = email;
+                        }
+                    }
                 }
-                if (email.isDefault) {
+                else if (data.isDefault) {
                     $scope.objectInfo.defaultEmail = email;
                 }
                 saveObjectInfoAndRefresh();
