@@ -13,6 +13,7 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
     private String objectType;
     private Long objectId;
     private String subject;
+    private String title;
     private String header;
     private String footer;
     private String body;
@@ -37,6 +38,23 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
     public void setSubject(String subject)
     {
         this.subject = subject;
+    }
+
+    /**
+     * @return the title
+     */
+    public String getTitle()
+    {
+        return title;
+    }
+
+    /**
+     * @param title
+     *            the title to set
+     */
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
     public String getBody()

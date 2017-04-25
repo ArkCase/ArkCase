@@ -21,6 +21,12 @@ public class ExchangeConfiguration
 
     private String defaultAccess;
 
+    private String systemUserEmail = "no-such-mailbox@armedia.com";
+
+    private String systemUserEmailPassword = "";
+
+    private String systemUserId = "no-such-mailbox@armedia.com";
+
     /**
      * @return the integrationEnabled
      */
@@ -104,6 +110,57 @@ public class ExchangeConfiguration
     public void setDefaultAccess(String defaultAccess)
     {
         this.defaultAccess = defaultAccess;
+    }
+
+    /**
+     * @return the systemUserEmail
+     */
+    public String getSystemUserEmail()
+    {
+        return systemUserEmail;
+    }
+
+    /**
+     * @param systemUserEmail
+     *            the systemUserEmail to set
+     */
+    public void setSystemUserEmail(String systemUserEmail)
+    {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    /**
+     * @return the systemUserEmailPassword
+     */
+    public String getSystemUserEmailPassword()
+    {
+        return systemUserEmailPassword;
+    }
+
+    /**
+     * @param systemUserEmailPassword
+     *            the systemUserEmailPassword to set
+     */
+    public void setSystemUserEmailPassword(String systemUserEmailPassword)
+    {
+        this.systemUserEmailPassword = systemUserEmailPassword;
+    }
+
+    /**
+     * @return the systemUserId
+     */
+    public String getSystemUserId()
+    {
+        return systemUserId;
+    }
+
+    /**
+     * @param systemUserId
+     *            the systemUserId to set
+     */
+    public void setSystemUserId(String systemUserId)
+    {
+        this.systemUserId = systemUserId;
     }
 
 }

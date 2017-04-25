@@ -39,6 +39,9 @@ public class ExchangeConfigurationService
                 Boolean.toString(configuration.isEnableAutodiscovery()));
         exchangeProperties.put(ExchangeConfigurationProperties.CLIENT_ACCESS_SERVER, configuration.getClientAccessServer());
         exchangeProperties.put(ExchangeConfigurationProperties.DEFAULT_ACCESS, configuration.getDefaultAccess());
+        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_EMAIL, configuration.getSystemUserEmail());
+        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_EMAIL_PASSWORD, configuration.getSystemUserEmailPassword());
+        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_ID, configuration.getSystemUserId());
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -84,6 +87,15 @@ public class ExchangeConfigurationService
                 break;
             case ExchangeConfigurationProperties.DEFAULT_ACCESS:
                 exchangeConfiguration.setDefaultAccess(propertyValue);
+                break;
+            case ExchangeConfigurationProperties.SYSTEM_USER_EMAIL:
+                exchangeConfiguration.setSystemUserEmail(propertyValue);
+                break;
+            case ExchangeConfigurationProperties.SYSTEM_USER_EMAIL_PASSWORD:
+                exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
+                break;
+            case ExchangeConfigurationProperties.SYSTEM_USER_ID:
+                exchangeConfiguration.setSystemUserId(propertyValue);
                 break;
             }
         }

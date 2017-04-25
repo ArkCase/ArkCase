@@ -3,7 +3,7 @@ package com.armedia.acm.services.notification.web.api;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.notification.exception.AcmNotificationException;
-import com.armedia.acm.services.notification.service.NotificationSender;
+import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class SendEmailWithAttachmentsAPIController
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    private NotificationSender notificationSender;
+    private NotificationSenderFactory notificationSenderFactory;
 
     @RequestMapping(value = "/withattachments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -41,7 +41,7 @@ public class SendEmailWithAttachmentsAPIController
 
         try
         {
-            getNotificationSender().sendEmailWithAttachments(in, authentication, user);
+            getNotificationSenderFactory().getNotificationSender().sendEmailWithAttachments(in, authentication, user);
         } catch (Exception e)
         {
             throw new AcmUserActionFailedException(
@@ -52,14 +52,14 @@ public class SendEmailWithAttachmentsAPIController
         return in;
     }
 
-    public NotificationSender getNotificationSender()
+    public NotificationSenderFactory getNotificationSenderFactory()
     {
-        return notificationSender;
+        return notificationSenderFactory;
     }
 
-    public void setNotificationSender(NotificationSender notificationSender)
+    public void setNotificationSenderFactory(NotificationSenderFactory notificationSenderFactory)
     {
-        this.notificationSender = notificationSender;
+        this.notificationSenderFactory = notificationSenderFactory;
     }
 
 }
