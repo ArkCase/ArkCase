@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h4 translate>common.directive.docTree.delete.confirmation.dialog.header</h4>
+</div>
+<div class="modal-body">
+    <h5 translate>common.directive.docTree.delete.confirmation.dialog.body.message</h5>
+    <p>{{ subFoldersNum }} {{ 'common.directive.docTree.delete.confirmation.dialog.body.content.folders' | translate }}
+        <i class="fa fa-fw fa-folder"></i></p>
+    <p>{{ filesNum }} {{ 'common.directive.docTree.delete.confirmation.dialog.body.content.files' | translate }}
+        <i class="fa fa-fw fa-file"></i></p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate>
+        common.directive.docTree.delete.confirmation.dialog.btn.delete.folder
+    </button>
+    <button type="button" class="btn btn-secondary" ng-click="$dismiss()" translate>
+        common.directive.docTree.delete.confirmation.dialog.btn.cancel.delete.folder
+    </button>
+</div>
+
