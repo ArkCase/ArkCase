@@ -818,10 +818,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
-                if(DocTree.isFolderNode(data.node)){
+                if (DocTree.isFolderNode(data.node)) {
                     DocTree.Op.addFolderActionBtns();
                 }
-                if(DocTree.isFileNode(data.node)){
+                if (DocTree.isFileNode(data.node)) {
                     DocTree.Op.removeFolderActionBtns();
                 }
                 if (DocTree.isSpecialNode(data.node)) {
@@ -3027,7 +3027,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 , addFolderActionBtns: function () {
                     DocTree.scope.$bus.publish('showFolderActionBtns', {command: DocTree.Command});
                 }
-                , removeFolderActionBtns: function(){
+                , removeFolderActionBtns: function () {
                     DocTree.scope.$bus.publish('hideFolderActionBtns');
                 }
             } // end Op
