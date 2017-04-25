@@ -2,7 +2,6 @@
     <h3 ng-hide="isEdit">
         <span translate>people.comp.phones.modal.addPhone</span>
     </h3>
-
     <h3 ng-show="isEdit">
         <span translate>people.comp.phones.modal.editPhone</span>
     </h3>
@@ -20,7 +19,8 @@
             <label for="phones_{{::$id}}"
                    translate>people.comp.phones.modal.value.label</label>
         </div>
-        <input id="phones_{{::$id}}" type="text" ng-model="phone.value">
+        <input id="phones_{{::$id}}" type="text" ng-model="phone.value"
+               placeholder="{{ 'people.comp.phones.modal.value.placeholder' | translate }}">
         <div>
             <p translate>people.comp.phones.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">

@@ -20,7 +20,8 @@
             <label for="emails_{{::$id}}"
                    translate>people.comp.emails.modal.value.label</label>
         </div>
-        <input id="emails_{{::$id}}" type="text" ng-model="email.value">
+        <input id="emails_{{::$id}}" type="text" ng-model="email.value"
+               placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
         <div>
             <p translate>people.comp.emails.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">

@@ -7,7 +7,7 @@
   },
   "people.menus": {
     "leftnav.item": "People",
-    "topbar.item": "People"
+    "topbar.item": "New Person"
   },
   "people.comp.info": {
     "phone.label": "Phone",
@@ -133,9 +133,11 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add Phone",
       "type.label": "Phone Type",
-      "value.label": "Phone Number"
+      "type.placeholder": "Enter Phone Type",
+      "value.label": "Phone Number",
+      "value.placeholder": "Enter Phone Number"
     }
   },
   "people.comp.emails": {
@@ -163,9 +165,11 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add Email",
       "type.label": "Email Type",
-      "value.label": "Email Address"
+      "type.placeholder": "Enter Email Type",
+      "value.label": "Email Address",
+      "value.placeholder": "Enter Email Address"
     }
   },
   "people.comp.urls": {
@@ -193,9 +197,11 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add URL",
       "type.label": "Type",
-      "value.label": "URL"
+      "type.placeholder": "Enter Type",
+      "value.label": "URL",
+      "value.placeholder": "Enter URL"
     }
   },
   "people.comp.aliases": {
@@ -207,24 +213,28 @@
     },
     "table.columns": {
       "aliasValue": "Alias",
+      "type": "Type",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
       "modifier": "Modified By"
     },
-    "dialog": {
+    "modal": {
+      "addAlias": "Add New Alias",
+      "editAlias": "Edit Alias",
       "title": "Insert New Alias",
       "setPrimary": "Set as Primary?",
       "yes": "Yes",
       "no": "No",
-      "cancel": "Cancel",
-      "ok": "Ok",
-      "alias": "Alias",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add Alias",
+      "value.label": "Alias",
+      "value.placeholder": "Enter Alias",
       "description": "Description",
-      "aliasType": "Alias Type"
-    },
-    "noData": "No data"
+      "aliasType.label": "Alias Type",
+      "aliasType.placeholder": "Enter Alias Type"
+    }
   },
   "people.comp.ids": {
     "title": "IDs",
@@ -252,12 +262,17 @@
       "yes": "Yes",
       "no": "No",
       "type.label": "Type",
+      "type.placeholder": "Enter Type",
       "id.label": "ID",
+      "id.placeholder": "Enter ID",
       "number.label": "Number",
+      "number.placeholder": "Enter Number",
       "issuer.label": "Issuer",
+      "issuer.placeholder": "Enter Issuer",
       "yearIssued.label": "Year Issued",
+      "yearIssued.placeholder": "Enter Year Issued",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok"
+      "btnOk.text": "Add ID"
     }
   },
   "people.comp.organizations": {
@@ -276,6 +291,28 @@
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
       "addExisting": "Add New"
+    }
+  },
+  "people.comp.cases": {
+    "title": "Cases",
+    "table.columns": {
+      "priority": "Priority",
+      "id": "ID",
+      "title": "Title",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "Complaints",
+    "table.columns": {
+      "priority": "Priority",
+      "id": "ID",
+      "title": "Title",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Modified"
     }
   },
   "people.comp.editPerson": {
@@ -338,6 +375,5 @@
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
     }
-  },
-  "people.menus.topbar.item": "New Person"
+  }
 }
