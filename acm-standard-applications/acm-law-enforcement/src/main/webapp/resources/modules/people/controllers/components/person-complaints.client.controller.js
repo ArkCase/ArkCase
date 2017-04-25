@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.ComplaintsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectPersonService) {
 
 
         Authentication.queryUserInfo().then(
@@ -44,8 +44,15 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = [];
+            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+            if (Util.goodPositive(currentObjectId, false)) {
+                ObjectPersonService.getPesonComplaints(currentObjectId).then(function (data) {
+                    var complaints = data.response.docs;
+                    $scope.gridOptions.data = complaints;
+                    $scope.gridOptions.totalItems = data.response.numFound;
+                    return data;
+                });
+            }
         };
-
     }
 ]);

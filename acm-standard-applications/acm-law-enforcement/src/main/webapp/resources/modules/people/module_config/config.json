@@ -669,35 +669,48 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "type",
-          "displayName": "people.comp.cases.table.columns.type",
+          "name": "priority",
+          "field": "priority_lcs",
+          "displayName": "people.comp.cases.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
-          "name": "value",
-          "displayName": "people.comp.cases.table.columns.value",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "description",
-          "displayName": "people.comp.cases.table.columns.description",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "author",
-          "field": "creator",
-          "displayName": "people.comp.cases.table.columns.creator",
+          "name": "id",
+          "field": "object_id_s",
+          "displayName": "people.comp.cases.table.columns.id",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "width": 130
         },
         {
-          "name": "created",
-          "displayName": "people.comp.cases.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "name": "title",
+          "field": "title_parseable",
+          "sortField": "title_parseable_lcs",
+          "displayName": "people.comp.cases.table.columns.title",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "status",
+          "field": "status_lcs",
+          "displayName": "people.comp.cases.table.columns.status",
+          "headerCellFilter": "translate"
+        },
+        {
+          "width": 150,
+          "name": "assignee",
+          "field": "assignee_id_lcs",
+          "displayName": "people.comp.cases.table.columns.assignee",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        },
+        {
+          "width": 150,
+          "name": "modified",
+          "field": "modified_date_tdt",
+          "displayName": "people.comp.cases.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },
@@ -717,35 +730,48 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "type",
-          "displayName": "people.comp.complaints.table.columns.type",
+          "name": "priority",
+          "field": "priority_lcs",
+          "displayName": "people.comp.complaints.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
-          "name": "value",
-          "displayName": "people.comp.complaints.table.columns.value",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "description",
-          "displayName": "people.comp.complaints.table.columns.description",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "author",
-          "field": "creator",
-          "displayName": "people.comp.complaints.table.columns.creator",
+          "name": "id",
+          "field": "object_id_s",
+          "displayName": "people.comp.complaints.table.columns.id",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "width": 130
         },
         {
-          "name": "created",
-          "displayName": "people.comp.complaints.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "name": "title",
+          "field": "title_parseable",
+          "sortField": "title_parseable_lcs",
+          "displayName": "people.comp.complaints.table.columns.title",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "status",
+          "field": "status_lcs",
+          "displayName": "people.comp.complaints.table.columns.status",
+          "headerCellFilter": "translate"
+        },
+        {
+          "width": 150,
+          "name": "assignee",
+          "field": "assignee_id_lcs",
+          "displayName": "people.comp.complaints.table.columns.assignee",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        },
+        {
+          "width": 150,
+          "name": "modified",
+          "field": "modified_date_tdt",
+          "displayName": "people.comp.complaints.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },

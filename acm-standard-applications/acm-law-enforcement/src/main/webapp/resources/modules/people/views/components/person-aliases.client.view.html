@@ -1,24 +1,12 @@
 <div ng-controller="Person.AliasesController">
-    <div class="row">
-        <div class="btn-group pull-right">
-            <button class="btn btn-sm btn-default" ng-disabled="disableBtnDelete()" ng-click="delete()">
-                <i class="fa fa-bullhorn"></i>
-                <span translate>people.comp.aliases.actions.delete</span>
-            </button>
-            <button class="btn btn-sm btn-default" ng-disabled="disableBtnSetPrimary()" ng-click="setPrimary()">
-                <i class="fa fa-bullhorn"></i>
-                <span translate>people.comp.aliases.actions.setPrimary</span>
-            </button>
-            <button class="btn btn-sm btn-default" ng-click="newAlias()">
-                <i class="fa fa-bullhorn"></i>
-                <span translate>people.comp.aliases.actions.upload</span>
-            </button>
-        </div>
-    </div>
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
                 <span> {{'people.comp.aliases.title' | translate}}</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
+                        <i class="fa fa-lg fa-plus"></i></button>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -31,11 +19,6 @@
                  adjust-table-height="gridOptions.data.length"
                  ng-hide="gridOptions.noData"
                  class="grid">
-            </div>
-            <div class="alert" ng-if="gridOptions.noData">
-                <p class="text-center">
-                    <span>{{noDataMessage}}</span>
-                </p>
             </div>
         </div>
     </div>

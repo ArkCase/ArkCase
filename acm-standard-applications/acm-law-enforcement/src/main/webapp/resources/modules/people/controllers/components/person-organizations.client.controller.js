@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService) {
 
 
         Authentication.queryUserInfo().then(

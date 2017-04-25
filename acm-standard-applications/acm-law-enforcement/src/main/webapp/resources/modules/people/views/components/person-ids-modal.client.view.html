@@ -20,17 +20,20 @@
             <label for="identificationNumber_{{::$id}}"
                    translate>people.comp.ids.modal.number.label</label>
         </div>
-        <input id="identificationNumber_{{::$id}}" type="text" ng-model="identification.identificationNumber">
+        <input id="identificationNumber_{{::$id}}" type="text" ng-model="identification.identificationNumber"
+               placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
         <div>
             <label for="identificationIssuer_{{::$id}}"
                    translate>people.comp.ids.modal.issuer.label</label>
         </div>
-        <input id="identificationIssuer_{{::$id}}" type="text" ng-model="identification.identificationIssuer">
+        <input id="identificationIssuer_{{::$id}}" type="text" ng-model="identification.identificationIssuer"
+               placeholder="{{ 'people.comp.ids.modal.issuer.placeholder' | translate }}">
         <div>
             <label for="identificationYearIssued_{{::$id}}"
                    translate>people.comp.ids.modal.yearIssued.label</label>
         </div>
-        <input id="identificationYearIssued_{{::$id}}" type="text" ng-model="identification.identificationYearIssued">
+        <input id="identificationYearIssued_{{::$id}}" type="text" ng-model="identification.identificationYearIssued"
+               placeholder="{{ 'people.comp.ids.modal.yearIssued.placeholder' | translate }}">
         <div>
             <p translate>people.comp.ids.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">

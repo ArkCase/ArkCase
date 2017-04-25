@@ -2,7 +2,7 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-12 col-md-3">
-                <img ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'
+                <img alt="Image" ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'
                      ng-style="{ width : 200, height : 100 }">
             </div>
             <div class="col-xs-12 col-md-8">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
-                        <div class="h4 font-bold">
+                        <div class="h4 font-bold" ng-show="objectInfo.defaultPhone">
                             {{objectInfo.defaultPhone.value}}({{objectInfo.defaultPhone.subType}})
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-md-4">
-                        <div class="h4 font-bold">
+                        <div class="h4 font-bold" ng-show="objectInfo.defaultEmail">
                             {{objectInfo.defaultEmail.value}}({{objectInfo.defaultEmail.subType}})
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.email.label</span></small>
