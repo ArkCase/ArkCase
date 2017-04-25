@@ -122,10 +122,23 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
                 url.subType = data.url.subType;
                 url.value = data.url.value;
                 url.description = data.url.description;
+
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(url);
+                    if (data.isDefault) {
+                        $scope.objectInfo.defaultUrl = url;
+                    }
+                    else {
+                        //if urls is empty then we will not add it to the array
+                        //but we will set it as default
+                        var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
+                        if (urls.length > 0) {
+                            $scope.objectInfo.contactMethods.push(url);
+                        } else {
+                            $scope.objectInfo.defaultUrl = url;
+                        }
+                    }
                 }
-                if (url.isDefault) {
+                else if (data.isDefault) {
                     $scope.objectInfo.defaultUrl = url;
                 }
                 saveObjectInfoAndRefresh();
