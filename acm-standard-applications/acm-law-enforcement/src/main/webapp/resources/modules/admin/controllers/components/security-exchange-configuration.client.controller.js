@@ -4,12 +4,32 @@ angular.module('admin').controller('Admin.SecurityExchangeConfigurationControlle
         $scope.exchangeConfigDataModel = {};
         $scope.serverVersionSelectOptions = [
         {
+            value: 'Exchange2007',
+            label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2007'
+        },
+        {
             value: 'Exchange2007_SP1',
             label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2007_SP1'
         },
         {
+            value: 'Exchange2010',
+            label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2010'
+        },
+        {
+            value: 'Exchange2010_SP1',
+            label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2010_SP1'
+        },
+        {
             value: 'Exchange2010_SP2',
             label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2010_SP2'
+        },
+        {
+            value: 'Exchange2013',
+            label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2013'
+        },
+        {
+            value: 'Exchange2013_SP1',
+            label: 'admin.security.exchangeConfiguration.exchangeConfigForm.exchangeServerVersionOptions.Exchange2013_SP1'
         }
         ];
 
