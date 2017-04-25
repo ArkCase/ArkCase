@@ -636,6 +636,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmObjectNotFoundException,
             AcmUserActionFailedException
     {
@@ -773,6 +774,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
     {
         AcmFolder rootFolder = container.getFolder();
