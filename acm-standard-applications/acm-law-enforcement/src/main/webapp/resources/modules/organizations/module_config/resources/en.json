@@ -124,5 +124,65 @@
       "eventDate": "Date",
       "userId": "User"
     }
-  }
+  },
+  "organizations.comp.newOrganization": {
+    "title": "Organization",
+    "addAnother": "Add Another",
+    "remove": "Remove",
+    "name": "Organization Name",
+    "name.placeholder": "Enter Organization Name",
+    "type": "Organization Type",
+    "type.placeholder": "Select Organization Type",
+    "saveButton": "Save Organization",
+    "communicationAccounts": {
+      "title": "Communication Accounts",
+      "phone": "Phone",
+      "phone.placeholder": "Enter Phone",
+      "phoneType": "Phone Type",
+      "email": "Email",
+      "email.placeholder": "Enter Email",
+      "emailType": "Email Type",
+      "fax": "Fax",
+      "fax.placeholder": "Enter Fax",
+      "faxType": "Fax Type",
+      "url": "URL",
+      "url.placeholder": "Enter URL",
+      "removeContactMethod": "Remove",
+      "urlType": "URL Type"
+    },
+    "people": {
+      "title": "People"
+    },
+    "locations": {
+      "title": "Locations",
+      "country": "Country",
+      "country.placeholder": "Select Country",
+      "state": "State",
+      "state.placeholder": "Enter State",
+      "zip": "Zip",
+      "zip.placeholder": "Enter Zip",
+      "city": "City",
+      "city.placeholder": "Enter City",
+      "type": "Address Type",
+      "type.placeholder": "Select Address Type",
+      "streetAddress": "Street Address",
+      "streetAddress.placeholder": "Enter Street Address",
+      "streetAddress2": "Street Address2",
+      "streetAddress2.placeholder": "Enter Street Address2"
+    },
+    "identification": {
+      "title": "Identifications",
+      "identificationID": "Identification ID",
+      "identificationID.placeholder": "Enter Identification ID",
+      "identificationType": "Identification Type",
+      "identificationType.placeholder": "Select Identification Type",
+      "identificationNumber": "Identification Number",
+      "identificationNumber.placeholder": "Enter Identification Number",
+      "identificationIssuer": "Identification Issuer",
+      "identificationIssuer.placeholder": "Enter Identification Issuer",
+      "identificationYearIssued": "Identification Issued",
+      "identificationYearIssued.placeholder": "Select Identification Issued"
+    }
+  },
+  "organizations.menus.topbar.item": "New Organization"
 }

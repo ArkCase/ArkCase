@@ -18,8 +18,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -110,6 +112,52 @@ public class Organization implements Serializable, AcmEntity
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    /**
+     * ContactMethod which is default as phone
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_phone")
+    private ContactMethod defaultPhone;
+
+    /**
+     * ContactMethod which is default as email
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_email")
+    private ContactMethod defaultEmail;
+
+    /**
+     * PostalAddress which is default
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_address")
+    private PostalAddress defaultAddress;
+
+    /**
+     * ContactMethod which is default as url
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_url")
+    private ContactMethod defaultUrl;
+
+    /**
+     * ContactMethod which is default as fax
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_fax")
+    private ContactMethod defaultFax;
+
+    /**
+     * Identification which is default from identifications
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_identification")
+    private Identification defaultIdentification;
+
+    @Lob
+    @Column(name = "cm_details")
+    private String details;
 
     @XmlTransient
     public Long getOrganizationId()
@@ -214,6 +262,10 @@ public class Organization implements Serializable, AcmEntity
 
     public List<Identification> getIdentifications()
     {
+        if (identifications == null)
+        {
+            identifications = new ArrayList<>();//just for prevention if something set this field to null
+        }
         return identifications;
     }
 
@@ -224,6 +276,10 @@ public class Organization implements Serializable, AcmEntity
 
     public List<PostalAddress> getAddresses()
     {
+        if (addresses == null)
+        {
+            addresses = new ArrayList<>();//just for prevention if something set this field to null
+        }
         return addresses;
     }
 
@@ -234,6 +290,10 @@ public class Organization implements Serializable, AcmEntity
 
     public List<ContactMethod> getContactMethods()
     {
+        if (contactMethods == null)
+        {
+            contactMethods = new ArrayList<>();//just for prevention if something set this field to null
+        }
         return contactMethods;
     }
 
@@ -252,4 +312,127 @@ public class Organization implements Serializable, AcmEntity
         this.className = className;
     }
 
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
+    }
+
+    public ContactMethod getDefaultPhone()
+    {
+        return defaultPhone;
+    }
+
+    /**
+     * if inserting default phone, same phone will be automatically added to the contacts
+     *
+     * @param defaultPhone
+     */
+    public void setDefaultPhone(ContactMethod defaultPhone)
+    {
+        this.defaultPhone = defaultPhone;
+        if (defaultPhone != null && defaultPhone.getId() == null)
+        {
+            getContactMethods().add(defaultPhone);
+        }
+    }
+
+    public ContactMethod getDefaultEmail()
+    {
+        return defaultEmail;
+    }
+
+    /**
+     * if inserting default email, same phone will be automatically added to the contacts
+     *
+     * @param defaultEmail
+     */
+    public void setDefaultEmail(ContactMethod defaultEmail)
+    {
+        this.defaultEmail = defaultEmail;
+        if (defaultEmail != null && defaultEmail.getId() == null)
+        {
+            getContactMethods().add(defaultEmail);
+        }
+    }
+
+    public PostalAddress getDefaultAddress()
+    {
+        return defaultAddress;
+    }
+
+    /**
+     * if inserting default address, same phone will be automatically added to the addresses
+     *
+     * @param defaultAddress
+     */
+    public void setDefaultAddress(PostalAddress defaultAddress)
+    {
+        this.defaultAddress = defaultAddress;
+        if (defaultAddress != null && defaultAddress.getId() == null)
+        {
+            getAddresses().add(defaultAddress);
+        }
+    }
+
+    public ContactMethod getDefaultUrl()
+    {
+        return defaultUrl;
+    }
+
+    /**
+     * if inserting default url, same phone will be automatically added to the contacts
+     *
+     * @param defaultUrl
+     */
+    public void setDefaultUrl(ContactMethod defaultUrl)
+    {
+        this.defaultUrl = defaultUrl;
+        if (defaultUrl != null && defaultUrl.getId() == null)
+        {
+            getContactMethods().add(defaultUrl);
+        }
+    }
+
+    public Identification getDefaultIdentification()
+    {
+        return defaultIdentification;
+    }
+
+    /**
+     * if inserting default identification, same identification will be automatically added to the identifications list
+     *
+     * @param defaultIdentification
+     */
+    public void setDefaultIdentification(Identification defaultIdentification)
+    {
+        if (defaultIdentification != null && defaultIdentification.getIdentificationID() == null)
+        {
+            getIdentifications().add(defaultIdentification);
+        }
+        this.defaultIdentification = defaultIdentification;
+    }
+
+    /**
+     * if inserting default fax, same fax will be automatically added to the contactMethods list
+     *
+     * @param defaultFax
+     */
+    public void setDefaultFax(ContactMethod defaultFax)
+    {
+        this.defaultFax = defaultFax;
+        if (defaultFax != null && defaultFax.getId() == null)
+        {
+            getContactMethods().add(defaultFax);
+        }
+    }
+
+    public ContactMethod getDefaultFax()
+    {
+        return defaultFax;
+    }
 }
