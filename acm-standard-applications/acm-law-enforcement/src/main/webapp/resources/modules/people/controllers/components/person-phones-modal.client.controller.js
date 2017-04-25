@@ -14,7 +14,7 @@ angular.module('people').controller('People.PhonesModalController', ['$scope', '
                 $modalInstance.close(
                     {
                         phone: $scope.phone,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );

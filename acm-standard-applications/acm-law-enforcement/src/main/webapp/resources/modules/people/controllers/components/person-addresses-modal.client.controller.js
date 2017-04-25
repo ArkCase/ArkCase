@@ -7,6 +7,10 @@ angular.module('people').controller('People.AddressesModalController', ['$scope'
                     return addressTypes;
                 });
 
+            ObjectLookupService.getCountries().then(function (countries) {
+                $scope.countries = countries;
+            });
+
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
@@ -14,7 +18,7 @@ angular.module('people').controller('People.AddressesModalController', ['$scope'
                 $modalInstance.close(
                     {
                         address: $scope.address,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );

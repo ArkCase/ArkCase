@@ -1,6 +1,6 @@
 <div class="modal-header">
-    <h3 ng-hide="isEdit">
-        <span translate>people.comp.related.modal.addAddress</span>
+    <h3>
+        <span translate>people.comp.related.modal.addPerson</span>
     </h3>
 
     <h3 ng-show="isEdit">
@@ -8,35 +8,30 @@
     </h3>
 </div>
 <div class="modal-body">
-    <form name="addressForm">
+    <form name="relatedForm">
         <div>
-            <label for="addressTypes_{{::$id}}"
-                   translate>people.comp.related.modal.type.label</label>
+            <label for="person_{{::$id}}"
+                   translate>people.comp.related.modal.person.label</label>
         </div>
-        <select id="addressTypes_{{::$id}}"
-                ng-model="address.type"
-                ng-options="item.type as item.name for item in addressTypes"></select>
+        <input id="person_{{::$id}}" class="form-control" type="text" ng-model="personName"
+               ng-click="pickPerson()" required>
         <div>
-            <label for="addressTypes_{{::$id}}"
-                   translate>people.comp.related.modal.value.label</label>
+            <label for="relationshipTypes_{{::$id}}"
+                   translate>people.comp.related.modal.relationship.label</label>
         </div>
-        <input id="phones_{{::$id}}" type="text" ng-model="address.value">
-        <div>
-            <p translate>people.comp.related.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>people.comp.related.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>people.comp.related.modal.no</translate>
-        </div>
-        <label for="addressDescription"/>
-        <textarea id="addressDescription" ng-model="address.description"></textarea>
+        <select id="relationshipTypes_{{::$id}}"
+                ng-model="relationshipType"
+                ng-options="item.type as item.name for item in relationshipTypes"></select>
+
+        <label for="description_{{::$id}}"/>
+        <textarea id="description_{{::$id}}" ng-model="description"></textarea>
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>people.comp.related.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addressForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="relatedForm.$invalid">
         <span translate>people.comp.related.modal.btnOk.text</span>
     </button>
 </div>

@@ -570,18 +570,13 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "type",
+          "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "value",
+          "name": "organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "description",
-          "displayName": "people.comp.organizations.table.columns.description",
           "headerCellFilter": "translate"
         },
         {
@@ -800,7 +795,32 @@
           "enableCellEdit": false,
           "width": 150
         }
-      ]
+      ],
+      "dialogPersonPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "people.comp.related.dialogPersonPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "people.comp.related.dialogPersonPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "history",

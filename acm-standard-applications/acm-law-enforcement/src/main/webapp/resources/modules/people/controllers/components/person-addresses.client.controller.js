@@ -113,7 +113,7 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-addresses-modal.client.view.html',
                 controller: 'People.AddressesModalController',
-                size: 'sm'
+                size: 'md'
             });
 
 
@@ -136,12 +136,20 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
                         $scope.objectInfo.defaultAddress = address;
                     }
                     else {
-                        $scope.objectInfo.addresses.push(address);
+                        //if address is empty then we will not add it to the array
+                        //but we will set it as default
+                        if ($scope.objectInfo.addresses.length > 0) {
+                            $scope.objectInfo.addresses.push(address);
+                        } else {
+                            $scope.objectInfo.defaultAddress = address;
+                        }
                     }
                 }
                 else if (data.isDefault) {
                     $scope.objectInfo.defaultAddress = address;
                 }
+
+
                 saveObjectInfoAndRefresh();
             });
         }
