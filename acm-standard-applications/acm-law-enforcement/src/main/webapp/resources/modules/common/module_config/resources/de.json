@@ -96,7 +96,7 @@
       "body.content.folders": "de_folders",
       "btn.delete.folder": "de_Yes",
       "btn.cancel.delete.folder": "de_No"
-    }
+    },
     "fileTypesDialog": {
       "header": "de_Please select type of the Document",
       "btnOK": "de_OK",

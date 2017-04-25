@@ -96,7 +96,7 @@
       "body.content.folders": "ru_folders",
       "btn.delete.folder": "ru_Yes",
       "btn.cancel.delete.folder": "ru_No"
-    }
+    },
     "fileTypesDialog": {
       "header": "ru_Please select type of the Document",
       "btnOK": "ru_OK",

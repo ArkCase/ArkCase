@@ -96,7 +96,7 @@
       "body.content.folders": "zh-cn_folders",
       "btn.delete.folder": "zh-cn_Yes",
       "btn.cancel.delete.folder": "zh-cn_No"
-    }
+    },
     "fileTypesDialog": {
       "header": "zh-cn_Please select type of the Document",
       "btnOK": "zh-cn_OK",
