@@ -46,8 +46,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            $scope.gridOptions.data = phones;
+            $scope.gridOptions.data = $scope.objectInfo.organizations;
         };
 
         $scope.addNew = function () {
