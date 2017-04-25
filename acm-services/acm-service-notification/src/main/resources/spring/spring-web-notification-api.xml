@@ -23,7 +23,7 @@
 
     <bean id="sendEmailWithAttachmentsAPIController"
           class="com.armedia.acm.services.notification.web.api.SendEmailWithAttachmentsAPIController">
-        <property name="notificationSender" ref="notificationSender"/>
+        <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
     
     <bean id="sendEmailWithEmbeddedLinksAPIController"

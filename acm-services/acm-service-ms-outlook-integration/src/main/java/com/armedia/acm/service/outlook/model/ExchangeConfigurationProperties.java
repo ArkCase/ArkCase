@@ -12,4 +12,7 @@ public interface ExchangeConfigurationProperties
     String ENABLE_AUTODISCOVERY = "outlook.exchange.enable.autodiscovery";
     String CLIENT_ACCESS_SERVER = "outlook.exchange.client-access-server";
     String DEFAULT_ACCESS = "outlook.exchange.default_access";
+    String SYSTEM_USER_EMAIL = "outlook.exchange.system_user_email";
+    String SYSTEM_USER_EMAIL_PASSWORD = "outlook.exchange.system_user_email_password";
+    String SYSTEM_USER_ID = "outlook.exchange.system_user_id";
 }
