@@ -97,6 +97,11 @@
       "btn.delete.folder": "Yes",
       "btn.cancel.delete.folder": "No"
     }
+    "fileTypesDialog": {
+      "header": "Please select type of the Document",
+      "btnOK": "OK",
+      "btnCancel": "Cancel"
+    }
   },
   "common.directive.objectTree": {
     "btnPrev.title": " records above...",
@@ -236,6 +241,10 @@
   },
   "common.directive.progressIndicator":{
     "progressCompletion": "% Complete"
+  },
+  "common.directive.folderActions":{
+    "button.addFile": "Add File",
+    "button.addFolder": "Add Folder"
   },
   "common.comp.acmLogin": {
     "confirmLogout": "For your protection, application is about to logout. Click Cancel to stay logged in."

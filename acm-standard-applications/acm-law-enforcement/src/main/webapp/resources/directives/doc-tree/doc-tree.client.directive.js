@@ -84,11 +84,9 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
-    , 'EcmService'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService', 'EcmService'
     , function ($q, $translate, $modal, $filter, $log, $injector
-        , Store, Util, UtilDateService, ConfigService, UserInfoService
-        , Ecm) {
+        , Store, Util, UtilDateService, ConfigService, UserInfoService, Ecm) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -820,6 +818,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
+                if(DocTree.isFolderNode(data.node)){
+                    DocTree.Op.addFolderActionBtns();
+                }
+                if(DocTree.isFileNode(data.node)){
+                    DocTree.Op.removeFolderActionBtns();
+                }
                 if (DocTree.isSpecialNode(data.node)) {
                     DocTree.Paging.doPaging(data.node);
                 }
@@ -3020,7 +3024,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-
+                , addFolderActionBtns: function () {
+                    DocTree.scope.$bus.publish('showFolderActionBtns', {command: DocTree.Command});
+                }
+                , removeFolderActionBtns: function(){
+                    DocTree.scope.$bus.publish('hideFolderActionBtns');
+                }
             } // end Op
 
 
