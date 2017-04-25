@@ -9,65 +9,61 @@
 </div>
 <div class="modal-body">
     <form name="addressesForm">
-        <div class="modal-body">
-            <form name="addressesForm">
-                <div class="row">
-                    <div class="col-sm-4 form-group">
-                        <label translate> people.comp.addresses.modal.country.label</label>
-                        <select class="form-control"
-                                ng-model="address.country">
-                            <option ng-repeat="option in countries" value="{{option.code}}">
-                                {{option.name}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="col-sm-4 form-group">
-                        <label for="addressTypes_{{::$id}}" translate> people.comp.addresses.modal.type.label</label>
-                        <select id="addressTypes_{{::$id}}" class="form-control"
-                                ng-model="address.addressType"
-                                ng-options="item.type as item.name for item in addressTypes"></select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4 form-group">
-                        <label translate>
-                            people.comp.addresses.modal.streetAddress.label</label>
-                        <input type="text" ng-model="address.streetAddress"
-                               class="input-md form-control"
-                               placeholder="{{ 'people.comp.addresses.modal.streetAddress.placeholder' | translate }}">
-                    </div>
-                    <div class="col-sm-4 form-group">
-                        <label translate>
-                            people.comp.addresses.modal.streetAddress2.label</label>
-                        <input type="text" ng-model="address.streetAddress2"
-                               class="input-md form-control"
-                               placeholder="{{ 'people.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4 form-group">
-                        <label translate>
-                            people.comp.addresses.modal.city.label</label>
-                        <input type="text" ng-model="address.city"
-                               class="input-md form-control"
-                               placeholder="{{ 'people.comp.addresses.modal.city.placeholder' | translate }}">
-                    </div>
-                    <div class="col-sm-3 form-group">
-                        <label translate>
-                            people.comp.addresses.modal.state.label</label>
-                        <input type="text" ng-model="address.state"
-                               class="input-md form-control"
-                               placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
-                    </div>
-                    <div class="col-sm-1 form-group">
-                        <label translate>
-                            people.comp.addresses.modal.zip.label</label>
-                        <input type="text" ng-model="address.zip"
-                               class="input-md form-control"
-                               placeholder="{{ 'people.comp.addresses.modal.zip.placeholder' | translate }}">
-                    </div>
-                </div>
-            </form>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label translate> people.comp.addresses.modal.country.label</label>
+                <select class="form-control"
+                        ng-model="address.country">
+                    <option ng-repeat="option in countries" value="{{option.code}}">
+                        {{option.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="addressTypes_{{::$id}}" translate> people.comp.addresses.modal.type.label</label>
+                <select id="addressTypes_{{::$id}}" class="form-control"
+                        ng-model="address.addressType"
+                        ng-options="item.type as item.name for item in addressTypes"></select>
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-sm-6 form-group">
+                <label translate>
+                    people.comp.addresses.modal.streetAddress.label</label>
+                <input type="text" ng-model="address.streetAddress"
+                       class="input-md form-control"
+                       placeholder="{{ 'people.comp.addresses.modal.streetAddress.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label translate>
+                    people.comp.addresses.modal.streetAddress2.label</label>
+                <input type="text" ng-model="address.streetAddress2"
+                       class="input-md form-control"
+                       placeholder="{{ 'people.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label translate>
+                    people.comp.addresses.modal.city.label</label>
+                <input type="text" ng-model="address.city"
+                       class="input-md form-control"
+                       placeholder="{{ 'people.comp.addresses.modal.city.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label translate>
+                    people.comp.addresses.modal.state.label</label>
+                <input type="text" ng-model="address.state"
+                       class="input-md form-control"
+                       placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label translate>
+                    people.comp.addresses.modal.zip.label</label>
+                <input type="text" ng-model="address.zip"
+                       class="input-md form-control"
+                       placeholder="{{ 'people.comp.addresses.modal.zip.placeholder' | translate }}">
+            </div>
         </div>
     </form>
 </div>

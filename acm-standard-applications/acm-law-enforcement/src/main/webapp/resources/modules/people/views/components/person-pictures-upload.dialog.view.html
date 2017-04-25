@@ -4,7 +4,8 @@
 <div class="modal-body">
     <button ngf-select ng-model="userPicture" id="file"
             ngf-pattern="'image/*'" ngf-accept="'image/*'"
-            class="btn btn-sm btn-default" ngf-change="upload()">people.comp.pictures.dialog.browse</button>
+            class="btn btn-sm btn-default" ngf-change="upload()"><span
+            translate>people.comp.pictures.dialog.browse</span></button>
     {{userPicture.name}}
     <div>
         <p translate>people.comp.pictures.dialog.setPrimary</p>
@@ -15,7 +16,10 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>people.comp.pictures.dialog.cancel</button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )>people.comp.pictures.dialog.upload</button>
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        people.comp.pictures.dialog.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )><span translate>people.comp.pictures.dialog.upload</span>
+    </button>
 </div>
 
