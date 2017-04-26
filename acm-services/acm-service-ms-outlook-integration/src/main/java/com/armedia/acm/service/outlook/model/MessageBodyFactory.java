@@ -64,7 +64,7 @@ public class MessageBodyFactory
      * @param model
      * @return
      */
-    public String buildMessageBodyFromTemplate(Map<String, Object> model)
+    private String buildMessageBodyFromTemplate(Map<String, Object> model)
     {
 
         if (!model.containsKey("header"))
@@ -83,7 +83,7 @@ public class MessageBodyFactory
         String template = new String(getTemplate());
         for (Map.Entry<String, Object> entry : model.entrySet())
         {
-            template = template.replace("${model." + entry.getKey() + "}", entry.getValue().toString());
+            template = template.replace("${model." + entry.getKey() + "}", entry.getValue() != null ? entry.getValue().toString() : "");
         }
         return template;
     }
