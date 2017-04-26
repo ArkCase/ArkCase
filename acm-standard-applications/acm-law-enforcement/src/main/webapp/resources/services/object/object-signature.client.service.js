@@ -32,7 +32,7 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
              */
             _confirmSignature: {
                 method: 'POST',
-                url: 'api/latest/plugin/signature/confirm/:objectType/:objectId?confirmPassword=:pass'
+                url: 'api/latest/plugin/signature/confirm/:objectType/:objectId'
             },
 
             /**
@@ -79,9 +79,10 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
                 , param: {
                     objectType: objectType
                     , objectId: objectId
-                    , pass: pass
                 }
-                , data: {}
+                , data: {
+                    confirmPassword: pass
+                }
                 ,
                 onSuccess: function (data) {
                     if (Service.validateSignature(data)) {

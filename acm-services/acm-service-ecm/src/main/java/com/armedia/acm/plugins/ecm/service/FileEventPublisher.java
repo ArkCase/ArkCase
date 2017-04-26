@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,4 +93,15 @@ public class FileEventPublisher implements ApplicationEventPublisherAware {
         eventPublisher.publishEvent(fileActiveVersionSetEvent);
     }
 
+    public void publishFileUpdatedEvent( EcmFile source, Authentication auth, boolean succeeded ) {
+
+        log.debug("Publishing a file updated event.");
+        EcmFileUpdatedEvent fileUpdatedEvent = new EcmFileUpdatedEvent(source, auth);
+        if ( auth.getDetails() != null && auth.getDetails() instanceof AcmAuthenticationDetails) {
+            fileUpdatedEvent.setIpAddress(((AcmAuthenticationDetails) auth.getDetails()).getRemoteAddress());
+        }
+        fileUpdatedEvent.setSucceeded(succeeded);
+
+        eventPublisher.publishEvent(fileUpdatedEvent);
+    }
 }
