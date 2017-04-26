@@ -46,7 +46,7 @@ public class AcmCalendarAPIController
             @RequestParam(value = "sort", required = false, defaultValue = "name") String sort,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems)
+            @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems) throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         return calendarService.listCalendars(user, auth, null, sort, sortDirection, start, maxItems);
@@ -59,7 +59,7 @@ public class AcmCalendarAPIController
             @RequestParam(value = "sort", required = false, defaultValue = "name") String sort,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems)
+            @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems) throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         return calendarService.listCalendars(user, auth, objectType, sort, sortDirection, start, maxItems);
@@ -72,7 +72,7 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException());
+                .orElseThrow(() -> new CalendarServiceException(""));
         return calendar.getInfo();
     }
 
@@ -88,7 +88,7 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException());
+                .orElseThrow(() -> new CalendarServiceException(""));
         return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
     }
 
@@ -103,7 +103,7 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException());
+                .orElseThrow(() -> new CalendarServiceException(""));
         return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection);
     }
 
@@ -115,14 +115,14 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException());
+                .orElseThrow(() -> new CalendarServiceException(""));
         return calendar.getEvent(eventId);
     }
 
-    @RequestMapping(value = "/{calendarId}", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth,
-            @PathVariable(value = "calendarId") String calendarId, @RequestPart("event") AcmCalendarEvent calendarEvent,
-            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments)
+            @RequestParam(value = "calendarId", required = false) String calendarId, @RequestPart("event") AcmCalendarEvent calendarEvent,
+            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments) throws CalendarServiceException
 
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
@@ -133,7 +133,7 @@ public class AcmCalendarAPIController
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
             @RequestPart("event") AcmCalendarEvent calendarEvent,
-            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments)
+            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments) throws CalendarServiceException
 
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
@@ -141,13 +141,14 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{calendarEventId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCalendarEvent(HttpSession session, Authentication auth,
-            @PathVariable(value = "calendarEventId") String calendarEventId)
+            @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
+            @PathVariable(value = "calendarEventId") String calendarEventId) throws CalendarServiceException
 
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        calendarService.deleteCalendarEvent(user, auth, calendarEventId);
+        calendarService.deleteCalendarEvent(user, auth, objectType, objectId, calendarEventId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

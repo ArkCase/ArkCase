@@ -67,7 +67,8 @@ public interface CalendarService
      * @param calendarEventId
      * @throws CalendarServiceException
      */
-    void deleteCalendarEvent(AcmUser user, Authentication auth, String calendarEventId) throws CalendarServiceException;
+    void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId)
+            throws CalendarServiceException;
 
     <CSE extends CalendarServiceException> CalendarExceptionMapper<CSE> getExceptionMapper(CalendarServiceException e);
 

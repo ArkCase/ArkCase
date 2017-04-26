@@ -35,6 +35,22 @@ public class AcmCalendarInfo implements Serializable
     private String description;
 
     /**
+     *
+     */
+    public AcmCalendarInfo()
+    {
+    }
+
+    public AcmCalendarInfo(String calendarId, String objectType, String objectId, String name, String description)
+    {
+        this.calendarId = calendarId;
+        this.objectType = objectType;
+        this.objectId = objectId;
+        this.name = name;
+        this.description = description;
+    }
+
+    /**
      * @return the calendarId
      */
     public String getCalendarId()

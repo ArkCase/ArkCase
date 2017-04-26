@@ -54,7 +54,7 @@ public class AcmCalendarEvent
 
     private String details;
 
-    private int remindIn;
+    private int remindIn = -1;
 
     private Sensitivity sensitivity = Sensitivity.NORMAL;
 
