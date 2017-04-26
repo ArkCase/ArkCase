@@ -26,11 +26,6 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
         return buildMessageBodyFromTemplate(body, getHeader(), getFooter());
     }
 
-    public String buildMessageBodyWithoutHeaderFromTemplate(String body)
-    {
-        return buildMessageBodyWithoutHeaderFromTemplate(body, getFooter());
-    }
-
     public String getSubject()
     {
         return subject;

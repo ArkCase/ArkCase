@@ -114,11 +114,6 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
         return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
     }
 
-    public String getMessageBodyWithoutHeader()
-    {
-        return buildMessageBodyWithoutHeaderFromTemplate(getBody(), getFooter());
-    }
-
     public List<String> getFilePaths()
     {
         return filePaths;
