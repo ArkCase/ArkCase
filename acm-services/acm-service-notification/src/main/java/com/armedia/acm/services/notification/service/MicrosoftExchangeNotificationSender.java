@@ -54,7 +54,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            in.setBody(new MessageBodyFactory().buildMessageBodyWithoutHeaderFromTemplate(messageBody, ""));
+            in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 

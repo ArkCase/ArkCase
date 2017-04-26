@@ -69,7 +69,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyWithoutHeaderFromTemplate(messageBody, "");
+            messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
             MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
@@ -259,13 +259,14 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             throws AcmEncryptionException
     {
         StringBuilder body = new StringBuilder();
-        body.append(emailWithEmbeddedLinksDTO.getBody());
+        body.append(emailWithEmbeddedLinksDTO.getBody() != null ? emailWithEmbeddedLinksDTO.getBody() : "").append("<br/>");
         if (emailWithEmbeddedLinksDTO.getFileIds() != null)
         {
             for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
             {
                 String token = generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
-                body.append(" http://" + emailWithEmbeddedLinksDTO.getBaseUrl() + fileId + "&acm_email_ticket=" + token + "\n");
+                body.append(emailWithEmbeddedLinksDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token)
+                        .append("<br/>");
             }
         }
         return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body.toString());
