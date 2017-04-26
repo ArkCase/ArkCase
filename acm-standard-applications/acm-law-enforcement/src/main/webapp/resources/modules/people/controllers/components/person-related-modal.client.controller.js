@@ -2,29 +2,27 @@ angular.module('people').controller('People.RelatedModalController', ['$scope', 
         , 'Object.LookupService', 'UtilService'
         , function ($scope, $modal, $modalInstance, $translate, ObjectLookupService, Util) {
 
-            ObjectLookupService.getContactMethodTypes().then(
-                function (contactMethodTypes) {
-                    $scope.phoneTypes = _.find(contactMethodTypes, {type: 'phone'}).subTypes;
-                    return contactMethodTypes;
+            ObjectLookupService.getPersonRelationTypes().then(
+                function (relationshipTypes) {
+                    $scope.relationshipTypes = relationshipTypes;
+                    return relationshipTypes;
                 });
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
+
             $scope.onClickOk = function () {
                 $modalInstance.close({
                     personId: $scope.personId,
                     description: $scope.description,
-                    isEdit: $scope.isEdit,
                     relationshipType: $scope.relationshipType
                 });
             };
+
             $scope.pickPerson = function () {
-
                 var params = {};
-
-
-                params.header = "Search for People";//$translate.instant("common.directive.coreParticipants.modal.dialogPersonPicker.header");
+                params.header = $translate.instant("people.comp.related.dialogPersonPicker.header");
                 params.filter = '"Object Type": PERSON';
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 

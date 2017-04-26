@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectPersonService) {
 
 
         Authentication.queryUserInfo().then(
@@ -45,26 +45,49 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            $scope.gridOptions.data = phones;
+            $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+        };
+
+        var newPersonAssociation = function () {
+            return {
+                id: null
+                , personType: ""
+                , parentId: $scope.objectInfo.id
+                , parentType: $scope.objectInfo.objectType
+                , parentTitle: ""
+                , personDescription: ""
+                , notes: ""
+                , person: null
+                , className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+            };
         };
 
         $scope.addPerson = function () {
-            var phone = {};
-            phone.created = Util.dateToIsoString(new Date());
-            phone.creator = $scope.userId;
 
-            //put contactMethod to scope, we will need it when we return from popup
-            $scope.phone = phone;
-            var item = {
-                id: '',
-                parentId: $scope.objectInfo.id,
-                type: 'phone',
-                subType: '',
-                value: '',
-                description: ''
-            };
-            showModal(item, false);
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/people/views/components/person-related-modal.client.view.html',
+                controller: 'People.RelatedModalController',
+                size: 'sm'
+            });
+
+            modalInstance.result.then(function (data) {
+                PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                    var association = new newPersonAssociation();
+                    association.person = person;
+                    association.parentTitle = person.parentTitle;
+                    association.personType = data.relationshipType;
+                    association.personDescription = data.description;
+                    //ObjectPersonService.addPersonAssociation(association).then(
+                    //function (personAssociation) {
+                    $scope.objectInfo.personAssociations.push(association);
+                    saveObjectInfoAndRefresh()
+                    //$scope.$emit("report-object-updated", $scope.objectInfo);
+                    //}
+                    // );
+                });
+            });
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -78,39 +101,6 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 saveObjectInfoAndRefresh()
             }
         };
-
-        function showModal(phone, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.phone = phone || {};
-            modalScope.isEdit = isEdit || false;
-
-            var modalInstance = $modal.open({
-                scope: modalScope,
-                animation: true,
-                templateUrl: 'modules/people/views/components/person-related-modal.client.view.html',
-                controller: 'People.RelatedModalController',
-                size: 'sm'
-            });
-            modalInstance.result.then(function (data) {
-                var phone;
-                if (!data.isEdit)
-                    phone = $scope.phone;
-                else {
-                    phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
-                }
-                phone.type = 'phone';
-                phone.subType = data.phone.subType;
-                phone.value = data.phone.value;
-                phone.description = data.phone.description;
-                if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(phone);
-                }
-                if (data.isDefault) {
-                    $scope.objectInfo.defaultPhone = phone;
-                }
-                saveObjectInfoAndRefresh();
-            });
-        }
 
         function saveObjectInfoAndRefresh() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));

@@ -315,6 +315,36 @@
       "modified": "Modified"
     }
   },
+  "people.comp.related": {
+    "title": "Related People",
+    "table.columns": {
+      "givenName": "First Name",
+      "familyName": "Last Name",
+      "type": "Relationship",
+      "description": "Description",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "modal": {
+      "title": "Add Related Person",
+      "type.label": "Relationship",
+      "type.placeholder": "Enter Relationship",
+      "person.label": "Person",
+      "person.placeholder": "Search People",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add Related Person"
+    },
+    "dialogPersonPicker": {
+      "header": "Search for People",
+      "table.columns": {
+        "givenName": "First Name",
+        "familyName": "Last Name",
+        "id": "ID"
+      }
+    }
+  },
   "people.comp.editPerson": {
     "title": "Person",
     "addAnother": "Add Another",
