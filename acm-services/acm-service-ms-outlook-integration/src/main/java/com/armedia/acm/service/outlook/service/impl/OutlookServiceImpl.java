@@ -429,10 +429,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         StringBuilder body = new StringBuilder();
         body.append(emailDTO.getBody() != null ? emailDTO.getBody() : "").append("<br/>");
 
-        for (Long fileId : emailDTO.getFileIds())
+        if (emailDTO.getFileIds() != null)
         {
-            String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailDTO, authentication);
-            body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
+            for (Long fileId : emailDTO.getFileIds())
+            {
+                String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailDTO, authentication);
+                body.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("<br/>");
+            }
         }
 
         return emailDTO.buildMessageBodyFromTemplate(body.toString());
