@@ -258,13 +258,17 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     protected String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
             throws AcmEncryptionException
     {
-        String body = "";
-        for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
+        StringBuilder body = new StringBuilder();
+        body.append(emailWithEmbeddedLinksDTO.getBody());
+        if (emailWithEmbeddedLinksDTO.getFileIds() != null)
         {
-            String token = generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
-            body += " http://" + emailWithEmbeddedLinksDTO.getBaseUrl() + fileId + "&acm_email_ticket=" + token + "\n";
+            for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
+            {
+                String token = generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
+                body.append(" http://" + emailWithEmbeddedLinksDTO.getBaseUrl() + fileId + "&acm_email_ticket=" + token + "\n");
+            }
         }
-        return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body);
+        return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body.toString());
     }
 
     protected String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)

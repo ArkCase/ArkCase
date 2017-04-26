@@ -427,6 +427,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private String generateBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
         StringBuilder body = new StringBuilder();
+        body.append(emailDTO.getBody());
 
         for (Long fileId : emailDTO.getFileIds())
         {
