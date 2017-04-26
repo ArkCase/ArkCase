@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
+import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class DocumentRepositoryAPIController
 
     final private Logger log = LoggerFactory.getLogger(getClass());
     private DocumentRepositoryService documentRepositoryService;
+    private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -70,6 +72,7 @@ public class DocumentRepositoryAPIController
             throw new AcmObjectNotFoundException(DocumentRepositoryConstants.OBJECT_TYPE, id,
                     String.format("Document Repository with id: [%d] not found!", id));
         }
+        documentRepositoryEventPublisher.publishViewedEvent(docRepo, true);
         return docRepo;
     }
 
@@ -81,5 +84,15 @@ public class DocumentRepositoryAPIController
     public void setDocumentRepositoryService(DocumentRepositoryService documentRepositoryService)
     {
         this.documentRepositoryService = documentRepositoryService;
+    }
+
+    public DocumentRepositoryEventPublisher getDocumentRepositoryEventPublisher()
+    {
+        return documentRepositoryEventPublisher;
+    }
+
+    public void setDocumentRepositoryEventPublisher(DocumentRepositoryEventPublisher documentRepositoryEventPublisher)
+    {
+        this.documentRepositoryEventPublisher = documentRepositoryEventPublisher;
     }
 }
