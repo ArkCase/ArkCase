@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "acm_person_alias")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PersonAlias implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;

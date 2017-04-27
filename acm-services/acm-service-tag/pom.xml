@@ -60,6 +60,12 @@
             <version>${javax-persistence.version}</version>
         </dependency>
 
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.voodoodyne.jackson.jsog</groupId>
+            <artifactId>jackson-jsog</artifactId>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>

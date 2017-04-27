@@ -3,7 +3,10 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,7 +35,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -44,6 +46,7 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Organization implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -158,6 +161,12 @@ public class Organization implements Serializable, AcmEntity
     @Lob
     @Column(name = "cm_details")
     private String details;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "acm_person_organization",
+            joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
+            inverseJoinColumns = {@JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")})
+    List<Person> people = new ArrayList<>();
 
     @XmlTransient
     public Long getOrganizationId()
@@ -434,5 +443,15 @@ public class Organization implements Serializable, AcmEntity
     public ContactMethod getDefaultFax()
     {
         return defaultFax;
+    }
+
+    public List<Person> getPeople()
+    {
+        return people;
+    }
+
+    public void setPeople(List<Person> people)
+    {
+        this.people = people;
     }
 }

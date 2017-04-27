@@ -43,7 +43,8 @@
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0</exchange-web-services.version>
-        <fasterxml-jackson-core.version>2.6.1</fasterxml-jackson-core.version>
+        <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
+        <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
         <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
         <h2.version>1.3.169</h2.version>
@@ -1502,6 +1503,14 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.voodoodyne.jackson.jsog/jackson-jsog -->
+            <dependency>
+                <groupId>com.voodoodyne.jackson.jsog</groupId>
+                <artifactId>jackson-jsog</artifactId>
+                <version>${voodoodyne-jackson-jsog.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.google.code.gson</groupId>

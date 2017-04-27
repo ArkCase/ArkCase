@@ -2,8 +2,10 @@ package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,6 +38,7 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.participants.model.AcmParticipant")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationReceiver
 {
     private static final long serialVersionUID = 5046781644315879063L;

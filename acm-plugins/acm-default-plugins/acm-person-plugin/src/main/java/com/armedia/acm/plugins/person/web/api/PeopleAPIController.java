@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,10 +49,14 @@ public class PeopleAPIController
 
         if (in.getId() == null)
         {
-            return personService.createPerson(in, auth);
+            log.info("person before {}", ToStringBuilder.reflectionToString(in));
+            Person person = personService.createPerson(in, auth);
+            log.info("person after {}", ToStringBuilder.reflectionToString(person));
+            return person;
         } else
         {
-            return personService.savePerson(in, auth);
+            Person person = personService.savePerson(in, auth);
+            return person;
         }
     }
 
@@ -84,7 +89,8 @@ public class PeopleAPIController
     {
         try
         {
-            return personService.get(personId);
+            Person person = personService.get(personId);
+            return person;
         } catch (Exception e)
         {
             log.error("Error while retrieving Person with id: [{}]", personId, e);
@@ -176,10 +182,10 @@ public class PeopleAPIController
     @ResponseBody
     public String
     getComplaints(Authentication auth,
-             @PathVariable("personId") Long personId,
-             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+                  @PathVariable("personId") Long personId,
+                  @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                  @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+                  @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:COMPLAINT AND child_id_s:%s", personId.toString());
 

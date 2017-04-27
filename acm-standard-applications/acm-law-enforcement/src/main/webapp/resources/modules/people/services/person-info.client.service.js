@@ -52,6 +52,17 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                 method: 'GET',
                 url: 'api/latest/plugin/people/:id',
                 cache: false
+                // ,
+                // transformResponse: function (data, headers) {
+                //     console.log("Before:");
+                //     console.log(data);
+                //     // if (data && headers['content-type'] === 'application/json') {
+                //         data = JSOG.parse(data);
+                //     console.log("After:");
+                //     console.log(data);
+                //
+                //     return data;
+                // }
             }
 
         });
