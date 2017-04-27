@@ -34,7 +34,9 @@
             "title": "Title",
             "priority": "Priority",
             "status": "Status"
-          }
+          },
+          "overdue.tooltip": "Case is Overdue",
+          "deadline.tooltip": "Deadline is Approaching"
         }
       },
       "myComplaints": {
@@ -48,6 +50,8 @@
             "created": "Created",
             "status": "Status"
           },
+          "overdue.tooltip": "Complaint is Overdue",
+          "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
         }
       },
