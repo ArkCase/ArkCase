@@ -1,10 +1,6 @@
 <div class="modal-header">
     <h3>
-        <span translate>people.comp.related.modal.addPerson</span>
-    </h3>
-
-    <h3 ng-show="isEdit">
-        <span translate>people.comp.related.modal.editAddress</span>
+        <span translate>people.comp.related.modal.title</span>
     </h3>
 </div>
 <div class="modal-body">
@@ -17,7 +13,7 @@
                ng-click="pickPerson()" required>
         <div>
             <label for="relationshipTypes_{{::$id}}"
-                   translate>people.comp.related.modal.relationship.label</label>
+                   translate>people.comp.related.modal.type.label</label>
         </div>
         <select id="relationshipTypes_{{::$id}}"
                 ng-model="relationshipType"
