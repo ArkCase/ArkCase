@@ -89,7 +89,7 @@ public class AcmCalendarAPIController
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
                 .orElseThrow(() -> new CalendarServiceException(""));
-        return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
+        return calendar.listItemsInfo(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
     }
 
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,13 +98,14 @@ public class AcmCalendarAPIController
             @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
             @RequestParam(value = "after", required = false) String after, @RequestParam(value = "before", required = false) String before,
             @RequestParam(value = "sort", required = false, defaultValue = "eventDate") String sort,
-            @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection)
-            throws CalendarServiceException
+            @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems) throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
                 .orElseThrow(() -> new CalendarServiceException(""));
-        return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection);
+        return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
     }
 
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

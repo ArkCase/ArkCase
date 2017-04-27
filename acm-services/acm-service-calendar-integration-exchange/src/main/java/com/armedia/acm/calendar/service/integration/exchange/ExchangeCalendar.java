@@ -72,10 +72,10 @@ public class ExchangeCalendar implements AcmCalendar
      * java.lang.String, java.lang.String, int, int)
      */
     @Override
-    public List<AcmCalendarEventInfo> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
+    public List<AcmCalendarEventInfo> listItemsInfo(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
             int maxItems) throws CalendarServiceException
     {
-        return handler.listItems(after, before, sort, sortDirection, start, maxItems);
+        return handler.listItemsInfo(service, objectId, after, before, sort, sortDirection, start, maxItems);
     }
 
     /*
@@ -85,10 +85,10 @@ public class ExchangeCalendar implements AcmCalendar
      * java.lang.String, java.lang.String)
      */
     @Override
-    public List<AcmCalendarEvent> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection)
-            throws CalendarServiceException
+    public List<AcmCalendarEvent> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
+            int maxItems) throws CalendarServiceException
     {
-        return handler.listItems(after, before, sort, sortDirection);
+        return handler.listItems(service, objectId, after, before, sort, sortDirection, start, maxItems);
     }
 
     /*

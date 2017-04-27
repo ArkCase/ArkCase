@@ -22,7 +22,7 @@ public interface AcmCalendar
      * @return
      * @throws CalendarServiceException
      */
-    List<AcmCalendarEventInfo> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
+    List<AcmCalendarEventInfo> listItemsInfo(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
             int maxItems) throws CalendarServiceException;
 
     /**
@@ -33,7 +33,7 @@ public interface AcmCalendar
      * @return
      * @throws CalendarServiceException
      */
-    List<AcmCalendarEvent> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection)
+    List<AcmCalendarEvent> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start, int maxItems)
             throws CalendarServiceException;
 
     /**
