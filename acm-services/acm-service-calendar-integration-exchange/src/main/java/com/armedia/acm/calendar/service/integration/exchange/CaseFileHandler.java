@@ -21,9 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
-import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
@@ -45,10 +43,13 @@ import microsoft.exchange.webservices.data.search.ItemView;
 public class CaseFileHandler implements EntityHandler
 {
 
-    private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
-            ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size,
-            AppointmentSchema.IsAllDayEvent, AppointmentSchema.IsCancelled, AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring,
-            AppointmentSchema.Start, AppointmentSchema.End, ItemSchema.ParentFolderId);
+    // private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject,
+    // ItemSchema.DateTimeSent,
+    // ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body,
+    // ItemSchema.Size,
+    // AppointmentSchema.IsAllDayEvent, AppointmentSchema.IsCancelled, AppointmentSchema.IsMeeting,
+    // AppointmentSchema.IsRecurring,
+    // AppointmentSchema.Start, AppointmentSchema.End, ItemSchema.ParentFolderId);
 
     private Map<String, PropertyDefinition> sortFields;
 

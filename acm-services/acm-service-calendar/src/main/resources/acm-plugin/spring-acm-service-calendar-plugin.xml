@@ -8,25 +8,79 @@
         <property name="privileges">
             <list>
                 <ref bean="acmCalendarConfigPrivilege"/>
+                <ref bean="acmCalendarEventsListPrivilege"/>
+                <ref bean="acmCalendarEventsSavePrivilege"/>
+                <ref bean="acmCalendarEventsCreatePrivilege"/>
+                <ref bean="acmCalendarEventsDeletePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
             <list>
+
+                <!-- Administration API privileges. -->
                 <bean id="calendarAdminUrlGet" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/calendar/configuration"/>
-                    <property name="requiredPrivilege" ref="acmOutlookListObjectsPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmCalendarConfigPrivilege"/>
                 </bean>
                 <bean id="calendarAdminUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
                     <property name="url" value="/api/{version}/service/calendar/configuration"/>
-                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmCalendarConfigPrivilege"/>
                 </bean>
                 <bean id="calendarAdminUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/calendar/configuration/{email}"/>
-                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                    <property name="requiredPrivilege" ref="acmCalendarConfigPrivilege"/>
                 </bean>
+
+                <!-- User functionality privileges. -->
+                <bean id="listCalendarsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendars"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="listCalendarsByTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendars/{objectType}"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="getCalendarInfoUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendars/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="listCalendarEventsInfoUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="listCalendarEventsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents/{objectType}/{objectId}"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="getCalendarEventUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents/{objectType}/{objectId}/{eventId}"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
+                </bean>
+                <bean id="addCalendarEventUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/calendar"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsCreatePrivilege"/>
+                </bean>
+                <bean id="updateCalendarEventUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/calendar"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsSavePrivilege"/>
+                </bean>
+                <bean id="deleteCalendarEventUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents/{objectType}/{objectId}/{eventId}"/>
+                    <property name="requiredPrivilege" ref="acmCalendarEventsDeletePrivilege"/>
+                </bean>
+
             </list>
         </property>
     </bean>
