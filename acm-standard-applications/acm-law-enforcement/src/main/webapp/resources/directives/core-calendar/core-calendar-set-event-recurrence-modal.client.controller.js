@@ -26,6 +26,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
             minEndDate: eventDataModel.start
         };
 
+        /*Invoked when date and time of event recurrence is changed*/
         $scope.onTimeChanged = function(start, end) {
             var startTime = start ? start.getTime() : 0;
             var endTime = end ? end.getTime() : 0;
@@ -68,10 +69,8 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
         };
 
         /**
-         * Invoked when some of the inputs for daily recurrence is changed. Based on their values it calculates
+         * Invoked when some of the inputs for recurrence pattern and range is changed. Based on their values it calculates
          * the recurrence start date and the end of the recurrence series.
-         *
-         * @param  {String} dailyRecurrencePatternType - the type of the daily recurrence
          */
         $scope.onDailyRecurrencePatternChange = function(dailyRecurrencePatternType) {
             var recurrenceRange = {};
@@ -90,12 +89,6 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
             $scope.validDuration = true;
         };
 
-        /**
-         * Invoked when some of the inputs for weekly recurrence is changed. Based on their values it calculates
-         * the recurrence start date and the end of the recurrence series. If day checkbox is toggled, it adds/removes days in selectedDayOfTheWeek array.
-         *
-         * @param  {Object} day - the selected days of the week. This param is provided only when some of the day checkboxes are toggled.
-         */
         $scope.onWeeklyRecurrencePatternChange = function(day) {
             if (day) {
                 var idx = $scope.selectedDayOfTheWeek.indexOf(day.value);
@@ -114,12 +107,6 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
             $scope.validDuration = true;
         };
 
-        /**
-         * Invoked when some of the inputs for monthly recurrence is changed. Based on their values it calculates
-         * the recurrence start date and the end of the recurrence series.
-         *
-         * @param  {String} monthlyRecurrencePatternType - the type of the monthly recurrence pattern
-         */
         $scope.onMonthlyRecurrencePatternChange = function(monthlyRecurrencePatternType) {
             var recurrenceRange = {};
 
@@ -220,7 +207,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     interval: recurrenceDetails.interval
                 };
                 $scope.relativeMonthlyRecurrence = {
-                    dayOuccurrenceInMonth: CalendarUtilService.calculateWeekInMonth($scope.recurrenceTmpModel.start.getDate()),
+                    dayOuccurrenceInMonth: CalendarUtilService.calculateDayOccurrenceInMonth($scope.recurrenceTmpModel.start.getDate()),
                     day: $scope.relativeDayOptions[$scope.recurrenceTmpModel.start.getDay() + 3].value,
                     interval: recurrenceDetails.interval
                 };
@@ -255,7 +242,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     day: recurrenceDetails.dayOfMonth
                 };
                 $scope.relativeYearlyRecurrence = {
-                    dayOuccurrenceInMonth: CalendarUtilService.calculateWeekInMonth($scope.recurrenceTmpModel.start.getDate()),
+                    dayOuccurrenceInMonth: CalendarUtilService.calculateDayOccurrenceInMonth($scope.recurrenceTmpModel.start.getDate()),
                     day: $scope.relativeDayOptions[$scope.recurrenceTmpModel.start.getDay() + 3].value,
                     month: $scope.monthsOptions[$scope.recurrenceTmpModel.start.getMonth()].value
                 };
@@ -324,7 +311,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                 interval: 1
             };
             $scope.relativeMonthlyRecurrence = {
-                dayOuccurrenceInMonth: CalendarUtilService.calculateWeekInMonth($scope.recurrenceTmpModel.start.getDate()),
+                dayOuccurrenceInMonth: CalendarUtilService.calculateDayOccurrenceInMonth($scope.recurrenceTmpModel.start.getDate()),
                 day: $scope.relativeDayOptions[$scope.recurrenceTmpModel.start.getDay() + 3].value,
                 interval: 1
             };
@@ -342,7 +329,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                 day: $scope.recurrenceTmpModel.start.getDate()
             };
             $scope.relativeYearlyRecurrence = {
-                dayOuccurrenceInMonth: CalendarUtilService.calculateWeekInMonth($scope.recurrenceTmpModel.start.getDate()),
+                dayOuccurrenceInMonth: CalendarUtilService.calculateDayOccurrenceInMonth($scope.recurrenceTmpModel.start.getDate()),
                 day: $scope.relativeDayOptions[$scope.recurrenceTmpModel.start.getDay() + 3].value,
                 month: $scope.monthsOptions[$scope.recurrenceTmpModel.start.getMonth()].value
             };
@@ -487,6 +474,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     break;
                 case 'END_AFTER':
                     recurrenceDetailsDataModel.endAfterOccurrances = $scope.recurrenceTmpModel.endAfterOccurrances;
+                    recurrenceDetailsDataModel.endBy = $scope.recurrenceTmpModel.recurrenceEndBy;
                     break;
                 case 'END_BY':
                     recurrenceDetailsDataModel.endBy = $scope.recurrenceTmpModel.recurrenceEndBy;

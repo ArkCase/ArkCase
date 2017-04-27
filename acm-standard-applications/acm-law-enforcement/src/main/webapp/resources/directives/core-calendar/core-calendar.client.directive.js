@@ -13,21 +13,9 @@
  *
  * The "Core-Calendar" calendar functionality to the view
  *
- * @param {string} folderId string that is folderId from outlook calendar
+ * @param {string} objectType string that is the type of the object
+ * @param {int} objectId the id of the object
  *
- * @example
- <example>
- <file name="index.html">
- <core-calendar folder-id="folderId"/>
- </file>
- <file name="app.js">
- angular.module('AppModule').controller('AppController', ['$scope', 'ConfigService'
- , function ($scope, ConfigService) {
-        $scope.folderId = 'somefolderid';
-    }
- ]);
- </file>
- </example>
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
     'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService',
@@ -36,16 +24,10 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
             restrict: 'E',
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
             scope: {
-                folderId: '='
+                objectId: '=',
+                objectType: '@'
             },
             link: function(scope) {
-
-                // scope.$watch('folderId', function (folderId, oldValue) {
-                //     if (folderId && scope.config) {
-                //         getDataAndRenderCalendar();
-                //     }
-                // });
-
                 /* Event sources array */
                 scope.eventSources = [];
 

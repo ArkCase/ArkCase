@@ -2,20 +2,20 @@
 <div class="row">
     <div class="col-sm-12 form-group">
         <label for="attendees">
-            <span translate>Required Attendees</span>
+            <span translate>common.directive.coreCalendar.addNewEventDialog.form.requiredAttendees.label</span>
             <span class="required-asterisk">*</span>
         </label>
         <textarea name="textarea" name="attendees" ng-model="requiredAttendeesViewModel" class="user-picker-input input-md form-control"
-                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.to.placeholder' | translate }}" ng-click="chooseAttendees('REQUIRED')" readonly required></textarea>
+                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.requiredAttendees.placeholder' | translate }}" ng-click="chooseAttendees('REQUIRED')" readonly required></textarea>
     </div>
 </div>
 <div class="row">
     <div class="col-sm-12 form-group">
         <label for="attendees">
-            <span translate>Optional Attendees</span>
+            <span translate>common.directive.coreCalendar.addNewEventDialog.form.optionalAttendees.label</span>
         </label>
         <textarea name="textarea" name="attendees" ng-model="optionalAttendeesViewModel" class="user-picker-input input-md form-control"
-                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.to.placeholder' | translate }}" ng-click="chooseAttendees('OPTIONAL')" readonly ></textarea>
+                  placeholder="{{ 'common.directive.coreCalendar.addNewEventDialog.form.optionalAttendees.placeholder' | translate }}" ng-click="chooseAttendees('OPTIONAL')" readonly ></textarea>
     </div>
 </div>
 <!-- Subject -->
@@ -152,14 +152,14 @@
 </div>
 <div class="row">
     <label class="col-sm-12" for="recurrence">
-        <span translate>Recurrence</span>
+        <span translate>common.directive.coreCalendar.addNewEventDialog.form.recurrence.label</span>
     </label>
     <fieldset name="recurrence" class="col-sm-12 form-group">
         <div class="row well-sm">
             <div class="col-sm-12" ng-if="!recurrentEvent">
                 <button class="btn btn-link" ng-click="setEventRecurrence()">
                     <i class="fa fa-refresh"></i>
-                    <span translate>Set event recurrence</span>
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.setRecurrence.button</span>
                 </button>
             </div>
             <div class="col-sm-12" ng-if="recurrentEvent">
@@ -168,7 +168,7 @@
             <div class="col-sm-12" ng-if="recurrentEvent">
                 <button class="btn btn-link" ng-click="setEventRecurrence()">
                     <i class="fa fa-refresh"></i>
-                    <span translate>Edit event recurrence</span>
+                    <span translate>common.directive.coreCalendar.addNewEventDialog.form.editRecurrence.button</span>
                 </button>
             </div>
         </div>

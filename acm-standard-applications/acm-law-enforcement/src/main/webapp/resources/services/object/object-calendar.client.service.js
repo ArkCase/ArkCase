@@ -168,11 +168,15 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
                 {
                     'subject' : 'Test Subject',
                     'location' : 'Armedia',
-                    'start' : moment().format('MM/DD/YYYY h:MM A'),
-                    'end' : moment().format('MM/DD/YYYY h:MM A'),
+                    'start' : (new Date()).toISOString(),
+                    'end' : (new Date()).toISOString(),
                     'allDayEvent' : false,
                     'recurrenceDetails' : {
-                        'recurrenceType' : 'ONLY_ONCE'
+                        dayOfWeek: "WEDNESDAY",
+                        endBy: (new Date()).toISOString(),
+                        interval: 1,
+                        recurrenceType: "MONTHLY",
+                        weekOfMonth: "FOURTH"
                     },
                     'details' : 'details',
                     'remindIn' : 30,

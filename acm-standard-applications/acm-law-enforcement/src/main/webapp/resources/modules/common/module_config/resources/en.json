@@ -218,8 +218,10 @@
       "stepTwoTitle": "Step 2 – Enter Comments",
       "stepThreeTitle": "Step 3 – Attach Documents",
       "form": {
-        "to.label": "To",
-        "to.placeholder": "Choose People To Invite To Meeting",
+        "requiredAttendees.label": "Required Attendees",
+        "requiredAttendees.placeholder": "Choose Required Attendees",
+        "optionalAttendees.label": "Optional Attendees",
+        "optionalAttendees.placeholder": "Choose Optional Attendees",
         "subject.label": "Subject",
         "subject.placeholder": "Enter Subject",
         "location.label": "Location",
@@ -231,6 +233,7 @@
         "priority.label": "Priority",
         "priority.placeholder": "Choose Priority",
         "priorityOptions": {
+          "normalImportance": "Normal Importance",
           "highImportance": "High Importance",
           "lowImportance": "Low Importance"
         },
@@ -242,31 +245,15 @@
         "reminder.placeholder": "Choose Reminder Window",
         "datePickerClose.button": "Close",
         "otherOptions.label": "Other Options",
-        "recurring.checkbox": "Recurring",
         "allDayEvent.checkbox": "All Day Event",
         "privateEvent.checkbox": "Private Event",
-        "repeats.label": "Repeats",
-        "repeats.placeholder": "Choose Repeats Option",
-        "repeatsOptions": {
-          "daily": "Daily",
-          "weekly": "Weekly",
-          "monthly": "Monthly",
-          "yearly": "Yearly"
-        },
-        "every.label": "Every",
-        "day.label": "Day",
-        "week.label": "Week",
-        "month.label": "Month",
-        "on.label": "On",
-        "day.placeholder": "Day",
-        "year.placeholder": "Year",
-        "sunday.checkbox": "Sunday",
-        "monday.checkbox": "Monday",
-        "tuesday.checkbox": "Tuesday",
-        "wednesday.checkbox": "Wednesday",
-        "thursday.checkbox": "Thursday",
-        "friday.checkbox": "Friday",
-        "saturday.checkbox": "Saturday",
+        "recurrence.label": "Recurrence",
+        "setRecurrence.button": "Set event recurrence",
+        "editRecurrence.button": "Edit event recurrence",
+        "browseFiles.button": "Browse Files",
+        "selectedFiles.label": "Selected files to attach:",
+        "noFiles.label": "No Files Selected.",
+        "attachedFiles.label": "Attached files:",
         "reminderOptions": {
           "none": "None",
           "0Minutes": "0 minutes",
@@ -293,20 +280,6 @@
           "4Days": "4 days",
           "1Week": "1 week",
           "2Weeks": "2 weeks"
-        },
-        "monthOptions": {
-          "january": "January",
-          "february": "February",
-          "march": "March",
-          "april": "April",
-          "may": "May",
-          "june": "June",
-          "july": "July",
-          "august": "August",
-          "september": "September",
-          "october": "October",
-          "november": "November",
-          "december": "December"
         }
       }
     },
@@ -319,6 +292,132 @@
       "searchAttendees.placeholder": "Search Attendees",
       "cancel.button": "Cancel",
       "addAttendees.button": "Add Attendees"
+    },
+    "recurrencePatternDialog": {
+      "title": "Event Recurrence",
+      "durationError.text": "The duration of the event must be shorter than how frequenlty it occurs.",
+      "recurrencePattern.label": "Recurrence Pattern",
+      "recurrencePattern.placeholder": "Choose Recurrence Pattern",
+      "cancel.button": "Cancel",
+      "removeRecurrence.button": "Remove current event recurrence",
+      "setRecurrence.button": "Set event recurrence",
+      "repeatsOptions": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly",
+        "yearly": "Yearly"
+      },
+      "sunday.checkbox": "Sunday",
+      "monday.checkbox": "Monday",
+      "tuesday.checkbox": "Tuesday",
+      "wednesday.checkbox": "Wednesday",
+      "thursday.checkbox": "Thursday",
+      "friday.checkbox": "Friday",
+      "saturday.checkbox": "Saturday",
+      "monthOptions": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "dayOptions": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "day": "day",
+        "weekDay": "weekday",
+        "weekendDay": "weekend day"
+      },
+      "dayOccurrenceOptions": {
+        "first": "first",
+        "second": "second",
+        "third": "third",
+        "fourth": "fourth",
+        "last": "last"
+      },
+      "every.label": "Every",
+      "day.label": "Day",
+      "week.label": "Week",
+      "month.label": "Month",
+      "on.label": "On",
+      "day.placeholder": "Day",
+      "year.placeholder": "Year",
+      "dailyRecurrence": {
+        "every.text": "Every",
+        "days.text": "day(s)",
+        "everyWeekday.text": "Every weekday"
+      },
+      "weeklyRecurrence": {
+        "recurEvery.text": "Recur every",
+        "weeksOn.text": "week(s) on:"
+      },
+      "monthlyRecurrence": {
+        "day.text": "Day",
+        "ofEvery.text": "of every",
+        "months.text": "month(s)",
+        "the.text": "The"
+      },
+      "yearlyRecurrence":{
+        "recurEvery.text": "Recur every",
+        "years.text": "year(s)",
+        "on.text": "On:",
+        "onThe.text": "On the:",
+        "of.text": "of"
+      },
+      "recurrenceRange": {
+        "label": "Recurrence Range",
+        "noEndDate.text": "No end date",
+        "endAfter.text": "End after:",
+        "occurrences.text": "occurrences",
+        "endBy.text": "End by:"
+      },
+      "descriptionString": {
+        "effective": "effective",
+        "until": "until",
+        "from": "from",
+        "to": "to",
+        "occurs": "Occurs",
+        "every": "every",
+        "on": "on",
+        "of": "of",
+        "the": "the",
+        "and": "and",
+        "years": "years",
+        "day": "day",
+        "days": "days",
+        "weekday": "weekday",
+        "weeks": "week(s)",
+        "months": "month(s)"
+      }
+    },
+    "eventDetailsDialog": {
+      "title": "Event Details",
+      "private.label": "Private",
+      "start.label": "Start:",
+      "end.label": "End:",
+      "priority.label": "Priority:",
+      "occurs.label": "Occurs:",
+      "reminders.label": "Reminders:",
+      "attachments.label": "Attachments",
+      "invited.label": "Invited:",
+      "accepted.label": "Accepted:",
+      "maybe.label": "Maybe:",
+      "declined.label": "Declined:",
+      "cancel.button": "Cancel",
+      "delete.button": "Delete",
+      "edit.button": "Edit Event"
     }
   },
   "common.directive.coreParticipants": {
