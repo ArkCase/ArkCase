@@ -1,35 +1,35 @@
 <div class="modal-header">
-    <h3 translate>Event Details</h3>
+    <h3 translate>common.directive.coreCalendar.eventDetailsDialog.title</h3>
 </div>
 <div class="modal-body">
 	<h3 translate>{{eventDetails.subject}}</h3>
 	<div class="well-sm">
 		<div class="row">
 			<div class="col-sm-12 form-group">
-				<strong class="pull-right" ng-if="eventDetails.privateEvent" translate>Private</strong>
+				<strong class="pull-right" ng-if="eventDetails.privateEvent" translate>common.directive.coreCalendar.eventDetailsDialog.private.label</strong>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-4 form-group">
-				<label translate>Start:</label>
-				<span>{{eventDetails.start | date:'MM/DD/YYYY h:MM A'}}</span>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.start.label</label>
+				<span>{{eventDetails.start | date:'MM/dd/yyyy h:mm a'}}</span>
 			</div>
 			<div class="col-sm-4">
-				<label translate>End:</label>
-				<span>{{eventDetails.end | date:'MM/DD/YYYY h:MM A'}}</span>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.end.label</label>
+				<span>{{eventDetails.end | date:'MM/dd/yyyy h:mm a'}}</span>
 			</div>
 			<div class="col-sm-4">
-				<label translate>Priority:</label>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.priority.label</label>
 				<span translate>{{eventPriority}}</span>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-8 form-group">
-				<label translate>Occurs:</label>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.occurs.label</label>
 				<span>{{recurrenceDescription}}</span>
 			</div>
 			<div class="col-sm-4">
-				<label translate>Reminders:</label>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.reminders.label</label>
 				<span translate>{{eventReminder}}</span>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-sm-12">
-				<label translate>Attachments</label>
+				<label translate>common.directive.coreCalendar.eventDetailsDialog.attachments.label</label>
 			</div>
 			<div class="col-sm-12 form-group" >
 				<span ng-repeat="file in eventDetails.files" class="well-sm"><i class="fa fa-file" aria-hidden="true"></i> {{file.name}}</span>
@@ -48,7 +48,7 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-3">
-				<label for="attendees">Invited:</label>
+				<label for="attendees" translate>common.directive.coreCalendar.eventDetailsDialog.invited.label</label>
 				<ul name="attendees" class="list-unstyled well-sm">
 				    <li ng-repeat="invited in eventDetails.attendees">
 				        <span>{{invited.name}}</span>
@@ -57,7 +57,7 @@
 				</ul>
 			</div>
 			<div class="col-sm-3">
-				<label for="attendees">Accepted:</label>
+				<label for="attendees" translate>common.directive.coreCalendar.eventDetailsDialog.accepted.label</label>
 				<ul name="attendees" class="list-unstyled well-sm">
 				    <li ng-repeat="person in attendeesAccepted">
 				        <span>{{person.name}}</span>
@@ -66,7 +66,7 @@
 				</ul>
 			</div>
 			<div class="col-sm-3">
-				<label for="attendees">Maybe:</label>
+				<label for="attendees" translate>common.directive.coreCalendar.eventDetailsDialog.maybe.label</label>
 				<ul name="attendees" class="list-unstyled well-sm">
 				    <li ng-repeat="person in attendeesMaybe">
 				        <span>{{person.name}}</span>
@@ -75,7 +75,7 @@
 				</ul>
 			</div>
 			<div class="col-sm-3">
-				<label for="attendees">Declined:</label>
+				<label for="attendees" translate>common.directive.coreCalendar.eventDetailsDialog.declined.label</label>
 				<ul name="attendees" class="list-unstyled well-sm">
 				    <li ng-repeat="person in attendeesDeclined">
 				        <span>{{person.name}}</span>
@@ -89,12 +89,12 @@
 <div class="modal-footer">
     <br/>
     <button type="button" class="btn btn-secondary pull-left" ng-click="cancel()" translate>
-        common.directive.coreCalendar.chooseEventAttendeesDialog.cancel.button
+        common.directive.coreCalendar.eventDetailsDialog.cancel.button
     </button>
     <button type="button" class="btn btn-secondary" ng-click="deleteEvent()" translate>
-        Delete
+        common.directive.coreCalendar.eventDetailsDialog.delete.button
     </button>
     <button type="button" class="btn btn-primary" ng-click="editEvent()" translate>
-        Edit Event
+        common.directive.coreCalendar.eventDetailsDialog.edit.button
     </button>
 </div>

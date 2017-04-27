@@ -3,7 +3,7 @@
         <div class="col-sm-12 form-group">
             <button type="file" ngf-select ng-model="attachmentModel.files" multiple ngf-max-size="20MB" ngf-keep="true" ngf-keep-distinct="true" class="btn btn-secondary">
 				<span translate>
-					Browse Files
+					common.directive.coreCalendar.addNewEventDialog.form.browseFiles.button
 				</span>
             </button>
         </div>
@@ -12,13 +12,13 @@
         <div class="col-sm-12">
             <label>
 				<span translate>
-					Selected files to attach:
+					common.directive.coreCalendar.addNewEventDialog.form.selectedFiles.label
 				</span>
             </label>
         </div>
         <div class="col-sm-12 form-group">
 			<span ng-if="attachmentModel.files.length === 0" class="well-sm" translate>
-				No Files Selected.
+				common.directive.coreCalendar.addNewEventDialog.form.noFiles.label
 			</span>
             <ul ng-if="attachmentModel.files.length > 0" class="list-unstyled well-sm">
                 <li ng-repeat="file in attachmentModel.files">
@@ -33,7 +33,7 @@
         <div class="col-sm-12">
             <label>
 				<span translate>
-					Attached files:
+					common.directive.coreCalendar.addNewEventDialog.form.attachedFiles.label
 				</span>
             </label>
         </div>

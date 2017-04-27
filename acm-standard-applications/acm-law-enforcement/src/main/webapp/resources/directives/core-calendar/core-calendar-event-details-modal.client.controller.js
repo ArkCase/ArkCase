@@ -9,26 +9,26 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 		$scope.reminderOptions = CalendarUtilService.REMINDER_OPTIONS;
 		$scope.coreCalendarConfig = coreCalendarConfig;
 
-		var processEventDetails = function(eventDetails) {
-			var eventDetailsDataModel = {};
+		var processEventDetails = function() {
+			$scope.eventDetails.start = moment($scope.eventDetails.start).toDate();
+			$scope.eventDetails.end = moment($scope.eventDetails.end).toDate();
+			$scope.eventDetails.recurrenceDetails.endBy = moment(eventDetails.recurrenceDetails.endBy).toDate();
 
 			$scope.eventReminder = _.find($scope.reminderOptions, function(option) {
-				return option.value === eventDetails.remindIn;
+				return option.value === $scope.eventDetails.remindIn;
 			}).label;
 
 			$scope.eventPriority = _.find($scope.priorityOptions, function(option) {
-				return option.value === eventDetails.priority;
+				return option.value === $scope.eventDetails.priority;
 			}).label;
 
-			if (eventDetails.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
-				$scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString(eventDetails, $filter('date')(eventDetails.start, 'MM/dd/yyyy'), $filter('date')(eventDetails.recurrenceDetails.endBy, 'MM/dd/yyyy'));
+			if ($scope.eventDetails.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
+				$scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDetails);
 			} else {
 				$scope.recurrenceDescription = 'Only Once';
 			}
 
-			splitAttendeesByResponseStatus(eventDetails.attendees);
-
-			return eventDetailsDataModel;
+			splitAttendeesByResponseStatus($scope.eventDetails.attendees);
 		};
 
 		var splitAttendeesByResponseStatus = function(attendees) {
@@ -83,6 +83,6 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 			$modalInstance.dismiss();
 		};
 
-		processEventDetails($scope.eventDetails);
+		processEventDetails();
 	}
 ]);

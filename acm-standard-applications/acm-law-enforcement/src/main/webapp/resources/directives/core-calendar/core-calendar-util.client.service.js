@@ -12,10 +12,15 @@
 
 angular.module('directives').factory('Directives.CalendarUtilService', ['$filter', '$translate', 'UtilService',
     function ($filter, $translate, UtilService) {
+
+        /**
+         * Options for select priority dropdown
+         * @type {Array}
+         */
         var PRIORITY_OPTIONS = [
             {
                 'value': 'NORMAL',
-                'label': 'Normal Importance'
+                'label': 'common.directive.coreCalendar.addNewEventDialog.form.priorityOptions.normalImportance'
             },
             {
                 'value': 'HIGH',
@@ -27,6 +32,10 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             }
         ];
 
+        /**
+         * Options for select reminder dropdown
+         * @type {Array}
+         */
         var REMINDER_OPTIONS = [
             {
                 'value': -1,
@@ -130,174 +139,207 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             }
         ];
 
+        /**
+         * Options for select month dropdown
+         * @type {Array}
+         */
         var MONTHS_OPTIONS = [
             {
                 'value': 'JANUARY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.january'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.january'
             },
             {
                 'value': 'FEBRUARY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.february'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.february'
             },
             {
                 'value': 'MARCH',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.march'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.march'
             },
             {
                 'value': 'APRIL',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.april'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.april'
             },
             {
                 'value': 'MAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.may'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.may'
             },
             {
                 'value': 'JUNE',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.june'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.june'
             },
             {
                 'value': 'JULY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.july'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.july'
             },
             {
                 'value': 'AUGUST',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.august'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.august'
             },
             {
                 'value': 'SEPTEMBER',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.september'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.september'
             },
             {
                 'value': 'OCTOBER',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.october'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.october'
             },
             {
                 'value': 'NOVEMBER',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.november'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.november'
             },
             {
                 'value': 'DECEMBER',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monthOptions.december'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monthOptions.december'
             }
         ];
 
+        /**
+         * Options for select days of the week checkboxes
+         * @type {Array}
+         */
         var DAYS_WEEK_OPTIONS = [
             {
                 'value': 'SUNDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.sunday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.sunday.checkbox'
             },
             {
                 'value': 'MONDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.monday.checkbox'
             },
             {
                 'value': 'TUESDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.tuesday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.tuesday.checkbox'
             },
             {
                 'value': 'WEDNESDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.wednesday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.wednesday.checkbox'
             },
             {
                 'value': 'THURSDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.thursday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.thursday.checkbox'
             },
             {
                 'value': 'FRIDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.friday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.friday.checkbox'
             },
             {
                 'value': 'SATURDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.saturday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.saturday.checkbox'
             }
         ];
 
+        /**
+         * Options for select recurrence type dropdown
+         * @type {Array}
+         */
         var RECURRENCE_OPTIONS = [
             {
                 'value': 'DAILY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.repeatsOptions.daily'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.repeatsOptions.daily'
             },
             {
                 'value': 'WEEKLY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.repeatsOptions.weekly'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.repeatsOptions.weekly'
             },
             {
                 'value': 'MONTHLY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.repeatsOptions.monthly'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.repeatsOptions.monthly'
             },
             {
                 'value': 'YEARLY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.repeatsOptions.yearly'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.repeatsOptions.yearly'
             }
         ];
 
+        /**
+         * Options for select relative day recurrence in month dropdown
+         * @type {Array}
+         */
         var RELATIVE_RECURRENCE_DAY_OPTIONS = [
             {
                 'value': 'DAY',
-                'label': 'day'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.day'
             },
             {
                 'value': 'WEEKDAY',
-                'label': 'weekday'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.weekDay'
             },
             {
                 'value': 'WEEKEND_DAY',
-                'label': 'weekend day'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.weekendDay'
             },
             {
                 'value': 'SUNDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.sunday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.sunday'
             },
             {
                 'value': 'MONDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.monday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.monday'
             },
             {
                 'value': 'TUESDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.tuesday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.tuesday'
             },
             {
                 'value': 'WEDNESDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.wednesday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.wednesday'
             },
             {
                 'value': 'THURSDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.thursday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.thursday'
             },
             {
                 'value': 'FRIDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.friday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.friday'
             },
             {
                 'value': 'SATURDAY',
-                'label': 'common.directive.coreCalendar.addNewEventDialog.form.saturday.checkbox'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOptions.saturday'
             }
         ];
 
+        /**
+         * Options for select day ocurrence in month dropdown
+         * @type {Array}
+         */
         var DAY_OCCURRENCE_IN_MONTH_OPTIONS = [
             {
                 'value': 'FIRST',
-                'label': 'first'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOccurrenceOptions.first'
             },
             {
                 'value': 'SECOND',
-                'label': 'second'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOccurrenceOptions.second'
             },
             {
                 'value': 'THIRD',
-                'label': 'third'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOccurrenceOptions.third'
             },
             {
                 'value': 'FOURTH',
-                'label': 'fourth'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOccurrenceOptions.fourth'
             },
             {
                 'value': 'LAST',
-                'label': 'last'
+                'label': 'common.directive.coreCalendar.recurrencePatternDialog.dayOccurrenceOptions.last'
             },
         ];
 
-        var calculateDaysInMonth = function(month, year) { // m is 0 indexed: 0-11
+        /**
+         * @ngdoc method
+         * @name calculateDaysInMonth
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates how many days are in a month of a given year. 
+         *
+         * @param {Int} month - the month of the year, indexed: 0-11.
+         * @param {Int} year - the year in format YYYY
+         *
+         * @Returns {Int} the number of days
+         */
+        var calculateDaysInMonth = function(month, year) {
             switch (month) {
                 case 1 :
                     return (year % 4 == 0 && year % 100) || year % 400 == 0 ? 29 : 28;
@@ -307,8 +349,19 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                     return 31;
             }
         };
-
-        var calculateWeekInMonth = function(day) {
+        /**
+         * @ngdoc method
+         * @name calculateDayOccurrenceInMonth
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates in which week of the month is the given day. 
+         *
+         * @param {Int} day - the day indexed: 1-31.
+         *
+         * @Returns {String} the week in the month. Possible return values are DAY_OCCURRENCE_IN_MONTH_OPTIONS.
+         */
+        var calculateDayOccurrenceInMonth = function(day) {
             var weekOfMonth = '';
 
             switch (Math.ceil(day / 7)) {
@@ -332,6 +385,19 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return weekOfMonth;
         };
 
+        /**
+         * @ngdoc method
+         * @name mapDayOccurrenceToRRule
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Maps the DAY_OCCURRENCE_IN_MONTH_OPTIONS to RRule values.
+         *
+         * @param {String} dayOuccurrenceInMonth - DAY_OCCURRENCE_IN_MONTH_OPTIONS values.
+         *
+         * @Returns {Int} values for bysetpos parameter in RRule library.
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var mapDayOccurrenceToRRule = function(dayOuccurrenceInMonth) {
             var bySetpos = null;
 
@@ -356,45 +422,71 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return bySetpos;
         };
 
+        /**
+         * @ngdoc method
+         * @name mapDayInMonthToRRule
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Maps the RELATIVE_RECURRENCE_DAY_OPTIONS to RRule values.
+         *
+         * @param {String} dayInMonth - RELATIVE_RECURRENCE_DAY_OPTIONS values.
+         *
+         * @Returns {Int} values for byweekday parameter in RRule library.
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var mapDayInMonthToRRule = function(dayInMonth) {
-            var byWeekDay = null;
+            var byweekday = null;
 
             switch (dayInMonth){
                 case 'DAY':
-                    byWeekDay = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
+                    byweekday = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU];
                     break;
                 case 'WEEKDAY':
-                    byWeekDay = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR];
+                    byweekday = [RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR];
                     break;
                 case 'WEEKEND_DAY':
-                    byWeekDay = [RRule.SA, RRule.SU];
+                    byweekday = [RRule.SA, RRule.SU];
                     break;
                 case 'SUNDAY':
-                    byWeekDay = [RRule.SU];
+                    byweekday = [RRule.SU];
                     break;
                 case 'MONDAY':
-                    byWeekDay = [RRule.MO];
+                    byweekday = [RRule.MO];
                     break;
                 case 'TUESDAY':
-                    byWeekDay = [RRule.TU];
+                    byweekday = [RRule.TU];
                     break;
                 case 'WEDNESDAY':
-                    byWeekDay = [RRule.WE];
+                    byweekday = [RRule.WE];
                     break;
                 case 'THURSDAY':
-                    byWeekDay = [RRule.TH];
+                    byweekday = [RRule.TH];
                     break;
                 case 'FRIDAY':
-                    byWeekDay = [RRule.FR];
+                    byweekday = [RRule.FR];
                     break;
                 case 'SATURDAY':
-                    byWeekDay = [RRule.SA];
+                    byweekday = [RRule.SA];
                     break;
             }
 
-            return byWeekDay;
+            return byweekday;
         };
 
+        /**
+         * @ngdoc method
+         * @name mapDayInWeekToRRule
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Maps the DAYS_WEEK_OPTIONS to RRule values.
+         *
+         * @param {Array} selectedDaysOfWeek -  array of DAYS_WEEK_OPTIONS values.
+         *
+         * @Returns {Array}  values for byweekday parameter in RRule library.
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var mapDayInWeekToRRule = function(selectedDaysOfWeek) {
             var DAY_RRULE_MAP = {
                 'SUNDAY': RRule.SU,
@@ -414,8 +506,20 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return byWeekDay;
         };
 
+        /**
+         * @ngdoc method
+         * @name mapMonthInYearToRRule
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Maps the MONTHS_OPTIONS to RRule values.
+         *
+         * @param {String} month - MONTHS_OPTIONS values.
+         *
+         * @Returns {Int}  values for bymonth parameter in RRule library.
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var mapMonthInYearToRRule = function(month) {
-
             var bymonth = null;
 
             switch (month){
@@ -460,121 +564,23 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return bymonth;
         };
 
-        var buildPopoverTemplate = function(calendarEvent) {
-            var dateFormat = $translate.instant('MM/DD/YYYY h:MM A');
-            var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
-            var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
-            var startDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.start, dateFormat);
-            var endDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.end, dateFormat);
-            var popoverTemplate = '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
-
-            return popoverTemplate;
-        };
-
-        var buildEventRecurrenceString = function(eventDetails, recurrenceStart, recurrenceEnd) {
-            var recurrenceDetails = eventDetails.recurrenceDetails;
-            var startDateString = '';
-            var endDateString = '';
-            var durationString = '';
-            var patternString = '';
-
-            /*build start date string*/
-            var startDateFormatedString = $filter('date')(recurrenceStart, 'MM/dd/yyyy');
-            startDateString = 'effective' + ' ' + startDateFormatedString;
-
-            /*build end date string*/
-            if(recurrenceDetails.endBy || recurrenceDetails.endAfterOccurrances) {
-                var endDateFormatedString = $filter('date')(recurrenceEnd, 'MM/dd/yyyy');
-                endDateString = 'until' + ' ' + endDateFormatedString;
-            }
-
-            /*build event duration string*/
-            var startTimeFormatedString = $filter('date')(eventDetails.start, 'h:mm a');
-            var endTimeFormatedString = $filter('date')(eventDetails.end, 'h:mm a');
-            durationString = 'from' + ' ' + startTimeFormatedString + ' ' + 'to' + ' ' + endTimeFormatedString;
-
-            /*build pattern string*/
-            patternString = 'Occurs';
-            switch (recurrenceDetails.recurrenceType) {
-                case 'DAILY':
-                    if (!recurrenceDetails.everyWeekDay) {
-                        if(recurrenceDetails.interval === 1) {
-                            patternString = patternString + ' ' + 'every day';
-                        } else {
-                            patternString = patternString + ' ' + 'every' + ' ' + recurrenceDetails.interval + ' ' + 'days';
-                        }
-                    } else {
-                        patternString = patternString + ' ' + 'every weekday';
-                    }
-                    break;
-                case 'WEEKLY':
-                    var daysString = '';
-                    var weekNumString = '';
-                    var successIndex = 0;
-                    _.forEach(DAYS_WEEK_OPTIONS, function(dayOption) {
-                        var selectedDayIndex = _.findIndex(recurrenceDetails.days, function(day) {
-                            return dayOption.value === day;
-                        });
-                        if(selectedDayIndex !== -1) {
-                            successIndex++;
-                            if(successIndex === 1) {
-                                daysString = $translate.instant(dayOption.label);
-                            } else if (successIndex === recurrenceDetails.days.length) {
-                                daysString = daysString + ' ' + 'and' + ' ' + $translate.instant(dayOption.label);
-                            } else {
-                                daysString = daysString + ',' + ' ' + $translate.instant(dayOption.label);
-                            }
-                        }
-                    });
-                    if(recurrenceDetails.interval === 1) {
-                        weekNumString = 'every';
-                    } else {
-                        weekNumString = 'every' + ' ' + recurrenceDetails.interval + ' ' + 'week(s)' + ' ' + 'on';
-                    }
-                    patternString = patternString + ' ' + weekNumString + ' ' + daysString;
-                    break;
-                case 'MONTHLY':
-                    if (!recurrenceDetails.weekOfMonth) {
-                        var absoluteMonthlyPatternString = 'day' + ' ' + recurrenceDetails.day + ' ' + 'of every' + ' ' + recurrenceDetails.interval + ' ' + 'month(s)';
-                        patternString = patternString + ' ' + absoluteMonthlyPatternString;
-                    } else {
-                        var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
-                        var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
-                        var relativeMonthlyPatternString = 'the' + ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) + ' '
-                            + 'of every' + ' ' + recurrenceDetails.interval + ' ' + 'month(s)';
-                        patternString = patternString + ' ' + relativeMonthlyPatternString;
-                    }
-                    break;
-                case 'YEARLY':
-                    var numYearString = '';
-                    var month = _.find(MONTHS_OPTIONS, function(o) { return o.value === recurrenceDetails.month; });
-
-                    if (!recurrenceDetails.weekOfMonth) {
-                        if(recurrenceDetails.interval !== 1) {
-                            numYearString = 'every' + ' ' + recurrenceDetails.interval + ' ' + ' years on';
-                        } else {
-                            numYearString = 'every';
-                        }
-                        var absoluteYearlyPatternString = $translate.instant(month.label) + ' ' + recurrenceDetails.dayOfMonth;
-                        patternString = patternString + ' ' + numYearString + ' ' + absoluteYearlyPatternString;
-                    } else {
-                        if(recurrenceDetails.interval !== 1) {
-                            numYearString = 'every' + ' ' + recurrenceDetails.interval + ' ' + ' years on';
-                        } else {
-                            numYearString = '';
-                        }
-                        var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
-                        var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
-                        var relativeYearlyPatternString = 'the' + ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) + ' '
-                            + 'of' + ' ' +$translate.instant(month.label);
-                        patternString = patternString + ' ' + numYearString + ' ' + relativeYearlyPatternString;
-                    }
-                    break;
-            }
-
-            return patternString + ' ' + startDateString + ' ' + endDateString + ' ' + durationString;
-        };
-
+        /**
+         * @ngdoc method
+         * @name getEveryDayRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Every Day recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getEveryDayRecurrenceRange = function(startDate, interval, count) {
             var rule =  new RRule({
                 freq: RRule.DAILY,
@@ -594,6 +600,22 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         };
 
+        /**
+         * @ngdoc method
+         * @name getEveryWeekdayRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Every Weekday recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getEveryWeekdayRecurrenceRange = function(startDate, count) {
             var rule =  new RRule({
                 freq: RRule.DAILY,
@@ -616,7 +638,24 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
-
+        /**
+         * @ngdoc method
+         * @name getWeeklyRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Weekly recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {Array} selectedDaysOfWeek -  array of DAYS_WEEK_OPTIONS values.
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getWeeklyRecurrenceRange = function(startDate, selectedDaysOfWeek, interval, count) {
 
             var byWeekDay = mapDayInWeekToRRule(selectedDaysOfWeek);
@@ -643,6 +682,25 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
+
+        /**
+         * @ngdoc method
+         * @name getAbsoluteMonthlyRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Absolute Monthly recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {Int} monthDayNum - the day in month indexed: 1-31.
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getAbsoluteMonthlyRecurrenceRange = function(startDate, monthDayNum, interval, count) {
             var rule = new RRule({
                 freq: RRule.MONTHLY,
@@ -667,6 +725,25 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
+        /**
+         * @ngdoc method
+         * @name getRelativeMonthlyRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Relative Monthly recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {String} dayOuccurrenceInMonth - DAY_OCCURRENCE_IN_MONTH_OPTIONS values.
+         * @param {String} dayInMonth - RELATIVE_RECURRENCE_DAY_OPTIONS values
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getRelativeMonthlyRecurrenceRange = function(startDate, dayOuccurrenceInMonth, dayInMonth, interval, count) {
 
             var byWeekDay = mapDayInMonthToRRule(dayInMonth);
@@ -695,7 +772,26 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
-        var getAbsoluteYearlyRecurrenceRange = function(startDate, month, dayInMonth, interval, count) {
+        /**
+         * @ngdoc method
+         * @name getAbsoluteYearlyRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Absolute Yearly recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {String} month - MONTHS_OPTIONS values.
+         * @param {Int} monthDayNum - the day in month indexed: 1-31
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
+        var getAbsoluteYearlyRecurrenceRange = function(startDate, month, monthDayNum, interval, count) {
 
             var byMonth = mapMonthInYearToRRule(month);
 
@@ -704,7 +800,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                 count: count,
                 interval: interval,
                 bymonth: byMonth,
-                bymonthday: dayInMonth
+                bymonthday: monthDayNum
             });
 
             var dateRange = rule.all();
@@ -721,6 +817,26 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
+        /**
+         * @ngdoc method
+         * @name getRelativeYearlyRecurrenceRange
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Calculates the recurrenge range for Relative Yearly recurrence type using the RRule library.
+         *
+         * @param {Date} startDate - the start date of the recurrence.
+         * @param {String} dayOuccurrenceInMonth - DAY_OCCURRENCE_IN_MONTH_OPTIONS values
+         * @param {String} dayInMonth - RELATIVE_RECURRENCE_DAY_OPTIONS values
+         * @param {String} month - MONTHS_OPTIONS values
+         * @param {Int} interval - the interval between each recurrence iteration
+         * @param {Int} count - how many occurrences of the recurrence range should be generated
+         *
+         * @Returns {Object} recurrenceRange
+         *          {Date} recurrenceRange.start - the start date of the recurrence
+         *          {Date} recurrenceRange.endBy - the end of the recurrence
+         * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
+         */
         var getRelativeYearlyRecurrenceRange = function(startDate, dayOuccurrenceInMonth, dayInMonth, month, interval, count) {
 
             var byWeekDay = mapDayInMonthToRRule(dayInMonth);
@@ -750,6 +866,165 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return recurrenceRange;
         };
 
+        /**
+         * @ngdoc method
+         * @name buildPopoverTemplate
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Builds the html for the event popover template.
+         *
+         * @param {Object} calendarEvent - the calendar event object containing the event details
+         *
+         * @Returns {String} popoverTemplate - the html of the popover template
+         */
+        var buildPopoverTemplate = function(calendarEvent) {
+            var dateFormat = $translate.instant('mm/dd/yyyy h:MM a');
+            var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
+            var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
+            var startDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.start, dateFormat);
+            var endDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.end, dateFormat);
+            var popoverTemplate = '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
+
+            return popoverTemplate;
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name buildEventRecurrenceString
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Builds the event recurrence description string.
+         *
+         * @param {Object} eventDetails - the details of the event
+         *
+         * @Returns {String} event recurrence description string
+         */
+        var buildEventRecurrenceString = function(eventDetails) {
+            var recurrenceDetails = eventDetails.recurrenceDetails;
+            var startDateString = '';
+            var endDateString = '';
+            var durationString = '';
+            var patternString = '';
+
+            /*build start date string*/
+            var startDateFormatedString = $filter('date')(eventDetails.start, 'MM/dd/yyyy');
+            startDateString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.effective') + ' ' + startDateFormatedString;
+
+            /*build end date string*/
+            if(recurrenceDetails.endBy || recurrenceDetails.endAfterOccurrances) {
+                var endDateFormatedString = $filter('date')(eventDetails.recurrenceDetails.endBy, 'MM/dd/yyyy');
+                endDateString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.until') + ' ' + endDateFormatedString;
+            }
+
+            /*build event duration string*/
+            var startTimeFormatedString = $filter('date')(eventDetails.start, 'h:mm a');
+            var endTimeFormatedString = $filter('date')(eventDetails.end, 'h:mm a');
+            durationString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.from') + ' ' +
+             startTimeFormatedString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.to') + ' ' + endTimeFormatedString;
+
+            /*build pattern string*/
+            patternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.occurs');
+            switch (recurrenceDetails.recurrenceType) {
+                case 'DAILY':
+                    if (!recurrenceDetails.everyWeekDay) {
+                        if(recurrenceDetails.interval === 1) {
+                            patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.day');
+                        } else {
+                            patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
+                             ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.days');
+                        }
+                    } else {
+                        patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weekday');
+                    }
+                    break;
+                case 'WEEKLY':
+                    var daysString = '';
+                    var weekNumString = '';
+                    var successIndex = 0;
+                    _.forEach(DAYS_WEEK_OPTIONS, function(dayOption) {
+                        var selectedDayIndex = _.findIndex(recurrenceDetails.days, function(day) {
+                            return dayOption.value === day;
+                        });
+                        if(selectedDayIndex !== -1) {
+                            successIndex++;
+                            if(successIndex === 1) {
+                                daysString = $translate.instant(dayOption.label);
+                            } else if (successIndex === recurrenceDetails.days.length) {
+                                daysString = daysString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.and') + 
+                                ' ' + $translate.instant(dayOption.label);
+                            } else {
+                                daysString = daysString + ',' + ' ' + $translate.instant(dayOption.label);
+                            }
+                        }
+                    });
+                    if(recurrenceDetails.interval === 1) {
+                        weekNumString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every');
+                    } else {
+                        weekNumString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weeks') + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                    }
+                    patternString = patternString + ' ' + weekNumString + ' ' + daysString;
+                    break;
+                case 'MONTHLY':
+                    if (!recurrenceDetails.weekOfMonth) {
+                        var absoluteMonthlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.day') + 
+                        ' ' + recurrenceDetails.day + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
+                        patternString = patternString + ' ' + absoluteMonthlyPatternString;
+                    } else {
+                        var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
+                        var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
+                        var relativeMonthlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.the') + 
+                        ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
+                        patternString = patternString + ' ' + relativeMonthlyPatternString;
+                    }
+                    break;
+                case 'YEARLY':
+                    var numYearString = '';
+                    var month = _.find(MONTHS_OPTIONS, function(o) { return o.value === recurrenceDetails.month; });
+
+                    if (!recurrenceDetails.weekOfMonth) {
+                        if(recurrenceDetails.interval !== 1) {
+                            numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') + 
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                        } else {
+                            numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every');
+                        }
+                        var absoluteYearlyPatternString = $translate.instant(month.label) + ' ' + recurrenceDetails.dayOfMonth;
+                        patternString = patternString + ' ' + numYearString + ' ' + absoluteYearlyPatternString;
+                    } else {
+                        if(recurrenceDetails.interval !== 1) {
+                            numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') + 
+                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') + 
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                        } else {
+                            numYearString = '';
+                        }
+                        var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
+                        var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
+                        var relativeYearlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.the') + 
+                        ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) + 
+                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') + 
+                        ' ' +$translate.instant(month.label);
+                        patternString = patternString + ' ' + numYearString + ' ' + relativeYearlyPatternString;
+                    }
+                    break;
+            }
+
+            return patternString + ' ' + startDateString + ' ' + endDateString + ' ' + durationString;
+        };
+
 
         return {
             RECURRENCE_OPTIONS: RECURRENCE_OPTIONS,
@@ -760,7 +1035,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             RELATIVE_RECURRENCE_DAY_OPTIONS: RELATIVE_RECURRENCE_DAY_OPTIONS,
             DAY_OCCURRENCE_IN_MONTH_OPTIONS: DAY_OCCURRENCE_IN_MONTH_OPTIONS,
             calculateDaysInMonth: calculateDaysInMonth,
-            calculateWeekInMonth: calculateWeekInMonth,
+            calculateDayOccurrenceInMonth: calculateDayOccurrenceInMonth,
             buildEventRecurrenceString: buildEventRecurrenceString,
             getEveryDayRecurrenceRange: getEveryDayRecurrenceRange,
             getEveryWeekdayRecurrenceRange: getEveryWeekdayRecurrenceRange,
@@ -770,8 +1045,6 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             getAbsoluteYearlyRecurrenceRange: getAbsoluteYearlyRecurrenceRange,
             getRelativeYearlyRecurrenceRange: getRelativeYearlyRecurrenceRange,
             buildPopoverTemplate: buildPopoverTemplate
-
-
         };
     }
 ]);
