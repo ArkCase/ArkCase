@@ -791,31 +791,35 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "type",
+          "name": "person.givenName",
+          "displayName": "people.comp.related.table.columns.givenName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "person.familyName",
+          "displayName": "people.comp.related.table.columns.familyName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "personType",
           "displayName": "people.comp.related.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "value",
-          "displayName": "people.comp.related.table.columns.value",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "description",
+          "name": "personDescription",
           "displayName": "people.comp.related.table.columns.description",
           "headerCellFilter": "translate"
         },
         {
-          "name": "author",
-          "field": "creator",
-          "displayName": "people.comp.related.table.columns.creator",
+          "name": "modifier",
+          "displayName": "people.comp.ids.table.columns.modifier",
           "headerCellFilter": "translate",
           "lookup": "userFullNames",
           "width": 150
         },
         {
-          "name": "created",
-          "displayName": "people.comp.related.table.columns.created",
+          "name": "modified",
+          "displayName": "people.comp.ids.table.columns.modified",
           "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
@@ -828,13 +832,18 @@
         "showFacets": false,
         "columnDefs": [
           {
-            "name": "name",
-            "displayName": "people.comp.related.dialogPersonPicker.table.columns.name",
+            "name": "object_id_s",
+            "displayName": "people.comp.related.dialogPersonPicker.table.columns.id",
             "headerCellFilter": "translate"
           },
           {
-            "name": "object_id_s",
-            "displayName": "people.comp.related.dialogPersonPicker.table.columns.id",
+            "name": "first_name_lcs",
+            "displayName": "people.comp.related.dialogPersonPicker.table.columns.givenName",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "last_name_lcs",
+            "displayName": "people.comp.related.dialogPersonPicker.table.columns.familyName",
             "headerCellFilter": "translate"
           }
         ],

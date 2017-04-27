@@ -439,6 +439,34 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getPersonRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of person relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getPersonRelationTypes = function () {
+            return LookupService.getLookup("personRelationTypes");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getOrganizationRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of person relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getOrganizationRelationTypes = function () {
+            return LookupService.getLookup("organizationRelationTypes");
+        };
+
+        /**
+         * @ngdoc method
          * @name getObjectTypes
          * @methodOf services:Object.LookupService
          *
