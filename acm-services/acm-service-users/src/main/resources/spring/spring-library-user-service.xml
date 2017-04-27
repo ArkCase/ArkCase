@@ -90,4 +90,21 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
+
+    <bean id="ldapProperties"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-armedia-ldap.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper.setUserLdapAttributes"/>
+        <property name="arguments">
+            <list>
+                <value type="java.lang.String">${ldap.user.attributes}</value>
+            </list>
+        </property>
+    </bean>
+
 </beans>

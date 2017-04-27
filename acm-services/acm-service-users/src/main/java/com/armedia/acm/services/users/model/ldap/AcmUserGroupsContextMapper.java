@@ -11,23 +11,10 @@ import java.util.Set;
 
 public class AcmUserGroupsContextMapper implements ContextMapper
 {
-
     public static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
-    public static String[] USER_LDAP_ATTRIBUTES = {
-            "cn",
-            "userAccountControl",
-            "sn",
-            "givenName",
-            "dn",
-            "distinguishedname",
-            "memberOf",
-            "sAMAccountName",
-            "userPrincipalName",
-            "uid",
-            "uidNumber"};
-
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmLdapSyncConfig acmLdapSyncConfig;
+    public static String[] USER_LDAP_ATTRIBUTES;
 
     public AcmUserGroupsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {
@@ -66,6 +53,10 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
         user.setUserId(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
+        user.setCountry(MapperUtils.getAttribute(adapter, "c"));
+        user.setCountryAbbreviation(MapperUtils.getAttribute(adapter, "co"));
+        user.setCompany(MapperUtils.getAttribute(adapter, "company"));
+        user.setDepartment(MapperUtils.getAttribute(adapter, "department"));
         user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
@@ -96,4 +87,8 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         }
     }
 
+    public static void setUserLdapAttributes(String userLdapAttributes)
+    {
+        AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES = userLdapAttributes.trim().split(",");
+    }
 }
