@@ -27,7 +27,7 @@ angular.module('people').controller('People.RelatedModalController', ['$scope', 
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
                 var modalInstance = $modal.open({
-                    templateUrl: "modules/people/views/components/person-picker-modal.client.view.html",
+                    templateUrl: "modules/common/views/object-picker-modal.client.view.html",
                     controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
                         $scope.modalInstance = $modalInstance;
                         $scope.header = params.header;

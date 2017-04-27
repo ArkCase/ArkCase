@@ -116,6 +116,31 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "type": "Type",
+      "id": "ID",
+      "value": "Organization",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New",
+      "addExisting": "Add New"
+    },
+    "dialogOrganizationPicker": {
+      "header": "Choose Organization",
+      "table.columns": {
+        "type": "Organization Type",
+        "name": "Value"
+      }
+    }
+  },
   "cases.comp.participants": {
     "title": "Participants",
     "table.columns": {
