@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,6 +124,13 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        in.setUsers(Arrays.asList(user.getUserId()));
+        sendEmailWithAttachments(in, authentication);
+    }
+
+    @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication) throws Exception
+    {
 
         in.setTemplate(notificationTemplate);
         Exception exception = null;
@@ -152,9 +160,9 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 
                         if (firstIteration)
                         {
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, in.getUsers().get(0), ecmFile.getParentObjectId(),
                                     ecmFile.getParentObjectType()));
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, in.getUsers().get(0), ecmFile.getId(), ecmFile.getObjectType()));
                         }
                     }
                 }
