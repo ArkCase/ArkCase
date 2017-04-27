@@ -15,6 +15,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_associated_tag")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
 {
 

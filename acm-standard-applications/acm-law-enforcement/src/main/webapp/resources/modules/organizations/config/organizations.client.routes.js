@@ -59,7 +59,7 @@ angular.module('organizations').config(['$stateProvider',
 
             .state('newOrganization', {
                 url: '/newOrganization',
-                templateUrl: 'modules/organizations/views/components/organization-new-organizations.client.view.html',
+                templateUrl: 'modules/organizations/views/components/organization-new-organization.client.view.html',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');

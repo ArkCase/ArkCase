@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -57,7 +58,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID", scope = Person.class)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -421,10 +422,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<PostalAddress> getAddresses()
     {
-        if (addresses == null)
-        {
-            addresses = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return addresses;
     }
 
@@ -436,10 +433,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<ContactMethod> getContactMethods()
     {
-        if (contactMethods == null)
-        {
-            contactMethods = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return contactMethods;
     }
 
@@ -462,10 +455,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<PersonAlias> getPersonAliases()
     {
-        if (personAliases == null)
-        {
-            personAliases = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return personAliases;
     }
 
@@ -488,11 +477,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setPersonAssociations(List<PersonAssociation> personAssociations)
     {
         this.personAssociations = personAssociations;
-
-        for (PersonAssociation personAssoc : personAssociations)
-        {
-            personAssoc.setPerson(this);
-        }
     }
 
     @XmlTransient
@@ -574,10 +558,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<Organization> getOrganizations()
     {
-        if (organizations == null)
-        {
-            organizations = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return organizations;
     }
 
@@ -589,10 +569,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @XmlTransient
     public List<Identification> getIdentifications()
     {
-        if (identifications == null)
-        {
-            identifications = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return identifications;
     }
 
@@ -641,18 +617,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultPhone;
     }
 
-    /**
-     * if inserting default phone, same phone will be automatically added to the contacts
-     *
-     * @param defaultPhone
-     */
     public void setDefaultPhone(ContactMethod defaultPhone)
     {
         this.defaultPhone = defaultPhone;
-        if (defaultPhone != null && defaultPhone.getId() == null)
-        {
-            getContactMethods().add(defaultPhone);
-        }
     }
 
     public ContactMethod getDefaultEmail()
@@ -660,18 +627,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultEmail;
     }
 
-    /**
-     * if inserting default email, same phone will be automatically added to the contacts
-     *
-     * @param defaultEmail
-     */
     public void setDefaultEmail(ContactMethod defaultEmail)
     {
         this.defaultEmail = defaultEmail;
-        if (defaultEmail != null && defaultEmail.getId() == null)
-        {
-            getContactMethods().add(defaultEmail);
-        }
     }
 
     public PostalAddress getDefaultAddress()
@@ -679,18 +637,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultAddress;
     }
 
-    /**
-     * if inserting default address, same phone will be automatically added to the addresses
-     *
-     * @param defaultAddress
-     */
     public void setDefaultAddress(PostalAddress defaultAddress)
     {
         this.defaultAddress = defaultAddress;
-        if (defaultAddress != null && defaultAddress.getId() == null)
-        {
-            getAddresses().add(defaultAddress);
-        }
     }
 
     public ContactMethod getDefaultUrl()
@@ -698,18 +647,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultUrl;
     }
 
-    /**
-     * if inserting default url, same phone will be automatically added to the contacts
-     *
-     * @param defaultUrl
-     */
     public void setDefaultUrl(ContactMethod defaultUrl)
     {
         this.defaultUrl = defaultUrl;
-        if (defaultUrl != null && defaultUrl.getId() == null)
-        {
-            getContactMethods().add(defaultUrl);
-        }
     }
 
     public PersonAlias getDefaultAlias()
@@ -717,18 +657,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultAlias;
     }
 
-    /**
-     * if inserting default alias, same phone will be automatically added to the aliases
-     *
-     * @param defaultAlias
-     */
     public void setDefaultAlias(PersonAlias defaultAlias)
     {
         this.defaultAlias = defaultAlias;
-        if (defaultAlias != null && defaultAlias.getId() == null)
-        {
-            getPersonAliases().add(defaultAlias);
-        }
     }
 
     public Identification getDefaultIdentification()
@@ -736,17 +667,8 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultIdentification;
     }
 
-    /**
-     * if inserting default identification, same identification will be automatically added to the identifications list
-     *
-     * @param defaultIdentification
-     */
     public void setDefaultIdentification(Identification defaultIdentification)
     {
-        if (defaultIdentification != null && defaultIdentification.getIdentificationID() == null)
-        {
-            getIdentifications().add(defaultIdentification);
-        }
         this.defaultIdentification = defaultIdentification;
     }
 
@@ -755,17 +677,8 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return defaultOrganization;
     }
 
-    /**
-     * if inserting default organization, same organization will be automatically added to the organizations list
-     *
-     * @param defaultOrganization
-     */
     public void setDefaultOrganization(Organization defaultOrganization)
     {
-        if (defaultOrganization != null && defaultOrganization.getOrganizationId() == null)
-        {
-            getOrganizations().add(defaultOrganization);
-        }
         this.defaultOrganization = defaultOrganization;
     }
 
