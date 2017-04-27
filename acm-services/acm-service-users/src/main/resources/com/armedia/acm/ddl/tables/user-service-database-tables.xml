@@ -431,4 +431,13 @@
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
 
+    <changeSet id="23-add-country-department-and-company-attributes" author="manoj.dhungana">
+        <addColumn tableName="acm_user">
+            <column name="cm_country" type="VARCHAR(255)"/>
+            <column name="cm_department" type="VARCHAR(255)"/>
+            <column name="cm_country_abbreviation" type="VARCHAR(255)"/>
+            <column name="cm_company" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

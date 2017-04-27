@@ -50,6 +50,10 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setGroups_id_ss(getGroupIds(in));
 
         solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
+        solr.setAdditionalProperty("country_s", in.getCountry());
+        solr.setAdditionalProperty("country_abbreviation_s", in.getCountryAbbreviation());
+        solr.setAdditionalProperty("department_s", in.getDepartment());
+        solr.setAdditionalProperty("company_s", in.getCompany());
 
         // TODO find a way to add Organization
         // TODO find a way to add Application Title

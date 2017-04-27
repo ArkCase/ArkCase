@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = { "/api/v1/users", "/api/latest/users" } )
+@RequestMapping(value = {"/api/v1/users", "/api/latest/users"})
 public class GetUserInfoAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -27,7 +27,8 @@ public class GetUserInfoAPIController
             method = RequestMethod.GET,
             value = "/info",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
+    public
+    @ResponseBody
     AcmUserInfoDTO info(Authentication auth, HttpSession session)
     {
         log.debug("Getting info for user {}", auth.getName());
@@ -49,6 +50,10 @@ public class GetUserInfoAPIController
         retval.setLastName(user.getLastName());
         retval.setMail(user.getMail());
         retval.setDirectoryName(user.getUserDirectoryName());
+        retval.setCountry(user.getCountry());
+        retval.setCountryAbbreviation(user.getCountryAbbreviation());
+        retval.setDepartment(user.getDepartment());
+        retval.setCompany(user.getCompany());
 
         return retval;
     }
