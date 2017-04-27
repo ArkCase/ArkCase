@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('people').controller('People.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Organization.InfoService'
+angular.module('complaints').controller('Complaints.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+    , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Organization.InfoService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
     , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, PersonInfoService, Authentication, OrganizationInfoService
+        , Util, ObjectService, ComplaintInfoService, Authentication, OrganizationInfoService
         , HelperUiGridService, HelperObjectBrowserService) {
 
 
@@ -18,10 +18,10 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
-            , moduleId: "people"
+            , moduleId: "complaints"
             , componentId: "organizations"
-            , retrieveObjectInfo: PersonInfoService.getPersonInfo
-            , validateObjectInfo: PersonInfoService.validatePersonInfo
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
@@ -72,7 +72,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
 
         $scope.addExisting = function () {
             var params = {};
-            params.header = $translate.instant("people.comp.organizations.dialogOrganizationPicker.header");
+            params.header = $translate.instant("complaints.comp.organizations.dialogOrganizationPicker.header");
             params.filter = '"Object Type": ORGANIZATION';
             params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
 
@@ -105,9 +105,9 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
 
         function saveObjectInfoAndRefresh() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
+            if (ComplaintInfoService.validateCaseInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
-                promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
+                promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);

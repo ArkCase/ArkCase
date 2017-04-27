@@ -115,6 +115,7 @@
           "details",
           "locations",
           "people",
+          "organizations",
           "documents",
           "participants",
           "notes",
@@ -150,6 +151,14 @@
         "icon": "fa fa-user",
         "components": [
           "people"
+        ]
+      },
+      {
+        "type": "p/COMPLAINT/org",
+        "label": "Organizations",
+        "icon": "fa fa-user",
+        "components": [
+          "organizations"
         ]
       },
       {
@@ -794,6 +803,73 @@
           {
             "name": "name",
             "displayName": "common.directive.corePeople.organizations.modal.dialogOrganizationPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
+    },
+    {
+      "id": "organizations",
+      "title": "Organizations",
+      "icon": "fa fa-info-circle",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "columnDefs": [
+        {
+          "name": "organizationType",
+          "displayName": "complaints.comp.organizations.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "organizationValue",
+          "displayName": "complaints.comp.organizations.table.columns.value",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modifier",
+          "displayName": "complaints.comp.organizations.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames",
+          "width": 150
+        },
+        {
+          "name": "modified",
+          "displayName": "complaints.comp.organizations.table.columns.modified",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate",
+          "enableCellEdit": false,
+          "width": 150
+        }
+      ],
+      "dialogOrganizationPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "type_lcs",
+            "displayName": "complaints.comp.organizations.dialogOrganizationPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "name",
+            "displayName": "complaints.comp.organizations.dialogOrganizationPicker.table.columns.name",
             "headerCellFilter": "translate"
           }
         ],

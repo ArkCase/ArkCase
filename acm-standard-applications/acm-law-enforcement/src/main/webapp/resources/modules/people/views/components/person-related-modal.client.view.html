@@ -5,22 +5,29 @@
 </div>
 <div class="modal-body">
     <form name="relatedForm">
-        <div>
-            <label for="person_{{::$id}}"
-                   translate>people.comp.related.modal.person.label</label>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <div>
+                    <label for="person_{{::$id}}"
+                           translate>people.comp.related.modal.person.label</label>
+                </div>
+                <input id="person_{{::$id}}" class="form-control" type="text" ng-model="personName"
+                       ng-click="pickPerson()" required>
+            </div>
+            <div class="col-sm-6 form-group">
+                <div>
+                    <label for="relationshipTypes_{{::$id}}"
+                           translate>people.comp.related.modal.type.label</label>
+                </div>
+                <select id="relationshipTypes_{{::$id}}"
+                        ng-model="relationshipType"
+                        ng-options="item.type as item.name for item in relationshipTypes"></select>
+            </div>
         </div>
-        <input id="person_{{::$id}}" class="form-control" type="text" ng-model="personName"
-               ng-click="pickPerson()" required>
-        <div>
-            <label for="relationshipTypes_{{::$id}}"
-                   translate>people.comp.related.modal.type.label</label>
+        <div class="row">
+            <label for="description_{{::$id}}"/>
+            <textarea id="description_{{::$id}}" ng-model="description"></textarea>
         </div>
-        <select id="relationshipTypes_{{::$id}}"
-                ng-model="relationshipType"
-                ng-options="item.type as item.name for item in relationshipTypes"></select>
-
-        <label for="description_{{::$id}}"/>
-        <textarea id="description_{{::$id}}" ng-model="description"></textarea>
     </form>
 </div>
 <div class="modal-footer">

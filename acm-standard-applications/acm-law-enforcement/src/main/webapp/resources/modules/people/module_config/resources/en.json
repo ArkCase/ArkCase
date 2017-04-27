@@ -291,6 +291,13 @@
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
       "addExisting": "Add New"
+    },
+    "dialogOrganizationPicker": {
+      "header": "Choose Organization",
+      "table.columns": {
+        "type": "Organization Type",
+        "name": "Value"
+      }
     }
   },
   "people.comp.cases": {
