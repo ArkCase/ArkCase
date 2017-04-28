@@ -20,6 +20,7 @@ public class AcmUserInfoDTO
     private String countryAbbreviation;
     private String department;
     private String company;
+    private String title;
 
     public String getUserId()
     {
@@ -141,4 +142,13 @@ public class AcmUserInfoDTO
         this.company = company;
     }
 
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
 }

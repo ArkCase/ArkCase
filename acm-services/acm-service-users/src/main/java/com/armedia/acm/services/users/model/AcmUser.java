@@ -86,6 +86,9 @@ public class AcmUser implements Serializable, AcmLdapUser
     @Column(name = "cm_company")
     private String company;
 
+    @Column(name = "cm_title")
+    private String title;
+
     @Transient
     private String sortableValue;
 
@@ -410,4 +413,14 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.department = department;
     }
 
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
 }

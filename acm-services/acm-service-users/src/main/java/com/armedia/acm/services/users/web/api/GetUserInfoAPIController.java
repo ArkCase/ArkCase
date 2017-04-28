@@ -54,6 +54,7 @@ public class GetUserInfoAPIController
         retval.setCountryAbbreviation(user.getCountryAbbreviation());
         retval.setDepartment(user.getDepartment());
         retval.setCompany(user.getCompany());
+        retval.setTitle(user.getTitle());
 
         return retval;
     }

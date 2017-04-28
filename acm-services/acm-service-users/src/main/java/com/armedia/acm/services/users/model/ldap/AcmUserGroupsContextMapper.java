@@ -57,6 +57,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setCountryAbbreviation(MapperUtils.getAttribute(adapter, "co"));
         user.setCompany(MapperUtils.getAttribute(adapter, "company"));
         user.setDepartment(MapperUtils.getAttribute(adapter, "department"));
+        user.setTitle(MapperUtils.getAttribute(adapter, "title"));
         user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
