@@ -72,6 +72,11 @@ angular.module('cases').config(['$stateProvider',
                 templateUrl: 'modules/cases/views/components/case-people.client.view.html'
             })
 
+            .state('cases.organizations', {
+                url: '/:id/organizations',
+                templateUrl: 'modules/cases/views/components/case-organizations.client.view.html'
+            })
+
             .state('cases.references', {
                 url: '/:id/references',
                 templateUrl: 'modules/cases/views/components/case-references.client.view.html'
