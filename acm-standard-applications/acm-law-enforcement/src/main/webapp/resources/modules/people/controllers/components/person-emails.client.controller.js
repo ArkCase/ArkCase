@@ -37,7 +37,7 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -93,24 +93,25 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
             }
         };
 
-
-        $scope.setPrimary = function () {
-            console.log('set primary');
-        };
-
-
         function showModal(email, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.email = email || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.email = email || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(email);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-emails-modal.client.view.html',
                 controller: 'People.EmailsModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
+
             modalInstance.result.then(function (data) {
                 var email;
                 if (!data.isEdit)
@@ -124,23 +125,14 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
                 email.description = data.email.description;
 
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultEmail = email;
-                    }
-                    else {
-                        //if emails is empty then we will not add it to the array
-                        //but we will set it as default
-                        var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
-                        if (emails.length > 0) {
-                            $scope.objectInfo.contactMethods.push(email);
-                        } else {
-                            $scope.objectInfo.defaultEmail = email;
-                        }
-                    }
+                    $scope.objectInfo.contactMethods.push(email);
                 }
-                else if (data.isDefault) {
+
+                var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
+                if (data.isDefault || emails.length == 1) {
                     $scope.objectInfo.defaultEmail = email;
                 }
+
                 saveObjectInfoAndRefresh();
             });
         }
@@ -163,5 +155,13 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultEmail) {
+                id = $scope.objectInfo.defaultEmail.id
+            }
+            return data.id == id;
+        };
     }
 ]);

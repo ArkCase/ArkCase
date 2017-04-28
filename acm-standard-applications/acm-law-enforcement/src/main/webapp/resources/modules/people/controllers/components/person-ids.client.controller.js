@@ -37,7 +37,7 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -89,23 +89,23 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
             }
         };
 
-
-        $scope.setPrimary = function () {
-            console.log('set primary');
-        };
-
-
         function showModal(identification, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.identification = identification || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.identification = identification || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(identification);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-ids-modal.client.view.html',
                 controller: 'People.IDsModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
             modalInstance.result.then(function (data) {
                 var identification;
@@ -121,20 +121,10 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
                 identification.identificationYearIssued = data.identification.identificationYearIssued;
 
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultIdentification = identification;
-                    }
-                    else {
-                        //if identifications is empty then we will not add it to the array
-                        //but we will set it as default
-                        if ($scope.objectInfo.identifications.length > 0) {
-                            $scope.objectInfo.identifications.push(identification);
-                        } else {
-                            $scope.objectInfo.defaultIdentification = identification;
-                        }
-                    }
+                    $scope.objectInfo.identifications.push(identification);
                 }
-                else if (data.isDefault) {
+
+                if (data.isDefault || $scope.objectInfo.identifications.length == 1) {
                     $scope.objectInfo.defaultIdentification = identification;
                 }
                 saveObjectInfoAndRefresh();
@@ -159,5 +149,14 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultIdentification) {
+                id = $scope.objectInfo.defaultIdentification.identificationID;
+            }
+            return data.identificationID == id;
+        };
     }
+
 ]);

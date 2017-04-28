@@ -1,11 +1,15 @@
-angular.module('people').controller('People.IDsModalController', ['$scope', '$modalInstance', 'Object.LookupService',
-        function ($scope, $modalInstance, ObjectLookupService) {
+angular.module('people').controller('People.IDsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getIdentificationTypes().then(
                 function (identificationTypes) {
                     $scope.identificationTypes = identificationTypes;
                     return identificationTypes;
                 });
+
+            $scope.identification = params.identification;
+            $scope.isEdit = params.isEdit;
+            $scope.isDefault = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
@@ -14,7 +18,7 @@ angular.module('people').controller('People.IDsModalController', ['$scope', '$mo
                 $modalInstance.close(
                     {
                         identification: $scope.identification,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );
