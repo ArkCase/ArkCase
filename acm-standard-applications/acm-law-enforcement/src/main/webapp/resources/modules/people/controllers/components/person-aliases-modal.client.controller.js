@@ -1,10 +1,13 @@
-angular.module('people').controller('Person.AliasesModalController', ['$scope', '$modalInstance', 'Object.LookupService',
-        function ($scope, $modalInstance, ObjectLookupService) {
-            $scope.alias = null;
+angular.module('people').controller('Person.AliasesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $modalInstance, ObjectLookupService, params) {
             ObjectLookupService.getAliasTypes().then(function (response) {
                 $scope.aliasTypes = response;
             });
-            $scope.isDefault = false;
+
+            $scope.alias = params.alias;
+            $scope.isEdit = params.isEdit;
+            $scope.isDefault = params.isDefault;
+
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };

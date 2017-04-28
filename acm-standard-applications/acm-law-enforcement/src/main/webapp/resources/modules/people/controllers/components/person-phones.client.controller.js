@@ -37,7 +37,7 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -93,23 +93,23 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
             }
         };
 
-
-        $scope.setPrimary = function () {
-            console.log('set primary');
-        };
-
-
         function showModal(phone, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.phone = phone || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.phone = phone || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(phone);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-phones-modal.client.view.html',
                 controller: 'People.PhonesModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
             modalInstance.result.then(function (data) {
                 var phone;
@@ -124,23 +124,14 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
                 phone.description = data.phone.description;
 
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultPhone = phone;
-                    }
-                    else {
-                        //if phones is empty then we will not add it to the array
-                        //but we will set it as default
-                        var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                        if (phones.length > 0) {
-                            $scope.objectInfo.contactMethods.push(phone);
-                        } else {
-                            $scope.objectInfo.defaultPhone = phone;
-                        }
-                    }
+                    $scope.objectInfo.contactMethods.push(phone);
                 }
-                else if (data.isDefault) {
+
+                var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
+                if (data.isDefault || phones.length == 1) {
                     $scope.objectInfo.defaultPhone = phone;
                 }
+
                 saveObjectInfoAndRefresh();
             });
         }
@@ -163,5 +154,13 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultPhone) {
+                id = $scope.objectInfo.defaultPhone.id
+            }
+            return data.id == id;
+        };
     }
 ]);
