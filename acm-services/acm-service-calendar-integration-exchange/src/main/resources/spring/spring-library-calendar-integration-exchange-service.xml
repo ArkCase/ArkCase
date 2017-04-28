@@ -5,7 +5,7 @@
 
         <bean id="caseFileEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CaseFileHandler"/>
 
-        <bean id="calendarService" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
+        <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
             <property name="entityHandlers">
                 <map>
                     <entry key="CASE_FILE" value-ref="caseFileEntityHandler"/>
