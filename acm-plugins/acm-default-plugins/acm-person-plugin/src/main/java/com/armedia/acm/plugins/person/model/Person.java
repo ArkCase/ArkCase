@@ -28,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
@@ -147,6 +148,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<PersonAssociation> personRelations = new ArrayList<>();
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
@@ -477,6 +487,11 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setPersonAssociations(List<PersonAssociation> personAssociations)
     {
         this.personAssociations = personAssociations;
+
+        for (PersonAssociation personAssoc : personAssociations)
+        {
+            personAssoc.setPerson(this);
+        }
     }
 
     @XmlTransient
@@ -690,5 +705,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setDetails(String details)
     {
         this.details = details;
+    }
+
+    public List<PersonAssociation> getPersonRelations()
+    {
+        return personRelations;
+    }
+
+    public void setPersonRelations(List<PersonAssociation> personRelations)
+    {
+        this.personRelations = personRelations;
     }
 }

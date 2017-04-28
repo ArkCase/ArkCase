@@ -139,49 +139,4 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-
-    <changeSet id="09-person-foreign-keys" author="nebojsha.davidovikj">
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_phone"
-                                 constraintName="fk_default_phone"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_email"
-                                 constraintName="fk_default_email"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_url"
-                                 constraintName="fk_default_url"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_fax"
-                                 constraintName="fk_default_fax"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_address"
-                                 constraintName="fk_default_address"
-                                 referencedTableName="acm_postal_address"
-                                 referencedColumnNames="cm_address_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_default_identification"
-                                 constraintName="fk_default_identification"
-                                 referencedTableName="acm_identification"
-                                 referencedColumnNames="cm_identification_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-    </changeSet>
 </databaseChangeLog>

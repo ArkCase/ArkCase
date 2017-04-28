@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="09-organization-foreign-keys" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_phone"
+                                 constraintName="fk_default_phone"
+                                 referencedTableName="acm_contact_method"
+                                 referencedColumnNames="cm_contact_method_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_email"
+                                 constraintName="fk_default_email"
+                                 referencedTableName="acm_contact_method"
+                                 referencedColumnNames="cm_contact_method_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_url"
+                                 constraintName="fk_default_url"
+                                 referencedTableName="acm_contact_method"
+                                 referencedColumnNames="cm_contact_method_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_fax"
+                                 constraintName="fk_default_fax"
+                                 referencedTableName="acm_contact_method"
+                                 referencedColumnNames="cm_contact_method_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_address"
+                                 constraintName="fk_default_address"
+                                 referencedTableName="acm_postal_address"
+                                 referencedColumnNames="cm_address_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_identification"
+                                 constraintName="fk_default_identification"
+                                 referencedTableName="acm_identification"
+                                 referencedColumnNames="cm_identification_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="10-organization-assoc-foreign-key" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_organization_assoc" baseColumnNames="cm_organization_id"
+                                 constraintName="fk_org_assoc_organization_id"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+</databaseChangeLog>
