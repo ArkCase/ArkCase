@@ -22,7 +22,7 @@
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowSending">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowDocuments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentEmail.checkbox
                                     </span>
@@ -34,7 +34,7 @@
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments" ng-disabled="!emailSenderConfigDataModel.allowSending">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments" ng-disabled="!emailSenderConfigDataModel.allowDocuments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentAttach.checkbox
                                     </span>
@@ -46,7 +46,7 @@
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks" ng-disabled="!emailSenderConfigDataModel.allowSending">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks" ng-disabled="!emailSenderConfigDataModel.allowDocuments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentHyperlink.checkbox
                                     </span>
@@ -64,24 +64,29 @@
                 </div> -->
                 <div class="well-sm">
                     <div class="row">
-                    <div class="col-lg-4 form-group">
-                        <label for="serverType" translate>
-                            admin.security.emailConfiguration.emailConfigForm.serverType.label
-                         </label>
-                        <select name="serverType" class="form-control" ng-model="emailSenderConfigDataModel.type">
-                            <option value="" disabled selected hidden translate>
-                                admin.security.emailConfiguration.emailConfigForm.serverType.placeholder
-                            </option>
-                            <option ng-repeat="option in serverTypeSelectOptions" value="{{option.value}}" translate>
-                                {{option.label}}
-                            </option>
-                        </select>
-                        <span class="text-success" ng-if="emailSenderConfigDataModel.type === 'outlook'">
-                            <span translate>
-                                admin.security.emailConfiguration.emailConfigForm.serverType.configuredExchange.label
-                            </span>
-                        </span>
-                    </div>
+                        <div class="col-lg-4 form-group">
+                            <label for="serverType" translate>
+                                admin.security.emailConfiguration.emailConfigForm.serverType.label
+                            </label>
+                            <select name="serverType" class="form-control" ng-model="emailSenderConfigDataModel.type">
+                                <option value="" disabled selected hidden translate>
+                                    admin.security.emailConfiguration.emailConfigForm.serverType.placeholder
+                                </option>
+                                <option ng-repeat="option in serverTypeSelectOptions" value="{{option.value}}" translate>
+                                    {{option.label}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                            <label>
+                                &nbsp;
+                            </label>
+                            <label class="text-success" ng-if="emailSenderConfigDataModel.type === 'outlook'">
+                                <span translate>
+                                   admin.security.emailConfiguration.emailConfigForm.serverType.configuredExchange.label
+                                </span>
+                            </label>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-4 form-group">
@@ -100,7 +105,7 @@
                             <label for="encryption" translate>
                                 admin.security.emailConfiguration.emailConfigForm.encryption.label
                             </label>
-                            <select name="encryption" class="form-control" ng-model="emailSenderConfigDataModel.encryption" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <select name="encryption" class="form-control" ng-model="emailSenderConfigDataModel.encryption" ng-change="changeEncryption(emailSenderConfigDataModel.encryption)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                                 <option value="" disabled selected hidden translate>
                                     admin.security.emailConfiguration.emailConfigForm.encryption.placeholder
                                 </option>

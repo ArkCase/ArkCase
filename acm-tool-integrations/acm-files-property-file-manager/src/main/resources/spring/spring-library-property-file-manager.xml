@@ -39,6 +39,7 @@
                 <value>file:${user.home}/.arkcase/acm/msOutlookIntegration.properties</value>
                 <value>file:${user.home}/.arkcase/acm/msOutlookPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/notification.properties</value>
+                <value>file:${user.home}/.arkcase/acm/acmEmailSender.properties</value>
                 <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/solr.properties</value>
                 <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>

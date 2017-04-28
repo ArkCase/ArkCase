@@ -1,47 +1,53 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationService;
+
+import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
 
-public class NotificationSenderFactory
+public class NotificationSenderFactory implements ApplicationListener<AbstractConfigurationFileEvent>
 {
-    private PropertyFileManager propertyFileManager;
-    private String emailSenderPropertyFileLocation;
+
     private Map<String, NotificationSender> notificationSenderMap;
+    private EmailSenderConfigurationService emailSenderConfigurationService;
+    String flowType = "smtp";
 
     public NotificationSender getNotificationSender()
     {
-        String flowType = "smtp";
-        try
-        {
-            flowType = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE, "smtp");
-        } catch (AcmEncryptionException e)
-        {
-        }
         return getNotificationSenderMap().get(flowType);
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    @Override
+    public void onApplicationEvent(AbstractConfigurationFileEvent event)
     {
-        return propertyFileManager;
+
+        if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
+        {
+            EmailSenderConfiguration senderConfigurationUpdated = getEmailSenderConfigurationService().readConfiguration();
+            flowType = senderConfigurationUpdated.getType();
+        }
+
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    /**
+     * @return the emailSenderConfigurationService
+     */
+    public EmailSenderConfigurationService getEmailSenderConfigurationService()
     {
-        this.propertyFileManager = propertyFileManager;
+        return emailSenderConfigurationService;
     }
 
-    public String getEmailSenderPropertyFileLocation()
+    /**
+     * @param emailSenderConfigurationService
+     *            the emailSenderConfigurationService to set
+     */
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationService emailSenderConfigurationService)
     {
-        return emailSenderPropertyFileLocation;
-    }
-
-    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
-    {
-        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
+        this.emailSenderConfigurationService = emailSenderConfigurationService;
     }
 
     public Map<String, NotificationSender> getNotificationSenderMap()

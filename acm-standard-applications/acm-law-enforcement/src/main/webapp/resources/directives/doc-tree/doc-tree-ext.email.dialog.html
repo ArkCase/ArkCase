@@ -20,7 +20,7 @@
         <div class="col-sm-12 form-group" ng-form="emailBodyForm">
             <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
         </div>
-        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowSending">
+        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowDocuments">
             <label for="attachments">
                 <span translate>common.directive.docTree.emailDialog.attachments.label</span>
             </label>
@@ -37,7 +37,7 @@
                 </label>
             </fieldset>
         </div>
-        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowSending">
+        <div class="col-sm-12 form-group" ng-if="emailSendConfiguration.allowDocuments">
             <label for="deliveryMethod">
                 <span translate>common.directive.docTree.emailDialog.deliveryMethod.label</span>
             </label>

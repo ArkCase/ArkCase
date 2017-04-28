@@ -61,6 +61,7 @@
 
     <bean id="exchangeWebServicesOutlookDao"
           class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
+        <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
         <property name="exchangeVersion" value="${outlook.exchange.server.version}"/>
         <property name="autodiscoveryEnabled" value="${outlook.exchange.enable.autodiscovery}"/>
         <property name="clientAccessServer" value="${outlook.exchange.client-access-server}"/>

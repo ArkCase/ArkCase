@@ -1,5 +1,14 @@
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.contains;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.matches;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -14,10 +23,12 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -32,6 +43,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -39,9 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 public class SmtpNotificationSenderTest extends EasyMockSupport
 {
@@ -286,11 +295,11 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
 
     private void setSendExpectations() throws AcmEncryptionException
     {
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_HOST_KEY, null)).andReturn("host_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_PORT_KEY, null)).andReturn("port_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_USER_KEY, null)).andReturn("email_user_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_PASSWORD_KEY, null)).andReturn("email_password_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_FROM_KEY, null)).andReturn("email_from_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.HOST, null)).andReturn("host_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PORT, null)).andReturn("port_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USERNAME, null)).andReturn("email_user_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PASSWORD, null)).andReturn("email_password_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USER_FROM, null)).andReturn("email_from_value");
     }
 
 }

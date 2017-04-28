@@ -25,7 +25,7 @@ public class EmailSenderConfiguration
 
     private String userFrom;
 
-    private boolean allowSending;
+    private boolean allowDocuments;
 
     private boolean allowAttachments;
 
@@ -151,20 +151,20 @@ public class EmailSenderConfiguration
     }
 
     /**
-     * @return the allowSending
+     * @return the allowDocuments
      */
-    public boolean isAllowSending()
+    public boolean isAllowDocuments()
     {
-        return allowSending;
+        return allowDocuments;
     }
 
     /**
-     * @param allowSending
-     *            the allowSending to set
+     * @param allowDocuments
+     *            the allowDocuments to set
      */
-    public void setAllowSending(boolean allowSending)
+    public void setAllowDocuments(boolean allowDocuments)
     {
-        this.allowSending = allowSending;
+        this.allowDocuments = allowDocuments;
     }
 
     /**

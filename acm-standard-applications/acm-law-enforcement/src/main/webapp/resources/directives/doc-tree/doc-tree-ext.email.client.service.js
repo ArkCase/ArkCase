@@ -187,12 +187,12 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             $scope.recipients = [];
 
             var processDeliveryMethods = function() {
-                $scope.emailSendConfiguration.allowSending = $scope.nodes.length > 0 ? true : false;
-                if($scope.emailSendConfiguration.allowSending) {
+                $scope.emailSendConfiguration.allowDocuments = $scope.nodes.length > 0 ? true : false;
+                if($scope.emailSendConfiguration.allowDocuments) {
                     if(!$scope.emailSendConfiguration.allowAttachments && $scope.emailSendConfiguration.allowHyperlinks) {
                         $scope.emailDataModel.deliveryMethod = 'SEND_HYPERLINKS';
                     } else if (!$scope.emailSendConfiguration.allowAttachments && !$scope.emailSendConfiguration.allowHyperlinks) {
-                        $scope.emailSendConfiguration.allowSending = false;
+                        $scope.emailSendConfiguration.allowDocuments = false;
                     }
                 }
             };
@@ -200,7 +200,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             processDeliveryMethods();
 
             var processDefaultEmailValues = function() {
-                var emailAction = !$scope.emailSendConfiguration.allowSending ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
+                var emailAction = !$scope.emailSendConfiguration.allowDocuments ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
                 $scope.emailDataModel.subject = DocTreeExtEmail._buildSubject($scope.DocTree);
                 $scope.emailDataModel.footer = $translate.instant('common.directive.docTree.email.defaultFooter');
 
@@ -280,7 +280,7 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
                 $modalInstance.dismiss();
             };
             $scope.onClickOk = function () {
-                $scope.emailDataModel.action = !$scope.emailSendConfiguration.allowSending ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
+                $scope.emailDataModel.action = !$scope.emailSendConfiguration.allowDocuments ? 'NO_ATTACHMENTS' : $scope.emailDataModel.deliveryMethod;
                 $scope.emailDataModel.recipients = $scope.recipientsStr.split('; ');
                 $modalInstance.close($scope.emailDataModel);
             };
