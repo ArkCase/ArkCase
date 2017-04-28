@@ -1,40 +1,22 @@
 package com.armedia.acm.calendar.service;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import java.io.Serializable;
-
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 4, 2017
  *
  */
-@Entity
-@Table(name = "acm_calendar_event")
-public class AcmCalendarEventInfo implements Serializable
+public class AcmCalendarEventInfo
 {
 
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @Column(name = "cm_calendar_event_id")
     private String eventId;
 
-    @Column(name = "cm_calendar_id")
     private String calendarId;
 
-    @Column(name = "cm_creator_id")
     private String creatorId;
 
-    @Column(name = "cm_object_type")
     private String objectType;
 
-    @Column(name = "cm_object_id")
     private String objectId;
 
-    @Column(name = "cm_subject")
     private String subject;
 
     /**
