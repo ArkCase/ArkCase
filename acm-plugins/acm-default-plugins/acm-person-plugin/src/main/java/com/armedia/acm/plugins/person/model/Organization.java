@@ -116,9 +116,11 @@ public class Organization implements Serializable, AcmEntity
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({
+            @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
-    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
+    private List<OrganizationAssociation> organizationRelations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -462,13 +464,13 @@ public class Organization implements Serializable, AcmEntity
         this.people = people;
     }
 
-    public List<OrganizationAssociation> getOrganizationAssociations()
+    public List<OrganizationAssociation> getOrganizationRelations()
     {
-        return organizationAssociations;
+        return organizationRelations;
     }
 
-    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    public void setOrganizationRelations(List<OrganizationAssociation> organizationRelations)
     {
-        this.organizationAssociations = organizationAssociations;
+        this.organizationRelations = organizationRelations;
     }
 }
