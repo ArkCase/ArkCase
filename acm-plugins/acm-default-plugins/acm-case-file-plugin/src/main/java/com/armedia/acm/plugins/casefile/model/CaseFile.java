@@ -12,6 +12,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
+import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
@@ -128,6 +129,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     /**
      * Milestones are read-only in the parent object; use the milestone service to add them.
@@ -725,5 +731,15 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     public void setPreviousQueue(AcmQueue previousQueue)
     {
         this.previousQueue = previousQueue;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }

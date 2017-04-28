@@ -45,7 +45,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.personAssociations;
+            $scope.gridOptions.data = $scope.objectInfo.personRelations;
         };
 
         var newPersonAssociation = function () {
@@ -81,7 +81,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                     association.personDescription = data.description;
                     //ObjectPersonService.addPersonAssociation(association).then(
                     //function (personAssociation) {
-                    $scope.objectInfo.personAssociations.push(association);
+                    $scope.objectInfo.personRelations.push(association);
                     saveObjectInfoAndRefresh()
                     //$scope.$emit("report-object-updated", $scope.objectInfo);
                     //}
@@ -95,7 +95,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.contactMethods = _.remove($scope.objectInfo.contactMethods, function (item) {
+                $scope.objectInfo.personRelations = _.remove($scope.objectInfo.personRelations, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()

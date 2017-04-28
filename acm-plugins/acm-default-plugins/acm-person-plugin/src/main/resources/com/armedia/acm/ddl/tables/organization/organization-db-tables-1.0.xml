@@ -1,0 +1,256 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="upperFunctionName" value="UPPER" dbms="oracle"/>
+    <property name="upperFunctionName" value="upper" dbms="postgresql"/>
+
+    <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
+    <property name="cmValueLength" value="255" dbms="mysql,mssql"/>
+
+    <property name="cmTagLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmTagLength" value="255" dbms="mysql,mssql"/>
+
+    <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
+    <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
+
+
+    <changeSet id="19-create-organization-table" author="tsedalu" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_organization">
+            <column name="cm_organization_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_organization"/>
+            </column>
+            <column name="cm_organization_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_value" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_organization_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="19-create-organization-table" author="tsedalu" dbms="mysql">
+        <createTable tableName="acm_organization">
+            <column name="cm_organization_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_organization"/>
+            </column>
+            <column name="cm_organization_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_value" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_organization_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_organization_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="29-acm_organization-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_organization_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_organization"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="31-add-organization-address-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_postal_address">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_address_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_postal_address"
+                             columnNames="cm_organization_id, cm_address_id"/>
+    </changeSet>
+
+    <changeSet id="32-add-organization-contact-method-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_contact_method">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_contact_method_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_contact_method"
+                             columnNames="cm_organization_id, cm_contact_method_id"/>
+    </changeSet>
+
+    <changeSet id="33-add-organization-identification-table" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_identification">
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_identification_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="acm_organization_identification"
+                             columnNames="cm_organization_id, cm_identification_id"/>
+    </changeSet>
+
+    <changeSet id="34-organization-add-class-name-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.PersonContact">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="46-acm_organization-add-columns-for-default-values-and-details" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_default_phone" type="${fkIdType}"/>
+            <column name="cm_default_email" type="${fkIdType}"/>
+            <column name="cm_default_url" type="${fkIdType}"/>
+            <column name="cm_default_fax" type="${fkIdType}"/>
+            <column name="cm_default_address" type="${fkIdType}"/>
+            <column name="cm_default_identification" type="${fkIdType}"/>
+            <column name="cm_details" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="47-add-organization-association-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_organization_assoc">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_organization_assoc"/>
+            </column>
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_association_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_title" type="VARCHAR(1024)"/>
+            <column name="cm_desc" type="VARCHAR(4000)"/>
+            <column name="cm_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.OrganizationAssociation">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="47-add-organization-association-table" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_organization_assoc">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_organization_assoc"/>
+            </column>
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_association_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_title" type="VARCHAR(1024)"/>
+            <column name="cm_desc" type="VARCHAR(4000)"/>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_class_name" type="varchar(400)"
+                    defaultValue="com.armedia.acm.plugins.person.model.OrganizationAssociation">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="48-acm_organization_assoc-id" author="nebojsha.davidovikj">
+        <createTable tableName="acm_organization_assoc_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_organization_assoc_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_organization_assoc"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="49-acm_organization-alter-default-value" author="nebojsha.davidovikj">
+        <dropDefaultValue tableName="acm_organization" columnName="cm_class_name" columnDataType="varchar(400)"/>
+        <addDefaultValue tableName="acm_organization" columnName="cm_class_name" columnDataType="varchar(400)"
+                         defaultValue="com.armedia.acm.plugins.person.model.Organization"/>
+    </changeSet>
+
+</databaseChangeLog>

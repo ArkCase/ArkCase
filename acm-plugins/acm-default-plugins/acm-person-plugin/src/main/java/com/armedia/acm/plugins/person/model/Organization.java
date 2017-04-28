@@ -20,11 +20,13 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -112,6 +114,11 @@ public class Organization implements Serializable, AcmEntity
             inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
     )
     private List<ContactMethod> contactMethods = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -453,5 +460,15 @@ public class Organization implements Serializable, AcmEntity
     public void setPeople(List<Person> people)
     {
         this.people = people;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }
