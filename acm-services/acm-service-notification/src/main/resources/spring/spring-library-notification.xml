@@ -119,8 +119,7 @@
 
     <bean id="notificationSenderFactory"
           class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
-        <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="notificationSenderMap">
             <map>
                 <entry key="smtp" value-ref="smtpNotificationSender"></entry>

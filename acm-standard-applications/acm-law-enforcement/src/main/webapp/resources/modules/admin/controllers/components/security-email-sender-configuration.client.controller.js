@@ -33,6 +33,19 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
             $scope.emailSenderConfigDataModel = res.data;
         });
         
+        $scope.changeEncryption = function(encryptionType) {
+            switch (encryptionType) {
+            case 'off':
+                $scope.emailSenderConfigDataModel.port = 25;
+                break;
+            case 'ssl':
+                $scope.emailSenderConfigDataModel.port = 465;
+                break;
+            case 'tls':
+                $scope.emailSenderConfigDataModel.port = 587;
+            }
+        }
+        
         /*Perform validation of the email*/
         $scope.validateEmail = function(emailSenderConfiguration) {
             EmailSenderConfigurationService.validateEmailSenderConfiguration(emailSenderConfiguration).then(function(res) {

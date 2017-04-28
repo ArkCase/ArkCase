@@ -1,5 +1,11 @@
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -10,9 +16,11 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -24,10 +32,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 {
@@ -113,8 +117,8 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
         Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
-        Authentication authentication = SecurityContextHolder.getContext() != null ?
-                SecurityContextHolder.getContext().getAuthentication() : null;
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
+                : null;
         mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture), eq(authentication));
         // when
         replayAll();
@@ -177,9 +181,9 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
     private void setSendExpectations() throws AcmEncryptionException
     {
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_USER_KEY, null)).andReturn("email_user_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_PASSWORD_KEY, null)).andReturn("email_password_value");
-        expect(mockPropertyFileManager.load("", NotificationConstants.EMAIL_FROM_KEY, null)).andReturn("email_from_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USERNAME, null)).andReturn("email_user_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PASSWORD, null)).andReturn("email_password_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USER_FROM, null)).andReturn("email_from_value");
     }
 
 }

@@ -8,6 +8,7 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -58,11 +59,12 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
-            String userId = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null);
-            String userEmail = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
+            String userId = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.USERNAME,
                     null);
-            String userPass = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
-                    null);
+            String userEmail = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(),
+                    EmailSenderConfigurationProperties.USER_FROM, null);
+            String userPass = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(),
+                    EmailSenderConfigurationProperties.PASSWORD, null);
 
             AcmOutlookUser outlookUser = new AcmOutlookUser(userId, userEmail, userPass);
 

@@ -8,6 +8,7 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
@@ -242,15 +243,15 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         Map<String, Object> messageProps = new HashMap<>();
 
         messageProps.put("host",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_HOST_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.HOST, null));
         messageProps.put("port",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PORT_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.PORT, null));
         messageProps.put("user",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.USERNAME, null));
         messageProps.put("password",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.PASSWORD, null));
         messageProps.put("from",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.USER_FROM, null));
 
         return messageProps;
     }

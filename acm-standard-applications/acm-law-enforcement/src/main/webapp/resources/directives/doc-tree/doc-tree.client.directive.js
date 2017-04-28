@@ -1805,7 +1805,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         /*email document should not be available when it's not configured*/
-                        if(!DocTree.treeConfig.emailSendConfiguration.allowSending && item.cmd === 'email') {
+                        if(!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
                             item.invisible = true;
                         }
 
