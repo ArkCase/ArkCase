@@ -37,7 +37,7 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -104,18 +104,23 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
         };
 
         function showModal(address, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.address = address || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.address = address || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(address);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-addresses-modal.client.view.html',
                 controller: 'People.AddressesModalController',
-                size: 'md'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
-
 
             modalInstance.result.then(function (data) {
                 var address;
@@ -132,24 +137,12 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
                 address.zip = data.address.zip;
                 address.country = data.address.country;
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultAddress = address;
-                    }
-                    else {
-                        //if address is empty then we will not add it to the array
-                        //but we will set it as default
-                        if ($scope.objectInfo.addresses.length > 0) {
-                            $scope.objectInfo.addresses.push(address);
-                        } else {
-                            $scope.objectInfo.defaultAddress = address;
-                        }
-                    }
+                    $scope.objectInfo.addresses.push(address);
                 }
-                else if (data.isDefault) {
+
+                if (data.isDefault || $scope.objectInfo.addresses.length == 1) {
                     $scope.objectInfo.defaultAddress = address;
                 }
-
-
                 saveObjectInfoAndRefresh();
             });
         }
@@ -172,5 +165,13 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultAddress) {
+                id = $scope.objectInfo.defaultAddress.id
+            }
+            return data.id == id;
+        };
     }
 ]);

@@ -37,7 +37,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -93,24 +93,25 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             }
         };
 
-
-        $scope.setPrimary = function () {
-            console.log('set primary');
-        };
-
-
         function showModal(url, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.url = url || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.url = url || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(url);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/people/views/components/person-urls-modal.client.view.html',
                 controller: 'People.UrlsModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
+
             modalInstance.result.then(function (data) {
                 var url;
                 if (!data.isEdit)
@@ -128,19 +129,15 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
                         $scope.objectInfo.defaultUrl = url;
                     }
                     else {
-                        //if urls is empty then we will not add it to the array
-                        //but we will set it as default
-                        var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
-                        if (urls.length > 0) {
-                            $scope.objectInfo.contactMethods.push(url);
-                        } else {
-                            $scope.objectInfo.defaultUrl = url;
-                        }
+                        $scope.objectInfo.contactMethods.push(url);
                     }
                 }
-                else if (data.isDefault) {
+
+                var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
+                if (data.isDefault || urls.length == 1) {
                     $scope.objectInfo.defaultUrl = url;
                 }
+
                 saveObjectInfoAndRefresh();
             });
         }
@@ -163,5 +160,13 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultUrl) {
+                id = $scope.objectInfo.defaultUrl.id
+            }
+            return data.id == id;
+        };
     }
 ]);

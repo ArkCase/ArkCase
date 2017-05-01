@@ -33,7 +33,7 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
             $scope.config = config;
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -93,18 +93,23 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
         };
 
         function showModal(alias, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.alias = alias || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.alias = alias || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(alias);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: "modules/people/views/components/person-aliases-modal.client.view.html",
                 controller: 'Person.AliasesModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
-
 
             modalInstance.result.then(function (data) {
                 var alias;
@@ -117,24 +122,12 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
                 alias.aliasValue = data.alias.aliasValue;
                 alias.description = data.alias.description;
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultAlias = alias;
-                    }
-                    else {
-                        //if address is empty then we will not add it to the array
-                        //but we will set it as default
-                        /*if ($scope.objectInfo.personAliases.length > 0) {
-                         $scope.objectInfo.personAliases.push(alias);
-                         } else {
-                         $scope.objectInfo.defaultAlias = alias;
-                         }*/
-                        $scope.objectInfo.personAliases.push(alias);
-                    }
-                }
-                else if (data.isDefault) {
-                    $scope.objectInfo.defaultAlias = alias;
+                    $scope.objectInfo.personAliases.push(alias);
                 }
 
+                if (data.isDefault || $scope.objectInfo.personAliases.length == 1) {
+                    $scope.objectInfo.defaultAlias = alias;
+                }
                 saveObjectInfoAndRefresh();
             });
         }
@@ -157,5 +150,13 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultAlias) {
+                id = $scope.objectInfo.defaultAlias.id
+            }
+            return data.id == id;
+        };
     }
 ]);

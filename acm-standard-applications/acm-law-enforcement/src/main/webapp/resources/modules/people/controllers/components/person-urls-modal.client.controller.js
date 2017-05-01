@@ -1,11 +1,15 @@
-angular.module('people').controller('People.UrlsModalController', ['$scope', '$modalInstance', 'Object.LookupService',
-        function ($scope, $modalInstance, ObjectLookupService) {
+angular.module('people').controller('People.UrlsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
                     $scope.urlTypes = _.find(contactMethodTypes, {type: 'url'}).subTypes;
                     return contactMethodTypes;
                 });
+
+            $scope.url = params.url;
+            $scope.isEdit = params.isEdit;
+            $scope.isDefault = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
