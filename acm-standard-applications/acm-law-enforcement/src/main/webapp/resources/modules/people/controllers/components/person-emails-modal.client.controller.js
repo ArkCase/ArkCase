@@ -1,5 +1,5 @@
-angular.module('people').controller('People.EmailsModalController', ['$scope', '$modalInstance', 'Object.LookupService',
-        function ($scope, $modalInstance, ObjectLookupService) {
+angular.module('people').controller('People.EmailsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
@@ -7,9 +7,14 @@ angular.module('people').controller('People.EmailsModalController', ['$scope', '
                     return contactMethodTypes;
                 });
 
+            $scope.email = params.email;
+            $scope.isEdit = params.isEdit;
+            $scope.isDefault = params.isDefault;
+
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
+
             $scope.onClickOk = function () {
                 $modalInstance.close(
                     {
