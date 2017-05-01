@@ -102,7 +102,7 @@
                   value="com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper.setUserLdapAttributes"/>
         <property name="arguments">
             <list>
-                <value type="java.lang.String">${ldap.user.attributes}</value>
+                <value type="java.lang.String">${ldapConfig.userAttributes}</value>
             </list>
         </property>
     </bean>
