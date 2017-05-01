@@ -33,7 +33,7 @@ angular
                 $httpProvider.defaults.transformRequest.splice(0, 0, function (data, headersGetter) {
                     var contentType = headersGetter()['content-type'] || '';
                     if (data && contentType.indexOf('application/json') > -1) {
-                        return JSOG.stringify(data);
+                        return JSOG.stringify(angular.copy(data));
                     }
                     return data;
                 });
