@@ -431,7 +431,7 @@
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
 
-    <changeSet id="23-add-country-department-and-company-attributes" author="manoj.dhungana">
+    <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mssql,oracle,postgres">
         <addColumn tableName="acm_user">
             <column name="cm_country" type="VARCHAR(255)"/>
             <column name="cm_department" type="VARCHAR(255)"/>
@@ -441,4 +441,14 @@
         </addColumn>
     </changeSet>
 
+
+    <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mysql">
+        <addColumn tableName="acm_user">
+            <column name="cm_country" type="TEXT"/>
+            <column name="cm_department" type="TEXT"/>
+            <column name="cm_country_abbreviation" type="TEXT"/>
+            <column name="cm_company" type="TEXT"/>
+            <column name="cm_title" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
