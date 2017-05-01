@@ -49,20 +49,21 @@ angular.module('admin').factory('Admin.EmailSenderConfigurationService', ['$http
             },
             /**
              * @ngdoc method
-             * @name validateEmailSenderConfiguration
+             * @name validateSmtpConfiguration
              * @methodOf admin.service:Admin.EmailSenderConfigurationService
              *
              * @description
-             * Check if the provided email sender configuration is valid.
+             * Check if the provided smtp configuration is valid.
              *
-             * @param {String}  emailConfiguration - the email sender configuration that should be validated
+             * @param {String}  smtpConfiguration - the smtp configuration that should be validated
              *
              * @returns {Object} http promise
              */
-            validateEmailSenderConfiguration: function(emailConfiguration) {
+            validateSmtpConfiguration: function(smtpConfiguration) {
                 return $http({
-                    method: 'GET',
-                    url: 'api/latest/plugin/admin/email/configuration/' + emailConfiguration
+                    method: 'PUT',
+                    url: 'api/latest/plugin/admin/email/configuration/validate',
+                    data: smtpConfiguration
                 });
             }
         };

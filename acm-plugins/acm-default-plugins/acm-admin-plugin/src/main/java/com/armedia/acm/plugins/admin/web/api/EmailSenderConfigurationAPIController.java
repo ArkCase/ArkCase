@@ -41,6 +41,13 @@ public class EmailSenderConfigurationAPIController
         emailSenderConfigurationService.writeConfiguration(configuration, auth);
     }
 
+    @RequestMapping(value = "/email/configuration/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public boolean validateSmtpConfiguration(@RequestBody EmailSenderConfiguration configuration, Authentication auth)
+    {
+        return emailSenderConfigurationService.validateSmtpConfiguration(configuration);
+    }
+
     /**
      * @param emailSenderConfigurationService
      *            the emailSenderConfigurationService to set
