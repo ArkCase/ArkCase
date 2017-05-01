@@ -121,18 +121,6 @@
                                 admin.security.emailConfiguration.emailConfigForm.username.label
                             </label>
                             <input type="text" name="username" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.username.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.username" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
-<!--                             <span class="text-danger">
-                                <i class="fa fa-times"></i>
-                                <span translate>
-                                    admin.security.emailConfiguration.emailConfigForm.smtpNotValid
-                                </span>
-                            </span>
-                            <span class="text-success">
-                                <i class="fa fa-check"></i>
-                                <span translate>
-                                    admin.security.emailConfiguration.emailConfigForm.smtpValid
-                                </span>
-                            </span> -->
                         </div>
                         <div class="col-lg-3 form-group">
                             <label for="password" translate>
@@ -149,11 +137,25 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-2 form-group">
-                            <button class="btn btn-sm btn-primary form-control" name="validate" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <button class="btn btn-sm btn-primary form-control" name="validate" ng-click="validateSmtpConfiguration(emailSenderConfigDataModel)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.validate.button
                                 </span>
                             </button>
+                        </div>
+                        <div class="col-lg-4 form-group">
+                             <span class="text-danger" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && !isSmtpValid">
+                                <i class="fa fa-times"></i>
+                                <span translate>
+                                    admin.security.emailConfiguration.emailConfigForm.smtpNotValid
+                                </span>
+                            </span>
+                            <span class="text-success" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && isSmtpValid">
+                                <i class="fa fa-check"></i>
+                                <span translate>
+                                    admin.security.emailConfiguration.emailConfigForm.smtpValid
+                                </span>
+                            </span>
                         </div>
                     </div>
                 </div>

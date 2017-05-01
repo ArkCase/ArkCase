@@ -3,6 +3,9 @@ package com.armedia.acm.services.email.sender.service;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
 
+import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
+import org.apache.commons.net.smtp.SMTPClient;
+import org.apache.commons.net.smtp.SMTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -128,6 +131,83 @@ public class EmailSenderConfigurationService
 
         }
         return emailSenderProperties;
+    }
+
+    public boolean validateSmtpConfiguration(EmailSenderConfiguration configuration)
+    {
+        boolean validation = false;
+        AuthenticatingSMTPClient authenticatingSmtpClient = null;
+
+        try
+        {
+            if (configuration.getEncryption().equals("starttls") || configuration.getEncryption().equals("off"))
+            {
+                authenticatingSmtpClient = new AuthenticatingSMTPClient();
+            } else
+            {
+                authenticatingSmtpClient = new AuthenticatingSMTPClient("TLS", true);
+            }
+
+            authenticatingSmtpClient.setConnectTimeout(3 * 1000);
+            authenticatingSmtpClient.connect(configuration.getHost(), configuration.getPort());
+            if (!isPositiveReply(authenticatingSmtpClient))
+            {
+                throw new Exception("Rejected connection");
+            }
+
+            if (configuration.getEncryption().equals("starttls"))
+            {
+                authenticatingSmtpClient.execTLS();
+                if (!isPositiveReply(authenticatingSmtpClient))
+                {
+                    throw new Exception("STARTTLS not supported");
+                }
+
+                validation = true;
+            }
+
+            if (configuration.getEncryption().equals("starttls") || configuration.getEncryption().equals("ssl-tls"))
+            {
+                authenticatingSmtpClient.ehlo("");
+                authenticatingSmtpClient.auth(AuthenticatingSMTPClient.AUTH_METHOD.PLAIN, configuration.getUsername(),
+                        configuration.getPassword());
+                if (!isPositiveReply(authenticatingSmtpClient))
+                {
+                    throw new Exception("Rejected login");
+                }
+            }
+
+            validation = true;
+
+        } catch (Exception e)
+        {
+            log.error("SMTP Error, {}", e.getMessage());
+            if (authenticatingSmtpClient.isConnected())
+            {
+                try
+                {
+                    authenticatingSmtpClient.logout();
+                    authenticatingSmtpClient.disconnect();
+                } catch (IOException ioe)
+                {
+                }
+            }
+        }
+
+        return validation;
+    }
+
+    private boolean isPositiveReply(SMTPClient smtpClient)
+    {
+        if (SMTPReply.isPositiveCompletion(smtpClient.getReplyCode()))
+        {
+            log.info("SMTP Positive Reply {} {}", smtpClient.getReplyCode(), smtpClient.getReplyString());
+            return true;
+        } else
+        {
+            log.error("SMTP Error Reply {} {}", smtpClient.getReplyCode(), smtpClient.getReplyString());
+            return false;
+        }
     }
 
     /**

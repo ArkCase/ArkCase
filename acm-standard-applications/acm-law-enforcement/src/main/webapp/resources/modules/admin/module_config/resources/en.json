@@ -230,8 +230,8 @@
         "encryption.placeholder": "Choose Encryption",
         "encryptionOptions": {
           "off": "OFF",
-          "ssl": "SSL",
-          "tls": "TLS",
+          "ssl-tls": "SSL/TLS",
+          "starttls": "STARTTLS",
         },        
         "username.label": "Username",
         "username.placeholder": "Enter Username",

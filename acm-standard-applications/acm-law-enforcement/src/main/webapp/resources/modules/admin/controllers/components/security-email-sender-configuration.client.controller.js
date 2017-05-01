@@ -2,6 +2,7 @@
 angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationController', ['$scope', 'Admin.EmailSenderConfigurationService', 'MessageService',
     function($scope, EmailSenderConfigurationService, MessageService) {
         $scope.emailSenderConfigDataModel = {};
+        $scope.isSmtpValid = null;
 
         $scope.serverTypeSelectOptions = [
             {
@@ -20,12 +21,12 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
                 label: 'admin.security.emailConfiguration.emailConfigForm.encryptionOptions.off'
             },
             {
-                value: 'ssl',
-                label: 'admin.security.emailConfiguration.emailConfigForm.encryptionOptions.ssl'
+                value: 'ssl-tls',
+                label: 'admin.security.emailConfiguration.emailConfigForm.encryptionOptions.ssl-tls'
             },
             {
-                value: 'tls',
-                label: 'admin.security.emailConfiguration.emailConfigForm.encryptionOptions.tls'
+                value: 'starttls',
+                label: 'admin.security.emailConfiguration.emailConfigForm.encryptionOptions.starttls'
             }
             ];
         
@@ -38,18 +39,21 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
             case 'off':
                 $scope.emailSenderConfigDataModel.port = 25;
                 break;
-            case 'ssl':
+            case 'ssl-tls':
                 $scope.emailSenderConfigDataModel.port = 465;
                 break;
-            case 'tls':
+            case 'starttls':
                 $scope.emailSenderConfigDataModel.port = 587;
             }
         }
         
-        /*Perform validation of the email*/
-        $scope.validateEmail = function(emailSenderConfiguration) {
-            EmailSenderConfigurationService.validateEmailSenderConfiguration(emailSenderConfiguration).then(function(res) {
-                MessageService.succsessAction();
+        $scope.validateSmtpConfiguration = function(smtpConfiguration) {
+            EmailSenderConfigurationService.validateSmtpConfiguration(smtpConfiguration).then(function(res) {
+                if (res.data) {
+                    $scope.isSmtpValid = true;
+                } else {
+                    $scope.isSmtpValid = false;
+                }
             }, function(err) {
                 MessageService.errorAction();
             });
@@ -59,14 +63,11 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
             EmailSenderConfigurationService.saveEmailSenderConfiguration($scope.emailSenderConfigDataModel)
                 .then(function(res) {
                     MessageService.succsessAction();
+                    $scope.isSmtpValid = null;
                 }, function(err) {
                     if(err.status === 400) {
-                        // TO DO
-                        // Email Validation error
                         MessageService.errorAction();
                     } else {
-                        // TO DO
-                        // server error
                         MessageService.errorAction();
                     }
                 });
