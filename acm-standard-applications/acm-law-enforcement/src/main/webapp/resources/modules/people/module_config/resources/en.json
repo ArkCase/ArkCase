@@ -7,7 +7,7 @@
   },
   "people.menus": {
     "leftnav.item": "People",
-    "topbar.item": "New Person"
+    "topbar.item": "Person"
   },
   "people.comp.info": {
     "phone.label": "Phone",
@@ -377,7 +377,8 @@
       "urlType": "URL Type"
     },
     "organizations": {
-      "title": "Organizations"
+      "title": "Organizations",
+      "searchExisting": "Search Existing Organizations"
     },
     "picture": {
       "title": "Picture"

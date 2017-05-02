@@ -177,6 +177,9 @@ public class Organization implements Serializable, AcmEntity
             inverseJoinColumns = {@JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")})
     List<Person> people = new ArrayList<>();
 
+    @Column(name = "cm_object_type", updatable = false)
+    private String objectType = PersonConstants.ORGANIZATION_OBJECT_TYPE;
+
     @XmlTransient
     public Long getOrganizationId()
     {
@@ -472,5 +475,15 @@ public class Organization implements Serializable, AcmEntity
     public void setOrganizationRelations(List<OrganizationAssociation> organizationRelations)
     {
         this.organizationRelations = organizationRelations;
+    }
+
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType)
+    {
+        this.objectType = objectType;
     }
 }
