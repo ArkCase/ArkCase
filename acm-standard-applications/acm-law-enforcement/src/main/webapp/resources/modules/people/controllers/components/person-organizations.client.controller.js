@@ -95,9 +95,13 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    //TODO: add organization to the list
                     OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (organization) {
+                        if (!$scope.objectInfo.organizations) {
+                            $scope.objectInfo.organizations = [];
+                        }
                         $scope.objectInfo.organizations.push(organization);
+                        //save person info
+                        saveObjectInfoAndRefresh();
                     });
                 }
             });
