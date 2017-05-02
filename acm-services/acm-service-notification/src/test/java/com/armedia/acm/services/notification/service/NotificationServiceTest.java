@@ -147,7 +147,6 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("unassignRule", unassignRule);
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        // notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
@@ -290,7 +289,6 @@ public class NotificationServiceTest extends EasyMockSupport
         NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        // notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
