@@ -283,10 +283,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<Identification> getIdentifications()
     {
-        if (identifications == null)
-        {
-            identifications = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return identifications;
     }
 
@@ -297,10 +293,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<PostalAddress> getAddresses()
     {
-        if (addresses == null)
-        {
-            addresses = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return addresses;
     }
 
@@ -311,10 +303,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<ContactMethod> getContactMethods()
     {
-        if (contactMethods == null)
-        {
-            contactMethods = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return contactMethods;
     }
 
@@ -348,18 +336,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultPhone;
     }
 
-    /**
-     * if inserting default phone, same phone will be automatically added to the contacts
-     *
-     * @param defaultPhone
-     */
     public void setDefaultPhone(ContactMethod defaultPhone)
     {
         this.defaultPhone = defaultPhone;
-        if (defaultPhone != null && defaultPhone.getId() == null)
-        {
-            getContactMethods().add(defaultPhone);
-        }
     }
 
     public ContactMethod getDefaultEmail()
@@ -367,18 +346,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultEmail;
     }
 
-    /**
-     * if inserting default email, same phone will be automatically added to the contacts
-     *
-     * @param defaultEmail
-     */
     public void setDefaultEmail(ContactMethod defaultEmail)
     {
         this.defaultEmail = defaultEmail;
-        if (defaultEmail != null && defaultEmail.getId() == null)
-        {
-            getContactMethods().add(defaultEmail);
-        }
     }
 
     public PostalAddress getDefaultAddress()
@@ -386,18 +356,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultAddress;
     }
 
-    /**
-     * if inserting default address, same phone will be automatically added to the addresses
-     *
-     * @param defaultAddress
-     */
     public void setDefaultAddress(PostalAddress defaultAddress)
     {
         this.defaultAddress = defaultAddress;
-        if (defaultAddress != null && defaultAddress.getId() == null)
-        {
-            getAddresses().add(defaultAddress);
-        }
     }
 
     public ContactMethod getDefaultUrl()
@@ -405,18 +366,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultUrl;
     }
 
-    /**
-     * if inserting default url, same phone will be automatically added to the contacts
-     *
-     * @param defaultUrl
-     */
     public void setDefaultUrl(ContactMethod defaultUrl)
     {
         this.defaultUrl = defaultUrl;
-        if (defaultUrl != null && defaultUrl.getId() == null)
-        {
-            getContactMethods().add(defaultUrl);
-        }
     }
 
     public Identification getDefaultIdentification()
@@ -424,32 +376,14 @@ public class Organization implements Serializable, AcmEntity
         return defaultIdentification;
     }
 
-    /**
-     * if inserting default identification, same identification will be automatically added to the identifications list
-     *
-     * @param defaultIdentification
-     */
     public void setDefaultIdentification(Identification defaultIdentification)
     {
-        if (defaultIdentification != null && defaultIdentification.getIdentificationID() == null)
-        {
-            getIdentifications().add(defaultIdentification);
-        }
         this.defaultIdentification = defaultIdentification;
     }
 
-    /**
-     * if inserting default fax, same fax will be automatically added to the contactMethods list
-     *
-     * @param defaultFax
-     */
     public void setDefaultFax(ContactMethod defaultFax)
     {
         this.defaultFax = defaultFax;
-        if (defaultFax != null && defaultFax.getId() == null)
-        {
-            getContactMethods().add(defaultFax);
-        }
     }
 
     public ContactMethod getDefaultFax()
