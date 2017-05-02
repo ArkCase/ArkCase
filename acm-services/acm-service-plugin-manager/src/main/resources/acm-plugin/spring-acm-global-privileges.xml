@@ -869,7 +869,7 @@
     </bean>
 
     <!--Calendar Management Plugin-->
-    <bean id="acmCalendarConfigPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+    <bean id="acmCalendarAdminPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-config-calendar"/>
         <property name="applicationRolesWithPrivilege">
             <list>
@@ -887,6 +887,7 @@
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_INVESTIGATOR</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_CALENDAR_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
@@ -898,6 +899,7 @@
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_INVESTIGATOR</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_CALENDAR_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
@@ -908,6 +910,7 @@
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_CALENDAR_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
@@ -918,6 +921,7 @@
                 <value>ROLE_INVESTIGATOR_SUPERVISOR</value>
                 <value>ROLE_CALLCENTER</value>
                 <value>ROLE_ADMINISTRATOR</value>
+                <value>ROLE_CALENDAR_ADMINISTRATOR</value>
             </list>
         </property>
     </bean>
