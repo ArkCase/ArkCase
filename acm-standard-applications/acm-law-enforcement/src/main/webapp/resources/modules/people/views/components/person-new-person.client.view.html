@@ -214,15 +214,14 @@
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
-                                                ng-click="removeOrganization(organization)">
+                                                ng-click="removeOrganization(organization)" ng-show="!$first">
                                             <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
-                                                ng-click="addNewOrganization();"
-                                                ng-show="$last">
+                                                ng-click="addNewOrganization();">
                                             <i class="fa fa-plus text-success"></i><span
                                                 translate>people.comp.editPerson.addAnother</span>
                                         </button>

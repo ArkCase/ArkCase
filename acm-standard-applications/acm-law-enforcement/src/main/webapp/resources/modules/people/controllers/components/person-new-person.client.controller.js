@@ -127,7 +127,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.addNewOrganization = function () {
             $timeout(function () {
-                searchOrganization(null);
+                $scope.searchOrganization(null);
             }, 0);
         };
 
@@ -169,7 +169,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                         if (organization) {
                             _.merge(organization, selectedOrganization);
                         } else {
-                            $person.organizations.push(selectedOrganization);
+                            $scope.person.organizations.push(selectedOrganization);
                         }
                     });
                 }
