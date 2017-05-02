@@ -122,19 +122,19 @@
       "addNew": "Add New"
     },
     "modal": {
-      "addPhone": "Add New Phone Number",
-      "editPhone": "Edit Phone Number",
-      "title": "Add New Phone Number",
+      "addFax": "Add New Fax Number",
+      "editFax": "Edit Fax Number",
+      "title": "Add New Fax Number",
       "setPrimary": "Set as Primary?",
       "yes": "Yes",
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Phone",
-      "type.label": "Phone Type",
-      "type.placeholder": "Enter Phone Type",
-      "value.label": "Phone Number",
-      "value.placeholder": "Enter Phone Number"
+      "btnOk.text": "Add Fax",
+      "type.label": "Fax Type",
+      "type.placeholder": "Enter Fax Type",
+      "value.label": "Fax Number",
+      "value.placeholder": "Enter Fax Number"
     }
   },
   "organizations.comp.emails": {
