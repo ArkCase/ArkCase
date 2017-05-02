@@ -39,7 +39,7 @@
     "title": "Groups"
   },
   "profile.buttons": {
-    "password": "Change Password",
+    "save": "Save Changes",
     "message": "Enter your new password.",
     "confirmation": "Enter your new password again.",
     "cancel": "Cancel",
@@ -57,6 +57,7 @@
     "comfirmation": "Please re-enter your password.",
     "differentPasswords": "Passwords do not match. Please try again.",
     "ok": "OK",
-    "success": "Successfully Changed Outlook Password"
+    "success": "Successfully Changed Outlook Password",
+    "changePassword.header": "Change Password"
   }
 }
