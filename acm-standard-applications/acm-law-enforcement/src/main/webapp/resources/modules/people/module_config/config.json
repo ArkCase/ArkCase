@@ -916,6 +916,34 @@
           "lookup": "userFullNames"
         }
       ]
+    },
+    {
+      "id": "newPerson",
+      "dialogOrganizationPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "type_lcs",
+            "displayName": "people.comp.organizations.dialogOrganizationPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "name",
+            "displayName": "people.comp.organizations.dialogOrganizationPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     }
   ]
 }

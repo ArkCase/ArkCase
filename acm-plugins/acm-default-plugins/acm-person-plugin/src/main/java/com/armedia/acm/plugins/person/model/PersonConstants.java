@@ -9,12 +9,19 @@ public interface PersonConstants
      * Object type for Person
      */
     String PERSON_OBJECT_TYPE = "PERSON";
+
     /**
      * uploaded picture file type
      */
     String PERSON_PICTURE_FILE_TYPE = "image";
+
     /**
      * uploaded picture category
      */
     String PERSON_PICTURE_CATEGORY = "Document";
+
+    /**
+     * Object type for Organization
+     */
+    String ORGANIZATION_OBJECT_TYPE = "ORGANIZATION";
 }

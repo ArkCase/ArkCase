@@ -7,7 +7,7 @@
   },
   "organizations.menus": {
     "leftnav.item": "Organizations",
-    "topbar.item": "Organizations"
+    "topbar.item": "Organization"
   },
   "organizations.comp.info": {
     "phone.label": "Phone",

@@ -127,9 +127,12 @@
                                     <div class="col-sm-4 form-group">
                                         <label translate>
                                             people.comp.editPerson.identification.identificationType</label>
-                                        <input type="text" ng-model="identification.identificationType"
-                                               class="input-md form-control"
-                                               placeholder="{{ 'people.comp.editPerson.identification.identificationType.placeholder' | translate }}">
+                                        <select class="form-control"
+                                                ng-model="identification.identificationType">
+                                            <option ng-repeat="option in identificationTypes" value="{{option.type}}">
+                                                {{option.name}}
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -196,7 +199,37 @@
                 </div>
                 <div id="collapseOrganizations" class="panel-collapse collapse">
                     <div class="panel-body">
-
+                        <div ng-repeat="organization in person.organizations">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="text" ng-model="organization.organizationValue"
+                                           ng-click="searchOrganization(organization)"
+                                           class="input-md form-control"
+                                           placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control"
+                                                ng-click="removeOrganization(organization)">
+                                            <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
+                                        </button>
+                                    </div>
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control"
+                                                ng-click="addNewOrganization();"
+                                                ng-show="$last">
+                                            <i class="fa fa-plus text-success"></i><span
+                                                translate>people.comp.editPerson.addAnother</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

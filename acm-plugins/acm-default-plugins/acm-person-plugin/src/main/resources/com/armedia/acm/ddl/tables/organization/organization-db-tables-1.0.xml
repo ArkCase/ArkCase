@@ -253,4 +253,19 @@
                          defaultValue="com.armedia.acm.plugins.person.model.Organization"/>
     </changeSet>
 
+    <changeSet id="50-acm_organization-add-object_type-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})" defaultValue="ORGANIZATION">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="51-acm_organization_association-add-organization_type-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization_assoc">
+            <column name="cm_organization_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
