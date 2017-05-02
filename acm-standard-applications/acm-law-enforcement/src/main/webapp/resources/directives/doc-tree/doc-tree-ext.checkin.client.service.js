@@ -15,8 +15,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
     , 'Profile.UserInfoService'
     , function ($q, $modal, $translate, Util, Authentication
         , ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
-        , UserInfoService
-    ) {
+        , UserInfoService) {
         var userId = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -111,6 +110,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                 args = args || {};
                                 args.files = files;
+                                args.lockType = ObjectService.LockTypes.CHECKIN_LOCK;
                                 var checkinFiles = DocTree.Command.findHandler("checkinFiles/");
                                 DocTree.Command.handleCommand(checkinFiles, nodes, args);
                             });
@@ -121,8 +121,12 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         execute: function (nodes, args) {
                             var node = nodes[0];
                             var fileId = node.data.objectId;
+                            var lockType = ObjectService.LockTypes.CANCEL_LOCK;
+                            if (args && args.lockType) {
+                                lockType = args.lockType;
+                            }
                             LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                ObjectService.LockTypes.CANCEL_LOCK).then(
+                                lockType).then(
                                 function (unlockedFile) {
                                     node.data.lock = "";
                                     var cacheKey = DocTree.getCacheKeyByNode(node.parent);
@@ -177,7 +181,11 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 }
 
                                 var cancelEditing = DocTree.Command.findHandler("cancelEditing");
-                                DocTree.Command.handleCommand(cancelEditing, nodes);
+                                var checkinArgs = {};
+                                if (args && args.lockType) {
+                                    checkinArgs.lockType = args.lockType;
+                                }
+                                DocTree.Command.handleCommand(cancelEditing, nodes, checkinArgs);
                             });
 
                         }

@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.11-SNAPSHOT</version>
+    <version>3.1.13-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -568,6 +568,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <classifier>feature</classifier>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -1781,6 +1782,19 @@
                 <artifactId>powermock-api-easymock</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib-nodep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
                 <exclusions>
                     <exclusion>
                         <!-- powermock pulls in an older version of cglib that breaks our unit tests -->

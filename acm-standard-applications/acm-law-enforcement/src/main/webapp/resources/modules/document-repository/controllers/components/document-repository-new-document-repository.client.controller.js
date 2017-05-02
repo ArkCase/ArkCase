@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.NewDocumentRepositoryController', ['$scope'
-    , '$modal', '$translate', 'ConfigService', 'UtilService', 'Authentication'
+    , '$modal', '$translate', '$window', 'ConfigService', 'UtilService', 'Authentication'
     , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService'
-    , function ($scope, $modal, $translate, ConfigService, Util, Authentication
+    , function ($scope, $modal, $translate, $window, ConfigService, Util, Authentication
         , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
 
         $scope.docRepo = {};
@@ -78,6 +78,10 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
             owningGroup.participantType = "owning group";
             owningGroup.participantLdapId = $scope.owningGroup.participantLdapId;
             $scope.docRepo.participants.push(owningGroup);
+        }
+
+        $scope.onCancel = function () {
+            $window.history.back();
         }
     }
 ]);

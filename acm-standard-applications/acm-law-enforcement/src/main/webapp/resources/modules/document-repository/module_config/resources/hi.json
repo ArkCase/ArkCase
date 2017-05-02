@@ -1,0 +1,181 @@
+{
+  "document-repository": {
+    "title": "hi_Documents"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "hi_Documents",
+    "topbar.item": "hi_Document Repository"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "document-repository.comp.info": {
+    "docRepoId": "hi_Repository ID:",
+    "docRepoName": "hi_Document Repository Name:",
+    "modified.label": "hi_Modified Date",
+    "assignee.label": "hi_Assigned To",
+    "owningGroup.label": "hi_Owning Group",
+    "description.label": "hi_Description"
+  },
+  "document-repository.comp.actions": {
+    "restrict": "hi_Restrict?",
+    "subscribe.button": "hi_Subscribe",
+    "unsubscribe.button": "hi_Unsubscribe"
+  },
+  "document-repository.comp.details": {
+    "title": "hi_Details",
+    "informSaved": "hi_Document Repository details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "hi_Documents"
+  },
+  "document-repository.comp.participants": {
+    "title": "hi_Participants",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "hi_Notes",
+    "table.columns": {
+      "note": "hi_Note",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "hi_References",
+    "table.columns": {
+      "targetName": "hi_Number",
+      "parentName": "hi_Parent",
+      "targetTitle": "hi_Title",
+      "modified": "hi_Modified",
+      "targetType": "hi_Reference Type",
+      "status": "hi_Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "hi_History",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "hi_Tags",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "hi_Add Reference",
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Add",
+    "search": {
+      "placeholder": "hi_Search for case, complaint, file, task",
+      "btn": "hi_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "hi_Id",
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "hi_Change Assignee",
+    "assigneeNamelabel": "hi_Assignee Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchAssigneeHeader": "hi_Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "hi_Change Group",
+    "groupNamelabel": "hi_Group Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchGroupHeader": "hi_Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "hi_userSearch",
+    "title": "hi_User/Group Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the user or group."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "hi_Create Repository",
+    "assigneeLabel": "hi_Assignee",
+    "owningGroupLabel": "hi_Owning Group",
+    "assignee.placeholder": "hi_Search Assignee",
+    "saveButton": "hi_Create Repository",
+    "cancelButton": "hi_Cancel",
+    "nameLabel": "hi_Name",
+    "name.placeholder": "hi_Enter Name",
+    "descriptionLabel": "hi_Description",
+    "description.placeholder": "hi_Enter Description",
+    "searchUser": "hi_Search User"
+  },
+  "document-repository.dialogUserPicker":{
+    "table.columns.name": "hi_Name",
+    "table.columns.type": "hi_Type",
+    "table.columns.title": "hi_Title",
+    "table.columns.id": "hi_Username"
+  }
+}
