@@ -114,6 +114,9 @@
           parent="baseNotificationSender">
         <property name="outlookService" ref="outlookService"/>
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
+        <property name="systemUserEmail" value="${outlook.exchange.system_user_email}"/>
+        <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}"/>
+        <property name="systemUserId" value="${outlook.exchange.system_user_id}"/>
     </bean>
 
     <bean id="notificationSenderFactory"
