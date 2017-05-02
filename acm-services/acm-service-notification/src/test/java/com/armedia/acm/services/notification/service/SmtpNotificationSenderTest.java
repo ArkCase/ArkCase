@@ -97,7 +97,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationSender.setPropertyFileManager(mockPropertyFileManager);
         smtpNotificationSender.setMuleContextManager(mockMuleContextManager);
-        smtpNotificationSender.setNotificationPropertyFileLocation("");
         smtpNotificationSender.setEmailSenderPropertyFileLocation("");
         smtpNotificationSender.setAuthenticationTokenService(mockAuthenticationTokenService);
         smtpNotificationSender.setAuthenticationTokenDao(mockAuthenticationTokenDao);
@@ -170,7 +169,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         final String footer = "footer";
         final long fileId = 1234;
         final String token = "token";
-        final String note = header + "\\s* http://" + baseUrl + fileId + "&acm_email_ticket=" + token + "\\s*" + footer;
+        final String note = header + "\\s*" + "<br/>" + baseUrl + fileId + "&acm_email_ticket=" + token + "<br/>" + "\\s*" + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
