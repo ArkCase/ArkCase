@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.aliases.modal.addAlias</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.aliases.modal.editAlias</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="aliasForm">
+        <label for="aliasValue"/>
+        <input id="aliasValue" ng-model="alias.aliasValue"
+               placeholder="{{ 'organizations.comp.aliases.modal.value.placeholder' | translate }}">
+        <label for="aliasType"/>
+        <select id="aliasType" ng-model="alias.aliasType">
+            <option ng-repeat="option in aliasTypes" value="{{option.type}}">{{option.name}}</option>
+        </select>
+        <div>
+            <p translate>organizations.comp.aliases.modal.setPrimary</p>
+            <input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>organizations.comp.aliases.modal.yes</translate>
+            <input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>organizations.comp.aliases.modal.no</translate>
+        </div>
+        <label for="aliasDescription"/>
+        <textarea id="aliasDescription" ng-model="alias.description"></textarea>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.aliases.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="aliasForm.$invalid">
+        <span translate>organizations.comp.aliases.modal.btnOk.text</span>
+    </button>
+</div>

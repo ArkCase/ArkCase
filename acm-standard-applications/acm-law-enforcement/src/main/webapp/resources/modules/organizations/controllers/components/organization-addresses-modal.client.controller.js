@@ -1,24 +1,27 @@
-angular.module('organizations').controller('Organizations.EmailsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+angular.module('organizations').controller('Organizations.AddressesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
         function ($scope, $modalInstance, ObjectLookupService, params) {
 
-            ObjectLookupService.getContactMethodTypes().then(
-                function (contactMethodTypes) {
-                    $scope.emailTypes = _.find(contactMethodTypes, {type: 'email'}).subTypes;
-                    return contactMethodTypes;
+            ObjectLookupService.getAddressTypes().then(
+                function (addressTypes) {
+                    $scope.addressTypes = addressTypes;
+                    return addressTypes;
                 });
 
-            $scope.email = params.email;
+            ObjectLookupService.getCountries().then(function (countries) {
+                $scope.countries = countries;
+            });
+
+            $scope.address = params.address;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
-
             $scope.onClickOk = function () {
                 $modalInstance.close(
                     {
-                        email: $scope.email,
+                        address: $scope.address,
                         isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }

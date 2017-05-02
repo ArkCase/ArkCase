@@ -33,14 +33,56 @@
       "modifier": "User Last Modified"
     }
   },
+  "organizations.comp.addresses": {
+    "title": "Addresses",
+    "table.columns": {
+      "type": "Type",
+      "streetAddress": "Address 1",
+      "streetAddress2": "Address 2",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "country": "Country",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "addNew": "Add New",
+      "map": "Map"
+    },
+    "modal": {
+      "addAddress": "Add Address",
+      "editAddress": "Edit Record",
+      "type.label": "Address Type",
+      "type.placeholder": "Enter Address Type",
+      "streetAddress.label": "Address 1",
+      "streetAddress.placeholder": "Enter Address 1",
+      "streetAddress2.label": "Address 2",
+      "streetAddress2.placeholder": "Enter Address 2",
+      "city.label": "City",
+      "city.placeholder": "Enter City",
+      "zip.label": "Zip",
+      "zip.placeholder": "Enter Zip",
+      "state.label": "State",
+      "state.placeholder": "Enter State",
+      "country.label": "Country",
+      "country.placeholder": "Enter Country",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Save"
+    }
+  },
   "organizations.comp.phones": {
     "title": "Phones Numbers",
     "table.columns": {
       "type": "Phone Type",
       "value": "Phone Number",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -56,9 +98,43 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add Phone",
       "type.label": "Phone Type",
-      "value.label": "Phone Number"
+      "type.placeholder": "Enter Phone Type",
+      "value.label": "Phone Number",
+      "value.placeholder": "Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "Fax Numbers",
+    "table.columns": {
+      "type": "Fax Type",
+      "value": "Fax Number",
+      "description": "Description",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New"
+    },
+    "modal": {
+      "addPhone": "Add New Phone Number",
+      "editPhone": "Edit Phone Number",
+      "title": "Add New Phone Number",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "description": "Description",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add Phone",
+      "type.label": "Phone Type",
+      "type.placeholder": "Enter Phone Type",
+      "value.label": "Phone Number",
+      "value.placeholder": "Enter Phone Number"
     }
   },
   "organizations.comp.emails": {
@@ -67,8 +143,10 @@
       "type": "Email Address Type",
       "value": "Emails Address",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -84,9 +162,11 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add Email",
       "type.label": "Email Type",
-      "value.label": "Email Address"
+      "type.placeholder": "Enter Email Type",
+      "value.label": "Email Address",
+      "value.placeholder": "Enter Email Address"
     }
   },
   "organizations.comp.urls": {
@@ -95,8 +175,10 @@
       "type": "Type",
       "value": "Url",
       "description": "Description",
-      "created": "Created",
-      "creator": "Author"
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     },
     "actions": {
       "delete": "Delete",
@@ -112,9 +194,159 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Ok",
+      "btnOk.text": "Add URL",
       "type.label": "Type",
-      "value.label": "URL"
+      "type.placeholder": "Enter Type",
+      "value.label": "URL",
+      "value.placeholder": "Enter URL"
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "DBAs",
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "upload": "New DBA"
+    },
+    "table.columns": {
+      "value": "DBA",
+      "type": "Type",
+      "description": "Description",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "modal": {
+      "addDBA": "Add New DBA",
+      "editDBA": "Edit DBA",
+      "title": "Insert New DBA",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add DBA",
+      "value.label": "DBA",
+      "value.placeholder": "Enter DBA",
+      "description": "Description",
+      "aliasType.label": "DBA Type",
+      "aliasType.placeholder": "Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "IDs",
+    "table.columns": {
+      "type": "Type",
+      "id": "ID",
+      "number": "Number",
+      "issuer": "Issuer",
+      "yearIssued": "Year Issued",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New"
+    },
+    "modal": {
+      "addID": "Add New Identification",
+      "editID": "Edit Identification",
+      "title": "Add New Identification",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No",
+      "type.label": "Type",
+      "type.placeholder": "Enter Type",
+      "id.label": "ID",
+      "id.placeholder": "Enter ID",
+      "number.label": "Number",
+      "number.placeholder": "Enter Number",
+      "issuer.label": "Issuer",
+      "issuer.placeholder": "Enter Issuer",
+      "yearIssued.label": "Year Issued",
+      "yearIssued.placeholder": "Enter Year Issued",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "People",
+    "table.columns": {
+      "type": "Type",
+      "id": "ID",
+      "value": "Person",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New",
+      "addExisting": "Add New"
+    },
+    "dialogOrganizationPicker": {
+      "header": "Choose Organization",
+      "table.columns": {
+        "type": "Organization Type",
+        "name": "Value"
+      }
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "Cases",
+    "table.columns": {
+      "priority": "Priority",
+      "id": "ID",
+      "title": "Title",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "Complaints",
+    "table.columns": {
+      "priority": "Priority",
+      "id": "ID",
+      "title": "Title",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "Related Organizations",
+    "table.columns": {
+      "givenName": "First Name",
+      "familyName": "Last Name",
+      "type": "Relationship",
+      "description": "Description",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "modal": {
+      "title": "Add Related Organization",
+      "type.label": "Relationship",
+      "type.placeholder": "Enter Relationship",
+      "organization.label": "Organization",
+      "organization.placeholder": "Search Organizations",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Add Related Organization"
+    },
+    "dialogOrganizationPicker": {
+      "header": "Search for Organizations",
+      "table.columns": {
+        "givenName": "First Name",
+        "familyName": "Last Name",
+        "id": "ID"
+      }
     }
   },
   "organizations.comp.history": {

@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.faxes.modal.addFax</span>
+    </h3>
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.faxes.modal.editFax</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="faxForm">
+        <div>
+            <label for="faxTypes_{{::$id}}"
+                   translate>organizations.comp.faxes.modal.type.label</label>
+        </div>
+        <select id="faxTypes_{{::$id}}"
+                ng-model="fax.subType"
+                ng-options="item.type as item.name for item in faxTypes"></select>
+        <div>
+            <label for="faxes_{{::$id}}"
+                   translate>organizations.comp.faxes.modal.value.label</label>
+        </div>
+        <input id="faxes_{{::$id}}" type="text" ng-model="fax.value"
+               placeholder="{{ 'organizations.comp.faxes.modal.value.placeholder' | translate }}">
+        <div>
+            <p translate>organizations.comp.faxes.modal.setPrimary</p>
+            <input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>organizations.comp.faxes.modal.yes</translate>
+            <input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>organizations.comp.faxes.modal.no</translate>
+        </div>
+        <label for="faxDescription"/>
+        <textarea id="faxDescription" ng-model="fax.description"></textarea>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.faxes.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="faxForm.$invalid">
+        <span translate>organizations.comp.faxes.modal.btnOk.text</span>
+    </button>
+</div>

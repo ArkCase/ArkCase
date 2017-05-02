@@ -1,8 +1,8 @@
-<div ng-controller="Organizations.PhonesController">
+<div ng-controller="Organization.AliasesController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
-                <span translate>organizations.comp.phones.title</span>
+                <span> {{'organizations.comp.aliases.title' | translate}}</span>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
                         <i class="fa fa-lg fa-plus"></i></button>
@@ -15,6 +15,7 @@
                  ui-grid-auto-resize
                  ui-grid-pagination
                  adjust-table-height="gridOptions.data.length"
+                 ng-hide="gridOptions.noData"
                  class="grid">
             </div>
         </div>

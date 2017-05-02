@@ -37,7 +37,7 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -93,24 +93,25 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
             }
         };
 
-
-        $scope.setPrimary = function () {
-            console.log('set primary');
-        };
-
-
         function showModal(email, isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.email = email || {};
-            modalScope.isEdit = isEdit || false;
+            var params = {};
+            params.email = email || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(email);
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/organizations/views/components/organization-emails-modal.client.view.html',
                 controller: 'Organizations.EmailsModalController',
-                size: 'sm'
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
+
             modalInstance.result.then(function (data) {
                 var email;
                 if (!data.isEdit)
@@ -122,12 +123,16 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
                 email.subType = data.email.subType;
                 email.value = data.email.value;
                 email.description = data.email.description;
+
                 if (!data.isEdit) {
                     $scope.objectInfo.contactMethods.push(email);
                 }
-                if (email.isDefault) {
+
+                var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
+                if (data.isDefault || emails.length == 1) {
                     $scope.objectInfo.defaultEmail = email;
                 }
+
                 saveObjectInfoAndRefresh();
             });
         }
@@ -150,5 +155,13 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
             }
             return promiseSaveInfo;
         }
+
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultEmail) {
+                id = $scope.objectInfo.defaultEmail.id
+            }
+            return data.id == id;
+        };
     }
 ]);
