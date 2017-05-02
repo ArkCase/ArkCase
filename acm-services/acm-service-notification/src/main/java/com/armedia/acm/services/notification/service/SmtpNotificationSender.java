@@ -123,6 +123,12 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
+        sendEmailWithAttachments(in, authentication, user.getUserId());
+    }
+
+    @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, String userId) throws Exception
+    {
 
         in.setTemplate(notificationTemplate);
         Exception exception = null;
@@ -152,9 +158,9 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 
                         if (firstIteration)
                         {
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, userId, ecmFile.getParentObjectId(),
                                     ecmFile.getParentObjectType()));
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, userId, ecmFile.getId(), ecmFile.getObjectType()));
                         }
                     }
                 }
