@@ -75,8 +75,15 @@ public class CaseFileHandler implements EntityHandler
     private Object getCaseFile(String objectId)
     {
         Query query = em.createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId");
-        query.setParameter("objectId", objectId);
-        return query.getSingleResult();
+        query.setParameter("objectId", Long.valueOf(objectId));
+        List<?> resultList = query.getResultList();
+        if (!resultList.isEmpty())
+        {
+            return resultList.get(0);
+        } else
+        {
+            return null;
+        }
     }
 
     /*
@@ -90,7 +97,12 @@ public class CaseFileHandler implements EntityHandler
     public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectId,
             PermissionType permissionType) throws CalendarServiceException
     {
-        AcmContainerEntity entity = (AcmContainerEntity) getCaseFile(objectId);
+        Object caseFile = getCaseFile(objectId);
+        if (caseFile == null)
+        {
+            throw new CalendarServiceException("");
+        }
+        AcmContainerEntity entity = (AcmContainerEntity) caseFile;
         String calendarId = entity.getContainer().getCalendarFolderId();
         try
         {
@@ -152,7 +164,7 @@ public class CaseFileHandler implements EntityHandler
      * java.lang.String, int, int)
      */
     @Override
-    public List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String objectType, String sort,
+    public List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String sort,
             String sortDirection, int start, int maxItems)
     {
         throw new UnsupportedOperationException();
@@ -164,9 +176,14 @@ public class CaseFileHandler implements EntityHandler
      * @see com.armedia.acm.calendar.service.integration.exchange.EntityHandler#getCalendarId(java.lang.String)
      */
     @Override
-    public String getCalendarId(String objectId)
+    public String getCalendarId(String objectId) throws CalendarServiceException
     {
-        AcmContainerEntity entity = (AcmContainerEntity) getCaseFile(objectId);
+        Object caseFile = getCaseFile(objectId);
+        if (caseFile == null)
+        {
+            throw new CalendarServiceException(String.format("No calendar associated with CASE_FILE with id %s.", objectId));
+        }
+        AcmContainerEntity entity = (AcmContainerEntity) caseFile;
         return entity.getContainer().getCalendarFolderId();
     }
 

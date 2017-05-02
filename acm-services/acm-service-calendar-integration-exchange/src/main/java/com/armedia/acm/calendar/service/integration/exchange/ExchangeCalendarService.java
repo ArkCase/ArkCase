@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -104,10 +105,21 @@ public class ExchangeCalendarService implements CalendarService
     public List<AcmCalendarInfo> listCalendars(AcmUser user, Authentication auth, String objectType, String sort, String sortDirection,
             int start, int maxItems) throws CalendarServiceException
     {
-        EntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(() -> new CalendarServiceException(""));
+        List<AcmCalendarInfo> result = new ArrayList<>();
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
-        return handler.listCalendars(exchangeService, user, auth, objectType, sort, sortDirection, start, maxItems);
+        if (objectType != null)
+        {
+            EntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(() -> new CalendarServiceException(""));
+            result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
+        } else
+        {
+            for (EntityHandler handler : entityHandlers.values())
+            {
+                result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
+            }
+        }
+        return result;
     }
 
     /*

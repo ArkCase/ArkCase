@@ -37,21 +37,21 @@ public interface EntityHandler
     /**
      * @param user
      * @param auth
-     * @param objectType
      * @param sort
      * @param sortDirection
      * @param start
      * @param maxItems
      * @return
      */
-    List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String objectType, String sort,
-            String sortDirection, int start, int maxItems);
+    List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String sort, String sortDirection,
+            int start, int maxItems);
 
     /**
      * @param objectId
      * @return
+     * @throws CalendarServiceException
      */
-    String getCalendarId(String objectId);
+    String getCalendarId(String objectId) throws CalendarServiceException;
 
     /**
      * @param after
