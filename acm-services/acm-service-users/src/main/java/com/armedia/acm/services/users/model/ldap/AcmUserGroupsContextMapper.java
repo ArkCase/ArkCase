@@ -31,7 +31,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         return user;
     }
 
-    private AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
+    protected AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
     {
         String fullName = MapperUtils.getAttribute(adapter, "cn");
 
