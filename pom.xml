@@ -29,6 +29,7 @@
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-codec>1.9</apache-commons-codec>
+        <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-poi.version>3.15</apache-poi.version>
         <apache-tika-parsers.version>1.13</apache-tika-parsers.version>
@@ -1471,6 +1472,11 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${apache-httpcomponents-httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${apache-commons-net.version}</version>
             </dependency>
 
             <!-- json -->
