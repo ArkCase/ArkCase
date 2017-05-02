@@ -27,7 +27,7 @@
  </example>
  */
 angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectService', 'Object.LookupService'
-    , function(Util, ObjectService, ObjectLookupService) {
+    , function (Util, ObjectService, ObjectLookupService) {
         var defaults = {
             isParent: false
         };
@@ -42,26 +42,41 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                 scope.$watch('objectData', function(newValue, oldValue) {
                     buildUrl(newValue);
                 });
-                
+
                 function buildUrl(objectData) {
                     if (scope.url == undefined) {
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
                         var objectType = Util.goodMapValue(objectData, "object_type_s");
                         var objectId = Util.goodMapValue(objectData, "object_id_s");
+                        var objectUrlKey = 'url';
+                        var pathVariables = {":id": objectId};
+
                         if (scope.isParent) {
-                            var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
-                            objectType  = parentReference.substring(parentReference.indexOf('-') + 1);
+                            objectType = parentReference.substring(parentReference.indexOf('-') + 1);
                             objectId = parentReference.substring(0, parentReference.indexOf('-'));
                         }
                         if (objectType == ObjectService.ObjectTypes.TASK) {
                             objectType = (Util.goodMapValue(objectData, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
                         }
+                        if (objectType == ObjectService.ObjectTypes.FILE) {
+                            var containerType = parentReference.substring(parentReference.indexOf('-') + 1);
+                            if (containerType == ObjectService.ObjectTypes.DOC_REPO) {
+                                var containerId = parentReference.substring(0, parentReference.indexOf('-'));
+                                var name = Util.goodMapValue(objectData, "title_parseable");
+                                objectUrlKey = "viewerUrl";
+                                pathVariables[":containerId"] = containerId;
+                                pathVariables[":containerType"] = containerType;
+                                pathVariables[":name"] = name;
+                                pathVariables[":selectedIds"] = objectId;
+                            }
+                        }
                         ObjectLookupService.getObjectTypes().then(
                             function (objectTypes) {
                                 var objectUrl = '';
                                 var foundObjectType = _.find(objectTypes, {key: objectType});
-                                if (Util.goodMapValue(foundObjectType, "url", false)) {
-                                    objectUrl = foundObjectType.url;
-                                    objectUrl = objectUrl.replace(":id", objectId);
+                                if (Util.goodMapValue(foundObjectType, objectUrlKey, false)) {
+                                    objectUrl = foundObjectType[objectUrlKey];
+                                    objectUrl = replacePathVariables(pathVariables, objectUrl);
                                 }
                                 element.attr('href', objectUrl);
                             }
@@ -69,8 +84,15 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                     } else {
                         element.attr('href', scope.url);
                     }
-                };
-                
+                }
+
+                function replacePathVariables(pathVars, url) {
+                    _.forEach(pathVars, function (value, key) {
+                        url = url.replace(key, value);
+                    });
+                    return url;
+                }
+
             }
         }
 }]);
