@@ -27,9 +27,6 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
 
     private OutlookService outlookService;
     private ExchangeWebServicesOutlookDao dao;
-    private String systemUserEmail;
-    private String systemUserPass;
-    private String systemUserId;
 
     @Override
     public Notification send(Notification notification)
@@ -60,14 +57,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
-            String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
-                    null);
-            String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
-                    null);
-            String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
-                    null);
-
-            AcmOutlookUser outlookUser = new AcmOutlookUser(userId, userEmail, userPass);
+            AcmOutlookUser outlookUser = getSystemOutlookUser();
 
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication() : null;
@@ -101,8 +91,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     {
         //Sending as system user to create AcmOutlookUser, ignoring userId
         in.setTemplate(notificationTemplate);
-        AcmOutlookUser outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
-        getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
+        getOutlookService().sendEmailWithAttachments(in, getSystemOutlookUser(), authentication);
     }
 
     @Override
@@ -124,6 +113,14 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
         return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);
     }
 
+    public AcmOutlookUser getSystemOutlookUser() throws Exception
+    {
+        String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY, null);
+        String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null);
+        String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null);
+        return new AcmOutlookUser(userId, userEmail, userPass);
+    }
+
     public OutlookService getOutlookService()
     {
         return outlookService;
@@ -143,36 +140,4 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     {
         this.dao = dao;
     }
-
-
-    public String getSystemUserEmail()
-    {
-        return systemUserEmail;
-    }
-
-    public void setSystemUserEmail(String systemUserEmail)
-    {
-        this.systemUserEmail = systemUserEmail;
-    }
-
-    public String getSystemUserPass()
-    {
-        return systemUserPass;
-    }
-
-    public void setSystemUserPass(String systemUserPass)
-    {
-        this.systemUserPass = systemUserPass;
-    }
-
-    public String getSystemUserId()
-    {
-        return systemUserId;
-    }
-
-    public void setSystemUserId(String systemUserId)
-    {
-        this.systemUserId = systemUserId;
-    }
-
 }
