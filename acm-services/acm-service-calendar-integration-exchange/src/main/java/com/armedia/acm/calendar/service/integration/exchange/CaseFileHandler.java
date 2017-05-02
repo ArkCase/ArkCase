@@ -110,6 +110,7 @@ public class CaseFileHandler implements EntityHandler
             FolderPermissionCollection permissions = folder.getPermissions();
             for (FolderPermission permission : permissions.getItems())
             {
+                // TODO: change the way the permission is computed!
                 if (permission.getUserId().getPrimarySmtpAddress().equals(user.getMail()))
                 {
                     if (hasPermission(permission.getPermissionLevel(), permissionType))
