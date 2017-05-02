@@ -11,7 +11,6 @@ import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -28,6 +27,9 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
 
     private OutlookService outlookService;
     private ExchangeWebServicesOutlookDao dao;
+    private String systemUserEmail;
+    private String systemUserPass;
+    private String systemUserId;
 
     @Override
     public Notification send(Notification notification)
@@ -95,6 +97,15 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     }
 
     @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, String userId) throws Exception
+    {
+        //Sending as system user to create AcmOutlookUser, ignoring userId
+        in.setTemplate(notificationTemplate);
+        AcmOutlookUser outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        getOutlookService().sendEmailWithAttachments(in, outlookUser, authentication);
+    }
+
+    @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
@@ -131,6 +142,37 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     public void setDao(ExchangeWebServicesOutlookDao dao)
     {
         this.dao = dao;
+    }
+
+
+    public String getSystemUserEmail()
+    {
+        return systemUserEmail;
+    }
+
+    public void setSystemUserEmail(String systemUserEmail)
+    {
+        this.systemUserEmail = systemUserEmail;
+    }
+
+    public String getSystemUserPass()
+    {
+        return systemUserPass;
+    }
+
+    public void setSystemUserPass(String systemUserPass)
+    {
+        this.systemUserPass = systemUserPass;
+    }
+
+    public String getSystemUserId()
+    {
+        return systemUserId;
+    }
+
+    public void setSystemUserId(String systemUserId)
+    {
+        this.systemUserId = systemUserId;
     }
 
 }
