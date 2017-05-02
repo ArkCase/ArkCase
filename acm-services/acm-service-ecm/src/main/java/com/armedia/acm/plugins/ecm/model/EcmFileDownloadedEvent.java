@@ -17,5 +17,7 @@ public class EcmFileDownloadedEvent extends AcmEvent
         setObjectType("FILE");
         setObjectId(source.getFileId());
         setEventDate(new Date());
+        setParentObjectType(source.getContainer().getContainerObjectType());
+        setParentObjectId(source.getContainer().getContainerObjectId());
     }
 }

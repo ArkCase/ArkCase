@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.NewDocumentRepositoryController', ['$scope'
-    , '$modal', '$translate', 'ConfigService', 'UtilService', 'Authentication'
+    , '$modal', '$translate', '$window', 'ConfigService', 'UtilService', 'Authentication'
     , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService'
-    , function ($scope, $modal, $translate, ConfigService, Util, Authentication
+    , function ($scope, $modal, $translate, $window, ConfigService, Util, Authentication
         , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
 
         $scope.docRepo = {};
+        $scope.loading = false;
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.assignee = {};
@@ -57,9 +58,12 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
 
         $scope.saveNewDocumentRepository = function () {
             setParticipants();
+            $scope.loading = true;
             DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function (data) {
                 ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
+                $scope.loading = false;
             }, function (error) {
+                $scope.loading = false;
                 if (error.data && error.data.message){
                     $scope.error = error.data.message;
                 }else{
@@ -78,6 +82,10 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
             owningGroup.participantType = "owning group";
             owningGroup.participantLdapId = $scope.owningGroup.participantLdapId;
             $scope.docRepo.participants.push(owningGroup);
+        }
+
+        $scope.onCancel = function () {
+            $window.history.back();
         }
     }
 ]);

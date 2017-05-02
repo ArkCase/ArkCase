@@ -6,9 +6,18 @@ angular.module('document-repository').controller('DocumentRepositoryListControll
     , function ($scope, $state, $stateParams, $translate, Util, ObjectService, HelperObjectBrowserService
         , MessageService, DocumentRepositoryListService, DocumentRepositoryInfoService) {
 
-        var eventName = "object.inserted";
-        $scope.$bus.subscribe(eventName, function (data) {
+        var objectInsertedEvent = "object.inserted";
+        $scope.$bus.subscribe(objectInsertedEvent, function (data) {
             MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");
+        });
+
+        var objectDeletedEvent = "object.deleted";
+        $scope.$bus.subscribe(objectDeletedEvent, function (data) {
+            MessageService.info(data.objectType + " with ID " + data.objectId + " was deleted.");
+            // wait solr to index the change, and update the tree i.e. remove Document Repository from tree
+            setTimeout(function () {
+                $scope.$emit("report-tree-updated");
+            }, 4000);
         });
 
         new HelperObjectBrowserService.Tree({

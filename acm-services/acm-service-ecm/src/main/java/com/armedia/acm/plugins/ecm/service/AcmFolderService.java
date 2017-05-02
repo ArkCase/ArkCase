@@ -7,15 +7,16 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import org.json.JSONArray;
 import org.mule.api.MuleException;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
-/**
- * Created by marjan.stefanoski on 03.04.2015.
- */
-public interface AcmFolderService {
+
+public interface AcmFolderService
+{
 
     AcmFolder addNewFolder(Long parentFolderId, String folderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException;
 
@@ -34,6 +35,17 @@ public interface AcmFolderService {
     AcmFolder copyFolder(AcmFolder toBeCopied, AcmFolder dstFolder, Long targetObjectId, String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException;
 
     void deleteFolderIfEmpty(Long folderId) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteFolderTree(Long folderId, Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException;
+
+    void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException;
+
+    void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException;
+
+    void deleteContainerAndContent(AcmContainer container, String username);
+
 
     AcmFolder findById(Long folderId);
 
@@ -69,4 +81,8 @@ public interface AcmFolderService {
      * @return AcmFolder root folder for given objectId, objectType
      */
     AcmFolder getRootFolder(Long parentObjectId, String parentObjectType) throws AcmObjectNotFoundException;
+
+    String getCmisRepositoryId(AcmFolder folder);
+
+    DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException;
 }
