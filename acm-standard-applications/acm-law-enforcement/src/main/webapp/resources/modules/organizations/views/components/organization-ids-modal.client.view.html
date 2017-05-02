@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.ids.modal.addID</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.ids.modal.editID</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="idForm">
+        <div>
+            <label for="idTypes_{{::$id}}"
+                   translate>organizations.comp.ids.modal.type.label</label>
+        </div>
+        <select id="idTypes_{{::$id}}"
+                ng-model="identification.identificationType"
+                ng-options="item.type as item.name for item in identificationTypes"></select>
+        <div>
+            <label for="identificationNumber_{{::$id}}"
+                   translate>organizations.comp.ids.modal.number.label</label>
+        </div>
+        <input id="identificationNumber_{{::$id}}" type="text" ng-model="identification.identificationNumber"
+               placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
+        <div>
+            <label for="identificationIssuer_{{::$id}}"
+                   translate>organizations.comp.ids.modal.issuer.label</label>
+        </div>
+        <input id="identificationIssuer_{{::$id}}" type="text" ng-model="identification.identificationIssuer"
+               placeholder="{{ 'organizations.comp.ids.modal.issuer.placeholder' | translate }}">
+        <div>
+            <label for="identificationYearIssued_{{::$id}}"
+                   translate>organizations.comp.ids.modal.yearIssued.label</label>
+        </div>
+        <input id="identificationYearIssued_{{::$id}}" type="text" ng-model="identification.identificationYearIssued"
+               placeholder="{{ 'organizations.comp.ids.modal.yearIssued.placeholder' | translate }}">
+        <div>
+            <p translate>organizations.comp.ids.modal.setPrimary</p>
+            <input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>organizations.comp.ids.modal.yes</translate>
+            <input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>organizations.comp.ids.modal.no</translate>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.ids.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="idForm.$invalid">
+        <span translate>organizations.comp.ids.modal.btnOk.text</span>
+    </button>
+</div>

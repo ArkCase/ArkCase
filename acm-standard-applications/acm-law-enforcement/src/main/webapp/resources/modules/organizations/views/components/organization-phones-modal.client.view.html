@@ -2,7 +2,6 @@
     <h3 ng-hide="isEdit">
         <span translate>organizations.comp.phones.modal.addPhone</span>
     </h3>
-
     <h3 ng-show="isEdit">
         <span translate>organizations.comp.phones.modal.editPhone</span>
     </h3>
@@ -17,10 +16,11 @@
                 ng-model="phone.subType"
                 ng-options="item.type as item.name for item in phoneTypes"></select>
         <div>
-            <label for="phoneTypes_{{::$id}}"
+            <label for="phones_{{::$id}}"
                    translate>organizations.comp.phones.modal.value.label</label>
         </div>
-        <input id="phones_{{::$id}}" type="text" ng-model="phone.value">
+        <input id="phones_{{::$id}}" type="text" ng-model="phone.value"
+               placeholder="{{ 'organizations.comp.phones.modal.value.placeholder' | translate }}">
         <div>
             <p translate>organizations.comp.phones.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">

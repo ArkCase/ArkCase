@@ -37,9 +37,19 @@ angular.module('organizations').config(['$stateProvider',
                 templateUrl: 'modules/organizations/views/components/organization-details.client.view.html'
             })
 
+            .state('organizations.addresses', {
+                url: '/:id/addresses',
+                templateUrl: 'modules/organizations/views/components/organization-addresses.client.view.html'
+            })
+
             .state('organizations.phones', {
                 url: '/:id/phones',
                 templateUrl: 'modules/organizations/views/components/organization-phones.client.view.html'
+            })
+
+            .state('organizations.faxes', {
+                url: '/:id/faxes',
+                templateUrl: 'modules/organizations/views/components/organization-faxes.client.view.html'
             })
 
             .state('organizations.emails', {
@@ -50,6 +60,36 @@ angular.module('organizations').config(['$stateProvider',
             .state('organizations.urls', {
                 url: '/:id/urls',
                 templateUrl: 'modules/organizations/views/components/organization-urls.client.view.html'
+            })
+
+            .state('organizations.dbas', {
+                url: '/:id/dbas',
+                templateUrl: 'modules/organizations/views/components/organization-dbas.client.view.html'
+            })
+
+            .state('organizations.people', {
+                url: '/:id/people',
+                templateUrl: 'modules/organizations/views/components/organization-people.client.view.html'
+            })
+
+            .state('organizations.ids', {
+                url: '/:id/ids',
+                templateUrl: 'modules/organizations/views/components/organization-ids.client.view.html'
+            })
+
+            .state('organizations.cases', {
+                url: '/:id/cases',
+                templateUrl: 'modules/organizations/views/components/organization-cases.client.view.html'
+            })
+
+            .state('organizations.complaints', {
+                url: '/:id/complaints',
+                templateUrl: 'modules/organizations/views/components/organization-complaints.client.view.html'
+            })
+
+            .state('organizations.related', {
+                url: '/:id/related',
+                templateUrl: 'modules/organizations/views/components/organization-related.client.view.html'
             })
 
             .state('organizations.history', {

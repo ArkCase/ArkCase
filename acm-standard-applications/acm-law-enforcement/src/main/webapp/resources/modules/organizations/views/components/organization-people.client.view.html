@@ -1,0 +1,36 @@
+<div ng-controller="Organizations.PeopleController">
+    <div class="panel panel-success panel-grid">
+        <div class="row">
+            <div class="btn-group pull-right">
+                <button class="btn btn-sm btn-default" ng-click="delete()">
+                    <span translate>organizations.comp.people.actions.delete</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="setPrimary()">
+                    <span translate>organizations.comp.people.actions.setPrimary</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="addExisting()">
+                    <span translate>organizations.comp.people.actions.addExisting</span>
+                </button>
+                <button class="btn btn-sm btn-default" ng-click="addNew()">
+                    <span translate>organizations.comp.people.actions.addNew</span>
+                </button>
+            </div>
+        </div>
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>organizations.comp.people.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 ui-grid-selection
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,21 +1,12 @@
 <div ng-controller="Organizations.EmailsController">
     <div class="panel panel-success panel-grid">
-        <div class="row">
-            <div class="btn-group pull-right">
-                <button class="btn btn-sm btn-default" ng-click="delete()">
-                    <span translate>organizations.comp.emails.actions.delete</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="setPrimary()">
-                    <span translate>organizations.comp.emails.actions.setPrimary</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="addNew()">
-                    <span translate>organizations.comp.emails.actions.addNew</span>
-                </button>
-            </div>
-        </div>
         <div class="panel-heading">
             <div class="panel-title">
                 <span translate>organizations.comp.emails.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
+                        <i class="fa fa-lg fa-plus"></i></button>
+                </div>
             </div>
         </div>
         <div class="panel-body">
@@ -23,8 +14,6 @@
                  ui-grid-resize-columns
                  ui-grid-auto-resize
                  ui-grid-pagination
-                 ui-grid-edit
-                 ui-grid-cell-nav
                  adjust-table-height="gridOptions.data.length"
                  class="grid">
             </div>

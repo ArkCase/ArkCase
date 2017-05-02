@@ -533,13 +533,13 @@
         },
         {
           "name": "description",
-          "displayName": "people.comp.pictures.table.columns.description",
+          "displayName": "people.comp.aliases.table.columns.description",
           "enableCellEdit": false,
           "headerCellFilter": "translate"
         },
         {
           "name": "modified",
-          "displayName": "people.comp.pictures.table.columns.modified",
+          "displayName": "people.comp.aliases.table.columns.modified",
           "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
@@ -547,7 +547,7 @@
         },
         {
           "name": "modifier",
-          "displayName": "people.comp.pictures.table.columns.modifier",
+          "displayName": "people.comp.aliases.table.columns.modifier",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -837,14 +837,14 @@
         },
         {
           "name": "modifier",
-          "displayName": "people.comp.ids.table.columns.modifier",
+          "displayName": "people.comp.related.table.columns.modifier",
           "headerCellFilter": "translate",
           "lookup": "userFullNames",
           "width": 150
         },
         {
           "name": "modified",
-          "displayName": "people.comp.ids.table.columns.modified",
+          "displayName": "people.comp.related.table.columns.modified",
           "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,

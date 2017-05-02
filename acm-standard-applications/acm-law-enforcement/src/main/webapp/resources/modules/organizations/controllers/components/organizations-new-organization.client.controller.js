@@ -27,7 +27,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 type: 'url'
             },
             defaultFax: {
-                type: 'url'
+                type: 'fax'
             }
         };
 

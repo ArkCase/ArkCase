@@ -17,10 +17,11 @@
                 ng-model="url.subType"
                 ng-options="item.type as item.name for item in urlTypes"></select>
         <div>
-            <label for="urlTypes_{{::$id}}"
+            <label for="urls_{{::$id}}"
                    translate>organizations.comp.urls.modal.value.label</label>
         </div>
-        <input id="urls_{{::$id}}" type="text" ng-model="url.value">
+        <input id="urls_{{::$id}}" type="text" ng-model="url.value"
+               placeholder="{{ 'organizations.comp.urls.modal.value.placeholder' | translate }}">
         <div>
             <p translate>organizations.comp.urls.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">
