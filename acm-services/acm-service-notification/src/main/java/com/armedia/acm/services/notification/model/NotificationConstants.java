@@ -82,7 +82,7 @@ public interface NotificationConstants
     String EMAIL_FLOW_TYPE = "notification.user.email.flow.type";
 
     /**
-     * The property key to use in the properties file that keeps flow type
+     * The property key to use in the properties file for the STARTTLS SMTP flag
      */
     String EMAIL_FLOW_STARTTLS = "notification.user.email.flow.starttls";
 
