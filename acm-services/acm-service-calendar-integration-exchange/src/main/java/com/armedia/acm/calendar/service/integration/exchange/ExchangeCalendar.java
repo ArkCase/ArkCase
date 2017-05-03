@@ -24,7 +24,7 @@ public class ExchangeCalendar implements AcmCalendar
 
     private ExchangeService service;
 
-    private EntityHandler handler;
+    private CalendarEntityHandler handler;
 
     private String objectType;
 
@@ -36,7 +36,7 @@ public class ExchangeCalendar implements AcmCalendar
      * @param objectType
      * @param objectId
      */
-    public ExchangeCalendar(ExchangeService service, EntityHandler handler, String objectType, String objectId)
+    public ExchangeCalendar(ExchangeService service, CalendarEntityHandler handler, String objectType, String objectId)
     {
         this.service = service;
         this.handler = handler;

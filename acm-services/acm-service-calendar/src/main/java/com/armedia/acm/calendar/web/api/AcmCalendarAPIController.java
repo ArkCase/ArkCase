@@ -27,6 +27,7 @@ import javax.servlet.http.HttpSession;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 /**
@@ -89,7 +90,8 @@ public class AcmCalendarAPIController
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
                 .orElseThrow(() -> new CalendarServiceException(""));
-        return calendar.listItemsInfo(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
+        return calendar.listItemsInfo(toZonedDate(setDefaultStart(after)), toZonedDate(setDefaultEnd(before)), sort, sortDirection, start,
+                maxItems);
     }
 
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -105,7 +107,8 @@ public class AcmCalendarAPIController
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
                 .orElseThrow(() -> new CalendarServiceException(""));
-        return calendar.listItems(toZonedDate(after), toZonedDate(before), sort, sortDirection, start, maxItems);
+        return calendar.listItems(toZonedDate(setDefaultStart(after)), toZonedDate(setDefaultEnd(before)), sort, sortDirection, start,
+                maxItems);
     }
 
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -160,6 +163,32 @@ public class AcmCalendarAPIController
         CalendarExceptionMapper<CalendarServiceException> exceptionMapper = calendarService.getExceptionMapper(ce);
         Object errorDetails = exceptionMapper.mapException(ce);
         return ResponseEntity.status(exceptionMapper.getStatusCode()).body(errorDetails);
+    }
+
+    /**
+     * @param after
+     * @return
+     */
+    private String setDefaultStart(String after)
+    {
+        if (after != null && !after.isEmpty())
+        {
+            return after;
+        }
+        return ZonedDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
+    }
+
+    /**
+     * @param before
+     * @return
+     */
+    private String setDefaultEnd(String before)
+    {
+        if (before != null && !before.isEmpty())
+        {
+            return before;
+        }
+        return ZonedDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).toString();
     }
 
     /**

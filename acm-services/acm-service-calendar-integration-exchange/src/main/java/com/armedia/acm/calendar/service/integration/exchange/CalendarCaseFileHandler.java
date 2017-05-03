@@ -40,7 +40,7 @@ import microsoft.exchange.webservices.data.search.ItemView;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2017
  *
  */
-public class CaseFileHandler implements EntityHandler
+public class CalendarCaseFileHandler implements CalendarEntityHandler
 {
 
     // private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject,
@@ -59,7 +59,7 @@ public class CaseFileHandler implements EntityHandler
     /**
      *
      */
-    public CaseFileHandler()
+    public CalendarCaseFileHandler()
     {
         sortFields = new HashMap<>();
         sortFields.put("subject", ItemSchema.Subject);
@@ -72,9 +72,17 @@ public class CaseFileHandler implements EntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    private Object getCaseFile(String objectId)
+    private Object getCaseFile(String objectId, boolean restrictedOnly)
     {
-        Query query = em.createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId");
+        Query query;
+        if (restrictedOnly)
+        {
+            query = em.createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId AND cf.restricted = :restricted");
+            query.setParameter("restricted", true);
+        } else
+        {
+            query = em.createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId");
+        }
         query.setParameter("objectId", Long.valueOf(objectId));
         List<?> resultList = query.getResultList();
         if (!resultList.isEmpty())
@@ -97,10 +105,10 @@ public class CaseFileHandler implements EntityHandler
     public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectId,
             PermissionType permissionType) throws CalendarServiceException
     {
-        Object caseFile = getCaseFile(objectId);
+        Object caseFile = getCaseFile(objectId, true);
         if (caseFile == null)
         {
-            throw new CalendarServiceException("");
+            return true;
         }
         AcmContainerEntity entity = (AcmContainerEntity) caseFile;
         String calendarId = entity.getContainer().getCalendarFolderId();
@@ -110,7 +118,6 @@ public class CaseFileHandler implements EntityHandler
             FolderPermissionCollection permissions = folder.getPermissions();
             for (FolderPermission permission : permissions.getItems())
             {
-                // TODO: change the way the permission is computed!
                 if (permission.getUserId().getPrimarySmtpAddress().equals(user.getMail()))
                 {
                     if (hasPermission(permission.getPermissionLevel(), permissionType))
@@ -179,7 +186,7 @@ public class CaseFileHandler implements EntityHandler
     @Override
     public String getCalendarId(String objectId) throws CalendarServiceException
     {
-        Object caseFile = getCaseFile(objectId);
+        Object caseFile = getCaseFile(objectId, false);
         if (caseFile == null)
         {
             throw new CalendarServiceException(String.format("No calendar associated with CASE_FILE with id %s.", objectId));
