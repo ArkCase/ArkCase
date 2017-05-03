@@ -40,12 +40,12 @@ angular.module('organizations').controller('OrganizationsListController', ['$sco
             , getNodeData: function (organizationId) {
                 return OrganizationInfoService.getOrganizationInfo(organizationId);
             }
-            , makeTreeNode: function (organizationnInfo) {
+            , makeTreeNode: function (organizationInfo) {
                 return {
-                    nodeId: Util.goodValue(organizationnInfo.organizationId, 0)
+                    nodeId: Util.goodValue(organizationInfo.organizationId, 0)
                     , nodeType: ObjectService.ObjectTypes.ORGANIZATION
-                    , nodeTitle: Util.goodValue(organizationnInfo.organizationTitle)
-                    , nodeToolTip: Util.goodValue(organizationnInfo.organizationTitle)
+                    , nodeTitle: Util.goodValue(organizationInfo.organizationValue)
+                    , nodeToolTip: Util.goodValue(organizationInfo.organizationValue)
                 };
             }
         });

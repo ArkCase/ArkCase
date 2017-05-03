@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('organizations').controller('Organizations.FaxesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
@@ -19,7 +19,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "organizations"
-            , componentId: "phones"
+            , componentId: "faxes"
             , retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo
             , validateObjectInfo: OrganizationInfoService.validateOrganizationInfo
             , onConfigRetrieved: function (componentConfig) {
@@ -46,21 +46,21 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            $scope.gridOptions.data = phones;
+            var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
+            $scope.gridOptions.data = faxes;
         };
 
         $scope.addNew = function () {
-            var phone = {};
-            phone.created = Util.dateToIsoString(new Date());
-            phone.creator = $scope.userId;
+            var fax = {};
+            fax.created = Util.dateToIsoString(new Date());
+            fax.creator = $scope.userId;
 
             //put contactMethod to scope, we will need it when we return from popup
-            $scope.phone = phone;
+            $scope.fax = fax;
             var item = {
                 id: '',
                 parentId: $scope.objectInfo.id,
-                type: 'phone',
+                type: 'fax',
                 subType: '',
                 value: '',
                 description: ''
@@ -69,7 +69,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
         };
 
         $scope.editRow = function (rowEntity) {
-            $scope.phone = rowEntity;
+            $scope.fax = rowEntity;
             var item = {
                 id: rowEntity.id,
                 type: rowEntity.type,
@@ -93,16 +93,16 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             }
         };
 
-        function showModal(phone, isEdit) {
+        function showModal(fax, isEdit) {
             var params = {};
-            params.phone = phone || {};
+            params.fax = fax || {};
             params.isEdit = isEdit || false;
-            params.isDefault = $scope.isDefault(phone);
+            params.isDefault = $scope.isDefault(fax);
 
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/organizations/views/components/organization-phones-modal.client.view.html',
-                controller: 'Organizations.PhonesModalController',
+                templateUrl: 'modules/organizations/views/components/organization-faxes-modal.client.view.html',
+                controller: 'Organizations.FaxesModalController',
                 size: 'md',
                 backdrop: 'static',
                 resolve: {
@@ -112,24 +112,24 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
                 }
             });
             modalInstance.result.then(function (data) {
-                var phone;
+                var fax;
                 if (!data.isEdit)
-                    phone = $scope.phone;
+                    fax = $scope.fax;
                 else {
-                    phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
+                    fax = _.find($scope.objectInfo.contactMethods, {id: data.fax.id});
                 }
-                phone.type = 'phone';
-                phone.subType = data.phone.subType;
-                phone.value = data.phone.value;
-                phone.description = data.phone.description;
+                fax.type = 'fax';
+                fax.subType = data.fax.subType;
+                fax.value = data.fax.value;
+                fax.description = data.fax.description;
 
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(phone);
+                    $scope.objectInfo.contactMethods.push(fax);
                 }
 
-                var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                if (data.isDefault || phones.length == 1) {
-                    $scope.objectInfo.defaultPhone = phone;
+                var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
+                if (data.isDefault || faxes.length == 1) {
+                    $scope.objectInfo.defaultFax = fax;
                 }
 
                 saveObjectInfoAndRefresh();
@@ -157,8 +157,8 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         $scope.isDefault = function (data) {
             var id = 0;
-            if ($scope.objectInfo.defaultPhone) {
-                id = $scope.objectInfo.defaultPhone.id
+            if ($scope.objectInfo.defaultFax) {
+                id = $scope.objectInfo.defaultFax.id
             }
             return data.id == id;
         };

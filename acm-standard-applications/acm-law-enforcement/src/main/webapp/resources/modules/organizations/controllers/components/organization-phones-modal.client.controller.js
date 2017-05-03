@@ -1,11 +1,15 @@
-angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$modalInstance', 'Object.LookupService',
-        function ($scope, $modalInstance, ObjectLookupService) {
+angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
                     $scope.phoneTypes = _.find(contactMethodTypes, {type: 'phone'}).subTypes;
                     return contactMethodTypes;
                 });
+
+            $scope.phone = params.phone;
+            $scope.isEdit = params.isEdit;
+            $scope.isDefault = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
@@ -14,7 +18,7 @@ angular.module('organizations').controller('Organizations.PhonesModalController'
                 $modalInstance.close(
                     {
                         phone: $scope.phone,
-                        isDefailt: $scope.isDefault,
+                        isDefault: $scope.isDefault,
                         isEdit: $scope.isEdit
                     }
                 );
