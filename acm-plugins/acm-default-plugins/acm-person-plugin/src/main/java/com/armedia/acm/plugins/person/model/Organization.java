@@ -27,6 +27,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -92,8 +94,7 @@ public class Organization implements Serializable, AcmEntity
     @JoinTable(
             name = "acm_organization_identification",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
-            }
+            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)}
     )
     private List<Identification> identifications = new ArrayList<>();
 
@@ -183,6 +184,23 @@ public class Organization implements Serializable, AcmEntity
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
+    private List<OrganizationDBA> organizationDBAs = new ArrayList<>();
+
+    /**
+     * OrganizationDBA which is default as dba
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_dba")
+    private OrganizationDBA defaultDBA;
+
+    /**
+     * OrganizationAssociation which is primary contact with parentType == PERSON
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_primary_contact")
+    private OrganizationAssociation primaryContact;
+
     @PostLoad
     protected void postLoad()
     {
@@ -197,7 +215,31 @@ public class Organization implements Serializable, AcmEntity
         {
             pa.setOrganization(this);
         }
+
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
     }
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
+    }
+
 
     @XmlTransient
     public Long getOrganizationId()
@@ -448,5 +490,35 @@ public class Organization implements Serializable, AcmEntity
     public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
     {
         this.organizationAssociations = organizationAssociations;
+    }
+
+    public List<OrganizationDBA> getOrganizationDBAs()
+    {
+        return organizationDBAs;
+    }
+
+    public void setOrganizationDBAs(List<OrganizationDBA> organizationDBAs)
+    {
+        this.organizationDBAs = organizationDBAs;
+    }
+
+    public OrganizationDBA getDefaultDBA()
+    {
+        return defaultDBA;
+    }
+
+    public void setDefaultDBA(OrganizationDBA defaultDBA)
+    {
+        this.defaultDBA = defaultDBA;
+    }
+
+    public OrganizationAssociation getPrimaryContact()
+    {
+        return primaryContact;
+    }
+
+    public void setPrimaryContact(OrganizationAssociation primaryContact)
+    {
+        this.primaryContact = primaryContact;
     }
 }
