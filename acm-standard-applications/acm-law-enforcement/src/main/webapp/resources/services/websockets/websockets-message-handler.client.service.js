@@ -6,6 +6,8 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
 
         Service.handleMessage = handleMessage;
 
+        Service.handleGenericMessage = handleGenericMessage;
+
         return Service;
 
         function handleMessage(message) {
@@ -23,9 +25,14 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
         }
 
+        function handleGenericMessage(message) {
+            var eventName = message.eventType;
+            $rootScope.$bus.publish(eventName, message);
+        }
+
         function handleCache(message) {
             // remove this object from cache
-            if (message.action == 'UPDATE') {
+            if (message.action == 'UPDATE' || message.action == 'DELETE') {
                 handleCacheObject(message.objectType, message.objectId);
             }
             handleCacheLists(message.objectType, message.objectId);
@@ -49,16 +56,20 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
         }
 
         function publishMessage(message) {
+            var eventName;
             // publish event for this object
             if (message.action == 'INSERT') {
-                var eventName = "object.inserted";
-            } else {
-                var eventName = "object.changed/" + message.objectType + "/" + message.objectId;
+                eventName = "object.inserted";
+            } else if (message.action == 'DELETE') {
+                eventName = "object.deleted";
+            }
+            else {
+                eventName = "object.changed/" + message.objectType + "/" + message.objectId;
             }
             $rootScope.$bus.publish(eventName, message);
             // publish event for this object's parent, if any
             if (message.parentObjectType != null && message.parentObjectId != null) {
-                var eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
+                eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
                 $rootScope.$bus.publish(eventName, message);
             }
         }
@@ -73,17 +84,17 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 }
             }
         }
-        
+
         function handleSubCacheLists(objectType, objectId) {
             // invalidate audit cache
             var cacheKey = objectType + '.' + objectId;
             var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA)
             var cacheKeys = cacheStore.keys();
-            _.each(cacheKeys, function (key){
-                if(key == null) {
+            _.each(cacheKeys, function (key) {
+                if (key == null) {
                     return;
                 }
-                if(key.indexOf(cacheKey) == 0) {
+                if (key.indexOf(cacheKey) == 0) {
                     cacheStore.remove(key);
                 }
             });

@@ -20,7 +20,8 @@
   "document-repository.comp.actions": {
     "restrict": "de_Restrict?",
     "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe"
+    "unsubscribe.button": "de_Unsubscribe",
+    "confirm.delete.documentRepository.msg": "de_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "de_Details",

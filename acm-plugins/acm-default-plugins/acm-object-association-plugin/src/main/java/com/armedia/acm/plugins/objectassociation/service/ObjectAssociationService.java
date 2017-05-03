@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.objectassociation.service;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -10,6 +11,9 @@ import java.util.List;
 public interface ObjectAssociationService
 {
     void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType) throws Exception;
+
+    @Transactional
+    void delete(Long id);
 
     AcmAbstractDao<AcmChildObjectEntity> getDaoForChildObjectEntity(String objectType);
 
