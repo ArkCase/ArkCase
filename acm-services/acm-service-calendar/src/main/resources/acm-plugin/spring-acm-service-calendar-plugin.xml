@@ -52,7 +52,7 @@
                 </bean>
                 <bean id="listCalendarEventsInfoUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/calendar/calendarevents"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents/info/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="acmCalendarEventsListPrivilege"/>
                 </bean>
                 <bean id="listCalendarEventsUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">

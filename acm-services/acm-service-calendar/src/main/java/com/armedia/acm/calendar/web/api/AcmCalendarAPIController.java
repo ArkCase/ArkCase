@@ -77,10 +77,10 @@ public class AcmCalendarAPIController
         return calendar.getInfo();
     }
 
-    @RequestMapping(value = "/calendarevents", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/calendarevents/info/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmCalendarEventInfo> listEvents(HttpSession session, Authentication auth,
-            @RequestParam(value = "objectType") String objectType, @RequestParam(value = "objectId") String objectId,
+            @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
             @RequestParam(value = "after", required = false) String after, @RequestParam(value = "before", required = false) String before,
             @RequestParam(value = "sort", required = false, defaultValue = "eventDate") String sort,
             @RequestParam(value = "sortDirection", required = false, defaultValue = "ASC") String sortDirection,
@@ -173,7 +173,7 @@ public class AcmCalendarAPIController
     {
         if (after != null && !after.isEmpty())
         {
-            return after;
+            return fixTimeZone(after);
         }
         return ZonedDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
     }
@@ -186,9 +186,22 @@ public class AcmCalendarAPIController
     {
         if (before != null && !before.isEmpty())
         {
-            return before;
+            return fixTimeZone(before);
         }
         return ZonedDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).toString();
+    }
+
+    /**
+     * @param time
+     * @return
+     */
+    private String fixTimeZone(String time)
+    {
+        if (time.charAt(time.length() - 2) != ':')
+        {
+            return new StringBuilder(time).insert(time.length() - 2, ":").toString();
+        }
+        return time;
     }
 
     /**
