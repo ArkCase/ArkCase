@@ -3,6 +3,7 @@
  */
 package com.armedia.acm.calendar.service;
 
+import com.armedia.acm.calendar.service.Attendee.AttendeeType;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Daily;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.OnlyOnce;
@@ -17,7 +18,9 @@ import org.junit.Test;
 import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 3, 2017
@@ -28,16 +31,36 @@ public class AcmCalendarEventTest
 
     private void populateCommonValues(AcmCalendarEvent event)
     {
+        event.setCalendarId(
+                "AAMkADdkNmQxM2NiLTRiZTUtNDZiNS04MTlkLTVjMTEwMjhiZTI5OQAuAAAAAADEdM3fYgV5RaJX1/99mbz+AQCfcmunDxepSpuD4DW2VHTXAAHLQYQQAAA=");
+        event.setObjectType("CASE_FILE");
+        event.setObjectId("108");
         event.setSubject("test");
         event.setLocation("Armedia");
         event.setStart(ZonedDateTime.now());
+        event.setEnd(ZonedDateTime.now().plusHours(1));
         event.setDetails("details");
         event.setRemindIn(30);
-        // List<String> invitees = new ArrayList<>();
-        // invitees.add("aron@armedia.com");
-        // invitees.add("bob@armedia.com");
-        // invitees.add("charlie@armedia.com");
-        // event.setInvitees(invitees);
+        List<Attendee> invitees = new ArrayList<>();
+        invitees.add(createAtendee("Aron", "aron@armedia.com", AttendeeType.REQUIRED));
+        invitees.add(createAtendee("Bob", "bob@armedia.com", AttendeeType.REQUIRED));
+        invitees.add(createAtendee("Charlie", "charlie@armedia.com", AttendeeType.REQUIRED));
+        event.setAttendees(invitees);
+    }
+
+    /**
+     * @param string
+     * @param string2
+     * @param type
+     * @return
+     */
+    private Attendee createAtendee(String displayName, String email, AttendeeType type)
+    {
+        Attendee attendee = new Attendee();
+        attendee.setDisplayName(displayName);
+        attendee.setEmail(email);
+        attendee.setType(type);
+        return attendee;
     }
 
     private void printJSON(AcmCalendarEvent event, String test) throws Exception
