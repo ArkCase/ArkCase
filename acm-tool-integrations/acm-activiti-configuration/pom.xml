@@ -86,6 +86,15 @@
             <artifactId>commons-codec</artifactId>
             <version>${apache-commons-codec}</version>
         </dependency>
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.voodoodyne.jackson.jsog</groupId>
+            <artifactId>jackson-jsog</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
     </dependencies>
 
 

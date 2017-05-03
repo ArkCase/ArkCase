@@ -31,10 +31,20 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
     </bean>
+    <bean id="deleteOrganizationAssociationAPIController"
+          class="com.armedia.acm.plugins.person.web.api.DeleteOrganizationAssociationAPIController">
+        <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
+        <property name="organizationAssociationEventPublisher" ref="organizationAssociationEventPublisher"/>
+    </bean>
 
     <bean id="savePersonAssociationAPIController"
           class="com.armedia.acm.plugins.person.web.api.SavePersonAssociationAPIController">
         <property name="personAssociationService" ref="personAssociationService"/>
+    </bean>
+
+    <bean id="saveOrganizationAssociationAPIController"
+          class="com.armedia.acm.plugins.person.web.api.SaveOrganizationAssociationAPIController">
+        <property name="organizationAssociationService" ref="organizationAssociationService"/>
     </bean>
 
     <bean id="organizationAPIController" class="com.armedia.acm.plugins.person.web.api.OrganizationAPIController">

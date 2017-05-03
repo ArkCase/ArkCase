@@ -5,7 +5,6 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
@@ -27,6 +26,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -122,6 +122,9 @@ public class Organization implements Serializable, AcmEntity
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationRelations = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
+
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
@@ -178,7 +181,23 @@ public class Organization implements Serializable, AcmEntity
     List<Person> people = new ArrayList<>();
 
     @Column(name = "cm_object_type", updatable = false)
-    private String objectType = PersonConstants.ORGANIZATION_OBJECT_TYPE;
+    private String objectType = PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
+
+    @PostLoad
+    protected void postLoad()
+    {
+        /*FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
+           same person which is parent to them.
+            Because of deadline didn't have time to find better solution for this like: get object from cache or explore new possibilities
+            So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code should be removed
+            linked with technical dept: AFDP-3487
+            */
+
+        for (OrganizationAssociation pa : getOrganizationAssociations())
+        {
+            pa.setOrganization(this);
+        }
+    }
 
     @XmlTransient
     public Long getOrganizationId()
@@ -419,5 +438,15 @@ public class Organization implements Serializable, AcmEntity
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }

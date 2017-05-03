@@ -261,11 +261,4 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="51-acm_organization_association-add-organization_type-column" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_organization_assoc">
-            <column name="cm_organization_type" type="VARCHAR(1024)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
 </databaseChangeLog>

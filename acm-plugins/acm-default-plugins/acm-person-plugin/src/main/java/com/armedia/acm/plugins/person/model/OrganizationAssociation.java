@@ -51,8 +51,8 @@ public class OrganizationAssociation implements Serializable, AcmEntity
     @JoinColumn(name = "cm_organization_id", nullable = false)
     private Organization organization;
 
-    @Column(name = "cm_organization_type", nullable = false)
-    private String organizationType;
+    @Column(name = "cm_association_type", nullable = false)
+    private String associationType;
 
     @Column(name = "cm_parent_id")
     private Long parentId;
@@ -113,14 +113,14 @@ public class OrganizationAssociation implements Serializable, AcmEntity
         this.parentId = parentId;
     }
 
-    public String getOrganizationType()
+    public String getAssociationType()
     {
-        return organizationType;
+        return associationType;
     }
 
-    public void setOrganizationType(String organizationType)
+    public void setAssociationType(String associationType)
     {
-        this.organizationType = organizationType;
+        this.associationType = associationType;
     }
 
     public String getParentType()

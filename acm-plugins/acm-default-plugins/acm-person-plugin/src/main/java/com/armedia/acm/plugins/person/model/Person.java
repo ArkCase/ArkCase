@@ -187,7 +187,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     private Long defaultPictureId;
 
     @Column(name = "cm_object_type", updatable = false)
-    private String objectType = PersonConstants.PERSON_OBJECT_TYPE;
+    private String objectType = PersonOrganizationConstants.PERSON_OBJECT_TYPE;
 
     /**
      * ContactMethod which is default as phone
