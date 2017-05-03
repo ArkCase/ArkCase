@@ -82,6 +82,11 @@ public interface NotificationConstants
     String EMAIL_FLOW_TYPE = "notification.user.email.flow.type";
 
     /**
+     * The property key to use in the properties file that keeps flow type
+     */
+    String EMAIL_FLOW_STARTTLS = "notification.user.email.flow.starttls";
+
+    /**
      * The property key to use in the properties file that keeps email response timeout
      */
     String EMAIL_RESPONSE_TIMEOUT_KEY = "notification.user.email.responseTimeout";
@@ -125,4 +130,6 @@ public interface NotificationConstants
     String PARTICIPANT_TYPE_GROUP = "owning group";
     String SPECIAL_PARTICIPANT_TYPE = "*";
 
+    String SMTP_STARTTLS = "smtp+starttls";
+    String SMTP = "smtp";
 }
