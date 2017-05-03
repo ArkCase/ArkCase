@@ -1,0 +1,8 @@
+<div>
+    <div class="progress row" ng-if=showProgress>
+        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ currentProgress }}"
+             aria-valuemin="0" aria-valuemax="100" ng-style="percentageStyle">
+            {{ currentProgress }} {{ 'common.directive.progressIndicator.progressCompletion' | translate }}
+        </div>
+    </div>
+</div>

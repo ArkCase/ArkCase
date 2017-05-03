@@ -14,4 +14,6 @@ public interface AcmObjectLockConstants
      * this should be used when objects needs to be locked for long running tasks.
      */
     String LOCK_FOR_PROCESSING = "OBJECT_PROCESSING_LOCK";
+
+    String EXCLUSIVE_TREE_LOCK = "EXCLUSIVE_TREE_LOCK";
 }
