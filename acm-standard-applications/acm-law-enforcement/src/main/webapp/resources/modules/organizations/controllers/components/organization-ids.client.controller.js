@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('organizations').controller('Organizations.IDsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
@@ -19,7 +19,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "organizations"
-            , componentId: "phones"
+            , componentId: "ids"
             , retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo
             , validateObjectInfo: OrganizationInfoService.validateOrganizationInfo
             , onConfigRetrieved: function (componentConfig) {
@@ -46,24 +46,21 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            $scope.gridOptions.data = phones;
+            $scope.gridOptions.data = $scope.objectInfo.identifications;
         };
 
         $scope.addNew = function () {
-            var phone = {};
-            phone.created = Util.dateToIsoString(new Date());
-            phone.creator = $scope.userId;
+            var identification = {};
+            identification.created = Util.dateToIsoString(new Date());
+            identification.creator = $scope.userId;
 
-            //put contactMethod to scope, we will need it when we return from popup
-            $scope.phone = phone;
+            $scope.identification = identification;
             var item = {
-                id: '',
-                parentId: $scope.objectInfo.id,
-                type: 'phone',
-                subType: '',
-                value: '',
-                description: ''
+                identificationID: '',
+                identificationType: '',
+                identificationNumber: '',
+                identificationIssuer: '',
+                identificationYearIssued: ''
             };
             showModal(item, false);
         };
@@ -71,38 +68,37 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
         $scope.editRow = function (rowEntity) {
             $scope.phone = rowEntity;
             var item = {
-                id: rowEntity.id,
-                type: rowEntity.type,
-                subType: rowEntity.subType,
-                value: rowEntity.value,
-                description: rowEntity.description
+                identificationID: rowEntity.identificationID,
+                identificationType: rowEntity.identificationType,
+                identificationNumber: rowEntity.identificationNumber,
+                identificationIssuer: rowEntity.identificationIssuer,
+                identificationYearIssued: rowEntity.identificationYearIssued
             };
             showModal(item, true);
-
         };
 
         $scope.deleteRow = function (rowEntity) {
             gridHelper.deleteRow(rowEntity);
 
-            var id = Util.goodMapValue(rowEntity, "id", 0);
+            var id = Util.goodMapValue(rowEntity, "identificationID", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.contactMethods = _.remove($scope.objectInfo.contactMethods, function (item) {
-                    return item.id != id;
+                $scope.objectInfo.identifications = _.remove($scope.objectInfo.identifications, function (item) {
+                    return item.identificationID != id;
                 });
                 saveObjectInfoAndRefresh()
             }
         };
 
-        function showModal(phone, isEdit) {
+        function showModal(identification, isEdit) {
             var params = {};
-            params.phone = phone || {};
+            params.identification = identification || {};
             params.isEdit = isEdit || false;
-            params.isDefault = $scope.isDefault(phone);
+            params.isDefault = $scope.isDefault(identification);
 
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/organizations/views/components/organization-phones-modal.client.view.html',
-                controller: 'Organizations.PhonesModalController',
+                templateUrl: 'modules/organizations/views/components/organization-ids-modal.client.view.html',
+                controller: 'Organizations.IDsModalController',
                 size: 'md',
                 backdrop: 'static',
                 resolve: {
@@ -112,26 +108,25 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
                 }
             });
             modalInstance.result.then(function (data) {
-                var phone;
+                var identification;
                 if (!data.isEdit)
-                    phone = $scope.phone;
+                    identification = $scope.identification;
                 else {
-                    phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
+                    identification = _.find($scope.objectInfo.identifications, {identificationID: data.identification.identificationID});
                 }
-                phone.type = 'phone';
-                phone.subType = data.phone.subType;
-                phone.value = data.phone.value;
-                phone.description = data.phone.description;
+
+                identification.identificationType = data.identification.identificationType;
+                identification.identificationNumber = data.identification.identificationNumber;
+                identification.identificationIssuer = data.identification.identificationIssuer;
+                identification.identificationYearIssued = data.identification.identificationYearIssued;
 
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(phone);
+                    $scope.objectInfo.identifications.push(identification);
                 }
 
-                var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                if (data.isDefault || phones.length == 1) {
-                    $scope.objectInfo.defaultPhone = phone;
+                if (data.isDefault || $scope.objectInfo.identifications.length == 1) {
+                    $scope.objectInfo.defaultIdentification = identification;
                 }
-
                 saveObjectInfoAndRefresh();
             });
         }
@@ -157,10 +152,11 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         $scope.isDefault = function (data) {
             var id = 0;
-            if ($scope.objectInfo.defaultPhone) {
-                id = $scope.objectInfo.defaultPhone.id
+            if ($scope.objectInfo.defaultIdentification) {
+                id = $scope.objectInfo.defaultIdentification.identificationID;
             }
-            return data.id == id;
+            return data.identificationID == id;
         };
     }
+
 ]);

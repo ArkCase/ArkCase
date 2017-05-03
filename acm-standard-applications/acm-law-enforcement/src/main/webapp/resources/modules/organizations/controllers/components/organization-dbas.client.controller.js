@@ -1,27 +1,16 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
-    , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+angular.module('organizations').controller('Organization.DBAsController', ['$scope', '$stateParams', '$translate'
+    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Organization.PicturesService', '$modal'
+    , function ($scope, $stateParams, $translate
+        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, OrganizationPicturesService, $modal) {
 
-
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
-
-        var componentHelper = new HelperObjectBrowserService.Component({
+        new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "organizations"
-            , componentId: "phones"
+            , componentId: "dbas"
             , retrieveObjectInfo: OrganizationInfoService.getOrganizationInfo
-            , validateObjectInfo: OrganizationInfoService.validateOrganizationInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
@@ -30,55 +19,65 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             }
         });
 
+        $scope.organizationInfo = null;
+
+        var currentUser = '';
+
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        var promiseUsers = gridHelper.getUsers();
+        Authentication.queryUserInfo().then(function (data) {
+            currentUser = data.userId;
+        });
 
         var onConfigRetrieved = function (config) {
+            $scope.config = config;
             $scope.config = config;
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.setUserNameFilterToConfig(promiseUsers, config);
         };
+
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            $scope.gridOptions.data = phones;
+
+            if (objectInfo.dbas) {
+                $scope.gridOptions.data = objectInfo.dbas;
+                $scope.gridOptions.noData = false;
+            } else {
+                $scope.gridOptions.data = [];
+                $scope.gridOptions.noData = true;
+            }
         };
 
+        //Aliases
         $scope.addNew = function () {
-            var phone = {};
-            phone.created = Util.dateToIsoString(new Date());
-            phone.creator = $scope.userId;
 
-            //put contactMethod to scope, we will need it when we return from popup
-            $scope.phone = phone;
+            var alias = {};
+            alias.created = Util.dateToIsoString(new Date());
+            alias.creator = $scope.userId;
+            $scope.alias = alias;
             var item = {
                 id: '',
                 parentId: $scope.objectInfo.id,
-                type: 'phone',
-                subType: '',
-                value: '',
+                aliasType: '',
+                aliasValue: '',
                 description: ''
             };
             showModal(item, false);
         };
-
         $scope.editRow = function (rowEntity) {
-            $scope.phone = rowEntity;
+            $scope.alias = rowEntity;
             var item = {
                 id: rowEntity.id,
-                type: rowEntity.type,
-                subType: rowEntity.subType,
-                value: rowEntity.value,
+                parentId: $scope.objectInfo.id,
+                aliasType: rowEntity.aliasType,
+                aliasValue: rowEntity.aliasValue,
                 description: rowEntity.description
             };
             showModal(item, true);
-
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -86,23 +85,23 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.contactMethods = _.remove($scope.objectInfo.contactMethods, function (item) {
+                $scope.objectInfo.organizationAliases = _.remove($scope.objectInfo.organizationAliases, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()
             }
         };
 
-        function showModal(phone, isEdit) {
+        function showModal(alias, isEdit) {
             var params = {};
-            params.phone = phone || {};
+            params.alias = alias || {};
             params.isEdit = isEdit || false;
-            params.isDefault = $scope.isDefault(phone);
+            params.isDefault = $scope.isDefault(alias);
 
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/organizations/views/components/organization-phones-modal.client.view.html',
-                controller: 'Organizations.PhonesModalController',
+                templateUrl: "modules/organizations/views/components/organization-aliases-modal.client.view.html",
+                controller: 'Organization.AliasesModalController',
                 size: 'md',
                 backdrop: 'static',
                 resolve: {
@@ -111,27 +110,24 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
                     }
                 }
             });
+
             modalInstance.result.then(function (data) {
-                var phone;
+                var alias;
                 if (!data.isEdit)
-                    phone = $scope.phone;
+                    alias = $scope.alias;
                 else {
-                    phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
+                    alias = _.find($scope.objectInfo.organizationAliases, {id: data.alias.id});
                 }
-                phone.type = 'phone';
-                phone.subType = data.phone.subType;
-                phone.value = data.phone.value;
-                phone.description = data.phone.description;
-
+                alias.aliasType = data.alias.aliasType;
+                alias.aliasValue = data.alias.aliasValue;
+                alias.description = data.alias.description;
                 if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(phone);
+                    $scope.objectInfo.organizationAliases.push(alias);
                 }
 
-                var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                if (data.isDefault || phones.length == 1) {
-                    $scope.objectInfo.defaultPhone = phone;
+                if (data.isDefault || $scope.objectInfo.organizationAliases.length == 1) {
+                    $scope.objectInfo.defaultAlias = alias;
                 }
-
                 saveObjectInfoAndRefresh();
             });
         }
@@ -157,8 +153,8 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         $scope.isDefault = function (data) {
             var id = 0;
-            if ($scope.objectInfo.defaultPhone) {
-                id = $scope.objectInfo.defaultPhone.id
+            if ($scope.objectInfo.defaultAlias) {
+                id = $scope.objectInfo.defaultAlias.id
             }
             return data.id == id;
         };
