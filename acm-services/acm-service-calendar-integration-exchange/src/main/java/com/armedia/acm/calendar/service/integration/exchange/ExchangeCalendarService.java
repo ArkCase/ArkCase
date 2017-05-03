@@ -6,7 +6,7 @@ import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.calendar.service.integration.exchange.EntityHandler.PermissionType;
+import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
@@ -71,7 +71,7 @@ public class ExchangeCalendarService implements CalendarService
 
     }
 
-    private Map<String, EntityHandler> entityHandlers;
+    private Map<String, CalendarEntityHandler> entityHandlers;
 
     private OutlookService outlookService;
 
@@ -88,10 +88,15 @@ public class ExchangeCalendarService implements CalendarService
     public Optional<AcmCalendar> retrieveCalendar(AcmUser user, Authentication auth, String objectType, String objectId)
             throws CalendarServiceException
     {
-        EntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(() -> new CalendarServiceException(""));
+        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                .orElseThrow(() -> new CalendarServiceException(""));
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
-        handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ);
+        if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
+        {
+            // TODO: add logging and proper exception message.
+            throw new CalendarServiceException("");
+        }
         return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
     }
 
@@ -110,11 +115,12 @@ public class ExchangeCalendarService implements CalendarService
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
         if (objectType != null)
         {
-            EntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(() -> new CalendarServiceException(""));
+            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                    .orElseThrow(() -> new CalendarServiceException(""));
             result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
         } else
         {
-            for (EntityHandler handler : entityHandlers.values())
+            for (CalendarEntityHandler handler : entityHandlers.values())
             {
                 result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
             }
@@ -134,11 +140,15 @@ public class ExchangeCalendarService implements CalendarService
     public void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent,
             MultipartFile[] attachments) throws CalendarServiceException
     {
-        EntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
+        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceException(""));
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
-        handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE);
+        if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+        {
+            // TODO: add logging and proper exception message.
+            throw new CalendarServiceException("");
+        }
         try
         {
             Appointment appointment = new Appointment(exchangeService);
@@ -166,9 +176,13 @@ public class ExchangeCalendarService implements CalendarService
 
         try
         {
-            EntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
+            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                     .orElseThrow(() -> new CalendarServiceException(""));
-            handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE);
+            if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+            {
+                // TODO: add logging and proper exception message.
+                throw new CalendarServiceException("");
+            }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEvent.getEventId()));
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments);
 
@@ -195,8 +209,13 @@ public class ExchangeCalendarService implements CalendarService
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
         try
         {
-            EntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(() -> new CalendarServiceException(""));
-            handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE);
+            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                    .orElseThrow(() -> new CalendarServiceException(""));
+            if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
+            {
+                // TODO: add logging and proper exception message.
+                throw new CalendarServiceException("");
+            }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEventId));
             outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, appointment.getIsRecurring(), DeleteMode.HardDelete);
         } catch (Exception e)
@@ -243,7 +262,7 @@ public class ExchangeCalendarService implements CalendarService
      * @param entityHandlers
      *            the entityHandlers to set
      */
-    public void setEntityHandlers(Map<String, EntityHandler> entityHandlers)
+    public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
     {
         this.entityHandlers = entityHandlers;
     }

@@ -17,7 +17,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 13, 2017
  *
  */
-public interface EntityHandler
+public interface CalendarEntityHandler
 {
 
     public static enum PermissionType
