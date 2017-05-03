@@ -3,8 +3,10 @@ package com.armedia.acm.services.subscription.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_subscription_event")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmSubscriptionEvent implements AcmObject, AcmEntity, AcmParentObjectInfo
 {
 

@@ -2,6 +2,8 @@ package com.armedia.acm.audit.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +20,7 @@ import java.util.Date;
 @Entity
 @NotAudited
 @Table(name = "acm_audit_event_type_lu")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity
 {
 

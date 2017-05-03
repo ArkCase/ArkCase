@@ -16,7 +16,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonConstants;
+import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,14 +205,14 @@ public class PersonServiceImpl implements PersonService
         }
 
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(),
-                PersonConstants.PERSON_PICTURE_FILE_TYPE,
-                PersonConstants.PERSON_PICTURE_CATEGORY,
+                PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
+                PersonOrganizationConstants.PERSON_PICTURE_CATEGORY,
                 image.getInputStream(),
                 image.getContentType(),
                 image.getOriginalFilename(),
                 auth,
                 picturesFolderObj.getCmisFolderId(),
-                PersonConstants.PERSON_OBJECT_TYPE,
+                PersonOrganizationConstants.PERSON_OBJECT_TYPE,
                 personId);
         if (isDefault)
         {
@@ -235,7 +235,7 @@ public class PersonServiceImpl implements PersonService
 
         //created container and add root folder
         AcmContainer container = new AcmContainer();
-        container.setContainerObjectType(PersonConstants.PERSON_OBJECT_TYPE);
+        container.setContainerObjectType(PersonOrganizationConstants.PERSON_OBJECT_TYPE);
         container.setContainerObjectId(person.getId());
         container.setContainerObjectTitle(person.getGivenName() + "-" + person.getFamilyName() + "-" + person.getId());
         AcmFolder folder = new AcmFolder();

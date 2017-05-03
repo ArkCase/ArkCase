@@ -2,7 +2,9 @@ package com.armedia.acm.services.subscription.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +14,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_subscription")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmSubscription implements AcmObject, AcmEntity {
 
     @Id
