@@ -45,7 +45,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="19-create-organization-table" author="tsedalu" dbms="mysql">
+    <changeSet id="19-create-organization-table" author="tsedalu" dbms="mysql" failOnError="false">
         <createTable tableName="acm_organization">
             <column name="cm_organization_id" type="${idType}">
                 <constraints
