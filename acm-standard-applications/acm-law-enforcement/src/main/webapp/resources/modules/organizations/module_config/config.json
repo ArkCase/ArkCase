@@ -552,6 +552,7 @@
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "grid",
+      "multiSelect": false,
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -562,12 +563,12 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organization.givenName",
+          "name": "givenName",
           "displayName": "organizations.comp.people.table.columns.givenName",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organization.familyName",
+          "name": "familyName",
           "displayName": "organizations.comp.people.table.columns.familyName",
           "headerCellFilter": "translate"
         },
@@ -586,37 +587,7 @@
           "enableCellEdit": false,
           "width": 150
         }
-      ],
-      "dialogPersonPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "object_id_s",
-            "displayName": "organizations.comp.people.dialogOrganizationPicker.table.columns.id",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "first_name_lcs",
-            "displayName": "organizations.comp.people.dialogOrganizationPicker.table.columns.givenName",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "last_name_lcs",
-            "displayName": "organizations.comp.people.dialogOrganizationPicker.table.columns.familyName",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
+      ]
     },
     {
       "id": "ids",
@@ -813,12 +784,17 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organizationType",
+          "name": "associationType",
+          "displayName": "people.comp.related.table.columns.associationType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "organization.organizationType",
           "displayName": "organizations.comp.related.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organizationValue",
+          "name": "organization.organizationValue",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate"
         },
@@ -837,32 +813,7 @@
           "enableCellEdit": false,
           "width": 150
         }
-      ],
-      "dialogOrganizationPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "type_lcs",
-            "displayName": "organizations.comp.related.dialogOrganizationPicker.table.columns.type",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "name",
-            "displayName": "organizations.comp.related.dialogOrganizationPicker.table.columns.name",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
+      ]
     },
     {
       "id": "history",
