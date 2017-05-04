@@ -263,6 +263,7 @@
         },
         "enableAutodiscovery.checkbox": "Enable Autodiscovery",
         "clientAccessServer.label": "Client Access Server",
+        "clientAccessServer.description": "Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
         "clientAccessServer.placeholder": "Enter Client Access Server",
         "exchangeDefaultAccess.label": "Exchange Default Access",
         "exchangeDefaultAccess.placeholder": "Choose Exchange Default Access",

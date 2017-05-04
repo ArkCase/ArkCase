@@ -37,7 +37,6 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    String flow = "vm://sendEmailViaSmtp.in";
     private ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -71,7 +70,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                     : notification.getNote();
 
             messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
-            MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
+            MuleMessage received = getMuleContextManager().send(getFlow(), messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
         } catch (MuleException e)
@@ -106,7 +105,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             Exception exception = null;
             try
             {
-                MuleMessage received = getMuleContextManager().send(flow, emailBodyBuilder.buildEmailBody(emailData), messageProps);
+                MuleMessage received = getMuleContextManager().send(getFlow(), emailBodyBuilder.buildEmailBody(emailData), messageProps);
                 exception = received.getInboundProperty("sendEmailException");
             } catch (Exception e)
             {
@@ -160,8 +159,8 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 
                         if (firstIteration)
                         {
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, userId, ecmFile.getParentObjectId(),
-                                    ecmFile.getParentObjectType()));
+                            sentEvents.add(
+                                    new SmtpEventSentEvent(ecmFile, userId, ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
                             sentEvents.add(new SmtpEventSentEvent(ecmFile, userId, ecmFile.getId(), ecmFile.getObjectType()));
                         }
                     }
@@ -176,7 +175,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                         attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
                     }
                 }
-                MuleMessage received = getMuleContextManager().send(flow, in.getMessageBody(), attachments, messageProps);
+                MuleMessage received = getMuleContextManager().send(getFlow(), in.getMessageBody(), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
             } catch (MuleException e)
@@ -218,7 +217,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             try
             {
                 messageProps.put("to", emailAddress);
-                MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), messageProps);
+                MuleMessage received = getMuleContextManager().send(getFlow(), makeNote(emailAddress, in, authentication), messageProps);
                 exception = received.getInboundProperty("sendEmailException");
             } catch (MuleException e)
             {
@@ -296,4 +295,16 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         getAuthenticationTokenDao().save(authenticationToken);
     }
 
+    protected String getFlow() throws AcmEncryptionException
+    {
+        String encryption = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(),
+                EmailSenderConfigurationProperties.USER_FROM, null);
+        if (encryption.equals("off"))
+        {
+            return "vm://sendEmailViaSmtp.in";
+        } else
+        {
+            return "vm://sendEmailViaSmtpStartTLS.in";
+        }
+    }
 }
