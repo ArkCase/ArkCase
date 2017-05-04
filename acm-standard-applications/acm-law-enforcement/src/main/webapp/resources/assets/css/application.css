@@ -560,6 +560,11 @@ span.fancytree-title {
     white-space: normal;
     padding: 2px;
 }
+
+.ui-grid-top-panel {
+    width: 100%
+}
+
 /* End of ui-grid fix. */
 
 .ui-grid-header-cell-row .ui-grid-cell-contents {

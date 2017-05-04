@@ -108,6 +108,8 @@
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
           parent="baseNotificationSender"/>
+    <bean id="smtpStartTLSNotificationSender" class="com.armedia.acm.services.notification.service.SmtpStartTLSNotificationSender"
+          parent="smtpNotificationSender"/>
 
     <bean id="microsoftExchangeNotificationSender"
           class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
@@ -122,8 +124,9 @@
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
         <property name="notificationSenderMap">
             <map>
-                <entry key="smtp" value-ref="smtpNotificationSender"></entry>
-                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>
+                <entry key="smtp" value-ref="smtpNotificationSender"/>
+                <entry key="smtp+starttls" value-ref="smtpStartTLSNotificationSender"/>
+                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"/>
             </map>
         </property>
     </bean>
