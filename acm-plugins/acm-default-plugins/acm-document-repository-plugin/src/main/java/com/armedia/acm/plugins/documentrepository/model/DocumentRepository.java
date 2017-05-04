@@ -13,7 +13,9 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstant
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -47,6 +49,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_document_repository")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class DocumentRepository implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmChildObjectEntity
 {

@@ -127,7 +127,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.addNewOrganization = function () {
             $timeout(function () {
-                searchOrganization(null);
+                $scope.searchOrganization(null);
             }, 0);
         };
 
@@ -169,31 +169,34 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                         if (organization) {
                             _.merge(organization, selectedOrganization);
                         } else {
-                            $person.organizations.push(selectedOrganization);
+                            $scope.person.organizations.push(selectedOrganization);
                         }
                     });
                 }
             });
-
         };
 
         function clearNotFilledElements(person) {
+            //phones
             if (!person.defaultPhone.value) {
                 person.defaultPhone = null;
             } else {
                 person.contactMethods.push(person.defaultPhone);
             }
+            //emails
             if (!person.defaultEmail.value) {
                 person.defaultEmail = null;
             } else {
                 person.contactMethods.push(person.defaultEmail);
             }
+            //urls
             if (!person.defaultUrl.value) {
                 person.defaultUrl = null;
             } else {
                 person.contactMethods.push(person.defaultUrl);
             }
-            if (!person.defaultIdentification.identificationID) {
+            //identifications
+            if (!person.defaultIdentification && !person.defaultIdentification.identificationID) {
                 person.defaultIdentification = null;
             } else {
                 person.identifications.push(person.defaultIdentification);
@@ -206,7 +209,18 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 }
                 return false;
             });
-            //TODO do same for aliases, address... all defaults
+            //addresses
+            if (person.defaultAddress && !person.defaultAddress.streetAddress) {
+                person.defaultAddress = null;
+            } else {
+                person.addresses.push(person.defaultAddress);
+            }
+            //aliases
+            if (person.defaultAlias && !person.defaultAlias.aliasValue) {
+                person.defaultAlias = null;
+            } else {
+                person.personAliases.push(person.defaultAlias);
+            }
             return person;
         }
 

@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-
 @Controller
 @RequestMapping(value = {"/api/v1/plugin/organizations", "/api/latest/plugin/organizations"})
 public class OrganizationAPIController
@@ -83,6 +81,69 @@ public class OrganizationAPIController
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organization.", e);
         }
 
+    }
+
+    @RequestMapping(value = "/{organizationId}/cases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String
+    getCases(Authentication auth,
+             @PathVariable("organizationId") Long organizationId,
+             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:CASE_FILE AND child_id_s:%s", organizationId.toString());
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        } catch (MuleException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve cases for organization id[" + organizationId + "]", e);
+        }
+    }
+
+    @RequestMapping(value = "/{organizationId}/complaints", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String
+    getComplaints(Authentication auth,
+                  @PathVariable("organizationId") Long organizationId,
+                  @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                  @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+                  @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:COMPLAINT AND child_id_s:%s", organizationId.toString());
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        } catch (MuleException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve cases for organization id[" + organizationId + "]", e);
+        }
+    }
+
+    @RequestMapping(value = "/{organizationId}/people", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String
+    getPeople(Authentication auth,
+              @PathVariable("organizationId") Long organizationId,
+              @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+              @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+              @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    {
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:PERSON AND child_id_s:%s", organizationId.toString());
+        try
+        {
+            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
+
+        } catch (MuleException e)
+        {
+            log.error("Error while executing Solr query: {}", query, e);
+            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve people for organization id[" + organizationId + "]", e);
+        }
     }
 
     public void setOrganizationService(OrganizationService organizationService)

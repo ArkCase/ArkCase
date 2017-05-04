@@ -5,7 +5,6 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
@@ -27,6 +26,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -92,8 +94,7 @@ public class Organization implements Serializable, AcmEntity
     @JoinTable(
             name = "acm_organization_identification",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
-            }
+            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)}
     )
     private List<Identification> identifications = new ArrayList<>();
 
@@ -121,6 +122,9 @@ public class Organization implements Serializable, AcmEntity
             @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationRelations = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -178,7 +182,64 @@ public class Organization implements Serializable, AcmEntity
     List<Person> people = new ArrayList<>();
 
     @Column(name = "cm_object_type", updatable = false)
-    private String objectType = PersonConstants.ORGANIZATION_OBJECT_TYPE;
+    private String objectType = PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
+    private List<OrganizationDBA> organizationDBAs = new ArrayList<>();
+
+    /**
+     * OrganizationDBA which is default as dba
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_dba")
+    private OrganizationDBA defaultDBA;
+
+    /**
+     * OrganizationAssociation which is primary contact with parentType == PERSON
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_primary_contact")
+    private OrganizationAssociation primaryContact;
+
+    @PostLoad
+    protected void postLoad()
+    {
+        /*FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
+           same person which is parent to them.
+            Because of deadline didn't have time to find better solution for this like: get object from cache or explore new possibilities
+            So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code should be removed
+            linked with technical dept: AFDP-3487
+            */
+
+        for (OrganizationAssociation pa : getOrganizationAssociations())
+        {
+            pa.setOrganization(this);
+        }
+
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
+    }
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        for (OrganizationDBA dba : getOrganizationDBAs())
+        {
+            dba.setOrganization(this);
+        }
+    }
+
 
     @XmlTransient
     public Long getOrganizationId()
@@ -283,10 +344,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<Identification> getIdentifications()
     {
-        if (identifications == null)
-        {
-            identifications = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return identifications;
     }
 
@@ -297,10 +354,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<PostalAddress> getAddresses()
     {
-        if (addresses == null)
-        {
-            addresses = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return addresses;
     }
 
@@ -311,10 +364,6 @@ public class Organization implements Serializable, AcmEntity
 
     public List<ContactMethod> getContactMethods()
     {
-        if (contactMethods == null)
-        {
-            contactMethods = new ArrayList<>();//just for prevention if something set this field to null
-        }
         return contactMethods;
     }
 
@@ -348,18 +397,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultPhone;
     }
 
-    /**
-     * if inserting default phone, same phone will be automatically added to the contacts
-     *
-     * @param defaultPhone
-     */
     public void setDefaultPhone(ContactMethod defaultPhone)
     {
         this.defaultPhone = defaultPhone;
-        if (defaultPhone != null && defaultPhone.getId() == null)
-        {
-            getContactMethods().add(defaultPhone);
-        }
     }
 
     public ContactMethod getDefaultEmail()
@@ -367,18 +407,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultEmail;
     }
 
-    /**
-     * if inserting default email, same phone will be automatically added to the contacts
-     *
-     * @param defaultEmail
-     */
     public void setDefaultEmail(ContactMethod defaultEmail)
     {
         this.defaultEmail = defaultEmail;
-        if (defaultEmail != null && defaultEmail.getId() == null)
-        {
-            getContactMethods().add(defaultEmail);
-        }
     }
 
     public PostalAddress getDefaultAddress()
@@ -386,18 +417,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultAddress;
     }
 
-    /**
-     * if inserting default address, same phone will be automatically added to the addresses
-     *
-     * @param defaultAddress
-     */
     public void setDefaultAddress(PostalAddress defaultAddress)
     {
         this.defaultAddress = defaultAddress;
-        if (defaultAddress != null && defaultAddress.getId() == null)
-        {
-            getAddresses().add(defaultAddress);
-        }
     }
 
     public ContactMethod getDefaultUrl()
@@ -405,18 +427,9 @@ public class Organization implements Serializable, AcmEntity
         return defaultUrl;
     }
 
-    /**
-     * if inserting default url, same phone will be automatically added to the contacts
-     *
-     * @param defaultUrl
-     */
     public void setDefaultUrl(ContactMethod defaultUrl)
     {
         this.defaultUrl = defaultUrl;
-        if (defaultUrl != null && defaultUrl.getId() == null)
-        {
-            getContactMethods().add(defaultUrl);
-        }
     }
 
     public Identification getDefaultIdentification()
@@ -424,32 +437,14 @@ public class Organization implements Serializable, AcmEntity
         return defaultIdentification;
     }
 
-    /**
-     * if inserting default identification, same identification will be automatically added to the identifications list
-     *
-     * @param defaultIdentification
-     */
     public void setDefaultIdentification(Identification defaultIdentification)
     {
-        if (defaultIdentification != null && defaultIdentification.getIdentificationID() == null)
-        {
-            getIdentifications().add(defaultIdentification);
-        }
         this.defaultIdentification = defaultIdentification;
     }
 
-    /**
-     * if inserting default fax, same fax will be automatically added to the contactMethods list
-     *
-     * @param defaultFax
-     */
     public void setDefaultFax(ContactMethod defaultFax)
     {
         this.defaultFax = defaultFax;
-        if (defaultFax != null && defaultFax.getId() == null)
-        {
-            getContactMethods().add(defaultFax);
-        }
     }
 
     public ContactMethod getDefaultFax()
@@ -485,5 +480,45 @@ public class Organization implements Serializable, AcmEntity
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
+    }
+
+    public List<OrganizationDBA> getOrganizationDBAs()
+    {
+        return organizationDBAs;
+    }
+
+    public void setOrganizationDBAs(List<OrganizationDBA> organizationDBAs)
+    {
+        this.organizationDBAs = organizationDBAs;
+    }
+
+    public OrganizationDBA getDefaultDBA()
+    {
+        return defaultDBA;
+    }
+
+    public void setDefaultDBA(OrganizationDBA defaultDBA)
+    {
+        this.defaultDBA = defaultDBA;
+    }
+
+    public OrganizationAssociation getPrimaryContact()
+    {
+        return primaryContact;
+    }
+
+    public void setPrimaryContact(OrganizationAssociation primaryContact)
+    {
+        this.primaryContact = primaryContact;
     }
 }
