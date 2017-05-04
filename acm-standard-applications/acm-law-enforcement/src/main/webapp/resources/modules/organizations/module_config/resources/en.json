@@ -278,6 +278,8 @@
       "type": "Type",
       "id": "ID",
       "value": "Person",
+      "familyName": "Last Name",
+      "givenName": "FirstName",
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
@@ -288,13 +290,6 @@
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
       "addExisting": "Add New"
-    },
-    "dialogOrganizationPicker": {
-      "header": "Choose Organization",
-      "table.columns": {
-        "type": "Organization Type",
-        "name": "Value"
-      }
     }
   },
   "organizations.comp.cases": {
@@ -322,9 +317,9 @@
   "organizations.comp.related": {
     "title": "Related Organizations",
     "table.columns": {
-      "givenName": "First Name",
-      "familyName": "Last Name",
-      "type": "Relationship",
+      "associationType": "Relationship",
+      "value": "Organization",
+      "type": "Type",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
