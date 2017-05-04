@@ -186,7 +186,6 @@ public class EmailSenderConfigurationService
             {
                 try
                 {
-                    authenticatingSmtpClient.logout();
                     authenticatingSmtpClient.disconnect();
                 } catch (IOException ioe)
                 {
