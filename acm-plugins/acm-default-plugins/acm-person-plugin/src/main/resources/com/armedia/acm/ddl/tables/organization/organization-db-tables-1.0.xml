@@ -261,11 +261,94 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="51-acm_organization_association-add-organization_type-column" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_organization_assoc">
-            <column name="cm_organization_type" type="VARCHAR(1024)">
+
+    <changeSet id="51-add-organization-dba-tables" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_organization_dba">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk"/>
+            </column>
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="cm_type" type="VARCHAR(${cmValueLength})">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
+            <column name="cm_description" type="VARCHAR(1024)"/>
+            <column name="cm_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_organization_dba_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_organization_dba_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_organization_dba"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="51-add-organization-dba-tables" author="nebojsha.davidovikj" dbms="mysql">
+        <createTable tableName="acm_organization_dba">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk"/>
+            </column>
+            <column name="cm_organization_id" type="${fkIdType}">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="cm_type" type="VARCHAR(${cmValueLength})">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_description" type="VARCHAR(1024)"/>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_organization_dba_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_organization_dba_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_organization_dba"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="52-add-organization-default_dba-primary_contact-columns" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_default_dba" type="${fkIdType}"/>
+            <column name="cm_primary_contact" type="${fkIdType}"/>
         </addColumn>
     </changeSet>
+
 </databaseChangeLog>

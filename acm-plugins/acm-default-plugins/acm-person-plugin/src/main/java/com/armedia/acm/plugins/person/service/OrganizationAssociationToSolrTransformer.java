@@ -46,12 +46,12 @@ public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolr
         solrDoc.setParent_type_s(organizationAssociation.getParentType());
         solrDoc.setParent_number_lcs(organizationAssociation.getParentTitle());
 
-        solrDoc.setType_lcs(organizationAssociation.getOrganizationType());
+        solrDoc.setType_lcs(organizationAssociation.getAssociationType());
 
-        solrDoc.setName(organizationAssociation.getOrganization().getOrganizationValue() + " (" + organizationAssociation.getOrganizationType() + ")");
+        solrDoc.setName(organizationAssociation.getOrganization().getOrganizationValue() + " (" + organizationAssociation.getAssociationType() + ")");
 
         solrDoc.setTitle_parseable(organizationAssociation.getOrganization().getOrganizationValue() + " ("
-                + organizationAssociation.getOrganizationType() + ")");
+                + organizationAssociation.getAssociationType() + ")");
 
         solrDoc.setParent_ref_s(organizationAssociation.getParentId() + "-" + organizationAssociation.getParentType());
 

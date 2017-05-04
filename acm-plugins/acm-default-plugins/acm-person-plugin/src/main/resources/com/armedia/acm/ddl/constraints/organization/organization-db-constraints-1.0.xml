@@ -57,4 +57,21 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+
+    <changeSet id="11-organization-foreign-key" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_default_dba"
+                                 constraintName="fk_org_default_dba_id"
+                                 referencedTableName="acm_organization_dba"
+                                 referencedColumnNames="cm_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_primary_contact"
+                                 constraintName="fk_org_primary_contact_id"
+                                 referencedTableName="acm_organization_assoc"
+                                 referencedColumnNames="cm_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
 </databaseChangeLog>
