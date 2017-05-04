@@ -28,7 +28,7 @@ import java.util.EnumSet;
  *
  */
 @JsonInclude(Include.NON_NULL)
-@JsonTypeInfo(use = Id.CLASS, include = As.EXISTING_PROPERTY, property = "recurrenceType")
+@JsonTypeInfo(use = Id.NAME, include = As.EXISTING_PROPERTY, property = "recurrenceType")
 @JsonSubTypes({ @Type(value = OnlyOnce.class, name = "ONLY_ONCE"), @Type(value = Daily.class, name = "DAILY"),
         @Type(value = Weekly.class, name = "WEEKLY"), @Type(value = Monthly.class, name = "MONTHLY"),
         @Type(value = Yearly.class, name = "YEARLY") })

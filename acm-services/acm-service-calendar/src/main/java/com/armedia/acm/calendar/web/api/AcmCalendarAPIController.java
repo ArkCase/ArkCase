@@ -123,7 +123,7 @@ public class AcmCalendarAPIController
         return calendar.getEvent(eventId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth,
             @RequestParam(value = "calendarId", required = false) String calendarId, @RequestPart("data") AcmCalendarEvent calendarEvent,
             @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws CalendarServiceException
@@ -134,7 +134,7 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
             @RequestPart("data") AcmCalendarEvent calendarEvent, @RequestPart(value = "file", required = false) MultipartFile[] attachments)
             throws CalendarServiceException
