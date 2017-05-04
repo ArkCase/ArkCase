@@ -1,18 +1,12 @@
 'use strict';
 
-angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService'
+angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+    , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Person.InfoService'
     , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , Util, ObjectService, ComplaintInfoService, Authentication, ObjectLookupService
+        , HelperUiGridService, HelperObjectBrowserService, PersonInfoService) {
 
-
-        ObjectLookupService.getPersonRelationTypes().then(
-            function (relationshipTypes) {
-                $scope.relationshipTypes = relationshipTypes;
-                return relationshipTypes;
-            });
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -21,13 +15,23 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
         );
 
-        var componentHelper = new HelperObjectBrowserService.Component({
+        ObjectLookupService.getPersonTypes().then(
+            function (personTypes) {
+                var options = [];
+                _.forEach(personTypes, function (v, k) {
+                    options.push({type: v, name: v});
+                });
+                $scope.personTypes = options;
+                return personTypes;
+            });
+
+        new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
-            , moduleId: "people"
-            , componentId: "related"
-            , retrieveObjectInfo: PersonInfoService.getPersonInfo
-            , validateObjectInfo: PersonInfoService.validatePersonInfo
+            , moduleId: "complaints"
+            , componentId: "people"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
@@ -51,7 +55,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.associationsToObjects;
+            $scope.gridOptions.data = $scope.objectInfo.personAssociations;
         };
 
         var newPersonAssociation = function () {
@@ -60,7 +64,6 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 , personType: ""
                 , parentId: $scope.objectInfo.id
                 , parentType: $scope.objectInfo.objectType
-                , parentTitle: ""
                 , personDescription: ""
                 , notes: ""
                 , person: null
@@ -71,8 +74,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         $scope.addPerson = function () {
 
             var params = {};
-            params.types = $scope.relationshipTypes;
-            params.showDescription = true;
+            params.types = $scope.personTypes;
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -93,16 +95,14 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                     var association = new newPersonAssociation();
                     association.person = data.person;
                     association.personType = data.type;
-                    association.personDescription = data.description;
-                    $scope.objectInfo.associationsToObjects.push(association);
+                    $scope.objectInfo.personAssociations.push(association);
                     saveObjectInfoAndRefresh();
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         var association = new newPersonAssociation();
                         association.person = person;
                         association.personType = data.type;
-                        association.personDescription = data.description;
-                        $scope.objectInfo.associationsToObjects.push(association);
+                        $scope.objectInfo.personAssociations.push(association);
                         saveObjectInfoAndRefresh();
                     })
                 }
@@ -112,7 +112,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         $scope.deleteRow = function (rowEntity) {
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.associationsToObjects = _.remove($scope.objectInfo.associationsToObjects, function (item) {
+                $scope.objectInfo.personAssociations = _.remove($scope.objectInfo.personAssociations, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()
@@ -121,9 +121,9 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         function saveObjectInfoAndRefresh() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
+            if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
-                promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
+                promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);

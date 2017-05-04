@@ -62,19 +62,14 @@
   "cases.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
-      "type": "Type",
+      "type": "Association Type",
       "id": "ID",
       "value": "Organization",
+      "organizationType": "Org Type",
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
       "modifier": "Modified By"
-    },
-    "actions": {
-      "delete": "Delete",
-      "setPrimary": "Set as Primary",
-      "addNew": "Add New",
-      "addExisting": "Add New"
     }
   },
   "cases.comp.participants": {

@@ -66,38 +66,6 @@ public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssoc
         return found;
     }
 
-    public OrganizationAssociation findByOrganizationIdOrganizationTypeParentIdParentTypeSilent(Long organizationId, String organizationType, Long parentId, String parentType)
-    {
-        Query select = getEntityManager().createQuery(
-                "SELECT organizationAssociation " +
-                        "FROM  OrganizationAssociation organizationAssociation " +
-                        "WHERE organizationAssociation.organization.organizationId = :organizationId " +
-                        "AND organizationAssociation.organizationType = :organizationType " +
-                        "AND organizationAssociation.parentId = :parentId " +
-                        "AND organizationAssociation.parentType = :parentType"
-        );
-
-        select.setParameter("organizationId", organizationId);
-        select.setParameter("organizationType", organizationType);
-        select.setParameter("parentId", parentId);
-        select.setParameter("parentType", parentType);
-
-        OrganizationAssociation retval = null;
-
-        try
-        {
-            retval = (OrganizationAssociation) select.getSingleResult();
-        } catch (NoResultException e1)
-        {
-            LOG.debug("There is no any OrganizationAssociation result for organizationId=" + organizationId + ", organizationType=" + organizationType + ", parentId=" + parentId + ", parentType=" + parentType);
-        } catch (Exception e2)
-        {
-            LOG.debug("Cannot take OrganizationAssociation result for organizationId=" + organizationId + ", organizationType=" + organizationType + ", parentId=" + parentId + ", parentType=" + parentType);
-        }
-
-        return retval;
-    }
-
     @Transactional
     public void deleteOrganizationAssociationById(Long id)
     {

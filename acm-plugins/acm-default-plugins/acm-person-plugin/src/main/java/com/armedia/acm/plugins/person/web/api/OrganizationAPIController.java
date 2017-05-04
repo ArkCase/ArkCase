@@ -69,8 +69,7 @@ public class OrganizationAPIController
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Organization
-    getOrganization(Authentication auth,
-                    @PathVariable("id") Long organizationId) throws AcmObjectNotFoundException
+    getOrganization(@PathVariable("id") Long organizationId) throws AcmObjectNotFoundException
     {
         try
         {
@@ -83,66 +82,23 @@ public class OrganizationAPIController
 
     }
 
-    @RequestMapping(value = "/{organizationId}/cases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String
-    getCases(Authentication auth,
-             @PathVariable("organizationId") Long organizationId,
-             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+    getChildObjects(Authentication auth,
+                    @PathVariable("organizationId") Long organizationId,
+                    @PathVariable("objectType") String objectType,
+                    @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                    @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
     {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:CASE_FILE AND child_id_s:%s", organizationId.toString());
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:%s AND child_id_s:%s", objectType, organizationId.toString());
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
         } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve cases for organization id[" + organizationId + "]", e);
-        }
-    }
-
-    @RequestMapping(value = "/{organizationId}/complaints", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String
-    getComplaints(Authentication auth,
-                  @PathVariable("organizationId") Long organizationId,
-                  @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                  @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                  @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
-    {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:COMPLAINT AND child_id_s:%s", organizationId.toString());
-        try
-        {
-            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
-        } catch (MuleException e)
-        {
-            log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve cases for organization id[" + organizationId + "]", e);
-        }
-    }
-
-    @RequestMapping(value = "/{organizationId}/people", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String
-    getPeople(Authentication auth,
-              @PathVariable("organizationId") Long organizationId,
-              @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-              @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-              @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
-    {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:PERSON AND child_id_s:%s", organizationId.toString());
-        try
-        {
-            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
-        } catch (MuleException e)
-        {
-            log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve people for organization id[" + organizationId + "]", e);
+            throw new AcmObjectNotFoundException("Organization", null, String.format("Could not retrieve %s for organization id[%s]", objectType, organizationId), e);
         }
     }
 

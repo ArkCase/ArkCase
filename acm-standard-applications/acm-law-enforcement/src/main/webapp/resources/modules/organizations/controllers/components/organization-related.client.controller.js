@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.OrganizationService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectOrganizationService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -14,6 +14,12 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 return userInfo;
             }
         );
+
+        ObjectLookupService.getOrganizationRelationTypes().then(
+            function (relationshipTypes) {
+                $scope.relationshipTypes = relationshipTypes;
+                return relationshipTypes;
+            });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -45,43 +51,60 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.organizationRelations;
+            $scope.gridOptions.data = $scope.objectInfo.associationsToObjects;
         };
 
         var newOrganizationAssociation = function () {
             return {
                 id: null
-                , organizationType: ""
-                , parentId: $scope.objectInfo.id
+                , associationType: ""
+                , parentId: $scope.objectInfo.organizationId
                 , parentType: $scope.objectInfo.objectType
-                , parentTitle: ""
-                , organizationDescription: ""
-                , notes: ""
+                , parentTitle: $scope.objectInfo.organizationValue
+                , description: ""
                 , organization: null
-                , className: "com.armedia.acm.plugins.organization.model.OrganizationAssociation"
+                , className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
             };
         };
 
         $scope.addOrganization = function () {
 
+            var params = {};
+            params.types = $scope.relationshipTypes;
+            params.showDescription = true;
+
             var modalInstance = $modal.open({
                 scope: $scope,
                 animation: true,
-                templateUrl: 'modules/organizations/views/components/organization-related-modal.client.view.html',
-                controller: 'Organizations.RelatedModalController',
-                size: 'sm'
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
             });
 
             modalInstance.result.then(function (data) {
-                OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                if (data.isNew) {
                     var association = new newOrganizationAssociation();
-                    association.organization = organization;
-                    association.parentTitle = organization.parentTitle;
-                    association.organizationType = data.relationshipType;
-                    association.organizationDescription = data.description;
-                    $scope.objectInfo.organizationRelations.push(association);
-                    saveObjectInfoAndRefresh()
-                });
+                    association.organization = data.organization;
+                    association.associationType = data.type;
+                    association.description = data.description;
+                    $scope.objectInfo.associationsToObjects.push(association);
+                    saveObjectInfoAndRefresh();
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        var association = new newOrganizationAssociation();
+                        association.person = person;
+                        association.associationType = data.type;
+                        association.description = data.description;
+                        $scope.objectInfo.associationsToObjects.push(association);
+                        saveObjectInfoAndRefresh();
+                    })
+                }
             });
         };
 
@@ -90,7 +113,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizationRelations = _.remove($scope.objectInfo.organizationRelations, function (item) {
+                $scope.objectInfo.associationsToObjects = _.remove($scope.objectInfo.associationsToObjects, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()
