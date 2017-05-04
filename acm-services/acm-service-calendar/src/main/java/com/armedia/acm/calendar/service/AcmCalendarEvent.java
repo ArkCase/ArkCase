@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 
@@ -42,10 +43,12 @@ public class AcmCalendarEvent
 
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime start;
 
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime end;
 
     private boolean allDayEvent;
