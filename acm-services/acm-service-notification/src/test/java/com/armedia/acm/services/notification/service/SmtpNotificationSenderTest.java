@@ -300,6 +300,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USERNAME, null)).andReturn("email_user_value");
         expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PASSWORD, null)).andReturn("email_password_value");
         expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USER_FROM, null)).andReturn("email_from_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.ENCRYPTION, null)).andReturn("off");
     }
 
 }
