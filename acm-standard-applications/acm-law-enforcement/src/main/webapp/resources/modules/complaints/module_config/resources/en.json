@@ -44,69 +44,9 @@
   "complaints.comp.people": {
     "title": "People",
     "table.columns": {
-      "entity": "Entity",
       "type": "Type",
       "firstName": "FirstName",
       "lastName": "LastName"
-    },
-    "contactMethods": {
-      "title": "ContactMethods",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organizations",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "addresses": {
-      "title": "Locations",
-      "table.columns": {
-        "type": "Type",
-        "streetAddress": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "aliases": {
-      "title": "Aliases",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "Security Tags",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
     }
   },
   "complaints.comp.organizations": {
@@ -125,13 +65,6 @@
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
       "addExisting": "Add New"
-    },
-    "dialogOrganizationPicker": {
-      "header": "Choose Organization",
-      "table.columns": {
-        "type": "Organization Type",
-        "name": "Value"
-      }
     }
   },
   "complaints.comp.participants": {

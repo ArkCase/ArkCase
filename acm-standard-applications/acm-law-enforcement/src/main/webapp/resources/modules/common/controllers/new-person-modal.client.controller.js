@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('people').controller('People.NewPersonController', ['$scope', '$stateParams', '$translate'
-    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService'
-    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService) {
+angular.module('common').controller('Common.NewPersonModalController', ['$scope', '$stateParams', '$translate'
+    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService',
+    '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService'
+    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService
+        , $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService) {
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -10,8 +12,8 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             'email': 0
         };
 
-        ConfigService.getModuleConfig("people").then(function (moduleConfig) {
-            $scope.config = _.find(moduleConfig.components, {id: "newPerson"});
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            $scope.config = moduleConfig;
             return moduleConfig;
         });
 
@@ -108,21 +110,15 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
-        $scope.save = function () {
+        $scope.onClickCancel = function () {
+            $modalInstance.dismiss('Cancel');
+        };
 
-            var promiseSavePerson = PersonInfoService.savePersonInfo(clearNotFilledElements(_.cloneDeep($scope.person)));
-            promiseSavePerson.then(
-                function (objectInfo) {
-                    $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("people.comp.newPerson.informSaved"));
-                    $state.go('people');
-                    return objectInfo;
-                }
-                , function (error) {
-                    $scope.$emit("report-object-update-failed", error);
-                    return error;
-                }
-            );
+        $scope.save = function () {
+            $modalInstance.close({
+                person: clearNotFilledElements(_.cloneDeep($scope.person)),
+                personType: $scope.personType
+            });
         };
 
         $scope.addNewOrganization = function () {
@@ -196,10 +192,12 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 person.contactMethods.push(person.defaultUrl);
             }
             //identifications
-            if (!person.defaultIdentification && !person.defaultIdentification.identificationID) {
-                person.defaultIdentification = null;
-            } else {
-                person.identifications.push(person.defaultIdentification);
+            if (person.defaultIdentification) {
+                if (!person.defaultIdentification.identificationID) {
+                    person.defaultIdentification = null;
+                } else {
+                    person.identifications.push(person.defaultIdentification);
+                }
             }
 
             //remove empty organizations before save
@@ -210,16 +208,20 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 return false;
             });
             //addresses
-            if (person.defaultAddress && !person.defaultAddress.streetAddress) {
-                person.defaultAddress = null;
-            } else {
-                person.addresses.push(person.defaultAddress);
+            if (person.defaultAddress) {
+                if (!person.defaultAddress.streetAddress) {
+                    person.defaultAddress = null;
+                } else {
+                    person.addresses.push(person.defaultAddress);
+                }
             }
             //aliases
-            if (person.defaultAlias && !person.defaultAlias.aliasValue) {
-                person.defaultAlias = null;
-            } else {
-                person.personAliases.push(person.defaultAlias);
+            if (person.defaultAlias) {
+                if (person.defaultAlias.aliasValue) {
+                    person.personAliases.push(person.defaultAlias);
+                } else {
+                    person.defaultAlias = null;
+                }
             }
             return person;
         }
