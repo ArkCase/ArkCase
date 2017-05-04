@@ -81,11 +81,11 @@ public class PeopleAPIController
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{personId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person
     getPerson(Authentication auth,
-              @PathVariable("id") Long personId) throws AcmObjectNotFoundException
+              @PathVariable("personId") Long personId) throws AcmObjectNotFoundException
     {
         try
         {
@@ -99,18 +99,18 @@ public class PeopleAPIController
 
     }
 
-    @RequestMapping(value = "/{id}/images", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{personId}/images", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String
     getImagesForPerson(Authentication auth,
-                       @PathVariable("id") Long personId,
+                       @PathVariable("personId") Long personId,
                        @RequestParam(value = "start", required = false, defaultValue = "0") int start,
                        @RequestParam(value = "n", required = false, defaultValue = "10") int n,
                        @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         log.debug("Get images for Person: [{}];", personId);
 
-        String query = String.format("parent_ref_s:%s-PERSON&sort=title_parseable %s", personId.toString(), s);
+        String query = String.format("object_type_s:FILE AND parent_ref_s:%s-PERSON&sort=title_parseable %s", personId.toString(), s);
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
@@ -155,73 +155,24 @@ public class PeopleAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{personId}/cases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{personId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String
-    getCases(Authentication auth,
-             @PathVariable("personId") Long personId,
-             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-             @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-             @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
-    {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:CASE_FILE AND child_id_s:%s", personId.toString());
-
-        try
-        {
-            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
-        } catch (MuleException e)
-        {
-            log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve cases for person id[" + personId + "]", e);
-        }
-
-    }
-
-    @RequestMapping(value = "/{personId}/complaints", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String
-    getComplaints(Authentication auth,
-                  @PathVariable("personId") Long personId,
-                  @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                  @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                  @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
-    {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:COMPLAINT AND child_id_s:%s", personId.toString());
-
-        try
-        {
-            return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
-        } catch (MuleException e)
-        {
-            log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve cases for person id[" + personId + "]", e);
-        }
-
-    }
-
-    @RequestMapping(value = "/{personId}/organizations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String
-    getOrganization(Authentication auth,
+    getChildObjects(Authentication auth,
                     @PathVariable("personId") Long personId,
+                    @PathVariable("objectType") String objectType,
                     @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                    @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                    @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+                    @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
     {
-        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:ORGANIZATION AND child_id_s:%s", personId.toString());
-
+        String query = String.format("{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:%s AND child_id_s:%s", objectType, personId.toString());
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-
         } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Person", null, "Could not retrieve organizations for person id[" + personId + "]", e);
+            throw new AcmObjectNotFoundException("Organization", null, String.format("Could not retrieve %s for organization id[%s]", objectType, personId).toString(), e);
         }
-
     }
 
     public void setPersonService(PersonService personService)

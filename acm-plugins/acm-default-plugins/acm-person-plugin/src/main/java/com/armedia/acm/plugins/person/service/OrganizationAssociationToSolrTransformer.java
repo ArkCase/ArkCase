@@ -13,9 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by armdev on 10/23/14.
- */
 public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolrDocTransformer<OrganizationAssociation>
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -76,7 +73,7 @@ public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolr
     @Override
     public SolrDocument toSolrQuickSearch(OrganizationAssociation in)
     {
-        // we don't want person associations in quick search, so just return null
+        // we don't want organization associations in quick search, so just return null
         return null;
     }
 

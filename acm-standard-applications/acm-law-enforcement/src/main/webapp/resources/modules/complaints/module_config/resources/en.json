@@ -46,7 +46,10 @@
     "table.columns": {
       "type": "Type",
       "firstName": "FirstName",
-      "lastName": "LastName"
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "complaints.comp.organizations": {

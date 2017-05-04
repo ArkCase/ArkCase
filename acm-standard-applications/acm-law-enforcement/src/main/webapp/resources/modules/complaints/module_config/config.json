@@ -570,6 +570,24 @@
           "field": "person.familyName",
           "displayName": "complaints.comp.people.table.columns.lastName",
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "organization",
+          "field": "person.defaultOrganization.organizationValue",
+          "displayName": "complaints.comp.people.table.columns.organization",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "phone",
+          "field": "person.defaultPhone.value",
+          "displayName": "complaints.comp.people.table.columns.phone",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "location",
+          "displayName": "complaints.comp.people.table.columns.location",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultAddress.city}}, {{row.entity.defaultAddress.state}}</div>"
         }
       ]
     },

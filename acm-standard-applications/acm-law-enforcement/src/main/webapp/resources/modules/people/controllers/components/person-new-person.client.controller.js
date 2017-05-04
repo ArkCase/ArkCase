@@ -196,10 +196,12 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 person.contactMethods.push(person.defaultUrl);
             }
             //identifications
-            if (!person.defaultIdentification && !person.defaultIdentification.identificationID) {
-                person.defaultIdentification = null;
-            } else {
-                person.identifications.push(person.defaultIdentification);
+            if (person.defaultIdentification) {
+                if (!person.defaultIdentification.identificationID) {
+                    person.defaultIdentification = null;
+                } else {
+                    person.identifications.push(person.defaultIdentification);
+                }
             }
 
             //remove empty organizations before save
@@ -216,10 +218,13 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 person.addresses.push(person.defaultAddress);
             }
             //aliases
-            if (person.defaultAlias && !person.defaultAlias.aliasValue) {
-                person.defaultAlias = null;
-            } else {
-                person.personAliases.push(person.defaultAlias);
+            if (person.defaultAlias) {
+                if (person.defaultAlias.aliasValue) {
+                    person.defaultAlias = null;
+                }
+                else {
+                    person.personAliases.push(person.defaultAlias);
+                }
             }
             return person;
         }

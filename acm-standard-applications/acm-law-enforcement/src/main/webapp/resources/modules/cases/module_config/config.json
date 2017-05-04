@@ -533,12 +533,18 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organizationType",
-          "displayName": "cases.comp.organizations.table.columns.type",
+          "name": "associationType",
+          "displayName": "cases.comp.people.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "personTypes"
+        },
+        {
+          "name": "organization.organizationType",
+          "displayName": "cases.comp.organizations.table.columns.organizationType",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organizationValue",
+          "name": "organization.organizationValue",
           "displayName": "cases.comp.organizations.table.columns.value",
           "headerCellFilter": "translate"
         },

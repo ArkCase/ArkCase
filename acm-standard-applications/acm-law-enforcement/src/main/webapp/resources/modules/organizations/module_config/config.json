@@ -563,12 +563,12 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organization.givenName",
+          "name": "givenName",
           "displayName": "organizations.comp.people.table.columns.givenName",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organization.familyName",
+          "name": "familyName",
           "displayName": "organizations.comp.people.table.columns.familyName",
           "headerCellFilter": "translate"
         },
@@ -784,12 +784,17 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organizationType",
+          "name": "associationType",
+          "displayName": "people.comp.related.table.columns.associationType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "organization.organizationType",
           "displayName": "organizations.comp.related.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organizationValue",
+          "name": "organization.organizationValue",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate"
         },

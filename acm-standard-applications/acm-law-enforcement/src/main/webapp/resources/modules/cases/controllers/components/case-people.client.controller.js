@@ -25,7 +25,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 return personTypes;
             });
 
-        var componentHelper = new HelperObjectBrowserService.Component({
+        new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
@@ -63,7 +63,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 id: null
                 , personType: ""
                 , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.objectType
+                , parentType: $scope.objectInfo.caseType
                 , parentTitle: $scope.objectInfo.caseNumber
                 , personDescription: ""
                 , notes: ""
@@ -95,15 +95,14 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 if (data.isNew) {
                     var association = new newPersonAssociation();
                     association.person = data.person;
-                    association.personType = data.personType;
+                    association.personType = data.type;
                     $scope.objectInfo.personAssociations.push(association);
                     saveObjectInfoAndRefresh();
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         var association = new newPersonAssociation();
                         association.person = person;
-                        association.personType = data.personType;
-                        association.personDescription = data.description;
+                        association.personType = data.type;
                         $scope.objectInfo.personAssociations.push(association);
                         saveObjectInfoAndRefresh();
                     })
@@ -112,8 +111,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
         };
 
         $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 $scope.objectInfo.personAssociations = _.remove($scope.objectInfo.personAssociations, function (item) {
@@ -129,9 +126,9 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
                 promiseSaveInfo.then(
-                    function (caseInfo) {
-                        $scope.$emit("report-object-updated", caseInfo);
-                        return caseInfo;
+                    function (objectInfo) {
+                        $scope.$emit("report-object-updated", objectInfo);
+                        return objectInfo;
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);

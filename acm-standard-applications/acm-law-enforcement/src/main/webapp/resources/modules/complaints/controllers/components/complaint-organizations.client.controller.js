@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Organization.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+    , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService'
     , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, ComplaintInfoService, Authentication, OrganizationInfoService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , Util, ObjectService, ComplaintInfoService, Authentication, ObjectLookupService
+        , HelperUiGridService, HelperObjectBrowserService, OrganizationInfoService) {
 
 
         Authentication.queryUserInfo().then(
@@ -15,7 +15,17 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
             }
         );
 
-        var componentHelper = new HelperObjectBrowserService.Component({
+        ObjectLookupService.getOrganizationTypes().then(
+            function (organizationTypes) {
+                var options = [];
+                _.forEach(organizationTypes, function (v, k) {
+                    options.push({type: v, name: v});
+                });
+                $scope.organizationTypes = options;
+                return organizationTypes;
+            });
+
+        new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
@@ -36,7 +46,6 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -46,46 +55,33 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.organizations;
+            $scope.gridOptions.data = $scope.objectInfo.organizationAssociations;
         };
 
-        $scope.addNew = function () {
-            //TODO: add new organization modal
+        var newOrganizationAssociation = function () {
+            return {
+                id: null
+                , organizationType: ""
+                , parentId: $scope.objectInfo.id
+                , parentType: $scope.objectInfo.objectType
+                , organizationDescription: ""
+                , notes: ""
+                , organization: null
+                , className: "com.armedia.acm.plugins.organization.model.OrganizationAssociation"
+            };
         };
 
-        $scope.editRow = function (rowEntity) {
-            //TODO see what needs to be done here
+        $scope.addOrganization = function () {
 
-        };
-
-        $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
-            var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizations = _.remove($scope.objectInfo.organizations, function (item) {
-                    return item.id != id;
-                });
-                saveObjectInfoAndRefresh()
-            }
-        };
-
-        $scope.addExisting = function () {
             var params = {};
-            params.header = $translate.instant("common.dialogOrganizationPicker.header");
-            params.filter = '"Object Type": ORGANIZATION';
-            params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+            params.types = $scope.organizationTypes;
 
             var modalInstance = $modal.open({
-                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
-                    $scope.modalInstance = $modalInstance;
-                    $scope.header = params.header;
-                    $scope.filter = params.filter;
-                    $scope.config = params.config;
-                }],
+                scope: $scope,
                 animation: true,
-                size: 'lg',
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -93,19 +89,39 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
                     }
                 }
             });
-            modalInstance.result.then(function (selected) {
-                if (!Util.isEmpty(selected)) {
-                    //TODO: add organization to the list
-                    OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (organization) {
-                        $scope.objectInfo.organizations.push(organization);
-                    });
+
+            modalInstance.result.then(function (data) {
+                if (data.isNew) {
+                    var association = new newOrganizationAssociation();
+                    association.organization = data.organization;
+                    association.organizationType = data.type;
+                    $scope.objectInfo.organizationAssociations.push(association);
+                    saveObjectInfoAndRefresh();
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        var association = new newOrganizationAssociation();
+                        association.organization = organization;
+                        association.organizationType = data.type;
+                        $scope.objectInfo.organizationAssociations.push(association);
+                        saveObjectInfoAndRefresh();
+                    })
                 }
             });
         };
 
+        $scope.deleteRow = function (rowEntity) {
+            var id = Util.goodMapValue(rowEntity, "id", 0);
+            if (0 < id) {    //do not need to call service when deleting a new row with id==0
+                $scope.objectInfo.organizationAssociations = _.remove($scope.objectInfo.organizationAssociations, function (item) {
+                    return item.id != id;
+                });
+                saveObjectInfoAndRefresh()
+            }
+        };
+
         function saveObjectInfoAndRefresh() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (ComplaintInfoService.validateCaseInfo($scope.objectInfo)) {
+            if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
                 promiseSaveInfo.then(

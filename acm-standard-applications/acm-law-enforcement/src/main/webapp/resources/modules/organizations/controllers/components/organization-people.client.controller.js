@@ -45,33 +45,28 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.organizations;
+            $scope.gridOptions.data = $scope.objectInfo.people;
         };
 
         $scope.addNew = function () {
-            //TODO: add new organization modal
-        };
 
-        $scope.editRow = function (rowEntity) {
-            //TODO see what needs to be done here
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/new-person-modal.client.view.html',
+                controller: 'Common.NewPersonModalController',
+                size: 'lg'
+            });
 
-        };
-
-        $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
-            var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizations = _.remove($scope.objectInfo.organizations, function (item) {
-                    return item.id != id;
-                });
+            modalInstance.result.then(function (data) {
+                $scope.objectInfo.people.push(data.person);
                 saveObjectInfoAndRefresh()
-            }
+            });
         };
 
         $scope.addExisting = function () {
             var params = {};
-            params.header = $translate.instant("organizations.comp.organizations.dialogPersonPicker.header");
+            params.header = $translate.instant("common.dialogPersonPicker.header");
             params.filter = '"Object Type": PERSON';
             params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
@@ -94,12 +89,22 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    //TODO: add person to the list
                     PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
                         $scope.objectInfo.people.push(person);
+                        saveObjectInfoAndRefresh();
                     });
                 }
             });
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var id = Util.goodMapValue(rowEntity, "personId", 0);
+            if (0 < id) {    //do not need to call service when deleting a new row with id==0
+                $scope.objectInfo.people = _.remove($scope.objectInfo.people, function (item) {
+                    return item.personId != personId;
+                });
+                saveObjectInfoAndRefresh()
+            }
         };
 
         function saveObjectInfoAndRefresh() {

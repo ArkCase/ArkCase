@@ -94,8 +94,7 @@ public class Organization implements Serializable, AcmEntity
     @JoinTable(
             name = "acm_organization_identification",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
     private List<Identification> identifications = new ArrayList<>();
 
 
@@ -103,8 +102,7 @@ public class Organization implements Serializable, AcmEntity
     @JoinTable(
             name = "acm_organization_postal_address",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
     private List<PostalAddress> addresses = new ArrayList<>();
 
 
@@ -112,8 +110,7 @@ public class Organization implements Serializable, AcmEntity
     @JoinTable(
             name = "acm_organization_contact_method",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
-    )
+            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -121,10 +118,10 @@ public class Organization implements Serializable, AcmEntity
             @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
             @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
-    private List<OrganizationAssociation> organizationRelations = new ArrayList<>();
+    private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
-    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
+    private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -211,7 +208,7 @@ public class Organization implements Serializable, AcmEntity
             linked with technical dept: AFDP-3487
             */
 
-        for (OrganizationAssociation pa : getOrganizationAssociations())
+        for (OrganizationAssociation pa : getAssociationsFromObjects())
         {
             pa.setOrganization(this);
         }
@@ -462,14 +459,14 @@ public class Organization implements Serializable, AcmEntity
         this.people = people;
     }
 
-    public List<OrganizationAssociation> getOrganizationRelations()
+    public List<OrganizationAssociation> getAssociationsToObjects()
     {
-        return organizationRelations;
+        return associationsToObjects;
     }
 
-    public void setOrganizationRelations(List<OrganizationAssociation> organizationRelations)
+    public void setAssociationsToObjects(List<OrganizationAssociation> associationsToObjects)
     {
-        this.organizationRelations = organizationRelations;
+        this.associationsToObjects = associationsToObjects;
     }
 
     public String getObjectType()
@@ -482,14 +479,14 @@ public class Organization implements Serializable, AcmEntity
         this.objectType = objectType;
     }
 
-    public List<OrganizationAssociation> getOrganizationAssociations()
+    public List<OrganizationAssociation> getAssociationsFromObjects()
     {
-        return organizationAssociations;
+        return associationsFromObjects;
     }
 
-    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    public void setAssociationsFromObjects(List<OrganizationAssociation> associationsFromObjects)
     {
-        this.organizationAssociations = organizationAssociations;
+        this.associationsFromObjects = associationsFromObjects;
     }
 
     public List<OrganizationDBA> getOrganizationDBAs()

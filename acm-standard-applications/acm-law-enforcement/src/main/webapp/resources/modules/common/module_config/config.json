@@ -615,17 +615,17 @@
     "columnDefs": [
       {
         "name": "object_id_s",
-        "displayName": "people.comp.related.dialogPersonPicker.table.columns.id",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
         "headerCellFilter": "translate"
       },
       {
         "name": "first_name_lcs",
-        "displayName": "people.comp.related.dialogPersonPicker.table.columns.givenName",
+        "displayName": "common.dialogPersonPicker.table.columns.givenName",
         "headerCellFilter": "translate"
       },
       {
         "name": "last_name_lcs",
-        "displayName": "people.comp.related.dialogPersonPicker.table.columns.familyName",
+        "displayName": "common.dialogPersonPicker.table.columns.familyName",
         "headerCellFilter": "translate"
       }
     ],
@@ -645,12 +645,12 @@
     "columnDefs": [
       {
         "name": "type_lcs",
-        "displayName": "people.comp.organizations.dialogOrganizationPicker.table.columns.type",
+        "displayName": "common.dialogOrganizationPicker.table.columns.type",
         "headerCellFilter": "translate"
       },
       {
         "name": "name",
-        "displayName": "people.comp.organizations.dialogOrganizationPicker.table.columns.name",
+        "displayName": "common.dialogOrganizationPicker.table.columns.name",
         "headerCellFilter": "translate"
       }
     ],

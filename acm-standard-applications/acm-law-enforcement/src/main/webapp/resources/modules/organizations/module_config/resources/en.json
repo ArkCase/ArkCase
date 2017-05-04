@@ -278,6 +278,8 @@
       "type": "Type",
       "id": "ID",
       "value": "Person",
+      "familyName": "Last Name",
+      "givenName": "FirstName",
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
@@ -315,9 +317,9 @@
   "organizations.comp.related": {
     "title": "Related Organizations",
     "table.columns": {
-      "givenName": "First Name",
-      "familyName": "Last Name",
-      "type": "Relationship",
+      "associationType": "Relationship",
+      "value": "Organization",
+      "type": "Type",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",

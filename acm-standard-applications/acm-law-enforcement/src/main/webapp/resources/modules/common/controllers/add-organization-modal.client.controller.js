@@ -1,4 +1,4 @@
-angular.module('common').controller('Common.AddPersonModalController', ['$scope', '$modal', '$modalInstance', '$translate'
+angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
             , ObjectLookupService, Util, ConfigService, params) {
@@ -15,17 +15,17 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.radioChanged = function () {
                 if ($scope.selectExisting != 0) {
                     $scope.isNew = false;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.pickPerson();
+                    $scope.organizationId = '';
+                    $scope.organizationName = '';
+                    $scope.organization = '';
+                    $scope.pickOrganization();
                 }
                 else {
                     $scope.isNew = true;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.addNewPerson();
+                    $scope.organizationId = '';
+                    $scope.organizationName = '';
+                    $scope.organization = '';
+                    $scope.addNewOrganization();
                 }
             };
 
@@ -36,19 +36,19 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
 
             $scope.onClickOk = function () {
                 $modalInstance.close({
-                    personId: $scope.personId,
+                    organizationId: $scope.organizationId,
                     description: $scope.description,
                     type: $scope.type,
-                    person: $scope.person,
+                    organization: $scope.organization,
                     isNew: $scope.isNew
                 });
             };
 
-            $scope.pickPerson = function () {
+            $scope.pickOrganization = function () {
                 var params = {};
-                params.header = $translate.instant("common.dialogPersonPicker.header");
-                params.filter = '"Object Type": PERSON';
-                params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
+                params.header = $translate.instant("common.dialogOrganizationPicker.header");
+                params.filter = '"Object Type": ORGANIZATION';
+                params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
 
                 var modalInstance = $modal.open({
                     templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -69,26 +69,26 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 });
                 modalInstance.result.then(function (selected) {
                     if (!Util.isEmpty(selected)) {
-                        $scope.personId = selected.object_id_s;
-                        $scope.personName = selected.name;
+                        $scope.organizationId = selected.object_id_s;
+                        $scope.organizationValue = selected.name;
                     }
                 });
             };
 
-            $scope.addNewPerson = function () {
+            $scope.addNewOrganization = function () {
 
                 var modalInstance = $modal.open({
                     scope: $scope,
                     animation: true,
-                    templateUrl: 'modules/common/views/new-person-modal.client.view.html',
-                    controller: 'Common.NewPersonModalController',
+                    templateUrl: 'modules/common/views/new-organization-modal.client.view.html',
+                    controller: 'Common.NewOrganizationModalController',
                     size: 'lg'
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.personId = '';
-                    $scope.personName = data.person.givenName + ' ' + data.person.familyName;
-                    $scope.person = data.person;
+                    $scope.organizationId = '';
+                    $scope.organizationValue = data.organization.organizationValue;
+                    $scope.organization = data.organization;
                 });
             };
         }

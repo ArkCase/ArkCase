@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -147,7 +148,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     private List<PersonAlias> personAliases = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
-    private List<PersonAssociation> personAssociations = new ArrayList<>();
+    private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
 
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -155,7 +156,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
             @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
-    private List<PersonAssociation> personRelations = new ArrayList<>();
+    private List<PersonAssociation> associationsToObjects = new ArrayList<>();
 
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -183,8 +184,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     /**
      * id for EcmFile which picture is default
      */
-    @Column(name = "cm_default_picture_id")
-    private Long defaultPictureId;
+    @OneToOne
+    @JoinColumn(name = "cm_default_picture_id")
+    private EcmFile defaultPicture;
 
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = PersonOrganizationConstants.PERSON_OBJECT_TYPE;
@@ -280,7 +282,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             pa.setPerson(this);
         }
 
-        for (PersonAssociation pa : getPersonAssociations())
+        for (PersonAssociation pa : getAssociationsFromObjects())
         {
             pa.setPerson(this);
         }
@@ -499,16 +501,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
     @XmlTransient
-    public List<PersonAssociation> getPersonAssociations()
+    public List<PersonAssociation> getAssociationsFromObjects()
     {
-        return personAssociations;
+        return associationsFromObjects;
     }
 
-    public void setPersonAssociations(List<PersonAssociation> personAssociations)
+    public void setAssociationsFromObjects(List<PersonAssociation> associationsFromObjects)
     {
-        this.personAssociations = personAssociations;
+        this.associationsFromObjects = associationsFromObjects;
 
-        for (PersonAssociation personAssoc : personAssociations)
+        for (PersonAssociation personAssoc : associationsFromObjects)
         {
             personAssoc.setPerson(this);
         }
@@ -632,9 +634,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.container = container;
     }
 
-    public void setDefaultPictureId(Long defaultPictureId)
+    public void setDefaultPicture(EcmFile defaultPictureId)
     {
-        this.defaultPictureId = defaultPictureId;
+        this.defaultPicture = defaultPictureId;
     }
 
     public AcmContainer getContainer()
@@ -642,9 +644,9 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         return container;
     }
 
-    public Long getDefaultPictureId()
+    public EcmFile getDefaultPicture()
     {
-        return defaultPictureId;
+        return defaultPicture;
     }
 
     public ContactMethod getDefaultPhone()
@@ -727,13 +729,13 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.details = details;
     }
 
-    public List<PersonAssociation> getPersonRelations()
+    public List<PersonAssociation> getAssociationsToObjects()
     {
-        return personRelations;
+        return associationsToObjects;
     }
 
-    public void setPersonRelations(List<PersonAssociation> personRelations)
+    public void setAssociationsToObjects(List<PersonAssociation> associationsToObjects)
     {
-        this.personRelations = personRelations;
+        this.associationsToObjects = associationsToObjects;
     }
 }

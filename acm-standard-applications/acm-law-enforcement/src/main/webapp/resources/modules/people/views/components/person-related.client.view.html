@@ -1,18 +1,12 @@
 <div ng-controller="People.RelatedController">
     <div class="panel panel-success panel-grid">
-        <div class="row">
-            <div class="btn-group pull-right">
-                <button class="btn btn-sm btn-default" ng-click="delete()">
-                    <span translate>people.comp.related.actions.delete</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="addPerson()">
-                    <span translate>people.comp.related.actions.addPerson</span>
-                </button>
-            </div>
-        </div>
         <div class="panel-heading">
             <div class="panel-title">
                 <span translate>people.comp.related.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addPerson()"><i
+                            class="fa fa-lg fa-plus"></i></button>
+                </div>
             </div>
         </div>
         <div class="panel-body">

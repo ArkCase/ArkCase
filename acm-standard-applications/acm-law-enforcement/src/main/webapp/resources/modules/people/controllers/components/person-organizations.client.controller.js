@@ -50,21 +50,28 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         };
 
         $scope.addNew = function () {
-            //TODO: add new organization modal
-        };
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/new-organization-modal.client.view.html',
+                controller: 'Common.NewOrganizationModalController',
+                size: 'lg'
+            });
 
-        $scope.editRow = function (rowEntity) {
-            //TODO see what needs to be done here
-
+            modalInstance.result.then(function (data) {
+                if (!$scope.objectInfo.organizations) {
+                    $scope.objectInfo.organizations = [];
+                }
+                $scope.objectInfo.organizations.push(data.organization);
+                saveObjectInfoAndRefresh();
+            });
         };
 
         $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
-            var id = Util.goodMapValue(rowEntity, "id", 0);
+            var id = Util.goodMapValue(rowEntity, "organizationId", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 $scope.objectInfo.organizations = _.remove($scope.objectInfo.organizations, function (item) {
-                    return item.id != id;
+                    return item.organizationId != id;
                 });
                 saveObjectInfoAndRefresh()
             }

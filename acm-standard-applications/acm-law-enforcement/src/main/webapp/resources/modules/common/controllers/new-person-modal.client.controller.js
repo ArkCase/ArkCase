@@ -116,8 +116,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
         $scope.save = function () {
             $modalInstance.close({
-                person: clearNotFilledElements(_.cloneDeep($scope.person)),
-                personType: $scope.personType
+                person: clearNotFilledElements(_.cloneDeep($scope.person))
             });
         };
 

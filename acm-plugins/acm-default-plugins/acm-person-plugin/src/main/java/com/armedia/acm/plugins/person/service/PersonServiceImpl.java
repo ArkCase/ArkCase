@@ -177,7 +177,11 @@ public class PersonServiceImpl implements PersonService
     {
         Person person = get(personId);
         Objects.requireNonNull(person, "Person must not be null");
-        if (person.getDefaultPictureId() == imageId)
+        Objects.requireNonNull(person.getDefaultPicture(), "default Image must not be null");
+        Objects.requireNonNull(person.getDefaultPicture().getId(), "default Image id must not be null");
+        Objects.requireNonNull(imageId, "imageId must not be null");
+
+        if (person.getDefaultPicture().getId().equals(imageId))
         {
             throw new AcmUserActionFailedException("Delete picture", "FILE", imageId, "Can't delete picture which is already set as default.", null);
         }
@@ -216,7 +220,7 @@ public class PersonServiceImpl implements PersonService
                 personId);
         if (isDefault)
         {
-            person.setDefaultPictureId(uploaded.getId());
+            person.setDefaultPicture(uploaded);
             savePerson(person, auth);
         }
 

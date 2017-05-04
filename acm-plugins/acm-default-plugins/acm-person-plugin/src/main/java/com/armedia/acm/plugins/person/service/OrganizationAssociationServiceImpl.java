@@ -19,27 +19,12 @@ public class OrganizationAssociationServiceImpl implements OrganizationAssociati
     public OrganizationAssociation saveOrganizationAssociation(OrganizationAssociation organizationAssociation, Authentication authentication)
             throws AcmCreateObjectFailedException
     {
-        Long id = organizationAssociation.getId();
-        String organizationAssociationHistory = null;
-
-        if (id != null)
-        {
-            OrganizationAssociation exOrganizationAssociation = getOrganizationAssociationDao().find(id);
-            AcmMarshaller marshaller = ObjectConverter.createJSONMarshaller();
-            // keep copy from the existing object to compare with the updated one
-            // otherwise JPA will update all references and no changes can be detected
-            organizationAssociationHistory = marshaller.marshal(exOrganizationAssociation);
-        }
-
         try
         {
             OrganizationAssociation savedOrganizationAssociation = organizationAssociationDao.save(organizationAssociation);
-
-            getOrganizationAssociationEventPublisher().publishOrganizationAssociationEvent(organizationAssociationHistory, savedOrganizationAssociation, true);
             return savedOrganizationAssociation;
         } catch (Exception e)
         {
-            getOrganizationAssociationEventPublisher().publishOrganizationAssociationEvent(organizationAssociationHistory, organizationAssociation, false);
             throw new AcmCreateObjectFailedException("organizationAssociation", e.getMessage(), e);
         }
     }
