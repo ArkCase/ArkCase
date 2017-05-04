@@ -298,7 +298,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     protected String getFlow() throws AcmEncryptionException
     {
         String encryption = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(),
-                EmailSenderConfigurationProperties.USER_FROM, null);
+                EmailSenderConfigurationProperties.ENCRYPTION, null);
         if (encryption.equals("off"))
         {
             return "vm://sendEmailViaSmtp.in";
