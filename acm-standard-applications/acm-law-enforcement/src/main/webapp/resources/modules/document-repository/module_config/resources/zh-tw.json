@@ -20,7 +20,8 @@
   "document-repository.comp.actions": {
     "restrict": "zh-tw_Restrict?",
     "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe"
+    "unsubscribe.button": "zh-tw_Unsubscribe",
+    "confirm.delete.documentRepository.msg": "zh-tw_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "zh-tw_Details",
