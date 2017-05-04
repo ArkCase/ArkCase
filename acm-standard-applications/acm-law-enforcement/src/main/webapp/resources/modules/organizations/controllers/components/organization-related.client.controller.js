@@ -45,7 +45,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.organizationRelations;
+            $scope.gridOptions.data = $scope.objectInfo.associationsToObjects;
         };
 
         var newOrganizationAssociation = function () {
@@ -79,7 +79,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                     association.parentTitle = organization.parentTitle;
                     association.organizationType = data.relationshipType;
                     association.organizationDescription = data.description;
-                    $scope.objectInfo.organizationRelations.push(association);
+                    $scope.objectInfo.associationsToObjects.push(association);
                     saveObjectInfoAndRefresh()
                 });
             });
@@ -90,7 +90,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizationRelations = _.remove($scope.objectInfo.organizationRelations, function (item) {
+                $scope.objectInfo.associationsToObjects = _.remove($scope.objectInfo.associationsToObjects, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()

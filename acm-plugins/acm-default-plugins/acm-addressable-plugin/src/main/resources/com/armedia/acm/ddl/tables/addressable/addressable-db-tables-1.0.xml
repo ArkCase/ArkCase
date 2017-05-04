@@ -203,12 +203,20 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="05-add-sub-type-to-contact_method" author="dragan.simonovski">
+    <changeSet id="05-add-sub-type-to-contact_method" author="dragan.simonovski" dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_contact_method">
             <column name="cm_contact_sub_type" type="VARCHAR(128)">
                 <constraints nullable="true"/>
             </column>
             <column name="cm_description" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="05-add-sub-type-to-contact_method" author="dragan.simonovski" dbms="mysql">
+        <addColumn tableName="acm_contact_method">
+            <column name="cm_contact_sub_type" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_description" type="TEXT"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

@@ -53,9 +53,6 @@ public class OrganizationDBA implements Serializable, AcmEntity
     @Column(name = "cm_type")
     private String type;
 
-    @Transient
-    private List<String> aliasTypes;
-
     @Column(name = "cm_value")
     private String value;
 
@@ -108,17 +105,6 @@ public class OrganizationDBA implements Serializable, AcmEntity
     public void setType(String type)
     {
         this.type = type;
-    }
-
-    @XmlTransient
-    public List<String> getAliasTypes()
-    {
-        return aliasTypes;
-    }
-
-    public void setAliasTypes(List<String> aliasTypes)
-    {
-        this.aliasTypes = aliasTypes;
     }
 
     @XmlTransient

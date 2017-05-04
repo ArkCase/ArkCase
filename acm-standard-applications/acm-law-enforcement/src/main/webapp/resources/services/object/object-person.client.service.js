@@ -56,13 +56,13 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
 
             , _getPersonCases: {
                 method: 'GET',
-                url: 'api/latest/plugin/people/:id/cases',
+                url: 'api/latest/plugin/people/:id/associations/CASE_FILE',
                 cache: false
             }
 
             , _getPersonComplaints: {
                 method: 'GET',
-                url: 'api/latest/plugin/people/:id/complaints',
+                url: 'api/latest/plugin/people/:id/associations/COMPLAINT',
                 cache: false
             }
         });
@@ -189,7 +189,7 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
 
         /**
          * @ngdoc method
-         * @name validatePersonAssociations
+         * @name validateAssociationsFromObjects
          * @methodOf services:Object.PersonService
          *
          * @description
@@ -199,7 +199,7 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validatePersonAssociations = function (data) {
+        Service.validateAssociationsFromObjects = function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }
