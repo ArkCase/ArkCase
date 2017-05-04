@@ -247,14 +247,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
 
-        if (personAssoc.getPerson().getPersonAssociations() == null)
+        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
+            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
         }
 
-        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
         {
-            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
         }
 
 
