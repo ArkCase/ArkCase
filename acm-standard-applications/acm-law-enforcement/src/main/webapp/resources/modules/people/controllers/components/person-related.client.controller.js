@@ -2,11 +2,17 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectPersonService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
 
+
+        ObjectLookupService.getPersonRelationTypes().then(
+            function (relationshipTypes) {
+                $scope.relationshipTypes = relationshipTypes;
+                return relationshipTypes;
+            });
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -76,13 +82,12 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                     var association = new newPersonAssociation();
                     association.person = person;
-                    association.parentTitle = person.parentTitle;
-                    association.personType = data.relationshipType;
+                    association.personType = data.type;
                     association.personDescription = data.description;
                     //ObjectPersonService.addPersonAssociation(association).then(
                     //function (personAssociation) {
                     $scope.objectInfo.personRelations.push(association);
-                    saveObjectInfoAndRefresh()
+                    saveObjectInfoAndRefresh();
                     //$scope.$emit("report-object-updated", $scope.objectInfo);
                     //}
                     // );

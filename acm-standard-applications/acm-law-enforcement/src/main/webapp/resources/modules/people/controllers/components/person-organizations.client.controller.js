@@ -72,7 +72,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
 
         $scope.addExisting = function () {
             var params = {};
-            params.header = $translate.instant("people.comp.organizations.dialogOrganizationPicker.header");
+            params.header = $translate.instant("common.dialogOrganizationPicker.header");
             params.filter = '"Object Type": ORGANIZATION';
             params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
 

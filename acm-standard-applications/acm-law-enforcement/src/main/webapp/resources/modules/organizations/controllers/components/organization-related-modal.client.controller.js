@@ -22,7 +22,7 @@ angular.module('organizations').controller('Organizations.RelatedModalController
 
             $scope.pickOrganization = function () {
                 var params = {};
-                params.header = $translate.instant("organizations.comp.related.dialogOrganizationPicker.header");
+                params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
 
