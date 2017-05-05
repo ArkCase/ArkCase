@@ -25,10 +25,15 @@ public class ZonedDateTimeDeserializer extends JsonDeserializer<ZonedDateTime>
     @Override
     public ZonedDateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException
     {
-        String dateText = jp.getText();
+
+        StringBuilder dateText = new StringBuilder(jp.getText());
         if (dateText.charAt(10) == ' ')
         {
-            dateText = new StringBuilder(dateText).replace(10, 11, "T").toString();
+            dateText.replace(10, 11, "T");
+        }
+        if (dateText.charAt(dateText.length() - 2) != ':')
+        {
+            dateText.insert(dateText.length() - 2, ":");
         }
         return ZonedDateTime.parse(dateText, DateTimeFormatter.ISO_DATE_TIME);
     }
