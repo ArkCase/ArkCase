@@ -62,8 +62,9 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             return {
                 id: null
                 , personType: ""
-                , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.objectType
+                , parentId: $scope.objectInfo.complaintId
+                , parentType: $scope.objectInfo.complaintType
+                , parentTitle: $scope.objectInfo.complaintNumber
                 , personDescription: ""
                 , notes: ""
                 , person: null

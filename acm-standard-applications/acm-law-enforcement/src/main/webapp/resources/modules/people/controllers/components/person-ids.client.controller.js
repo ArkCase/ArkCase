@@ -66,7 +66,7 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
         };
 
         $scope.editRow = function (rowEntity) {
-            $scope.phone = rowEntity;
+            $scope.identification = rowEntity;
             var item = {
                 identificationID: rowEntity.identificationID,
                 identificationType: rowEntity.identificationType,
