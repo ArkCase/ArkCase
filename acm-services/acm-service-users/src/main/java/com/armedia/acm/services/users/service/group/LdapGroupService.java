@@ -55,7 +55,9 @@ public class LdapGroupService
 
         log.debug("Saving Group:{} with DN:{} in LDAP server", group.getName(), group.getDistinguishedName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
+                null, ldapSyncConfig.getBaseDC());
+        log.debug("Ldap Group Context: {}", context.getAttributes());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
@@ -99,8 +101,9 @@ public class LdapGroupService
 
         log.debug("Saving sub-group:{} with parent-group:{} in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
-        context.addAttributeValue("memberOf", parentGroup.getDistinguishedName());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
+                parentGroupName, ldapSyncConfig.getBaseDC());
+        log.debug("Ldap Sub-Group Context: {}", context.getAttributes());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));

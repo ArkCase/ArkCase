@@ -4,6 +4,7 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
@@ -61,14 +62,23 @@ public class SpringLdapUserDao
             throws AcmLdapActionFailedException
     {
         String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
+        String passwordAttribute = "userPassword";
+
         try
         {
+            byte[] passwordBytes = password.getBytes();
+            if (AcmLdapConstants.LDAP_OPENLDAP.equals(config.getDirectoryType()))
+            {
+                passwordBytes = String.format("\"%s\"", password).getBytes("UTF-16LE");
+                passwordAttribute = "unicodePwd";
+            }
             DirContextOperations context = new RetryExecutor<DirContextOperations>()
                     .retryResult(() -> ldapTemplate.lookupContext(strippedBaseDn));
-            context.setAttributeValue("userPassword", password.getBytes());
+            context.setAttributeValue(passwordAttribute, passwordBytes);
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
         } catch (Exception e)
         {
+            log.warn("Changing User's [{}] password failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
     }
