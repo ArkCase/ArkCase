@@ -281,9 +281,9 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());
         CalendarView calendarView = new CalendarView(startDate, endDate, maxItems);
-        PropertySet allProperties = new PropertySet();
-        allProperties.addRange(standardProperties);
-        calendarView.setPropertySet(allProperties);
+        // PropertySet allProperties = new PropertySet();
+        // allProperties.addRange(standardProperties);
+        // calendarView.setPropertySet(allProperties);
 
         PropertyDefinition orderBy = sort == null || sort.trim().isEmpty() || !sortFields.containsKey(sort) ? ItemSchema.DateTimeReceived
                 : sortFields.get(sort);

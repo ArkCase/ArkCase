@@ -197,7 +197,7 @@ public class AcmCalendarAPIController
      */
     private String fixTimeZone(String time)
     {
-        if (time.charAt(time.length() - 2) != ':')
+        if (time.charAt(time.length() - 3) != ':')
         {
             return new StringBuilder(time).insert(time.length() - 2, ":").toString();
         }

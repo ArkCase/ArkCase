@@ -31,7 +31,7 @@ public class ZonedDateTimeDeserializer extends JsonDeserializer<ZonedDateTime>
         {
             dateText.replace(10, 11, "T");
         }
-        if (dateText.charAt(dateText.length() - 2) != ':')
+        if (dateText.charAt(dateText.length() - 3) != ':')
         {
             dateText.insert(dateText.length() - 2, ":");
         }
