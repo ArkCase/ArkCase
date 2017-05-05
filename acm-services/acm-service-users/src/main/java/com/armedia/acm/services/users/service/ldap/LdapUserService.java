@@ -245,7 +245,7 @@ public class LdapUserService
             String strippedBaseDCUserDn = MapperUtils.stripBaseFromDn(savedUser.getDistinguishedName(),
                     ldapSyncConfig.getBaseDC());
 
-            // comment
+            // set memberOf only for OpenLdap, AD sets this property automatically
             if (AcmLdapConstants.LDAP_OPENLDAP.equals(ldapSyncConfig.getDirectoryType()))
             {
                 try
