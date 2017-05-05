@@ -4,7 +4,6 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
-import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import org.slf4j.Logger;
@@ -96,6 +95,22 @@ public class LdapUserAPIController extends SecureLdapController
         {
             log.error("Editing LDAP user failed!", e);
             throw new AcmUserActionFailedException("edit LDAP user", null, null, "Editing LDAP user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser removeLdapUser(@RequestBody AcmUser acmUser, @PathVariable String userId,
+                                  @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            return ldapUserService.removeLdapUser(acmUser, userId, directory);
+        } catch (Exception e)
+        {
+            log.error("Removing LDAP user failed!", e);
+            throw new AcmUserActionFailedException("remove LDAP user", null, null, "Removing LDAP user failed!", e);
         }
     }
 

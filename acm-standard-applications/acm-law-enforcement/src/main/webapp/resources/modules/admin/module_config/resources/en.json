@@ -136,6 +136,13 @@
             "ok": "Edit Ldap User"
           }
         },
+        "deleteLdapMember": {
+          "title": "Delete Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Delete Ldap User"
+          }
+        },
         "username": "Username",
         "firstName": "FirstName",
         "lastName": "LastName",
