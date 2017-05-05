@@ -58,6 +58,11 @@ public class AcmUser implements Serializable, AcmLdapUser
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
+    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
+    @Column(name = "cm_user_deleted_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date deletedAt;
+
     @Column(name = "cm_user_state")
     private String userState;
 
@@ -161,6 +166,16 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    public Date getDeletedAt()
+    {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt)
+    {
+        this.deletedAt = deletedAt;
     }
 
     public String getUserState()
@@ -280,8 +295,7 @@ public class AcmUser implements Serializable, AcmLdapUser
         if (getUserId() == null)
         {
             return 0;
-        }
-        else
+        } else
         {
             return getUserId().hashCode();
         }

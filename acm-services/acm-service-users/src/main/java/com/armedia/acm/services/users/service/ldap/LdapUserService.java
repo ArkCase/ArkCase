@@ -201,6 +201,31 @@ public class LdapUserService
     }
 
     @Transactional
+    public AcmUser removeLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
+    {
+        log.debug("Removing User:{} from database", acmUser.getUserId());
+        getUserDao().markUserAsDeleted(userId);
+
+        //TODO sync to Ldap and remove User from Ldap
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directory));
+        LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+   
+        try
+        {
+            log.debug("Deleting User:{} with DN:{} in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
+            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(acmUser.getDistinguishedName(),
+                    ldapSyncConfig.getBaseDC())));
+            log.debug("User:{} with DN:{} successfully deleted in DB and LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
+        } catch (Exception e)
+        {
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
+
+        return acmUser;
+    }
+
+    @Transactional
     public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName) throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).

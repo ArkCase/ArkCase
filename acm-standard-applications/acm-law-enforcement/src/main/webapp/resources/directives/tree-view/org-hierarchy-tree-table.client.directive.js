@@ -23,7 +23,8 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 onAddLdapMember: "=",
                 onEditLdapMember: "=",
                 onAddExistingMembersToLdapGroup: "=",
-                onAddLdapSubgroup: "="
+                onAddLdapSubgroup: "=",
+                onDeleteLdapMember: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -87,9 +88,10 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             }
 
                             if (node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
+                                console.log("node.data is ", node.data);
                                 // check if editing is allowed for the directory server this sub-group belongs
                                 if (scope.enableEditingLdapUsers[node.parent.data.directory_name_s]) {
-                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>")(scope));
+                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>" + "<button class='btn btn-link btn-xs' type='button' ng-click='deleteLdapUser($event)' name='deleteMember' title='Delete Member'><i class='fa fa-trash-o'></i></button>")(scope));
                                 }
                             }
                         }
@@ -180,6 +182,19 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         node.data = member;
                         node.title = member.name;
                         node.renderTitle();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
+                    });
+                };
+
+                //TODO handle UI logic for soft deleting Ldap users
+                scope.deleteLdapUser = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onDeleteLdapMember(node.data).then(function () {
+                        node.remove();
                         messageService.succsessAction();
                     }, function (error) {
                         if (error != "cancel") {

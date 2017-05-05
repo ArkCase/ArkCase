@@ -431,4 +431,13 @@
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
 
+    <changeSet id="23-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
