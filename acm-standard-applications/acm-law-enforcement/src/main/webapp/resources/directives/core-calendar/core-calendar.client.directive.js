@@ -18,14 +18,14 @@
  *
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService',
-    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService) {
+    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService',
+    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService) {
         return {
             restrict: 'E',
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
             scope: {
                 objectId: '=',
-                objectType: '@'
+                objectType: '='
             },
             link: function(scope) {
                 /* Event sources array */
@@ -56,6 +56,12 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         resolve: {
                             coreCalendarConfig: function() {
                                 return scope.coreCalendarConfig;
+                            },
+                            params: function() {
+                                return {
+                                    objectType: scope.objectType,
+                                    objectId: scope.objectId
+                                };
                             }
                         }
                     });
@@ -68,7 +74,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 };
 
                 scope.eventClick = function(event, element, view) {
-                    CalendarService.getCalendarEventDetails(event.id).then(function(res) {
+                    CalendarService.getCalendarEventDetails(scope.objectType, scope.objectId, event.id).then(function(res) {
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'directives/core-calendar/core-calendar-event-details-modal.client.vew.html',
@@ -81,6 +87,12 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                                 },
                                 eventDetails: function() {
                                     return res[0];
+                                },
+                                params: function() {
+                                    return {
+                                        objectType: scope.objectType,
+                                        objectId: scope.objectId
+                                    };
                                 }
                             }
                         });
@@ -124,7 +136,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 };
 
                 scope.uiConfig.calendar.events = function(start, end, timezone, callback) {
-                    CalendarService.getCalendarEvents(start, end)
+                    CalendarService.getCalendarEvents(DateService.dateToIso(start.toDate()), DateService.dateToIso(end.toDate()), scope.objectType, scope.objectId)
                         .then(function(res) {
                             var events = [];
                             _.forEach(res, function(value, key) {

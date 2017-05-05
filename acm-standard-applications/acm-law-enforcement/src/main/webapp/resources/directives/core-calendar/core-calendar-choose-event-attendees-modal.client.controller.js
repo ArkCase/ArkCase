@@ -14,7 +14,7 @@ angular.module('directives').controller('Directives.CoreCalendarChooseEventAtten
 
             var selectedAttendeeDataModel = {
                 email: lastSelectedItems[0].email_lcs,
-                name: lastSelectedItems[0].name,
+                displayName: lastSelectedItems[0].name,
                 type: $scope.attendeeType
             };
 
@@ -34,7 +34,7 @@ angular.module('directives').controller('Directives.CoreCalendarChooseEventAtten
         $scope.addAdditionalAttendees = function(tag) {
             var selectedAttendeeDataModel = {
                 email: tag.email,
-                name: '',
+                displayName: '',
                 type: $scope.attendeeType
             };
             

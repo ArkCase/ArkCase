@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', '$modal', 'Directives.CalendarUtilService',
-    function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService) {
+angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', '$modal', 'Directives.CalendarUtilService', 'params',
+    function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, params) {
+        $scope.objectId = params.objectId;
+        $scope.objectType = params.objectType;
 
         $scope.formStep = 1;
         $scope.formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepOneTitle';
@@ -22,6 +24,10 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
 
         var requiredAttendees = [];
         var optionalAttendees = [];
+
+        CalendarService.getCalendar($scope.objectType, $scope.objectId).then(function(res) {
+            $scope.calendarId = res.data.calendarId;
+        });
 
         /*Make start/end time with intervals of 30 minutes*/
         var setInitialStartEndTime = function() {
@@ -176,7 +182,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
                 },
                 priority: 'NORMAL',
                 allDayEvent: false,
-                privateEvent: false,
+                sensitivity: 'NORMAL',
                 remindIn: -1
             };
 
@@ -233,24 +239,34 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
             $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
             $scope.eventDataModel.attendees = requiredAttendees.concat(optionalAttendees);
+            $scope.eventDataModel.objectId = $scope.objectId;
+            $scope.eventDataModel.objectType = $scope.objectType;
+            $scope.eventDataModel.calendarId = $scope.calendarId;
+
         };
         /*Perform adding of the event to the calendar*/
         $scope.addEvent = function() {
             processEventDataModel();
-            CalendarService.createNewEvent($scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
+            CalendarService.createNewEvent($scope.calendarId, $scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
                 MessageService.succsessAction();
                 $modalInstance.close('ADD_EVENT');
             }, function(err) {
+                $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
+                $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
                 MessageService.errorAction();
             });
         };
 
         $scope.editEvent = function() {
             processEventDataModel();
-            CalendarService.editEvent($scope.eventDataModel.id, $scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
+            CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
                 MessageService.succsessAction();
                 $modalInstance.close('EDIT_EVENT');
             }, function(err) {
+                $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
+                $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
+                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
                 MessageService.errorAction();
             });
         };

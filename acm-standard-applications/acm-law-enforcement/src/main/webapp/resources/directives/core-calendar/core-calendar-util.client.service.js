@@ -879,11 +879,10 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          * @Returns {String} popoverTemplate - the html of the popover template
          */
         var buildPopoverTemplate = function(calendarEvent) {
-            var dateFormat = $translate.instant('mm/dd/yyyy h:MM a');
             var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
             var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
-            var startDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.start, dateFormat);
-            var endDateTime = UtilService.getDateTimeFromDatetime(calendarEvent.end, dateFormat);
+            var startDateTime = $filter('date')(calendarEvent.start, 'MM/dd/yyyy h:mm a');
+            var endDateTime = $filter('date')(calendarEvent.end, 'MM/dd/yyyy h:mm a');
             var popoverTemplate = '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
 
             return popoverTemplate;
