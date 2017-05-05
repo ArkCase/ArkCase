@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,13 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
                 dao.save(entity);
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id)
+    {
+        objectAssociationDao.delete(id);
     }
 
     @Override

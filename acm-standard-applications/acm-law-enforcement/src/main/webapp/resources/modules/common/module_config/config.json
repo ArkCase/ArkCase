@@ -8,7 +8,13 @@
     "allowDuplicate": false
   },
   "docTree": {
-    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
+    "extensions": [
+      "DocTreeExt.Checkin",
+      "DocTreeExt.Email",
+      "DocTreeExt.WebDAV",
+      "DocTreeExt.Record",
+      "DocTreeExt.Template"
+    ],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -630,5 +636,60 @@
         "start": 0
       }
     }
+  },
+  "dialogPersonPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "first_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.givenName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "last_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.familyName",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "dialogOrganizationPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "type_lcs",
+        "displayName": "common.dialogOrganizationPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "name",
+        "displayName": "common.dialogOrganizationPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
   }
 }

@@ -1,19 +1,29 @@
 'use strict';
 
-angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler',
-    function ($q, $timeout, messageHandler) {
+angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Websockets.MessageHandler'
+    , 'Authentication'
+    , function ($q, $timeout, messageHandler, Authentication) {
+
+        var user;
+        Authentication.queryUserInfo().then(
+            function (userInfo) {
+                user = userInfo;
+                return userInfo;
+            }
+        );
 
         var service = {
             //The number of milliseconds to delay before attempting to reconnect.
             RECONNECT_INTERVAL: 1000,
             //The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist.
             RECONNECT_DELAY: 2,
-            RECONNECT_ATTEMPTS: 0,
-            MAX_RECONNECT_ATTEMPTS: 5,
+            RECONNECT_ATTEMPTS: 1,
+            MAX_RECONNECT_ATTEMPTS: 1,
             //The maximum number of milliseconds to delay a reconnection attempt
             MAX_RECONNECT_INTERVAL: 30000,
             SOCKET_URL: "/arkcase/stomp",
             LISTEN_TOPIC_OBJECTS: "/topic/objects/changed",
+            GENERIC_TOPIC: "/topic/generic/",
             MESSAGE_BROKER: "/app/print-message",
             shouldStart: true,
             socket: {
@@ -63,6 +73,10 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
                         messageHandler.handleMessage(message);
                         //4 seconds delay so solr can index the object
                     }, 4000);
+                });
+                target.socket.stomp.subscribe(target.GENERIC_TOPIC + user.userId, function (data) {
+                    var message = JSON.parse(data.body);
+                    messageHandler.handleGenericMessage(message);
                 });
             }
         };
