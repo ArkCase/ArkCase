@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author riste.tutureski
@@ -25,6 +27,7 @@ import com.armedia.acm.data.AcmEntity;
  */
 @Entity
 @Table(name = "acm_assignment")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmAssignment implements Serializable, AcmObject, AcmEntity{
 
 	private static final long serialVersionUID = 6553619780571596758L;

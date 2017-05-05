@@ -756,7 +756,54 @@
             </list>
         </property>
     </bean>
-
+    <bean id="acmOrganizationSavePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-organization-save"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if acmOrganizationSavePrivilege??>
+                <#list acmOrganizationSavePrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmOrganizationListPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-organization-list"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if acmOrganizationListPrivilege??>
+                <#list acmOrganizationListPrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmOrganizationDeletePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-organization-delete"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if acmOrganizationDeletePrivilege??>
+                <#list acmOrganizationDeletePrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
+    <bean id="acmOrganizationDetailsPrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
+        <property name="privilegeName" value="acm-organization-details"/>
+        <property name="applicationRolesWithPrivilege">
+            <list>
+            <#if acmOrganizationDetailsPrivilege??>
+                <#list acmOrganizationDetailsPrivilege as role>
+                    <value>${role}</value>
+                </#list>
+            </#if>
+            </list>
+        </property>
+    </bean>
     <!--Admin Plugin-->
     <bean id="acmAdminModulePrivilege" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivilege">
         <property name="privilegeName" value="acm-admin-module"/>
