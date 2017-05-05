@@ -1,0 +1,26 @@
+<div ng-controller="Organizations.AddressesController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>organizations.comp.addresses.title</span>
+                <div class="btn-group pull-right">
+                    <button class="btn btn-xs btn-default" ng-click="map()">
+                        <span translate>organizations.comp.addresses.actions.map</span>
+                    </button>
+                    <button class="btn btn-xs btn-default" ng-click="addNew()">
+                        <span translate>organizations.comp.addresses.actions.addNew</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>
