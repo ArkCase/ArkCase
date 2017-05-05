@@ -1,18 +1,22 @@
 'use strict';
 
 angular.module('directives').controller('Directives.CoreCalendarEventDetailsModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig',
-	'$modal', 'Directives.CalendarUtilService', 'eventDetails', '$filter', '$rootScope',
-	function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, eventDetails, $filter, $rootScope) {
+	'$modal', 'Directives.CalendarUtilService', 'eventDetails', '$filter', '$rootScope', 'params',
+	function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, eventDetails, $filter, $rootScope, params) {
 
 		$scope.eventDetails = eventDetails;
 		$scope.priorityOptions = CalendarUtilService.PRIORITY_OPTIONS;
 		$scope.reminderOptions = CalendarUtilService.REMINDER_OPTIONS;
 		$scope.coreCalendarConfig = coreCalendarConfig;
+		$scope.objectId = params.objectId;
+		$scope.objectType = params.objectType;
 
 		var processEventDetails = function() {
 			$scope.eventDetails.start = moment($scope.eventDetails.start).toDate();
 			$scope.eventDetails.end = moment($scope.eventDetails.end).toDate();
 			$scope.eventDetails.recurrenceDetails.endBy = moment(eventDetails.recurrenceDetails.endBy).toDate();
+
+			$scope.privateEvent = $scope.eventDetails.sensitivity !== 'PRIVATE';
 
 			$scope.eventReminder = _.find($scope.reminderOptions, function(option) {
 				return option.value === $scope.eventDetails.remindIn;
@@ -71,7 +75,7 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 		};
 
 		$scope.deleteEvent = function() {
-			CalendarService.deleteEvent().then(function(res) {
+			CalendarService.deleteEvent($scope.objectType, $scope.objectId, $scope.eventDetails.id).then(function(res) {
 				MessageService.succsessAction();
 				$modalInstance.close('DELETE_EVENT');	
 			}, function(err) {
