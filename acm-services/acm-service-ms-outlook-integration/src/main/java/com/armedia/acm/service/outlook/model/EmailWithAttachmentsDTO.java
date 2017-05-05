@@ -1,10 +1,13 @@
 package com.armedia.acm.service.outlook.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
  * Created by manoj.dhungana on 7/28/2015.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 
