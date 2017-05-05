@@ -79,6 +79,21 @@ public class AcmUser implements Serializable, AcmLdapUser
     @Column(name = "cm_uid")
     private String uid;
 
+    @Column(name = "cm_country")
+    private String country;
+
+    @Column(name = "cm_country_abbreviation")
+    private String countryAbbreviation;
+
+    @Column(name = "cm_department")
+    private String department;
+
+    @Column(name = "cm_company")
+    private String company;
+
+    @Column(name = "cm_title")
+    private String title;
+
     @Transient
     private String sortableValue;
 
@@ -369,5 +384,58 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setSortableValue(String sortableValue)
     {
         this.sortableValue = sortableValue;
+    }
+
+
+    public String getCountry()
+    {
+        return country;
+    }
+
+    public void setCountry(String country)
+    {
+        this.country = country;
+    }
+
+
+    public String getCountryAbbreviation()
+    {
+        return countryAbbreviation;
+    }
+
+    public void setCountryAbbreviation(String countryAbbreviation)
+    {
+        this.countryAbbreviation = countryAbbreviation;
+    }
+
+    public String getCompany()
+    {
+        return company;
+    }
+
+    public void setCompany(String company)
+    {
+        this.company = company;
+    }
+
+    public String getDepartment()
+    {
+        return department;
+    }
+
+    public void setDepartment(String department)
+    {
+        this.department = department;
+    }
+
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 }
