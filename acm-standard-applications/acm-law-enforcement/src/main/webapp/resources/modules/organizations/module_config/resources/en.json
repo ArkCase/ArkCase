@@ -13,7 +13,7 @@
     "phone.label": "Phone",
     "email.label": "Email",
     "status.label": "Status",
-    "duns.label": "DUNS Number",
+    "identification.label": "ID",
     "primary.label": "Primary Contact"
   },
   "organizations.comp.actions": {
@@ -275,21 +275,18 @@
   "organizations.comp.people": {
     "title": "People",
     "table.columns": {
-      "type": "Type",
-      "id": "ID",
-      "value": "Person",
-      "familyName": "Last Name",
-      "givenName": "FirstName",
-      "created": "Date Added",
-      "creator": "Added By",
-      "modified": "Last Modified",
-      "modifier": "Modified By"
+      "type": "Role",
+      "firstName": "FirstName",
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     },
     "actions": {
       "delete": "Delete",
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
-      "addExisting": "Add New"
+      "addExisting": "Add Existing"
     }
   },
   "organizations.comp.cases": {
@@ -318,13 +315,12 @@
     "title": "Related Organizations",
     "table.columns": {
       "associationType": "Relationship",
-      "value": "Organization",
       "type": "Type",
-      "description": "Description",
-      "created": "Date Added",
-      "creator": "Added By",
-      "modified": "Last Modified",
-      "modifier": "Modified By"
+      "identification": "ID",
+      "value": "Organization",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     },
     "modal": {
       "title": "Add Related Organization",
@@ -334,14 +330,6 @@
       "organization.placeholder": "Search Organizations",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Add Related Organization"
-    },
-    "dialogOrganizationPicker": {
-      "header": "Search for Organizations",
-      "table.columns": {
-        "givenName": "First Name",
-        "familyName": "Last Name",
-        "id": "ID"
-      }
     }
   },
   "organizations.comp.history": {

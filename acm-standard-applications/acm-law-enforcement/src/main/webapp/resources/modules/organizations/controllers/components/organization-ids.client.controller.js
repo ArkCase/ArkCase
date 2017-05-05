@@ -66,7 +66,7 @@ angular.module('organizations').controller('Organizations.IDsController', ['$sco
         };
 
         $scope.editRow = function (rowEntity) {
-            $scope.phone = rowEntity;
+            $scope.identification = rowEntity;
             var item = {
                 identificationID: rowEntity.identificationID,
                 identificationType: rowEntity.identificationType,

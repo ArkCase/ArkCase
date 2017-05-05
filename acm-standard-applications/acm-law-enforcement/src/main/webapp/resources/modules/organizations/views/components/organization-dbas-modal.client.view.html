@@ -1,37 +1,37 @@
 <div class="modal-header">
     <h3 ng-hide="isEdit">
-        <span translate>organizations.comp.aliases.modal.addAlias</span>
+        <span translate>organizations.comp.dbas.modal.addDBA</span>
     </h3>
 
     <h3 ng-show="isEdit">
-        <span translate>organizations.comp.aliases.modal.editAlias</span>
+        <span translate>organizations.comp.dbas.modal.editDBA</span>
     </h3>
 </div>
 <div class="modal-body">
-    <form name="aliasForm">
-        <label for="aliasValue"/>
-        <input id="aliasValue" ng-model="alias.aliasValue"
-               placeholder="{{ 'organizations.comp.aliases.modal.value.placeholder' | translate }}">
-        <label for="aliasType"/>
-        <select id="aliasType" ng-model="alias.aliasType">
-            <option ng-repeat="option in aliasTypes" value="{{option.type}}">{{option.name}}</option>
-        </select>
+    <form name="dbasForm">
+        <label for="value_{{::$id}}"/>
+        <input id="value_{{::$id}}" ng-model="dba.value"
+               placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
+        <label for="type_{{::$id}}"/>
+        <select id="type_{{::$id}}"
+                ng-model="dba.type"
+                ng-options="item.type as item.name for item in dbasTypes"></select>
         <div>
-            <p translate>organizations.comp.aliases.modal.setPrimary</p>
+            <p translate>organizations.comp.dbas.modal.setPrimary</p>
             <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>organizations.comp.aliases.modal.yes</translate>
+            <translate>organizations.comp.dbas.modal.yes</translate>
             <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>organizations.comp.aliases.modal.no</translate>
+            <translate>organizations.comp.dbas.modal.no</translate>
         </div>
-        <label for="aliasDescription"/>
-        <textarea id="aliasDescription" ng-model="alias.description"></textarea>
+        <label for="description"/>
+        <textarea id="description" ng-model="dba.description"></textarea>
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
-        <span translate>organizations.comp.aliases.modal.btnCancel.text</span>
+        <span translate>organizations.comp.dbas.modal.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="aliasForm.$invalid">
-        <span translate>organizations.comp.aliases.modal.btnOk.text</span>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="dbasForm.$invalid">
+        <span translate>organizations.comp.dbas.modal.btnOk.text</span>
     </button>
 </div>

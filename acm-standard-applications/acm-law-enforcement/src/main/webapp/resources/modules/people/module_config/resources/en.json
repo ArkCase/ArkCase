@@ -281,6 +281,10 @@
       "type": "Type",
       "id": "ID",
       "value": "Organization",
+      "identification": "ID",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location",
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
@@ -290,7 +294,7 @@
       "delete": "Delete",
       "setPrimary": "Set as Primary",
       "addNew": "Add New",
-      "addExisting": "Add New"
+      "addExisting": "Add Existing"
     }
   },
   "people.comp.cases": {
@@ -318,14 +322,13 @@
   "people.comp.related": {
     "title": "Related People",
     "table.columns": {
-      "givenName": "First Name",
-      "familyName": "Last Name",
+      "firstName": "First Name",
+      "lastName": "Last Name",
       "type": "Relationship",
       "description": "Description",
-      "created": "Date Added",
-      "creator": "Added By",
-      "modified": "Last Modified",
-      "modifier": "Modified By"
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     },
     "modal": {
       "title": "Add Related Person",
