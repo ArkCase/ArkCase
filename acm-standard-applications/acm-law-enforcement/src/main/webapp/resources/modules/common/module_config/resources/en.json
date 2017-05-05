@@ -273,14 +273,21 @@
     "table.columns": {
       "givenName": "First Name",
       "familyName": "Last Name",
-      "id": "ID"
+      "id": "ID",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "common.dialogOrganizationPicker": {
     "header": "Choose Organization",
     "table.columns": {
       "type": "Organization Type",
-      "name": "Value"
+      "name": "Organization",
+      "identification": "ID",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "common.addOrganization": {

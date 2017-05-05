@@ -31,7 +31,6 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            $scope.config = config;
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
