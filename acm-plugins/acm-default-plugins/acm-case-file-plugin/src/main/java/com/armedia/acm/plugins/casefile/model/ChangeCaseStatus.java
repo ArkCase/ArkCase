@@ -7,8 +7,10 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,6 +37,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_change_case_status")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
 

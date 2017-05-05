@@ -2,7 +2,9 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,6 +25,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_container")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmContainer implements AcmEntity, Serializable, AcmObject
 {
 
@@ -55,10 +58,10 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_container_modifier")
     private String modifier;
 
-    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    @Column(name = "cm_object_type", insertable = true, updatable = false, nullable = false)
     private String containerObjectType;
 
-    @Column(name = "cm_object_id", insertable = true, updatable = false)
+    @Column(name = "cm_object_id", insertable = true, updatable = false, nullable = false)
     private Long containerObjectId;
 
     @Column(name = "cm_object_title")

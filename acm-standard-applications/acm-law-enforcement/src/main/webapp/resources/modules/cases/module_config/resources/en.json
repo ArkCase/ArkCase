@@ -52,69 +52,25 @@
   "cases.comp.people": {
     "title": "People",
     "table.columns": {
-      "entity": "Entity",
-      "type": "Type",
+      "type": "Role",
       "firstName": "FirstName",
-      "lastName": "LastName"
-    },
-    "contactMethods": {
-      "title": "ContactMethods",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organizations",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "addresses": {
-      "title": "Locations",
-      "table.columns": {
-        "type": "Type",
-        "streetAddress": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "aliases": {
-      "title": "Aliases",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "Security Tags",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
+    }
+  },
+  "cases.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "type": "Association Type",
+      "id": "ID",
+      "value": "Organization",
+      "organizationType": "Org Type",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
     }
   },
   "cases.comp.participants": {
