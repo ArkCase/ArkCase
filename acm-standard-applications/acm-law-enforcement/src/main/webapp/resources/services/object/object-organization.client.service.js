@@ -56,13 +56,13 @@ angular.module('services').factory('Object.OrganizationService', ['$resource', '
 
             , _getOrganizationCases: {
                 method: 'GET',
-                url: 'api/latest/plugin/organizations/:id/cases',
+                url: 'api/latest/plugin/organizations/:id/associations/CASE_FILE',
                 cache: false
             }
 
             , _getOrganizationComplaints: {
                 method: 'GET',
-                url: 'api/latest/plugin/organizations/:id/complaints',
+                url: 'api/latest/plugin/organizations/:id/associations/COMPLAINT',
                 cache: false
             }
         });
@@ -133,7 +133,7 @@ angular.module('services').factory('Object.OrganizationService', ['$resource', '
          *
          * @returns {Object} Promise
          */
-        Service.getPesonCases = function (id) {
+        Service.getOrganizationCases = function (id) {
             var cacheData = new Store.CacheFifo(Service.SessionCacheNames.ORGANIZATION_CASES_DATA);
             var cacheKey = id;
             var casesData = cacheData.get(cacheKey);
@@ -156,7 +156,7 @@ angular.module('services').factory('Object.OrganizationService', ['$resource', '
 
         /**
          * @ngdoc method
-         * @name getPesonComplaints
+         * @name getOrganizationComplaints
          * @methodOf services:Object.OrganizationService
          *
          * @description
@@ -166,7 +166,7 @@ angular.module('services').factory('Object.OrganizationService', ['$resource', '
          *
          * @returns {Object} Promise
          */
-        Service.getPesonComplaints = function (id) {
+        Service.getOrganizationComplaints = function (id) {
             var cacheData = new Store.CacheFifo(Service.SessionCacheNames.ORGANIZATION_COMPLAINTS_DATA);
             var cacheKey = id;
             var complaintsData = cacheData.get(cacheKey);

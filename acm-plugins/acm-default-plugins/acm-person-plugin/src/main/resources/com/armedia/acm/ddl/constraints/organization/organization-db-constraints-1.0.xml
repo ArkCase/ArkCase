@@ -74,4 +74,13 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+    <changeSet id="12-organization-foreign-key" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_organization"
+                                 baseColumnNames="cm_parent_organization"
+                                 constraintName="fk_org_parent_org_id"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
 </databaseChangeLog>

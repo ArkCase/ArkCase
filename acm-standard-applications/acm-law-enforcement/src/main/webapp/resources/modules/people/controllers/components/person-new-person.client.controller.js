@@ -10,8 +10,8 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             'email': 0
         };
 
-        ConfigService.getModuleConfig("people").then(function (moduleConfig) {
-            $scope.config = _.find(moduleConfig.components, {id: "newPerson"});
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            $scope.config = moduleConfig;
             return moduleConfig;
         });
 
@@ -127,7 +127,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.addNewOrganization = function () {
             $timeout(function () {
-                $scope.searchOrganization(null);
+                $scope.searchOrganization(-1);
             }, 0);
         };
 
@@ -139,7 +139,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
-        $scope.searchOrganization = function (organization) {
+        $scope.searchOrganization = function (index) {
             var params = {};
             params.header = $translate.instant("common.dialogOrganizationPicker.header");
             params.filter = '"Object Type": ORGANIZATION';
@@ -162,15 +162,23 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     }
                 }
             });
+
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
                     OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (selectedOrganization) {
+                        //FIXME ugly hack - saving person fails because those properties are not removed when angular converts to JSON
+                        delete selectedOrganization.$promise;
+                        delete selectedOrganization.$resolved;
                         // override values of existing organization which is displayed
-                        if (organization) {
-                            _.merge(organization, selectedOrganization);
-                        } else {
-                            $scope.person.organizations.push(selectedOrganization);
-                        }
+
+                        $timeout(function () {
+                            if (index > -1) {
+                                $scope.person.organizations[index] = selectedOrganization;
+
+                            } else {
+                                $scope.person.organizations.push(selectedOrganization);
+                            }
+                        }, 0);
                     });
                 }
             });
@@ -205,8 +213,8 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }
 
             //remove empty organizations before save
-            _.remove(person.organizations, function (person) {
-                if (!person.organizationId) {
+            _.remove(person.organizations, function (organization) {
+                if (!organization.organizationId) {
                     return true;
                 }
                 return false;
