@@ -349,6 +349,8 @@
     "type": "Organization Type",
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
+    "parentOrganization": "Parent organization",
+    "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {
       "title": "Communication Accounts",
       "phone": "Phone",
@@ -366,7 +368,8 @@
       "urlType": "URL Type"
     },
     "people": {
-      "title": "People"
+      "title": "People",
+      "searchExisting.placeholder": "Search Existing Person"
     },
     "locations": {
       "title": "Locations",

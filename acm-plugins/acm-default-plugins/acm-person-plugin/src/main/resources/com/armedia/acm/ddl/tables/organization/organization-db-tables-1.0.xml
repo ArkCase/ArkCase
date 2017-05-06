@@ -348,4 +348,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="53-add-organization-parent_organization-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_parent_organization" type="${fkIdType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

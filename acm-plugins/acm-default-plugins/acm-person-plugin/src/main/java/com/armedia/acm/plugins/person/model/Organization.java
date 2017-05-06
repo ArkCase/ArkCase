@@ -198,6 +198,13 @@ public class Organization implements Serializable, AcmEntity
     @JoinColumn(name = "cm_primary_contact")
     private OrganizationAssociation primaryContact;
 
+    /**
+     * Parent Organization
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_parent_organization")
+    private Organization parentOrganization;
+
     @PostLoad
     protected void postLoad()
     {
@@ -517,5 +524,15 @@ public class Organization implements Serializable, AcmEntity
     public void setPrimaryContact(OrganizationAssociation primaryContact)
     {
         this.primaryContact = primaryContact;
+    }
+
+    public Organization getParentOrganization()
+    {
+        return parentOrganization;
+    }
+
+    public void setParentOrganization(Organization parentOrganization)
+    {
+        this.parentOrganization = parentOrganization;
     }
 }
