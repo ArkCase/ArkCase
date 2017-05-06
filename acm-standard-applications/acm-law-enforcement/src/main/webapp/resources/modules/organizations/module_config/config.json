@@ -85,7 +85,7 @@
       },
       {
         "type": "p/ORGANIZATION",
-        "icon": "fa fa-exclamation-triangle",
+        "icon": "fa fa-building",
         "components": [
           "details",
           "addresses",
@@ -113,7 +113,7 @@
       {
         "type": "p/ORGANIZATION/add",
         "label": "Addresses",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-address-card",
         "components": [
           "addresses"
         ]
@@ -121,7 +121,7 @@
       {
         "type": "p/ORGANIZATION/pho",
         "label": "Phones",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-phone",
         "components": [
           "phones"
         ]
@@ -129,7 +129,7 @@
       {
         "type": "p/ORGANIZATION/fax",
         "label": "Faxes",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-fax",
         "components": [
           "faxes"
         ]
@@ -137,7 +137,7 @@
       {
         "type": "p/ORGANIZATION/ema",
         "label": "Emails",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-envelope",
         "components": [
           "emails"
         ]
@@ -161,7 +161,7 @@
       {
         "type": "p/ORGANIZATION/peo",
         "label": "People",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-users",
         "components": [
           "people"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/ORGANIZATION/ids",
         "label": "IDs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-id-card",
         "components": [
           "ids"
         ]
@@ -177,7 +177,7 @@
       {
         "type": "p/ORGANIZATION/cas",
         "label": "Cases",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-folder",
         "components": [
           "cases"
         ]
@@ -185,7 +185,7 @@
       {
         "type": "p/ORGANIZATION/com",
         "label": "Complaints",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
         ]
@@ -193,7 +193,7 @@
       {
         "type": "p/ORGANIZATION/rel",
         "label": "Related Organizations",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exchange",
         "components": [
           "related"
         ]

@@ -113,14 +113,14 @@ public class Organization implements Serializable, AcmEntity
             inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumns({
             @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
             @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "organization")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -172,7 +172,7 @@ public class Organization implements Serializable, AcmEntity
     @Column(name = "cm_details")
     private String details;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "acm_person_organization",
             joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
             inverseJoinColumns = {@JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")})
@@ -214,7 +214,29 @@ public class Organization implements Serializable, AcmEntity
             So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code should be removed
             linked with technical dept: AFDP-3487
             */
+        updateChildObjectsWithParentObjectReference();
+    }
 
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        updateChildObjectsWithParentObjectReference();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        updateChildObjectsWithParentObjectReference();
+    }
+
+
+    /**
+     * Updates child objects which (should) have reference to **this** object instance, reference is lost due to (de)serialization from/to JSON, XMl, etc.
+     * Also JPA without caching returns different instance for same object, executes additional query for same object id.
+     */
+    private void updateChildObjectsWithParentObjectReference()
+    {
         for (OrganizationAssociation pa : getAssociationsFromObjects())
         {
             pa.setOrganization(this);
@@ -225,25 +247,6 @@ public class Organization implements Serializable, AcmEntity
             dba.setOrganization(this);
         }
     }
-
-    @PrePersist
-    protected void beforeInsert()
-    {
-        for (OrganizationDBA dba : getOrganizationDBAs())
-        {
-            dba.setOrganization(this);
-        }
-    }
-
-    @PreUpdate
-    protected void beforeUpdate()
-    {
-        for (OrganizationDBA dba : getOrganizationDBAs())
-        {
-            dba.setOrganization(this);
-        }
-    }
-
 
     @XmlTransient
     public Long getOrganizationId()
