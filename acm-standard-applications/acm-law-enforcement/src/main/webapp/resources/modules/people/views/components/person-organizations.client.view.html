@@ -2,10 +2,8 @@
     <div class="panel panel-success panel-grid">
         <div class="row">
             <div class="btn-group pull-right">
-                <button class="btn btn-sm btn-default" ng-click="delete()">
-                    <span translate>people.comp.organizations.actions.delete</span>
-                </button>
-                <button class="btn btn-sm btn-default" ng-click="setPrimary()">
+                <button class="btn btn-sm btn-default" ng-click="setPrimary()"
+                        ng-disabled="!(!isDefault() && hasSelected)">
                     <span translate>people.comp.organizations.actions.setPrimary</span>
                 </button>
                 <button class="btn btn-sm btn-default" ng-click="addExisting()">

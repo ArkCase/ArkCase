@@ -125,12 +125,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
                 url.description = data.url.description;
 
                 if (!data.isEdit) {
-                    if (data.isDefault) {
-                        $scope.objectInfo.defaultUrl = url;
-                    }
-                    else {
-                        $scope.objectInfo.contactMethods.push(url);
-                    }
+                    $scope.objectInfo.contactMethods.push(url);
                 }
 
                 var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});

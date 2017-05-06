@@ -273,14 +273,21 @@
     "table.columns": {
       "givenName": "First Name",
       "familyName": "Last Name",
-      "id": "ID"
+      "id": "ID",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "common.dialogOrganizationPicker": {
     "header": "Choose Organization",
     "table.columns": {
       "type": "Organization Type",
-      "name": "Value"
+      "name": "Organization",
+      "identification": "ID",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "common.addOrganization": {
@@ -301,6 +308,8 @@
     "type": "Organization Type",
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
+    "parentOrganization": "Parent Organization",
+    "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {
       "title": "Communication Accounts",
       "phone": "Phone",
@@ -318,7 +327,8 @@
       "urlType": "URL Type"
     },
     "people": {
-      "title": "People"
+      "title": "People",
+      "searchExisting.placeholder": "Search Existing Person"
     },
     "locations": {
       "title": "Locations",

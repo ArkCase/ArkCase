@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('common').controller('Common.NewOrganizationModalController', ['$scope', '$stateParams', '$translate'
-    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', '$modalInstance'
-    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService
-        , $timeout, $modalInstance) {
+    , 'Organization.InfoService', '$state', 'Object.LookupService', 'UtilService', '$modal', 'ConfigService', 'MessageService', '$timeout', '$modalInstance', 'Person.InfoService'
+    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, Util, $modal, ConfigService, MessageService
+        , $timeout, $modalInstance, PersonInfoService) {
+
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -11,6 +12,10 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             'email': 0,
             'fax': 0
         };
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            $scope.config = moduleConfig;
+            return moduleConfig;
+        });
 
         //new organization with predefined values
         $scope.organization = {
@@ -18,6 +23,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             contactMethods: [],
             identifications: [],
             addresses: [],
+            people: [{}],
             defaultEmail: {
                 type: 'email'
             },
@@ -32,6 +38,100 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             }
         };
 
+        $scope.searchOrganization = function () {
+            var params = {};
+            params.header = $translate.instant("common.dialogOrganizationPicker.header");
+            params.filter = '"Object Type": ORGANIZATION';
+            params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+
+            var modalInstance = $modal.open({
+                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
+                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                    $scope.modalInstance = $modalInstance;
+                    $scope.header = params.header;
+                    $scope.filter = params.filter;
+                    $scope.config = params.config;
+                }],
+                animation: true,
+                size: 'lg',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (response) {
+                        //FIXME ugly hack - saving organization fails because those properties are not removed when angular converts to JSON
+                        delete response.$promise;
+                        delete response.$resolved;
+                        $scope.organization.parentOrganization = response;
+                    });
+                }
+            });
+        };
+
+
+        $scope.addNewPerson = function () {
+            $timeout(function () {
+                $scope.searchPerson(-1);
+            }, 0);
+        };
+
+        $scope.removePerson = function (person) {
+            $timeout(function () {
+                _.remove($scope.organization.people, function (object) {
+                    return object === person;
+                });
+            }, 0);
+        };
+
+        $scope.searchPerson = function (index) {
+            var params = {};
+            params.header = $translate.instant("common.dialogPersonPicker.header");
+            params.filter = '"Object Type": PERSON';
+            params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
+
+            var modalInstance = $modal.open({
+                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
+                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
+                    $scope.modalInstance = $modalInstance;
+                    $scope.header = params.header;
+                    $scope.filter = params.filter;
+                    $scope.config = params.config;
+                }],
+                animation: true,
+                size: 'lg',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selected) {
+                if (!Util.isEmpty(selected)) {
+                    PersonInfoService.getPersonInfo(selected.object_id_s).then(function (response) {
+                        //FIXME ugly hack - saving organization fails because those properties are not removed when angular converts to JSON
+                        delete response.$promise;
+                        delete response.$resolved;
+                        $timeout(function () {
+                            if (index > -1) {
+                                $scope.organization.people[index] = response;
+
+                            } else {
+                                $scope.organization.people.push(response);
+                            }
+                        }, 0);
+                    });
+                }
+            });
+        };
+
         //contact methods subtypes types
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
@@ -43,7 +143,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             $scope.communicationAccountsTypes = ['phone', 'fax', 'email', 'url'];
         });
 
-        ObjectLookupService.getIdentificationTypes().then(function (identificationTypes) {
+        ObjectLookupService.getOrganizationIdTypes().then(function (identificationTypes) {
             $scope.identificationTypes = identificationTypes;
         });
 
@@ -122,16 +222,58 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
         };
 
         function clearNotFilledElements(organization) {
+            //phones
             if (!organization.defaultPhone.value) {
                 organization.defaultPhone = null;
+            } else {
+                organization.contactMethods.push(organization.defaultPhone);
             }
+
+            //faxes
+            if (!organization.defaultFax.value) {
+                organization.defaultFax = null;
+            } else {
+                organization.contactMethods.push(organization.defaultFax);
+            }
+
+            //emails
             if (!organization.defaultEmail.value) {
                 organization.defaultEmail = null;
+            } else {
+                organization.contactMethods.push(organization.defaultEmail);
             }
+
+            //urls
             if (!organization.defaultUrl.value) {
                 organization.defaultUrl = null;
+            } else {
+                organization.contactMethods.push(organization.defaultUrl);
             }
-            //TODO do same for aliases, address... all defaults
+
+            //identifications
+            if (organization.defaultIdentification) {
+                if (!organization.defaultIdentification.identificationID) {
+                    organization.defaultIdentification = null;
+                } else {
+                    organization.identifications.push(organization.defaultIdentification);
+                }
+            }
+
+            //addresses
+            if (organization.defaultAddress && !organization.defaultAddress.streetAddress) {
+                organization.defaultAddress = null;
+            } else {
+                organization.addresses.push(organization.defaultAddress);
+            }
+
+            //remove empty organizations before save
+            _.remove(organization.people, function (person) {
+                if (!person.id) {
+                    return true;
+                }
+                return false;
+            });
+
             return organization;
         }
 

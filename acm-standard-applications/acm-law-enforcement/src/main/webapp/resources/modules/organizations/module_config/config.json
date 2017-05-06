@@ -192,7 +192,7 @@
       },
       {
         "type": "p/ORGANIZATION/rel",
-        "label": "Related People",
+        "label": "Related Organizations",
         "icon": "fa fa-info-circle",
         "components": [
           "related"
@@ -511,14 +511,12 @@
       "columnDefs": [
         {
           "name": "value",
-          "field": "value",
           "displayName": "organizations.comp.dbas.table.columns.value",
           "enableCellEdit": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "aliasType",
-          "field": "aliasType",
+          "name": "type",
           "displayName": "organizations.comp.dbas.table.columns.type",
           "enableCellEdit": false,
           "headerCellFilter": "translate"
@@ -563,29 +561,37 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "givenName",
-          "displayName": "organizations.comp.people.table.columns.givenName",
+          "name": "firstName",
+          "field": "givenName",
+          "displayName": "organizations.comp.people.table.columns.firstName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.id})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "lastName",
+          "field": "familyName",
+          "displayName": "organizations.comp.people.table.columns.lastName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.id})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "organization",
+          "field": "defaultOrganization.organizationValue",
+          "displayName": "organizations.comp.people.table.columns.organization",
           "headerCellFilter": "translate"
         },
         {
-          "name": "familyName",
-          "displayName": "organizations.comp.people.table.columns.familyName",
-          "headerCellFilter": "translate"
+          "name": "phone",
+          "field": "defaultPhone.value",
+          "displayName": "organizations.comp.people.table.columns.phone",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPhone.value}} [{{row.entity.defaultPhone.subType}}]</div>"
         },
         {
-          "name": "modifier",
-          "displayName": "organizations.comp.people.table.columns.modifier",
+          "name": "location",
+          "displayName": "organizations.comp.people.table.columns.location",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
-        },
-        {
-          "name": "modified",
-          "displayName": "organizations.comp.people.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultAddress.city}}, {{row.entity.defaultAddress.state}}</div>"
         }
       ]
     },
@@ -785,8 +791,20 @@
       "columnDefs": [
         {
           "name": "associationType",
-          "displayName": "people.comp.related.table.columns.associationType",
+          "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "organization.organizationValue",
+          "displayName": "organizations.comp.related.table.columns.value",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "organization.defaultIdentification.identificationNumber",
+          "displayName": "organizations.comp.related.table.columns.identification",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
         },
         {
           "name": "organization.organizationType",
@@ -794,24 +812,22 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "organization.organizationValue",
-          "displayName": "organizations.comp.related.table.columns.value",
-          "headerCellFilter": "translate"
+          "name": "organization.defaultPerson.givenName",
+          "displayName": "organizations.comp.related.table.columns.contact",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
         },
         {
-          "name": "modifier",
-          "displayName": "organizations.comp.related.table.columns.modifier",
+          "name": "organization.defaultPhone.value",
+          "displayName": "organizations.comp.related.table.columns.phone",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
         },
         {
-          "name": "modified",
-          "displayName": "organizations.comp.related.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "name": "organization.defaultAddress.city",
+          "displayName": "organizations.comp.related.table.columns.location",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
         }
       ]
     },

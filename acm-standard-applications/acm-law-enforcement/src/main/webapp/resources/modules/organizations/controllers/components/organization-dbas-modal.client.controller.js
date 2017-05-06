@@ -1,10 +1,10 @@
-angular.module('organizations').controller('Organization.AliasesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
+angular.module('organizations').controller('Organizations.DBAsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
         function ($scope, $modalInstance, ObjectLookupService, params) {
-            ObjectLookupService.getAliasTypes().then(function (response) {
-                $scope.aliasTypes = response;
+            ObjectLookupService.getDBAsTypes().then(function (response) {
+                $scope.dbasTypes = response;
             });
 
-            $scope.alias = params.alias;
+            $scope.dba = params.dba;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
 
@@ -14,7 +14,7 @@ angular.module('organizations').controller('Organization.AliasesModalController'
             $scope.onClickOk = function () {
                 $modalInstance.close(
                     {
-                        alias: $scope.alias,
+                        dba: $scope.dba,
                         isDefault: $scope.isDefault
                     }
                 );
