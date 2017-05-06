@@ -85,7 +85,7 @@
       },
       {
         "type": "p/PERSON",
-        "icon": "fa fa-exclamation-triangle",
+        "icon": "fa fa-user",
         "components": [
           "details",
           "pictures",
@@ -113,7 +113,7 @@
       {
         "type": "p/PERSON/pic",
         "label": "Pictures",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-file-image",
         "components": [
           "pictures"
         ]
@@ -121,7 +121,7 @@
       {
         "type": "p/PERSON/add",
         "label": "Addresses",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-address-card",
         "components": [
           "addresses"
         ]
@@ -129,7 +129,7 @@
       {
         "type": "p/PERSON/pho",
         "label": "Phones",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-phone",
         "components": [
           "phones"
         ]
@@ -137,7 +137,7 @@
       {
         "type": "p/PERSON/ema",
         "label": "Emails",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-envelope",
         "components": [
           "emails"
         ]
@@ -161,7 +161,7 @@
       {
         "type": "p/PERSON/org",
         "label": "Organizations",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-building",
         "components": [
           "organizations"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/PERSON/ids",
         "label": "IDs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-id-card",
         "components": [
           "ids"
         ]
@@ -177,7 +177,7 @@
       {
         "type": "p/PERSON/cas",
         "label": "Cases",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-folder",
         "components": [
           "cases"
         ]
@@ -185,7 +185,7 @@
       {
         "type": "p/PERSON/com",
         "label": "Complaints",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
         ]
@@ -193,7 +193,7 @@
       {
         "type": "p/PERSON/rel",
         "label": "Related People",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exchange",
         "components": [
           "related"
         ]

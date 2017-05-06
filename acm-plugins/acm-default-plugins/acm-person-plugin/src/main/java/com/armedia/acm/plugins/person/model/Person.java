@@ -147,11 +147,11 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
     private List<PersonAlias> personAliases = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "person")
     private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinColumns({
             @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
             @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
@@ -165,7 +165,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
     private List<Identification> identifications = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "acm_person_organization", joinColumns = {
             @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
@@ -257,12 +257,22 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             pa.setPerson(this);
         }
+
+        for (PersonAssociation pa : getAssociationsFromObjects())
+        {
+            pa.setPerson(this);
+        }
     }
 
     @PreUpdate
     protected void beforeUpdate()
     {
         for (PersonAlias pa : getPersonAliases())
+        {
+            pa.setPerson(this);
+        }
+
+        for (PersonAssociation pa : getAssociationsFromObjects())
         {
             pa.setPerson(this);
         }
