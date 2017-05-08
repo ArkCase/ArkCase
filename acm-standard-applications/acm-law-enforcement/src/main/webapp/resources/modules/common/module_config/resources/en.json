@@ -223,7 +223,8 @@
     },
     "organizations": {
       "title": "Organizations",
-      "searchExisting": "Search Existing Organizations"
+      "searchExisting.placeholder": "Search Existing Organizations",
+      "organizationType": "Relation Type"
     },
     "picture": {
       "title": "Picture"
@@ -328,7 +329,8 @@
     },
     "people": {
       "title": "People",
-      "searchExisting.placeholder": "Search Existing Person"
+      "searchExisting.placeholder": "Search Existing Person",
+      "personType": "Person Type"
     },
     "locations": {
       "title": "Locations",

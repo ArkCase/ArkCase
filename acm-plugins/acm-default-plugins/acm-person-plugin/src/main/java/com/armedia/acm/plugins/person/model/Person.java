@@ -147,7 +147,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
     private List<PersonAlias> personAliases = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "person")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "person")
     private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
 
 
@@ -238,7 +238,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
      */
     @OneToOne
     @JoinColumn(name = "cm_default_organization")
-    private Organization defaultOrganization;
+    private PersonAssociation defaultOrganization;
 
     @Lob
     @Column(name = "cm_details")
@@ -719,12 +719,12 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.defaultIdentification = defaultIdentification;
     }
 
-    public Organization getDefaultOrganization()
+    public PersonAssociation getDefaultOrganization()
     {
         return defaultOrganization;
     }
 
-    public void setDefaultOrganization(Organization defaultOrganization)
+    public void setDefaultOrganization(PersonAssociation defaultOrganization)
     {
         this.defaultOrganization = defaultOrganization;
     }

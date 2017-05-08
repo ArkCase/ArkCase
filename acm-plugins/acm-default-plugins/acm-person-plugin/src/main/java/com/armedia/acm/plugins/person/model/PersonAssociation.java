@@ -55,7 +55,7 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_person_assoc_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_person_assoc_person_id", nullable = false)
     private Person person;
 

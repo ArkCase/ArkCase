@@ -47,7 +47,7 @@ public class OrganizationAssociation implements Serializable, AcmEntity
     @Column(name = "cm_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_organization_id", nullable = false)
     private Organization organization;
 

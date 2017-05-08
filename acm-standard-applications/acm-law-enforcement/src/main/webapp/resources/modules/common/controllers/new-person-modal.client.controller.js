@@ -22,7 +22,9 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             contactMethods: [],
             identifications: [],
             addresses: [],
-            organizations: [{}],
+            associationsFromObjects: [{
+                parentType: 'ORGANIZATION'
+            }],
             defaultEmail: {
                 type: 'email'
             },
@@ -55,6 +57,10 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
         ObjectLookupService.getAddressTypes().then(function (addressTypes) {
             $scope.addressTypes = addressTypes;
+        });
+
+        ObjectLookupService.getPersonOrganizationRelationTypes().then(function (personOrganizationRelationTypes) {
+            $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
         });
 
         $scope.addContactMethod = function (contactType) {
@@ -127,7 +133,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
         $scope.removeOrganization = function (organization) {
             $timeout(function () {
-                _.remove($scope.person.organizations, function (object) {
+                _.remove($scope.person.associationsFromObjects, function (object) {
                     return object === organization;
                 });
             }, 0);
@@ -156,23 +162,23 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
                     }
                 }
             });
+
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (selectedOrganization) {
-                        //FIXME ugly hack - saving person fails because those properties are not removed when angular converts to JSON
-                        delete selectedOrganization.$promise;
-                        delete selectedOrganization.$resolved;
-                        // override values of existing organization which is displayed
-
-                        $timeout(function () {
-                            if (index > -1) {
-                                $scope.person.organizations[index] = selectedOrganization;
-
-                            } else {
-                                $scope.person.organizations.push(selectedOrganization);
-                            }
-                        }, 0);
-                    });
+                    // override values of existing organization which is displayed
+                    $timeout(function () {
+                        var personAssocation = {
+                            person: $scope.person,
+                            parentId: selected.object_id_s,
+                            parentType: selected.object_type_s,
+                            parentTitle: selected.value_parseable
+                        };
+                        if (index > -1) {
+                            $scope.person.associationsFromObjects[index] = personAssocation;
+                        } else {
+                            $scope.person.associationsFromObjects.push(personAssocation);
+                        }
+                    }, 0);
                 }
             });
         };
@@ -206,8 +212,8 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }
 
             //remove empty organizations before save
-            _.remove(person.organizations, function (organization) {
-                if (!organization.organizationId) {
+            _.remove(person.associationsFromObjects, function (organization) {
+                if (!organization.parentId) {
                     return true;
                 }
                 return false;
@@ -221,7 +227,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }
             //aliases
             if (person.defaultAlias) {
-                if (!person.defaultAlias.aliasValue) {
+                if (person.defaultAlias.aliasValue) {
                     person.defaultAlias = null;
                 }
                 else {

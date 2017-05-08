@@ -113,14 +113,14 @@ public class Organization implements Serializable, AcmEntity
             inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST})
     @JoinColumns({
             @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
             @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "organization")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -171,12 +171,6 @@ public class Organization implements Serializable, AcmEntity
     @Lob
     @Column(name = "cm_details")
     private String details;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
-    @JoinTable(name = "acm_person_organization",
-            joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")})
-    List<Person> people = new ArrayList<>();
 
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
@@ -457,16 +451,6 @@ public class Organization implements Serializable, AcmEntity
     public ContactMethod getDefaultFax()
     {
         return defaultFax;
-    }
-
-    public List<Person> getPeople()
-    {
-        return people;
-    }
-
-    public void setPeople(List<Person> people)
-    {
-        this.people = people;
     }
 
     public List<OrganizationAssociation> getAssociationsToObjects()

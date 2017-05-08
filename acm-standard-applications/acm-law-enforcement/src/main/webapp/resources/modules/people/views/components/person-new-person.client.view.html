@@ -199,16 +199,25 @@
                 </div>
                 <div id="collapseOrganizations" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <div ng-repeat="organization in person.organizations">
+                        <div ng-repeat="organization in person.associationsFromObjects | filter: {parentType:'ORGANIZATION'}">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                     <label>&nbsp;</label>
-                                    <input type="text" ng-model="organization.organizationValue"
+                                    <input type="text" ng-model="organization.parentTitle"
                                            ng-click="searchOrganization($index)"
                                            class="input-md form-control"
                                            placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
+                                    <label translate>
+                                        people.comp.editPerson.organizations.organizationType</label>
+                                    <select class="form-control" ng-disabled="!organization.parentId"
+                                            ng-model="organization.personType">
+                                        <option ng-repeat="relation in personOrganizationRelationTypes"
+                                                value="{{relation.type}}">
+                                            {{relation.name}}
+                                        </option>
+                                    </select>
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">

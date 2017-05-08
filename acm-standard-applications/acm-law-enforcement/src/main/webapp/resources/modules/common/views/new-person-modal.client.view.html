@@ -202,33 +202,43 @@
             </div>
             <div id="collapseOrganizations" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <div ng-repeat="organization in person.organizations">
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label>&nbsp;</label>
-                                <input type="text" ng-model="organization.organizationValue"
-                                       ng-click="searchOrganization($index)"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'common.newPerson.organizations.searchExisting.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="removeOrganization(organization)" ng-show="!$first">
-                                        <i class="fa fa-minus text-danger"></i><span
-                                            translate>common.newPerson.remove</span>
-                                    </button>
+                    <div class="panel-body">
+                        <div ng-repeat="organization in person.associationsFromObjects | filter: {parentType:'ORGANIZATION'}">
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label>&nbsp;</label>
+                                    <input type="text" ng-model="organization.parentTitle"
+                                           ng-click="searchOrganization($index)"
+                                           class="input-md form-control"
+                                           placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
                                 </div>
-                                <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addNewOrganization();">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>common.newPerson.addAnother</span>
-                                    </button>
+                                <div class="col-sm-4 form-group">
+                                    <label translate>
+                                        people.comp.editPerson.organizations.organizationType</label>
+                                    <select class="form-control" ng-disabled="!organization.parentId"
+                                            ng-model="organization.personType">
+                                        <option ng-repeat="relation in personOrganizationRelationTypes"
+                                                value="{{relation.type}}">
+                                            {{relation.name}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control"
+                                                ng-click="removeOrganization(organization)" ng-show="!$first">
+                                            <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
+                                        </button>
+                                    </div>
+                                    <div class="pull-left">
+                                        <label class="control-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-link form-control"
+                                                ng-click="addNewOrganization();">
+                                            <i class="fa fa-plus text-success"></i><span
+                                                translate>people.comp.editPerson.addAnother</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -76,7 +76,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
             solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solrDoc.setAdditionalProperty("default_organization_s", person.getDefaultOrganization() != null ? person.getDefaultOrganization().getOrganizationValue() : null);
+        solrDoc.setAdditionalProperty("default_organization_s", person.getDefaultOrganization() != null ? person.getDefaultOrganization().getParentTitle() : null);
         solrDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(person));
         solrDoc.setAdditionalProperty("default_location_s", getDefaultAddress(person));
 
