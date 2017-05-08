@@ -13,13 +13,13 @@
            <div class="col-sm-6 form-group">
             	<label for="emails_{{::$id}}"
                            translate>organizations.comp.emails.modal.value.label</label>
-            	<input id="emails_{{::$id}}" type="text" ng-model="email.value"
+            	<input id="emails_{{::$id}}" type="text" ng-model="email.value" class="input-md form-control"
                        placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
               	<label for="emailTypes_{{::$id}}"
                            translate>organizations.comp.emails.modal.type.label</label>
-                <select id="emailTypes_{{::$id}}"
+                <select id="emailTypes_{{::$id}}" class="input-md form-control"
                         ng-model="email.subType"
                         ng-options="item.type as item.name for item in emailTypes"></select>
            </div>
