@@ -166,7 +166,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 , controller: 'directives.DocTreeCheckinDialogController'
                                 , animation: true
                                 , size: 'lg'
-                                ,backdrop: 'static'
+                                , backdrop: 'static'
                                 , resolve: {
                                     params: function () {
                                         return params;
