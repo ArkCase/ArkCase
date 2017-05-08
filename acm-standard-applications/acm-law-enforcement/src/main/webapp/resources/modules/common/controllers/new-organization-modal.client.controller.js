@@ -23,7 +23,6 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             contactMethods: [],
             identifications: [],
             addresses: [],
-            people: [{}],
             defaultEmail: {
                 type: 'email'
             },
