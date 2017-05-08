@@ -140,6 +140,10 @@
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="01-person-drop-foreign-keys" author="nebojsha.davidovikj">
+        <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization"/>
+    </changeSet>
+
     <changeSet id="09-person-foreign-keys" author="nebojsha.davidovikj">
         <addForeignKeyConstraint baseTableName="acm_person"
                                  baseColumnNames="cm_default_organization"
