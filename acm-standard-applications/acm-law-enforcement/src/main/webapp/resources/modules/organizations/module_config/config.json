@@ -9,7 +9,7 @@
       "menuItemURL": "organizations.main",
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
-      "iconClass": "fa fa-exclamation-triangle",
+      "iconClass": "fa fa-building",
       "position": 90
     },
     {
@@ -113,7 +113,7 @@
       {
         "type": "p/ORGANIZATION/add",
         "label": "Addresses",
-        "icon": "fa fa-address-card",
+        "icon": "fa fa-map-marker",
         "components": [
           "addresses"
         ]
@@ -145,7 +145,7 @@
       {
         "type": "p/ORGANIZATION/url",
         "label": "URLs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-link",
         "components": [
           "urls"
         ]
@@ -153,7 +153,7 @@
       {
         "type": "p/ORGANIZATION/dba",
         "label": "DBAs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-eye",
         "components": [
           "dbas"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/ORGANIZATION/ids",
         "label": "IDs",
-        "icon": "fa fa-id-card",
+        "icon": "fa fa-credit-card",
         "components": [
           "ids"
         ]

@@ -8,28 +8,38 @@
 </div>
 <div class="modal-body">
     <form name="phoneForm">
-        <div>
-            <label for="phoneTypes_{{::$id}}"
-                   translate>people.comp.phones.modal.type.label</label>
+        <div class="row">
+           <div class="col-sm-6 form-group">
+              <label for="phones_{{::$id}}"
+                           translate>people.comp.phones.modal.value.label</label>
+              <input id="phones_{{::$id}}" type="text" ng-model="phone.value" class="input-md form-control"
+                       placeholder="{{ 'people.comp.phones.modal.value.placeholder' | translate }}">
+           </div>
+           <div class="col-sm-6 form-group">
+              <label for="phoneTypes_{{::$id}}"
+                           translate>people.comp.phones.modal.type.label</label>
+              <select id="phoneTypes_{{::$id}}" class="input-md form-control"
+                        ng-model="phone.subType"
+                        ng-options="item.type as item.name for item in phoneTypes"></select>
+           </div>
         </div>
-        <select id="phoneTypes_{{::$id}}"
-                ng-model="phone.subType"
-                ng-options="item.type as item.name for item in phoneTypes"></select>
-        <div>
-            <label for="phones_{{::$id}}"
-                   translate>people.comp.phones.modal.value.label</label>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+              <label translate>people.comp.phones.modal.setPrimary</label>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="true">
+                 <translate>people.comp.phones.modal.yes</translate>
+              </label>
+              <input type="radio" ng-model="isDefault" ng-value="false">
+              <translate>people.comp.phones.modal.no</translate>
+           </div>
         </div>
-        <input id="phones_{{::$id}}" type="text" ng-model="phone.value"
-               placeholder="{{ 'people.comp.phones.modal.value.placeholder' | translate }}">
-        <div>
-            <p translate>people.comp.phones.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>people.comp.phones.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>people.comp.phones.modal.no</translate>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+           	<label for="phoneDescription" translate>people.comp.phones.modal.type.description</label>
+            <textarea id="phoneDescription" class="input-md form-control" ng-model="phone.description"></textarea>
+           </div>
         </div>
-        <label for="phoneDescription"/>
-        <textarea id="phoneDescription" ng-model="phone.description"></textarea>
     </form>
 </div>
 <div class="modal-footer">

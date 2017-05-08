@@ -8,28 +8,38 @@
 </div>
 <div class="modal-body">
     <form name="faxForm">
-        <div>
-            <label for="faxTypes_{{::$id}}"
-                   translate>organizations.comp.faxes.modal.type.label</label>
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            	<label for="faxes_{{::$id}}"
+                           translate>organizations.comp.faxes.modal.value.label</label>
+            	<input id="faxes_{{::$id}}" type="text" ng-model="fax.value" class="input-md form-control"
+                       placeholder="{{ 'organizations.comp.faxes.modal.value.placeholder' | translate }}">
+           </div>
+           <div class="col-sm-6 form-group">
+              	<label for="faxTypes_{{::$id}}"
+                           translate>organizations.comp.faxes.modal.type.label</label>
+                <select id="faxTypes_{{::$id}}"
+                        ng-model="fax.subType" class="input-md form-control"
+                        ng-options="item.type as item.name for item in faxTypes"></select>
+           </div>
         </div>
-        <select id="faxTypes_{{::$id}}"
-                ng-model="fax.subType"
-                ng-options="item.type as item.name for item in faxTypes"></select>
-        <div>
-            <label for="faxes_{{::$id}}"
-                   translate>organizations.comp.faxes.modal.value.label</label>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+              <label translate>organizations.comp.faxes.modal.setPrimary</label>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="true">
+                 <translate>organizations.comp.faxes.modal.yes</translate>
+              </label>
+              <input type="radio" ng-model="isDefault" ng-value="false">
+              <translate>organizations.comp.faxes.modal.no</translate>
+           </div>
         </div>
-        <input id="faxes_{{::$id}}" type="text" ng-model="fax.value"
-               placeholder="{{ 'organizations.comp.faxes.modal.value.placeholder' | translate }}">
-        <div>
-            <p translate>organizations.comp.faxes.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>organizations.comp.faxes.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>organizations.comp.faxes.modal.no</translate>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+           	<label for="faxDescription" translate>organizations.comp.faxes.modal.description</label>
+            <textarea id="faxDescription" class="input-md form-control" ng-model="faxes.description"></textarea>
+           </div>
         </div>
-        <label for="faxDescription"/>
-        <textarea id="faxDescription" ng-model="fax.description"></textarea>
     </form>
 </div>
 <div class="modal-footer">
