@@ -9,7 +9,7 @@
       "menuItemURL": "people.main",
       "menuItemTitle": "people.menus.leftnav.item",
       "moduleId": "person",
-      "iconClass": "fa fa-exclamation-triangle",
+      "iconClass": "fa fa-user",
       "position": 80
     },
     {
@@ -113,7 +113,7 @@
       {
         "type": "p/PERSON/pic",
         "label": "Pictures",
-        "icon": "fa fa-file-image",
+        "icon": "fa fa-picture-o",
         "components": [
           "pictures"
         ]
@@ -121,7 +121,7 @@
       {
         "type": "p/PERSON/add",
         "label": "Addresses",
-        "icon": "fa fa-address-card",
+        "icon": "fa fa-map-marker",
         "components": [
           "addresses"
         ]
@@ -145,7 +145,7 @@
       {
         "type": "p/PERSON/url",
         "label": "URLs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-link",
         "components": [
           "urls"
         ]
@@ -153,7 +153,7 @@
       {
         "type": "p/PERSON/ali",
         "label": "Aliases",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-eye",
         "components": [
           "aliases"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/PERSON/ids",
         "label": "IDs",
-        "icon": "fa fa-id-card",
+        "icon": "fa fa-credit-card",
         "components": [
           "ids"
         ]
