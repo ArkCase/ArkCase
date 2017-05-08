@@ -105,7 +105,7 @@
       "country.label": "Country",
       "country.placeholder": "Enter Country",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Save"
+      "btnOk.text": "Save Address"
     }
   },
   "people.comp.phones": {
@@ -133,7 +133,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Phone",
+      "btnOk.text": "Add Phone Number",
       "type.label": "Phone Type",
       "type.placeholder": "Enter Phone Type",
       "value.label": "Phone Number",
@@ -165,7 +165,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Email",
+      "btnOk.text": "Add Email Address",
       "type.label": "Email Type",
       "type.placeholder": "Enter Email Type",
       "value.label": "Email Address",
