@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -58,14 +59,96 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        orgDoc.setAdditionalProperty("primary_contact_s", org.getPrimaryContact());
+        orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
+        orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
+        orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
+
         return orgDoc;
     }
 
-    // No implementation needed because we don't want Organization indexed in the SolrQuickSearch
+    private Object getDefaultIdentification(Organization org)
+    {
+        if (org.getDefaultIdentification() == null)
+        {
+            return null;
+        }
+        return org.getDefaultIdentification().getIdentificationNumber() + " [" + org.getDefaultIdentification().getIdentificationType() + "]";
+    }
+
+    private String getDefaultPhone(Organization organization)
+    {
+        if (organization.getDefaultPhone() == null)
+        {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(organization.getDefaultPhone().getValue());
+        if (organization.getDefaultPhone().getSubType() != null)
+        {
+            sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
+        }
+        return sb.toString();
+    }
+
+    private String getDefaultAddress(Organization organization)
+    {
+        if (organization.getDefaultAddress() == null)
+        {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (organization.getDefaultAddress().getCity() != null)
+        {
+            sb.append(organization.getDefaultAddress().getCity());
+        }
+        if (organization.getDefaultAddress().getState() != null)
+        {
+            if (sb.length() > 0)
+            {
+                sb.append(", ");
+            }
+            sb.append(organization.getDefaultAddress().getState());
+        }
+        return sb.toString();
+    }
+
     @Override
     public SolrDocument toSolrQuickSearch(Organization in)
     {
-        return null;
+
+        SolrDocument orgDoc = new SolrDocument();
+        orgDoc.setId(in.getOrganizationId() + "-ORGANIZATION");
+        orgDoc.setObject_type_s("ORGANIZATION");
+        orgDoc.setObject_id_s(in.getOrganizationId() + "");
+
+
+        orgDoc.setCreate_tdt(in.getCreated());
+        orgDoc.setAuthor_s(in.getCreator());
+        orgDoc.setLast_modified_tdt(in.getModified());
+        orgDoc.setModifier_s(in.getModifier());
+
+        orgDoc.setType_s(in.getOrganizationType());
+        orgDoc.setData_s(in.getOrganizationValue());
+
+        orgDoc.setName(in.getOrganizationValue());
+        orgDoc.setTitle_parseable(in.getOrganizationValue());
+
+        /** Additional properties for full names instead of ID's */
+        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
+        if (creator != null)
+        {
+            orgDoc.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+        }
+
+        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
+        if (modifier != null)
+        {
+            orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
+        }
+
+        return orgDoc;
     }
 
     @Override

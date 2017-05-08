@@ -43,7 +43,8 @@
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0</exchange-web-services.version>
-        <fasterxml-jackson-core.version>2.6.1</fasterxml-jackson-core.version>
+        <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
+        <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
         <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
         <h2.version>1.3.169</h2.version>
@@ -568,6 +569,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <classifier>feature</classifier>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -1502,6 +1504,14 @@
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/com.voodoodyne.jackson.jsog/jackson-jsog -->
+            <dependency>
+                <groupId>com.voodoodyne.jackson.jsog</groupId>
+                <artifactId>jackson-jsog</artifactId>
+                <version>${voodoodyne-jackson-jsog.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
@@ -1781,6 +1791,19 @@
                 <artifactId>powermock-api-easymock</artifactId>
                 <version>${powermock.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib-nodep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
                 <exclusions>
                     <exclusion>
                         <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
