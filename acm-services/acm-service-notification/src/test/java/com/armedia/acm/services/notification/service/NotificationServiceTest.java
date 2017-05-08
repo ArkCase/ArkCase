@@ -8,6 +8,7 @@ import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.BasicNotificationRule;
 import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -26,6 +27,8 @@ import java.util.Map;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class NotificationServiceTest extends EasyMockSupport
@@ -149,18 +152,11 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
-        SmtpStartTLSNotificationSender smtpStartTLSNotificationSender = new SmtpStartTLSNotificationSender();
-        smtpStartTLSNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpStartTLSNotificationSender.setMuleContextManager(mockMuleContextManager);
-        smtpStartTLSNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-
         notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderMap.put("smtp+starttls", smtpStartTLSNotificationSender);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
         NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
-        smtpStartTLSNotificationSender.setNotificationUtils(mockNotificationUtils);
 
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
         senders.put("notificationSender", notificationSenderFactory);
@@ -195,9 +191,11 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn("smtp").anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.starttls"), capture(stringCapture)))
                 .andReturn("false").anyTimes();
+
+        Capture<Map<String, Object>> messagePropsCapture = null;
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
@@ -226,6 +224,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        assertFalse(starttls);
     }
 
     @Test
@@ -305,14 +306,7 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
-        SmtpStartTLSNotificationSender smtpStartTLSNotificationSender = new SmtpStartTLSNotificationSender();
-        smtpStartTLSNotificationSender.setNotificationUtils(mockNotificationUtils);
-        smtpStartTLSNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpStartTLSNotificationSender.setMuleContextManager(mockMuleContextManager);
-        smtpStartTLSNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-
         notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderMap.put("smtp+starttls", smtpStartTLSNotificationSender);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
@@ -355,9 +349,10 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
                 anyString(), anyLong())).andReturn(null).anyTimes();
 
+        Capture<Map<String, Object>> messagePropsCapture = null;
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
@@ -382,6 +377,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        assertFalse(starttls);
     }
 
     @Test
@@ -458,18 +456,11 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
-        SmtpStartTLSNotificationSender smtpStartTLSNotificationSender = new SmtpStartTLSNotificationSender();
-        smtpStartTLSNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpStartTLSNotificationSender.setMuleContextManager(mockMuleContextManager);
-        smtpStartTLSNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-
         notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderMap.put("smtp+starttls", smtpStartTLSNotificationSender);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
         NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
-        smtpStartTLSNotificationSender.setNotificationUtils(mockNotificationUtils);
 
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
         senders.put("notificationSender", notificationSenderFactory);
@@ -504,10 +495,11 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn("smtp").anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.starttls"), capture(stringCapture)))
                 .andReturn("true").anyTimes();
+        Capture<Map<String, Object>> messagePropsCapture = null;
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtpStartTLS.in"), contains("note"), capture(messagePropsCapture)))
+            messagePropsCapture = EasyMock.newCapture();
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
@@ -535,6 +527,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        assertTrue(starttls);
     }
 
     @Test
@@ -614,14 +609,7 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
-        SmtpStartTLSNotificationSender smtpStartTLSNotificationSender = new SmtpStartTLSNotificationSender();
-        smtpStartTLSNotificationSender.setNotificationUtils(mockNotificationUtils);
-        smtpStartTLSNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpStartTLSNotificationSender.setMuleContextManager(mockMuleContextManager);
-        smtpStartTLSNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-
         notificationSenderMap.put("smtp", smtpNotificationServer);
-        notificationSenderMap.put("smtp+starttls", smtpStartTLSNotificationSender);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
         Map<String, NotificationSenderFactory> senders = new HashMap<>();
@@ -664,10 +652,12 @@ public class NotificationServiceTest extends EasyMockSupport
         expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
                 anyString(), anyLong())).andReturn(null).anyTimes();
 
+        Capture<Map<String, Object>> messagePropsCapture = null;
+
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
-            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtpStartTLS.in"), contains("note"), capture(messagePropsCapture)))
+            messagePropsCapture = EasyMock.newCapture();
+            expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
         {
@@ -691,6 +681,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        assertTrue(starttls);
     }
 
     @Test
