@@ -100,13 +100,14 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         };
 
         $scope.deleteRow = function (rowEntity) {
-            var id = Util.goodMapValue(rowEntity, "organizationId", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizations = _.remove($scope.objectInfo.organizations, function (item) {
-                    return item.organizationId != id;
-                });
-                saveObjectInfoAndRefresh();
-            }
+            //TODO remove old code below, and make API call for deleting
+            // var id = Util.goodMapValue(rowEntity, "organizationId", 0);
+            // if (0 < id) {    //do not need to call service when deleting a new row with id==0
+            //     $scope.objectInfo.organizations = _.remove($scope.objectInfo.organizations, function (item) {
+            //         return item.organizationId != id;
+            //     });
+            //     saveObjectInfoAndRefresh();
+            // }
         };
 
         $scope.addExisting = function () {
@@ -134,15 +135,18 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    PersonAssociationService.savePersonAssociation({
+                    var personAssociation = {
                         person: {id: $scope.objectInfo.id},
                         parentId: selected.object_id_s,
                         parentType: selected.object_type_s,
                         parentTitle: selected.value_parseable,
                         personType: "Employee"
-                    }).then(function (data) {
-                        $scope.$emit("report-object-updated", $scope.objectInfo);
-                    });
+                    };
+                    if (!$scope.objectInfo.associationsFromObjects) {
+                        $scope.objectInfo.associationsFromObjects = [];
+                    }
+                    $scope.objectInfo.associationsFromObjects.push(personAssociation);
+                    saveObjectInfoAndRefresh();
                 }
             });
         };

@@ -120,7 +120,7 @@ public class Organization implements Serializable, AcmEntity
     @OrderBy("created ASC")
     private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE}, orphanRemoval = true, mappedBy = "organization")
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
     @Column(name = "cm_class_name")
