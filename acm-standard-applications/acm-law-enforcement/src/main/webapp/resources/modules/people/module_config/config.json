@@ -571,39 +571,35 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "organizationValue",
+          "name": "name",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "defaultIdentification.identificationNumber",
+          "name": "default_identification_s",
           "displayName": "people.comp.organizations.table.columns.identification",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultIdentification.identificationNumber}} [{{row.entity.defaultIdentification.identificationType}}]</div>"
+          "headerCellFilter": "translate"
         },
         {
-          "name": "organizationType",
+          "name": "type_lcs",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "defaultPerson.givenName",
+          "name": "primary_contact_s",
           "displayName": "people.comp.organizations.table.columns.contact",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPerson.givenName}} {{row.entity.defaultPerson.familyName}}</div>"
+          "headerCellFilter": "translate"
         },
         {
-          "name": "defaultPhone.value",
+          "name": "default_phone_s",
           "displayName": "people.comp.organizations.table.columns.phone",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPhone.value}} [{{row.entity.defaultPhone.subType}}]</div>"
+          "headerCellFilter": "translate"
         },
         {
-          "name": "defaultAddress.city",
+          "name": "default_location_s",
           "displayName": "people.comp.organizations.table.columns.location",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultAddress.city}}, {{row.entity.defaultAddress.state}}</div>"
+          "headerCellFilter": "translate"
         }
       ]
     },

@@ -4,7 +4,9 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- need an empty changelog file here so Liquibase will stop complaining -->
 
+    <changeSet id="01-person-drop-foreign-keys" author="nebojsha.davidovikj">
+        <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization"/>
+    </changeSet>
 </databaseChangeLog>
 
