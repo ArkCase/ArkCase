@@ -213,7 +213,8 @@
                                         people.comp.editPerson.organizations.organizationType</label>
                                     <select class="form-control" ng-disabled="!organization.parentId"
                                             ng-model="organization.personType">
-                                        <option ng-repeat="relation in personOrganizationRelationTypes" value="{{relation.type}}">
+                                        <option ng-repeat="relation in personOrganizationRelationTypes"
+                                                value="{{relation.type}}">
                                             {{relation.name}}
                                         </option>
                                     </select>
