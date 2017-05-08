@@ -106,11 +106,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.selectedItems = [];
+                var filterInitialValue = scope.filter;
                 scope.queryExistingItems = function () {
 
                     var query = '';
                     if (scope.extraFilter) {
-                        scope.filters = scope.filters + scope.extraFilter + '*' + scope.searchQuery + '*';
+                        scope.filters = filterInitialValue + scope.extraFilter + '*' + scope.searchQuery + '*';
                     }
 
                     if (scope.findGroups) {
