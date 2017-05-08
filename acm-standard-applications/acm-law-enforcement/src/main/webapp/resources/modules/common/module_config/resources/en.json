@@ -223,7 +223,8 @@
     },
     "organizations": {
       "title": "Organizations",
-      "searchExisting": "Search Existing Organizations"
+      "searchExisting.placeholder": "Search Existing Organizations",
+      "organizationType": "Relation Type"
     },
     "picture": {
       "title": "Picture"

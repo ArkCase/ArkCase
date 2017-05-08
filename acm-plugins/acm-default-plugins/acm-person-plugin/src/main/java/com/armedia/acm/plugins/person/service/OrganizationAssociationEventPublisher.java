@@ -72,7 +72,6 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
             Organization exOrganization = previousSource.getOrganization();
             Organization upOrganization = source.getOrganization();
 
-            checkForPeopleRelatedEvents(exOrganization, upOrganization, succeeded, parentType, parentId);
             checkForContactRelatedEvents(exOrganization, upOrganization, succeeded, parentType, parentId);
             checkForAddressRelatedEvents(exOrganization, upOrganization, succeeded, parentType, parentId);
         }
@@ -168,52 +167,6 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 
         return IntStream.range(0, sortedExisting.size())
                 .anyMatch(i -> !isContactMethodChanged(sortedExisting.get(i), sortedUpdated.get(i)));
-    }
-
-    private void checkForPeopleRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-                                             String parentType, Long parentId)
-    {
-        boolean isOrganizationAddedOrRemoved = false;
-        List<Person> existingOrganizations = existingOrganization.getPeople();
-        List<Person> updatedOrganizations = updatedOrganization.getPeople();
-        Set<Long> updatedIds = updatedOrganizations.stream()
-                .map(Person::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingOrganizations.stream()
-                .map(Person::getId)
-                .collect(Collectors.toSet());
-
-        if (isObjectAdded(existingIds, updatedIds))
-        {
-            publishOrganizationEvent(updatedOrganization, "person.added", succeeded, parentType, parentId);
-            isOrganizationAddedOrRemoved = true;
-        }
-        if (isObjectRemoved(existingIds, updatedIds))
-        {
-            publishOrganizationEvent(updatedOrganization, "person.deleted", succeeded, parentType, parentId);
-            isOrganizationAddedOrRemoved = true;
-        }
-        if (!isOrganizationAddedOrRemoved)
-        {
-            if (isPersonEdited(existingOrganizations, updatedOrganizations))
-            {
-                publishOrganizationEvent(updatedOrganization, "organization.updated", succeeded, parentType, parentId);
-            }
-        }
-    }
-
-    private boolean isPersonEdited(List<Person> existingPeople, List<Person> updatedPeople)
-    {
-        List<Person> sortedExisting = existingPeople.stream()
-                .sorted(Comparator.comparing(Person::getId))
-                .collect(Collectors.toList());
-
-        List<Person> sortedUpdated = updatedPeople.stream()
-                .sorted(Comparator.comparing(Person::getId))
-                .collect(Collectors.toList());
-
-        return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !isPersonChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
 
