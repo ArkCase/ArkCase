@@ -93,13 +93,10 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                 });
 
             $scope.isreadOnly = false;
-            // Using the parentInfo to enforce the editing permission
-            // Uncomment this when `editAttachments` access rules are added for case, complaints, etc
-            /*
-             PermissionsService.getActionPermission('editAttachments', $scope.parentInfo).then(function (result) {
+            // Using the parentInfo and parentObjectType to enforce the editing permission
+            PermissionsService.getActionPermission('editAttachments', $scope.parentInfo, {objectType: $scope.parentObjectType}).then(function (result) {
              $scope.isReadOnly = !result;
              });
-             */
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
