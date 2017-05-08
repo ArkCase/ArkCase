@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 
@@ -56,6 +57,7 @@ public abstract class RecurrenceDetails
 
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime endBy;
 
     public EventRecurrence getRecurrenceType()

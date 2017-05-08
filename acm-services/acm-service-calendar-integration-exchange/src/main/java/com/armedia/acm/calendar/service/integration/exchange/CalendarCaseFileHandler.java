@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -28,6 +29,7 @@ import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -46,10 +48,12 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
 {
 
     private final PropertySet standardProperties = new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.Subject,
-            ItemSchema.DateTimeSent, ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body,
-            ItemSchema.Size, AppointmentSchema.IsAllDayEvent, AppointmentSchema.IsCancelled, AppointmentSchema.IsMeeting,
-            AppointmentSchema.IsRecurring, AppointmentSchema.Start, AppointmentSchema.End, AppointmentSchema.StartTimeZone,
-            AppointmentSchema.EndTimeZone, ItemSchema.ParentFolderId);
+            AppointmentSchema.Location, AppointmentSchema.Start, AppointmentSchema.StartTimeZone, AppointmentSchema.End,
+            AppointmentSchema.EndTimeZone, AppointmentSchema.IsAllDayEvent, ItemSchema.DateTimeSent, ItemSchema.DateTimeCreated,
+            ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size, AppointmentSchema.IsCancelled,
+            AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring, ItemSchema.ParentFolderId, ItemSchema.ReminderMinutesBeforeStart,
+            AppointmentSchema.Sensitivity, AppointmentSchema.Importance, AppointmentSchema.RequiredAttendees,
+            AppointmentSchema.OptionalAttendees, AppointmentSchema.Resources, AppointmentSchema.Recurrence, AppointmentSchema.Organizer);
 
     private Map<String, PropertyDefinition> sortFields;
 
@@ -252,6 +256,8 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
             {
                 AcmCalendarEvent event = new AcmCalendarEvent();
                 ExchangeTypesConverter.setEventProperties(event, appointment);
+                event.setObjectId(objectId);
+                // event.setCalendarId(calendarId);
                 events.add(event);
             }
             return events;
@@ -281,15 +287,21 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());
         CalendarView calendarView = new CalendarView(startDate, endDate, maxItems);
-        // PropertySet allProperties = new PropertySet();
-        // allProperties.addRange(standardProperties);
-        // calendarView.setPropertySet(allProperties);
 
         PropertyDefinition orderBy = sort == null || sort.trim().isEmpty() || !sortFields.containsKey(sort) ? ItemSchema.DateTimeReceived
                 : sortFields.get(sort);
 
         view.getOrderBy().add(orderBy, "ASC".equals(sortDirection) ? SortDirection.Ascending : SortDirection.Descending);
+
+        PropertySet allProperties = new PropertySet();
+        allProperties.addRange(standardProperties);
+        // calendarView.setPropertySet(allProperties);
+
         FindItemsResults<Appointment> findResults = service.findAppointments(new FolderId(calendarId), calendarView);
+        List<Item> appointmentItems = findResults.getItems().stream().map(item -> {
+            return (Item) item;
+        }).collect(Collectors.toList());
+        service.loadPropertiesForItems(appointmentItems, allProperties);
         return findResults;
     }
 

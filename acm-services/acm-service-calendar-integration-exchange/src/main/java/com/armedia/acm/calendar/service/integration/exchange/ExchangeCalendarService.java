@@ -140,6 +140,13 @@ public class ExchangeCalendarService implements CalendarService
     public void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent,
             MultipartFile[] attachments) throws CalendarServiceException
     {
+        if (calendarId == null && calendarEvent.getCalendarId() == null
+                || calendarId != null && calendarEvent.getCalendarId() != null && !calendarId.equals(calendarEvent.getCalendarId()))
+        {
+            // TODO: add logging and proper exception message here.
+            throw new CalendarServiceException("");
+        }
+        calendarId = calendarId != null ? calendarId : calendarEvent.getCalendarId();
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceException(""));
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
