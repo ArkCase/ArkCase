@@ -9,22 +9,36 @@
 </div>
 <div class="modal-body">
     <form name="dbasForm">
-        <label for="value_{{::$id}}"/>
-        <input id="value_{{::$id}}" ng-model="dba.value"
-               placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
-        <label for="type_{{::$id}}"/>
-        <select id="type_{{::$id}}"
-                ng-model="dba.type"
-                ng-options="item.type as item.name for item in dbasTypes"></select>
-        <div>
-            <p translate>organizations.comp.dbas.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>organizations.comp.dbas.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>organizations.comp.dbas.modal.no</translate>
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            	<label for="value_{{::$id}}" translate>organizations.comp.dba.modal.value.label</label>
+            	<input id="value_{{::$id}}" ng-model="dba.value" class="input-md form-control"
+                       placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
+           </div>
+           <div class="col-sm-6 form-group">
+              <label for="type_{{::$id}}" translate>organizations.comp.dba.modal.aliasType.label</label>
+                <select id="type_{{::$id}}"
+                        ng-model="dba.type" class="input-md form-control"
+                        ng-options="item.type as item.name for item in dbasTypes"></select>
+           </div>
         </div>
-        <label for="description"/>
-        <textarea id="description" ng-model="dba.description"></textarea>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+              <label translate>organizations.comp.dbas.modal.setPrimary</label>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="true">
+                 <translate>organizations.comp.dbas.modal.yes</translate>
+              </label>
+              <input type="radio" ng-model="isDefault" ng-value="false">
+              <translate>organizations.comp.dbas.modal.no</translate>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+           	<label for="description" translate>organizations.comp.dba.modal.type.description</label>
+            <textarea id="description" class="input-md form-control" ng-model="dba.description"></textarea>
+           </div>
+        </div>  
     </form>
 </div>
 <div class="modal-footer">
