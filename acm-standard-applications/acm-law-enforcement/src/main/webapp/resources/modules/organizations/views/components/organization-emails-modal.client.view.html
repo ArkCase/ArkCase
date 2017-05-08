@@ -9,28 +9,38 @@
 </div>
 <div class="modal-body">
     <form name="emailForm">
-        <div>
-            <label for="emailTypes_{{::$id}}"
-                   translate>organizations.comp.emails.modal.type.label</label>
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            	<label for="emails_{{::$id}}"
+                           translate>organizations.comp.emails.modal.value.label</label>
+            	<input id="emails_{{::$id}}" type="text" ng-model="email.value" class="input-md form-control"
+                       placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
+           </div>
+           <div class="col-sm-6 form-group">
+              	<label for="emailTypes_{{::$id}}"
+                           translate>organizations.comp.emails.modal.type.label</label>
+                <select id="emailTypes_{{::$id}}" class="input-md form-control"
+                        ng-model="email.subType"
+                        ng-options="item.type as item.name for item in emailTypes"></select>
+           </div>
         </div>
-        <select id="emailTypes_{{::$id}}"
-                ng-model="email.subType"
-                ng-options="item.type as item.name for item in emailTypes"></select>
-        <div>
-            <label for="emails_{{::$id}}"
-                   translate>organizations.comp.emails.modal.value.label</label>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+              <label translate>organizations.comp.emails.modal.setPrimary</label>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="true">
+                 <translate>organizations.comp.emails.modal.yes</translate>
+              </label>
+              <input type="radio" ng-model="isDefault" ng-value="false">
+              <translate>organizations.comp.emails.modal.no</translate>
+           </div>
         </div>
-        <input id="emails_{{::$id}}" type="text" ng-model="email.value"
-               placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
-        <div>
-            <p translate>organizations.comp.emails.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>organizations.comp.emails.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>organizations.comp.emails.modal.no</translate>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+           	<label for="emailDescription" translate>organizations.comp.email.modal.description</label>
+            <textarea id="emailDescription" class="input-md form-control" ng-model="emails.description"></textarea>
+           </div>
         </div>
-        <label for="emailDescription"/>
-        <textarea id="emailDescription" ng-model="email.description"></textarea>
     </form>
 </div>
 <div class="modal-footer">
