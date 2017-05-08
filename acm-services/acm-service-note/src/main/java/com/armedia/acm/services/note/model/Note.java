@@ -3,7 +3,9 @@ package com.armedia.acm.services.note.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +23,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_note")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -1154137631399833851L;
