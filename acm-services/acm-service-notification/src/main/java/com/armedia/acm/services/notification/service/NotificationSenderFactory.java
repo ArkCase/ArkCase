@@ -21,11 +21,6 @@ public class NotificationSenderFactory
         try
         {
             flowType = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE, NotificationConstants.SMTP);
-            Boolean startTLS = Boolean.valueOf(getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_STARTTLS, "false"));
-            if(startTLS && flowType.equalsIgnoreCase(NotificationConstants.SMTP))
-            {
-                flowType = NotificationConstants.SMTP_STARTTLS;
-            }
         } catch (AcmEncryptionException e)
         {
             log.error("Encryption error: {}", e.getMessage());
