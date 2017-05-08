@@ -31,14 +31,14 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         };
 
         $scope.$on('update-viewer-opened-versions', function (event, openedVersions) {
-            // Remove when snowbound support will be implemented
-            //$scope.fileInfo.selectedIds = '';
-            //_.forEach(openedVersions, function (openedVersion) {
-            //    $scope.fileInfo.selectedIds += $stateParams['selectedIds'] + ":" + openedVersion.versionTag + ",";
-            //});
-            //if ($scope.fileInfo.selectedIds.length > 0) {
-            //    $scope.fileInfo.selectedIds = $scope.fileInfo.selectedIds.substring(0, $scope.fileInfo.selectedIds.length - 1);
-            //}
+            // Remove block comment when snowbound support will be implemented
+            /*$scope.fileInfo.selectedIds = '';
+            _.forEach(openedVersions, function (openedVersion) {
+                $scope.fileInfo.selectedIds += $stateParams['selectedIds'] + ":" + openedVersion.versionTag + ",";
+            });
+            if ($scope.fileInfo.selectedIds.length > 0) {
+                $scope.fileInfo.selectedIds = $scope.fileInfo.selectedIds.substring(0, $scope.fileInfo.selectedIds.length - 1);
+            }*/
             
             $scope.openSnowboundViewer();
         });
