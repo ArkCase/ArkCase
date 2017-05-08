@@ -58,6 +58,7 @@ public class ExchangeTypesConverter
     static void setAppointmentProperties(Appointment appointment, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
             throws Exception
     {
+        // TODO: set organizer
         appointment.setSubject(calendarEvent.getSubject());
         appointment.setLocation(calendarEvent.getLocation());
         OlsonTimeZoneDefinition startTimeZoneDefinition = new OlsonTimeZoneDefinition(
@@ -301,6 +302,10 @@ public class ExchangeTypesConverter
      */
     static void setEventProperties(AcmCalendarEvent event, Appointment appointment) throws Exception
     {
+        // TODO set organizer
+        // event.setCreatorId(appointment.getOrganizer().getAddress());
+        event.setEventId(appointment.getId().getUniqueId());
+        event.setObjectType("CASE_FILE");
         event.setSubject(appointment.getSubject());
         event.setLocation(appointment.getLocation());
 
