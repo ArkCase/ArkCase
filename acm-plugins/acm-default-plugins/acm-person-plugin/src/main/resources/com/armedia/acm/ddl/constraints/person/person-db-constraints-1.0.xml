@@ -141,6 +141,9 @@
     </changeSet>
 
     <changeSet id="01-person-drop-foreign-keys" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_default_organization"/>
+        </preConditions>
         <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization"/>
     </changeSet>
 
