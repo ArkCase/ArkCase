@@ -221,6 +221,8 @@
       "modifier": "Modified By"
     },
     "modal": {
+      "aliasValue": "Alias Value",
+      "type": "Type",
       "addAlias": "Add New Alias",
       "editAlias": "Edit Alias",
       "title": "Insert New Alias",
