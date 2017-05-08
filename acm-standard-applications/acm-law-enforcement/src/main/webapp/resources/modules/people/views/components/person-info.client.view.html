@@ -1,11 +1,7 @@
 <div ng-controller="People.InfoController">
     <div class="clearfix">
         <div class="row">
-            <div class="col-xs-12 col-md-3">
-                <img alt="Image" ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'
-                     ng-style="{ width : 200, height : 100 }">
-            </div>
-            <div class="col-xs-12 col-md-8">
+            <div class="col-xs-12 col-md-10">
                 <div class="row">
                     <div class="col-xs-6">
                         <h4><a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()"
@@ -20,7 +16,7 @@
 
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-5">
                         <div class="h4 font-bold" ng-show="objectInfo.defaultPhone">
                             {{objectInfo.defaultPhone.value}} ({{objectInfo.defaultPhone.subType}})
                         </div>
@@ -32,7 +28,7 @@
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
                     </div>
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-3">
                         <div class="h4 font-bold">
                             {{objectInfo.defaultIdentification.identificationNumber}}
                         </div>
@@ -40,7 +36,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-5">
                         <div class="h4 font-bold" ng-show="objectInfo.defaultEmail">
                             {{objectInfo.defaultEmail.value}} ({{objectInfo.defaultEmail.subType}})
                         </div>
@@ -55,7 +51,10 @@
 
                 </div>
             </div>
-
+            <div class="col-xs-12 col-md-2">
+                <img alt="Image" ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPictureId}}'
+                     ng-style="{ width : 100, height : 100 }">
+            </div>
         </div>
     </div>
 </div>
