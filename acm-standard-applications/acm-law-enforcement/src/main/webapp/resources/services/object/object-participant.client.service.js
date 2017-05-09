@@ -243,10 +243,6 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.groupType"));
                 return false;
             }
-            if (data.participantType != "owning group" && type != "USER") {
-                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userType"));
-                return false;
-            }
             return true;
         };
 
