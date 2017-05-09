@@ -2,9 +2,9 @@
 
 angular.module('organizations').controller('Organizations.PeopleController', ['$scope', '$q', '$stateParams'
     , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService'
-    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService'
     , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService
-        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService) {
+        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService) {
 
 
         Authentication.queryUserInfo().then(
@@ -13,6 +13,11 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 return userInfo;
             }
         );
+
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            $scope.commonConfig = moduleConfig;
+            return moduleConfig;
+        });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -45,11 +50,20 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.people;
+            OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, 'PERSON', null, 'true').then(function (response) {
+                $scope.gridOptions.data = response.response.docs;
+                $scope.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                    if (row && row.isSelected) {
+                        $scope.hasSelected = true;
+                        $scope.selectedItem = row.entity;
+                    } else {
+                        $scope.hasSelected = false;
+                    }
+                });
+            });
         };
 
         $scope.addNew = function () {
-
             var modalInstance = $modal.open({
                 scope: $scope,
                 animation: true,
@@ -59,8 +73,20 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             });
 
             modalInstance.result.then(function (data) {
-                $scope.objectInfo.people.push(data.person);
-                saveObjectInfoAndRefresh()
+                PersonInfoService.savePersonInfo(data.person).then(function (savedPerson) {
+                    var organizationAssociation = {
+                        organization: {organizationId: $scope.objectInfo.organizationId},
+                        parentId: savedPerson.id,
+                        parentType: savedPerson.objectType,
+                        parentTitle: savedPerson.givenName + ' ' + savedPerson.familyName,
+                        associationType: "Employee"
+                    };
+                    if (!$scope.objectInfo.associationsFromObjects) {
+                        $scope.objectInfo.associationsFromObjects = [];
+                    }
+                    $scope.objectInfo.associationsFromObjects.push(organizationAssociation);
+                    saveObjectInfoAndRefresh();
+                });
             });
         };
 
@@ -68,7 +94,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             var params = {};
             params.header = $translate.instant("common.dialogPersonPicker.header");
             params.filter = '"Object Type": PERSON';
-            params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
+            params.config = Util.goodMapValue($scope.commonConfig, "dialogPersonPicker");
 
             var modalInstance = $modal.open({
                 templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -89,22 +115,31 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    PersonInfoService.getPersonInfo(selected.object_id_s).then(function (person) {
-                        $scope.objectInfo.people.push(person);
-                        saveObjectInfoAndRefresh();
-                    });
+                    var organizationAssociation = {
+                        organization: {organizationId: $scope.objectInfo.organizationId},
+                        parentId: selected.object_id_s,
+                        parentType: selected.object_type_s,
+                        parentTitle: selected.full_name_lcs,
+                        associationType: "Employee"
+                    };
+                    if (!$scope.objectInfo.associationsFromObjects) {
+                        $scope.objectInfo.associationsFromObjects = [];
+                    }
+                    $scope.objectInfo.associationsFromObjects.push(organizationAssociation);
+                    saveObjectInfoAndRefresh();
                 }
             });
         };
 
         $scope.deleteRow = function (rowEntity) {
-            var id = Util.goodMapValue(rowEntity, "personId", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.people = _.remove($scope.objectInfo.people, function (item) {
-                    return item.personId != personId;
-                });
-                saveObjectInfoAndRefresh()
-            }
+            //TODO remove old code below, and make API call for deleting
+            // var id = Util.goodMapValue(rowEntity, "personId", 0);
+            // if (0 < id) {    //do not need to call service when deleting a new row with id==0
+            //     $scope.objectInfo.people = _.remove($scope.objectInfo.people, function (item) {
+            //         return item.personId != personId;
+            //     });
+            //     saveObjectInfoAndRefresh()
+            // }
         };
 
         function saveObjectInfoAndRefresh() {

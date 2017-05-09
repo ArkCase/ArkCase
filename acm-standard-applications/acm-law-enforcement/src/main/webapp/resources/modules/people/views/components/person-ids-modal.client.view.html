@@ -9,37 +9,44 @@
 </div>
 <div class="modal-body">
     <form name="idForm">
-        <div>
-            <label for="idTypes_{{::$id}}"
-                   translate>people.comp.ids.modal.type.label</label>
+        <div class="row">
+        	<div class="col-sm-6 form-group">
+        		<label for="identificationNumber_{{::$id}}" translate>people.comp.ids.modal.number.label</label>
+                <input id="identificationNumber_{{::$id}}" class="input-md form-control" type="text" ng-model="identification.identificationNumber"
+                       placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
+        	</div>
+        	<div class="col-sm-6 form-group">
+        	  <label for="idTypes_{{::$id}}"
+                           translate>people.comp.ids.modal.type.label</label>
+                           <select id="idTypes_{{::$id}}" class="input-md form-control"
+                        ng-model="identification.identificationType"
+                        ng-options="item.type as item.name for item in identificationTypes"></select>
+        	</div>
         </div>
-        <select id="idTypes_{{::$id}}"
-                ng-model="identification.identificationType"
-                ng-options="item.type as item.name for item in identificationTypes"></select>
-        <div>
-            <label for="identificationNumber_{{::$id}}"
-                   translate>people.comp.ids.modal.number.label</label>
+        
+        <div class="row">
+        	<div class="col-sm-6 form-group">
+        		<label for="identificationIssuer_{{::$id}}" translate>people.comp.ids.modal.issuer.label</label>
+                <input id="identificationIssuer_{{::$id}}" type="text" class="input-md form-control" ng-model="identification.identificationIssuer"
+                       placeholder="{{ 'people.comp.ids.modal.issuer.placeholder' | translate }}">
+        	</div>
+        	<div class="col-sm-6 form-group">
+        	  <label for="identificationYearIssued_{{::$id}}" translate>people.comp.ids.modal.yearIssued.label</label>
+              <input id="identificationYearIssued_{{::$id}}" type="text" class="input-md form-control" ng-model="identification.identificationYearIssued"
+                       placeholder="{{ 'people.comp.ids.modal.yearIssued.placeholder' | translate }}">
+        	</div>
         </div>
-        <input id="identificationNumber_{{::$id}}" type="text" ng-model="identification.identificationNumber"
-               placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
-        <div>
-            <label for="identificationIssuer_{{::$id}}"
-                   translate>people.comp.ids.modal.issuer.label</label>
-        </div>
-        <input id="identificationIssuer_{{::$id}}" type="text" ng-model="identification.identificationIssuer"
-               placeholder="{{ 'people.comp.ids.modal.issuer.placeholder' | translate }}">
-        <div>
-            <label for="identificationYearIssued_{{::$id}}"
-                   translate>people.comp.ids.modal.yearIssued.label</label>
-        </div>
-        <input id="identificationYearIssued_{{::$id}}" type="text" ng-model="identification.identificationYearIssued"
-               placeholder="{{ 'people.comp.ids.modal.yearIssued.placeholder' | translate }}">
-        <div>
-            <p translate>people.comp.ids.modal.setPrimary</p>
-            <input type="radio" ng-model="isDefault" ng-value="true">
-            <translate>people.comp.ids.modal.yes</translate>
-            <input type="radio" ng-model="isDefault" ng-value="false">
-            <translate>people.comp.ids.modal.no</translate>
+        
+        <div class="row">
+        	<div class="col-sm-12 form-group">
+        		<label translate>people.comp.ids.modal.setPrimary</label>
+                <label>
+                <input type="radio" ng-model="isDefault" ng-value="true">
+                <translate>people.comp.ids.modal.yes</translate>
+                </label>
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>people.comp.ids.modal.no</translate>
+        	</div>
         </div>
     </form>
 </div>

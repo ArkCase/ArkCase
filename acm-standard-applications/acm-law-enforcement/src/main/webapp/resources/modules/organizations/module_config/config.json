@@ -9,7 +9,7 @@
       "menuItemURL": "organizations.main",
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
-      "iconClass": "fa fa-exclamation-triangle",
+      "iconClass": "fa fa-building",
       "position": 90
     },
     {
@@ -113,7 +113,7 @@
       {
         "type": "p/ORGANIZATION/add",
         "label": "Addresses",
-        "icon": "fa fa-address-card",
+        "icon": "fa fa-map-marker",
         "components": [
           "addresses"
         ]
@@ -145,7 +145,7 @@
       {
         "type": "p/ORGANIZATION/url",
         "label": "URLs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-link",
         "components": [
           "urls"
         ]
@@ -153,7 +153,7 @@
       {
         "type": "p/ORGANIZATION/dba",
         "label": "DBAs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-eye",
         "components": [
           "dbas"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/ORGANIZATION/ids",
         "label": "IDs",
-        "icon": "fa fa-id-card",
+        "icon": "fa fa-credit-card",
         "components": [
           "ids"
         ]
@@ -562,36 +562,35 @@
       "columnDefs": [
         {
           "name": "firstName",
-          "field": "givenName",
+          "field": "first_name_lcs",
           "displayName": "organizations.comp.people.table.columns.firstName",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.id})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "lastName",
-          "field": "familyName",
+          "field": "last_name_lcs",
           "displayName": "organizations.comp.people.table.columns.lastName",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.id})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "organization",
-          "field": "defaultOrganization.organizationValue",
+          "field": "default_organization_s",
           "displayName": "organizations.comp.people.table.columns.organization",
           "headerCellFilter": "translate"
         },
         {
           "name": "phone",
-          "field": "defaultPhone.value",
+          "field": "default_phone_s",
           "displayName": "organizations.comp.people.table.columns.phone",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPhone.value}} [{{row.entity.defaultPhone.subType}}]</div>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "location",
+          "field": "default_location_s",
           "displayName": "organizations.comp.people.table.columns.location",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultAddress.city}}, {{row.entity.defaultAddress.state}}</div>"
+          "headerCellFilter": "translate"
         }
       ]
     },

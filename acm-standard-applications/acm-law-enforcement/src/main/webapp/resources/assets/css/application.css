@@ -1231,6 +1231,16 @@ tags-input .tags {
     margin: 0px;
 }
 
+.module-header .col-xs-12.col-md-4 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-12.col-md-5 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
 .right-sidebar.well-sm.documentDetails {
 	top: 172px;
 }
