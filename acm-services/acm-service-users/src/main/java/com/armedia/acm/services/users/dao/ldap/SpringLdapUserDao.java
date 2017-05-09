@@ -62,19 +62,12 @@ public class SpringLdapUserDao
             throws AcmLdapActionFailedException
     {
         String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
-        String passwordAttribute = "userPassword";
 
         try
         {
-            byte[] passwordBytes = password.getBytes();
-            if (AcmLdapConstants.LDAP_OPENLDAP.equals(config.getDirectoryType()))
-            {
-                passwordBytes = String.format("\"%s\"", password).getBytes("UTF-16LE");
-                passwordAttribute = "unicodePwd";
-            }
             DirContextOperations context = new RetryExecutor<DirContextOperations>()
                     .retryResult(() -> ldapTemplate.lookupContext(strippedBaseDn));
-            context.setAttributeValue(passwordAttribute, passwordBytes);
+            context.setAttributeValue("userPassword", password.getBytes());
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
         } catch (Exception e)
         {
