@@ -100,7 +100,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
                 , param: {}
                 , data: emailData
                 , onSuccess: function (data) {
-                    if (Service.validateSentEmails(data)) {
+                    if (Service.validateSentEmail(data)) {
                         return data;
                     }
                 }
@@ -150,6 +150,11 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
             if (Util.isEmpty(data)) {
                 return false;
             }
+            
+            if(!Util.isEmpty(data.emailAddresses) && !Util.isArrayEmpty(data.emailAddresses)){
+            	return true;
+            }
+            
             if (Util.isEmpty(data.state)) {
                 return false;
             }
