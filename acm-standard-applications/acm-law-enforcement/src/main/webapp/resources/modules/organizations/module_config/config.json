@@ -243,7 +243,7 @@
     {
       "id": "addresses",
       "title": "Addresses",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -356,7 +356,7 @@
     {
       "id": "faxes",
       "title": "Fax Numbers",
-      "icon": "fa fa-phone",
+      "icon": "fa fa-fax",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -403,7 +403,7 @@
     {
       "id": "emails",
       "title": "Email Addresses",
-      "icon": "fa fa-address-book-o",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -497,7 +497,7 @@
     {
       "id": "dbas",
       "title": "DBAs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -547,7 +547,7 @@
     {
       "id": "people",
       "title": "People",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-users",
       "enabled": true,
       "type": "grid",
       "multiSelect": false,
@@ -597,7 +597,7 @@
     {
       "id": "ids",
       "title": "IDs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -654,7 +654,7 @@
     {
       "id": "cases",
       "title": "Cases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -715,7 +715,7 @@
     {
       "id": "complaints",
       "title": "Complaints",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -776,7 +776,7 @@
     {
       "id": "related",
       "title": "Related Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
