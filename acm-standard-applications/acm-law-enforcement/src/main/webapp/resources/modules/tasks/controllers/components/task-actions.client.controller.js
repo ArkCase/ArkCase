@@ -39,7 +39,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 //we should wait for userId before we compare it with assignee
                 if (!Util.isEmpty($scope.objectInfo.assignee)) {
                     if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
-                        if ($scope.objectInfo.adhocTask) {
+                        if ($scope.objectInfo.adhocTask || Util.isArrayEmpty($scope.objectInfo.availableOutcomes)) {
                             if (!Util.goodValue($scope.objectInfo.completed, false)) {
                                 $scope.showBtnSignature = true;
                                 $scope.showBtnDelete = true;
