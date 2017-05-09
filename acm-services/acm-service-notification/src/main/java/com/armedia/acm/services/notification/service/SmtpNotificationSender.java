@@ -8,7 +8,7 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
@@ -38,6 +38,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
+    private String flow = "vm://sendEmailViaSmtp.in";
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -70,7 +71,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                     : notification.getNote();
 
             messageBody = new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", "");
-            MuleMessage received = getMuleContextManager().send(getFlow(), messageBody, messageProps);
+            MuleMessage received = getMuleContextManager().send(flow, messageBody, messageProps);
 
             exception = received.getInboundProperty("sendEmailException");
         } catch (MuleException e)
@@ -105,7 +106,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             Exception exception = null;
             try
             {
-                MuleMessage received = getMuleContextManager().send(getFlow(), emailBodyBuilder.buildEmailBody(emailData), messageProps);
+                MuleMessage received = getMuleContextManager().send(flow, emailBodyBuilder.buildEmailBody(emailData), messageProps);
                 exception = received.getInboundProperty("sendEmailException");
             } catch (Exception e)
             {
@@ -175,7 +176,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                         attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
                     }
                 }
-                MuleMessage received = getMuleContextManager().send(getFlow(), in.getMessageBody(), attachments, messageProps);
+                MuleMessage received = getMuleContextManager().send(flow, in.getMessageBody(), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
             } catch (MuleException e)
@@ -217,7 +218,7 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
             try
             {
                 messageProps.put("to", emailAddress);
-                MuleMessage received = getMuleContextManager().send(getFlow(), makeNote(emailAddress, in, authentication), messageProps);
+                MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), messageProps);
                 exception = received.getInboundProperty("sendEmailException");
             } catch (MuleException e)
             {
@@ -248,15 +249,17 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         Map<String, Object> messageProps = new HashMap<>();
 
         messageProps.put("host",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.HOST, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.HOST, null));
         messageProps.put("port",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.PORT, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.PORT, null));
         messageProps.put("user",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.USERNAME, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.USERNAME, null));
         messageProps.put("password",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.PASSWORD, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.PASSWORD, null));
         messageProps.put("from",
-                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationProperties.USER_FROM, null));
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.USER_FROM, null));
+        messageProps.put("encryption",
+                getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.ENCRYPTION, null));
 
         return messageProps;
     }
@@ -295,16 +298,4 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
         getAuthenticationTokenDao().save(authenticationToken);
     }
 
-    protected String getFlow() throws AcmEncryptionException
-    {
-        String encryption = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(),
-                EmailSenderConfigurationProperties.ENCRYPTION, null);
-        if (encryption.equals("off"))
-        {
-            return "vm://sendEmailViaSmtp.in";
-        } else
-        {
-            return "vm://sendEmailViaSmtpStartTLS.in";
-        }
-    }
 }

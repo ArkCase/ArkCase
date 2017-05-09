@@ -4,7 +4,7 @@ package com.armedia.acm.service.outlook.model;
  * @author sasko.tanaskoski
  *
  */
-public interface ExchangeConfigurationProperties
+public interface ExchangeConfigurationConstants
 {
 
     String INTEGRATION_ENABLED = "outlook.integration.enabled";

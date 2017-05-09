@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         </vm:inbound-endpoint>
 
         <choice>
-            <when expression="#[message.inboundProperties['smtp+starttls'] == true]">
+            <when expression="#[message.inboundProperties['encryption'] == 'starttls']">
                 <smtp:outbound-endpoint
                         connector-ref="smtpStartTLSConnector"
                         host="#[message.inboundProperties.host]"

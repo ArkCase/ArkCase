@@ -1,13 +1,13 @@
 package com.armedia.acm.services.email.sender.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author sasko.tanaskoski
  *
  */
-@JsonInclude(Include.NON_NULL)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailSenderConfiguration
 {
 

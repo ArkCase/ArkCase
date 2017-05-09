@@ -23,7 +23,7 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
@@ -72,7 +72,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
     private FileInputStream mockFileInputStream;
     private ApplicationEventPublisher mockApplicationEventPublisher;
     private NotificationUtils mockNotificationUtils;
-    private String starttls = "false";
 
     @Before
     public void setUp()
@@ -124,6 +123,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockMuleException.getLocalizedMessage()).andReturn(null);
         expect(mockMuleException.getStackTrace()).andReturn(new StackTraceElement[1]);
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("off");
 
         // when
         replayAll();
@@ -132,7 +132,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
         assertEquals(NotificationConstants.STATE_NOT_SENT, returnedNotification.getState());
-        // assertFalse((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
 
     }
 
@@ -152,6 +151,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("the_note"), capture(messagePropsCapture)))
                 .andReturn(mockMuleMessage);
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("off");
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
         // when
@@ -160,7 +160,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
         assertEquals(NotificationConstants.STATE_SENT, returnedNotification.getState());
-        // assertFalse((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
 
     }
 
@@ -193,6 +192,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
                 .andReturn(mockMuleMessage);
 
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("off");
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
         expect(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).andReturn(token);
@@ -219,8 +219,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         EmailWithEmbeddedLinksResultDTO emailWithEmbeddedLinksResultDTO = results.get(0);
         assertEquals(Boolean.TRUE, emailWithEmbeddedLinksResultDTO.isState());
         assertEquals(email, emailWithEmbeddedLinksResultDTO.getEmailAddress());
-        // assertFalse((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
-
     }
 
     @Test
@@ -256,6 +254,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
                 capture(messagePropsCapture))).andReturn(mockMuleMessage);
 
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("off");
 
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
@@ -298,13 +297,11 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         assertEquals(2, capturedAttachments.getValue().size());
         assertNotNull(capturedAttachments.getValue().get("fileName.extension"));
         assertNotNull(capturedAttachments.getValue().get("temp.zip"));
-        // assertFalse((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
     }
 
     @Test
     public void testSendWhenExceptionSTARTTLS() throws MuleException, AcmEncryptionException
     {
-        starttls = "true";
         Notification notification = new Notification();
         notification.setUserEmail("user_email");
         notification.setTitle("title");
@@ -320,6 +317,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockMuleException.getLocalizedMessage()).andReturn(null);
         expect(mockMuleException.getStackTrace()).andReturn(new StackTraceElement[1]);
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("starttls");
 
         // when
         replayAll();
@@ -328,14 +326,13 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
         assertEquals(NotificationConstants.STATE_NOT_SENT, returnedNotification.getState());
-        // assertTrue((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
+        assertEquals("starttls", messagePropsCapture.getValue().get("encryption"));
 
     }
 
     @Test
     public void testSendSTARTTLS() throws MuleException, AcmEncryptionException
     {
-        starttls = "true";
         Notification notification = new Notification();
         notification.setUserEmail("user_email");
         notification.setTitle("title");
@@ -349,6 +346,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("the_note"), capture(messagePropsCapture)))
                 .andReturn(mockMuleMessage);
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("starttls");
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
         // when
@@ -357,14 +355,13 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         // then
         verifyAll();
         assertEquals(NotificationConstants.STATE_SENT, returnedNotification.getState());
-        // assertTrue((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
+        assertEquals("starttls", messagePropsCapture.getValue().get("encryption"));
 
     }
 
     @Test
     public void testSendEmailWithEmbeddedLinksSTARTTLS() throws MuleException, AcmEncryptionException, Exception
     {
-        starttls = "true";
         final String email = "user_email";
         final String header = "header";
         final String baseUrl = "base_url";
@@ -372,7 +369,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         final String footer = "footer";
         final long fileId = 1234;
         final String token = "token";
-        final String note = header + "\\s* http://" + baseUrl + fileId + "&acm_email_ticket=" + token + "\\s*" + footer;
+        final String note = header + "\\s*" + "<br/>" + baseUrl + fileId + "&acm_email_ticket=" + token + "<br/>" + "\\s*" + footer;
 
         List<String> addresses = new ArrayList<>();
         addresses.add(email);
@@ -391,6 +388,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
                 .andReturn(mockMuleMessage);
 
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("starttls");
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
         expect(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).andReturn(token);
@@ -417,14 +415,13 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         EmailWithEmbeddedLinksResultDTO emailWithEmbeddedLinksResultDTO = results.get(0);
         assertEquals(Boolean.TRUE, emailWithEmbeddedLinksResultDTO.isState());
         assertEquals(email, emailWithEmbeddedLinksResultDTO.getEmailAddress());
-        // assertTrue((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
+        assertEquals("starttls", messagePropsCapture.getValue().get("encryption"));
 
     }
 
     @Test
     public void testSendEmailWithAttachmentsSTARTTLS() throws MuleException, AcmEncryptionException, Exception
     {
-        starttls = "true";
         final String email = "user_email";
         final String header = "header";
         final String body = "body";
@@ -455,6 +452,7 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
                 capture(messagePropsCapture))).andReturn(mockMuleMessage);
 
         setSendExpectations();
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).andReturn("starttls");
 
         expect(mockMuleMessage.getInboundProperty("sendEmailException")).andReturn(null);
 
@@ -497,17 +495,17 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         assertEquals(2, capturedAttachments.getValue().size());
         assertNotNull(capturedAttachments.getValue().get("fileName.extension"));
         assertNotNull(capturedAttachments.getValue().get("temp.zip"));
-        // assertTrue((Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS));
+        assertEquals("starttls", messagePropsCapture.getValue().get("encryption"));
+
     }
 
     private void setSendExpectations() throws AcmEncryptionException
     {
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.HOST, null)).andReturn("host_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PORT, null)).andReturn("port_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USERNAME, null)).andReturn("email_user_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PASSWORD, null)).andReturn("email_password_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USER_FROM, null)).andReturn("email_from_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.ENCRYPTION, null)).andReturn("off");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.HOST, null)).andReturn("host_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PORT, null)).andReturn("port_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USERNAME, null)).andReturn("email_user_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PASSWORD, null)).andReturn("email_password_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USER_FROM, null)).andReturn("email_from_value");
     }
 
 }
