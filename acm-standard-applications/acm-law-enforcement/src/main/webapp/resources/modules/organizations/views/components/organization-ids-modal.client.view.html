@@ -11,37 +11,36 @@
     <form name="idForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-            <label for="idTypes_{{::$id}}"
+            <label for="idTypes"
                    translate>organizations.comp.ids.modal.type.label</label>
-            <select id="idTypes_{{::$id}}" class="input-md form-control"
+            <select id="idTypes" class="input-md form-control"
                     ng-model="identification.identificationType"
                     ng-options="item.type as item.name for item in identificationTypes"></select>
             </div>
            <div class="col-sm-6 form-group">
-            <label for="identificationNumber_{{::$id}}"
+            <label for="identificationNumber"
                    translate>organizations.comp.ids.modal.number.label</label>
-            <input id="identificationNumber_{{::$id}}" type="text" class="input-md form-control" ng-model="identification.identificationNumber"
+            <input id="identificationNumber" type="text" class="input-md form-control" ng-model="identification.identificationNumber"
                     placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
             </div>
         </div>
         <div class="row">
            <div class="col-sm-6 form-group">
-            <label for="identificationIssuer_{{::$id}}"
+            <label for="identificationIssuer"
                    translate>organizations.comp.ids.modal.issuer.label</label>
-            <input id="identificationIssuer_{{::$id}}" type="text" ng-model="identification.identificationIssuer"
+            <input id="identificationIssuer}" class="input-md form-control" type="text" ng-model="identification.identificationIssuer"
                 placeholder="{{ 'organizations.comp.ids.modal.issuer.placeholder' | translate }}">
             </div>
            <div class="col-sm-6 form-group">
-            <label for="identificationYearIssued_{{::$id}}"
+            <label for="identificationYearIssued"
                    translate>organizations.comp.ids.modal.yearIssued.label</label>
-            <input id="identificationYearIssued_{{::$id}}" type="text" ng-model="identification.identificationYearIssued"
+            <input id="identificationYearIssued" class="input-md form-control" type="text" ng-model="identification.identificationYearIssued"
                    placeholder="{{ 'organizations.comp.ids.modal.yearIssued.placeholder' | translate }}">
-                            placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
             </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-            <label translate>organizations.comp.ids.modal.setPrimary</label>
+            <label translate>organizations.comp.ids.modal.setPrimary</label><br/>
             <label><input type="radio" ng-model="isDefault" ng-value="true">
             <translate>organizations.comp.ids.modal.yes</translate></label>
             <label><input type="radio" ng-model="isDefault" ng-value="false">
