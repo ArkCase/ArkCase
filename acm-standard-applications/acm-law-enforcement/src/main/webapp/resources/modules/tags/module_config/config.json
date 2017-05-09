@@ -8,7 +8,7 @@
       "menuItemTitle": "tags.menus.leftnav.item",
       "moduleId": "tag",
       "iconClass": "fa fa-tags",
-      "position": 110
+      "position": 140
     }
   ],
   "components": [
