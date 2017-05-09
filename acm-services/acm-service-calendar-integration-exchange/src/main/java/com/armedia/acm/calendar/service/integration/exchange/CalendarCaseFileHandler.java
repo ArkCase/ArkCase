@@ -298,10 +298,13 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
         // calendarView.setPropertySet(allProperties);
 
         FindItemsResults<Appointment> findResults = service.findAppointments(new FolderId(calendarId), calendarView);
-        List<Item> appointmentItems = findResults.getItems().stream().map(item -> {
-            return (Item) item;
-        }).collect(Collectors.toList());
-        service.loadPropertiesForItems(appointmentItems, allProperties);
+        if (!findResults.getItems().isEmpty())
+        {
+            List<Item> appointmentItems = findResults.getItems().stream().map(item -> {
+                return (Item) item;
+            }).collect(Collectors.toList());
+            service.loadPropertiesForItems(appointmentItems, allProperties);
+        }
         return findResults;
     }
 
