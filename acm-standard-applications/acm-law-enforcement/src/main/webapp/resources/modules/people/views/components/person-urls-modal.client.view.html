@@ -11,33 +11,35 @@
     <form name="urlForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-              <label for="urls_{{::$id}}"
+              <label for="urls"
                            translate>people.comp.urls.modal.value.label</label>
-              <input id="urls_{{::$id}}" type="text" ng-model="url.value"
+              <input id="urls" type="text" ng-model="url.value" class="input-md form-control"
                        placeholder="{{ 'people.comp.urls.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              <label for="urlTypes_{{::$id}}"
+              <label for="urlTypes"
                            translate>people.comp.urls.modal.type.label</label>
-              <select id="urlTypes_{{::$id}}"
+              <select id="urlTypes" class="input-md form-control"
                         ng-model="url.subType"
                         ng-options="item.type as item.name for item in urlTypes"></select>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-              <label translate>people.comp.urls.modal.setPrimary</label>
-              <label>
-                 <input type="radio" ng-model="isDefault" ng-value="true">
-                 <translate>people.comp.urls.modal.yes</translate>
-              </label>
-              <input type="radio" ng-model="isDefault" ng-value="false">
-              <translate>people.comp.urls.modal.no</translate>
+              <label translate>people.comp.urls.modal.setPrimary</label><br>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>people.comp.urls.modal.yes</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>people.comp.urls.modal.no</translate>
+                </label>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-           	<label for="urlDescription" translate>people.comp.urls.modal.type.description</label>
+           	<label for="urlDescription" translate>people.comp.urls.modal.description</label>
             <textarea id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
            </div>
         </div>
