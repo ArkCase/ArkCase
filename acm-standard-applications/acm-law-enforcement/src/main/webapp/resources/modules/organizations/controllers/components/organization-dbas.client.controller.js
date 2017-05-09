@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('organizations').controller('Organization.DBAsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Organization.PicturesService', '$modal'
+    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal'
     , function ($scope, $stateParams, $translate
-        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, OrganizationPicturesService, $modal) {
+        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -31,7 +31,6 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            $scope.config = config;
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
@@ -43,8 +42,8 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
-            if (objectInfo.dbas) {
-                $scope.gridOptions.data = objectInfo.dbas;
+            if (objectInfo.organizationDBAs) {
+                $scope.gridOptions.data = objectInfo.organizationDBAs;
                 $scope.gridOptions.noData = false;
             } else {
                 $scope.gridOptions.data = [];
@@ -55,26 +54,26 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
         //Aliases
         $scope.addNew = function () {
 
-            var alias = {};
-            alias.created = Util.dateToIsoString(new Date());
-            alias.creator = $scope.userId;
-            $scope.alias = alias;
+            var dba = {};
+            dba.created = Util.dateToIsoString(new Date());
+            dba.creator = $scope.userId;
+            dba.organization = $scope.objectInfo;
+            $scope.dba = dba;
             var item = {
                 id: '',
-                parentId: $scope.objectInfo.id,
-                aliasType: '',
-                aliasValue: '',
+
+                type: '',
+                value: '',
                 description: ''
             };
             showModal(item, false);
         };
         $scope.editRow = function (rowEntity) {
-            $scope.alias = rowEntity;
+            $scope.dba = rowEntity;
             var item = {
                 id: rowEntity.id,
-                parentId: $scope.objectInfo.id,
-                aliasType: rowEntity.aliasType,
-                aliasValue: rowEntity.aliasValue,
+                type: rowEntity.type,
+                value: rowEntity.value,
                 description: rowEntity.description
             };
             showModal(item, true);
@@ -85,23 +84,23 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
 
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizationAliases = _.remove($scope.objectInfo.organizationAliases, function (item) {
+                $scope.objectInfo.organizationDBAs = _.remove($scope.objectInfo.organizationDBAs, function (item) {
                     return item.id != id;
                 });
                 saveObjectInfoAndRefresh()
             }
         };
 
-        function showModal(alias, isEdit) {
+        function showModal(dba, isEdit) {
             var params = {};
-            params.alias = alias || {};
+            params.dba = dba || {};
             params.isEdit = isEdit || false;
-            params.isDefault = $scope.isDefault(alias);
+            params.isDefault = $scope.isDefault(dba);
 
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: "modules/organizations/views/components/organization-aliases-modal.client.view.html",
-                controller: 'Organization.AliasesModalController',
+                templateUrl: "modules/organizations/views/components/organization-dbas-modal.client.view.html",
+                controller: 'Organizations.DBAsModalController',
                 size: 'md',
                 backdrop: 'static',
                 resolve: {
@@ -112,21 +111,22 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
             });
 
             modalInstance.result.then(function (data) {
-                var alias;
+                var dba;
                 if (!data.isEdit)
-                    alias = $scope.alias;
+                    dba = $scope.dba;
                 else {
-                    alias = _.find($scope.objectInfo.organizationAliases, {id: data.alias.id});
+                    dba = _.find($scope.objectInfo.organizationDBAs, {id: data.dba.id});
                 }
-                alias.aliasType = data.alias.aliasType;
-                alias.aliasValue = data.alias.aliasValue;
-                alias.description = data.alias.description;
+                dba.type = data.dba.type;
+                dba.value = data.dba.value;
+                dba.description = data.dba.description;
+
                 if (!data.isEdit) {
-                    $scope.objectInfo.organizationAliases.push(alias);
+                    $scope.objectInfo.organizationDBAs.push(dba);
                 }
 
-                if (data.isDefault || $scope.objectInfo.organizationAliases.length == 1) {
-                    $scope.objectInfo.defaultAlias = alias;
+                if (data.isDefault || $scope.objectInfo.organizationDBAs.length == 1) {
+                    $scope.objectInfo.defaultDBA = dba;
                 }
                 saveObjectInfoAndRefresh();
             });
@@ -153,8 +153,8 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
 
         $scope.isDefault = function (data) {
             var id = 0;
-            if ($scope.objectInfo.defaultAlias) {
-                id = $scope.objectInfo.defaultAlias.id
+            if ($scope.objectInfo.organizationDBAs) {
+                id = $scope.objectInfo.organizationDBAs.id
             }
             return data.id == id;
         };

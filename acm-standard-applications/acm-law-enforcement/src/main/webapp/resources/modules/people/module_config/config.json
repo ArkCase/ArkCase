@@ -85,7 +85,7 @@
       },
       {
         "type": "p/PERSON",
-        "icon": "fa fa-exclamation-triangle",
+        "icon": "fa fa-user",
         "components": [
           "details",
           "pictures",
@@ -113,7 +113,7 @@
       {
         "type": "p/PERSON/pic",
         "label": "Pictures",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-file-image",
         "components": [
           "pictures"
         ]
@@ -121,7 +121,7 @@
       {
         "type": "p/PERSON/add",
         "label": "Addresses",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-address-card",
         "components": [
           "addresses"
         ]
@@ -129,7 +129,7 @@
       {
         "type": "p/PERSON/pho",
         "label": "Phones",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-phone",
         "components": [
           "phones"
         ]
@@ -137,7 +137,7 @@
       {
         "type": "p/PERSON/ema",
         "label": "Emails",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-envelope",
         "components": [
           "emails"
         ]
@@ -161,7 +161,7 @@
       {
         "type": "p/PERSON/org",
         "label": "Organizations",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-building",
         "components": [
           "organizations"
         ]
@@ -169,7 +169,7 @@
       {
         "type": "p/PERSON/ids",
         "label": "IDs",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-id-card",
         "components": [
           "ids"
         ]
@@ -177,7 +177,7 @@
       {
         "type": "p/PERSON/cas",
         "label": "Cases",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-folder",
         "components": [
           "cases"
         ]
@@ -185,7 +185,7 @@
       {
         "type": "p/PERSON/com",
         "label": "Complaints",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
         ]
@@ -193,7 +193,7 @@
       {
         "type": "p/PERSON/rel",
         "label": "Related People",
-        "icon": "fa fa-info-circle",
+        "icon": "fa fa-exchange",
         "components": [
           "related"
         ]
@@ -571,29 +571,39 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
+          "name": "organizationValue",
+          "displayName": "people.comp.organizations.table.columns.value",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "defaultIdentification.identificationNumber",
+          "displayName": "people.comp.organizations.table.columns.identification",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultIdentification.identificationNumber}} [{{row.entity.defaultIdentification.identificationType}}]</div>"
+        },
+        {
           "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "organizationValue",
-          "displayName": "people.comp.organizations.table.columns.value",
-          "headerCellFilter": "translate"
+          "name": "defaultPerson.givenName",
+          "displayName": "people.comp.organizations.table.columns.contact",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPerson.givenName}} {{row.entity.defaultPerson.familyName}}</div>"
         },
         {
-          "name": "modifier",
-          "displayName": "people.comp.organizations.table.columns.modifier",
+          "name": "defaultPhone.value",
+          "displayName": "people.comp.organizations.table.columns.phone",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultPhone.value}} [{{row.entity.defaultPhone.subType}}]</div>"
         },
         {
-          "name": "modified",
-          "displayName": "people.comp.organizations.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "name": "defaultAddress.city",
+          "displayName": "people.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.defaultAddress.city}}, {{row.entity.defaultAddress.state}}</div>"
         }
       ]
     },
@@ -792,19 +802,24 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "person.givenName",
-          "displayName": "people.comp.related.table.columns.givenName",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "person.familyName",
-          "displayName": "people.comp.related.table.columns.familyName",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "personType",
           "displayName": "people.comp.related.table.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "personTypes"
+        },
+        {
+          "name": "firstName",
+          "field": "person.givenName",
+          "displayName": "people.comp.related.table.columns.firstName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "lastName",
+          "field": "person.familyName",
+          "displayName": "people.comp.related.table.columns.lastName",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "personDescription",
@@ -812,19 +827,23 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "modifier",
-          "displayName": "people.comp.related.table.columns.modifier",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "name": "organization",
+          "field": "person.defaultOrganization.organizationValue",
+          "displayName": "people.comp.related.table.columns.organization",
+          "headerCellFilter": "translate"
         },
         {
-          "name": "modified",
-          "displayName": "people.comp.related.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "name": "phone",
+          "field": "person.defaultPhone.value",
+          "displayName": "people.comp.related.table.columns.phone",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone.value}} [{{row.entity.person.defaultPhone.subType}}]</div>"
+        },
+        {
+          "name": "location",
+          "displayName": "people.comp.related.table.columns.location",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress.city}}, {{row.entity.person.defaultAddress.state}}</div>"
         }
       ]
     },

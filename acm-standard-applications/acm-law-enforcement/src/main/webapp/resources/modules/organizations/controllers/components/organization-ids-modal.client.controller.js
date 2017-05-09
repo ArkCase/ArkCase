@@ -1,7 +1,7 @@
 angular.module('organizations').controller('Organizations.IDsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
         function ($scope, $modalInstance, ObjectLookupService, params) {
 
-            ObjectLookupService.getIdentificationTypes().then(
+            ObjectLookupService.getOrganizationIdTypes().then(
                 function (identificationTypes) {
                     $scope.identificationTypes = identificationTypes;
                     return identificationTypes;
