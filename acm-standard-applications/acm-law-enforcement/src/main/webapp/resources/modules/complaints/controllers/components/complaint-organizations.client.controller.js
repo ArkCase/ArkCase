@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.PeopleController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('complaints').controller('Complaints.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication', 'Object.LookupService'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Organization.InfoService'
     , function ($scope, $q, $stateParams, $translate, $modal
@@ -15,7 +15,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        ObjectLookupService.getOrganizationTypes().then(
+        //TODO: check for organization types
+        ObjectLookupService.getPersonTypes().then(
             function (organizationTypes) {
                 var options = [];
                 _.forEach(organizationTypes, function (v, k) {
@@ -62,8 +63,9 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             return {
                 id: null
                 , organizationType: ""
-                , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.objectType
+                , parentId: $scope.objectInfo.complaintId
+                , parentType: $scope.objectInfo.complaintType
+                , parentTitle: $scope.objectInfo.complaintNumber
                 , organizationDescription: ""
                 , notes: ""
                 , organization: null

@@ -207,7 +207,7 @@
                             <div class="col-sm-4 form-group">
                                 <label>&nbsp;</label>
                                 <input type="text" ng-model="organization.organizationValue"
-                                       ng-click="searchOrganization(organization)"
+                                       ng-click="searchOrganization($index)"
                                        class="input-md form-control"
                                        placeholder="{{ 'common.newPerson.organizations.searchExisting.placeholder' | translate }}">
                             </div>

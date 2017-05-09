@@ -560,6 +560,35 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getOrganizationIdTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getOrganizationIdTypes = function () {
+            return LookupService.getLookup("organizationIdTypes");
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name getDBAsTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getDBAsTypes = function () {
+            return LookupService.getLookup("dbasTypes");
+        };
+
+        /**
+         * @ngdoc method
          * @name getCountries
          * @methodOf services:Object.LookupService
          *
