@@ -4,6 +4,7 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
@@ -11,6 +12,7 @@ import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryServ
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Date;
 import java.util.Objects;
@@ -74,6 +77,15 @@ public class DocumentRepositoryAPIController
         }
         documentRepositoryEventPublisher.publishViewedEvent(docRepo, true);
         return docRepo;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(value = "id") Long id, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        log.info("Deleting Document Repository with id: [{}]", id);
+        getDocumentRepositoryService().delete(id, authentication);
     }
 
     public DocumentRepositoryService getDocumentRepositoryService()

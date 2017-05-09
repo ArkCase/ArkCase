@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_identification")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Identification implements Serializable, AcmEntity {
 
     private static final long serialVersionUID = 3413715007864370940L;

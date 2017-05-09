@@ -122,8 +122,8 @@
         <property name="notificationPropertyFileLocation" ref="notificationPropertyFileLocation"/>
         <property name="notificationSenderMap">
             <map>
-                <entry key="smtp" value-ref="smtpNotificationSender"></entry>
-                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>
+                <entry key="smtp" value-ref="smtpNotificationSender"/>
+                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"/>
             </map>
         </property>
     </bean>

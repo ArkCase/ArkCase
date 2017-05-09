@@ -1,6 +1,8 @@
 package com.armedia.acm.activiti.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Column;
@@ -19,6 +21,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_process_definition")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmProcessDefinition implements AcmEntity {
     @Column(name = "cm_pd_id")
     @Id

@@ -16,7 +16,9 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author riste.tutureski
@@ -24,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_timesheet")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity {
 
 	private static final long serialVersionUID = 3346214028142786165L;

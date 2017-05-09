@@ -17,7 +17,7 @@ import java.util.Date;
  * change set, and <strong>only</strong> if the objects actually have changes.  That means we have to update the
  * EclipseLink change set directly; and we also update the POJO entity fields, so the client sees the updates.
  */
-public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
+    public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private ThreadLocal<String> userId = new ThreadLocal<>();

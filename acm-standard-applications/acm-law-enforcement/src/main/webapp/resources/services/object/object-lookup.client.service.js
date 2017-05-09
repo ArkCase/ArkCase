@@ -439,6 +439,34 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getPersonRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of person relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getPersonRelationTypes = function () {
+            return LookupService.getLookup("personRelationTypes");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getOrganizationRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of person relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getOrganizationRelationTypes = function () {
+            return LookupService.getLookup("organizationRelationTypes");
+        };
+
+        /**
+         * @ngdoc method
          * @name getObjectTypes
          * @methodOf services:Object.LookupService
          *
@@ -514,6 +542,77 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         Service.getSecurityFieldTypes = function () {
             var data = LookupService.getLookup("securityFieldTypes");
             return data;
+        };
+
+        /**
+         * @ngdoc method
+         * @name getIdentificationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getIdentificationTypes = function () {
+            return LookupService.getLookup("identificationTypes");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getOrganizationIdTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getOrganizationIdTypes = function () {
+            return LookupService.getLookup("organizationIdTypes");
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name getDBAsTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of identification types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getDBAsTypes = function () {
+            return LookupService.getLookup("dbasTypes");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getCountries
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of countries
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getCountries = function () {
+            return LookupService.getLookup("countries");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getPersonOrganizationRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of person-organization relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getPersonOrganizationRelationTypes = function () {
+            return LookupService.getLookup("personOrganizationRelationTypes");
         };
 
         return Service;
