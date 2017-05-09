@@ -1,6 +1,7 @@
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
@@ -254,7 +255,8 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
                 getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY, null));
         messageProps.put("from",
                 getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY, null));
-
+        messageProps.put(NotificationConstants.SMTP_STARTTLS,
+                Boolean.valueOf(getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_STARTTLS, "false")));
         return messageProps;
     }
 

@@ -44,9 +44,9 @@ angular.module('organizations').controller('Organizations.ComplaintsController',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+            var currentObjectId = Util.goodMapValue($scope.objectInfo, "organizationId");
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectOrganizationService.getPesonComplaints(currentObjectId).then(function (data) {
+                ObjectOrganizationService.getOrganizationComplaints(currentObjectId).then(function (data) {
                     var complaints = data.response.docs;
                     $scope.gridOptions.data = complaints;
                     $scope.gridOptions.totalItems = data.response.numFound;
