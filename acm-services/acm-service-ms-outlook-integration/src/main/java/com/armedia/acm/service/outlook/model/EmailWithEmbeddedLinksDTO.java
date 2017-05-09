@@ -1,10 +1,11 @@
 package com.armedia.acm.service.outlook.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 {
 

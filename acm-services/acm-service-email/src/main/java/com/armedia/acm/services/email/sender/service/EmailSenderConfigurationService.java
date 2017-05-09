@@ -1,7 +1,7 @@
 package com.armedia.acm.services.email.sender.service;
 
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
@@ -37,17 +37,17 @@ public class EmailSenderConfigurationService
 
         Properties emailSenderProperties = new Properties();
 
-        emailSenderProperties.put(EmailSenderConfigurationProperties.HOST, configuration.getHost());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.PORT, configuration.getPort().toString());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.ENCRYPTION, configuration.getEncryption());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.TYPE, configuration.getType());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.USERNAME, configuration.getUsername());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.PASSWORD, configuration.getPassword());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.USER_FROM, configuration.getUserFrom());
-        emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_DOCUMENTS, Boolean.toString(configuration.isAllowDocuments()));
-        emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_ATTACHMENTS,
+        emailSenderProperties.put(EmailSenderConfigurationConstants.HOST, configuration.getHost());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.PORT, configuration.getPort().toString());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.ENCRYPTION, configuration.getEncryption());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.TYPE, configuration.getType());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.USERNAME, configuration.getUsername());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.PASSWORD, configuration.getPassword());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.USER_FROM, configuration.getUserFrom());
+        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_DOCUMENTS, Boolean.toString(configuration.isAllowDocuments()));
+        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS,
                 Boolean.toString(configuration.isAllowAttachments()));
-        emailSenderProperties.put(EmailSenderConfigurationProperties.ALLOW_HYPERLINKS, Boolean.toString(configuration.isAllowHyperlinks()));
+        emailSenderProperties.put(EmailSenderConfigurationConstants.ALLOW_HYPERLINKS, Boolean.toString(configuration.isAllowHyperlinks()));
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -79,34 +79,34 @@ public class EmailSenderConfigurationService
             String propertyValue = emailSenderProperties.getProperty(propertyName);
             switch (propertyName)
             {
-            case EmailSenderConfigurationProperties.HOST:
+            case EmailSenderConfigurationConstants.HOST:
                 emailSenderConfiguration.setHost(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.PORT:
+            case EmailSenderConfigurationConstants.PORT:
                 emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
                 break;
-            case EmailSenderConfigurationProperties.ENCRYPTION:
+            case EmailSenderConfigurationConstants.ENCRYPTION:
                 emailSenderConfiguration.setEncryption(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.TYPE:
+            case EmailSenderConfigurationConstants.TYPE:
                 emailSenderConfiguration.setType(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.USERNAME:
+            case EmailSenderConfigurationConstants.USERNAME:
                 emailSenderConfiguration.setUsername(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.PASSWORD:
+            case EmailSenderConfigurationConstants.PASSWORD:
                 emailSenderConfiguration.setPassword(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.USER_FROM:
+            case EmailSenderConfigurationConstants.USER_FROM:
                 emailSenderConfiguration.setUserFrom(propertyValue);
                 break;
-            case EmailSenderConfigurationProperties.ALLOW_DOCUMENTS:
+            case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
                 emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
                 break;
-            case EmailSenderConfigurationProperties.ALLOW_ATTACHMENTS:
+            case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
                 emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
                 break;
-            case EmailSenderConfigurationProperties.ALLOW_HYPERLINKS:
+            case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
                 emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
             }
         }

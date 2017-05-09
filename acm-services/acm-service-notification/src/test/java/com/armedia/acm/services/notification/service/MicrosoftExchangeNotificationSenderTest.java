@@ -16,7 +16,7 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationProperties;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -182,9 +182,9 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
     private void setSendExpectations() throws AcmEncryptionException
     {
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USERNAME, null)).andReturn("email_user_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.PASSWORD, null)).andReturn("email_password_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationProperties.USER_FROM, null)).andReturn("email_from_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USERNAME, null)).andReturn("email_user_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PASSWORD, null)).andReturn("email_password_value");
+        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USER_FROM, null)).andReturn("email_from_value");
     }
 
 }

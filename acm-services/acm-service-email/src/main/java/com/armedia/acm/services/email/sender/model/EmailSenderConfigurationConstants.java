@@ -4,7 +4,7 @@ package com.armedia.acm.services.email.sender.model;
  * @author sasko.tanaskoski
  *
  */
-public interface EmailSenderConfigurationProperties
+public interface EmailSenderConfigurationConstants
 {
 
     String HOST = "email.sender.host";

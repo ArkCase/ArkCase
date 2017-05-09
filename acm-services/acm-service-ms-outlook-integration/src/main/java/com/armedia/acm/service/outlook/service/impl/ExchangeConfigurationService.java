@@ -1,7 +1,7 @@
 package com.armedia.acm.service.outlook.service.impl;
 
 import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
-import com.armedia.acm.service.outlook.model.ExchangeConfigurationProperties;
+import com.armedia.acm.service.outlook.model.ExchangeConfigurationConstants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +33,15 @@ public class ExchangeConfigurationService
     {
 
         Properties exchangeProperties = new Properties();
-        exchangeProperties.put(ExchangeConfigurationProperties.INTEGRATION_ENABLED, Boolean.toString(configuration.isIntegrationEnabled()));
-        exchangeProperties.put(ExchangeConfigurationProperties.SERVER_VERSION, configuration.getServerVersion());
-        exchangeProperties.put(ExchangeConfigurationProperties.ENABLE_AUTODISCOVERY,
+        exchangeProperties.put(ExchangeConfigurationConstants.INTEGRATION_ENABLED, Boolean.toString(configuration.isIntegrationEnabled()));
+        exchangeProperties.put(ExchangeConfigurationConstants.SERVER_VERSION, configuration.getServerVersion());
+        exchangeProperties.put(ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY,
                 Boolean.toString(configuration.isEnableAutodiscovery()));
-        exchangeProperties.put(ExchangeConfigurationProperties.CLIENT_ACCESS_SERVER, configuration.getClientAccessServer());
-        exchangeProperties.put(ExchangeConfigurationProperties.DEFAULT_ACCESS, configuration.getDefaultAccess());
-        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_EMAIL, configuration.getSystemUserEmail());
-        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_EMAIL_PASSWORD, configuration.getSystemUserEmailPassword());
-        exchangeProperties.put(ExchangeConfigurationProperties.SYSTEM_USER_ID, configuration.getSystemUserId());
+        exchangeProperties.put(ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER, configuration.getClientAccessServer());
+        exchangeProperties.put(ExchangeConfigurationConstants.DEFAULT_ACCESS, configuration.getDefaultAccess());
+        exchangeProperties.put(ExchangeConfigurationConstants.SYSTEM_USER_EMAIL, configuration.getSystemUserEmail());
+        exchangeProperties.put(ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD, configuration.getSystemUserEmailPassword());
+        exchangeProperties.put(ExchangeConfigurationConstants.SYSTEM_USER_ID, configuration.getSystemUserId());
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
@@ -73,28 +73,28 @@ public class ExchangeConfigurationService
             String propertyValue = exchangeProperties.getProperty(propertyName);
             switch (propertyName)
             {
-            case ExchangeConfigurationProperties.INTEGRATION_ENABLED:
+            case ExchangeConfigurationConstants.INTEGRATION_ENABLED:
                 exchangeConfiguration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
                 break;
-            case ExchangeConfigurationProperties.SERVER_VERSION:
+            case ExchangeConfigurationConstants.SERVER_VERSION:
                 exchangeConfiguration.setServerVersion(propertyValue);
                 break;
-            case ExchangeConfigurationProperties.ENABLE_AUTODISCOVERY:
+            case ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY:
                 exchangeConfiguration.setEnableAutodiscovery(Boolean.valueOf(propertyValue));
                 break;
-            case ExchangeConfigurationProperties.CLIENT_ACCESS_SERVER:
+            case ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER:
                 exchangeConfiguration.setClientAccessServer(propertyValue);
                 break;
-            case ExchangeConfigurationProperties.DEFAULT_ACCESS:
+            case ExchangeConfigurationConstants.DEFAULT_ACCESS:
                 exchangeConfiguration.setDefaultAccess(propertyValue);
                 break;
-            case ExchangeConfigurationProperties.SYSTEM_USER_EMAIL:
+            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL:
                 exchangeConfiguration.setSystemUserEmail(propertyValue);
                 break;
-            case ExchangeConfigurationProperties.SYSTEM_USER_EMAIL_PASSWORD:
+            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD:
                 exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
                 break;
-            case ExchangeConfigurationProperties.SYSTEM_USER_ID:
+            case ExchangeConfigurationConstants.SYSTEM_USER_ID:
                 exchangeConfiguration.setSystemUserId(propertyValue);
                 break;
             }
