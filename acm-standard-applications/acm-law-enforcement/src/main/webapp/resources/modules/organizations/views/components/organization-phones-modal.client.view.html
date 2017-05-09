@@ -12,13 +12,13 @@
            <div class="col-sm-6 form-group">
             	<label for="phones_{{::$id}}"
                    translate>organizations.comp.phones.modal.value.label</label>
-                <input id="phones_{{::$id}}" type="text" ng-model="phone.value"
+                <input id="phones_{{::$id}}" type="text" ng-model="phone.value" class="input-md form-control"
                placeholder="{{ 'organizations.comp.phones.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
               	<label for="phoneTypes_{{::$id}}"
                    translate>organizations.comp.phones.modal.type.label</label>
-                <select id="phoneTypes_{{::$id}}"
+                <select id="phoneTypes_{{::$id}}" class="input-md form-control"
                 ng-model="phone.subType"
                 ng-options="item.type as item.name for item in phoneTypes"></select>
            </div>
@@ -35,7 +35,7 @@
         <div class="row">
         	<div class="col-sm-12 form-group">
            		<label for="phoneDescription">organizations.comp.phones.modal.description</label>
-        		<textarea id="phoneDescription" ng-model="phone.description"></textarea>
+        		<textarea id="phoneDescription" class="input-md form-control" ng-model="phone.description"></textarea>
            	</div>
         </div>
     </form>
