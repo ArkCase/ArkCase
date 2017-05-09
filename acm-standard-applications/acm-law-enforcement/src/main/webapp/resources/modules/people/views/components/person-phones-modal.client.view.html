@@ -10,15 +10,15 @@
     <form name="phoneForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-              <label for="phones_{{::$id}}"
+              <label for="phones"
                            translate>people.comp.phones.modal.value.label</label>
-              <input id="phones_{{::$id}}" type="text" ng-model="phone.value" class="input-md form-control"
+              <input id="phones" type="text" ng-model="phone.value" class="input-md form-control"
                        placeholder="{{ 'people.comp.phones.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              <label for="phoneTypes_{{::$id}}"
+              <label for="phoneTypes"
                            translate>people.comp.phones.modal.type.label</label>
-              <select id="phoneTypes_{{::$id}}" class="input-md form-control"
+              <select id="phoneTypes" class="input-md form-control"
                         ng-model="phone.subType"
                         ng-options="item.type as item.name for item in phoneTypes"></select>
            </div>
@@ -31,8 +31,8 @@
                  <translate>people.comp.phones.modal.yes</translate>
               </label>
               <label>
-              <input type="radio" ng-model="isDefault" ng-value="false">
-              <translate>people.comp.phones.modal.no</translate>
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>people.comp.phones.modal.no</translate>
               </label>
            </div>
         </div>
