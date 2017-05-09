@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
-import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationService;
+import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class ExchangeConfigurationAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private ExchangeConfigurationService exchangeConfigurationService;
+    private ExchangeConfigurationServiceImpl exchangeConfigurationService;
 
     @RequestMapping(value = "/exchange/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -45,7 +45,7 @@ public class ExchangeConfigurationAPIController
      * @param exchangeConfigurationService
      *            the exchangeConfigurationService to set
      */
-    public void setExchangeConfigurationService(ExchangeConfigurationService exchangeConfigurationService)
+    public void setExchangeConfigurationService(ExchangeConfigurationServiceImpl exchangeConfigurationService)
     {
         this.exchangeConfigurationService = exchangeConfigurationService;
     }

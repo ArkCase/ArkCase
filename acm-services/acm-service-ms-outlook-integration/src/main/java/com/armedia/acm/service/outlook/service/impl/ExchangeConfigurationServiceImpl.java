@@ -2,6 +2,7 @@ package com.armedia.acm.service.outlook.service.impl;
 
 import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
 import com.armedia.acm.service.outlook.model.ExchangeConfigurationConstants;
+import com.armedia.acm.service.outlook.service.ExchangeConfigurationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author sasko.tanaskoski
  *
  */
-public class ExchangeConfigurationService
+public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationService
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -29,6 +30,7 @@ public class ExchangeConfigurationService
 
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
+    @Override
     public void writeConfiguration(ExchangeConfiguration configuration, Authentication auth)
     {
 
@@ -59,6 +61,7 @@ public class ExchangeConfigurationService
         }
     }
 
+    @Override
     public ExchangeConfiguration readConfiguration()
     {
         ExchangeConfiguration exchangeConfiguration = new ExchangeConfiguration();

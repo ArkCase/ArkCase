@@ -18,7 +18,7 @@ import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
-import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationService;
+import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,7 +85,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     private Cache outlookUserConnectionCache;
     private String defaultAccess;
 
-    private ExchangeConfigurationService exchangeConfigurationService;
+    private ExchangeConfigurationServiceImpl exchangeConfigurationService;
 
     private final PropertySet standardProperties = new PropertySet(BasePropertySet.IdOnly, ItemSchema.Subject, ItemSchema.DateTimeSent,
             ItemSchema.DateTimeCreated, ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size);
@@ -662,7 +662,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     /**
      * @return the exchangeConfigurationService
      */
-    public ExchangeConfigurationService getExchangeConfigurationService()
+    public ExchangeConfigurationServiceImpl getExchangeConfigurationService()
     {
         return exchangeConfigurationService;
     }
@@ -671,7 +671,7 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
      * @param exchangeConfigurationService
      *            the exchangeConfigurationService to set
      */
-    public void setExchangeConfigurationService(ExchangeConfigurationService exchangeConfigurationService)
+    public void setExchangeConfigurationService(ExchangeConfigurationServiceImpl exchangeConfigurationService)
     {
         this.exchangeConfigurationService = exchangeConfigurationService;
     }

@@ -3,7 +3,7 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
-import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationService;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
 import org.springframework.context.ApplicationListener;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 public class NotificationSenderFactory implements ApplicationListener<AbstractConfigurationFileEvent>
 {
     private Map<String, NotificationSender> notificationSenderMap;
-    private EmailSenderConfigurationService emailSenderConfigurationService;
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
     String flowType = "smtp";
 
     public NotificationSender getNotificationSender()
@@ -35,7 +35,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
     /**
      * @return the emailSenderConfigurationService
      */
-    public EmailSenderConfigurationService getEmailSenderConfigurationService()
+    public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()
     {
         return emailSenderConfigurationService;
     }
@@ -44,7 +44,7 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
      * @param emailSenderConfigurationService
      *            the emailSenderConfigurationService to set
      */
-    public void setEmailSenderConfigurationService(EmailSenderConfigurationService emailSenderConfigurationService)
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {
         this.emailSenderConfigurationService = emailSenderConfigurationService;
     }

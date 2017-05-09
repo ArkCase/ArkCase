@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
-import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationService;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class EmailSenderConfigurationAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private EmailSenderConfigurationService emailSenderConfigurationService;
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
 
     @RequestMapping(value = "/email/configuration", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -52,7 +52,7 @@ public class EmailSenderConfigurationAPIController
      * @param emailSenderConfigurationService
      *            the emailSenderConfigurationService to set
      */
-    public void setEmailSenderConfigurationService(EmailSenderConfigurationService emailSenderConfigurationService)
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {
         this.emailSenderConfigurationService = emailSenderConfigurationService;
     }
