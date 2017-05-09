@@ -11,8 +11,8 @@
     <form name="addressesForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label translate> people.comp.addresses.modal.country.label</label>
-                <select class="form-control"
+                <label for="country_{{::$id}}" translate> people.comp.addresses.modal.country.label</label>
+                <select id="country_{{::$id}}" class="form-control"
                         ng-model="address.country">
                     <option ng-repeat="option in countries" value="{{option.code}}">
                         {{option.name}}
@@ -26,41 +26,41 @@
                         ng-options="item.type as item.name for item in addressTypes"></select>
             </div>
         </div>
-        <div class=" row">
+        <div class="row">
             <div class="col-sm-6 form-group">
-                <label translate>
+                <label for="streetAddress_{{::$id}}" translate>
                     people.comp.addresses.modal.streetAddress.label</label>
-                <input type="text" ng-model="address.streetAddress"
+                <input id="streetAddress_{{::$id}}" type="text" ng-model="address.streetAddress"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.streetAddress.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">
-                <label translate>
+                <label for="streetAddress2{{::$id}}" translate>
                     people.comp.addresses.modal.streetAddress2.label</label>
-                <input type="text" ng-model="address.streetAddress2"
+                <input id="streetAddress2{{::$id}}" type="text" ng-model="address.streetAddress2"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label translate>
+                <label for="city_{{::$id}}" translate>
                     people.comp.addresses.modal.city.label</label>
-                <input type="text" ng-model="address.city"
+                <input id="city_{{::$id}}" type="text" ng-model="address.city"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.city.placeholder' | translate }}">
             </div>
             <div class="col-sm-3 form-group">
-                <label translate>
+                <label for="state_{{::$id}}" translate>
                     people.comp.addresses.modal.state.label</label>
-                <input type="text" ng-model="address.state"
+                <input id="state_{{::$id}}" type="text" ng-model="address.state"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.state.placeholder' | translate }}">
             </div>
             <div class="col-sm-3 form-group">
-                <label translate>
+                <label for="zip_{{::$id}}" translate>
                     people.comp.addresses.modal.zip.label</label>
-                <input type="text" ng-model="address.zip"
+                <input id="zip_{{::$id}}" type="text" ng-model="address.zip"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.zip.placeholder' | translate }}">
             </div>
