@@ -21,7 +21,9 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             contactMethods: [],
             identifications: [],
             addresses: [],
-            people: [{}],
+            associationsFromObjects: [{
+                parentType: 'PERSON'
+            }],
             defaultEmail: {
                 type: 'email'
             },
@@ -81,7 +83,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         $scope.removePerson = function (person) {
             $timeout(function () {
-                _.remove($scope.organization.people, function (object) {
+                _.remove($scope.organization.associationsFromObjects, function (object) {
                     return object === person;
                 });
             }, 0);
@@ -113,19 +115,20 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    PersonInfoService.getPersonInfo(selected.object_id_s).then(function (response) {
-                        //FIXME ugly hack - saving organization fails because those properties are not removed when angular converts to JSON
-                        delete response.$promise;
-                        delete response.$resolved;
-                        $timeout(function () {
-                            if (index > -1) {
-                                $scope.organization.people[index] = response;
+                    $timeout(function () {
+                        var organizationAssocation = {
+                            organization: $scope.organization,
+                            parentId: selected.object_id_s,
+                            parentType: selected.object_type_s,
+                            parentTitle: selected.full_name_lcs
+                        };
+                        if (index > -1) {
+                            $scope.organization.associationsFromObjects[index] = organizationAssocation;
 
-                            } else {
-                                $scope.organization.people.push(response);
-                            }
-                        }, 0);
-                    });
+                        } else {
+                            $scope.organization.associationsFromObjects.push(organizationAssocation);
+                        }
+                    }, 0);
                 }
             });
         };
@@ -155,6 +158,10 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
             $scope.organizationTypes = organizationTypes;
+        });
+
+        ObjectLookupService.getPersonOrganizationRelationTypes().then(function (personOrganizationRelationTypes) {
+            $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
         });
 
         $scope.addContactMethod = function (contactType) {
@@ -272,8 +279,8 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             }
 
             //remove empty organizations before save
-            _.remove(organization.people, function (person) {
-                if (!person.id) {
+            _.remove(organization.associationsFromObjects, function (person) {
+                if (!person.parentId) {
                     return true;
                 }
                 return false;

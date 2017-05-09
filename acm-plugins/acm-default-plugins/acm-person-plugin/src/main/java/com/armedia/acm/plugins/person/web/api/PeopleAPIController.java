@@ -171,9 +171,11 @@ public class PeopleAPIController
         } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
-            throw new AcmObjectNotFoundException("Organization", null, String.format("Could not retrieve %s for organization id[%s]", objectType, personId).toString(), e);
+            throw new AcmObjectNotFoundException("Person", null, String.format("Could not retrieve %s for person id[%s]", objectType, personId).toString(), e);
         }
     }
+
+
 
     public void setPersonService(PersonService personService)
     {
