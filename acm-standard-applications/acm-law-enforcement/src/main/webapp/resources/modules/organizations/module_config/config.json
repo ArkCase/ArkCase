@@ -10,7 +10,7 @@
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 90
+      "position": 80
     },
     {
       "menuId": "topbar",
