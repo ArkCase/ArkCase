@@ -193,9 +193,11 @@ public class NotificationServiceTest extends EasyMockSupport
                 .anyTimes();
         expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.encryption"), capture(stringCapture))).andReturn("off")
                 .anyTimes();
+
+        Capture<Map<String, Object>> messagePropsCapture = null;
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
@@ -223,6 +225,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        // assertFalse(starttls);
     }
 
     @Test
@@ -370,6 +375,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        // assertTrue(starttls);
     }
 
     @Test

@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('common').controller('Common.NewPersonModalController', ['$scope', '$stateParams', '$translate'
-    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService',
-    '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService'
+    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', '$modalInstance', 'ConfigService', 'Organization.InfoService'
     , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService
         , $timeout, Util, $modal, $modalInstance, ConfigService, OrganizationInfoService) {
         //used for showing/hiding buttons in communication accounts
@@ -122,7 +121,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
         $scope.addNewOrganization = function () {
             $timeout(function () {
-                $scope.searchOrganization(null);
+                $scope.searchOrganization(-1);
             }, 0);
         };
 
@@ -134,7 +133,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }, 0);
         };
 
-        $scope.searchOrganization = function (organization) {
+        $scope.searchOrganization = function (index) {
             var params = {};
             params.header = $translate.instant("common.dialogOrganizationPicker.header");
             params.filter = '"Object Type": ORGANIZATION';
@@ -160,12 +159,19 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
                     OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (selectedOrganization) {
+                        //FIXME ugly hack - saving person fails because those properties are not removed when angular converts to JSON
+                        delete selectedOrganization.$promise;
+                        delete selectedOrganization.$resolved;
                         // override values of existing organization which is displayed
-                        if (organization) {
-                            _.merge(organization, selectedOrganization);
-                        } else {
-                            $scope.person.organizations.push(selectedOrganization);
-                        }
+
+                        $timeout(function () {
+                            if (index > -1) {
+                                $scope.person.organizations[index] = selectedOrganization;
+
+                            } else {
+                                $scope.person.organizations.push(selectedOrganization);
+                            }
+                        }, 0);
                     });
                 }
             });
@@ -200,26 +206,26 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }
 
             //remove empty organizations before save
-            _.remove(person.organizations, function (person) {
-                if (!person.organizationId) {
+            _.remove(person.organizations, function (organization) {
+                if (!organization.organizationId) {
                     return true;
                 }
                 return false;
             });
+
             //addresses
-            if (person.defaultAddress) {
-                if (!person.defaultAddress.streetAddress) {
-                    person.defaultAddress = null;
-                } else {
-                    person.addresses.push(person.defaultAddress);
-                }
+            if (person.defaultAddress && !person.defaultAddress.streetAddress) {
+                person.defaultAddress = null;
+            } else {
+                person.addresses.push(person.defaultAddress);
             }
             //aliases
             if (person.defaultAlias) {
-                if (person.defaultAlias.aliasValue) {
-                    person.personAliases.push(person.defaultAlias);
-                } else {
+                if (!person.defaultAlias.aliasValue) {
                     person.defaultAlias = null;
+                }
+                else {
+                    person.personAliases.push(person.defaultAlias);
                 }
             }
             return person;

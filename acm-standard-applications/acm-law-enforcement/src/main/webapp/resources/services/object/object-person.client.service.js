@@ -133,7 +133,7 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
          *
          * @returns {Object} Promise
          */
-        Service.getPesonCases = function (id) {
+        Service.getPersonCases = function (id) {
             var cacheData = new Store.CacheFifo(Service.SessionCacheNames.PERSON_CASES_DATA);
             var cacheKey = id;
             var casesData = cacheData.get(cacheKey);
@@ -166,7 +166,7 @@ angular.module('services').factory('Object.PersonService', ['$resource', 'Acm.St
          *
          * @returns {Object} Promise
          */
-        Service.getPesonComplaints = function (id) {
+        Service.getPersonComplaints = function (id) {
             var cacheData = new Store.CacheFifo(Service.SessionCacheNames.PERSON_COMPLAINTS_DATA);
             var cacheKey = id;
             var complaintsData = cacheData.get(cacheKey);

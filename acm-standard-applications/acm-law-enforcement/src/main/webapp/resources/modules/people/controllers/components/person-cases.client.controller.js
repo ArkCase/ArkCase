@@ -46,7 +46,7 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
             $scope.objectInfo = objectInfo;
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectPersonService.getPesonCases(currentObjectId).then(function (data) {
+                ObjectPersonService.getPersonCases(currentObjectId).then(function (data) {
                     var cases = data.response.docs;
                     $scope.gridOptions.data = cases;
                     $scope.gridOptions.totalItems = data.response.numFound;

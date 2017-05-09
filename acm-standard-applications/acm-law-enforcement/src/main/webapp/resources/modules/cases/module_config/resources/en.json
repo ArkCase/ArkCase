@@ -63,14 +63,13 @@
   "cases.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
-      "type": "Association Type",
-      "id": "ID",
+      "associationType": "Role",
+      "type": "Type",
+      "identification": "ID",
       "value": "Organization",
-      "organizationType": "Org Type",
-      "created": "Date Added",
-      "creator": "Added By",
-      "modified": "Last Modified",
-      "modifier": "Modified By"
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "cases.comp.participants": {
