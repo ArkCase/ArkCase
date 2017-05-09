@@ -8,7 +8,7 @@
       "menuItemTitle": "notifications.menus.leftnav.item",
       "moduleId": "notification",
       "iconClass": "fa fa-bell-o",
-      "position": 90
+      "position": 120
     }
   ],
   "components": [
