@@ -10,22 +10,22 @@
     <form name="phoneForm">
                 <div class="row">
            <div class="col-sm-6 form-group">
-            	<label for="phones_{{::$id}}"
+            	<label for="phones"
                    translate>organizations.comp.phones.modal.value.label</label>
-                <input id="phones_{{::$id}}" type="text" ng-model="phone.value" class="input-md form-control"
+                <input id="phones" type="text" ng-model="phone.value" class="input-md form-control"
                placeholder="{{ 'organizations.comp.phones.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              	<label for="phoneTypes_{{::$id}}"
+              	<label for="phoneTypes"
                    translate>organizations.comp.phones.modal.type.label</label>
-                <select id="phoneTypes_{{::$id}}" class="input-md form-control"
+                <select id="phoneTypes" class="input-md form-control"
                 ng-model="phone.subType"
                 ng-options="item.type as item.name for item in phoneTypes"></select>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-              	<label translate>organizations.comp.phones.modal.setPrimary</label>
+              	<label translate>organizations.comp.phones.modal.setPrimary</label><br/>
             	<label><input type="radio" ng-model="isDefault" ng-value="true">
             	<translate>organizations.comp.phones.modal.yes</translate></label>
             	<label><input type="radio" ng-model="isDefault" ng-value="false">
@@ -34,7 +34,7 @@
         </div>
         <div class="row">
         	<div class="col-sm-12 form-group">
-           		<label for="phoneDescription">organizations.comp.phones.modal.description</label>
+           		<label for="phoneDescription" translate>organizations.comp.phones.modal.description</label>
         		<textarea id="phoneDescription" class="input-md form-control" ng-model="phone.description"></textarea>
            	</div>
         </div>
