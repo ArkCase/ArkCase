@@ -192,6 +192,13 @@ public class ExchangeCalendarService implements CalendarService
             }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEvent.getEventId()));
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments);
+            if (calendarEvent.getFileNames() != null)
+            {
+                for (String fileName : calendarEvent.getFileNames())
+                {
+
+                }
+            }
 
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
 
@@ -224,7 +231,15 @@ public class ExchangeCalendarService implements CalendarService
                 throw new CalendarServiceException("");
             }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEventId));
-            outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, appointment.getIsRecurring(), DeleteMode.HardDelete);
+            if (appointment.getIsRecurring())
+            {
+                appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEventId));
+                outlookDao.deleteAppointmentItem(exchangeService, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
+            } else
+            {
+                outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, appointment.getIsRecurring(),
+                        DeleteMode.MoveToDeletedItems);
+            }
         } catch (Exception e)
         {
             throw new CalendarServiceException(e);

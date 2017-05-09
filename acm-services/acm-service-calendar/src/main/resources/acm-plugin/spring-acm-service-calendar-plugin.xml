@@ -77,7 +77,7 @@
                 </bean>
                 <bean id="deleteCalendarEventUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
-                    <property name="url" value="/api/{version}/service/calendar/calendarevents/{objectType}/{objectId}/{eventId}"/>
+                    <property name="url" value="/api/{version}/service/calendar/calendarevents/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="acmCalendarEventsDeletePrivilege"/>
                 </bean>
 

@@ -145,10 +145,10 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/calendarevents/{objectType}/{objectId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCalendarEvent(HttpSession session, Authentication auth,
             @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
-            @PathVariable(value = "calendarEventId") String calendarEventId) throws CalendarServiceException
+            @RequestParam(value = "calendarEventId") String calendarEventId) throws CalendarServiceException
 
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
