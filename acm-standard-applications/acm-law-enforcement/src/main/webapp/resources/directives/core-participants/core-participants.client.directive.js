@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',
             scope: {
@@ -96,7 +96,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     var modalScope = scope.$new();
                     modalScope.participant = participant || {};
                     modalScope.isEdit = isEdit || false;
-                    modalScope.selectedType = "";
+                    modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
 
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -180,14 +180,36 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 scope.editRow = function (rowEntity) {
                     scope.participant = rowEntity;
-                    var item = {
-                        id: rowEntity.id,
-                        participantType: rowEntity.participantType,
-                        participantLdapId: rowEntity.participantLdapId,
-                        participantTypes: scope.participantTypes,
-                        config: scope.config
-                    };
-                    showModal(item, true);
+                    // determine exact object type so that the validation passes in object-participant.client.service.js
+                    var filter = 'fq="object_type_s": (GROUP OR USER)' + '&fq="object_id_s": ' + rowEntity.participantLdapId;
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(rowEntity.participantLdapId + '*', filter, scope.config.paginationPageSize ? scope.config.paginationPageSize : 10, 0);
+                    SearchService.queryFilteredSearch({
+                            query: query
+                        },
+                        function (data) {
+                            if (SearchService.validateSolrData(data)) {
+                                var participantData = data.response.docs;
+                                if (participantData.length > 1) {
+                                    //can't have two objects with same id
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                                }
+                                else if (Util.isArrayEmpty(participantData)) {
+                                    //probably group/user is invalid (sync error/stale data)
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userOrGroupNotFound"));
+                                } else {
+                                    var item = {
+                                        id: rowEntity.id,
+                                        participantType: rowEntity.participantType,
+                                        participantLdapId: rowEntity.participantLdapId,
+                                        participantTypes: scope.participantTypes,
+                                        selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
+                                        config: scope.config
+                                    };
+                                    showModal(item, true);
+                                }
+                            }
+                        }
+                    )
                 };
 
                 scope.deleteRow = function (rowEntity) {
