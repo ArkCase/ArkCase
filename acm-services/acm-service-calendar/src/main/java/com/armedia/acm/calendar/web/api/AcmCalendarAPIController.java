@@ -127,7 +127,6 @@ public class AcmCalendarAPIController
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth,
             @RequestParam(value = "calendarId", required = false) String calendarId, @RequestPart("data") AcmCalendarEvent calendarEvent,
             @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws CalendarServiceException
-
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         calendarService.addCalendarEvent(user, auth, calendarId, calendarEvent, attachments);
@@ -138,7 +137,6 @@ public class AcmCalendarAPIController
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
             @RequestPart("data") AcmCalendarEvent calendarEvent, @RequestPart(value = "file", required = false) MultipartFile[] attachments)
             throws CalendarServiceException
-
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         calendarService.updateCalendarEvent(user, auth, calendarEvent, attachments);
@@ -148,11 +146,12 @@ public class AcmCalendarAPIController
     @RequestMapping(value = "/calendarevents/{objectType}/{objectId}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteCalendarEvent(HttpSession session, Authentication auth,
             @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
-            @RequestParam(value = "calendarEventId") String calendarEventId) throws CalendarServiceException
-
+            @RequestParam(value = "calendarEventId") String calendarEventId,
+            @RequestParam(value = "deleteRecurring", required = false, defaultValue = "false") boolean deleteRecurring)
+            throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        calendarService.deleteCalendarEvent(user, auth, objectType, objectId, calendarEventId);
+        calendarService.deleteCalendarEvent(user, auth, objectType, objectId, calendarEventId, deleteRecurring);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

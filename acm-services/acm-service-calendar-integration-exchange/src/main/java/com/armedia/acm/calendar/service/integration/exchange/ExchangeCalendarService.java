@@ -216,8 +216,8 @@ public class ExchangeCalendarService implements CalendarService
      * AcmUser, org.springframework.security.core.Authentication, java.lang.String)
      */
     @Override
-    public void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId)
-            throws CalendarServiceException
+    public void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId,
+            boolean deleteRecurring) throws CalendarServiceException
     {
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
@@ -231,14 +231,13 @@ public class ExchangeCalendarService implements CalendarService
                 throw new CalendarServiceException("");
             }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEventId));
-            if (appointment.getIsRecurring())
+            if (deleteRecurring && appointment.getIsRecurring())
             {
                 appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEventId));
                 outlookDao.deleteAppointmentItem(exchangeService, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
             } else
             {
-                outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, appointment.getIsRecurring(),
-                        DeleteMode.MoveToDeletedItems);
+                outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, false, DeleteMode.MoveToDeletedItems);
             }
         } catch (Exception e)
         {
