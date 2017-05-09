@@ -7,7 +7,9 @@ import com.armedia.acm.audit.model.NotAudited;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,6 +30,7 @@ import java.util.Date;
 @Entity
 @NotAudited
 @Table(name = "acm_object_history")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
 

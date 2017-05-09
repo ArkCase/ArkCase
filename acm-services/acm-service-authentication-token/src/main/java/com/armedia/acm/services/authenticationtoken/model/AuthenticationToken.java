@@ -2,6 +2,8 @@ package com.armedia.acm.services.authenticationtoken.model;
 
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 
@@ -11,6 +13,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_authentication_token")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AuthenticationToken implements Serializable, AcmEntity
 
 {

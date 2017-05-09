@@ -2,7 +2,9 @@ package com.armedia.acm.services.notification.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_notification")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Notification implements Serializable, AcmObject, AcmEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;

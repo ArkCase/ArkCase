@@ -9,6 +9,8 @@ import java.util.Date;
 import javax.persistence.*;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author riste.tutureski
@@ -16,6 +18,7 @@ import com.armedia.acm.data.AcmEntity;
  */
 @Entity
 @Table(name = "acm_history")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmHistory implements Serializable, AcmEntity{
 
 	private static final long serialVersionUID = 3919545816704448776L;
