@@ -4,6 +4,7 @@
 <div class="modal-body">
     <div class="row">
        <div class="col-sm-12 form-group">
+        <label translate>people.comp.pictures.dialog.title <span class="required-asterisk">*</span></label><br/>
        	<button ngf-select ng-model="userPicture" id="file"
                 ngf-pattern="'image/*'" ngf-accept="'image/*'"
                 class="btn btn-sm btn-default" ngf-change="upload()"><span
@@ -13,7 +14,7 @@
     </div>
     <div class="row">
        <div class="col-sm-12 form-group">
-          <label translate>people.comp.pictures.dialog.setPrimary</label><br/>
+          <label translate>people.comp.pictures.dialog.setPrimary <span class="required-asterisk">*</span></label><br/>
           <label>
              <translate>people.comp.pictures.dialog.yes</translate>
              <input type="radio" ng-model="isDefault" ng-value="true">
