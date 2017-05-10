@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 
@@ -192,11 +194,14 @@ public class ExchangeCalendarService implements CalendarService
             }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEvent.getEventId()));
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments);
-            if (calendarEvent.getFileNames() != null)
+            List<String> attachmentsFileNames = calendarEvent.getFileNames();
+            if (attachmentsFileNames != null && !attachmentsFileNames.isEmpty())
             {
-                for (String fileName : calendarEvent.getFileNames())
+                List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
+                        .filter(attachment -> attachmentsFileNames.contains(attachment.getName())).collect(Collectors.toList());
+                for (Attachment attachment : attachmentsToRemove)
                 {
-
+                    appointment.getAttachments().remove(attachment);
                 }
             }
 

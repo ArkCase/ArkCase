@@ -53,7 +53,8 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
             ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size, AppointmentSchema.IsCancelled,
             AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring, ItemSchema.ParentFolderId, ItemSchema.ReminderMinutesBeforeStart,
             AppointmentSchema.Sensitivity, AppointmentSchema.Importance, AppointmentSchema.RequiredAttendees,
-            AppointmentSchema.OptionalAttendees, AppointmentSchema.Resources, AppointmentSchema.Recurrence, AppointmentSchema.Organizer);
+            AppointmentSchema.OptionalAttendees, AppointmentSchema.Resources, AppointmentSchema.Recurrence, AppointmentSchema.Organizer,
+            ItemSchema.Attachments);
 
     private Map<String, PropertyDefinition> sortFields;
 
