@@ -26,18 +26,20 @@
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-              <label translate>organizations.comp.emails.modal.setPrimary</label>
-              <label>
-                 <input type="radio" ng-model="isDefault" ng-value="true">
-                 <translate>organizations.comp.emails.modal.yes</translate>
-              </label>
-              <input type="radio" ng-model="isDefault" ng-value="false">
-              <translate>organizations.comp.emails.modal.no</translate>
+                <label translate>organizations.comp.emails.modal.setPrimary</label><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>organizations.comp.emails.modal.yes</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>organizations.comp.emails.modal.no</translate>
+                </label>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-           	<label for="emailDescription" translate>organizations.comp.email.modal.description</label>
+           	<label for="emailDescription" translate>organizations.comp.emails.modal.description</label>
             <textarea id="emailDescription" class="input-md form-control" ng-model="emails.description"></textarea>
            </div>
         </div>

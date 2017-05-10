@@ -10,7 +10,7 @@
       "menuItemTitle": "people.menus.leftnav.item",
       "moduleId": "person",
       "iconClass": "fa fa-user",
-      "position": 80
+      "position": 70
     },
     {
       "menuId": "topbar",
@@ -411,7 +411,7 @@
     {
       "id": "emails",
       "title": "Email Addresses",
-      "icon": "fa fa-address-book-o",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -505,7 +505,7 @@
     {
       "id": "aliases",
       "title": "Aliases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -557,7 +557,7 @@
     {
       "id": "organizations",
       "title": "Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -606,7 +606,7 @@
     {
       "id": "ids",
       "title": "IDs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -663,7 +663,7 @@
     {
       "id": "cases",
       "title": "Cases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -724,7 +724,7 @@
     {
       "id": "complaints",
       "title": "Complaints",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -785,7 +785,7 @@
     {
       "id": "related",
       "title": "Related People",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,

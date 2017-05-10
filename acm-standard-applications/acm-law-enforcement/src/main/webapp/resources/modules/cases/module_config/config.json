@@ -130,7 +130,7 @@
       {
         "type": "p/CASE_FILE/ppl",
         "label": "People",
-        "icon": "fa fa-users",
+        "icon": "fa fa-user",
         "components": [
           "people"
         ]
@@ -138,7 +138,7 @@
       {
         "type": "p/CASE_FILE/org",
         "label": "Organizations",
-        "icon": "fa fa-users",
+        "icon": "fa fa-building",
         "components": [
           "organizations"
         ]
@@ -523,7 +523,7 @@
     {
       "id": "organizations",
       "title": "Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
