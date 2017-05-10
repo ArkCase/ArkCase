@@ -44,14 +44,15 @@ angular.module('document-details').controller('Document.VersionHistoryController
         
         $scope.$watchCollection('versions', function (newValue, oldValue) {
             if (newValue && newValue.length) {
-                $q.all([gridHelper.getUsers(), ConfigService.getComponentConfig("document-details", "versionHistory")]).then(function (data) {
-                    $scope.gridOptions.columnDefs = data[1].columnDefs;
-                    $scope.gridOptions.paginationPageSizes = data[1].paginationPageSizes;
-                    $scope.gridOptions.paginationPageSize = data[1].paginationPageSize;
-                    gridHelper.setUserNameFilter(data[0]);
-
-                    $scope.retrieveGridData();
-                    return data[1];
+                gridHelper.getUsers().then(function (promiseUsers) {
+                    ConfigService.getComponentConfig("document-details", "versionHistory").then(function (data) {
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, data);
+                        $scope.gridOptions.columnDefs = data.columnDefs;
+                        $scope.gridOptions.paginationPageSizes = data.paginationPageSizes;
+                        $scope.gridOptions.paginationPageSize = data.paginationPageSize;
+                        $scope.retrieveGridData();
+                        return data;
+                    });
                 });
             }
 
