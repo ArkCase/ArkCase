@@ -12,15 +12,15 @@
         <div class="row">
            <div class="col-sm-6 form-group">
             <label for="idTypes"
-                   translate>organizations.comp.ids.modal.type.label</label>
-            <select id="idTypes" class="input-md form-control"
+                   translate>organizations.comp.ids.modal.type.label <span class="required-asterisk">*</span></label>
+            <select id="idTypes" class="input-md form-control" required="required"
                     ng-model="identification.identificationType"
                     ng-options="item.type as item.name for item in identificationTypes"></select>
             </div>
            <div class="col-sm-6 form-group">
             <label for="identificationNumber"
-                   translate>organizations.comp.ids.modal.number.label</label>
-            <input id="identificationNumber" type="text" class="input-md form-control" ng-model="identification.identificationNumber"
+                   translate>organizations.comp.ids.modal.number.label <span class="required-asterisk">*</span></label>
+            <input id="identificationNumber" type="text"  required="required" class="input-md form-control" ng-model="identification.identificationNumber"
                     placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
             </div>
         </div>
@@ -40,7 +40,7 @@
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-            <label translate>organizations.comp.ids.modal.setPrimary</label><br/>
+            <label translate>organizations.comp.ids.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
             <label><input type="radio" ng-model="isDefault" ng-value="true">
             <translate>organizations.comp.ids.modal.yes</translate></label>
             <label><input type="radio" ng-model="isDefault" ng-value="false">
