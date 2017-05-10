@@ -152,7 +152,7 @@ public class ExchangeTypesConverter
         {
             for (MultipartFile attachment : attachments)
             {
-                appointment.getAttachments().addFileAttachment(attachment.getName(), attachment.getInputStream());
+                appointment.getAttachments().addFileAttachment(attachment.getOriginalFilename(), attachment.getInputStream());
             }
         }
 
@@ -378,42 +378,42 @@ public class ExchangeTypesConverter
             }
             event.setRecurrenceDetails(recurrenceDetails);
 
-            event.setDetails(MessageBody.getStringFromMessageBody(appointment.getBody()));
-
-            if (appointment.getIsReminderSet())
-            {
-                event.setRemindIn(appointment.getReminderMinutesBeforeStart());
-            }
-
-            event.setSensitivity(convertSensitivity(appointment.getSensitivity()));
-
-            event.setPriority(convertImportance(appointment.getImportance()));
-
-            List<Attendee> attendees = new ArrayList<>();
-            appointment.getRequiredAttendees().forEach(a -> {
-                Attendee attendee = new Attendee();
-                attendee.setEmail(a.getAddress());
-                attendee.setType(AttendeeType.REQUIRED);
-                attendees.add(attendee);
-            });
-            appointment.getOptionalAttendees().forEach(a -> {
-                Attendee attendee = new Attendee();
-                attendee.setEmail(a.getAddress());
-                attendee.setType(AttendeeType.OPTIONAL);
-                attendees.add(attendee);
-            });
-            appointment.getResources().forEach(a -> {
-                Attendee attendee = new Attendee();
-                attendee.setEmail(a.getAddress());
-                attendee.setType(AttendeeType.RESOURCE);
-                attendees.add(attendee);
-            });
-            event.setAttendees(attendees);
-
-            List<String> fileNames = new ArrayList<>();
-            appointment.getAttachments().forEach(att -> fileNames.add(att.getName()));
-            event.setFileNames(fileNames);
         }
+        event.setDetails(MessageBody.getStringFromMessageBody(appointment.getBody()));
+
+        if (appointment.getIsReminderSet())
+        {
+            event.setRemindIn(appointment.getReminderMinutesBeforeStart());
+        }
+
+        event.setSensitivity(convertSensitivity(appointment.getSensitivity()));
+
+        event.setPriority(convertImportance(appointment.getImportance()));
+
+        List<Attendee> attendees = new ArrayList<>();
+        appointment.getRequiredAttendees().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.REQUIRED);
+            attendees.add(attendee);
+        });
+        appointment.getOptionalAttendees().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.OPTIONAL);
+            attendees.add(attendee);
+        });
+        appointment.getResources().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.RESOURCE);
+            attendees.add(attendee);
+        });
+        event.setAttendees(attendees);
+
+        List<String> fileNames = new ArrayList<>();
+        appointment.getAttachments().forEach(att -> fileNames.add(att.getName()));
+        event.setFileNames(fileNames);
     }
 
     /**

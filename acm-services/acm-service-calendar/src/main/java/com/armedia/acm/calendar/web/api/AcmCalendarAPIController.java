@@ -111,10 +111,10 @@ public class AcmCalendarAPIController
                 maxItems);
     }
 
-    @RequestMapping(value = "/calendarevents/{objectType}/{objectId}/{eventId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/calendarevents/event/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmCalendarEvent getEvent(HttpSession session, Authentication auth, @PathVariable(value = "objectType") String objectType,
-            @PathVariable(value = "objectId") String objectId, @PathVariable(value = "eventId") String eventId)
+            @PathVariable(value = "objectId") String objectId, @RequestParam(value = "eventId") String eventId)
             throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
