@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/PERSON/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/PERSON/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/PERSON/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -298,7 +298,7 @@
     {
       "id": "addresses",
       "title": "Addresses",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
