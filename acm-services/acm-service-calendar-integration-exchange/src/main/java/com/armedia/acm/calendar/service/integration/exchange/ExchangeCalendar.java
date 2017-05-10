@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -102,6 +103,9 @@ public class ExchangeCalendar implements AcmCalendar
         try
         {
             Appointment appointment = Appointment.bind(service, new ItemId(eventId));
+            PropertySet allProperties = new PropertySet();
+            allProperties.addRange(PropertyDefinitionHolder.standardProperties);
+            appointment.load(allProperties);
             AcmCalendarEvent event = new AcmCalendarEvent();
             ExchangeTypesConverter.setEventProperties(event, appointment);
             return event;
