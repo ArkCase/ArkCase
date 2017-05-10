@@ -106,6 +106,14 @@ public class ExchangeCalendar implements AcmCalendar
             PropertySet allProperties = new PropertySet();
             allProperties.addRange(PropertyDefinitionHolder.standardProperties);
             appointment.load(allProperties);
+
+            if (appointment.getIsRecurring())
+            {
+                Appointment recurringMaster = Appointment.bindToRecurringMaster(service, new ItemId(eventId));
+                recurringMaster.load(allProperties);
+                appointment.setRecurrence(recurringMaster.getRecurrence());
+            }
+
             AcmCalendarEvent event = new AcmCalendarEvent();
             ExchangeTypesConverter.setEventProperties(event, appointment);
             return event;
