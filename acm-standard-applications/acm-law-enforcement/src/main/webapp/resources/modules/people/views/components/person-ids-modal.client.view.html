@@ -11,14 +11,14 @@
     <form name="idForm">
         <div class="row">
         	<div class="col-sm-6 form-group">
-        		<label for="identificationNumber" translate>people.comp.ids.modal.number.label</label>
-                <input id="identificationNumber" class="input-md form-control" type="text" ng-model="identification.identificationNumber"
+        		<label for="identificationNumber" translate>people.comp.ids.modal.number.label <span class="required-asterisk">*</span></label>
+                <input id="identificationNumber" class="input-md form-control" type="text" required="required" ng-model="identification.identificationNumber"
                        placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
         	</div>
         	<div class="col-sm-6 form-group">
         	  <label for="idTypes"
-                           translate>people.comp.ids.modal.type.label</label>
-                           <select id="idTypes" class="input-md form-control"
+                           translate>people.comp.ids.modal.type.label <span class="required-asterisk">*</span></label>
+                           <select id="idTypes" class="input-md form-control" required="required"
                         ng-model="identification.identificationType"
                         ng-options="item.type as item.name for item in identificationTypes"></select>
         	</div>
@@ -39,7 +39,7 @@
         
         <div class="row">
         	<div class="col-sm-12 form-group">
-        		<label translate>people.comp.ids.modal.setPrimary</label><br/>
+        		<label translate>people.comp.ids.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.ids.modal.yes</translate>
