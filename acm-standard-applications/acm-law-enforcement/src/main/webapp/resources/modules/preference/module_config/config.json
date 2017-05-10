@@ -86,6 +86,20 @@
         "person",
         "hoursSummary"
       ]
+    },
+    {
+      "name": "PERSON",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "name": "ORGANIZATION",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
     }
   ]
 }
