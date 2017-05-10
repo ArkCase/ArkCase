@@ -1,6 +1,6 @@
 {
   "id": "organizations",
-  "title": "organizations",
+  "title": "Organizations",
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -10,7 +10,7 @@
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 90
+      "position": 50
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "organizations.menus.topbar.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 40
+      "position": 50
     }
   ],
   "tree": {
@@ -120,7 +120,7 @@
       },
       {
         "type": "p/ORGANIZATION/pho",
-        "label": "Phones",
+        "label": "Phone Numbers",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -128,7 +128,7 @@
       },
       {
         "type": "p/ORGANIZATION/fax",
-        "label": "Faxes",
+        "label": "Fax Numbers",
         "icon": "fa fa-fax",
         "components": [
           "faxes"
@@ -136,7 +136,7 @@
       },
       {
         "type": "p/ORGANIZATION/ema",
-        "label": "Emails",
+        "label": "Email Addresses",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/ORGANIZATION/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/ORGANIZATION/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -217,6 +217,36 @@
       "type": "empty",
       "editable": false,
       "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "organizations.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "organizations.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "organizations.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        }
       ]
     },
     {

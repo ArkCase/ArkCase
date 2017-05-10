@@ -18,7 +18,7 @@
       "menuItemTitle": "costTracking.menus.topbar.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
-      "position": 50
+      "position": 70
     }
   ],
   "tree": {
