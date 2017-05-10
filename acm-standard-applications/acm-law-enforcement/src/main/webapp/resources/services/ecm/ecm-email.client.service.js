@@ -10,8 +10,8 @@
 
  * Email service for ECM.
  */
-angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , function ($resource, Store, Util) {
+angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService'
+    , function ($resource, $translate, Store, Util, MessageService) {
 
         var Service = $resource('api/latest/service', {}, {
             /**
@@ -99,7 +99,8 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
                 service: Service._sendEmailWithAttachments
                 , param: {}
                 , data: emailData
-                , onSuccess: function (data) {
+                , onSuccess: function (data) {                	
+                	MessageService.info($translate.instant("common.directive.docTree.email.successCallback"));                	
                     if (Service.validateSentEmail(data)) {
                         return data;
                     }
