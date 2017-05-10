@@ -10,7 +10,7 @@
       "menuItemTitle": "costTracking.menus.leftnav.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
-      "position": 120
+      "position": 150
     },
     {
       "menuId": "topbar",

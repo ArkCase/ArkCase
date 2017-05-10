@@ -11,31 +11,33 @@
     <form name="dbasForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-            	<label for="value_{{::$id}}" translate>organizations.comp.dba.modal.value.label</label>
-            	<input id="value_{{::$id}}" ng-model="dba.value" class="input-md form-control"
+            	<label for="value" translate>organizations.comp.dbas.modal.value.label <span class="required-asterisk">*</span></label>
+            	<input id="value" ng-model="dba.value" class="input-md form-control"  required="required"
                        placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              <label for="type_{{::$id}}" translate>organizations.comp.dba.modal.aliasType.label</label>
-                <select id="type_{{::$id}}"
-                        ng-model="dba.type" class="input-md form-control"
+              <label for="type" translate>organizations.comp.dbas.modal.aliasType.label <span class="required-asterisk">*</span></label>
+                <select id="type"
+                        ng-model="dba.type" class="input-md form-control"  required="required"
                         ng-options="item.type as item.name for item in dbasTypes"></select>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-              <label translate>organizations.comp.dbas.modal.setPrimary</label>
+              <label translate>organizations.comp.dbas.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
               <label>
                  <input type="radio" ng-model="isDefault" ng-value="true">
                  <translate>organizations.comp.dbas.modal.yes</translate>
               </label>
-              <input type="radio" ng-model="isDefault" ng-value="false">
-              <translate>organizations.comp.dbas.modal.no</translate>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="false">
+                 <translate>organizations.comp.dbas.modal.no</translate>
+              </label>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-           	<label for="description" translate>organizations.comp.dba.modal.description</label>
+           	<label for="description" translate>organizations.comp.dbas.modal.description</label>
             <textarea id="description" class="input-md form-control" ng-model="dba.description"></textarea>
            </div>
         </div>  

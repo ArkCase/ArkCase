@@ -1,39 +1,22 @@
 <div ng-controller="Organizations.NewOrganizationController" class="module-content">
+    <form name="organizationForm" ng-submit="save()">
+    <div class="module-header">
+        <h3><span translate>organizations.comp.newOrganization.title</span></h3>
+    </div>
     <div class="content-body">
-        <form name="organizationForm" ng-submit="save()">
-            <div class="module-header">
-                <h3><span translate>organizations.comp.newOrganization.title</span></h3>
-            </div>
-            <div class="well-sm">
-                <div class="row">
-                    <div class="well-sm">
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="submit" ng-disabled="organizationForm.$invalid || saved"
-                                        class="btn btn-primary btn-sm" data-toggle="tooltip"
-                                        id="saveButton" data-title="Save">
-                                    <i class="fa fa-floppy-o"></i>
-                                    <span translate> organizations.comp.newOrganization.saveButton</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="row well-sm">
                 <div class="col-sm-4 form-group">
-                    <label translate> organizations.comp.newOrganization.name </label>
-                    <input type="text" ng-model="organization.organizationValue"
+                    <label for="organizationName" translate> organizations.comp.newOrganization.name </label>
+                    <input id="organizationName" type="text" ng-model="organization.organizationValue"
                            class="input-md form-control"
                            placeholder="{{ 'organizations.comp.newOrganization.name.placeholder' | translate }}"
                            style="background-color: white;">
                 </div>
                 <div class="col-sm-4">
-                    <label class="control-label">{{ 'organizations.comp.newOrganization.type'
+                    <label for="orgType" class="control-label">{{ 'organizations.comp.newOrganization.type'
                         |
                         translate}}</label>
-                    <select class="form-control"
+                    <select id="orgType" class="form-control"
                             ng-model="organization.organizationType">
                         <option ng-repeat="option in organizationTypes" value="{{option.type}}">
                             {{option.name}}
@@ -41,9 +24,9 @@
                     </select>
                 </div>
                 <div class="col-sm-4">
-                    <label class="control-label">{{
-                        'organizations.comp.newOrganization.parentOrganization'|translate}}</label>
-                    <input type="text" ng-model="organization.parentOrganization.organizationValue"
+                    <label for="parentOrganization" class="control-label">{{
+                        'organizations.comp.newOrganization.parentOrganization' | translate}}</label>
+                    <input id="parentOrganization" type="text" ng-model="organization.parentOrganization.organizationValue"
                            readonly
                            ng-click="searchOrganization()"
                            class="input-md form-control"
@@ -63,23 +46,23 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="identificationID" translate>
                                         organizations.comp.newOrganization.identification.identificationID</label>
-                                    <input type="text" ng-model="organization.defaultIdentification.identificationID"
+                                    <input id="identificationID" type="text" ng-model="organization.defaultIdentification.identificationID"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationID.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="identificationNumber" translate>
                                         organizations.comp.newOrganization.identification.identificationNumber</label>
-                                    <input type="text"
+                                    <input id="identificationNumber" type="text"
                                            ng-model="organization.defaultIdentification.identificationNumber"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>organizations.comp.newOrganization.identification.identificationType</label>
-                                    <select class="form-control"
+                                    <label for="identificationType" translate>organizations.comp.newOrganization.identification.identificationType</label>
+                                    <select id="identificationType" class="form-control"
                                             ng-model="organization.defaultIdentification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -89,17 +72,17 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="identificationIssuer" translate>
                                         organizations.comp.newOrganization.identification.identificationIssuer</label>
-                                    <input type="text"
+                                    <input id="identificationIssuer" type="text"
                                            ng-model="organization.defaultIdentification.identificationIssuer"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationIssuer.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="identificationYearIssued" translate>
                                         organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                    <input type="text"
+                                    <input id="identificationYearIssued" type="text"
                                            ng-model="organization.defaultIdentification.identificationYearIssued"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
@@ -120,23 +103,23 @@
                             <div ng-repeat="identification in organization.identifications">
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
-                                        <label translate>
+                                        <label for="identificationID" translate>
                                             organizations.comp.newOrganization.identification.identificationID</label>
-                                        <input type="text" ng-model="identification.identificationID"
+                                        <input id="identificationID" type="text" ng-model="identification.identificationID"
                                                class="input-md form-control"
                                                placeholder="{{ 'organizations.comp.newOrganization.identification.identificationID.placeholder' | translate }}">
                                     </div>
                                     <div class="col-sm-4 form-group">
-                                        <label translate>
+                                        <label for="identificationNumber" translate>
                                             organizations.comp.newOrganization.identification.identificationNumber</label>
-                                        <input type="text" ng-model="identification.identificationNumber"
+                                        <input id="identificationNumber" type="text" ng-model="identification.identificationNumber"
                                                class="input-md form-control"
                                                placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
                                     </div>
                                     <div class="col-sm-4 form-group">
-                                        <label translate>
+                                        <label for="identificationType" translate>
                                             organizations.comp.newOrganization.identification.identificationType</label>
-                                        <select class="form-control"
+                                        <select id="identificationType" class="form-control"
                                                 ng-model="identification.identificationType">
                                             <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                                 {{option.name}}
@@ -146,17 +129,17 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
-                                        <label translate>
+                                        <label for="" translate>
                                             organizations.comp.newOrganization.identification.identificationIssuer</label>
-                                        <input type="text" ng-model="identification.identificationIssuer"
+                                        <input id="" type="text" ng-model="identification.identificationIssuer"
                                                class="input-md form-control"
                                                placeholder="{{ 'organizations.comp.newOrganization.identification.identificationIssuer.placeholder' | translate }}">
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <div>
-                                            <label translate>
+                                            <label for="identificationYearIssued" translate>
                                                 organizations.comp.newOrganization.identification.identificationYearIssued</label>
-                                            <input type="text"
+                                            <input id="identificationYearIssued" type="text"
                                                    ng-model="identification.identificationYearIssued"
                                                    class="input-md form-control"
                                                    placeholder="{{ 'organizations.comp.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
@@ -164,14 +147,14 @@
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <div class="pull-left">
-                                            <label class="control-label">&nbsp;</label>
+                                            <label for="" class="control-label">&nbsp;</label>
                                             <button type="button" class="btn btn-link form-control"
                                                     ng-click="removeIdentification(identification)">
                                                 <i class="fa fa-minus text-danger"></i><span translate>organizations.comp.newOrganization.communicationAccounts.removeContactMethod</span>
                                             </button>
                                         </div>
                                         <div class="pull-left">
-                                            <label class="control-label">&nbsp;</label>
+                                            <label for="" class="control-label">&nbsp;</label>
                                             <button type="button" class="btn btn-link form-control"
                                                     ng-click="addIdentification();"
                                                     ng-show="$last">
@@ -198,16 +181,16 @@
                         <div ng-repeat="person in organization.associationsFromObjects | filter: {parentType:'PERSON'}">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label>&nbsp;</label>
-                                    <input type="text" ng-model="person.parentTitle"
+                                    <label for="searchExisting">&nbsp;</label>
+                                    <input id="searchExisting" type="text" ng-model="person.parentTitle"
                                            ng-click="searchPerson($index)"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.people.searchExisting.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="personType" translate>
                                         organizations.comp.newOrganization.people.personType</label>
-                                    <select class="form-control" ng-disabled="!person.parentId"
+                                    <select id="personType" class="form-control" ng-disabled="!person.parentId"
                                             ng-model="person.associationType">
                                         <option ng-repeat="relation in personOrganizationRelationTypes"
                                                 value="{{relation.type}}">
@@ -217,14 +200,14 @@
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="removePerson(person)" ng-show="!$first">
                                             <i class="fa fa-minus text-danger"></i><span translate>organizations.comp.newOrganization.remove</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="addNewPerson();">
                                             <i class="fa fa-plus text-success"></i><span
@@ -248,8 +231,8 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate> organizations.comp.newOrganization.locations.country</label>
-                                <select class="form-control"
+                                <label for="country" translate> organizations.comp.newOrganization.locations.country</label>
+                                <select id="country" class="form-control"
                                         ng-model="organization.defaultAddress.country">
                                     <option ng-repeat="option in countries" value="{{option.code}}">
                                         {{option.name}}
@@ -257,8 +240,8 @@
                                 </select>
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label translate> organizations.comp.newOrganization.locations.type</label>
-                                <select class="form-control"
+                                <label for="loctype" translate> organizations.comp.newOrganization.locations.type</label>
+                                <select id="loctype" class="form-control"
                                         ng-model="organization.defaultAddress.type">
                                     <option ng-repeat="option in addressTypes" value="{{option.type}}">
                                         {{option.name}}
@@ -268,45 +251,45 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate>
+                                <label for="" translate>
                                     organizations.comp.newOrganization.locations.streetAddress</label>
-                                <input type="text" ng-model="organization.defaultAddress.streetAddress"
+                                <input id="streetAddress" type="text" ng-model="organization.defaultAddress.streetAddress"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label translate>
+                                <label for="streetAddress" translate>
                                     organizations.comp.newOrganization.locations.streetAddress2</label>
-                                <input type="text" ng-model="organization.defaultAddress.streetAddress2"
+                                <input id="" type="text" ng-model="organization.defaultAddress.streetAddress2"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress2.placeholder' | translate }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate>
+                                <label for="city" translate>
                                     organizations.comp.newOrganization.locations.city</label>
-                                <input type="text" ng-model="organization.defaultAddress.city"
+                                <input id="city" for="" type="text" ng-model="organization.defaultAddress.city"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.city.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-3 form-group">
-                                <label translate>
+                                <label for="state" translate>
                                     organizations.comp.newOrganization.locations.state</label>
-                                <input type="text" ng-model="organization.defaultAddress.state"
+                                <input id="state" type="text" ng-model="organization.defaultAddress.state"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-1 form-group">
-                                <label translate>
+                                <label for="zip" translate>
                                     organizations.comp.newOrganization.locations.zip</label>
-                                <input type="text" ng-model="organization.defaultAddress.zip"
+                                <input id="zip" type="text" ng-model="organization.defaultAddress.zip"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
-                                    <label class="control-label">&nbsp;</label>
+                                    <label for="" class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
                                             ng-click="addAddress();"
                                             ng-show="organization.addresses.length < 1">
@@ -320,8 +303,8 @@
                         <div ng-repeat="address in organization.addresses">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate> organizations.comp.newOrganization.locations.country</label>
-                                    <select class="form-control"
+                                    <label for="country" translate> organizations.comp.newOrganization.locations.country</label>
+                                    <select id="country" class="form-control"
                                             ng-model="address.country">
                                         <option ng-repeat="option in countries" value="{{option.code}}">
                                             {{option.name}}
@@ -329,8 +312,8 @@
                                     </select>
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate> organizations.comp.newOrganization.locations.type</label>
-                                    <select class="form-control" ng-model="address.type">
+                                    <label for="loctype" translate> organizations.comp.newOrganization.locations.type</label>
+                                    <select id="" class="form-control" ng-model="address.type">
                                         <option ng-repeat="option in addressTypes" value="{{option.type}}">
                                             {{option.name}}
                                         </option>
@@ -339,52 +322,52 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="streetAddress" translate>
                                         organizations.comp.newOrganization.locations.streetAddress</label>
-                                    <input type="text" ng-model="address.streetAddress"
+                                    <input id="streetAddress" type="text" ng-model="address.streetAddress"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="streetAddress2" translate>
                                         organizations.comp.newOrganization.locations.streetAddress2</label>
-                                    <input type="text" ng-model="address.streetAddress2"
+                                    <input id="streetAddress2" type="text" ng-model="address.streetAddress2"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.locations.streetAddress2.placeholder' | translate }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
+                                    <label for="city" translate>
                                         organizations.comp.newOrganization.locations.city</label>
-                                    <input type="text" ng-model="address.city"
+                                    <input id="city" type="text" ng-model="address.city"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.locations.city.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-3 form-group">
-                                    <label translate>
+                                    <label for="state" translate>
                                         organizations.comp.newOrganization.locations.state</label>
-                                    <input type="text" ng-model="address.state"
+                                    <input id="state" type="text" ng-model="address.state"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-1 form-group">
-                                    <label translate>
+                                    <label for="zip" translate>
                                         organizations.comp.newOrganization.locations.zip</label>
-                                    <input type="text" ng-model="address.zip"
+                                    <input id="zip" type="text" ng-model="address.zip"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="removeAddress(address)">
                                             <i class="fa fa-minus text-danger"></i><span translate>organizations.comp.newOrganization.remove</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="addAddress();"
                                                 ng-show="$last">
@@ -411,10 +394,10 @@
                         <div ng-repeat="caType in communicationAccountsTypes">
                             <div id="defaultPhone" class="row">
                                 <div class="col-sm-4">
-                                    <label>
+                                    <label for="communicationAccounts">
                                         {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                         translate}} </label>
-                                    <input type="text"
+                                    <input id="communicationAccounts" type="text"
                                            ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}">
@@ -431,7 +414,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="addContactMethod(caType);"
                                                 ng-show="showAddAnotherContactMethod(caType)">
@@ -444,18 +427,18 @@
                             <div ng-repeat="contactMethod in organization.contactMethods | filter: {type:caType}"
                                  class="row">
                                 <div class="col-sm-4">
-                                    <label>
+                                    <label for="caType">
                                         {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                         translate}} </label>
-                                    <input type="text" ng-model="contactMethod.value"
+                                    <input id="caType" type="text" ng-model="contactMethod.value"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4">
-                                    <label class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
+                                    <label for="caType2" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
                                         +
                                         caType + 'Type' | translate}}</label>
-                                    <select ng-model="contactMethod.subType" class="form-control">
+                                    <select id="caType2" ng-model="contactMethod.subType" class="form-control">
                                         <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
                                             {{option.name}}
                                         </option>
@@ -463,14 +446,14 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="removeContactMethod(contactMethod)">
                                             <i class="fa fa-minus text-danger"></i><span translate>organizations.comp.newOrganization.communicationAccounts.removeContactMethod</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
-                                        <label class="control-label">&nbsp;</label>
+                                        <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="addContactMethod(caType)"
                                                 ng-show="$last">
@@ -484,6 +467,14 @@
                     </div>
                 </div>
             </div>
-        </form>
     </div>
+    <div class="modal-footer">
+        <button type="submit" ng-disabled="organizationForm.$invalid || saved"
+                class="btn btn-primary" data-toggle="tooltip"
+                id="saveButton" data-title="Save">
+            <i class="fa fa-floppy-o"></i>
+            <span translate> organizations.comp.newOrganization.saveButton</span>
+        </button>
+    </div>
+</form>
 </div>

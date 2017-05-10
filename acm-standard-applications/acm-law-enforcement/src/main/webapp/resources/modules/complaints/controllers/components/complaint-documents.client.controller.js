@@ -3,11 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $modal, $q, $timeout
         , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail) {
 
 
         Authentication.queryUserInfo().then(
@@ -74,6 +74,12 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
+        };
+
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
         };
 
     }
