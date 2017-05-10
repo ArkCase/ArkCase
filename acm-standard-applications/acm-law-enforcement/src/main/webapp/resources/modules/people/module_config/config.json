@@ -1,6 +1,6 @@
 {
   "id": "people",
-  "title": "people",
+  "title": "People",
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -10,7 +10,7 @@
       "menuItemTitle": "people.menus.leftnav.item",
       "moduleId": "person",
       "iconClass": "fa fa-user",
-      "position": 80
+      "position": 40
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "people.menus.topbar.item",
       "moduleId": "person",
       "iconClass": "fa fa-user",
-      "position": 30
+      "position": 40
     }
   ],
   "tree": {
@@ -128,7 +128,7 @@
       },
       {
         "type": "p/PERSON/pho",
-        "label": "Phones",
+        "label": "Phone Numbers",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -136,7 +136,7 @@
       },
       {
         "type": "p/PERSON/ema",
-        "label": "Emails",
+        "label": "Email Addresses",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/PERSON/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/PERSON/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/PERSON/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -217,6 +217,36 @@
       "type": "empty",
       "editable": false,
       "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "people.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "people.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "people.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        }
       ]
     },
     {
