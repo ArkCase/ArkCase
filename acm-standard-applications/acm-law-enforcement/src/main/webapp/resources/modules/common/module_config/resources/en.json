@@ -307,6 +307,7 @@
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organizatoin",
     "organization.label": "Organization",
+    "description": "Description",
     "type.label": "Organization Type",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Add Organization"
