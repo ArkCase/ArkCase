@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
@@ -46,15 +45,6 @@ import microsoft.exchange.webservices.data.search.ItemView;
  */
 public class CalendarCaseFileHandler implements CalendarEntityHandler
 {
-
-    private final PropertySet standardProperties = new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.Subject,
-            AppointmentSchema.Location, AppointmentSchema.Start, AppointmentSchema.StartTimeZone, AppointmentSchema.End,
-            AppointmentSchema.EndTimeZone, AppointmentSchema.IsAllDayEvent, ItemSchema.DateTimeSent, ItemSchema.DateTimeCreated,
-            ItemSchema.DateTimeReceived, ItemSchema.LastModifiedTime, ItemSchema.Body, ItemSchema.Size, AppointmentSchema.IsCancelled,
-            AppointmentSchema.IsMeeting, AppointmentSchema.IsRecurring, ItemSchema.ParentFolderId, ItemSchema.IsReminderSet,
-            ItemSchema.ReminderMinutesBeforeStart, AppointmentSchema.Sensitivity, AppointmentSchema.Importance,
-            AppointmentSchema.RequiredAttendees, AppointmentSchema.OptionalAttendees, AppointmentSchema.Resources,
-            AppointmentSchema.Recurrence, AppointmentSchema.Organizer, ItemSchema.Attachments);
 
     private Map<String, PropertyDefinition> sortFields;
 
@@ -295,8 +285,7 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
         view.getOrderBy().add(orderBy, "ASC".equals(sortDirection) ? SortDirection.Ascending : SortDirection.Descending);
 
         PropertySet allProperties = new PropertySet();
-        allProperties.addRange(standardProperties);
-        // calendarView.setPropertySet(allProperties);
+        allProperties.addRange(PropertyDefinitionHolder.standardProperties);
 
         FindItemsResults<Appointment> findResults = service.findAppointments(new FolderId(calendarId), calendarView);
         if (!findResults.getItems().isEmpty())
