@@ -47,7 +47,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
-            PermissionsService.getActionPermission('editAttachments', objectInfo).then(function (result) {
+            PermissionsService.getActionPermission('editAttachments', objectInfo, {objectType: ObjectService.ObjectTypes.TASK}).then(function (result) {
                 $scope.isReadOnly = !result;
             });
         };
