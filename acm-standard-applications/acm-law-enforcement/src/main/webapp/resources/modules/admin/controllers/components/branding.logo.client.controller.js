@@ -23,10 +23,19 @@ angular.module('admin').controller('Admin.BrandingLogoController', ['$scope', 'A
 
             brandingLogoService.uploadLogo(files, formNames)
                 .success(function () {
+
+                    if($scope.selectedLoginFile === null && $scope.selectedHeaderFile === null)
+                    {
+                        messageService.error($translate.instant('admin.branding.logo.messages.upload.error'));
+                    }
+                    else
+                    {
+                        messageService.info($translate.instant('admin.branding.logo.messages.upload.success'));
+                    }
+
                     $scope.uploadingInProgress = false;
                     $scope.selectedHeaderFile = null;
                     $scope.selectedLoginFile = null;
-                    messageService.info($translate.instant('admin.branding.logo.messages.upload.success'));
                 })
                 .error(function () {
                     $scope.uploadingInProgress = false;
