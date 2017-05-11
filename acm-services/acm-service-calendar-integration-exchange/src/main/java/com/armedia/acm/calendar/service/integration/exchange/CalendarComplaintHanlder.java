@@ -5,10 +5,10 @@ import javax.persistence.Query;
 import java.util.List;
 
 /**
- * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 26, 2017
+ * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 11, 2017
  *
  */
-public class CalendarCaseFileHandler extends CalendarEntityHandlerBase
+public class CalendarComplaintHanlder extends CalendarEntityHandlerBase
 {
 
     /*
@@ -19,20 +19,26 @@ public class CalendarCaseFileHandler extends CalendarEntityHandlerBase
     @Override
     protected String getEntityType()
     {
-        return "CASE_FILE";
+        return "COMPLAINT";
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandlerBase#getEntity(java.lang.String,
+     * boolean)
+     */
     @Override
     protected Object getEntity(String objectId, boolean restrictedOnly)
     {
         Query query;
         if (restrictedOnly)
         {
-            query = getEm().createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId AND cf.restricted = :restricted");
+            query = getEm().createQuery("SELECT cо FROM Complaint co WHERE co.id = :objectId AND co.restricted = :restricted");
             query.setParameter("restricted", true);
         } else
         {
-            query = getEm().createQuery("SELECT cf FROM CaseFile cf WHERE cf.id = :objectId");
+            query = getEm().createQuery("SELECT co FROM Complaint co WHERE cof.id = :objectId");
         }
         query.setParameter("objectId", Long.valueOf(objectId));
         List<?> resultList = query.getResultList();

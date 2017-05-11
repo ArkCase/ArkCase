@@ -195,8 +195,8 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         {
             for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
             {
-                if (!configurationsByType.containsKey(handlerEntry.getValue())
-                        && !configurationsByType.get(handlerEntry.getValue()).isIntegrationEnabled())
+                if (!configurationsByType.containsKey(handlerEntry.getKey())
+                        && !configurationsByType.get(handlerEntry.getKey()).isIntegrationEnabled())
                 {
                     continue;
                 }
