@@ -143,10 +143,17 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          *
          * @returns {Object} Promise
          */
-        Service.deleteEvent = function(objectType, objectId, eventId) {
+        Service.deleteEvent = function(objectType, objectId, eventId, deleteRecurring) {
+            var params = {
+                calendarEventId: eventId,
+                deleteRecurring: deleteRecurring
+            };
+
+            var urlArgs = $httpParamSerializer(params);
+
             return $http({
                 method: 'DELETE',
-                url: 'api/latest/service/calendar/calendarevents/' + objectType +'/' + objectId +'/' + eventId
+                url: 'api/latest/service/calendar/calendarevents/' + objectType +'/' + objectId + '?' + urlArgs
             });
         };
 
@@ -166,38 +173,31 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          * @returns {Object} Promise
          */
         Service.getCalendarEvents = function(startDate, endDate, objectType, objectId) {
+            var deferred = $q.defer();
+
             var params = {
                 after: startDate,
                 before: endDate
             };
 
             var urlArgs = $httpParamSerializer(params);
-            // after=' + encodeURIComponent(startDate) + '&before=' + encodeURIComponent(endDate),
-            var service = $resource('api/latest/service', {}, {
-                _getCalendarEvents: {
-                    method: 'GET',
-                    url: 'api/latest/service/calendar/calendarevents/' + objectType +'/' + objectId + '?' + urlArgs,
-                    cache: false,
-                    isArray: true
-                }
-            });
 
             var cacheCalendarEvents = new Store.CacheFifo(Service.CacheNames.CALENDAR_EVENTS);
             var cacheKey = objectType + '_' + objectId;
             var calendarEvents = cacheCalendarEvents.get(cacheKey);
 
-            return Util.serviceCall({
-                service: service._getCalendarEvents
-                , param: {}
-                , result: calendarEvents
-                , onSuccess: function (data) {
-                    if (!Util.isEmpty(data) && Util.isArray(data.items) && !Util.isEmpty(data.totalItems)) {
-                        calendarEvents = data;
-                        cacheCalendarEvents.put(cacheKey, calendarEvents);
-                        return calendarEvents;
-                    }
-                }
+            $http({
+                method: 'GET',
+                url: 'api/latest/service/calendar/calendarevents/' + objectType +'/' + objectId + '?' + urlArgs
+            }).then(function(data) {
+                calendarEvents = data;
+                cacheCalendarEvents.put(cacheKey, calendarEvents);
+                deferred.resolve(calendarEvents);
+            }, function(error) {
+                deferred.reject(error);
             });
+
+            return deferred.promise;
         };
 
         /**
@@ -218,7 +218,7 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
         Service.getCalendarEventDetails = function(objectType, objectId, eventId) {
             return $http({
                 method: 'GET',
-                url: 'api/latest/service/calendar/calendarevents/' + objectType +'/' + objectId +'/' + eventId
+                url: 'api/latest/service/calendar/calendarevents/event/' + objectType +'/' + objectId + '?eventId=' + encodeURIComponent(eventId)
             });
         };
 

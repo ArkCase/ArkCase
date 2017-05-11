@@ -164,6 +164,7 @@
       "title": "New Event",
       "cancel.button": "Cancel",
       "add.button": "Add New Event",
+      "edit.button": "Update Event",
       "next.button": "Next",
       "previous.button": "Previous",
       "stepOneTitle": "Step 1 – Enter Event Details",
@@ -370,6 +371,22 @@
       "cancel.button": "Cancel",
       "delete.button": "Delete",
       "edit.button": "Edit Event"
+    },
+    "updateEventDialog": {
+      "title": "Update Event",
+      "cancel.button": "Cancel",
+      "updateEvent.button": "Update",
+      "thisOne.radio": "Just this one",
+      "entireSeries.radio": "The entire series",
+      "updateWarning.text": "Are you sure you want to update this event?"
+    },
+    "deleteEventDialog": {
+      "title": "Delete Event",
+      "cancel.button": "Cancel",
+      "deleteEvent.button": "Delete",
+      "thisOne.radio": "Just this one",
+      "entireSeries.radio": "The entire series",
+      "deleteWarning.text": "Are you sure you want to delete this event?"
     }
   },
   "common.directive.coreParticipants": {

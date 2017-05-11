@@ -35,7 +35,9 @@
 		</div>
 		<div class="row">
 			<div class="col-sm-12 form-group">
-				<textarea name="eventDetails" ng-model="eventDetails.details" class="form-control user-picker-input input-md form-control" readonly></textarea>
+				<!-- <textarea name="eventDetails" ng-model="eventDetails.details" class="form-control user-picker-input input-md form-control" readonly></textarea> -->
+				<span ng-bind-html="eventDetails.details">
+				</span>
 			</div>
 		</div>
 		<div class="row form-group">
@@ -87,7 +89,6 @@
 	</div>
 </div>
 <div class="modal-footer">
-    <br/>
     <button type="button" class="btn btn-secondary pull-left" ng-click="cancel()" translate>
         common.directive.coreCalendar.eventDetailsDialog.cancel.button
     </button>
