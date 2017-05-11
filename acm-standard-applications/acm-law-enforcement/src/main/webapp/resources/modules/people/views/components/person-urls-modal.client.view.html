@@ -22,7 +22,7 @@
               <select id="urlTypes" class="input-md form-control" required="required"
                         ng-model="url.subType"
                         ng-options="item.type as item.name for item in urlTypes"></select>
-           </div>
+            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
@@ -35,13 +35,13 @@
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.urls.modal.no</translate>
                 </label>
-           </div>
+            </div>
         </div>
         <div class="row">
-           <div class="col-sm-12 form-group">
-           	<label for="urlDescription" translate>people.comp.urls.modal.description</label>
-            <textarea id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
-           </div>
+            <div class="col-sm-12 form-group">
+                <label for="urlDescription" translate>people.comp.urls.modal.description</label>
+                <textarea id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
+            </div>
         </div>
     </form>
 </div>
