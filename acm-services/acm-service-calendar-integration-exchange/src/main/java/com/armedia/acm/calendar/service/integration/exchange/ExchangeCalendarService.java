@@ -3,6 +3,7 @@ package com.armedia.acm.calendar.service.integration.exchange;
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
+import com.armedia.acm.calendar.service.Attendee.AttendeeType;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
@@ -28,6 +29,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -204,16 +206,9 @@ public class ExchangeCalendarService implements CalendarService
             allProperties.addRange(PropertyDefinitionHolder.standardProperties);
             appointment.load(allProperties);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, updateRecurrence);
-            List<String> attachmentsFileNames = calendarEvent.getFileNames();
-            if (attachmentsFileNames != null && !attachmentsFileNames.isEmpty())
-            {
-                List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
-                        .filter(attachment -> attachmentsFileNames.contains(attachment.getName())).collect(Collectors.toList());
-                for (Attachment attachment : attachmentsToRemove)
-                {
-                    appointment.getAttachments().remove(attachment);
-                }
-            }
+
+            processAttachmentsForRemoval(calendarEvent, appointment);
+            processAttendeesForRemoval(calendarEvent, appointment);
 
             appointment.update(ConflictResolutionMode.AlwaysOverwrite);
 
@@ -222,6 +217,63 @@ public class ExchangeCalendarService implements CalendarService
             throw new CalendarServiceException(e);
         }
 
+    }
+
+    /**
+     * @param calendarEvent
+     * @param appointment
+     * @throws ServiceLocalException
+     * @throws Exception
+     */
+    private void processAttachmentsForRemoval(AcmCalendarEvent calendarEvent, Appointment appointment)
+            throws ServiceLocalException, Exception
+    {
+        List<String> attachmentsFileNames = calendarEvent.getFileNames();
+        if (attachmentsFileNames != null && !attachmentsFileNames.isEmpty())
+        {
+            List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
+                    .filter(attachment -> attachmentsFileNames.contains(attachment.getName())).collect(Collectors.toList());
+            for (Attachment attachment : attachmentsToRemove)
+            {
+                appointment.getAttachments().remove(attachment);
+            }
+        }
+    }
+
+    /**
+     * @param calendarEvent
+     * @param appointment
+     * @throws ServiceLocalException
+     * @throws Exception
+     */
+    private void processAttendeesForRemoval(AcmCalendarEvent calendarEvent, Appointment appointment) throws ServiceLocalException, Exception
+    {
+        List<String> required = calendarEvent.getAttendees().stream().filter(att -> AttendeeType.REQUIRED.equals(att.getType()))
+                .map(att -> att.getEmail()).collect(Collectors.toList());
+        List<microsoft.exchange.webservices.data.property.complex.Attendee> requiredForRemoval = appointment.getRequiredAttendees()
+                .getItems().stream().filter(att -> !required.contains(att.getAddress())).collect(Collectors.toList());
+        for (microsoft.exchange.webservices.data.property.complex.Attendee attendee : requiredForRemoval)
+        {
+            appointment.getRequiredAttendees().remove(attendee);
+        }
+
+        List<String> optional = calendarEvent.getAttendees().stream().filter(att -> AttendeeType.OPTIONAL.equals(att.getType()))
+                .map(att -> att.getEmail()).collect(Collectors.toList());
+        List<microsoft.exchange.webservices.data.property.complex.Attendee> optionalForRemoval = appointment.getOptionalAttendees()
+                .getItems().stream().filter(att -> !optional.contains(att.getAddress())).collect(Collectors.toList());
+        for (microsoft.exchange.webservices.data.property.complex.Attendee attendee : optionalForRemoval)
+        {
+            appointment.getOptionalAttendees().remove(attendee);
+        }
+
+        List<String> resource = calendarEvent.getAttendees().stream().filter(att -> AttendeeType.RESOURCE.equals(att.getType()))
+                .map(att -> att.getEmail()).collect(Collectors.toList());
+        List<microsoft.exchange.webservices.data.property.complex.Attendee> resourcedForRemoval = appointment.getResources().getItems()
+                .stream().filter(att -> !resource.contains(att.getAddress())).collect(Collectors.toList());
+        for (microsoft.exchange.webservices.data.property.complex.Attendee attendee : resourcedForRemoval)
+        {
+            appointment.getResources().remove(attendee);
+        }
     }
 
     /*
