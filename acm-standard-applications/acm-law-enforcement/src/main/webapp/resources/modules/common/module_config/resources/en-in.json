@@ -44,7 +44,7 @@
       "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
       "headerForAttachment": "Hello,",
       "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "successCallback": "The email was sent successfully"
+      "successMessage": "The email was sent successfully"
     },
     "menu": {
       "noop": "(Select Item)",

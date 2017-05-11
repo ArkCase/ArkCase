@@ -39,7 +39,8 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email"
   },
   "complaints.comp.people": {
     "title": "People",

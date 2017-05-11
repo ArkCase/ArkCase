@@ -37,14 +37,10 @@
     "moreItemsTooltip": "Load more items",
     "moreItemsBegin": "More items...",
     "email": {
-      "defaultTitle": "ArkCase Documents",
-      "headerForLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
-      "footerForLinks": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "subjectForAttachment": "Documents from ArkCase",
-      "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
-      "headerForAttachment": "Hello,",
-      "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "successCallback": "The email was sent successfully"
+      "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
+      "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
+      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "successMessage": "The email was sent successfully"
     },
     "menu": {
       "noop": "(Select Item)",
@@ -70,9 +66,24 @@
     },
     "emailDialog": {
       "title": "Email",
-      "recipients": "Recipients:",
+      "recipients.label": "Recipients:",
+      "recipients.placeholder": "Choose recipients",
+      "subject.label": "Subject:",
+      "subject.placeholder": "Enter subject",
+      "attachments.label": "Attachments:",
+      "deliveryMethod.label": "Delivery Method:",
+      "sendWithAttachments.checkbox": "Send Email with Attachment",
+      "sendWithHyperlink.checkbox": "Send Email with Hyperlink",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Send Email",
+      "btnOk.text": "Send Email"
+    },
+    "recipientsDialog":{
+      "title": "Choose Recipients",
+      "search.placeholder": "Search Recipients",
+      "recipients.label": "Recipients:",
+      "externalRecipients.placeholder": "Enter external email addresses",
+      "cancel.button": "Cancel",
+      "addRecipients.button": "Add Recipients",
       "gridColumns": {
         "name": "Name",
         "email": "Email"
@@ -297,6 +308,7 @@
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organizatoin",
     "organization.label": "Organization",
+    "description": "Description",
     "type.label": "Organization Type",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Add Organization"

@@ -15,10 +15,11 @@ angular.module('dashboard.details', ['adf.provider'])
     })
     .controller('Dashboard.DetailsController', ['$scope', '$stateParams', 'UtilService', 'Case.InfoService'
         , 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService'
-        , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService',
-        function ($scope, $stateParams, Util, CaseInfoService, ComplaintInfoService, TaskInfoService
+        , 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService'
+        , 'Person.InfoService', 'Organization.InfoService'
+        , function ($scope, $stateParams, Util, CaseInfoService, ComplaintInfoService, TaskInfoService
             , CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService
-            , DocumentRepositoryInfoService) {
+            , DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService) {
 
             var modules = [
                 {
@@ -62,6 +63,18 @@ angular.module('dashboard.details', ['adf.provider'])
                     configName: "document-repository",
                     getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                     validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                }
+                , {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                }
+                , {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 

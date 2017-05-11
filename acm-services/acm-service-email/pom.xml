@@ -50,7 +50,11 @@
             <version>${easymock.version}</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${apache-commons-net.version}</version>
+        </dependency>
 	</dependencies>
 
 
