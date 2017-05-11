@@ -12,13 +12,13 @@
         <div class="row">
            <div class="col-sm-6 form-group">
             	<label for="emails_{{::$id}}"
-                           translate>organizations.comp.emails.modal.value.label <span class="required-asterisk">*</span></label>
+                           translate>organizations.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
             	<input id="emails_{{::$id}}" type="text" ng-model="email.value" class="input-md form-control"  required="required"
                        placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
               	<label for="emailTypes_{{::$id}}"
-                           translate>organizations.comp.emails.modal.type.label <span class="required-asterisk">*</span></label>
+                           translate>organizations.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
                 <select id="emailTypes_{{::$id}}" class="input-md form-control"  required="required"
                         ng-model="email.subType"
                         ng-options="item.type as item.name for item in emailTypes"></select>
@@ -26,7 +26,7 @@
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-                <label translate>organizations.comp.emails.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
+                <label translate>organizations.comp.emails.modal.setPrimary</label><span class="required-asterisk">*</span><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>organizations.comp.emails.modal.yes</translate>
