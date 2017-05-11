@@ -180,36 +180,20 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 scope.editRow = function (rowEntity) {
                     scope.participant = rowEntity;
-                    // determine exact object type so that the validation passes in object-participant.client.service.js
-                    var filter = 'fq="object_type_s": (GROUP OR USER)' + '&fq="object_id_s": ' + rowEntity.participantLdapId;
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(rowEntity.participantLdapId + '*', filter, scope.config.paginationPageSize ? scope.config.paginationPageSize : 10, 0);
-                    SearchService.queryFilteredSearch({
-                            query: query
-                        },
-                        function (data) {
-                            if (SearchService.validateSolrData(data)) {
-                                var participantData = data.response.docs;
-                                if (participantData.length > 1) {
-                                    //can't have two objects with same id
-                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
-                                }
-                                else if (Util.isArrayEmpty(participantData)) {
-                                    //probably group/user is invalid (sync error/stale data)
-                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userOrGroupNotFound"));
-                                } else {
-                                    var item = {
-                                        id: rowEntity.id,
-                                        participantType: rowEntity.participantType,
-                                        participantLdapId: rowEntity.participantLdapId,
-                                        participantTypes: scope.participantTypes,
-                                        selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
-                                        config: scope.config
-                                    };
-                                    showModal(item, true);
-                                }
-                            }
+                    var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
+                    participantDataPromise.then(function (participantData) {
+                        if (!Util.isArrayEmpty(participantData)) {
+                            var item = {
+                                id: rowEntity.id,
+                                participantType: rowEntity.participantType,
+                                participantLdapId: rowEntity.participantLdapId,
+                                participantTypes: scope.participantTypes,
+                                selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
+                                config: scope.config
+                            };
+                            showModal(item, true);
                         }
-                    )
+                    })
                 };
 
                 scope.deleteRow = function (rowEntity) {
