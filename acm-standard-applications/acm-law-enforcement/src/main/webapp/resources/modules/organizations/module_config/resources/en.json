@@ -46,7 +46,10 @@
       "created": "Date Added",
       "creator": "Added By",
       "modified": "Last Modified",
-      "modifier": "Modified By"
+      "modifier": "Modified By",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No"
     },
     "actions": {
       "addNew": "Add New",
@@ -70,7 +73,10 @@
       "country.label": "Country",
       "country.placeholder": "Enter Country",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Save Address"
+      "btnOk.text": "Save Address",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No"
     }
   },
   "organizations.comp.phones": {

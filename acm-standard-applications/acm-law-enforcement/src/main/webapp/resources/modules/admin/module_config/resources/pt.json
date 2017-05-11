@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "pt_LDAP Url",
     "security.ldapConfig.table.directoryName": "pt_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "pt_Ldap User Attributes Template",
+      "groupAttributesTemplate": "pt_Ldap Group Attributes Template",
       "addNewDirectory": "pt_Add New Directory",
       "editRecord": "pt_Edit Record",
       "id": "pt_ID",
+      "directoryType": "pt_Select directory server",
       "ldapUrl": "pt_LDAP Url",
       "base": "pt_Base",
       "directoryName": "pt_Directory Name",

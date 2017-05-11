@@ -236,7 +236,9 @@
       "error.userType": "zh-cn_ User type cannot be a group.",
       "error.assigneeUnique": "zh-cn_Only one assignee is allowed.",
       "error.owninggroupUnique": "zh-cn_Only one owning group is allowed.",
-      "error.noAccessCombo": "zh-cn_The combination of No Access and Assignee is not allowed."
+      "error.noAccessCombo": "zh-cn_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
     }
   },
   "common.directive.progressIndicator": {
