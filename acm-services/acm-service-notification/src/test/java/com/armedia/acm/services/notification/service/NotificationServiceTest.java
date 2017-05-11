@@ -1,5 +1,14 @@
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.anyLong;
+import static org.easymock.EasyMock.anyString;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.contains;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -11,6 +20,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.model.QueryType;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -23,10 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-
 
 public class NotificationServiceTest extends EasyMockSupport
 {
@@ -141,12 +147,13 @@ public class NotificationServiceTest extends EasyMockSupport
         rules.put("unassignRule", unassignRule);
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
+
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
@@ -172,21 +179,25 @@ public class NotificationServiceTest extends EasyMockSupport
                 .anyTimes();
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.host"), capture(stringCapture)))
-                .andReturn("host").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.port"), capture(stringCapture)))
-                .andReturn("port").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.user"), capture(stringCapture)))
-                .andReturn("user").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.password"), capture(stringCapture)))
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.host"), capture(stringCapture))).andReturn("host")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.port"), capture(stringCapture))).andReturn("port")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.username"), capture(stringCapture))).andReturn("user")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.password"), capture(stringCapture)))
                 .andReturn("password").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture)))
-                .andReturn("from").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.type"), capture(stringCapture)))
-                .andReturn("smtp").anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.userFrom"), capture(stringCapture))).andReturn("from")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.type"), capture(stringCapture))).andReturn("smtp")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.encryption"), capture(stringCapture))).andReturn("off")
+                .anyTimes();
+
+        Capture<Map<String, Object>> messagePropsCapture = null;
         try
         {
-            Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
+            messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
         } catch (MuleException e)
@@ -207,14 +218,16 @@ public class NotificationServiceTest extends EasyMockSupport
                 .andReturn(new ArrayList<>()).anyTimes();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
-        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
-                anyString(), anyLong())).andReturn(null).anyTimes();
+        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
         replayAll();
 
         notificationService.run();
 
         verifyAll();
+
+        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        // assertFalse(starttls);
     }
 
     @Test
@@ -285,7 +298,6 @@ public class NotificationServiceTest extends EasyMockSupport
         NotificationUtils mockNotificationUtils = createMock(NotificationUtils.class);
 
         NotificationSenderFactory notificationSenderFactory = new NotificationSenderFactory();
-        notificationSenderFactory.setPropertyFileManager(mockPropertyFileManager);
         Map<String, NotificationSender> notificationSenderMap = new HashMap<>();
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
@@ -293,6 +305,7 @@ public class NotificationServiceTest extends EasyMockSupport
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
+
         notificationSenderMap.put("smtp", smtpNotificationServer);
         notificationSenderFactory.setNotificationSenderMap(notificationSenderMap);
 
@@ -316,23 +329,24 @@ public class NotificationServiceTest extends EasyMockSupport
 
         mockAuditPropertyEntityAdapter.setUserId(eq("NOTIFICATION-BATCH-INSERT"));
         expectLastCall().anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.host"), capture(stringCapture)))
-                .andReturn("host").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.port"), capture(stringCapture)))
-                .andReturn("port").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.user"), capture(stringCapture)))
-                .andReturn("user").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.password"), capture(stringCapture)))
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.host"), capture(stringCapture))).andReturn("host")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.port"), capture(stringCapture))).andReturn("port")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.username"), capture(stringCapture))).andReturn("user")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.password"), capture(stringCapture)))
                 .andReturn("password").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.from"), capture(stringCapture)))
-                .andReturn("from").anyTimes();
-        expect(mockPropertyFileManager.load(capture(stringCapture), eq("notification.user.email.flow.type"), capture(stringCapture)))
-                .andReturn("smtp").anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.userFrom"), capture(stringCapture))).andReturn("from")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.type"), capture(stringCapture))).andReturn("smtp")
+                .anyTimes();
+        expect(mockPropertyFileManager.load(capture(stringCapture), eq("email.sender.encryption"), capture(stringCapture))).andReturn("off")
+                .anyTimes();
 
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification1)).andReturn(notification1).atLeastOnce();
         expect(mockNotificationFormatter.replaceFormatPlaceholders(notification2)).andReturn(notification2).atLeastOnce();
-        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(),
-                anyString(), anyLong())).andReturn(null).anyTimes();
+        expect(mockNotificationUtils.buildNotificationLink(anyString(), anyLong(), anyString(), anyLong())).andReturn(null).anyTimes();
 
         try
         {
@@ -361,6 +375,9 @@ public class NotificationServiceTest extends EasyMockSupport
         notificationService.run();
 
         verifyAll();
+
+        // Boolean starttls = (Boolean) messagePropsCapture.getValue().get(NotificationConstants.SMTP_STARTTLS);
+        // assertTrue(starttls);
     }
 
     @Test

@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.ids.modal.addID</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.ids.modal.editID</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="idForm">
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            <label for="idTypes"
+                   translate>organizations.comp.ids.modal.type.label <span class="required-asterisk">*</span></label>
+            <select id="idTypes" class="input-md form-control" required="required"
+                    ng-model="identification.identificationType"
+                    ng-options="item.type as item.name for item in identificationTypes"></select>
+            </div>
+           <div class="col-sm-6 form-group">
+            <label for="identificationNumber"
+                   translate>organizations.comp.ids.modal.number.label <span class="required-asterisk">*</span></label>
+            <input id="identificationNumber" type="text"  required="required" class="input-md form-control" ng-model="identification.identificationNumber"
+                    placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            <label for="identificationIssuer"
+                   translate>organizations.comp.ids.modal.issuer.label</label>
+            <input id="identificationIssuer}" class="input-md form-control" type="text" ng-model="identification.identificationIssuer"
+                placeholder="{{ 'organizations.comp.ids.modal.issuer.placeholder' | translate }}">
+            </div>
+           <div class="col-sm-6 form-group">
+            <label for="identificationYearIssued"
+                   translate>organizations.comp.ids.modal.yearIssued.label</label>
+            <input id="identificationYearIssued" class="input-md form-control" type="text" ng-model="identification.identificationYearIssued"
+                   placeholder="{{ 'organizations.comp.ids.modal.yearIssued.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+            <label translate>organizations.comp.ids.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
+            <label><input type="radio" ng-model="isDefault" ng-value="true">
+            <translate>organizations.comp.ids.modal.yes</translate></label>
+            <label><input type="radio" ng-model="isDefault" ng-value="false">
+            <translate>organizations.comp.ids.modal.no</translate></label>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.ids.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="idForm.$invalid">
+        <span translate>organizations.comp.ids.modal.btnOk.text</span>
+    </button>
+</div>

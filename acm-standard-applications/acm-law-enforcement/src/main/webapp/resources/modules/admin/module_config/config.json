@@ -8,7 +8,7 @@
       "menuItemTitle": "admin.menus.leftnav.item",
       "moduleId": "admin",
       "iconClass": "fa fa-wrench",
-      "position": 150
+      "position": 180
     }
   ],
   "components": [
@@ -705,6 +705,14 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.emailConfiguration.title",
+          "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.exchangeConfiguration.title",
+          "templateName": "security-exchange-configuration"
         }
       ]
     },

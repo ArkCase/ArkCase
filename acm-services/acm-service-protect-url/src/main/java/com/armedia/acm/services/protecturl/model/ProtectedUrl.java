@@ -3,6 +3,8 @@ package com.armedia.acm.services.protecturl.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateTimeConverter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
@@ -26,6 +28,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_protected_url")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ProtectedUrl implements AcmObject, AcmEntity
 {
     @Id
