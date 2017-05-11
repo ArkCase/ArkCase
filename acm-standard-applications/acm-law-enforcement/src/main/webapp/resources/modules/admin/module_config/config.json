@@ -18,6 +18,16 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "directoryTypes": [
+        {
+          "name": "OpenLDAP",
+          "value": "openldap"
+        },
+        {
+          "name": "Active Directory",
+          "value": "activedirectory"
+        }
+      ],
       "columnDefs": [
         {
           "name": "authUserDn",

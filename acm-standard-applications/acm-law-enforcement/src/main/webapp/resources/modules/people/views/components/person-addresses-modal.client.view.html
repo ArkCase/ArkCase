@@ -11,8 +11,8 @@
     <form name="addressesForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="country" translate> people.comp.addresses.modal.country.label <span
-                        class="required-asterisk">*</span></label>
+                <label for="country" translate> people.comp.addresses.modal.country.label</label><span
+                    class="required-asterisk">*</span>
                 <select id="country" class="form-control" required="required"
                         ng-model="address.country">
                     <option ng-repeat="option in countries" value="{{option.code}}">
@@ -21,8 +21,8 @@
                 </select>
             </div>
             <div class="col-sm-6 form-group">
-                <label for="addressTypes" translate> people.comp.addresses.modal.type.label <span
-                        class="required-asterisk">*</span></label>
+                <label for="addressTypes" translate> people.comp.addresses.modal.type.label</label><span
+                    class="required-asterisk">*</span>
                 <select id="addressTypes" class="form-control" required="required"
                         ng-model="address.addressType"
                         ng-options="item.type as item.name for item in addressTypes"></select>
@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label for="streetAddress" translate>
-                    people.comp.addresses.modal.streetAddress.label <span class="required-asterisk">*</span></label>
+                    people.comp.addresses.modal.streetAddress.label</label><span class="required-asterisk">*</span>
                 <input id="streetAddress" type="text" ng-model="address.streetAddress" required="required"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.streetAddress.placeholder' | translate }}">
@@ -47,7 +47,7 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label for="city" translate>
-                    people.comp.addresses.modal.city.label <span class="required-asterisk">*</span></label>
+                    people.comp.addresses.modal.city.label</label><span class="required-asterisk">*</span>
                 <input id="city" type="text" ng-model="address.city" required="required"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.city.placeholder' | translate }}">
@@ -65,6 +65,21 @@
                 <input id="zip" type="text" ng-model="address.zip"
                        class="input-md form-control"
                        placeholder="{{ 'people.comp.addresses.modal.zip.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+
+                <label><span translate>people.comp.addresses.modal.setPrimary</span></label>
+                <span class="required-asterisk">*</span><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>people.comp.addresses.modal.yes</translate>
+                </label>
+
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>people.comp.addresses.modal.no</translate>
+
             </div>
         </div>
     </form>
