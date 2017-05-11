@@ -11,6 +11,8 @@ public interface CalendarAdminService
 
     void writeConfiguration(CalendarConfigurationsByObjectType configuration) throws CalendarConfigurationException;
 
+    boolean verifyEmailCredentials(String userId, EmailCredentials emailCredentials);
+
     <CCE extends CalendarConfigurationException> CalendarConfigurationExceptionMapper<CCE> getExceptionMapper(CCE e);
 
 }

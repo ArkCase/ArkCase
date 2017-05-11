@@ -4,6 +4,8 @@ import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
+import com.armedia.acm.calendar.config.service.EmailCredentials;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
@@ -45,11 +48,12 @@ public class AcmCalendarManagementAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{email}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> validateEmail(@PathVariable(value = "email") String email)
+    @RequestMapping(value = "/validate", method = RequestMethod.PUT, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> validateEmail(HttpSession session, @RequestBody EmailCredentials emailCredentials)
     {
-        // TODO: implement real checking. We will need both username/email and password
-        return ResponseEntity.status(HttpStatus.OK).body("true");
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Boolean.toString(calendarService.verifyEmailCredentials(user.getUserId(), emailCredentials)));
     }
 
     @ExceptionHandler(CalendarConfigurationException.class)

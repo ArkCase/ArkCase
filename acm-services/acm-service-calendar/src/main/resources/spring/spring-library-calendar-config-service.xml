@@ -7,6 +7,7 @@
             <property name="configurableObjectTypes" value="file:${user.home}/.arkcase/acm/calendarConfiguredObjectTypes.properties"/>
             <property name="calendarPropertiesResource" value="file:${user.home}/.arkcase/acm/calendarService.properties"/>
             <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+            <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
         </bean>
 
 </beans>

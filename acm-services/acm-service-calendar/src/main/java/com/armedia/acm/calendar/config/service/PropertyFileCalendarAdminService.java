@@ -3,7 +3,10 @@ package com.armedia.acm.calendar.config.service;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtilsImpl;
+import com.armedia.acm.service.outlook.dao.OutlookDao;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -95,7 +98,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#getStatusCode()
          */
         @Override
@@ -113,6 +116,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     private Resource calendarPropertiesResource;
 
     private AcmEncryptablePropertyUtilsImpl encryptablePropertyUtils;
+
+    private OutlookDao outlookDao;
 
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -258,6 +263,30 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         } finally
         {
             writeLock.unlock();
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.armedia.acm.calendar.config.service.CalendarAdminService#verifyEmailCredentials(com.armedia.acm.calendar.
+     * config.service.EmailCredentials)
+     */
+    @Override
+    public boolean verifyEmailCredentials(String userId, EmailCredentials emailCredentials)
+    {
+        AcmOutlookUser user = new AcmOutlookUser(userId, emailCredentials.getEmail(), emailCredentials.getPassword());
+        try
+        {
+            outlookDao.connect(user);
+            return true;
+        } catch (AcmOutlookConnectionFailedException e)
+        {
+            return false;
+        } finally
+        {
+            outlookDao.disconnect(user);
         }
     }
 
@@ -416,6 +445,15 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtilsImpl encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    /**
+     * @param outlookDao
+     *            the outlookDao to set
+     */
+    public void setOutlookDao(OutlookDao outlookDao)
+    {
+        this.outlookDao = outlookDao;
     }
 
     /*
