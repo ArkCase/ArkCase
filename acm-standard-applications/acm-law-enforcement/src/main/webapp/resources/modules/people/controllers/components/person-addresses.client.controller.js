@@ -87,8 +87,6 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
         };
 
         $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 $scope.objectInfo.addresses = _.remove($scope.objectInfo.addresses, function (item) {
