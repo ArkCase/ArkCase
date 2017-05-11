@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.admin.model;
 
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.QueryType;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
@@ -9,6 +11,8 @@ import java.util.List;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 25, 2017
  *
  */
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CorrespondenceQueryResponse
 {
 
@@ -44,7 +48,8 @@ public class CorrespondenceQueryResponse
     }
 
     /**
-     * @param beanId the beanId to set
+     * @param beanId
+     *            the beanId to set
      */
     public void setBeanId(String beanId)
     {
@@ -60,7 +65,8 @@ public class CorrespondenceQueryResponse
     }
 
     /**
-     * @param queryType the queryType to set
+     * @param queryType
+     *            the queryType to set
      */
     public void setQueryType(QueryType queryType)
     {
@@ -76,7 +82,8 @@ public class CorrespondenceQueryResponse
     }
 
     /**
-     * @param jpaQuery the jpaQuery to set
+     * @param jpaQuery
+     *            the jpaQuery to set
      */
     public void setJpaQuery(String jpaQuery)
     {
@@ -92,7 +99,8 @@ public class CorrespondenceQueryResponse
     }
 
     /**
-     * @param fieldNames the fieldNames to set
+     * @param fieldNames
+     *            the fieldNames to set
      */
     public void setFieldNames(List<String> fieldNames)
     {

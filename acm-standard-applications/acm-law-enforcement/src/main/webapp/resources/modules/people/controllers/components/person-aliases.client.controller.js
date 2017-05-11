@@ -25,6 +25,8 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
+        var promiseUsers = gridHelper.getUsers();
+
         Authentication.queryUserInfo().then(function (data) {
             currentUser = data.userId;
         });
@@ -36,6 +38,7 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilterToConfig(promiseUsers, config);
         };
 
 
@@ -80,8 +83,6 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
         };
 
         $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
             var id = Util.goodMapValue(rowEntity, "id", 0);
             if (0 < id) {    //do not need to call service when deleting a new row with id==0
                 $scope.objectInfo.personAliases = _.remove($scope.objectInfo.personAliases, function (item) {
