@@ -377,5 +377,8 @@
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
     }
+  },
+  "common.labels": {
+    "primary": " [Primary]"
   }
 }
