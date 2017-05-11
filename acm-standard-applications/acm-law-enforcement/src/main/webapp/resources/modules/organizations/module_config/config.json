@@ -1,6 +1,6 @@
 {
   "id": "organizations",
-  "title": "organizations",
+  "title": "Organizations",
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -10,7 +10,7 @@
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 90
+      "position": 50
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "organizations.menus.topbar.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 40
+      "position": 50
     }
   ],
   "tree": {
@@ -120,7 +120,7 @@
       },
       {
         "type": "p/ORGANIZATION/pho",
-        "label": "Phones",
+        "label": "Phone Numbers",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -128,7 +128,7 @@
       },
       {
         "type": "p/ORGANIZATION/fax",
-        "label": "Faxes",
+        "label": "Fax Numbers",
         "icon": "fa fa-fax",
         "components": [
           "faxes"
@@ -136,7 +136,7 @@
       },
       {
         "type": "p/ORGANIZATION/ema",
-        "label": "Emails",
+        "label": "Email Addresses",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/ORGANIZATION/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/ORGANIZATION/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -217,6 +217,36 @@
       "type": "empty",
       "editable": false,
       "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "organizations.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "organizations.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "organizations.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        }
       ]
     },
     {
@@ -243,7 +273,7 @@
     {
       "id": "addresses",
       "title": "Addresses",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -356,7 +386,7 @@
     {
       "id": "faxes",
       "title": "Fax Numbers",
-      "icon": "fa fa-phone",
+      "icon": "fa fa-fax",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -403,7 +433,7 @@
     {
       "id": "emails",
       "title": "Email Addresses",
-      "icon": "fa fa-address-book-o",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -497,7 +527,7 @@
     {
       "id": "dbas",
       "title": "DBAs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -547,7 +577,7 @@
     {
       "id": "people",
       "title": "People",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-users",
       "enabled": true,
       "type": "grid",
       "multiSelect": false,
@@ -597,7 +627,7 @@
     {
       "id": "ids",
       "title": "IDs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -654,7 +684,7 @@
     {
       "id": "cases",
       "title": "Cases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -715,7 +745,7 @@
     {
       "id": "complaints",
       "title": "Complaints",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -776,7 +806,7 @@
     {
       "id": "related",
       "title": "Related Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,

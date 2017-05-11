@@ -256,7 +256,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var hidden = false;
                             if (typeof scope.config.hiddenFacets !== 'undefined' &&
                                 Util.isArray(scope.config.hiddenFacets)) {
-                                hidden = scope.config.hiddenFacets.includes(key);
+                                hidden = _.includes(scope.config.hiddenFacets, key);
                             }
                             if (!hidden && value) {
                                 scope.facets.push({"name": key, "fields": value});
