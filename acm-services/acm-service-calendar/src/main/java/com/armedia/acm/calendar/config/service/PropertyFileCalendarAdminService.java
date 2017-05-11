@@ -276,6 +276,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     @Override
     public boolean verifyEmailCredentials(String userId, EmailCredentials emailCredentials)
     {
+        // TODO: TECHNICAL DEBT, depends on the Outlook DAO, therefore on Exchange. Check should be delegated to
+        // CalendarService implementation! This is an easy fix.
         AcmOutlookUser user = new AcmOutlookUser(userId, emailCredentials.getEmail(), emailCredentials.getPassword());
         try
         {

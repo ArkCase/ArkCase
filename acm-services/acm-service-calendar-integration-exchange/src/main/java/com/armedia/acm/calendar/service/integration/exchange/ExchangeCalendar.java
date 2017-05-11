@@ -102,7 +102,7 @@ public class ExchangeCalendar implements AcmCalendar
      * @see com.armedia.acm.calendar.service.AcmCalendar#getEvent(java.lang.String)
      */
     @Override
-    public AcmCalendarEvent getEvent(String eventId) throws CalendarServiceException
+    public AcmCalendarEvent getEvent(String eventId, boolean retrieveMaster) throws CalendarServiceException
     {
         try
         {
@@ -111,14 +111,19 @@ public class ExchangeCalendar implements AcmCalendar
             allProperties.addRange(PropertyDefinitionHolder.standardProperties);
             appointment.load(allProperties);
 
+            AcmCalendarEvent event = new AcmCalendarEvent();
             if (appointment.getIsRecurring())
             {
                 Appointment recurringMaster = Appointment.bindToRecurringMaster(service, new ItemId(eventId));
                 recurringMaster.load(allProperties);
+                if (retrieveMaster)
+                {
+                    ExchangeTypesConverter.setEventProperties(event, appointment);
+                    return event;
+                }
                 appointment.setRecurrence(recurringMaster.getRecurrence());
             }
 
-            AcmCalendarEvent event = new AcmCalendarEvent();
             ExchangeTypesConverter.setEventProperties(event, appointment);
             return event;
         } catch (Exception e)

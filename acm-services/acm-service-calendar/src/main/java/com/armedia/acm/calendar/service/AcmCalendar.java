@@ -38,9 +38,10 @@ public interface AcmCalendar
 
     /**
      * @param eventId
+     * @param retrieveMaster
      * @return
      * @throws CalendarServiceException
      */
-    AcmCalendarEvent getEvent(String eventId) throws CalendarServiceException;
+    AcmCalendarEvent getEvent(String eventId, boolean retrieveMaster) throws CalendarServiceException;
 
 }
