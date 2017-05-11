@@ -53,16 +53,26 @@
             <div class="col-sm-3 form-group">
                 <label for="state" translate>
                     organizations.comp.addresses.modal.state.label</label>
-                <input for="state" type="text" ng-model="address.state"
+                <input id="state" type="text" ng-model="address.state"
                        class="input-md form-control"
                        placeholder="{{ 'organizations.comp.addresses.modal.state.placeholder' | translate }}">
             </div>
             <div class="col-sm-3 form-group">
                 <label for="zip" translate>
                     organizations.comp.addresses.modal.zip.label</label>
-                <input for="zip" type="text" ng-model="address.zip"
+                <input id="zip" type="text" ng-model="address.zip"
                        class="input-md form-control"
                        placeholder="{{ 'organizations.comp.addresses.modal.zip.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label><span translate>organizations.comp.addresses.modal.setPrimary</span></label>
+                <span class="required-asterisk">*</span><br/>
+                <input type="radio" ng-model="isDefault" ng-value="true">
+                <translate>organizations.comp.addresses.modal.yes</translate
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>organizations.comp.addresses.modal.no</translate>
             </div>
         </div>
     </form>

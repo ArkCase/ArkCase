@@ -1,0 +1,22 @@
+<form name="ldapConfigForm" novalidate ng-submit="ok()">
+    <div class="modal-header">
+        <h3>
+            <span translate>admin.security.ldapConfig.data.userAttributesTemplate</span>
+        </h3>
+    </div>
+
+    <div class="modal-body">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="(key, value) in attributes">{{ key }} : {{ value }}</li>
+        </ul>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="cancel()">
+            <span translate>admin.security.ldapConfig.dialog.cancel</span>
+        </button>
+        <button class="btn btn-primary" type="submit">
+            <span translate>admin.security.ldapConfig.dialog.ok</span>
+        </button>
+    </div>
+</form>
+
