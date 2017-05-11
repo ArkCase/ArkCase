@@ -91,6 +91,17 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
 
     /*
      * (non-Javadoc)
+     * 
+     * @see com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler#isRestricted(java.lang.String)
+     */
+    @Override
+    public boolean isRestricted(String objectId)
+    {
+        return getCaseFile(objectId, true) != null;
+    }
+
+    /*
+     * (non-Javadoc)
      *
      * @see
      * com.armedia.acm.calendar.service.integration.exchange.EntityHandler#checkPermission(com.armedia.acm.services.
