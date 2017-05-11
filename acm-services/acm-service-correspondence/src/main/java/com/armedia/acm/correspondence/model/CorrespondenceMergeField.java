@@ -1,5 +1,8 @@
 package com.armedia.acm.correspondence.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 /**
  * @author sasko.tanaskoski
  *
@@ -8,6 +11,7 @@ package com.armedia.acm.correspondence.model;
 /**
  * This POJO stores parameters for mergeField
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CorrespondenceMergeField
 {
 
