@@ -49,14 +49,15 @@ public class ExchangeTypesConverter
 {
 
     /**
+     *
      * @param appointment
-     * @param exchange
-     * @param folder
      * @param calendarEvent
+     * @param attachments
+     * @param updateRecurrence
      * @throws Exception
      */
-    static void setAppointmentProperties(Appointment appointment, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
-            throws Exception
+    static void setAppointmentProperties(Appointment appointment, AcmCalendarEvent calendarEvent, MultipartFile[] attachments,
+            boolean updateRecurrence) throws Exception
     {
         // TODO: set organizer
         appointment.setSubject(calendarEvent.getSubject());
@@ -73,7 +74,7 @@ public class ExchangeTypesConverter
         appointment.setIsAllDayEvent(calendarEvent.isAllDayEvent());
         RecurrenceDetails rc = calendarEvent.getRecurrenceDetails();
         Recurrence recurrence = null;
-        if (rc != null)
+        if (updateRecurrence && rc != null)
         {
             switch (rc.getRecurrenceType())
             {

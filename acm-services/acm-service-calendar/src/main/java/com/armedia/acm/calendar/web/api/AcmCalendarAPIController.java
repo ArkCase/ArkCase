@@ -135,11 +135,12 @@ public class AcmCalendarAPIController
 
     @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
+            @RequestParam(value = "updateMaster", required = false, defaultValue = "false") boolean updateMaster,
             @RequestPart("data") AcmCalendarEvent calendarEvent, @RequestPart(value = "file", required = false) MultipartFile[] attachments)
             throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        calendarService.updateCalendarEvent(user, auth, calendarEvent, attachments);
+        calendarService.updateCalendarEvent(user, auth, updateMaster, calendarEvent, attachments);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
