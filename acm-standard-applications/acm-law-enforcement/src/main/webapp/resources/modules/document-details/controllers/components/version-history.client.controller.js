@@ -44,7 +44,7 @@ angular.module('document-details').controller('Document.VersionHistoryController
         
         $scope.$watchCollection('versions', function (newValue, oldValue) {
             if (newValue && newValue.length) {
-                gridHelper.getUsers().then(function (promiseUsers) {
+                var promiseUsers = gridHelper.getUsers();
                     ConfigService.getComponentConfig("document-details", "versionHistory").then(function (data) {
                         gridHelper.setUserNameFilterToConfig(promiseUsers, data);
                         $scope.gridOptions.columnDefs = data.columnDefs;
@@ -53,7 +53,6 @@ angular.module('document-details').controller('Document.VersionHistoryController
                         $scope.retrieveGridData();
                         return data;
                     });
-                });
             }
 
         })
@@ -67,7 +66,7 @@ angular.module('document-details').controller('Document.VersionHistoryController
                     if (versionData.versionTag == $scope.activeVersionTag) {
                         $timeout(function () {
                             $scope.gridApi.selection.selectRow(versionData);
-                        }, 100);
+                        });
                     }
                 });
                 $scope.gridOptions.totalItems = $scope.versions.length;
