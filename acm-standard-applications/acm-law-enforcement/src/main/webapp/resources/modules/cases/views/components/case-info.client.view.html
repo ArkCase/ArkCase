@@ -43,7 +43,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
-                       permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                       permission="editCaseOwningGroup" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable">
                         <user-full-name userId="assignee" fallback="None"/>
                     </a>
@@ -53,7 +53,7 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                       permission="editCaseOwningGroup" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable">
                         {{owningGroup || 'Unknown'}}</a>
                 </div>
