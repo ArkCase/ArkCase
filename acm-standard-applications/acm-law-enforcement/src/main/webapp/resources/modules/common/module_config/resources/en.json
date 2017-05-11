@@ -176,7 +176,9 @@
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
       "error.owninggroupUnique": "Only one owning group is allowed.",
-      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
     }
   },
   "common.directive.progressIndicator": {
@@ -375,5 +377,8 @@
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
     }
+  },
+  "common.labels": {
+    "primary": " [Primary]"
   }
 }

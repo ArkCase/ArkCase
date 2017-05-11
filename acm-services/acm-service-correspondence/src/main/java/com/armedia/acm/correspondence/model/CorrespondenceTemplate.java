@@ -1,10 +1,15 @@
 package com.armedia.acm.correspondence.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.Date;
 
 /**
  * This POJO stores the parameters to generate a new Word document based on a Word template.
  */
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CorrespondenceTemplate
 {
 
