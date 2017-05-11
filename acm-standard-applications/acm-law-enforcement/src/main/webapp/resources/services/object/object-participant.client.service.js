@@ -10,8 +10,8 @@
 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
-angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService', 'MessageService',
-    function ($resource, $translate, Util, MessageService) {
+angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', '$q', 'UtilService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
+    function ($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder) {
         var Service = $resource('api/v1/service', {}, {
 
             /**
@@ -107,6 +107,39 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
             }
 
         });
+
+        /**
+         * @ngdoc method
+         * @name findParticipantById
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Query participant of an object by Id
+         *
+         * @param {String} participantId  Participant id
+         *
+         * @returns {Object} participant data
+         */
+        Service.findParticipantById = function (participantId) {
+            // determine exact object type so that the validation passes in object-participant.client.service.js
+            var df = $q.defer();
+            var filter = 'fq="id":(' + participantId + '-USER OR ' + participantId + '-GROUP)';
+            var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(participantId + '*', filter, 10, 0);
+            SearchService.queryFilteredSearch({
+                    query: query
+                },
+                function (data) {
+                    if (SearchService.validateSolrData(data)) {
+                        var participantData = data.response.docs;
+                        if (Service.isParticipantValid(participantData)) {
+                            return df.resolve(participantData);
+                        }
+                    }
+                    return df.resolve([]);
+                }
+            )
+            return df.promise;
+        };
 
         /**
          * @ngdoc method
@@ -231,6 +264,28 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
 
         /**
          * @ngdoc method
+         * @name isParticipantValid
+         * @methodOf services:Object.ParticipantService
+         * @description Check if the participant is valid
+         * @param {Object} data Participant object to be validated
+         * @returns {boolean} Promise
+         */
+        Service.isParticipantValid = function (data) {
+            if (Util.isArrayEmpty(data)) {
+                //group/user is invalid (e.g. sync error/stale data)
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userOrGroupNotFound"));
+                return false;
+            }
+            if (Util.isArrayEmpty(data) && data.length > 1) {
+                //can't have two participants with same id
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
          * @name validateType
          * @methodOf services:Object.ParticipantService
          * @description Check if the type of participant is consistent with the given USER or GROUP type
@@ -241,10 +296,6 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
         Service.validateType = function (data, type) {
             if (data.participantType == "owning group" && type != "GROUP") {
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.groupType"));
-                return false;
-            }
-            if (data.participantType != "owning group" && type != "USER") {
-                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userType"));
                 return false;
             }
             return true;

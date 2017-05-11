@@ -166,6 +166,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 , controller: 'directives.DocTreeCheckinDialogController'
                                 , animation: true
                                 , size: 'lg'
+                                , backdrop: 'static'
                                 , resolve: {
                                     params: function () {
                                         return params;
@@ -385,9 +386,6 @@ angular.module('directives').controller('directives.DocTreeCheckinDialogControll
             $scope.note = params.note;
             $scope.isNoteRequired = params.isNoteRequired;
 
-            $scope.onClickCancel = function () {
-                $modalInstance.dismiss();
-            };
             $scope.onClickOk = function () {
                 $modalInstance.close({note: $scope.note});
             };
