@@ -1,5 +1,9 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
@@ -9,12 +13,16 @@ import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
+import com.armedia.acm.files.ConfigurationFileAddedEvent;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -39,8 +48,13 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
  *
  */
-public class ExchangeCalendarService implements CalendarService
+public class ExchangeCalendarService implements CalendarService, ApplicationListener<AbstractConfigurationFileEvent>
 {
+
+    /**
+     * The scheduler task name.
+     */
+    private static final String CONFIGUTATION_FILENAME = "calendarService.properties";
 
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
@@ -76,11 +90,57 @@ public class ExchangeCalendarService implements CalendarService
 
     }
 
+    private CalendarAdminService calendarAdminService;
+
     private Map<String, CalendarEntityHandler> entityHandlers;
 
     private OutlookService outlookService;
 
     private OutlookDao outlookDao;
+
+    private Map<String, CalendarConfiguration> configurationsByType;
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+     */
+    @Override
+    public void onApplicationEvent(AbstractConfigurationFileEvent event)
+    {
+        // TODO: TECHNICAL DEBT, should not depend on an implementation of configuration service that writes to file
+        // system, as there might be different implementations of configuration service. Maybe it would be better if the
+        // configuration service emits an event that would trigger action?
+        if (isConfigurationFileChange(event))
+        {
+            try
+            {
+                CalendarConfigurationsByObjectType calendarConfiguration = calendarAdminService.readConfiguration(true);
+                configurationsByType = calendarConfiguration.getConfigurationsByType();
+            } catch (CalendarConfigurationException e)
+            {
+                // TODO add logging
+                // log.error("Could not load scheduler configuration from file {}, error was: {}.",
+                // configFile.getAbsoluteFile(), e);
+            }
+        }
+
+    }
+
+    /**
+     * Checks if the event was triggered by a change of the scheduler configuration file.
+     *
+     * @param abstractConfigurationFileEvent
+     *            the event encapsulating a reference to the modified file.
+     * @return <code>true</code> if the event was triggered by the calendar configuration <code>false</code> otherwise.
+     */
+    private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
+    {
+        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
+                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
+                && abstractConfigurationFileEvent.getConfigFile().getName().equals(CONFIGUTATION_FILENAME);
+    }
 
     /*
      * (non-Javadoc)
@@ -93,9 +153,14 @@ public class ExchangeCalendarService implements CalendarService
     public Optional<AcmCalendar> retrieveCalendar(AcmUser user, Authentication auth, String objectType, String objectId)
             throws CalendarServiceException
     {
+        if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
+        {
+            return Optional.ofNullable(null);
+        }
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                 .orElseThrow(() -> new CalendarServiceException(""));
-        AcmOutlookUser outlookUser = getOutlookUser(user, auth);
+        AcmOutlookUser outlookUser = handler.isRestricted(objectId) ? getRestrictedOutlookUser(auth, objectType)
+                : getPublicOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
         if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
         {
@@ -116,18 +181,25 @@ public class ExchangeCalendarService implements CalendarService
             int start, int maxItems) throws CalendarServiceException
     {
         List<AcmCalendarInfo> result = new ArrayList<>();
-        AcmOutlookUser outlookUser = getOutlookUser(user, auth);
+        AcmOutlookUser outlookUser = getPublicOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
         if (objectType != null)
         {
-            CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
-                    .orElseThrow(() -> new CalendarServiceException(""));
-            result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
+            if (configurationsByType.containsKey(objectType) && configurationsByType.get(objectType).isIntegrationEnabled())
+            {
+                CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                        .orElseThrow(() -> new CalendarServiceException(""));
+                result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
+            }
         } else
         {
-            for (CalendarEntityHandler handler : entityHandlers.values())
+            for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
             {
-                result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
+                if (!configurationsByType.containsKey(objectType) && !configurationsByType.get(objectType).isIntegrationEnabled())
+                {
+                    continue;
+                }
+                result.addAll(handlerEntry.getValue().listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
             }
         }
         return result;
@@ -151,10 +223,17 @@ public class ExchangeCalendarService implements CalendarService
             // TODO: add logging and proper exception message here.
             throw new CalendarServiceException("");
         }
+        if (!configurationsByType.containsKey(calendarEvent.getObjectType())
+                || !configurationsByType.get(calendarEvent.getObjectType()).isIntegrationEnabled())
+        {
+            // TODO: add logging and proper exception message here.
+            throw new CalendarServiceException("");
+        }
         calendarId = calendarId != null ? calendarId : calendarEvent.getCalendarId();
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceException(""));
-        AcmOutlookUser outlookUser = getOutlookUser(user, auth);
+        AcmOutlookUser outlookUser = handler.isRestricted(calendarEvent.getObjectId())
+                ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType()) : getPublicOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
         if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
         {
@@ -183,13 +262,23 @@ public class ExchangeCalendarService implements CalendarService
     public void updateCalendarEvent(AcmUser user, Authentication auth, boolean updateMaster, AcmCalendarEvent calendarEvent,
             MultipartFile[] attachments) throws CalendarServiceException
     {
-        AcmOutlookUser outlookUser = getOutlookUser(user, auth);
-        ExchangeService exchangeService = outlookDao.connect(outlookUser);
+        if (!configurationsByType.containsKey(calendarEvent.getObjectType())
+                || !configurationsByType.get(calendarEvent.getObjectType()).isIntegrationEnabled())
+        {
+            // TODO: add logging and proper exception message here.
+            throw new CalendarServiceException(
+                    String.format("Calendar integration is not enablef for %s object type.", calendarEvent.getObjectType()));
+        }
 
         try
         {
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                     .orElseThrow(() -> new CalendarServiceException(""));
+
+            AcmOutlookUser outlookUser = handler.isRestricted(calendarEvent.getObjectId())
+                    ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType()) : getPublicOutlookUser(user, auth);
+            ExchangeService exchangeService = outlookDao.connect(outlookUser);
+
             if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
             {
                 // TODO: add logging and proper exception message.
@@ -286,12 +375,21 @@ public class ExchangeCalendarService implements CalendarService
     public void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId,
             boolean deleteRecurring) throws CalendarServiceException
     {
-        AcmOutlookUser outlookUser = getOutlookUser(user, auth);
-        ExchangeService exchangeService = outlookDao.connect(outlookUser);
+        if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
+        {
+            // TODO: add logging and proper exception message here.
+            throw new CalendarServiceException(String.format("Calendar integration is not enablef for %s object type.", objectType));
+        }
+
         try
         {
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                     .orElseThrow(() -> new CalendarServiceException(""));
+
+            AcmOutlookUser outlookUser = handler.isRestricted(objectId) ? getRestrictedOutlookUser(auth, objectType)
+                    : getPublicOutlookUser(user, auth);
+            ExchangeService exchangeService = outlookDao.connect(outlookUser);
+
             if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
             {
                 // TODO: add logging and proper exception message.
@@ -326,13 +424,25 @@ public class ExchangeCalendarService implements CalendarService
     }
 
     /**
+     * @param auth
+     * @param objectType
+     * @return
+     */
+    private AcmOutlookUser getRestrictedOutlookUser(Authentication auth, String objectType)
+    {
+        String userId = auth.getName();
+        CalendarConfiguration configuration = configurationsByType.get(objectType);
+        return new AcmOutlookUser(userId, configuration.getSystemEmail(), configuration.getPassword());
+    }
+
+    /**
      * @param user
      * @param handler
      * @param calendarEvent
      * @return
      * @throws CalendarServiceException
      */
-    private AcmOutlookUser getOutlookUser(AcmUser user, Authentication auth) throws CalendarServiceException
+    private AcmOutlookUser getPublicOutlookUser(AcmUser user, Authentication auth) throws CalendarServiceException
     {
         try
         {
@@ -344,6 +454,15 @@ public class ExchangeCalendarService implements CalendarService
             // TODO: Add logging here.
             throw new CalendarServiceException(e);
         }
+    }
+
+    /**
+     * @param calendarAdminService
+     *            the calendarAdminService to set
+     */
+    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 
     /**

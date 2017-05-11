@@ -20,17 +20,17 @@
                 <!-- Administration API privileges. -->
                 <bean id="calendarAdminUrlGet" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/calendar/configuration"/>
+                    <property name="url" value="/api/{version}/service/calendar/configure"/>
                     <property name="requiredPrivilege" ref="acmCalendarAdminPrivilege"/>
                 </bean>
                 <bean id="calendarAdminUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
-                    <property name="url" value="/api/{version}/service/calendar/configuration"/>
+                    <property name="url" value="/api/{version}/service/calendar/configure"/>
                     <property name="requiredPrivilege" ref="acmCalendarAdminPrivilege"/>
                 </bean>
                 <bean id="calendarAdminUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/calendar/configuration/{email}"/>
+                    <property name="url" value="/api/{version}/service/calendar/configure/{email}"/>
                     <property name="requiredPrivilege" ref="acmCalendarAdminPrivilege"/>
                 </bean>
 

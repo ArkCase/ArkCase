@@ -26,6 +26,12 @@ public interface CalendarEntityHandler
     }
 
     /**
+     * @param objectId
+     * @return
+     */
+    boolean isRestricted(String objectId);
+
+    /**
      * @param exchangeService
      * @param user
      * @param auth

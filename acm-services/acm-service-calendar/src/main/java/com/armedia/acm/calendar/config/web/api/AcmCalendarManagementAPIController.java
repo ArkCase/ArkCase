@@ -48,6 +48,7 @@ public class AcmCalendarManagementAPIController
     @RequestMapping(value = "/{email}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> validateEmail(@PathVariable(value = "email") String email)
     {
+        // TODO: implement real checking. We will need both username/email and password
         return ResponseEntity.status(HttpStatus.OK).body("true");
     }
 
