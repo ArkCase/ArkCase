@@ -61,6 +61,7 @@
 
     <bean id="exchangeWebServicesOutlookDao"
           class="com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao">
+        <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
         <property name="exchangeVersion" value="${outlook.exchange.server.version}"/>
         <property name="autodiscoveryEnabled" value="${outlook.exchange.enable.autodiscovery}"/>
         <property name="clientAccessServer" value="${outlook.exchange.client-access-server}"/>
@@ -81,7 +82,10 @@
     </bean>
 
     <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
-    
+
+    <bean id="exchangeConfigurationService" class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl">
+        <property name="exchangePropertiesResource" value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
+    </bean>
 
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>

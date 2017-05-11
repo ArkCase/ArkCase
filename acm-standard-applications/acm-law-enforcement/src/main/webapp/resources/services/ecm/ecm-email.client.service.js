@@ -100,7 +100,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
                 , param: {}
                 , data: emailData
                 , onSuccess: function (data) {                	
-                	MessageService.info($translate.instant("common.directive.docTree.email.successCallback"));                	
+                	MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));                	
                     if (Service.validateSentEmail(data)) {
                         return data;
                     }

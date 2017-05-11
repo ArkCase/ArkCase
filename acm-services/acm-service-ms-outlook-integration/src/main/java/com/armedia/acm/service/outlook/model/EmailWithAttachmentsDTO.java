@@ -1,10 +1,14 @@
 package com.armedia.acm.service.outlook.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.List;
 
 /**
  * Created by manoj.dhungana on 7/28/2015.
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 

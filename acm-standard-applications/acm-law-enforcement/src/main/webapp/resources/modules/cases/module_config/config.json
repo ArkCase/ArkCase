@@ -11,7 +11,7 @@
       "menuItemTitle": "cases.menus.leftnav.item",
       "moduleId": "case",
       "iconClass": "fa fa-folder",
-      "position": 50
+      "position": 20
     },
     {
       "menuId": "topbar",
