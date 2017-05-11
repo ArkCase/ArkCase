@@ -26,25 +26,25 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <div>
-                    <label for="organization_{{::$id}}"
+                    <label for="organization"
                            translate>common.addOrganization.organization.label</label>
                 </div>
-                <input id="organization_{{::$id}}" class="form-control" type="text" ng-model="organizationValue"
+                <input id="organization" class="form-control" type="text" ng-model="organizationValue"
                        ng-click="radioChanged()" required>
             </div>
             <div class="col-sm-6 form-group">
                 <div>
-                    <label for="types_{{::$id}}"
+                    <label for="types"
                            translate>common.addOrganization.type.label</label>
                 </div>
-                <select id="types_{{::$id}}"
+                <select id="types"
                         ng-model="type"
                         ng-options="item.type as item.name for item in types"></select>
             </div>
         </div>
         <div class="row" ng-show="showDescription">
-            <label for="description_{{::$id}}"/>
-            <textarea id="description_{{::$id}}" ng-model="description"></textarea>
+            <label for="description"/>
+            <textarea id="description" ng-model="description"></textarea>
         </div>
     </form>
 </div>
