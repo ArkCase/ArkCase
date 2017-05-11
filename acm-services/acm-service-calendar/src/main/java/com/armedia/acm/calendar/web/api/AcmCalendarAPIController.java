@@ -114,13 +114,14 @@ public class AcmCalendarAPIController
     @RequestMapping(value = "/calendarevents/event/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmCalendarEvent getEvent(HttpSession session, Authentication auth, @PathVariable(value = "objectType") String objectType,
-            @PathVariable(value = "objectId") String objectId, @RequestParam(value = "eventId") String eventId)
+            @PathVariable(value = "objectId") String objectId, @RequestParam(value = "eventId") String eventId,
+            @RequestParam(value = "retrieveMaster", required = false, defaultValue = "false") boolean retrieveMaster)
             throws CalendarServiceException
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
                 .orElseThrow(() -> new CalendarServiceException(""));
-        return calendar.getEvent(eventId);
+        return calendar.getEvent(eventId, retrieveMaster);
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
