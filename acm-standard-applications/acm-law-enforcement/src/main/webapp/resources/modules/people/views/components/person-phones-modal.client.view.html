@@ -10,33 +10,35 @@
     <form name="phoneForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-              <label for="phones_{{::$id}}"
-                           translate>people.comp.phones.modal.value.label</label>
-              <input id="phones_{{::$id}}" type="text" ng-model="phone.value" class="input-md form-control"
+              <label for="phones"
+                           translate>people.comp.phones.modal.value.label <span class="required-asterisk">*</span></label>
+              <input id="phones" type="text" ng-model="phone.value" class="input-md form-control" required="required"
                        placeholder="{{ 'people.comp.phones.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              <label for="phoneTypes_{{::$id}}"
-                           translate>people.comp.phones.modal.type.label</label>
-              <select id="phoneTypes_{{::$id}}" class="input-md form-control"
+              <label for="phoneTypes"
+                           translate>people.comp.phones.modal.type.label <span class="required-asterisk">*</span></label>
+              <select id="phoneTypes" class="input-md form-control"
                         ng-model="phone.subType"
-                        ng-options="item.type as item.name for item in phoneTypes"></select>
+                        ng-options="item.type as item.name for item in phoneTypes" required="required"></select>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-              <label translate>people.comp.phones.modal.setPrimary</label>
+              <label translate>people.comp.phones.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
               <label>
                  <input type="radio" ng-model="isDefault" ng-value="true">
                  <translate>people.comp.phones.modal.yes</translate>
               </label>
-              <input type="radio" ng-model="isDefault" ng-value="false">
-              <translate>people.comp.phones.modal.no</translate>
+              <label>
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>people.comp.phones.modal.no</translate>
+              </label>
            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
-           	<label for="phoneDescription" translate>people.comp.phones.modal.type.description</label>
+           	<label for="phoneDescription" translate>people.comp.phones.modal.description</label>
             <textarea id="phoneDescription" class="input-md form-control" ng-model="phone.description"></textarea>
            </div>
         </div>

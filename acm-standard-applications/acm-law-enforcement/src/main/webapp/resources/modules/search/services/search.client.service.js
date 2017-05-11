@@ -161,8 +161,10 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    var searchObj = JSON.parse(data);
-                    return searchObj;
+                    if (Service.validateSolrData(data)) {
+                        var searchObj = JSON.parse(data);
+                        return searchObj;
+                    }
                 }
             },
 
@@ -183,8 +185,10 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    var searchObj = JSON.parse(data);
-                    return searchObj;
+                    if (Service.validateSolrData(data)) {
+                        var searchObj = JSON.parse(data);
+                        return searchObj;
+                    }
                 }
             }
         });

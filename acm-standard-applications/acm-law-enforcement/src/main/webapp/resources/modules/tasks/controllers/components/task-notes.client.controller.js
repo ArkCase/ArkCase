@@ -38,7 +38,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.notesInit.parentTitle = $scope.objectInfo.parentObjectName;
-            PermissionsService.getActionPermission('editNote', objectInfo).then(function (result) {
+            PermissionsService.getActionPermission('editNote', objectInfo, {objectType: ObjectService.ObjectTypes.TASK}).then(function (result) {
                 $scope.notesInit.isReadOnly = !result;
             });
         };

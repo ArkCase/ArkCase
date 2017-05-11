@@ -111,7 +111,7 @@
   "people.comp.phones": {
     "title": "Phones Numbers",
     "table.columns": {
-      "type": "Phone Type",
+      "type": "Type",
       "value": "Phone Number",
       "description": "Description",
       "created": "Date Added",
@@ -143,7 +143,7 @@
   "people.comp.emails": {
     "title": "Email Addresses",
     "table.columns": {
-      "type": "Email Address Type",
+      "type": "Type",
       "value": "Emails Address",
       "description": "Description",
       "created": "Date Added",
@@ -175,8 +175,8 @@
   "people.comp.urls": {
     "title": "URLs",
     "table.columns": {
+      "value": "URL",
       "type": "Type",
-      "value": "Url",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
@@ -212,8 +212,8 @@
       "upload": "New Alias"
     },
     "table.columns": {
-      "aliasValue": "Alias",
       "type": "Type",
+      "aliasValue": "Alias",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
