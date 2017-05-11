@@ -159,15 +159,15 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         }
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                 .orElseThrow(() -> new CalendarServiceException(""));
-        AcmOutlookUser outlookUser = handler.isRestricted(objectId) ? getRestrictedOutlookUser(auth, objectType)
-                : getPublicOutlookUser(user, auth);
+        boolean restricted = handler.isRestricted(objectId);
+        AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, objectType) : getPublicOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
-        if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
+        if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
         {
             // TODO: add logging and proper exception message.
             throw new CalendarServiceException("");
         }
-        return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
+        return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId, restricted));
     }
 
     /*
@@ -195,7 +195,8 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         {
             for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
             {
-                if (!configurationsByType.containsKey(objectType) && !configurationsByType.get(objectType).isIntegrationEnabled())
+                if (!configurationsByType.containsKey(handlerEntry.getValue())
+                        && !configurationsByType.get(handlerEntry.getValue()).isIntegrationEnabled())
                 {
                     continue;
                 }
@@ -232,10 +233,11 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         calendarId = calendarId != null ? calendarId : calendarEvent.getCalendarId();
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceException(""));
-        AcmOutlookUser outlookUser = handler.isRestricted(calendarEvent.getObjectId())
-                ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType()) : getPublicOutlookUser(user, auth);
+        boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
+        AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType())
+                : getPublicOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
-        if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+        if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
         {
             // TODO: add logging and proper exception message.
             throw new CalendarServiceException("");
@@ -275,11 +277,12 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                     .orElseThrow(() -> new CalendarServiceException(""));
 
-            AcmOutlookUser outlookUser = handler.isRestricted(calendarEvent.getObjectId())
-                    ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType()) : getPublicOutlookUser(user, auth);
+            boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
+            AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType())
+                    : getPublicOutlookUser(user, auth);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (!handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+            if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
             {
                 // TODO: add logging and proper exception message.
                 throw new CalendarServiceException("");
@@ -386,11 +389,11 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                     .orElseThrow(() -> new CalendarServiceException(""));
 
-            AcmOutlookUser outlookUser = handler.isRestricted(objectId) ? getRestrictedOutlookUser(auth, objectType)
-                    : getPublicOutlookUser(user, auth);
+            boolean restricted = handler.isRestricted(objectId);
+            AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, objectType) : getPublicOutlookUser(user, auth);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (!handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
+            if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
             {
                 // TODO: add logging and proper exception message.
                 throw new CalendarServiceException("");
@@ -419,7 +422,6 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
     @Override
     public <CSE extends CalendarServiceException> CalendarExceptionMapper<CSE> getExceptionMapper(CalendarServiceException e)
     {
-        // TODO Auto-generated method stub
         return new ExchangeCalendarExcpetionMapper<>();
     }
 
