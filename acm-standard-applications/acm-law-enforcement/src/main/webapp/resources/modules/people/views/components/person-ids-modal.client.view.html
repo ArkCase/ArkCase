@@ -10,15 +10,17 @@
 <div class="modal-body">
     <form name="idForm">
         <div class="row">
-        	<div class="col-sm-6 form-group">
-        		<label for="identificationNumber" translate>people.comp.ids.modal.number.label</label><span class="required-asterisk">*</span>
-                <input id="identificationNumber" class="input-md form-control" type="text" required="required" ng-model="identification.identificationNumber"
+            <div class="col-sm-6 form-group">
+                <label for="identificationNumber" translate>people.comp.ids.modal.number.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="identificationNumber" class="input-md form-control" type="text" required="required"
+                       ng-model="identification.identificationNumber"
                        placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
-        	</div>
-        	<div class="col-sm-6 form-group">
-        	  <label for="idTypes"
-                           translate>people.comp.ids.modal.type.label</label><span class="required-asterisk">*</span>
-                           <select id="idTypes" class="input-md form-control" required="required"
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="idTypes"
+                       translate>people.comp.ids.modal.type.label</label><span class="required-asterisk">*</span>
+                <select id="idTypes" class="input-md form-control" required="required"
                         ng-model="identification.identificationType"
                         ng-options="item.type as item.name for item in identificationTypes"></select>
             </div>
@@ -40,8 +42,8 @@
         </div>
 
         <div class="row">
-        	<div class="col-sm-12 form-group">
-        		<label translate>people.comp.ids.modal.setPrimary</label><span class="required-asterisk">*</span>
+            <div class="col-sm-12 form-group">
+                <label translate>people.comp.ids.modal.setPrimary</label><span class="required-asterisk">*</span>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.ids.modal.yes</translate>
