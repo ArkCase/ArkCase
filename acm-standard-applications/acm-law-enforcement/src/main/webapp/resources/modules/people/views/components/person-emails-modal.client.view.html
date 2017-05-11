@@ -10,44 +10,42 @@
 <div class="modal-body">
     <form name="emailForm">
         <div class="row">
-        	<div class="col-sm-6 form-group">
-        	
-        		<label for="emails"
-                           translate>people.comp.emails.modal.value.label <span class="required-asterisk">*</span></label>
-                           
+            <div class="col-sm-6 form-group">
+
+                <label for="emails"><span translate>people.comp.emails.modal.value.label</span>
+                    <span class="required-asterisk">*</span></label>
+
                 <input id="emails" class="input-md form-control" type="text" ng-model="email.value" required="required"
                        placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
-        
-        	</div>
-        	<div class="col-sm-6 form-group">
-        	
-        	  <label for="emailTypes"
-                           translate>people.comp.emails.modal.type.label <span class="required-asterisk">*</span></label>
-        	   <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subType" ng-options="item.type as item.name for item in emailTypes"></select>
-        	
-        	</div>
+
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="emailTypes"><span translate>people.comp.emails.modal.type.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subType"
+                        ng-options="item.type as item.name for item in emailTypes"></select>
+            </div>
         </div>
-        
         <div class="row">
-        	<div class="col-sm-12 form-group">
-        
-        		<label translate>people.comp.emails.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
+            <div class="col-sm-12 form-group">
+                <label><span translate>people.comp.emails.modal.setPrimary</span>
+                    <span class="required-asterisk">*</span></label><br/>
                 <label>
-                <input type="radio" ng-model="isDefault" ng-value="true">
-                <translate>people.comp.emails.modal.yes</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>people.comp.emails.modal.yes</translate>
                 </label>
                 <label>
-                <input type="radio" ng-model="isDefault" ng-value="false">
-                <translate>people.comp.emails.modal.no</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>people.comp.emails.modal.no</translate>
                 </label>
-        	</div>
+            </div>
         </div>
-        
+
         <div class="row">
-        	<div class="col-sm-12 form-group">
-        		<label for="emailDescription" translate>people.comp.emails.modal.description</label>
+            <div class="col-sm-12 form-group">
+                <label for="emailDescription" translate>people.comp.emails.modal.description</label>
                 <textarea class="input-md form-control" id="emailDescription" ng-model="email.description"></textarea>
-        	</div>
+            </div>
         </div>
 
     </form>

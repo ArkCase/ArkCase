@@ -10,36 +10,40 @@
 <div class="modal-body">
     <form name="idForm">
         <div class="row">
-        	<div class="col-sm-6 form-group">
-        		<label for="identificationNumber" translate>people.comp.ids.modal.number.label <span class="required-asterisk">*</span></label>
-                <input id="identificationNumber" class="input-md form-control" type="text" required="required" ng-model="identification.identificationNumber"
+            <div class="col-sm-6 form-group">
+                <label for="identificationNumber"><span translate>people.comp.ids.modal.number.label</span> <span
+                        class="required-asterisk">*</span></label>
+                <input id="identificationNumber" class="input-md form-control" type="text" required="required"
+                       ng-model="identification.identificationNumber"
                        placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
-        	</div>
-        	<div class="col-sm-6 form-group">
-        	  <label for="idTypes"
-                           translate>people.comp.ids.modal.type.label <span class="required-asterisk">*</span></label>
-                           <select id="idTypes" class="input-md form-control" required="required"
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="idTypes"><span translate>people.comp.ids.modal.type.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <select id="idTypes" class="input-md form-control" required="required"
                         ng-model="identification.identificationType"
                         ng-options="item.type as item.name for item in identificationTypes"></select>
-        	</div>
+            </div>
         </div>
-        
+
         <div class="row">
-        	<div class="col-sm-6 form-group">
-        		<label for="identificationIssuer" translate>people.comp.ids.modal.issuer.label</label>
-                <input id="identificationIssuer" type="text" class="input-md form-control" ng-model="identification.identificationIssuer"
+            <div class="col-sm-6 form-group">
+                <label for="identificationIssuer" translate>people.comp.ids.modal.issuer.label</label>
+                <input id="identificationIssuer" type="text" class="input-md form-control"
+                       ng-model="identification.identificationIssuer"
                        placeholder="{{ 'people.comp.ids.modal.issuer.placeholder' | translate }}">
-        	</div>
-        	<div class="col-sm-6 form-group">
-        	  <label for="identificationYearIssued" translate>people.comp.ids.modal.yearIssued.label</label>
-              <input id="identificationYearIssued" type="text" class="input-md form-control" ng-model="identification.identificationYearIssued"
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="identificationYearIssued" translate>people.comp.ids.modal.yearIssued.label</label>
+                <input id="identificationYearIssued" type="text" class="input-md form-control"
+                       ng-model="identification.identificationYearIssued"
                        placeholder="{{ 'people.comp.ids.modal.yearIssued.placeholder' | translate }}">
-        	</div>
+            </div>
         </div>
-        
+
         <div class="row">
-        	<div class="col-sm-12 form-group">
-        		<label translate>people.comp.ids.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
+            <div class="col-sm-12 form-group">
+                <label><span translate>people.comp.ids.modal.setPrimary</span> <span class="required-asterisk">*</span></label><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.ids.modal.yes</translate>
@@ -48,7 +52,7 @@
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.ids.modal.no</translate>
                 </label>
-        	</div>
+            </div>
         </div>
     </form>
 </div>
