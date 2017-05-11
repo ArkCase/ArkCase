@@ -5,16 +5,15 @@
 </div>
 <div class="modal-body">
     <form name="addOrganizationForm">
-        <div id="selectRadio">
-            <div>
+        <div id="selectRadio row">
+            <div class="col-sm-12 form-group">
                 <input ng-model="selectExisting" value="0"
                        type="radio" ng-change="radioChanged()" id="addNew"
                        class="radio-inline">
                 <label class="radio-inline" for="addNew">
                     <span translate>common.addOrganization.addNew.label</span>
                 </label>
-            </div>
-            <div>
+
                 <input ng-model="selectExisting" value="1" type="radio"
                        ng-change="radioChanged()" id="selectExisting"
                        class="radio-inline">
@@ -25,27 +24,23 @@
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">
-                <div>
-                    <label for="organization_{{::$id}}"
-                           translate>common.addOrganization.organization.label</label>
-                </div>
-                <input id="organization_{{::$id}}" class="form-control" type="text" ng-model="organizationValue"
+                <label for="organization"
+                       translate>common.addOrganization.organization.label</label>
+                <input id="organization" class="input-md form-control" type="text" ng-model="organizationValue"
                        ng-click="radioChanged()" required>
             </div>
             <div class="col-sm-6 form-group">
-                <div>
-                    <label for="types_{{::$id}}"
-                           translate>common.addOrganization.type.label</label>
-                </div>
-                <select id="types_{{::$id}}"
+                <label for="types" translate>common.addOrganization.type.label</label>
+                <select class="input-md form-control" id="types"
                         ng-model="type"
                         ng-options="item.type as item.name for item in types"></select>
             </div>
         </div>
         <div class="row" ng-show="showDescription">
-            <label for="description_{{::$id}}"/>
-            <textarea id="description_{{::$id}}" ng-model="description"></textarea>
-        </div>
+            <div class="col-sm-12 form-group">
+                <label for="description" translate>common.addOrganization.description</label>
+                <textarea id="description" class="input-md form-control" ng-model="description"></textarea>
+            </div>
     </form>
 </div>
 <div class="modal-footer">
