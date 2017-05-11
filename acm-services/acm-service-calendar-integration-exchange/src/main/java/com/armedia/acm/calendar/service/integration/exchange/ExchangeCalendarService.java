@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -161,7 +162,7 @@ public class ExchangeCalendarService implements CalendarService
         try
         {
             Appointment appointment = new Appointment(exchangeService);
-            ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments);
+            ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
             appointment.save(new FolderId(calendarId));
         } catch (Exception e)
         {
@@ -177,8 +178,8 @@ public class ExchangeCalendarService implements CalendarService
      * org.springframework.web.multipart.MultipartFile[])
      */
     @Override
-    public void updateCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
-            throws CalendarServiceException
+    public void updateCalendarEvent(AcmUser user, Authentication auth, boolean updateMaster, AcmCalendarEvent calendarEvent,
+            MultipartFile[] attachments) throws CalendarServiceException
     {
         AcmOutlookUser outlookUser = getOutlookUser(user, auth);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
@@ -193,7 +194,16 @@ public class ExchangeCalendarService implements CalendarService
                 throw new CalendarServiceException("");
             }
             Appointment appointment = Appointment.bind(exchangeService, new ItemId(calendarEvent.getEventId()));
-            ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments);
+            boolean updateRecurrence = false;
+            if (updateMaster && appointment.getIsRecurring())
+            {
+                appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEvent.getEventId()));
+                updateRecurrence = true;
+            }
+            PropertySet allProperties = new PropertySet();
+            allProperties.addRange(PropertyDefinitionHolder.standardProperties);
+            appointment.load(allProperties);
+            ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, updateRecurrence);
             List<String> attachmentsFileNames = calendarEvent.getFileNames();
             if (attachmentsFileNames != null && !attachmentsFileNames.isEmpty())
             {

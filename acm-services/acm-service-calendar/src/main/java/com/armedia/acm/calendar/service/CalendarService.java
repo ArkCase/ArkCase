@@ -58,8 +58,8 @@ public interface CalendarService
      * @param attachments
      * @throws CalendarServiceException
      */
-    void updateCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
-            throws CalendarServiceException;
+    void updateCalendarEvent(AcmUser user, Authentication auth, boolean updateMaster, AcmCalendarEvent calendarEvent,
+            MultipartFile[] attachments) throws CalendarServiceException;
 
     /**
      * @param user
