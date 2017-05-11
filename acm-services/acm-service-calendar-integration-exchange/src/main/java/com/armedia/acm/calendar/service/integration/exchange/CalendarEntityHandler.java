@@ -60,6 +60,7 @@ public interface CalendarEntityHandler
     String getCalendarId(String objectId) throws CalendarServiceException;
 
     /**
+     * @param restricted
      * @param after
      * @param before
      * @param sort
@@ -68,18 +69,19 @@ public interface CalendarEntityHandler
      * @param maxItems
      * @return
      */
-    List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
+    List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
+            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
 
     /**
      * @param objectId
+     * @param restricted
      * @param after
      * @param before
      * @param sort
      * @param sortDirection
      * @return
      */
-    List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before, String sort,
-            String sortDirection, int start, int maxItems) throws CalendarServiceException;
+    List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
+            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
 
 }

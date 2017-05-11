@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
@@ -91,7 +92,7 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler#isRestricted(java.lang.String)
      */
     @Override
@@ -208,20 +209,19 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
      * java.time.ZonedDateTime, java.lang.String, java.lang.String, int, int)
      */
     @Override
-    public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+    public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
+            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
-        String calendarId = getCalendarId(objectId);
         try
         {
             FindItemsResults<Appointment> findResults = retreiveAppointments(service, after, before, sort, sortDirection, start, maxItems,
-                    calendarId);
+                    objectId, restricted);
 
             List<AcmCalendarEventInfo> events = new ArrayList<>();
             for (Appointment appointment : findResults.getItems())
             {
                 AcmCalendarEventInfo event = new AcmCalendarEventInfo();
-                event.setCalendarId(calendarId);
+                event.setCalendarId(appointment.getICalUid());
                 event.setCreatorId(appointment.getOrganizer().getAddress());
                 event.setEventId(appointment.getId().getUniqueId());
                 event.setObjectId(objectId);
@@ -244,14 +244,14 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
      * java.time.ZonedDateTime, java.lang.String, java.lang.String)
      */
     @Override
-    public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+    public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
+            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
-        String calendarId = getCalendarId(objectId);
+
         try
         {
             FindItemsResults<Appointment> findResults = retreiveAppointments(service, after, before, sort, sortDirection, start, maxItems,
-                    calendarId);
+                    objectId, restricted);
 
             List<AcmCalendarEvent> events = new ArrayList<>();
             for (Appointment appointment : findResults.getItems())
@@ -277,13 +277,14 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
      * @param sortDirection
      * @param start
      * @param maxItems
-     * @param calendarId
+     * @param objectId
      * @return
      * @throws ServiceLocalException
      * @throws Exception
      */
     private FindItemsResults<Appointment> retreiveAppointments(ExchangeService service, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems, String calendarId) throws ServiceLocalException, Exception
+            String sort, String sortDirection, int start, int maxItems, String objectId, boolean restricted)
+            throws ServiceLocalException, Exception
     {
         ItemView view = new ItemView(maxItems, start);
         Date startDate = Date.from(after.toInstant());
@@ -298,7 +299,9 @@ public class CalendarCaseFileHandler implements CalendarEntityHandler
         PropertySet allProperties = new PropertySet();
         allProperties.addRange(PropertyDefinitionHolder.standardProperties);
 
-        FindItemsResults<Appointment> findResults = service.findAppointments(new FolderId(calendarId), calendarView);
+        FindItemsResults<Appointment> findResults = restricted
+                ? service.findAppointments(new FolderId(getCalendarId(objectId)), calendarView)
+                : service.findAppointments(WellKnownFolderName.Calendar, calendarView);
         if (!findResults.getItems().isEmpty())
         {
             List<Item> appointmentItems = findResults.getItems().stream().map(item -> {
