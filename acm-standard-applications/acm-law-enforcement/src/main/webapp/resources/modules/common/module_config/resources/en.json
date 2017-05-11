@@ -39,7 +39,8 @@
     "email": {
       "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
       "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
-      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "successMessage": "The email was sent successfully"
     },
     "menu": {
       "noop": "(Select Item)",
