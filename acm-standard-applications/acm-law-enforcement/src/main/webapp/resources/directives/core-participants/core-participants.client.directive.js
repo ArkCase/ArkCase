@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',
             scope: {
@@ -96,7 +96,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     var modalScope = scope.$new();
                     modalScope.participant = participant || {};
                     modalScope.isEdit = isEdit || false;
-                    modalScope.selectedType = "";
+                    modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
 
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -180,14 +180,20 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 scope.editRow = function (rowEntity) {
                     scope.participant = rowEntity;
-                    var item = {
-                        id: rowEntity.id,
-                        participantType: rowEntity.participantType,
-                        participantLdapId: rowEntity.participantLdapId,
-                        participantTypes: scope.participantTypes,
-                        config: scope.config
-                    };
-                    showModal(item, true);
+                    var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
+                    participantDataPromise.then(function (participantData) {
+                        if (!Util.isArrayEmpty(participantData)) {
+                            var item = {
+                                id: rowEntity.id,
+                                participantType: rowEntity.participantType,
+                                participantLdapId: rowEntity.participantLdapId,
+                                participantTypes: scope.participantTypes,
+                                selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
+                                config: scope.config
+                            };
+                            showModal(item, true);
+                        }
+                    })
                 };
 
                 scope.deleteRow = function (rowEntity) {

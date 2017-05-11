@@ -11,18 +11,18 @@
     <form name="emailForm">
         <div class="row">
            <div class="col-sm-6 form-group">
-            	<label for="emails_{{::$id}}"
+            	<label for="emails"
                            translate>organizations.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
-            	<input id="emails_{{::$id}}" type="text" ng-model="email.value" class="input-md form-control"  required="required"
+            	<input id="emails" class="input-md form-control" type="text" ng-model="email.value" class="input-md form-control"  required="required"
                        placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
            </div>
            <div class="col-sm-6 form-group">
-              	<label for="emailTypes_{{::$id}}"
+              	<label for="emailTypes"
                            translate>organizations.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
-                <select id="emailTypes_{{::$id}}" class="input-md form-control"  required="required"
+                <select id="emailTypes" class="input-md form-control"  required="required"
                         ng-model="email.subType"
                         ng-options="item.type as item.name for item in emailTypes"></select>
-           </div>
+            </div>
         </div>
         <div class="row">
            <div class="col-sm-12 form-group">
@@ -35,14 +35,16 @@
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>organizations.comp.emails.modal.no</translate>
                 </label>
-           </div>
+            </div>
         </div>
+
         <div class="row">
-           <div class="col-sm-12 form-group">
-           	<label for="emailDescription" translate>organizations.comp.emails.modal.description</label>
-            <textarea id="emailDescription" class="input-md form-control" ng-model="emails.description"></textarea>
-           </div>
+            <div class="col-sm-12 form-group">
+                <label for="emailDescription" translate>organizations.comp.emails.modal.description</label>
+                <textarea class="input-md form-control" id="emailDescription" ng-model="email.description"></textarea>
+            </div>
         </div>
+
     </form>
 </div>
 <div class="modal-footer">
