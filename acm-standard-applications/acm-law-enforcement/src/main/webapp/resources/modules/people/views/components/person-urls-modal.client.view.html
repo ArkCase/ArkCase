@@ -11,14 +11,14 @@
     <form name="urlForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="urls"><span translate>people.comp.urls.modal.value.label</span>
-                    <span class="required-asterisk">*</span></label>
+                <label for="urls"
+                       translate>people.comp.urls.modal.value.label</label><span class="required-asterisk">*</span>
                 <input id="urls" type="text" ng-model="url.value" class="input-md form-control" required="required"
                        placeholder="{{ 'people.comp.urls.modal.value.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">
-                <label for="urlTypes"><span translate>people.comp.urls.modal.type.label</span>
-                    <span class="required-asterisk">*</span></label>
+                <label for="urlTypes"
+                       translate>people.comp.urls.modal.type.label</label><span class="required-asterisk">*</span>
                 <select id="urlTypes" class="input-md form-control" required="required"
                         ng-model="url.subType"
                         ng-options="item.type as item.name for item in urlTypes"></select>
@@ -26,8 +26,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label><span translate>people.comp.urls.modal.setPrimary</span>
-                    <span class="required-asterisk">*</span></label><br>
+                <label translate>people.comp.urls.modal.setPrimary</label><span class="required-asterisk">*</span>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.urls.modal.yes</translate>
