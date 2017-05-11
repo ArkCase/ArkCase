@@ -11,6 +11,7 @@ public class AcmLdapConfig
     private boolean ignorePartialResultException;
     private String referral;
     private String directoryName;
+    private String directoryType;
 
     public String getAuthUserPassword()
     {
@@ -100,5 +101,15 @@ public class AcmLdapConfig
     public void setDirectoryName(String directoryName)
     {
         this.directoryName = directoryName;
+    }
+
+    public String getDirectoryType()
+    {
+        return directoryType;
+    }
+
+    public void setDirectoryType(String directoryType)
+    {
+        this.directoryType = directoryType;
     }
 }
