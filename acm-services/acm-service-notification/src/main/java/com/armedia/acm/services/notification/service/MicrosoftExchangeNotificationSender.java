@@ -8,6 +8,7 @@ import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.MessageBodyFactory;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -58,14 +59,7 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
-            String userId = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_USER_KEY,
-                    null);
-            String userEmail = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FROM_KEY,
-                    null);
-            String userPass = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_PASSWORD_KEY,
-                    null);
-
-            AcmOutlookUser outlookUser = new AcmOutlookUser(userId, userEmail, userPass);
+            AcmOutlookUser outlookUser = getSystemOutlookUser();
 
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication() : null;
@@ -95,6 +89,14 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     }
 
     @Override
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, String userId) throws Exception
+    {
+        // Sending as system user to create AcmOutlookUser, ignoring userId
+        in.setTemplate(notificationTemplate);
+        getOutlookService().sendEmailWithAttachments(in, getSystemOutlookUser(), authentication);
+    }
+
+    @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
@@ -111,6 +113,17 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
         AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
         return getOutlookService().sendEmailWithEmbeddedLinks(in, outlookUser, authentication);
+    }
+
+    public AcmOutlookUser getSystemOutlookUser() throws Exception
+    {
+        String userId = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.USERNAME,
+                null);
+        String userEmail = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.USER_FROM,
+                null);
+        String userPass = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.PASSWORD,
+                null);
+        return new AcmOutlookUser(userId, userEmail, userPass);
     }
 
     public OutlookService getOutlookService()
@@ -132,5 +145,4 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     {
         this.dao = dao;
     }
-
 }
