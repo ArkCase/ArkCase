@@ -313,4 +313,12 @@
         <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
     </bean>
 
+    <bean id="exchangeConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
+        <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
+    </bean>
+
+    <bean id="emailSenderConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
+    </bean>
+
 </beans>

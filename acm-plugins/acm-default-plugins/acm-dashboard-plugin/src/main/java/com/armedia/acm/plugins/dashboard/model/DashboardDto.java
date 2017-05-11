@@ -1,8 +1,12 @@
 package com.armedia.acm.plugins.dashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 /**
  * Created by marst on 8/6/14.
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class DashboardDto
 {
     String userId;
