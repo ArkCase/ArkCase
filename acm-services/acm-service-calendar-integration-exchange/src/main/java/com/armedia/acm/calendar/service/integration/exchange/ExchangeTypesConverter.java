@@ -76,6 +76,7 @@ public class ExchangeTypesConverter
         Recurrence recurrence = null;
         if (updateRecurrence && rc != null)
         {
+            Date recurrenceStartAt = Date.from(rc.getStartAt().toInstant());
             switch (rc.getRecurrenceType())
             {
             case ONLY_ONCE:
@@ -85,39 +86,41 @@ public class ExchangeTypesConverter
                 Daily daily = (Daily) rc;
                 if (daily.getEveryWeekDay() != null && daily.getEveryWeekDay())
                 {
-                    recurrence = new DailyPattern(startDate, 1);
+                    recurrence = new DailyPattern(recurrenceStartAt, 1);
                 } else
                 {
-                    recurrence = new DailyPattern(startDate, daily.getInterval());
+                    recurrence = new DailyPattern(recurrenceStartAt, daily.getInterval());
                 }
                 break;
             case WEEKLY:
                 Weekly weekly = (Weekly) rc;
-                recurrence = new WeeklyPattern(startDate, weekly.getInterval(), convertDaysOfWeek(weekly));
+                recurrence = new WeeklyPattern(recurrenceStartAt, weekly.getInterval(), convertDaysOfWeek(weekly));
                 break;
             case MONTHLY:
                 Monthly monthly = (Monthly) rc;
                 if (monthly.getDay() != null)
                 {
-                    recurrence = new MonthlyPattern(startDate, monthly.getInterval(), monthly.getDay());
+                    recurrence = new MonthlyPattern(recurrenceStartAt, monthly.getInterval(), monthly.getDay());
                 } else
                 {
-                    recurrence = new RelativeMonthlyPattern(startDate, monthly.getInterval(), convertDayOfWeek(monthly.getDayOfWeek()),
-                            convertWeekOfMonth(monthly.getWeekOfMonth()));
+                    recurrence = new RelativeMonthlyPattern(recurrenceStartAt, monthly.getInterval(),
+                            convertDayOfWeek(monthly.getDayOfWeek()), convertWeekOfMonth(monthly.getWeekOfMonth()));
                 }
                 break;
             case YEARLY:
                 Yearly yearly = (Yearly) rc;
                 if (yearly.getDayOfMonth() != null)
                 {
-                    recurrence = new YearlyPattern(startDate, convertMonth(yearly.getMonth()), yearly.getDayOfMonth());
+                    recurrence = new YearlyPattern(recurrenceStartAt, convertMonth(yearly.getMonth()), yearly.getDayOfMonth());
                 } else
                 {
-                    recurrence = new RelativeYearlyPattern(startDate, convertMonth(yearly.getMonth()),
+                    recurrence = new RelativeYearlyPattern(recurrenceStartAt, convertMonth(yearly.getMonth()),
                             convertDayOfWeek(yearly.getDayOfWeek()), convertWeekOfMonth(yearly.getWeekOfMonth()));
                 }
+                recurrence.setNumberOfOccurrences(yearly.getInterval());
                 break;
             }
+            recurrence.setEndDate(Date.from(rc.getEndBy().toInstant()));
             appointment.setRecurrence(recurrence);
         }
         appointment.setBody(MessageBody.getMessageBodyFromText(calendarEvent.getDetails()));
@@ -372,6 +375,11 @@ public class ExchangeTypesConverter
             if (recurrence.getNumberOfOccurrences() != null)
             {
                 recurrenceDetails.setEndAfterOccurrances(recurrence.getNumberOfOccurrences());
+            }
+            if (recurrence.getStartDate() != null)
+            {
+                recurrenceDetails
+                        .setStartAt(ZonedDateTime.ofInstant(recurrence.getStartDate().toInstant(), ZoneId.of(startTimeZone.getID())));
             }
             if (recurrence.getEndDate() != null)
             {

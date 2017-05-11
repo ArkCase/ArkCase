@@ -58,6 +58,11 @@ public abstract class RecurrenceDetails
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    private ZonedDateTime startAt;
+
+    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime endBy;
 
     public EventRecurrence getRecurrenceType()
@@ -106,6 +111,23 @@ public abstract class RecurrenceDetails
     public void setEndAfterOccurrances(Integer endAfterOccurrances)
     {
         this.endAfterOccurrances = endAfterOccurrances;
+    }
+
+    /**
+     * @return the startAt
+     */
+    public ZonedDateTime getStartAt()
+    {
+        return startAt;
+    }
+
+    /**
+     * @param startAt
+     *            the startAt to set
+     */
+    public void setStartAt(ZonedDateTime startAt)
+    {
+        this.startAt = startAt;
     }
 
     /**
