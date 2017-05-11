@@ -1,5 +1,8 @@
 package com.armedia.acm.correspondence.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.Date;
 
 /**
@@ -10,6 +13,8 @@ import java.util.Date;
 /**
  * This POJO stores parameters for mergeFieldVersion
  */
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CorrespondenceMergeFieldVersion
 {
 

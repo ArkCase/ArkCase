@@ -9,23 +9,25 @@
 <div class="modal-body">
     <form name="faxForm">
         <div class="row">
-           <div class="col-sm-6 form-group">
-            	<label for="faxes"
-                           translate>organizations.comp.faxes.modal.value.label <span class="required-asterisk">*</span></label>
-            	<input id="faxes" type="text" ng-model="fax.value" class="input-md form-control"  required="required"
+            <div class="col-sm-6 form-group">
+                <label for="faxes"><span translate>organizations.comp.faxes.modal.value.label</span>
+                    <span class="required-asterisk">*</span></label>
+                <input id="faxes" type="text" ng-model="fax.value" class="input-md form-control" required="required"
                        placeholder="{{ 'organizations.comp.faxes.modal.value.placeholder' | translate }}">
-           </div>
-           <div class="col-sm-6 form-group">
-              	<label for="faxTypes"
-                           translate>organizations.comp.faxes.modal.type.label <span class="required-asterisk">*</span></label>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="faxTypes"><span translate>organizations.comp.faxes.modal.type.label</span>
+                    <span class="required-asterisk">*</span></label>
                 <select id="faxTypes"
-                        ng-model="fax.subType" class="input-md form-control"  required="required"
+                        ng-model="fax.subType" class="input-md form-control" required="required"
                         ng-options="item.type as item.name for item in faxTypes"></select>
-           </div>
+            </div>
         </div>
         <div class="row">
-           <div class="col-sm-12 form-group">
-                <label translate>organizations.comp.faxes.modal.setPrimary <span class="required-asterisk">*</span></label><br/>
+            <div class="col-sm-12 form-group">
+                <label><span translate>organizations.comp.faxes.modal.setPrimary</span>
+                    <spanclass
+                    ="required-asterisk">*</span></label><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>organizations.comp.faxes.modal.yes</translate>
@@ -34,13 +36,13 @@
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>organizations.comp.faxes.modal.no</translate>
                 </label>
-           </div>
+            </div>
         </div>
         <div class="row">
-           <div class="col-sm-12 form-group">
-           	<label for="faxDescription" translate>organizations.comp.faxes.modal.description</label>
-            <textarea id="faxDescription" class="input-md form-control" ng-model="faxes.description"></textarea>
-           </div>
+            <div class="col-sm-12 form-group">
+                <label for="faxDescription" translate>organizations.comp.faxes.modal.description</label>
+                <textarea id="faxDescription" class="input-md form-control" ng-model="fax.description"></textarea>
+            </div>
         </div>
     </form>
 </div>

@@ -67,6 +67,21 @@
                        placeholder="{{ 'people.comp.addresses.modal.zip.placeholder' | translate }}">
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+
+                <label><span translate>people.comp.addresses.modal.setPrimary</span></label>
+                <span class="required-asterisk">*</span><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>people.comp.addresses.modal.yes</translate>
+                </label>
+
+                <input type="radio" ng-model="isDefault" ng-value="false">
+                <translate>people.comp.addresses.modal.no</translate>
+
+            </div>
+        </div>
     </form>
 </div>
 <div class="modal-footer">
