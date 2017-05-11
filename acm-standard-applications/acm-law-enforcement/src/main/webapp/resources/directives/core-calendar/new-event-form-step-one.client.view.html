@@ -150,7 +150,7 @@
         </div>
     </fieldset>
 </div>
-<div class="row">
+<div class="row" ng-hide="!updateMaster && existingEvent && !originiallyNotRecurrent">
     <label class="col-sm-12" for="recurrence">
         <span translate>common.directive.coreCalendar.addNewEventDialog.form.recurrence.label</span>
     </label>

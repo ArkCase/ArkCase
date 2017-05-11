@@ -4,6 +4,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
     function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, params) {
         $scope.objectId = params.objectId;
         $scope.objectType = params.objectType;
+        $scope.updateMaster = params.updateMaster;
 
         $scope.formStep = 1;
         $scope.formTitle = 'common.directive.coreCalendar.addNewEventDialog.stepOneTitle';
@@ -169,7 +170,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
         };
 
         $scope.removeAttachedFile = function(fileIndex) {
-            $scope.eventDataModel.files.splice(fileIndex, 1);
+            $scope.eventDataModel.fileNames.splice(fileIndex, 1);
         };
 
         if(!$scope.existingEvent) {
@@ -198,8 +199,10 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
 
             if($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
-                $scope.recurrentEvent = true;
+                $scope.recurrentEvent = $scope.updateMaster;
                 $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel, $scope.eventDataModel.start, $scope.eventDataModel.recurrenceDetails.endBy);
+            } else {
+                $scope.originiallyNotRecurrent = true;
             }
 
             splitAttendeesByType($scope.eventDataModel.attendees);
@@ -237,7 +240,9 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
         var processEventDataModel = function() {
             $scope.eventDataModel.start = DateService.dateToIso($scope.eventDataModel.start);
             $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
-            $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
+            if($scope.eventDataModel.recurrenceDetails.endBy) {
+                $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
+            }
             $scope.eventDataModel.attendees = requiredAttendees.concat(optionalAttendees);
             $scope.eventDataModel.objectId = $scope.objectId;
             $scope.eventDataModel.objectType = $scope.objectType;
@@ -260,7 +265,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
 
         $scope.editEvent = function() {
             processEventDataModel();
-            CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.files).then(function(res) {
+            CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.files, $scope.updateMaster).then(function(res) {
                 MessageService.succsessAction();
                 $modalInstance.close('EDIT_EVENT');
             }, function(err) {

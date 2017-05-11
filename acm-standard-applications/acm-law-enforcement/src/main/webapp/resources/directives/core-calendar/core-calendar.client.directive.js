@@ -36,7 +36,8 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                     element.attr({
                         'popover-html-unsafe': event.popoverTemplate,
                         'popover-title': event.title,
-                        'popover-trigger': 'mouseenter'
+                        'popover-trigger': 'mouseenter',
+                        'popover-append-to-body': true
                     });
                     $compile(element)(scope);
                 };
@@ -86,7 +87,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                                     return scope.coreCalendarConfig;
                                 },
                                 eventDetails: function() {
-                                    return res[0];
+                                    return res.data;
                                 },
                                 params: function() {
                                     return {
@@ -139,9 +140,9 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                     CalendarService.getCalendarEvents(DateService.dateToIso(start.toDate()), DateService.dateToIso(end.toDate()), scope.objectType, scope.objectId)
                         .then(function(res) {
                             var events = [];
-                            _.forEach(res, function(value, key) {
+                            _.forEach(res.data, function(value, key) {
                                 events.push({
-                                    id: value.id,
+                                    id: value.eventId,
                                     title: value.subject,
                                     start: value.start,
                                     end: value.end,

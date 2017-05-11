@@ -84,7 +84,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
 
             $scope.recurrenceTmpModel.recurrenceEndBy = recurrenceRange.endBy;
             $scope.recurrenceTmpModel.start = recurrenceRange.start;
-            $scope.recurrenceTmpModel.end = recurrenceRange.start;
+            $scope.recurrenceTmpModel.end = moment($scope.recurrenceTmpModel.start).add(eventDurationInMinutes, 'minutes').toDate();
             $scope.recurrenceTmpModel.minEndDate = $scope.recurrenceTmpModel.start;
             $scope.validDuration = true;
         };

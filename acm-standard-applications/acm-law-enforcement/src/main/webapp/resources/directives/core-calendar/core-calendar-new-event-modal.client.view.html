@@ -24,7 +24,10 @@
     <button ng-if="formStep !== 3" class="btn btn-primary" ng-click="nextFormStep()" ng-disabled="addEventForm.$invalid">
         <span translate>common.directive.coreCalendar.addNewEventDialog.next.button</span>
     </button>
-    <button ng-if="formStep === 3" class="btn btn-primary" ng-click="addEvent()" ng-disabled="addEventForm.$invalid">
+    <button ng-if="formStep === 3 && !existingEvent" class="btn btn-primary" ng-click="addEvent()" ng-disabled="addEventForm.$invalid">
         <span translate>common.directive.coreCalendar.addNewEventDialog.add.button</span>
+    </button>
+    <button ng-if="formStep === 3 && existingEvent" class="btn btn-primary" ng-click="editEvent()" ng-disabled="addEventForm.$invalid">
+        <span translate>common.directive.coreCalendar.addNewEventDialog.edit.button</span>
     </button>
 </div>

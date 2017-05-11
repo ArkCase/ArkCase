@@ -881,8 +881,8 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
         var buildPopoverTemplate = function(calendarEvent) {
             var startLabel = $translate.instant('common.directive.coreCalendar.start.label');
             var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
-            var startDateTime = $filter('date')(calendarEvent.start, 'MM/dd/yyyy h:mm a');
-            var endDateTime = $filter('date')(calendarEvent.end, 'MM/dd/yyyy h:mm a');
+            var startDateTime = $filter('date')(moment(calendarEvent.start).toDate(), 'MM/dd/yyyy h:mm a');
+            var endDateTime = $filter('date')(moment(calendarEvent.end).toDate(), 'MM/dd/yyyy h:mm a');
             var popoverTemplate = '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
 
             return popoverTemplate;
