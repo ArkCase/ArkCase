@@ -5,6 +5,7 @@
 
     <bean id="calendarManagementAPIController" class="com.armedia.acm.calendar.config.web.api.AcmCalendarManagementAPIController">
         <property name="calendarService" ref="propertyFileCalendarAdminService"/>
+        <property name="verifierService" ref="calendarServiceProvider"/>
     </bean>
     
     <bean id="calendarAPIController" class="com.armedia.acm.calendar.web.api.AcmCalendarAPIController">
