@@ -124,7 +124,7 @@ public class ExchangeCalendar implements AcmCalendar
                 recurringMaster.load(allProperties);
                 if (retrieveMaster)
                 {
-                    ExchangeTypesConverter.setEventProperties(event, appointment);
+                    ExchangeTypesConverter.setEventProperties(event, recurringMaster);
                     return event;
                 }
                 appointment.setRecurrence(recurringMaster.getRecurrence());
