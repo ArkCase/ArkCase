@@ -26,8 +26,14 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
-            // TODO: showBtnDiagram is set to true. Change this depending what type of task is
-            $scope.showBtnDiagram = true;
+            // For adhock tasks we don't have business process who can be shown with graphic,
+            // so don't show the button
+            if ($scope.objectInfo.adhocTask == true){
+                $scope.showBtnDiagram = false;
+            }else if($scope.objectInfo.businessProcessId != null){
+                $scope.showBtnDiagram = true;
+            }
+
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;
@@ -320,8 +326,8 @@ angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope',
 );
 angular.module('tasks').controller('Tasks.DiagramDialogController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId',
         function ($scope, $modalInstance, TaskWorkflowService, taskId) {
-            TaskWorkflowService.diagram(taskId).then(function(data){
-                $scope.diagramData = 'data:image/png;base64,' + data;
+            TaskWorkflowService.diagram(taskId).then(function(response){
+                $scope.diagramData = 'data:image/png;base64,' + response.data;
             });
             $scope.onClickClose = function () {
                 $modalInstance.dismiss('Close');

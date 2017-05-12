@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao;
 import org.activiti.engine.*;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +74,7 @@ public class TaskDiagramIT
 
         FileOutputStream fos = new FileOutputStream("src/test/resources/diagram.png");
         BufferedOutputStream bos = new BufferedOutputStream(fos);
-        bos.write(Base64.decodeBase64(diagram));
+        bos.write(diagram);
         bos.flush();
         bos.close();
 

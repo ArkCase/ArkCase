@@ -1254,8 +1254,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 BpmnModel model = getActivitiRepositoryService().getBpmnModel(task.getProcessDefinitionId());
                 List<String> activeActivityIds = getActivitiRuntimeService().getActiveActivityIds(task.getExecutionId());
                 InputStream inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);
-                byte[] bytes = IOUtils.toByteArray(inputStream);
-                diagram = Base64.encodeBase64(bytes);
+                diagram = IOUtils.toByteArray(inputStream);
 
             }
             catch (Exception e)

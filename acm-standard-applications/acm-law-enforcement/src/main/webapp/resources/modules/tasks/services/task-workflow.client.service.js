@@ -10,8 +10,8 @@
  *
  * Task.WorkflowService provides functions for Task workflow
  */
-angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translate', 'UtilService', 'Task.InfoService',
-    function ($resource, $translate, Util, TaskInfoService) {
+angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translate', 'UtilService', 'Task.InfoService', 'Acm.StoreService',
+    function ($resource, $translate, Util, TaskInfoService, Store) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -139,6 +139,10 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
         Service.WorkflowStatus = {
             COMPLETE: "COMPLETE"
             //other status ?
+        };
+
+        Service.CacheNames = {
+            TASK_DIAGRAM: "TaskDiagram"
         };
 
         /**
@@ -295,14 +299,41 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
          * @returns {Object} Promise
          */
         Service.diagram = function (taskId) {
+            var cacheTaskDiagram = new Store.CacheFifo(Service.CacheNames.TASK_DIAGRAM);
+            var taskDiagram = cacheTaskDiagram.get(taskId);
             return Util.serviceCall({
                 service: Service._diagram
                 , param: {taskId: taskId}
-                , data: {}
+                , data: taskDiagram
                 , onSuccess: function (data) {
-                    return data;
+                    if (Service.validateDiagramData(data)){
+                        cacheTaskDiagram.put(taskId, data);
+                        return data;
+                    }
                 }
             });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateDiagramData
+         * @methodOf tasks.service:Task.WorkflowService
+         *
+         * @description
+         * Validate diagram data
+         *
+         * @param {Object} response  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateDiagramData = function (response) {
+            if (Util.isEmpty(response)) {
+                return false;
+            }
+            if (Util.isEmpty(response.data)) {
+                return false;
+            }
+            return true;
         };
 
 
