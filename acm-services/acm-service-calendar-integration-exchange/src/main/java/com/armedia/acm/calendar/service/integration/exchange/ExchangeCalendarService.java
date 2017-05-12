@@ -30,6 +30,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -65,6 +66,8 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
     public class ExchangeCalendarExcpetionMapper<CSE extends CalendarServiceException> implements CalendarExceptionMapper<CSE>
     {
 
+        private CSE exception;
+
         /*
          * (non-Javadoc)
          *
@@ -74,8 +77,19 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         @Override
         public Object mapException(CSE ce)
         {
-            // TODO Auto-generated method stub
-            return null;
+            Map<String, Object> errorDetails = new HashMap<>();
+            if (exception instanceof CalendarServiceAccessDeniedException)
+            {
+                errorDetails.put("error_cause", "ACCESS_DENIED.");
+            } else if (exception instanceof CalendarServiceConfigurationException)
+            {
+                errorDetails.put("error_cause", "SERVICE_CONFIGURATION.");
+            } else
+            {
+                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
+            }
+            errorDetails.put("error_message", ce.getMessage());
+            return errorDetails;
         }
 
         /*
@@ -86,8 +100,11 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         @Override
         public HttpStatus getStatusCode()
         {
-            // TODO Auto-generated method stub
-            return null;
+            if (exception instanceof CalendarServiceAccessDeniedException)
+            {
+                return HttpStatus.FORBIDDEN;
+            }
+            return HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
     }
@@ -161,8 +178,9 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             return Optional.ofNullable(null);
         }
 
-        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType)).orElseThrow(
-                () -> new CalendarServiceException(String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
+        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
 
         boolean restricted = handler.isRestricted(objectId);
         AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, objectType) : getPublicOutlookUser(user, auth);
@@ -172,7 +190,7 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         {
             log.warn("User {} does not have READ permission to access object with {} id of {} type.", user.getFullName(), objectId,
                     objectType);
-            throw new CalendarServiceException(
+            throw new CalendarServiceAccessDeniedException(
                     String.format("User %s does not have READ permission to access object with %s id of %s type.", user.getFullName(),
                             objectId, objectType));
         }
@@ -197,7 +215,7 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             if (configurationsByType.containsKey(objectType) && configurationsByType.get(objectType).isIntegrationEnabled())
             {
                 CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
-                        .orElseThrow(() -> new CalendarServiceException(
+                        .orElseThrow(() -> new CalendarServiceConfigurationException(
                                 String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
                 result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
             }
@@ -241,14 +259,14 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
                 || !configurationsByType.get(calendarEvent.getObjectType()).isIntegrationEnabled())
         {
             log.warn("Calendar integration is not enabled for {} object type.", calendarEvent.getObjectType());
-            throw new CalendarServiceException(
+            throw new CalendarServiceConfigurationException(
                     String.format("Calendar integration is not enabled for %s object type.", calendarEvent.getObjectType()));
         }
 
         calendarId = calendarId != null ? calendarId : calendarEvent.getCalendarId();
 
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
-                .orElseThrow(() -> new CalendarServiceException(
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for %s object type.", calendarEvent.getObjectType())));
 
         boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
@@ -262,7 +280,7 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         {
             log.warn("User {} does not have WRITE permission to access object with {} id of {} type.", user.getFullName(),
                     calendarEvent.getObjectId(), calendarEvent.getObjectType());
-            throw new CalendarServiceException(
+            throw new CalendarServiceAccessDeniedException(
                     String.format("User %s does not have WRITE permission to access object with %s id of %s type.", user.getFullName(),
                             calendarEvent.getObjectId(), calendarEvent.getObjectType()));
         }
@@ -295,14 +313,14 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
                 || !configurationsByType.get(calendarEvent.getObjectType()).isIntegrationEnabled())
         {
             log.warn("Calendar integration is not enabled for {} object type.", calendarEvent.getObjectType());
-            throw new CalendarServiceException(
+            throw new CalendarServiceConfigurationException(
                     String.format("Calendar integration is not enabled for %s object type.", calendarEvent.getObjectType()));
         }
 
         try
         {
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
-                    .orElseThrow(() -> new CalendarServiceException(
+                    .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for %s object type.", calendarEvent.getObjectType())));
 
             boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
@@ -314,7 +332,7 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             {
                 log.warn("User {} does not have WRITE permission to access object with {} id of {} type.", user.getFullName(),
                         calendarEvent.getObjectId(), calendarEvent.getObjectType());
-                throw new CalendarServiceException(
+                throw new CalendarServiceAccessDeniedException(
                         String.format("User %s does not have WRITE permission to access object with %s id of %s type.", user.getFullName(),
                                 calendarEvent.getObjectId(), calendarEvent.getObjectType()));
             }
@@ -414,13 +432,14 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
         {
             log.warn("Calendar integration is not enabled for {} object type.", objectType);
-            throw new CalendarServiceException(String.format("Calendar integration is not enabled for %s object type.", objectType));
+            throw new CalendarServiceConfigurationException(
+                    String.format("Calendar integration is not enabled for %s object type.", objectType));
         }
 
         try
         {
             CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
-                    .orElseThrow(() -> new CalendarServiceException(
+                    .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
 
             boolean restricted = handler.isRestricted(objectId);
@@ -431,7 +450,7 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
             {
                 log.warn("User {} does not have DELETE permission to access object with {} id of {} type.", user.getFullName(), objectId,
                         objectType);
-                throw new CalendarServiceException(
+                throw new CalendarServiceAccessDeniedException(
                         String.format("User %s does not have DELETE permission to access object with %s id of %s type.", user.getFullName(),
                                 objectId, objectType));
             }
