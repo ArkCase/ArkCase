@@ -5,6 +5,7 @@ import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.calendar.config.service.EmailCredentials;
+import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
@@ -33,6 +34,8 @@ public class AcmCalendarManagementAPIController
 
     private CalendarAdminService calendarService;
 
+    private EmailCredentialsVerifierService verifierService;
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CalendarConfigurationsByObjectType getConfiguration() throws CalendarConfigurationException
@@ -53,7 +56,7 @@ public class AcmCalendarManagementAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         return ResponseEntity.status(HttpStatus.OK)
-                .body(Boolean.toString(calendarService.verifyEmailCredentials(user.getUserId(), emailCredentials)));
+                .body(Boolean.toString(verifierService.verifyEmailCredentials(user.getUserId(), emailCredentials)));
     }
 
     @ExceptionHandler(CalendarConfigurationException.class)
@@ -72,6 +75,15 @@ public class AcmCalendarManagementAPIController
     public void setCalendarService(CalendarAdminService calendarService)
     {
         this.calendarService = calendarService;
+    }
+
+    /**
+     * @param verifierService
+     *            the verifierService to set
+     */
+    public void setVerifierService(EmailCredentialsVerifierService verifierService)
+    {
+        this.verifierService = verifierService;
     }
 
 }
