@@ -1,5 +1,7 @@
 package com.armedia.acm.calendar.service;
 
+import static com.armedia.acm.calendar.service.AcmCalendarEvent.ZONED_DATE_TIME_FORMAT;
+
 import com.armedia.acm.calendar.service.RecurrenceDetails.Daily;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.OnlyOnce;
@@ -55,12 +57,12 @@ public abstract class RecurrenceDetails
 
     private Integer endAfterOccurrances;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
+    @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime startAt;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
+    @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime endBy;

@@ -19,6 +19,8 @@ import java.util.List;
 public class AcmCalendarEvent
 {
 
+    static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm:ssXXX";
+
     public static enum Priority
     {
         LOW, NORMAL, HIGH;
@@ -41,12 +43,12 @@ public class AcmCalendarEvent
 
     private String location;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
+    @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime start;
 
-    @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ssXXX")
+    @JsonFormat(shape = Shape.STRING, pattern = ZONED_DATE_TIME_FORMAT)
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime end;

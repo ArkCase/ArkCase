@@ -130,7 +130,13 @@ public class ExchangeTypesConverter
         Recurrence recurrence = null;
         if (updateRecurrence && rc != null)
         {
-            Date recurrenceStartAt = Date.from(rc.getStartAt().toInstant());
+
+            ZonedDateTime startAt = rc.getStartAt();
+            if (startAt == null)
+            {
+                startAt = calendarEvent.getStart();
+            }
+            Date recurrenceStartAt = Date.from(startAt.toInstant());
             switch (rc.getRecurrenceType())
             {
             case ONLY_ONCE:
