@@ -1,7 +1,9 @@
 package com.armedia.acm.calendar.config.service;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import java.util.Map;
  *
  */
 @JsonInclude(Include.NON_NULL)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CalendarConfigurationsByObjectType
 {
 
