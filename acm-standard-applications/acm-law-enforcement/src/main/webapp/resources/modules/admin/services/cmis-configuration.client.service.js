@@ -36,7 +36,7 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
         return $http({
             method: "POST",
             url: "api/latest/plugin/admin/cmisconfiguration/config",
-            data: angular.toJson(cmisConfig),
+            data: cmisConfig,
             headers: {
                 "Content-Type": "application/json"
             }
@@ -80,7 +80,7 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
         return $http({
             method: "PUT",
             url: url,
-            data: angular.toJson(config),
+            data: config,
             headers: {
                 "Content-Type": "application/json"
             }
