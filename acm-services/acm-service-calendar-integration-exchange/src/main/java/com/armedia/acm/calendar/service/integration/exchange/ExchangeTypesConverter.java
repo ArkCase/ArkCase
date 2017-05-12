@@ -187,8 +187,16 @@ public class ExchangeTypesConverter
                 }
                 break;
             }
-            recurrence.setNumberOfOccurrences(rc.getEndAfterOccurrances());
-            recurrence.setEndDate(Date.from(rc.getEndBy().toInstant()));
+            Integer endAfterOccurrances = rc.getEndAfterOccurrances();
+            if (endAfterOccurrances != null)
+            {
+                recurrence.setNumberOfOccurrences(endAfterOccurrances);
+            }
+            ZonedDateTime endBy = rc.getEndBy();
+            if (endBy != null)
+            {
+                recurrence.setEndDate(Date.from(endBy.toInstant()));
+            }
             appointment.setRecurrence(recurrence);
         }
     }
