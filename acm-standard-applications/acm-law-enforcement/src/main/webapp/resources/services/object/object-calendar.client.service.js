@@ -44,6 +44,7 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          * @description
          * Add new event to the calendar.
          *
+         * @param {String} calendarId - the id of the calendar
          * @param {Object} eventData  the data of the calendar event
          * @param {Array} files the files that should be attached on the event
          *
@@ -93,10 +94,11 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          *
          * @param {Object} eventData  the data of the calendar event
          * @param {Array} files the files that should be attached on the event
+         * @param {Boolean} updateMaster - update whole series of recurrent events, or only one
          *
          * @returns {Object} Promise
          */
-        Service.updateEvent = function(eventData, files) {
+        Service.updateEvent = function(eventData, files, updateMaster) {
             var formData = new FormData();
 
             // First part: application/json
@@ -123,7 +125,7 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
             // populate the headers properly including the boundary parameter.
             return $http({
                 method: 'PUT',
-                url: 'api/latest/service/calendar',
+                url: 'api/latest/service/calendar?updateMaster=' + encodeURIComponent(updateMaster),
                 data: formData,
                 headers: {'Content-Type': undefined}
             });
@@ -140,6 +142,7 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          * @param {String} objectType
          * @param {String} objectId
          * @param {String} eventId
+         * @param {Boolean} deleteRecurring - delete whole series of recurrent events, or only one
          *
          * @returns {Object} Promise
          */
@@ -212,13 +215,22 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
          * @param {String} objectType
          * @param {String} objectId
          * @param {String} eventId
+         * @param {Strin} retrieveMaster - get data for specific event, or for whole series
          *
          * @returns {Object} Promise
          */
-        Service.getCalendarEventDetails = function(objectType, objectId, eventId) {
+        Service.getCalendarEventDetails = function(objectType, objectId, eventId, retrieveMaster) {
+
+            var params = {
+                eventId: eventId,
+                retrieveMaster: retrieveMaster
+            };
+
+            var urlArgs = $httpParamSerializer(params);
+
             return $http({
                 method: 'GET',
-                url: 'api/latest/service/calendar/calendarevents/event/' + objectType +'/' + objectId + '?eventId=' + encodeURIComponent(eventId)
+                url: 'api/latest/service/calendar/calendarevents/event/' + objectType +'/' + objectId + '?' + urlArgs
             });
         };
 

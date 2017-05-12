@@ -231,6 +231,12 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
         };
 
         var applyExistingYearlyRecurrencePattern = function(recurrenceDetails) {
+            // for some reason, the interval for yearlyRecurrencePattern could not be set
+            // by current Michorosf Exchange implementation in ArkCase
+            if(!recurrenceDetails.interval) {
+                recurrenceDetails.interval = 1;
+            }
+
             $scope.recurrenceType = 'YEARLY';
             $scope.yearlyRecurrence = {
                 interval: recurrenceDetails.interval
@@ -468,6 +474,8 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     recurrenceDetailsDataModel.weekOfMonth = $scope.relativeYearlyRecurrence.dayOuccurrenceInMonth;
                     break;
             }
+
+            recurrenceDetailsDataModel.startAt = DateService.dateToIso($scope.recurrenceTmpModel.start);
 
             switch (recurrenceRangeType) {
                 case 'NO_END_DATE':

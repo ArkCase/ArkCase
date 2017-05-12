@@ -197,7 +197,11 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
 
             $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
             $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
-
+            if($scope.eventDataModel.recurrenceDetails) {
+                // $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                $scope.eventDataModel.recurrenceDetails.startAt = moment($scope.eventDataModel.recurrenceDetails.startAt).toDate();
+                $scope.eventDataModel.recurrenceDetails.endBy = moment($scope.eventDataModel.recurrenceDetails.endBy).toDate();
+            }
             if($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
                 $scope.recurrentEvent = $scope.updateMaster;
                 $scope.recurrenceDescription = CalendarUtilService.buildEventRecurrenceString($scope.eventDataModel, $scope.eventDataModel.start, $scope.eventDataModel.recurrenceDetails.endBy);
@@ -240,6 +244,9 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
         var processEventDataModel = function() {
             $scope.eventDataModel.start = DateService.dateToIso($scope.eventDataModel.start);
             $scope.eventDataModel.end = DateService.dateToIso($scope.eventDataModel.end);
+            if($scope.eventDataModel.recurrenceDetails.startAt && $scope.eventDataModel.recurrenceDetails.startAt instanceof Date) {
+                $scope.eventDataModel.recurrenceDetails.startAt = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.startAt);
+            }
             if($scope.eventDataModel.recurrenceDetails.endBy) {
                 $scope.eventDataModel.recurrenceDetails.endBy = DateService.dateToIso($scope.eventDataModel.recurrenceDetails.endBy);
             }
@@ -249,6 +256,7 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.eventDataModel.calendarId = $scope.calendarId;
 
         };
+
         /*Perform adding of the event to the calendar*/
         $scope.addEvent = function() {
             processEventDataModel();
@@ -258,11 +266,17 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             }, function(err) {
                 $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
                 $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
-                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                if($scope.eventDataModel.recurrenceDetails.startAt) {
+                    $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                }
+                if($scope.eventDataModel.recurrenceDetails.endBy) {
+                    $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                }
                 MessageService.errorAction();
             });
         };
 
+        /*Perform editin of the event*/
         $scope.editEvent = function() {
             processEventDataModel();
             CalendarService.updateEvent($scope.eventDataModel, $scope.attachmentModel.files, $scope.updateMaster).then(function(res) {
@@ -271,7 +285,13 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             }, function(err) {
                 $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
                 $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
-                $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                if($scope.eventDataModel.recurrenceDetails.startAt) {
+                    $scope.eventDataModel.recurrenceDetails.startAt = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.startAt);
+                }
+                if($scope.eventDataModel.recurrenceDetails.endBy) {
+                    $scope.eventDataModel.recurrenceDetails.endBy = DateService.isoToDate($scope.eventDataModel.recurrenceDetails.endBy);
+                }
+                
                 MessageService.errorAction();
             });
         };

@@ -908,8 +908,14 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             var durationString = '';
             var patternString = '';
 
+            // for some reason, the interval for yearlyRecurrencePattern could not be set
+            // by current Michorosf Exchange implementation in ArkCase
+            if(!recurrenceDetails.interval) {
+                recurrenceDetails.interval = 1;
+            }
+
             /*build start date string*/
-            var startDateFormatedString = $filter('date')(eventDetails.start, 'MM/dd/yyyy');
+            var startDateFormatedString = $filter('date')(moment(eventDetails.recurrenceDetails.startAt).toDate(), 'MM/dd/yyyy');
             startDateString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.effective') + ' ' + startDateFormatedString;
 
             /*build end date string*/

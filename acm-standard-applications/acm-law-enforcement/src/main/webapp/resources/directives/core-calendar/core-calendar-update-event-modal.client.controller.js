@@ -11,16 +11,28 @@ angular.module('directives').controller('Directives.CoreCalendarUpdateEventContr
 		};
 
 		$scope.updateEvent = function() {
-			var scope = $rootScope.$new();
-			scope.existingEvent = $scope.eventDataModel;
+			$scope.modalScope = $rootScope.$new();
 
+			if($scope.updateModel.updateMaster) {
+				CalendarService.getCalendarEventDetails($scope.objectType, $scope.objectId, $scope.eventDataModel.eventId, true).then(function(res) {
+					$scope.modalScope.existingEvent = res.data;
+					openEditModal();
+				});
+
+			} else {
+				$scope.modalScope.existingEvent = $scope.eventDataModel;
+				openEditModal();
+			}
+		};
+
+		var openEditModal = function() {
 			var modalInstance = $modal.open({
 				animation: true,
 				templateUrl: 'directives/core-calendar/core-calendar-new-event-modal.client.view.html',
 				controller: 'Directives.CoreCalendarNewEventModalController',
 				size: 'lg',
 				backdrop: 'static',
-				scope: scope,
+				scope: $scope.modalScope,
 				resolve: {
 					coreCalendarConfig: function() {
 						return $scope.coreCalendarConfig;
