@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "en-in_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "en-in_Process Diagram",
     "eSignature.button": "en-in_Sign",
     "subscribe.button": "en-in_Subscribe",
     "unsubscribe.button": "en-in_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "en-in_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "en-in_Error",
-      "btnOk.text": "en-in_OK"
+      "btnOk.text": "en-in_OK",
+      "btnClose.text": "en-in_Close"
     }
   },
   "tasks.comp.details": {

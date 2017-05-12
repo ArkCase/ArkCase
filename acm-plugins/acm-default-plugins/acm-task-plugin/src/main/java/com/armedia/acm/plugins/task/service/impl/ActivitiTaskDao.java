@@ -43,10 +43,13 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.history.HistoricVariableInstance;
+import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
@@ -54,6 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1236,6 +1240,37 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                                            Map<String, Object> localVariables, String taskEventName)
     {
         return createAcmTask(activitiTask, processVariables, localVariables, taskEventName);
+    }
+
+    @Override
+    public byte[] getDiagram(Long id) throws AcmTaskException
+    {
+        byte[] diagram = null;
+        if (id != null)
+        {
+            try
+            {
+                Task task = getActivitiTaskService().createTaskQuery().taskId(id.toString()).singleResult();
+                BpmnModel model = getActivitiRepositoryService().getBpmnModel(task.getProcessDefinitionId());
+                List<String> activeActivityIds = getActivitiRuntimeService().getActiveActivityIds(task.getExecutionId());
+                InputStream inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);
+                byte[] bytes = IOUtils.toByteArray(inputStream);
+                diagram = Base64.encodeBase64(bytes);
+
+            }
+            catch (Exception e)
+            {
+                log.warn("Cannot take diagram for task id=[{}]", id);
+            }
+        }
+
+        if (diagram == null)
+        {
+            log.debug("Diagram for task id = [{}] cannot be retrieved", id);
+            throw new AcmTaskException("Diagram for task id = [" + id + "] cannot be retrieved");
+        }
+
+        return diagram;
     }
 
     private List<String> findCandidateGroups(String taskId)

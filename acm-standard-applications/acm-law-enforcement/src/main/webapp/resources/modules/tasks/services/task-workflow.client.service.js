@@ -114,6 +114,25 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
                 cache: false
             }
 
+            /**
+             * @ngdoc method
+             * @name _diagram
+             * @methodOf tasks.service:Task.WorkflowService
+             *
+             * @description
+             * Make REST call for diagram() function to get diagram for a task.
+             * @param {String} taskId  Task ID
+             * @param {Function} onSuccess (Optional)Callback function of success taking the diagram.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {String} Base64 of diagram
+             */
+            , _diagram: {
+                method: 'GET',
+                url: 'api/latest/plugin/task/diagram/:taskId',
+                cache: false
+            }
+
 
         });
 
@@ -259,6 +278,29 @@ angular.module('tasks').factory('Task.WorkflowService', ['$resource', '$translat
                     if (TaskInfoService.validateTaskInfo(data)) {
                         return data;
                     }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name diagram
+         * @methodOf tasks.service:Task.WorkflowService
+         *
+         * @description
+         * Get diagram for the task
+         *
+         * @param {Number} taskId  Task ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.diagram = function (taskId) {
+            return Util.serviceCall({
+                service: Service._diagram
+                , param: {taskId: taskId}
+                , data: {}
+                , onSuccess: function (data) {
+                    return data;
                 }
             });
         };
