@@ -105,7 +105,10 @@
       "country.label": "Country",
       "country.placeholder": "Enter Country",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Save Address"
+      "btnOk.text": "Save Address",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No"
     }
   },
   "people.comp.phones": {
