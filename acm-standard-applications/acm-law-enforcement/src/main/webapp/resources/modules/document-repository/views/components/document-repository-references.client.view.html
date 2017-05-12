@@ -1,0 +1,20 @@
+<div ng-controller="DocumentRepository.ReferencesController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>document-repository.comp.references.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-click="addReference()"><i class="fa fa-lg fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid"></div>
+        </div>
+    </div>
+</div>

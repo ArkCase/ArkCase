@@ -14,9 +14,9 @@ angular.module('dashboard.participants', ['adf.provider'])
             );
     })
     .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService'
         , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, HelperUiGridService) {
+            , HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService) {
 
             var modules = [
                 {
@@ -30,6 +30,12 @@ angular.module('dashboard.participants', ['adf.provider'])
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
+                }
+                , {
+                    name: "DOC_REPO",
+                    configName: "document-repository",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                 }
             ];
 

@@ -6,7 +6,9 @@ import static com.armedia.acm.plugins.category.model.Category.FIND_ROOT_CATEGORI
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,6 +40,7 @@ import java.util.List;
 @Table(name = "acm_category")
 @NamedQueries({ @NamedQuery(name = FIND_ROOT_CATEGORIES, query = "SELECT c FROM Category c WHERE c.parent IS NULL"),
         @NamedQuery(name = FIND_CHILDREN, query = "SELECT c FROM Category c WHERE c.parent = :parentId") })
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Category implements Serializable, AcmObject, AcmEntity
 {
 

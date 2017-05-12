@@ -305,6 +305,7 @@
     "noBuckslipMessage": "en-in_No Data",
     "table.columns": {
       "approvalDate": "en-in_Approval Date",
+      "approverFullName": "en-in_Approver",
       "approverId": "en-in_Approver",
       "approverDecision": "en-in_Approver Decision"
     }

@@ -41,7 +41,7 @@ public class GetWidgetsByUserRolesAPIController
     private DashboardService dashboardService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public List<Widget> getWidgetsByUserAndRoles(Authentication authentication, HttpSession session)
             throws AcmWidgetException, AcmObjectNotFoundException

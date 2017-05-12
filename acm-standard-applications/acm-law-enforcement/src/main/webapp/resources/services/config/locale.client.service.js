@@ -15,7 +15,7 @@ angular.module('services').factory('Config.LocaleService', ['$resource', 'Acm.St
         var Service = $resource('api/latest/plugin', {}, {
         });
 
-        Service.DEFAULT_LOCALE = "en";
+        Service.DEFAULT_SETTINGS = {"locales":[{"locale": "en", "desc": "English"}], "defaultLocale":"en"};
 
         /**
          * @ngdoc method
@@ -53,7 +53,6 @@ angular.module('services').factory('Config.LocaleService', ['$resource', 'Acm.St
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateSettings = function (data) {
-            //if (!Util.isArray(data)) {
             if (!data) {
                 return false;
             }

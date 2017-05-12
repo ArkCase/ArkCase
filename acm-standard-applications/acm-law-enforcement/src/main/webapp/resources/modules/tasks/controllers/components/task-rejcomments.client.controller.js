@@ -38,7 +38,7 @@ angular.module('tasks').controller('Tasks.RejectCommentsController', ['$scope', 
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            PermissionsService.getActionPermission('editRejComment', objectInfo).then(function (result) {
+            PermissionsService.getActionPermission('editRejComment', objectInfo, {objectType: ObjectService.ObjectTypes.TASK}).then(function (result) {
                 $scope.notesInit.isReadOnly = !result;
             });
         };

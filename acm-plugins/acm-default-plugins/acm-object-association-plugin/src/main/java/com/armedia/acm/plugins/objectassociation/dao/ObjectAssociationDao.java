@@ -17,7 +17,7 @@ import java.util.List;
 public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
+
     @Override
     protected Class<ObjectAssociation> getPersistenceClass()
     {
@@ -43,7 +43,7 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
 
     }
-    
+
     public ObjectAssociation findChildOfType(String parentType, Long parentId, String targetSubtype)
     {
         Query selectQuery = getEm().createQuery(
@@ -63,7 +63,7 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
         selectQuery.setParameter("targetSubtype", targetSubtype);
 
         ObjectAssociation retval = null;
-        
+
         try
         {
         	retval = (ObjectAssociation) selectQuery.getSingleResult();
@@ -76,5 +76,12 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
         return retval;
 
 
+    }
+
+    @Transactional
+    public void delete(Long id)
+    {
+        ObjectAssociation objectAssociation = getEm().find(getPersistenceClass(), id);
+        getEm().remove(objectAssociation);
     }
 }

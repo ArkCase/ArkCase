@@ -15,8 +15,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
     , 'Profile.UserInfoService'
     , function ($q, $modal, $translate, Util, Authentication
         , ObjectService, PermissionsService, LockingService, HelperNoteService, ObjectNoteService
-        , UserInfoService
-    ) {
+        , UserInfoService) {
         var userId = "";
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -111,6 +110,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             $q.when(DocTree.uploadSetting.deferSelectFile.promise).then(function (files) {
                                 args = args || {};
                                 args.files = files;
+                                args.lockType = ObjectService.LockTypes.CHECKIN_LOCK;
                                 var checkinFiles = DocTree.Command.findHandler("checkinFiles/");
                                 DocTree.Command.handleCommand(checkinFiles, nodes, args);
                             });
@@ -121,8 +121,12 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         execute: function (nodes, args) {
                             var node = nodes[0];
                             var fileId = node.data.objectId;
+                            var lockType = ObjectService.LockTypes.CANCEL_LOCK;
+                            if (args && args.lockType) {
+                                lockType = args.lockType;
+                            }
                             LockingService.unlockObject(fileId, ObjectService.ObjectTypes.FILE,
-                                ObjectService.LockTypes.CANCEL_LOCK).then(
+                                lockType).then(
                                 function (unlockedFile) {
                                     node.data.lock = "";
                                     var cacheKey = DocTree.getCacheKeyByNode(node.parent);
@@ -162,6 +166,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 , controller: 'directives.DocTreeCheckinDialogController'
                                 , animation: true
                                 , size: 'lg'
+                                , backdrop: 'static'
                                 , resolve: {
                                     params: function () {
                                         return params;
@@ -177,7 +182,11 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 }
 
                                 var cancelEditing = DocTree.Command.findHandler("cancelEditing");
-                                DocTree.Command.handleCommand(cancelEditing, nodes);
+                                var checkinArgs = {};
+                                if (args && args.lockType) {
+                                    checkinArgs.lockType = args.lockType;
+                                }
+                                DocTree.Command.handleCommand(cancelEditing, nodes, checkinArgs);
                             });
 
                         }
@@ -208,7 +217,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         } else {
                             var df = $q.defer();
                             //check permission for lock
-                            PermissionsService.getActionPermission('lock', fileObject)
+                            PermissionsService.getActionPermission('lock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -268,7 +277,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             var df = $q.defer();
 
                             //check permission for unlock
-                            PermissionsService.getActionPermission('unlock', fileObject)
+                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -314,7 +323,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             //because backend will expect unlock permission we should check for it
                             var df = $q.defer();
 
-                            PermissionsService.getActionPermission('unlock', fileObject)
+                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -333,11 +342,11 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             //and after that for unlock because backend will return access denied without unlock permission
                             var df = $q.defer();
 
-                            PermissionsService.getActionPermission('cancelLock', fileObject)
+                            PermissionsService.getActionPermission('cancelLock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasCancelPermission) {
                                         if (hasCancelPermission) {
                                             //check permission for unlock
-                                            PermissionsService.getActionPermission('unlock', fileObject)
+                                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                                 .then(function success(hasPermission) {
                                                         if (hasPermission)
                                                             df.resolve("");
@@ -377,9 +386,6 @@ angular.module('directives').controller('directives.DocTreeCheckinDialogControll
             $scope.note = params.note;
             $scope.isNoteRequired = params.isNoteRequired;
 
-            $scope.onClickCancel = function () {
-                $modalInstance.dismiss();
-            };
             $scope.onClickOk = function () {
                 $modalInstance.close({note: $scope.note});
             };

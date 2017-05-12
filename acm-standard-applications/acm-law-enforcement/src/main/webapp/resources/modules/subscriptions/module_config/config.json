@@ -8,7 +8,7 @@
       "menuItemTitle": "subscriptions.menus.leftnav.item",
       "moduleId": "subscription",
       "iconClass": "fa fa-bullhorn",
-      "position": 100
+      "position": 130
     }
   ],
   "components": [
@@ -67,7 +67,8 @@
       "isAutoSuggestActive": true,
       "autoSuggestObjectType": "SUBSCRIPTION_EVENT",
       "hiddenFacets": [
-        "Owner"
+        "Owner",
+        "Document Repository Name"
       ]
     }
   ]

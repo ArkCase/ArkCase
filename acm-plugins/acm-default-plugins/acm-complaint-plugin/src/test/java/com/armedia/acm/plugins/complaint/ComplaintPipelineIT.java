@@ -62,7 +62,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-user-login.xml",
                 "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-notification.xml",
-                "/spring/spring-library-service-data.xml"
+                "/spring/spring-library-service-data.xml",
+                "/spring/spring-library-drools-rule-monitor.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")

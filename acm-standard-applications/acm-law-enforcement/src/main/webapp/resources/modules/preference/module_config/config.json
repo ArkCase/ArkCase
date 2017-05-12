@@ -47,6 +47,17 @@
       ]
     },
     {
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
       "name": "TASK",
       "allowedWidgets": [
         "details",
@@ -74,6 +85,20 @@
         "details",
         "person",
         "hoursSummary"
+      ]
+    },
+    {
+      "name": "PERSON",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "name": "ORGANIZATION",
+      "allowedWidgets": [
+        "details",
+        "history"
       ]
     }
   ]

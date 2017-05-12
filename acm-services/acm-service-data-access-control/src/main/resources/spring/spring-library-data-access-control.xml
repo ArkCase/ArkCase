@@ -28,12 +28,14 @@
     </bean>
 
     <bean id="acmAssignmentBusinessRule"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
     </bean>
 
     <bean id="acmDataAccessControlBusinessRule"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule">
+          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
     </bean>
 

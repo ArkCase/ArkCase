@@ -14,24 +14,21 @@
     </bean>
 
     <bean id="saveCaseFileBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.SaveCaseFileBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-case-file-rules.xlsx"/>
     </bean>
 
     <bean id="caseFileStartBusinessProcessBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule">
-        <property name="ruleSpreadsheetFilename"
-                  value="drools-start-business-process-rules.xlsx"/>
+          class="com.armedia.acm.plugins.casefile.service.CaseFileStartBusinessProcessBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
+        <property name="ruleSpreadsheetFilename" value="drools-start-business-process-rules.xlsx"/>
     </bean>
 
     <bean id="splitCaseFileBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule">
+          class="com.armedia.acm.plugins.casefile.service.SplitCaseFileBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-split-case-file-rules.xlsx"/>
-    </bean>
-
-    <bean id="participantsBusinessRule"
-          class="com.armedia.acm.services.participants.service.ParticipantsBusinessRule">
-        <property name="ruleSpreadsheetFilename" value="drools-participant-assignment-rules.xlsx"/>
     </bean>
 
 </beans>

@@ -4,7 +4,10 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Objects;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_folder")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssignedObject
 {
 
@@ -260,5 +264,20 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcmFolder acmFolder = (AcmFolder) o;
+        return Objects.equal(id, acmFolder.id);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(id);
     }
 }

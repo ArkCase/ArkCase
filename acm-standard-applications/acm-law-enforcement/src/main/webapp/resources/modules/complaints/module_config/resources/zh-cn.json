@@ -300,6 +300,7 @@
     "table.columns": {
       "approvalDate": "zh-cn_Approval Date",
       "approverId": "zh-cn_Approver",
+      "approverFullName": "zh-cn_Approver",
       "approverDecision": "zh-cn_Approver Decision"
     }
   },

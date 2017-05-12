@@ -44,6 +44,7 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setChild_type_s("PERSON");
         solrDoc.setParent_id_s(personAssociation.getParentId() + "");
         solrDoc.setParent_type_s(personAssociation.getParentType());
+        solrDoc.setParent_number_lcs(personAssociation.getParentTitle());
 
         solrDoc.setType_lcs(personAssociation.getPersonType());
 

@@ -39,7 +39,7 @@ public class SetAuthorizedWidgetRolesAPIController
     private WidgetEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public RolesGroupByWidgetDto setAuthorizedWidgetRoles(
             @RequestBody RolesGroupByWidgetDto updateAuthorizedWidgetRoles,

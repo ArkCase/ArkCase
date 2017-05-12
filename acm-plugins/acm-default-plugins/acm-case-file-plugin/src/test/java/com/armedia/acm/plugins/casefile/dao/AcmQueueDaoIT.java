@@ -20,7 +20,12 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-acm-encryption.xml"
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/test-case-file-context.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT

@@ -3,12 +3,10 @@ package com.armedia.acm.drools;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
-
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieBase;
 import org.kie.api.io.ResourceType;
-import org.kie.internal.KnowledgeBase;
 import org.kie.internal.builder.DecisionTableConfiguration;
 import org.kie.internal.builder.DecisionTableInputType;
 import org.kie.internal.builder.KnowledgeBuilder;
@@ -36,8 +34,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     private transient Logger log = LoggerFactory.getLogger(getClass());
 
     private KieBase kieBase;
-
-
+    private String ruleFileLocation;
 
     public KieBase getKieBase() {
 		return kieBase;
@@ -49,10 +46,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
 	public T applyRules(T businessObject)
     {
-        if ( log.isTraceEnabled() )
-        {
-            log.trace("Applying rules: " + businessObject);
-        }
+        log.trace("Applying rules: {}", businessObject);
 
         try
         {
@@ -63,16 +57,31 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         }
         catch (NullPointerException e)
         {
-            log.error("Assign Rules NPE: " + e.getMessage(), e);
+            log.error("{} NPE: {}", getClass().getName(), e.getMessage(), e);
         }
 
+        log.trace("Done applying rules: {}", businessObject);
 
-        if ( log.isTraceEnabled() )
-        {
-            log.trace("Done applying rules: " + businessObject);
-        }
 
         return businessObject;
+    }
+
+    public void afterPropertiesSet() throws Exception
+    {
+        String ruleFileName = getRuleFileLocation() + "/" + getRuleSpreadsheetFilename();
+        log.debug("Loading rules from {}", ruleFileName);
+
+        File ruleFile = new File(ruleFileName);
+
+        if ( ruleFile.exists() && ruleFile.isFile())
+        {
+            updateRulesFromFile(ruleFile);
+        }
+        else
+        {
+            log.warn("No such file: {}", ruleFileName);
+        }
+
     }
 
     @Override
@@ -100,14 +109,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         {
             String drl = sc.compile(xls.getInputStream(), InputType.XLS);
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("DRL: " + drl);
-            }
 
-            /*
-            Handling transformer type
-             */
             KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
             DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
             dtconf.setInputType(DecisionTableInputType.XLS);
@@ -115,26 +117,25 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
             if ( kbuilder.hasErrors() )
             {
+                log.error("DRL with errors: {}", drl);
+
                 for (KnowledgeBuilderError error : kbuilder.getErrors() )
                 {
-                    log.error("Error building rules: " + error);
+                    log.error("Error building rules: {}", error);
                 }
 
-                throw new RuntimeException("Could not build rules from " + configFile.getAbsolutePath());
+                throw new RuntimeException(String.format("Could not build rules from %s", configFile.getAbsolutePath()));
             }
 
             KieBase base = kbuilder.newKnowledgeBase();
 
             setKieBase(base);
 
-            if ( log.isDebugEnabled() )
-            {
-                log.debug("Updated business rules from file '" + getRuleSpreadsheetFilename() + "'.");
-            }
+            log.debug("Updated business rules from file '{}'",  getRuleSpreadsheetFilename());
 
         } catch (IOException e)
         {
-            log.error("Could not update rules: " + e.getMessage(), e);
+            log.error("Could not update rules: {}", e.getMessage(), e);
         }
     }
 
@@ -149,5 +150,13 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     }
 
 
+    public void setRuleFileLocation(String ruleFileLocation)
+    {
+        this.ruleFileLocation = ruleFileLocation;
+    }
 
+    public String getRuleFileLocation()
+    {
+        return ruleFileLocation;
+    }
 }
