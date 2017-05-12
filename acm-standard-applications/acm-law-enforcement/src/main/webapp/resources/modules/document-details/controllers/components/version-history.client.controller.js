@@ -17,27 +17,7 @@ angular.module('document-details').controller('Document.VersionHistoryController
         }
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        
-        $scope.gridOptions = {
-                enableRowSelection: true,
-                enableFiltering: false,
-                enableRowHeaderSelection: true,
-                enableFullRowSelection: true,
-                data: [],
-                onRegisterApi: function(gridApi) {
-                    $scope.gridApi = gridApi;
-                    gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                        $scope.selectedRows = gridApi.selection.getSelectedRows();
-                        $scope.updateViewerOpenDocuments();
-                    });
-     
-                    gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
-                        $scope.selectedRows = gridApi.selection.getSelectedRows();
-                        $scope.updateViewerOpenDocuments();
-                    });
-               }
-            };
-        
+                
         $scope.updateViewerOpenDocuments = function () {
             $scope.$emit('update-viewer-opened-versions', $scope.selectedRows);
         };
@@ -45,17 +25,29 @@ angular.module('document-details').controller('Document.VersionHistoryController
         $scope.$watchCollection('versions', function (newValue, oldValue) {
             if (newValue && newValue.length) {
                 var promiseUsers = gridHelper.getUsers();
-                    ConfigService.getComponentConfig("document-details", "versionHistory").then(function (data) {
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, data);
-                        $scope.gridOptions.columnDefs = data.columnDefs;
-                        $scope.gridOptions.paginationPageSizes = data.paginationPageSizes;
-                        $scope.gridOptions.paginationPageSize = data.paginationPageSize;
-                        $scope.retrieveGridData();
-                        return data;
-                    });
-            }
+                ConfigService.getComponentConfig("document-details", "versionHistory").then(function (data) {
+                    gridHelper.setColumnDefs(data);
+                    gridHelper.setBasicOptions(data);
+                    gridHelper.disableGridScrolling(data);
+                    gridHelper.setUserNameFilterToConfig(promiseUsers, data);
+                    
+                    gridHelper.addGridApiHandler(function(gridApi) {
+                        gridApi.selection.on.rowSelectionChanged($scope, function (row) {
+                            $scope.selectedRows = gridApi.selection.getSelectedRows();
+                            $scope.updateViewerOpenDocuments();
+                        });
 
-        })
+                        gridApi.selection.on.rowSelectionChangedBatch($scope, function (rows) {
+                            $scope.selectedRows = gridApi.selection.getSelectedRows();
+                            $scope.updateViewerOpenDocuments();
+                        });
+                    });
+                    
+                    $scope.retrieveGridData();
+                    return data;
+                });
+            }
+        });
 
         $scope.retrieveGridData = function () {
             if ($scope.versions && $scope.versions.length) {
