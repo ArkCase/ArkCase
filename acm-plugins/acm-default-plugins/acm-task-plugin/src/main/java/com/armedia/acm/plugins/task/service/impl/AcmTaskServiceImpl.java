@@ -47,6 +47,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -133,6 +134,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
         }
+    }
+
+    @Override
+    public byte[] getDiagram(Long id) throws AcmTaskException
+    {
+        return taskDao.getDiagram(id);
     }
 
     @Override

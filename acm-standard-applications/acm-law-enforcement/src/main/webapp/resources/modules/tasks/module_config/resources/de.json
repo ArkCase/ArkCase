@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "de_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "de_Process Diagram",
     "eSignature.button": "de_Sign",
     "subscribe.button": "de_Subscribe",
     "unsubscribe.button": "de_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "de_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "de_Error",
-      "btnOk.text": "de_OK"
+      "btnOk.text": "de_OK",
+      "btnClose.text": "de_Close"
     }
   },
   "tasks.comp.details": {

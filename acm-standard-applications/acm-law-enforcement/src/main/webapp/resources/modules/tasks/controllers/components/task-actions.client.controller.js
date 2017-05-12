@@ -26,6 +26,8 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
+            // TODO: showBtnDiagram is set to true. Change this depending what type of task is
+            $scope.showBtnDiagram = true;
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;
@@ -80,6 +82,22 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
         //];
 
+        $scope.diagram = function () {
+            var modalInstance = $modal.open({
+                templateUrl: "modules/tasks/views/components/task-diagram.dialog.html",
+                controller: 'Tasks.DiagramDialogController',
+                resolve:{
+                    taskId: function(){
+                        return $scope.objectInfo.taskId;
+                    }
+                }
+            });
+            modalInstance.result.then(function (result) {
+                if (result) {
+                    // Do nothing
+                }
+            });
+        };
 
         $scope.sign = function () {
             var modalInstance = $modal.open({
@@ -296,6 +314,17 @@ angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope',
             };
             $scope.onClickOk = function () {
                 $modalInstance.close({pass: $scope.password});
+            };
+        }
+    ]
+);
+angular.module('tasks').controller('Tasks.DiagramDialogController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId',
+        function ($scope, $modalInstance, TaskWorkflowService, taskId) {
+            TaskWorkflowService.diagram(taskId).then(function(data){
+                $scope.diagramData = 'data:image/png;base64,' + data;
+            });
+            $scope.onClickClose = function () {
+                $modalInstance.dismiss('Close');
             };
         }
     ]
