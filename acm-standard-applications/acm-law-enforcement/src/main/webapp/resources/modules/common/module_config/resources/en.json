@@ -379,7 +379,7 @@
       "updateEvent.button": "Update",
       "thisOne.radio": "Just this one",
       "entireSeries.radio": "The entire series",
-      "updateWarning.text": "Are you sure you want to update this event?"
+      "updateWarning.text": "This is one event in a series. What do you want to update?"
     },
     "deleteEventDialog": {
       "title": "Delete Event",

@@ -75,7 +75,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 };
 
                 scope.eventClick = function(event, element, view) {
-                    CalendarService.getCalendarEventDetails(scope.objectType, scope.objectId, event.id).then(function(res) {
+                    CalendarService.getCalendarEventDetails(scope.objectType, scope.objectId, event.id, false).then(function(res) {
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'directives/core-calendar/core-calendar-event-details-modal.client.vew.html',
