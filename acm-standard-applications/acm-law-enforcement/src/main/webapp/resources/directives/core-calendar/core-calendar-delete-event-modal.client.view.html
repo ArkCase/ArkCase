@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h3 translate>common.directive.coreCalendar.deleteEventDialog.title</h3>
+</div>
+
+<div class="modal-body">
+    <div class="row well-sm">
+        <div class="col-sm-12 text-center form-group" translate>
+            common.directive.coreCalendar.deleteEventDialog.deleteWarning.text
+        </div>
+        <div class="col-sm-12 text-center form-group" ng-if="eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE'">
+            <label class="radio-inline">
+                <input type="radio" ng-model="deleteEventModel.deleteRecurring" ng-value="false">
+                <span translate>
+                    common.directive.coreCalendar.deleteEventDialog.thisOne.radio
+                </span>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="deleteEventModel.deleteRecurring" ng-value="true">
+                <span translate>
+                    common.directive.coreCalendar.deleteEventDialog.entireSeries.radio
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()" translate>
+        common.directive.coreCalendar.deleteEventDialog.cancel.button
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="deleteEvent()" translate>
+        common.directive.coreCalendar.deleteEventDialog.deleteEvent.button
+    </button>
+</div>
