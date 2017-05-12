@@ -28,12 +28,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
 
             // For adhock tasks we don't have business process who can be shown with graphic,
             // so don't show the button
-            if ($scope.objectInfo.adhocTask == true){
-                $scope.showBtnDiagram = false;
-            }else if($scope.objectInfo.businessProcessId != null){
-                $scope.showBtnDiagram = true;
-            }
-
+            $scope.showBtnDiagram = !$scope.objectInfo.adhocTask && $scope.objectInfo.businessProcessId != null;
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;

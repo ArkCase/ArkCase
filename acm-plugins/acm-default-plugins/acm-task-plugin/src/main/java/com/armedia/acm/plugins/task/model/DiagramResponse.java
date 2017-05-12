@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class DiagramResponse implements Serializable
 {
-    byte[] data;
+    private byte[] data;
 
     public DiagramResponse()
     {
