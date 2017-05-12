@@ -16,6 +16,8 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             return moduleConfig;
         });
 
+        $scope.pictures = [{}];
+
         //new person with predefined values
         $scope.person = {
             className: 'com.armedia.acm.plugins.person.model.Person',
@@ -115,9 +117,24 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }, 0);
         };
 
-        $scope.onClickCancel = function () {
-            $modalInstance.dismiss('Cancel');
+        $scope.addEmptyPerson = function () {
+            $scope.pictures.push({});
+            $timeout(function () {
+                //add empty object
+            }, 0);
         };
+
+        $scope.removePerson = function (toBeRemoved) {
+            $timeout(function () {
+                _.remove($scope.pictures, function (object) {
+                    return object === toBeRemoved;
+                });
+                if ($scope.pictures.length < 1) {
+                    $scope.pictures.push({});
+                }
+            }, 0);
+        };
+
 
         $scope.save = function () {
             $modalInstance.close({

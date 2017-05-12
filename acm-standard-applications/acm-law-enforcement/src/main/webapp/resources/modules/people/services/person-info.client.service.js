@@ -10,8 +10,8 @@
  *
  * Person.InfoService provides functions for Person database data
  */
-angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
-    function ($resource, $translate, Store, Util) {
+angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http',
+    function ($resource, $translate, Store, Util, $http) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -155,6 +155,56 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                         return personInfo;
                     }
                 }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name savePersonInfoWithPictures
+         * @methodOf services:Person.InfoService
+         *
+         * @description
+         * Save person data with pictures
+         *
+         * @param {Object} personInfo  Person data
+         * @param {Array} pictures  Images array
+         *
+         * @returns {Object} Promise
+         */
+        Service.savePersonInfoWithPictures = function (personInfo, images) {
+            if (!Service.validatePersonInfo(personInfo)) {
+                return Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            }
+
+            var formData = new FormData();
+
+            // First part: application/json
+            // The browser will not set the content-type of the json object automatically,
+            // so we need to set it manualy. The only way to do that is to convert the data to Blob.
+            // In that way we can set the desired content-type.
+            var data = new Blob([angular.toJson(personInfo)], {
+                type: 'application/json'
+            });
+            formData.append('person', data);
+
+            // Second part: file type
+            // The browser will automatically set the content-type for the files
+            for (var i = 0; i < images.length; i++) {
+                //add each file to the form data
+                formData.append('pictures', images[i]);
+            }
+
+            // when we are sending data the request
+            // needs to include a 'boundary' parameter which identifies the boundary
+            // name between parts in this multi-part request and setting the Content-type of the Request Header
+            // manually will not set this boundary parameter. Setting the Content-type to
+            // undefined will force the request to automatically
+            // populate the headers properly including the boundary parameter.
+            return $http({
+                method: 'POST',
+                url: 'api/latest/plugin/people',
+                data: formData,
+                headers: {'Content-Type': undefined}
             });
         };
 
