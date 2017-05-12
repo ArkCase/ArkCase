@@ -201,7 +201,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return $http({
                 method: 'POST',
                 url: url,
-                data: angular.toJson(group),
+                data: group,
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -228,7 +228,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return $http({
                 method: 'POST',
                 url: url,
-                data: angular.toJson(members),
+                data: members,
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -260,7 +260,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return $http({
                 method: 'POST',
                 url: url,
-                data: angular.toJson(data),
+                data: data,
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -311,7 +311,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return $http({
                 method: 'POST',
                 url: url,
-                data: angular.toJson(member),
+                data: member,
                 headers: {
                     "Content-Type": "application/json"
                 }

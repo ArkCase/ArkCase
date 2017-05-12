@@ -76,7 +76,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             $scope.defaultLocale = _.find(locales, {locale: newLocale});
             $scope.settings.defaultLocale = newLocale;
             LabelsConfigService.updateSettings(
-                angular.toJson($scope.settings)
+                $scope.settings
             )
         };
 
@@ -137,11 +137,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             LabelsConfigService.updateResource({
                 lang: $scope.selectedLocale.locale,
                 ns: $scope.selectedNamespace.id
-            }, angular.toJson({
+            }, {
                 id: rowEntity.id,
                 value: rowEntity.value,
                 description: desc
-            }));
+            });
         };
 
         //updating value for Value for selected record in grid
@@ -149,11 +149,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             LabelsConfigService.updateResource({
                 lang: $scope.selectedLocale.locale,
                 ns: $scope.selectedNamespace.id
-            }, angular.toJson({
+            }, {
                 id: rowEntity.id,
                 value: value,
                 description: rowEntity.description
-            }));
+            });
         }
     }
 ]);
