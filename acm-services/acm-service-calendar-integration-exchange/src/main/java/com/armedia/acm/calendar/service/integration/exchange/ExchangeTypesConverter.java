@@ -28,6 +28,9 @@ import microsoft.exchange.webservices.data.core.enumeration.property.Sensitivity
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeek;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeekIndex;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.Month;
+import microsoft.exchange.webservices.data.core.exception.misc.ArgumentOutOfRangeException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceValidationException;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.complex.recurrence.DayOfTheWeekCollection;
@@ -59,7 +62,6 @@ public class ExchangeTypesConverter
     static void setAppointmentProperties(Appointment appointment, AcmCalendarEvent calendarEvent, MultipartFile[] attachments,
             boolean updateRecurrence) throws Exception
     {
-        // TODO: set organizer
         appointment.setSubject(calendarEvent.getSubject());
         appointment.setLocation(calendarEvent.getLocation());
         OlsonTimeZoneDefinition startTimeZoneDefinition = new OlsonTimeZoneDefinition(
@@ -72,6 +74,58 @@ public class ExchangeTypesConverter
         appointment.setEndTimeZone(endTimeZoneDefinition);
         appointment.setEnd(Date.from(calendarEvent.getEnd().toInstant()));
         appointment.setIsAllDayEvent(calendarEvent.isAllDayEvent());
+
+        processRecurrence(appointment, calendarEvent, updateRecurrence);
+
+        appointment.setBody(MessageBody.getMessageBodyFromText(calendarEvent.getDetails()));
+        if (calendarEvent.getRemindIn() != -1)
+        {
+            appointment.setIsReminderSet(true);
+            appointment.setReminderMinutesBeforeStart(calendarEvent.getRemindIn());
+            // appointment.setReminderDueBy(Date.from(calendarEvent.getEnd().minusMinutes(calendarEvent.getRemindIn()).toInstant()));
+        } else
+        {
+            appointment.setIsReminderSet(false);
+        }
+        appointment.setSensitivity(convertSensitivity(calendarEvent.getSensitivity()));
+        appointment.setImportance(convertImportance(calendarEvent.getPriority()));
+
+        if (calendarEvent.getAttendees() != null)
+        {
+            for (Attendee attendee : calendarEvent.getAttendees())
+            {
+                switch (attendee.getType())
+                {
+                case REQUIRED:
+                    appointment.getRequiredAttendees().add(attendee.getEmail());
+                case OPTIONAL:
+                    appointment.getOptionalAttendees().add(attendee.getEmail());
+                case RESOURCE:
+                    appointment.getResources().add(attendee.getEmail());
+                }
+            }
+        }
+
+        if (attachments != null)
+        {
+            for (MultipartFile attachment : attachments)
+            {
+                appointment.getAttachments().addFileAttachment(attachment.getOriginalFilename(), attachment.getInputStream());
+            }
+        }
+
+    }
+
+    /**
+     * @param appointment
+     * @param calendarEvent
+     * @param updateRecurrence
+     * @throws ArgumentOutOfRangeException
+     * @throws Exception
+     */
+    private static void processRecurrence(Appointment appointment, AcmCalendarEvent calendarEvent, boolean updateRecurrence)
+            throws ArgumentOutOfRangeException, Exception
+    {
         RecurrenceDetails rc = calendarEvent.getRecurrenceDetails();
         Recurrence recurrence = null;
         if (updateRecurrence && rc != null)
@@ -123,43 +177,6 @@ public class ExchangeTypesConverter
             recurrence.setEndDate(Date.from(rc.getEndBy().toInstant()));
             appointment.setRecurrence(recurrence);
         }
-        appointment.setBody(MessageBody.getMessageBodyFromText(calendarEvent.getDetails()));
-        if (calendarEvent.getRemindIn() != -1)
-        {
-            appointment.setIsReminderSet(true);
-            appointment.setReminderMinutesBeforeStart(calendarEvent.getRemindIn());
-            // appointment.setReminderDueBy(Date.from(calendarEvent.getEnd().minusMinutes(calendarEvent.getRemindIn()).toInstant()));
-        } else
-        {
-            appointment.setIsReminderSet(false);
-        }
-        appointment.setSensitivity(convertSensitivity(calendarEvent.getSensitivity()));
-        appointment.setImportance(convertImportance(calendarEvent.getPriority()));
-
-        if (calendarEvent.getAttendees() != null)
-        {
-            for (Attendee attendee : calendarEvent.getAttendees())
-            {
-                switch (attendee.getType())
-                {
-                case REQUIRED:
-                    appointment.getRequiredAttendees().add(attendee.getEmail());
-                case OPTIONAL:
-                    appointment.getOptionalAttendees().add(attendee.getEmail());
-                case RESOURCE:
-                    appointment.getResources().add(attendee.getEmail());
-                }
-            }
-        }
-
-        if (attachments != null)
-        {
-            for (MultipartFile attachment : attachments)
-            {
-                appointment.getAttachments().addFileAttachment(attachment.getOriginalFilename(), attachment.getInputStream());
-            }
-        }
-
     }
 
     /**
@@ -322,6 +339,57 @@ public class ExchangeTypesConverter
         event.setEnd(ZonedDateTime.ofInstant(appointment.getEnd().toInstant(), ZoneId.of(endTimeZone.getID())));
 
         event.setAllDayEvent(appointment.getIsAllDayEvent());
+
+        processRecurrence(event, appointment, startTimeZone, endTimeZone);
+
+        event.setDetails(MessageBody.getStringFromMessageBody(appointment.getBody()));
+
+        if (appointment.getIsReminderSet())
+        {
+            event.setRemindIn(appointment.getReminderMinutesBeforeStart());
+        }
+
+        event.setSensitivity(convertSensitivity(appointment.getSensitivity()));
+
+        event.setPriority(convertImportance(appointment.getImportance()));
+
+        List<Attendee> attendees = new ArrayList<>();
+        appointment.getRequiredAttendees().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.REQUIRED);
+            attendees.add(attendee);
+        });
+        appointment.getOptionalAttendees().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.OPTIONAL);
+            attendees.add(attendee);
+        });
+        appointment.getResources().forEach(a -> {
+            Attendee attendee = new Attendee();
+            attendee.setEmail(a.getAddress());
+            attendee.setType(AttendeeType.RESOURCE);
+            attendees.add(attendee);
+        });
+        event.setAttendees(attendees);
+
+        List<String> fileNames = new ArrayList<>();
+        appointment.getAttachments().forEach(att -> fileNames.add(att.getName()));
+        event.setFileNames(fileNames);
+    }
+
+    /**
+     * @param event
+     * @param appointment
+     * @param startTimeZone
+     * @param endTimeZone
+     * @throws ServiceLocalException
+     * @throws ServiceValidationException
+     */
+    private static void processRecurrence(AcmCalendarEvent event, Appointment appointment, TimeZone startTimeZone, TimeZone endTimeZone)
+            throws ServiceLocalException, ServiceValidationException
+    {
         Recurrence recurrence = appointment.getRecurrence();
         RecurrenceDetails recurrenceDetails = null;
         if (recurrence != null)
@@ -388,41 +456,6 @@ public class ExchangeTypesConverter
             event.setRecurrenceDetails(recurrenceDetails);
 
         }
-        event.setDetails(MessageBody.getStringFromMessageBody(appointment.getBody()));
-
-        if (appointment.getIsReminderSet())
-        {
-            event.setRemindIn(appointment.getReminderMinutesBeforeStart());
-        }
-
-        event.setSensitivity(convertSensitivity(appointment.getSensitivity()));
-
-        event.setPriority(convertImportance(appointment.getImportance()));
-
-        List<Attendee> attendees = new ArrayList<>();
-        appointment.getRequiredAttendees().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.REQUIRED);
-            attendees.add(attendee);
-        });
-        appointment.getOptionalAttendees().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.OPTIONAL);
-            attendees.add(attendee);
-        });
-        appointment.getResources().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.RESOURCE);
-            attendees.add(attendee);
-        });
-        event.setAttendees(attendees);
-
-        List<String> fileNames = new ArrayList<>();
-        appointment.getAttachments().forEach(att -> fileNames.add(att.getName()));
-        event.setFileNames(fileNames);
     }
 
     /**

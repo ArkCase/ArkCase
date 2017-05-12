@@ -6,6 +6,9 @@ import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -23,6 +26,8 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
  */
 public class ExchangeCalendar implements AcmCalendar
 {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     private ExchangeService service;
 
@@ -66,6 +71,7 @@ public class ExchangeCalendar implements AcmCalendar
             return new AcmCalendarInfo(folder.getId().getUniqueId(), objectType, objectId, folder.getDisplayName(), "");
         } catch (Exception e)
         {
+            log.debug("Error while trying to get calendar info for object with id: {} of {} type.", objectId, objectType, e);
             throw new CalendarServiceException(e);
         }
     }
@@ -128,6 +134,7 @@ public class ExchangeCalendar implements AcmCalendar
             return event;
         } catch (Exception e)
         {
+            log.debug("Error while trying to get event with {} id for object with id: {} of {} type.", eventId, objectId, objectType, e);
             throw new CalendarServiceException(e);
         }
     }

@@ -10,6 +10,8 @@ import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
@@ -51,6 +53,8 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
 
     @PersistenceContext
     private EntityManager em;
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     protected Map<String, PropertyDefinition> sortFields;
 
@@ -112,6 +116,8 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
             }
         } catch (Exception e)
         {
+            log.debug("Error while evaluationg permission of user {} to object with {} id of type {}.", user.getFullName(), objectId,
+                    getEntityType(), e);
             throw new CalendarServiceException(e);
         }
         return false;
@@ -151,7 +157,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     public List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String sort,
             String sortDirection, int start, int maxItems)
     {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("This operation is not supported by Exchnage.");
     }
 
     @Override
@@ -191,6 +197,8 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
             return events;
         } catch (Exception e)
         {
+            log.debug("Error while trying to retrieve appointment items info for ibject with {} it, of {} type..", objectId,
+                    getEntityType(), e);
             throw new CalendarServiceException(e);
         }
     }
@@ -217,6 +225,8 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
             return events;
         } catch (Exception e)
         {
+            log.debug("Error while trying to retrieve appointment items details for ibject with {} it, of {} type..", objectId,
+                    getEntityType(), e);
             throw new CalendarServiceException(e);
         }
     }
