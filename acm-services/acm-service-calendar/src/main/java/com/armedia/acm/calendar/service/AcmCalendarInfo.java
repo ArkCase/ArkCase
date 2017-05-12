@@ -1,9 +1,13 @@
 package com.armedia.acm.calendar.service;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 29, 2017
  *
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmCalendarInfo
 {
 
