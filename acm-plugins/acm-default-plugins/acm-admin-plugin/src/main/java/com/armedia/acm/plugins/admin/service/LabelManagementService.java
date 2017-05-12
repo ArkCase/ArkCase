@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sergey on 2/12/16.
@@ -19,8 +20,6 @@ import java.util.List;
 public class LabelManagementService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
-    private List<String> languages;
-    private String baseLanguage;
     private String customResourcesLocation;
     private String customResourceFile;
     private String modulesLocation;
@@ -29,6 +28,8 @@ public class LabelManagementService
     private String resourcesLocation;
     private String resourceFile;
     private String settingsFileLocation;
+    private String defaultLocale;
+    private Map<String, Object> defaultLocales;
 
     private final String MODULE_CORE_ID = "core";
 
@@ -48,32 +49,6 @@ public class LabelManagementService
         return modulesNames;
     }
 
-    /**
-     * Return languages list.
-     *
-     * @return
-     */
-    public List<String> getLanguages() throws AcmLabelManagementException
-    {
-        List<String> langs = new ArrayList();
-        JSONObject setitngs = getSettings(true);
-        JSONArray jsonLangs = setitngs.getJSONArray("languages");
-        if (jsonLangs != null)
-        {
-            for (int i = 0; i < jsonLangs.length(); i++)
-            {
-                langs.add(jsonLangs.getString(i));
-            }
-        }
-
-        // If JSON setting file doesn't contain information about available languages, then usxe XML data
-        if (langs.isEmpty())
-        {
-            langs = languages;
-        }
-
-        return langs;
-    }
 
     /**
      * Return list of modules configuration
@@ -138,9 +113,9 @@ public class LabelManagementService
     {
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
-        if (!baseLanguage.equals(lang))
+        if (!defaultLocale.equals(lang))
         {
-            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
+            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, defaultLocale));
             moduleResource = mergeResources(baseResource, moduleResource);
         }
 
@@ -193,11 +168,10 @@ public class LabelManagementService
     public JSONObject getDefaultSettings()
     {
         JSONObject defaultSettings = new JSONObject();
-
-        // Get information about languages
-        // Set first language in the list as default language
-        defaultSettings.put("languages", languages);
-        defaultSettings.put("defaultLang", languages.get(0));
+        Map<String, Object> locales = getDefaultLocales();
+        String locale = getDefaultLocale();
+        defaultSettings.put("locales", locales);
+        defaultSettings.put("defaultLocale", locale);
         return defaultSettings;
     }
 
@@ -273,9 +247,9 @@ public class LabelManagementService
         // 1. Load module's resource file
         JSONObject moduleResource = normalizeResource(loadModuleResource(moduleId, lang));
 
-        if (!baseLanguage.equals(lang))
+        if (!defaultLocale.equals(lang))
         {
-            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, baseLanguage));
+            JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, defaultLocale));
             moduleResource = mergeResources(baseResource, moduleResource);
         }
 
@@ -682,16 +656,6 @@ public class LabelManagementService
     }
 
 
-    public void setLanguages(List<String> languages)
-    {
-        this.languages = languages;
-    }
-
-    public void setBaseLanguage(String baseLanguage)
-    {
-        this.baseLanguage = baseLanguage;
-    }
-
     public void setCustomResourcesLocation(String customResourcesLocation)
     {
         this.customResourcesLocation = customResourcesLocation;
@@ -730,5 +694,21 @@ public class LabelManagementService
     public void setSettingsFileLocation(String settingsFileLocation)
     {
         this.settingsFileLocation = settingsFileLocation;
+    }
+
+    public String getDefaultLocale() {
+        return defaultLocale;
+    }
+
+    public void setDefaultLocale(String defaultLocale) {
+        this.defaultLocale = defaultLocale;
+    }
+
+    public Map<String, Object> getDefaultLocales() {
+        return defaultLocales;
+    }
+
+    public void setDefaultLocales(Map<String, Object> defaultLocales) {
+        this.defaultLocales = defaultLocales;
     }
 }

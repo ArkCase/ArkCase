@@ -14,9 +14,10 @@ angular.module('dashboard.references', ['adf.provider'])
             );
     })
     .controller('Dashboard.ReferencesController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService', 'Helper.UiGridService'
+        , 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService'
+        , 'Helper.UiGridService', 'DocumentRepository.InfoService'
         , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, TaskInfoService
-            , HelperObjectBrowserService, ObjectService, HelperUiGridService) {
+            , HelperObjectBrowserService, ObjectService, HelperUiGridService, DocumentRepositoryInfoService) {
 
             var modules = [
                 {
@@ -45,6 +46,13 @@ angular.module('dashboard.references', ['adf.provider'])
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
                     validateInfo: TaskInfoService.validateTaskInfo
+                }
+                ,
+                {
+                    name: "DOC_REPO",
+                    configName: "document-repository",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                 }
             ];
 

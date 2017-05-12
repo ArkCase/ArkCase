@@ -214,6 +214,18 @@
     {
       "name": "TASK",
       "configName": "tasks"
+    },
+    {
+      "name": "DOC_REPO",
+      "configName": "document-repository"
+    },
+    {
+      "name": "PERSON",
+      "configName": "people"
+    },
+    {
+      "name": "ORGANIZATION",
+      "configName": "organizations"
     }
   ],
   "objectWidgets": [
@@ -235,6 +247,20 @@
     "signature",
     "tasks",
     "time",
-    "workflow"
+    "workflow",
+    "approvalrouting",
+    "pictures",
+    "addresses",
+    "phones",
+    "faxes",
+    "emails",
+    "aliases",
+    "organizations",
+    "urls",
+    "dbas",
+    "ids",
+    "cases",
+    "complaints",
+    "related"
   ]
 }

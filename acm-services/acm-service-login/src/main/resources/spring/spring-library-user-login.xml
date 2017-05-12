@@ -93,6 +93,9 @@
                 <value>/stomp</value>
                 <value>/api</value>
                 <value>/views/loggedout.jsp</value>
+                <value>/VirtualViewerJavaHTML5</value>
+                <value>/pentaho</value>
+                <value>/frevvo</value>
             </list>
         </property>
     </bean>

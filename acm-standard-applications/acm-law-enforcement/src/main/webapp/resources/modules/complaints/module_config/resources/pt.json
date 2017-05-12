@@ -300,6 +300,7 @@
     "table.columns": {
       "approvalDate": "pt_Approval Date",
       "approverId": "pt_Approver",
+      "approverFullName": "pt_Approver",
       "approverDecision": "pt_Approver Decision"
     }
   },

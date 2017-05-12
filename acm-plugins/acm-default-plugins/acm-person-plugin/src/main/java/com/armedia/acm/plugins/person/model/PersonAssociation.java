@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -41,7 +43,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.PersonAssociation")
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = PersonAssociation.class)
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID", scope = PersonAssociation.class)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PersonAssociation implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
@@ -53,7 +55,7 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_person_assoc_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_person_assoc_person_id", nullable = false)
     private Person person;
 
@@ -65,6 +67,9 @@ public class PersonAssociation implements Serializable, AcmEntity
 
     @Column(name = "cm_person_assoc_parent_type")
     private String parentType;
+
+    @Column(name = "cm_person_assoc_parent_title")
+    private String parentTitle;
 
     @Column(name = "cm_person_assoc_person_desc")
     private String personDescription;
@@ -240,6 +245,10 @@ public class PersonAssociation implements Serializable, AcmEntity
     {
         this.className = className;
     }
+
+    public String getParentTitle() { return parentTitle; }
+
+    public void setParentTitle(String parentTitle) { this.parentTitle = parentTitle; }
 
     @Override
     public boolean equals(Object obj)

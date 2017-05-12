@@ -100,7 +100,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 var isSelected = searchObject.isSelected;
                 scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
-                    scope.labelSelected = $label;
                     isSelected = true;
                 };
 
@@ -129,8 +128,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
 
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
-                            scope.searchQuery = scope.labelSelected;
-                            searchObject.searchQuery = scope.labelSelected;
                             var query = SearchQueryBuilder.buildFacetedSearchQuerySorted("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start, scope.sort);
                             isSelected = false;
                         } else {
@@ -259,7 +256,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var hidden = false;
                             if (typeof scope.config.hiddenFacets !== 'undefined' &&
                                 Util.isArray(scope.config.hiddenFacets)) {
-                                hidden = scope.config.hiddenFacets.includes(key);
+                                hidden = _.includes(scope.config.hiddenFacets, key);
                             }
                             if (!hidden && value) {
                                 scope.facets.push({"name": key, "fields": value});

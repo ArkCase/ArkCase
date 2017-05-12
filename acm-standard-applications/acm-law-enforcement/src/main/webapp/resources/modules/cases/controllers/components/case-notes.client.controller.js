@@ -27,19 +27,17 @@ angular.module('cases').controller('Cases.NotesController', ['$scope', '$statePa
 
         };
 
+        $scope.notesInit = {
+            noteTitle: "Notes",
+            objectType: ObjectService.ObjectTypes.CASE_FILE,
+            currentObjectId: $stateParams.id,
+            parentTitle: "",
+            noteType: "GENERAL"
+        };
+
         var onObjectInfoRetrieved = function(objectInfo) {
-
             $scope.objectInfo = objectInfo;
-            $scope.parentObjectTitle = $scope.objectInfo.caseNumber;
-
-            $scope.notesInit = {
-                noteTitle: "Notes",
-                objectType: ObjectService.ObjectTypes.CASE_FILE,
-                currentObjectId: $stateParams.id,
-                parentTitle: $scope.parentObjectTitle,
-                noteType: "GENERAL"
-            };
-
+            $scope.notesInit.parentTitle = $scope.objectInfo.caseNumber;
         };
 
     }

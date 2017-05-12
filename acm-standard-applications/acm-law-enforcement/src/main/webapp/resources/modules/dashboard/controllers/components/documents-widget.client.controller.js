@@ -15,9 +15,9 @@ angular.module('dashboard.documents', ['adf.provider'])
     })
     .controller('Dashboard.DocumentsController', ['$scope', 'config', '$stateParams', '$translate', 'Dashboard.DashboardService'
         , 'Helper.ObjectBrowserService', 'EcmService', 'Case.InfoService', 'ObjectService', 'Complaint.InfoService'
-        , 'Task.InfoService', 'UtilService',
+        , 'Task.InfoService', 'UtilService', 'DocumentRepository.InfoService',
         function ($scope, config, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Ecm, CaseInfoService
-            , ObjectService, ComplaintInfoService, TaskInfoService, Util) {
+            , ObjectService, ComplaintInfoService, TaskInfoService, Util, DocumentRepositoryInfoService) {
 
             var vm = this;
 
@@ -45,6 +45,12 @@ angular.module('dashboard.documents', ['adf.provider'])
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
                     objectType: ObjectService.ObjectTypes.ADHOC_TASK
+                }
+                , {
+                    name: "DOC_REPO",
+                    configName: "document-repository",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    objectType: ObjectService.ObjectTypes.DOC_REPO
                 }
             ];
 

@@ -120,7 +120,8 @@
         <property name="taskDao" ref="acmTaskDao"/>
     </bean>
 
-    <bean id="taskBusinessRule" class="com.armedia.acm.plugins.task.service.impl.TaskBusinessRule">
+    <bean id="taskBusinessRule" class="com.armedia.acm.plugins.task.service.impl.TaskBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-task-rules.xlsx"/>
     </bean>
 

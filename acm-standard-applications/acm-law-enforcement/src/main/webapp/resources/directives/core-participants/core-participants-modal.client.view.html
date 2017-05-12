@@ -11,16 +11,18 @@
 <div class="modal-body">
     <form name="participantsForm">
         <div>
-            <label for="participantType_{{::$id}}"><span translate>common.directive.coreParticipants.modal.participantType.label</span><span
+            <label for="participantType"><span
+                    translate>common.directive.coreParticipants.modal.participantType.label</span><span
                     class="required-asterisk">*</span></label>
-            <select id="participantType_{{::$id}}" class="form-control"
+            <select id="participantType" class="form-control"
                     ng-model="participant.participantType" required
                     ng-options="item.type as item.name for item in participant.participantTypes"></select>
         </div>
         <div>
-            <label for="participantName_{{::$id}}"><span translate>common.directive.coreParticipants.modal.participantName.label</span>
+            <label for="participantName"><span
+                    translate>common.directive.coreParticipants.modal.participantName.label</span>
                 <span class="required-asterisk">*</span></label>
-            <input id="participantName_{{::$id}}" class="form-control" type="text"
+            <input id="participantName" class="form-control" type="text"
                    ng-model="participant.participantLdapId"
                    ng-click="pickParticipant()" required>
 

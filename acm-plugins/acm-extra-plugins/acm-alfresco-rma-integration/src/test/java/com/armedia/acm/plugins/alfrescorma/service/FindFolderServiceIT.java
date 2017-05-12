@@ -33,7 +33,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-activiti-configuration.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-drools-rule-monitor.xml"
 })
 public class FindFolderServiceIT
 {

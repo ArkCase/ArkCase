@@ -15,6 +15,7 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
@@ -34,6 +35,7 @@ public abstract class NotificationSender
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     protected PropertyFileManager propertyFileManager;
     protected String notificationPropertyFileLocation;
+    protected String emailSenderPropertyFileLocation;
     protected MuleContextManager muleContextManager;
     protected AuthenticationTokenService authenticationTokenService;
     protected AuthenticationTokenDao authenticationTokenDao;
@@ -53,6 +55,8 @@ public abstract class NotificationSender
 
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception;
+
+    public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, String userId) throws Exception;
 
     public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
 
@@ -97,6 +101,23 @@ public abstract class NotificationSender
     public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
     {
         this.notificationPropertyFileLocation = notificationPropertyFileLocation;
+    }
+
+    /**
+     * @return the emailSenderPropertyFileLocation
+     */
+    public String getEmailSenderPropertyFileLocation()
+    {
+        return emailSenderPropertyFileLocation;
+    }
+
+    /**
+     * @param emailSenderPropertyFileLocation
+     *            the emailSenderPropertyFileLocation to set
+     */
+    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
+    {
+        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     public MuleContextManager getMuleContextManager()

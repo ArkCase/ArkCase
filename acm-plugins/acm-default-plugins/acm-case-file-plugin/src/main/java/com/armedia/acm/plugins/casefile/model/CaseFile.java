@@ -6,25 +6,30 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
+import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
+import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -35,6 +40,7 @@ import java.util.*;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.casefile.model.CaseFile")
 @JsonPropertyOrder(value = {"id", "personAssociations", "originator"})
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity
 {
@@ -127,6 +133,11 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
+
     /**
      * Milestones are read-only in the parent object; use the milestone service to add them.
      */
@@ -167,6 +178,20 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_queue_id")
     private AcmQueue queue;
+
+    @Column(name = "cm_queue_enter_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate queueEnterDate;
+
+    @Column(name = "cm_response_due_date")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate responseDueDate;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cm_previous_queue_id")
+    private AcmQueue previousQueue;
 
     @Column(name = "cm_security_field")
     private String securityField;
@@ -222,14 +247,14 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         personAssoc.setParentId(getId());
         personAssoc.setParentType(getObjectType());
 
-        if (personAssoc.getPerson().getPersonAssociations() == null)
+        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
+            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
         }
 
-        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
         {
-            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
         }
 
 
@@ -679,5 +704,45 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
             groupName = owningGroup.getParticipantLdapId();
         }
         return groupName;
+    }
+
+    public LocalDate getQueueEnterDate()
+    {
+        return queueEnterDate;
+    }
+
+    public void setQueueEnterDate(LocalDate queueEnterDate)
+    {
+        this.queueEnterDate = queueEnterDate;
+    }
+
+    public LocalDate getResponseDueDate()
+    {
+        return responseDueDate;
+    }
+
+    public void setResponseDueDate(LocalDate responseDueDate)
+    {
+        this.responseDueDate = responseDueDate;
+    }
+
+    public AcmQueue getPreviousQueue()
+    {
+        return previousQueue;
+    }
+
+    public void setPreviousQueue(AcmQueue previousQueue)
+    {
+        this.previousQueue = previousQueue;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }

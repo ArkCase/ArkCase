@@ -35,7 +35,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-add-file-mule.xml",
-        "/spring/spring-library-audit-service.xml"})
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-drools-rule-monitor.xml"})
 public class AddFileFlowIT
 {
 

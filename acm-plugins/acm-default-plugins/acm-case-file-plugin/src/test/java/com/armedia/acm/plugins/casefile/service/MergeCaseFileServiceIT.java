@@ -79,7 +79,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-task.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-notification.xml",
-        "/spring/spring-library-service-data.xml"})
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-drools-rule-monitor.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {

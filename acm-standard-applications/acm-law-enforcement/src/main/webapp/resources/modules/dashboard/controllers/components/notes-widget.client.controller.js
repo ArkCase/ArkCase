@@ -26,6 +26,7 @@ angular.module('dashboard.notes', ['adf.provider'])
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectNoteService.queryNotes, objectType: ObjectService.ObjectTypes.COMPLAINT}
                 , {name: "TASK", configName: "tasks", getInfo: ObjectNoteService.queryNotes, objectType: ObjectService.ObjectTypes.TASK}
                 , {name: "ADHOC", configName: "tasks", getInfo: ObjectNoteService.queryNotes, objectType: ObjectService.ObjectTypes.TASK}
+                , {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectNoteService.queryNotes, objectType: ObjectService.ObjectTypes.DOC_REPO}
             ];
 
             var module = _.find(modules, function (module) {

@@ -27,19 +27,17 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
 
         };
 
+        $scope.notesInit = {
+            noteTitle: "Notes",
+            objectType: ObjectService.ObjectTypes.COMPLAINT,
+            currentObjectId: $stateParams.id,
+            parentTitle: "",
+            noteType: "GENERAL"
+        };
+
         var onObjectInfoRetrieved = function(objectInfo) {
-
             $scope.objectInfo = objectInfo;
-            $scope.parentObjectTitle = $scope.objectInfo.complaintNumber;
-
-            $scope.notesInit = {
-                noteTitle: "Notes",
-                objectType: ObjectService.ObjectTypes.COMPLAINT,
-                currentObjectId: $stateParams.id,
-                parentTitle: $scope.parentObjectTitle,
-                noteType: "GENERAL"
-            };
-
+            $scope.notesInit.parentTitle = $scope.objectInfo.complaintNumber;
         };
     }
 ]);

@@ -36,7 +36,7 @@ public class SetDashboardConfigAPIController
     private DashboardEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public DashboardDto setDashboardConfig(
             @RequestBody DashboardDto updateDashboardDto,

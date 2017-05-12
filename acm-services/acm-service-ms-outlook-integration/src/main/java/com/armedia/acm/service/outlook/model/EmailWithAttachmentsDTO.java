@@ -1,14 +1,19 @@
 package com.armedia.acm.service.outlook.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.List;
 
 /**
  * Created by manoj.dhungana on 7/28/2015.
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailWithAttachmentsDTO extends MessageBodyFactory
 {
 
     private List<Long> attachmentIds;
+    private List<String> filePaths;
     private String objectType;
     private Long objectId;
     private String subject;
@@ -111,6 +116,16 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory
     public String getMessageBody()
     {
         return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
+    }
+
+    public List<String> getFilePaths()
+    {
+        return filePaths;
+    }
+
+    public void setFilePaths(List<String> filePaths)
+    {
+        this.filePaths = filePaths;
     }
 
 }
