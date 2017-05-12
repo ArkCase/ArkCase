@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.task;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.service.impl.AcmTaskServiceImpl;
 import com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao;
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
 import org.activiti.engine.*;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -13,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,14 +71,10 @@ public class TaskDiagramIT
         byte[] diagram = acmTaskService.getDiagram(Long.parseLong(tasks.get(0).getId()));
         assertNotNull(diagram);
 
-        FileOutputStream fos = new FileOutputStream("src/test/resources/diagram.png");
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        bos.write(diagram);
-        bos.flush();
-        bos.close();
+        MagicMatch match = Magic.getMagicMatch(diagram);
+        String mimeType = match.getMimeType();
 
-        File file = new File("src/test/resources/diagram.png");
-        file.delete();
+        assertEquals("image/png", mimeType);
     }
 
     @Test
