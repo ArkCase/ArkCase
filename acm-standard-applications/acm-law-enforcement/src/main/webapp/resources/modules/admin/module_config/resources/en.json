@@ -230,7 +230,7 @@
         "purgeOptions": {
           "retainIndefinitely": "Retain Indefinitely",
           "objectClosed": "Object = 'Closed'",
-          "objectClosedXDays": "Object = 'Closed' + X Days",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
         },
         "configurableObjectTypes": {
           "cases.label": "Cases",
@@ -238,7 +238,7 @@
           "tasks.label": "Tasks"
         }
       }
-    },  
+    },
     "security.emailConfiguration": {
       "title": "Document Delivery Policy",
       "emailConfigForm": {
@@ -246,7 +246,7 @@
         "deliveryMethods.label": "Delivery Methods",
         "enableDocumentEmail.checkbox": "Documents can be emailed",
         "enableDocumentAttach.checkbox": "Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",        
+        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
         "serverSettings.label": "Server Settings",
         "serverType.label": "Server Type",
         "serverType.placeholder": "Choose Email Server Type",
@@ -264,8 +264,8 @@
         "encryptionOptions": {
           "off": "OFF",
           "ssl-tls": "SSL/TLS",
-          "starttls": "STARTTLS",
-        },        
+          "starttls": "STARTTLS"
+        },
         "username.label": "Username",
         "username.placeholder": "Enter Username",
         "password.label": "Password",
@@ -312,8 +312,7 @@
           "Contributor": "Contributor",
           "FreeBusyTimeOnly": "FreeBusyTimeOnly",
           "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "Custom"   
->>>>>>> ff1b1efbc82c11cd701019d972f66c507e91ae0f
+          "Custom": "Custom"
         }
       }
     },

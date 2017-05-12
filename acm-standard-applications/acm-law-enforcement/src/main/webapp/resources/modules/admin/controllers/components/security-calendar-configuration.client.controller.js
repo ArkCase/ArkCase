@@ -45,13 +45,20 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
         });
 
         /*Perform validation of the email*/
-        $scope.validateEmail = function(systemEmail, configurableObjectType) {
-            CalendarConfigurationService.validateCalendarConfigurationSystemEmail(systemEmail).then(function(res) {
-                //TO DO
+        $scope.validateEmail = function(systemEmail, password, configurableObjectType) {
+            var emailCredentials = {
+                email: systemEmail,
+                password: password
+            };
+
+            CalendarConfigurationService.validateCalendarConfigurationSystemEmail(emailCredentials).then(function(res) {
                 MessageService.succsessAction();
-                $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
+                if(res.data) {
+                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
+                } else {
+                    $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
+                }
             }, function(err) {
-                //TO DO
                 MessageService.errorAction();
                 $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
             });
@@ -75,15 +82,7 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
                     $scope.validEmailsByObjectType = {};
                     MessageService.succsessAction();
                 }, function(err) {
-                    if(err.status === 400) {
-                        // TO DO
-                        // Email Validation error
-                        MessageService.errorAction();
-                    } else {
-                        // TO DO
-                        // server error
-                        MessageService.errorAction();
-                    }
+                    MessageService.errorAction();
                 });
         };
     }

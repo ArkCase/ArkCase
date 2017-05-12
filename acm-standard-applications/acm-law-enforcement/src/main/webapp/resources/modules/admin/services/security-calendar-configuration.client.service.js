@@ -27,7 +27,7 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
             saveCalendarConfiguration: function(calendarConfig) {
                 return $http({
                     method: 'PUT',
-                    url: 'api/v1/service/calendar/configuration',
+                    url: 'api/v1/service/calendar/configure',
                     data: calendarConfig
                 });
             },
@@ -45,7 +45,7 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
             getCurrentCalendarConfiguration: function() {
                 return $http({
                     method: 'GET',
-                    url: 'api/v1/service/calendar/configuration'
+                    url: 'api/v1/service/calendar/configure'
                 });
             },
             /**
@@ -56,14 +56,15 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
              * @description
              * Check if the provided system email for the calendar configuration is valid.
              *
-             * @param {String} systemEmail - the email that should be validated
+             * @param {Object} emailCredentials - the email and password credentials that should be validated
              *
              * @returns {Object} http promise
              */
-            validateCalendarConfigurationSystemEmail: function(systemEmail) {
+            validateCalendarConfigurationSystemEmail: function(emailCredentials) {
                 return $http({
-                    method: 'GET',
-                    url: 'api/v1/service/calendar/configuration/' + systemEmail
+                    method: 'PUT',
+                    url: 'api/v1/service/calendar/calendar/configure/validate',
+                    data: emailCredentials
                 });
             }
         };
