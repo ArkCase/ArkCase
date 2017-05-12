@@ -9,6 +9,7 @@ import com.armedia.acm.calendar.service.RecurrenceDetails.Weekly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.time.DayOfWeek;
 import java.time.Month;
@@ -35,6 +37,7 @@ import java.util.EnumSet;
 @JsonSubTypes({ @Type(value = OnlyOnce.class, name = "ONLY_ONCE"), @Type(value = Daily.class, name = "DAILY"),
         @Type(value = Weekly.class, name = "WEEKLY"), @Type(value = Monthly.class, name = "MONTHLY"),
         @Type(value = Yearly.class, name = "YEARLY") })
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public abstract class RecurrenceDetails
 {
     /**
