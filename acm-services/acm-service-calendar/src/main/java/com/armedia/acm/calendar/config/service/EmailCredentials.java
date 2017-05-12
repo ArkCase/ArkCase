@@ -1,9 +1,13 @@
 package com.armedia.acm.calendar.config.service;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 11, 2017
  *
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailCredentials
 {
 
