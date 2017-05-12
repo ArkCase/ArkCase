@@ -30,7 +30,7 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
             $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };
 
-        $scope.$on('update-viewer-opened-versions', function (event, openedVersions) {
+        $scope.$bus.subscribe('update-viewer-opened-versions', function (openedVersions) {
             $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
                 if (index == 0) {
                     $scope.fileInfo.id = $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
