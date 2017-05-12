@@ -185,9 +185,9 @@ public class ExchangeTypesConverter
                     recurrence = new RelativeYearlyPattern(recurrenceStartAt, convertMonth(yearly.getMonth()),
                             convertDayOfWeek(yearly.getDayOfWeek()), convertWeekOfMonth(yearly.getWeekOfMonth()));
                 }
-                recurrence.setNumberOfOccurrences(yearly.getInterval());
                 break;
             }
+            recurrence.setNumberOfOccurrences(rc.getEndAfterOccurrances());
             recurrence.setEndDate(Date.from(rc.getEndBy().toInstant()));
             appointment.setRecurrence(recurrence);
         }
