@@ -19,7 +19,7 @@ angular.module('document-details').controller('Document.VersionHistoryController
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
                 
         $scope.updateViewerOpenDocuments = function () {
-            $scope.$emit('update-viewer-opened-versions', $scope.selectedRows);
+            $scope.$bus.$publish('update-viewer-opened-versions', $scope.selectedRows);
         };
         
         $scope.$watchCollection('versions', function (newValue, oldValue) {
