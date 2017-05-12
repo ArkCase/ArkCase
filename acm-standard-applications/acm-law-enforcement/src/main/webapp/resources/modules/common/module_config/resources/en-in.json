@@ -218,9 +218,9 @@
     }
   },
   "common.directive.coreCalendar": {
-    "title": "Calendar",
-    "start.label": "Start: ",
-    "end.label": "End: "
+    "title": "en-in_Calendar",
+    "start.label": "en-in_Start: ",
+    "end.label": "en-in_End: "
   },
   "common.directive.coreParticipants": {
     "title": "Participants",
