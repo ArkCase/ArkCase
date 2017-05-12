@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+   An arkcase of how user login details can be captured.
+-->
+
+<Audit
+    xmlns="http://www.alfresco.org/repo/audit/model/3.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.alfresco.org/repo/audit/model/3.2 alfresco-audit-3.2.xsd"
+    >
+
+    <DataExtractors>
+       <DataExtractor name="simpleValue" registeredName="auditModel.extractor.simpleValue"/>
+       <DataExtractor name="nullValue" registeredName="auditModel.extractor.nullValue"/>
+       <DataExtractor name="nodeNameValue" registeredName="auditModel.extractor.nodeName"/>
+       <DataExtractor name="nodeTypeValue" registeredName="auditModel.extractor.nodeType"/>
+    </DataExtractors>
+
+    <PathMappings>
+        <PathMap source="/alfresco-api/post/NodeService/createNode" target="/auditarkcaseextractors"/>
+        <PathMap source="/alfresco-api/post/NodeService/deleteNode" target="/auditarkcasedeleteextractors"/>
+        <PathMap source="/alfresco-api/post/NodeService/addChild" target="/auditarkcaseaddchild"/>
+        <PathMap source="/alfresco-api/post/FileFolderService/create" target="/auditarkcasecreate"/>
+    </PathMappings>
+
+    <Application name="AuditArkCaseCreate" key="auditarkcasecreate">
+        <AuditPath key="create">
+            <AuditPath key="in">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcasecreate/args/parentNodeRef" dataTrigger="/auditarkcasecreate/no-error"/>
+                <RecordValue key="b" dataExtractor="simpleValue" dataSource="/auditarkcasecreate/args/name" dataTrigger="/auditarkcasecreate/no-error"/>
+                <RecordValue key="c" dataExtractor="simpleValue" dataSource="/auditarkcasecreate/args/typeQName" dataTrigger="/auditarkcasecreate/no-error"/>
+                <RecordValue key="d" dataExtractor="simpleValue" dataSource="/auditarkcasecreate/args/assocQNname" dataTrigger="/auditarkcasecreate/no-error"/>
+            </AuditPath>
+            <AuditPath key="out">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcasecreate/result" dataTrigger="/auditarkcasecreate/no-error"/>
+            </AuditPath>
+            <AuditPath key="derived">
+                <RecordValue key="parent-node-null" dataExtractor="nullValue"     dataSource="/auditarkcasecreate/args/parentNodeRef" dataTrigger="/auditarkcasecreate/no-error"/>
+                <RecordValue key="parent-node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcasecreate/args/parentNodeRef" dataTrigger="/auditarkcasecreate/no-error"/>
+                <RecordValue key="parent-node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcasecreate/args/parentNodeRef" dataTrigger="/auditarkcasecreate/no-error"/>
+            </AuditPath>
+        </AuditPath>
+    </Application>
+
+
+    <Application name="AuditArkCaseAddChild" key="auditarkcaseaddchild">
+        <AuditPath key="addChild">
+            <AuditPath key="in">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcaseaddchild/args/parentRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="b" dataExtractor="simpleValue" dataSource="/auditarkcaseaddchild/args/childRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="c" dataExtractor="simpleValue" dataSource="/auditarkcaseaddchild/args/assocTypeQName" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="d" dataExtractor="simpleValue" dataSource="/auditarkcaseaddchild/args/qname" dataTrigger="/auditarkcaseaddchild/no-error"/>
+            </AuditPath>
+            <AuditPath key="out">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcaseaddchild/result" dataTrigger="/auditarkcaseaddchild/no-error"/>
+            </AuditPath>
+            <AuditPath key="derived">
+                <RecordValue key="parent-node-null" dataExtractor="nullValue"     dataSource="/auditarkcaseaddchild/args/parentRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="parent-node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcaseaddchild/args/parentRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="parent-node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcaseaddchild/args/parentRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="child-node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcaseaddchild/args/childRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+                <RecordValue key="child-node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcaseaddchild/args/childRef" dataTrigger="/auditarkcaseaddchild/no-error"/>
+            </AuditPath>
+        </AuditPath>
+    </Application>
+
+    <Application name="AuditArkCaseExtractors" key="auditarkcaseextractors">
+        <AuditPath key="create">
+            <AuditPath key="in">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/args/parentRef" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="b" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/args/nodeTypeQName" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="c" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/args/assocTypeQName" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="d" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/args/assocQName" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="e" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/args/properties" dataTrigger="/auditarkcaseextractors/no-error"/>
+            </AuditPath>
+            <AuditPath key="out">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcaseextractors/result" dataTrigger="/auditarkcaseextractors/no-error"/>
+            </AuditPath>
+            <AuditPath key="derived">
+                <RecordValue key="parent-node-null" dataExtractor="nullValue"     dataSource="/auditarkcaseextractors/args/parentRef" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="parent-node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcaseextractors/args/parentRef" dataTrigger="/auditarkcaseextractors/no-error"/>
+                <RecordValue key="parent-node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcaseextractors/args/parentRef" dataTrigger="/auditarkcaseextractors/no-error"/>
+            </AuditPath>
+        </AuditPath>
+    </Application>
+
+    <Application name="AuditArkCaseDeleteExtractors" key="auditarkcasedeleteextractors">
+        <AuditPath key="delete">
+            <AuditPath key="in">
+                <RecordValue key="a" dataExtractor="simpleValue" dataSource="/auditarkcasedeleteextractors/args/nodeRef" dataTrigger="/auditarkcasedeleteextractors/no-error"/>
+            </AuditPath>
+            <AuditPath key="derived">
+                <RecordValue key="node-null" dataExtractor="nullValue"     dataSource="/auditarkcasedeleteextractors/args/nodeRef" dataTrigger="/auditarkcasedeleteextractors/no-error"/>
+                <RecordValue key="node-name" dataExtractor="nodeNameValue" dataSource="/auditarkcasedeleteextractors/args/nodeRef" dataTrigger="/auditarkcasedeleteextractors/no-error"/>
+                <RecordValue key="node-type" dataExtractor="nodeTypeValue" dataSource="/auditarkcasedeleteextractors/args/nodeRef" dataTrigger="/auditarkcasedeleteextractors/no-error"/>
+            </AuditPath>
+        </AuditPath>
+    </Application>
+
+</Audit>
