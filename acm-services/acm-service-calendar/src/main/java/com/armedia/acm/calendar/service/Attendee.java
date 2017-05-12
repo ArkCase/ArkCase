@@ -1,13 +1,16 @@
 package com.armedia.acm.calendar.service;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 6, 2017
  *
  */
 @JsonInclude(Include.NON_NULL)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Attendee
 {
 
