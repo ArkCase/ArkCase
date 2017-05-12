@@ -63,7 +63,7 @@ angular.module('admin').factory('Admin.CalendarConfigurationService', ['$http',
             validateCalendarConfigurationSystemEmail: function(emailCredentials) {
                 return $http({
                     method: 'PUT',
-                    url: 'api/v1/service/calendar/calendar/configure/validate',
+                    url: 'api/v1/service/calendar/configure/validate',
                     data: emailCredentials
                 });
             }
