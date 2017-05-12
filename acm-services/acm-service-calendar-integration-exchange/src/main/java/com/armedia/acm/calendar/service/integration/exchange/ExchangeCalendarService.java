@@ -4,6 +4,8 @@ import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
+import com.armedia.acm.calendar.config.service.EmailCredentials;
+import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
@@ -39,9 +41,11 @@ import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -51,7 +55,8 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
  *
  */
-public class ExchangeCalendarService implements CalendarService, ApplicationListener<AbstractConfigurationFileEvent>
+public class ExchangeCalendarService
+        implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<AbstractConfigurationFileEvent>
 {
 
     /**
@@ -512,6 +517,31 @@ public class ExchangeCalendarService implements CalendarService, ApplicationList
         {
             log.debug("Error while trying to decript password for user {}.", auth.getName(), e);
             throw new CalendarServiceException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.armedia.acm.calendar.config.service.CalendarAdminService#verifyEmailCredentials(com.armedia.acm.calendar.
+     * config.service.EmailCredentials)
+     */
+    @Override
+    public boolean verifyEmailCredentials(String userId, EmailCredentials emailCredentials)
+    {
+        AcmOutlookUser user = new AcmOutlookUser(userId, emailCredentials.getEmail(), emailCredentials.getPassword());
+        try
+        {
+            ExchangeService service = outlookDao.connect(user);
+            Folder.bind(service, WellKnownFolderName.Inbox);
+            return true;
+        } catch (Exception e)
+        {
+            return false;
+        } finally
+        {
+            outlookDao.disconnect(user);
         }
     }
 
