@@ -77,7 +77,7 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
         return $http({
             method: 'PUT',
             url: url,
-            data: angular.toJson({}),
+            data: {},
             headers: {
                 'Content-Type': 'application/json'
             }
