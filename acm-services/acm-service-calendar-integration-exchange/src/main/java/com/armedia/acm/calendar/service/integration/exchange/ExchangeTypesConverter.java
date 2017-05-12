@@ -64,11 +64,19 @@ public class ExchangeTypesConverter
     {
         appointment.setSubject(calendarEvent.getSubject());
         appointment.setLocation(calendarEvent.getLocation());
+        if (calendarEvent.getStart() == null)
+        {
+            calendarEvent.setStart(ZonedDateTime.now());
+        }
         OlsonTimeZoneDefinition startTimeZoneDefinition = new OlsonTimeZoneDefinition(
                 TimeZone.getTimeZone(calendarEvent.getStart().getZone().toString()));
         appointment.setStartTimeZone(startTimeZoneDefinition);
         Date startDate = Date.from(calendarEvent.getStart().toInstant());
         appointment.setStart(startDate);
+        if (calendarEvent.getEnd() == null)
+        {
+            calendarEvent.setEnd(ZonedDateTime.now().plusHours(1));
+        }
         OlsonTimeZoneDefinition endTimeZoneDefinition = new OlsonTimeZoneDefinition(
                 TimeZone.getTimeZone(calendarEvent.getEnd().getZone().toString()));
         appointment.setEndTimeZone(endTimeZoneDefinition);
