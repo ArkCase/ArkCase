@@ -29,8 +29,8 @@
                     <property name="requiredPrivilege" ref="acmCalendarAdminPrivilege"/>
                 </bean>
                 <bean id="calendarAdminUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-                    <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/calendar/configure/{email}"/>
+                    <property name="httpMethod" value="PUT"/>
+                    <property name="url" value="/api/{version}/service/calendar/configure/validate"/>
                     <property name="requiredPrivilege" ref="acmCalendarAdminPrivilege"/>
                 </bean>
 
