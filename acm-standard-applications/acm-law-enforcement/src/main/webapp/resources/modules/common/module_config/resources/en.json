@@ -39,7 +39,8 @@
     "email": {
       "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
       "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
-      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "successMessage": "The email was sent successfully"
     },
     "menu": {
       "noop": "(Select Item)",
@@ -404,7 +405,9 @@
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
       "error.owninggroupUnique": "Only one owning group is allowed.",
-      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
     }
   },
   "common.directive.progressIndicator": {
@@ -603,5 +606,8 @@
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
     }
+  },
+  "common.labels": {
+    "primary": " [Primary]"
   }
 }
