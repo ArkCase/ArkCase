@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmCreateEvent;
-import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoCreateFoldersAuditResponseReader;
+import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceAuditResponseReader;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -17,24 +17,24 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by dmiller on 5/12/17.
  */
-public class AlfrescoEcmSyncServiceTest
+public class AlfrescoNodeServiceAuditResponseReaderTest
 {
 
-    private JSONObject createNodesAuditResponseJson;
-    private AlfrescoCreateFoldersAuditResponseReader unit = new AlfrescoCreateFoldersAuditResponseReader();
+    private JSONObject alfrescoNodeServiceAuditResponseJson;
+    private AlfrescoNodeServiceAuditResponseReader unit = new AlfrescoNodeServiceAuditResponseReader();
 
     @Before
     public void setUp() throws Exception
     {
-        final Resource createNodesAuditResponseResource = new ClassPathResource("json/SampleAlfrescoAuditCreateFolders.json");
-        String createNodesAuditResponseString = FileUtils.readFileToString(createNodesAuditResponseResource.getFile());
-        createNodesAuditResponseJson = new JSONObject(createNodesAuditResponseString);
+        final Resource alfrescoNodeServiceAuditResponseResource = new ClassPathResource("json/SampleAlfrescoAuditCreateFolders.json");
+        String createNodesAuditResponseString = FileUtils.readFileToString(alfrescoNodeServiceAuditResponseResource.getFile());
+        alfrescoNodeServiceAuditResponseJson = new JSONObject(createNodesAuditResponseString);
     }
 
     @Test
     public void readResponse() throws Exception
     {
-        List<EcmCreateEvent> createEvents = unit.read(createNodesAuditResponseJson);
+        List<EcmCreateEvent> createEvents = unit.read(alfrescoNodeServiceAuditResponseJson);
 
         assertNotNull(createEvents);
         assertEquals(3, createEvents.size());
@@ -51,10 +51,10 @@ public class AlfrescoEcmSyncServiceTest
         for (EcmCreateEvent ece : createEvents)
         {
             assertEquals("User #" + index, expectedData[index][0], ece.getUserId());
-            assertEquals("nodeType #" + index, expectedData[index][1], ece.getEventProperties().get("nodeType"));
-            assertEquals("nodeId #" + index, expectedData[index][2], ece.getEventProperties().get("nodeId"));
-            assertEquals("parentNodeId #" + index, expectedData[index][3], ece.getEventProperties().get("parentNodeId"));
-            assertEquals("nodeName #" + index, expectedData[index][4], ece.getEventProperties().get("nodeName"));
+            assertEquals("nodeType #" + index, expectedData[index][1], ece.getNodeType());
+            assertEquals("nodeId #" + index, expectedData[index][2], ece.getNodeId());
+            assertEquals("parentNodeId #" + index, expectedData[index][3], ece.getParentNodeId());
+            assertEquals("nodeName #" + index, expectedData[index][4], ece.getNodeName());
 
             ++index;
         }
