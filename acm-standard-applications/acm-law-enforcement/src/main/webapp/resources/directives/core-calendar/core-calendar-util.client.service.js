@@ -387,18 +387,18 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         /**
          * @ngdoc method
-         * @name mapDayOccurrenceToRRule
+         * @name convertDayOccurrenceToRRule
          * @methodOf services:Directives.CalendarUtilService
          *
          * @description
-         * Maps the DAY_OCCURRENCE_IN_MONTH_OPTIONS to RRule values.
+         * Converts the DAY_OCCURRENCE_IN_MONTH_OPTIONS to RRule values.
          *
          * @param {String} dayOuccurrenceInMonth - DAY_OCCURRENCE_IN_MONTH_OPTIONS values.
          *
          * @Returns {Int} values for bysetpos parameter in RRule library.
          * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
          */
-        var mapDayOccurrenceToRRule = function(dayOuccurrenceInMonth) {
+        var convertDayOccurrenceToRRule = function(dayOuccurrenceInMonth) {
             var bySetpos = null;
 
             switch (dayOuccurrenceInMonth){
@@ -424,18 +424,18 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         /**
          * @ngdoc method
-         * @name mapDayInMonthToRRule
+         * @name convertDayInMonthToRRule
          * @methodOf services:Directives.CalendarUtilService
          *
          * @description
-         * Maps the RELATIVE_RECURRENCE_DAY_OPTIONS to RRule values.
+         * Converts the RELATIVE_RECURRENCE_DAY_OPTIONS to RRule values.
          *
          * @param {String} dayInMonth - RELATIVE_RECURRENCE_DAY_OPTIONS values.
          *
          * @Returns {Int} values for byweekday parameter in RRule library.
          * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
          */
-        var mapDayInMonthToRRule = function(dayInMonth) {
+        var convertDayInMonthToRRule = function(dayInMonth) {
             var byweekday = null;
 
             switch (dayInMonth){
@@ -476,18 +476,18 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         /**
          * @ngdoc method
-         * @name mapDayInWeekToRRule
+         * @name convertDayInWeekToRRule
          * @methodOf services:Directives.CalendarUtilService
          *
          * @description
-         * Maps the DAYS_WEEK_OPTIONS to RRule values.
+         * Converts the DAYS_WEEK_OPTIONS to RRule values.
          *
          * @param {Array} selectedDaysOfWeek -  array of DAYS_WEEK_OPTIONS values.
          *
          * @Returns {Array}  values for byweekday parameter in RRule library.
          * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
          */
-        var mapDayInWeekToRRule = function(selectedDaysOfWeek) {
+        var convertDayInWeekToRRule = function(selectedDaysOfWeek) {
             var DAY_RRULE_MAP = {
                 'SUNDAY': RRule.SU,
                 'MONDAY': RRule.MO,
@@ -508,18 +508,18 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
         /**
          * @ngdoc method
-         * @name mapMonthInYearToRRule
+         * @name convertMonthInYearToRRule
          * @methodOf services:Directives.CalendarUtilService
          *
          * @description
-         * Maps the MONTHS_OPTIONS to RRule values.
+         * Converts the MONTHS_OPTIONS to RRule values.
          *
          * @param {String} month - MONTHS_OPTIONS values.
          *
          * @Returns {Int}  values for bymonth parameter in RRule library.
          * For more information about RRule library please visit https://github.com/jakubroztocil/rrule
          */
-        var mapMonthInYearToRRule = function(month) {
+        var convertMonthInYearToRRule = function(month) {
             var bymonth = null;
 
             switch (month){
@@ -658,7 +658,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          */
         var getWeeklyRecurrenceRange = function(startDate, selectedDaysOfWeek, interval, count) {
 
-            var byWeekDay = mapDayInWeekToRRule(selectedDaysOfWeek);
+            var byWeekDay = convertDayInWeekToRRule(selectedDaysOfWeek);
 
             var rule =  new RRule({
                 freq: RRule.WEEKLY,
@@ -746,8 +746,8 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          */
         var getRelativeMonthlyRecurrenceRange = function(startDate, dayOuccurrenceInMonth, dayInMonth, interval, count) {
 
-            var byWeekDay = mapDayInMonthToRRule(dayInMonth);
-            var bySetPos = mapDayOccurrenceToRRule(dayOuccurrenceInMonth);
+            var byWeekDay = convertDayInMonthToRRule(dayInMonth);
+            var bySetPos = convertDayOccurrenceToRRule(dayOuccurrenceInMonth);
 
             var rule = new RRule({
                 freq: RRule.MONTHLY,
@@ -793,7 +793,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          */
         var getAbsoluteYearlyRecurrenceRange = function(startDate, month, monthDayNum, interval, count) {
 
-            var byMonth = mapMonthInYearToRRule(month);
+            var byMonth = convertMonthInYearToRRule(month);
 
             var rule = new RRule({
                 freq: RRule.YEARLY,
@@ -839,9 +839,9 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          */
         var getRelativeYearlyRecurrenceRange = function(startDate, dayOuccurrenceInMonth, dayInMonth, month, interval, count) {
 
-            var byWeekDay = mapDayInMonthToRRule(dayInMonth);
-            var bySetPos = mapDayOccurrenceToRRule(dayOuccurrenceInMonth);
-            var byMonth = mapMonthInYearToRRule(month);
+            var byWeekDay = convertDayInMonthToRRule(dayInMonth);
+            var bySetPos = convertDayOccurrenceToRRule(dayOuccurrenceInMonth);
+            var byMonth = convertMonthInYearToRRule(month);
 
             var rule = new RRule({
                 freq: RRule.YEARLY,
@@ -909,7 +909,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             var patternString = '';
 
             // for some reason, the interval for yearlyRecurrencePattern could not be set
-            // by current Michorosf Exchange implementation in ArkCase
+            // by current Microsoft Exchange implementation in ArkCase
             if(!recurrenceDetails.interval) {
                 recurrenceDetails.interval = 1;
             }
