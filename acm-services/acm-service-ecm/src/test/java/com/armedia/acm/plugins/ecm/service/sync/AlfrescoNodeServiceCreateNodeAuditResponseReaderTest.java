@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmCreateEvent;
-import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceAuditResponseReader;
+import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceCreateNodeAuditResponseReader;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -17,24 +17,24 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by dmiller on 5/12/17.
  */
-public class AlfrescoNodeServiceAuditResponseReaderTest
+public class AlfrescoNodeServiceCreateNodeAuditResponseReaderTest
 {
 
-    private JSONObject alfrescoNodeServiceAuditResponseJson;
-    private AlfrescoNodeServiceAuditResponseReader unit = new AlfrescoNodeServiceAuditResponseReader();
+    private JSONObject alfrescoNodeServiceCreateNodeAuditResponseJson;
+    private AlfrescoNodeServiceCreateNodeAuditResponseReader unit = new AlfrescoNodeServiceCreateNodeAuditResponseReader();
 
     @Before
     public void setUp() throws Exception
     {
-        final Resource alfrescoNodeServiceAuditResponseResource = new ClassPathResource("json/SampleAlfrescoAuditCreateFolders.json");
-        String createNodesAuditResponseString = FileUtils.readFileToString(alfrescoNodeServiceAuditResponseResource.getFile());
-        alfrescoNodeServiceAuditResponseJson = new JSONObject(createNodesAuditResponseString);
+        final Resource alfrescoNodeServiceCreateNodeAuditResponseResource = new ClassPathResource("json/SampleAlfrescoNodeServiceCreateNodeAuditResponse.json");
+        String createNodesAuditResponseString = FileUtils.readFileToString(alfrescoNodeServiceCreateNodeAuditResponseResource.getFile());
+        alfrescoNodeServiceCreateNodeAuditResponseJson = new JSONObject(createNodesAuditResponseString);
     }
 
     @Test
     public void readResponse() throws Exception
     {
-        List<EcmCreateEvent> createEvents = unit.read(alfrescoNodeServiceAuditResponseJson);
+        List<EcmCreateEvent> createEvents = unit.read(alfrescoNodeServiceCreateNodeAuditResponseJson);
 
         assertNotNull(createEvents);
         assertEquals(3, createEvents.size());
