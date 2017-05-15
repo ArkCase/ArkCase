@@ -125,6 +125,9 @@
       "endDateTime": "de_End"
     }
   },
+  "tasks.comp.diagram": {
+    "title": "de_Process Diagram"
+  },
   "tasks.comp.signatures": {
     "title": "de_eSignatures",
     "table.columns": {

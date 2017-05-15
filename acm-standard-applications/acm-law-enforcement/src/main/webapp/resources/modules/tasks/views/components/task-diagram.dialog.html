@@ -1,8 +1,15 @@
 <div class="modal-header">
-    <h3><span translate>Diagram</span></h3>
+    <h3><span translate>tasks.comp.diagram.title</span></h3>
 </div>
 <div class="modal-body">
-    <img class="img-responsive" ng-src="{{diagramData}}">
+    <div ng-switch on="showLoader">
+        <div ng-switch-when="true">
+            <div class="loader"></div>
+        </div>
+        <div ng-switch-when="false">
+            <img class="img-responsive" ng-src="{{diagramData}}"/>
+        </div>
+    </div>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="onClickClose()" )>
