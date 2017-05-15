@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.objectassociation.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.io.Serializable;
 
 /**
@@ -7,7 +10,7 @@ import java.io.Serializable;
  * @author vladimir.radeski
  *
  */
-
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Reference implements Serializable
 {
 
