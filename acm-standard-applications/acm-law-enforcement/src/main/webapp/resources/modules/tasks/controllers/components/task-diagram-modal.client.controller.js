@@ -1,6 +1,5 @@
-/**
- * Created by riste.tutureski on 5/15/2017.
- */
+'use strict';
+
 angular.module('tasks').controller('Tasks.DiagramModalController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId' , 'showLoader', 'showError',
         function ($scope, $modalInstance, TaskWorkflowService, taskId, showLoader, showError) {
             $scope.showLoader = showLoader;
