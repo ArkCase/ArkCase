@@ -85,8 +85,8 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
 
         $scope.diagram = function () {
             var modalInstance = $modal.open({
-                templateUrl: "modules/tasks/views/components/task-diagram.dialog.html",
-                controller: 'Tasks.DiagramDialogController',
+                templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
+                controller: 'Tasks.DiagramModalController',
                 resolve:{
                     taskId: function(){
                         return $scope.objectInfo.taskId;
@@ -321,24 +321,6 @@ angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope',
             };
             $scope.onClickOk = function () {
                 $modalInstance.close({pass: $scope.password});
-            };
-        }
-    ]
-);
-angular.module('tasks').controller('Tasks.DiagramDialogController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId' , 'showLoader', 'showError',
-        function ($scope, $modalInstance, TaskWorkflowService, taskId, showLoader, showError) {
-            $scope.showLoader = showLoader;
-            $scope.showError = showError;
-            TaskWorkflowService.diagram(taskId).then(function(response){
-                $scope.showLoader = false;
-                $scope.showError = false;
-                $scope.diagramData = 'data:image/png;base64,' + response.data;
-            }, function(error){
-                $scope.showLoader = false;
-                $scope.showError = true;
-            });
-            $scope.onClickClose = function () {
-                $modalInstance.dismiss('Close');
             };
         }
     ]
