@@ -126,7 +126,8 @@
     }
   },
   "tasks.comp.diagram": {
-    "title": "zh-cn_Process Diagram"
+    "title": "zh-cn_Process Diagram",
+    "error.loading": "zh-cn_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "zh-cn_eSignatures",

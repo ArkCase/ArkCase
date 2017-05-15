@@ -126,7 +126,8 @@
     }
   },
   "tasks.comp.diagram": {
-    "title": "ru_Process Diagram"
+    "title": "ru_Process Diagram",
+    "error.loading": "ru_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "ru_eSignatures",
