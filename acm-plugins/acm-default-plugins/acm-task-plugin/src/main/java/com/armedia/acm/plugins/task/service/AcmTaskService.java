@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 
 import org.springframework.security.core.Authentication;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -36,4 +37,6 @@ public interface AcmTaskService
 
     void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
                      Long parentId);
+
+    byte[] getDiagram(Long id) throws AcmTaskException;
 }

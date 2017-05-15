@@ -5,7 +5,9 @@ package com.armedia.acm.services.users.model.group;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -34,6 +36,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "acm_group")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmGroup implements Serializable, AcmEntity
 {
 

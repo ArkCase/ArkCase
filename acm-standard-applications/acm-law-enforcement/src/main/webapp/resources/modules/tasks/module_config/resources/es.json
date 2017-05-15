@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "es_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "es_Process Diagram",
     "eSignature.button": "es_Sign",
     "subscribe.button": "es_Subscribe",
     "unsubscribe.button": "es_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "es_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "es_Error",
-      "btnOk.text": "es_OK"
+      "btnOk.text": "es_OK",
+      "btnClose.text": "es_Close"
     }
   },
   "tasks.comp.details": {
@@ -122,6 +124,10 @@
       "startDateTime": "es_Start",
       "endDateTime": "es_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "es_Process Diagram",
+    "error.loading": "es_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "es_eSignatures",

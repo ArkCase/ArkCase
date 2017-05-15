@@ -2,6 +2,8 @@ package com.armedia.acm.service.milestone.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -20,6 +22,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "acm_milestone")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmMilestone implements Serializable, AcmEntity {
     private static final long serialVersionUID = -2866319464429863768L;
 

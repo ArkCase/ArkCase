@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.utils;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,6 +65,30 @@ public class FolderAndFilesUtils
          */
 
         return cmisId;
+    }
+
+    public String getVersionCmisId(EcmFile ecmFile, String version)
+    {
+
+        if (StringUtils.isEmpty(version))
+        {
+            return getActiveVersionCmisId(ecmFile);
+        }
+
+        EcmFileVersion ecmFileVersion = getVersion(ecmFile, version);
+
+        return ecmFileVersion != null ? ecmFileVersion.getCmisObjectId() : getActiveVersionCmisId(ecmFile);
+
+    }
+
+    public EcmFileVersion getVersion(EcmFile ecmFile, String version)
+    {
+        if (ecmFile != null && ecmFile.getVersions() != null && version != null)
+        {
+            return ecmFile.getVersions().stream().filter(fv -> version.equals(fv.getVersionTag())).findFirst().orElse(null);
+        }
+
+        return null;
     }
 
     public String createUniqueIdentificator(String input)

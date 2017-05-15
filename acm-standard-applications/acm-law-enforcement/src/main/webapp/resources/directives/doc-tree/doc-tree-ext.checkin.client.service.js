@@ -166,6 +166,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                                 , controller: 'directives.DocTreeCheckinDialogController'
                                 , animation: true
                                 , size: 'lg'
+                                , backdrop: 'static'
                                 , resolve: {
                                     params: function () {
                                         return params;
@@ -216,7 +217,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                         } else {
                             var df = $q.defer();
                             //check permission for lock
-                            PermissionsService.getActionPermission('lock', fileObject)
+                            PermissionsService.getActionPermission('lock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -276,7 +277,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             var df = $q.defer();
 
                             //check permission for unlock
-                            PermissionsService.getActionPermission('unlock', fileObject)
+                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -322,7 +323,7 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             //because backend will expect unlock permission we should check for it
                             var df = $q.defer();
 
-                            PermissionsService.getActionPermission('unlock', fileObject)
+                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");
@@ -341,11 +342,11 @@ angular.module('services').factory('DocTreeExt.Checkin', ['$q', '$modal', '$tran
                             //and after that for unlock because backend will return access denied without unlock permission
                             var df = $q.defer();
 
-                            PermissionsService.getActionPermission('cancelLock', fileObject)
+                            PermissionsService.getActionPermission('cancelLock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasCancelPermission) {
                                         if (hasCancelPermission) {
                                             //check permission for unlock
-                                            PermissionsService.getActionPermission('unlock', fileObject)
+                                            PermissionsService.getActionPermission('unlock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                                 .then(function success(hasPermission) {
                                                         if (hasPermission)
                                                             df.resolve("");
@@ -385,9 +386,6 @@ angular.module('directives').controller('directives.DocTreeCheckinDialogControll
             $scope.note = params.note;
             $scope.isNoteRequired = params.isNoteRequired;
 
-            $scope.onClickCancel = function () {
-                $modalInstance.dismiss();
-            };
             $scope.onClickOk = function () {
                 $modalInstance.close({note: $scope.note});
             };
