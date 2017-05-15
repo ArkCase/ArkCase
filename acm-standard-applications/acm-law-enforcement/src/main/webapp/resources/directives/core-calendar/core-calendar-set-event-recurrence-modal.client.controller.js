@@ -31,7 +31,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
             var startTime = start ? start.getTime() : 0;
             var endTime = end ? end.getTime() : 0;
 
-            if(startTime > endTime) {
+            if (startTime > endTime) {
                 $scope.recurrenceTmpModel.end = start;
             }
 
@@ -45,7 +45,7 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
             var startTime = start ? start.getTime() : 0;
             var endTime = end ? end.getTime() : 0;
 
-            if(startTime > endTime) {
+            if (startTime > endTime) {
                 $scope.recurrenceTmpModel.end = start;
             }
 
@@ -232,8 +232,8 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
 
         var applyExistingYearlyRecurrencePattern = function(recurrenceDetails) {
             // for some reason, the interval for yearlyRecurrencePattern could not be set
-            // by current Michorosf Exchange implementation in ArkCase
-            if(!recurrenceDetails.interval) {
+            // by current Microsoft Exchange implementation in ArkCase
+            if (!recurrenceDetails.interval) {
                 recurrenceDetails.interval = 1;
             }
 
@@ -389,7 +389,6 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     applyExistingYearlyRecurrencePattern(eventDataModel.recurrenceDetails);
                     break;
             }
-
         }
 
         /*=============== FORM ACTIONS ========================*/
@@ -420,12 +419,11 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
                     patternDuration = $scope.yearlyRecurrence.interval * 525600;
                     break;
             }
-            if(patternDuration < eventDuration) {
+            if (patternDuration < eventDuration) {
                 $scope.validDuration = false;
             } else {
                 $scope.validDuration = true;
             }
-
         };
 
         /*invoked before save to build the model based on the selected values*/
@@ -494,12 +492,11 @@ angular.module('directives').controller('Directives.CoreCalendarSetEventRecurren
 
         $scope.setEventRecurrence = function() {
             checkValidEventDuration(eventDurationInMinutes, $scope.recurrenceTmpModel.recurrencePattern);
-            if($scope.validDuration) {
+            if ($scope.validDuration) {
                 var modalActionData = {
                     recurrenceDataModel: buildRecurrenceDataModel($scope.recurrenceType, $scope.recurrenceTmpModel.recurrencePattern, $scope.recurrenceTmpModel.recurrenceRangeType),
                     eventStartDate: $scope.recurrenceTmpModel.start,
                     eventEndDate: $scope.recurrenceTmpModel.end,
-                    recurrenceEnd: $scope.recurrenceTmpModel.recurrenceEndBy,
                     modalAction: 'setEventRecurrence'
                 };
 
