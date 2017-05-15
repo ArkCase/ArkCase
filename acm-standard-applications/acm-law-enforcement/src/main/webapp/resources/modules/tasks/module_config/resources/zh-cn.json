@@ -125,6 +125,9 @@
       "endDateTime": "zh-cn_End"
     }
   },
+  "tasks.comp.diagram": {
+    "title": "zh-cn_Process Diagram"
+  },
   "tasks.comp.signatures": {
     "title": "zh-cn_eSignatures",
     "table.columns": {

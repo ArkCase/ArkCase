@@ -125,6 +125,9 @@
       "endDateTime": "ru_End"
     }
   },
+  "tasks.comp.diagram": {
+    "title": "ru_Process Diagram"
+  },
   "tasks.comp.signatures": {
     "title": "ru_eSignatures",
     "table.columns": {
