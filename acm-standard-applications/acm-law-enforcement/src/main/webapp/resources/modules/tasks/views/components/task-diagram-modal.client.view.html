@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3><span translate>tasks.comp.diagram.title</span></h3>
+</div>
+<div class="modal-body">
+    <div ng-switch on="showLoader">
+        <div ng-switch-when="true">
+            <div class="loader"></div>
+        </div>
+        <div ng-switch-when="false">
+            <div ng-switch on="showError">
+                <div ng-switch-when="true">
+                    <span translate>tasks.comp.diagram.error.loading</span>
+                </div>
+                <div ng-switch-when="false">
+                    <img class="img-responsive" ng-src="{{diagramData}}"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="onClickClose()" )>
+        <span translate>tasks.comp.actions.modal.btnClose.text</span>
+    </button>
+</div>
+
