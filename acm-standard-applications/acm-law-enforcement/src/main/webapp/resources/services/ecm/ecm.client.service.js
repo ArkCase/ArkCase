@@ -20,6 +20,12 @@ angular.module('services').factory('EcmService', ['$resource'
                 cache: false,
                 isArray: false
             }
+            , retrieveFlatSearchResultList: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId/search/:searchFilter?start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                cache: false,
+                isArray: false
+            }
             , createFolder: {
                 method: 'PUT',
                 url: 'api/latest/service/ecm/folder/:parentId/:folderName'

@@ -40,7 +40,9 @@
   },
   "complaints.comp.documents": {
     "title": "Documents",
-    "sendEmail": "Send Email"
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "complaints.comp.people": {
     "title": "People",

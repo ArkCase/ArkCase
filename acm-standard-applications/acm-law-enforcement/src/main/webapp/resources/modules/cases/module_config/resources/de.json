@@ -46,7 +46,10 @@
     }
   },
   "cases.comp.documents": {
-    "title": "de_Documents"
+    "title": "de_Documents",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
   },
   "cases.comp.people": {
     "title": "de_People",

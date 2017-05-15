@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ja_Documents"
+    "title": "ja_Documents",
+    "sendEmail": "ja_Send Email",
+    "filterInputPlaceholder": "ja_Filter",
+    "searchInputPlaceholder": "ja_Search"
   },
   "document-repository.comp.participants": {
     "title": "ja_Participants",

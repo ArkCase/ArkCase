@@ -51,16 +51,34 @@ public class FolderListAPIController
         // the special category "all" should not be sent to Solr
         category = "all".equals(category) ? null : category;
 
-        AcmCmisObjectList retval = getEcmFileService().listFolderContents(
-                auth,
-                container,
-                category,
-                sortBy,
-                sortDirection,
-                startRow,
-                maxRows);
+        return getEcmFileService().listFolderContents(auth, container, category, sortBy, sortDirection, startRow, maxRows);
+    }
 
-        return retval;
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @RequestMapping(value = "/folder/{objectType}/{objectId}/search/{searchFilter}", method = RequestMethod.GET)
+    @ResponseBody public AcmCmisObjectList listFlatSearchResultsFromFolderContent(
+            Authentication auth, @PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId,
+            @PathVariable("searchFilter") String searchFilter,
+            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            @RequestParam(value = "category", required = false) String category)
+            throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        // just to ensure a folder really exists
+        AcmContainer container = getEcmFileService().getOrCreateContainer(objectType, objectId);
+
+        if (container.getFolder() == null)
+        {
+            // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+            throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
+        }
+
+        // the special category "all" should not be sent to Solr
+        category = "all".equals(category) ? null : category;
+
+        return getEcmFileService().listFlatSearchResults(auth, container, category, sortBy, sortDirection, startRow, maxRows, searchFilter);
     }
 
     public EcmFileService getEcmFileService()

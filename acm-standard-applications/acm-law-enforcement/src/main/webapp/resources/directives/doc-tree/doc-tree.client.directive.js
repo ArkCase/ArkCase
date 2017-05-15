@@ -88,8 +88,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
     , 'EcmService', 'Admin.EmailSenderConfigurationService'
     , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, UserInfoService
-        , Ecm, EmailSenderConfigurationService
-    ) {
+        , Ecm, EmailSenderConfigurationService) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -124,7 +123,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , _getDefaultTreeArgs: function () {
                 return {
-                    extensions: ["table", "gridnav", "edit", "dnd"]
+                    extensions: ["table", "gridnav", "edit", "dnd", "filter"]
                     , checkbox: true
                     , selectMode: 2
 
@@ -354,6 +353,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 jqTreeHead.find("input:checkbox").on("click", function (e) {
                     DocTree.onClickBtnChkAllDocument(e, this);
                 });
+                jqTreeHead.find("label").on("click", function (e) {
+                    DocTree.onClickBtnSort(e, this);
+                });
 
                 return tree;
             }
@@ -519,7 +521,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
              */
             , expandAfterRefresh: function (children, nodesStatusBeforeRefresh) {
                 nodesStatusBeforeRefresh.forEach(function (item, index) {
-                    if (angular.isArray(item)) {
+                    if (angular.isArray(item) && angular.isDefined(children[index])) {
                         DocTree.expandNode(children[index]).then(function (data) {
                             DocTree.expandAfterRefresh(data.children, nodesStatusBeforeRefresh[index]);
                         });
@@ -571,18 +573,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     //}
                 }
 
-                var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
-                var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
-                DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
-
-                DocTree.tree.reload(DocTree.Source.source()).then(function () {
-                    if (rootNode.expanded) {
+                var setting = DocTree.Config.getSetting();
+                if (setting.search.enabled) {
+                    DocTree.tree.reload(DocTree.Source.source()).then(function () {
                         DocTree.expandTopNode().then(function () {
                             var rootNode = DocTree.getTopNode();
-                            DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
-                        })
-                    }
-                });
+                            DocTree.expandAfterRefresh(rootNode.children, []);
+                        });
+                    });
+                } else {
+                    var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
+                    var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
+                    DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
+                    DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                        if (rootNode.expanded) {
+                            DocTree.expandTopNode().then(function () {
+                                var rootNode = DocTree.getTopNode();
+                                DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
+                            })
+                        }
+                    });
+                }
             }
             /**
              * @description Refresh a tree node.
@@ -821,19 +832,47 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
-                if (DocTree.isFolderNode(data.node)) {
-                    DocTree.Op.addFolderActionBtns();
-                }
-                if (DocTree.isFileNode(data.node)) {
-                    DocTree.Op.removeFolderActionBtns();
+                if (data.targetType !== "expander" && !DocTree.Config._setting.search.enabled) {
+                    if (DocTree.isFolderNode(data.node)) {
+                        DocTree.Op.addFolderActionBtns();
+                    }
+                    if (DocTree.isFileNode(data.node)) {
+                        DocTree.Op.removeFolderActionBtns();
+                    }
                 }
                 if (DocTree.isSpecialNode(data.node)) {
                     DocTree.Paging.doPaging(data.node);
                 }
                 return true;
             }
-
-
+            , onFilter: function (filterText) {
+                var tree = DocTree.tree,
+                    filterFunc = tree.filterBranches,
+                    match = filterText;
+                var opts = {
+                    autoApply: true,   // Re-apply last filter if lazy data is loaded
+                    autoExpand: true, // Expand all branches that contain matches while filtered
+                    counter: true,     // Show a badge with number of matching child nodes near parent icons
+                    fuzzy: false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                    hideExpandedCounter: true,  // Hide counter badge if parent is expanded
+                    hideExpanders: false,       // Hide expanders if all child nodes are hidden by filter
+                    highlight: true,   // Highlight matches by wrapping inside <mark> tags
+                    leavesOnly: false, // Match end nodes only
+                    nodata: true,      // Display a 'no data' status node if result is empty
+                    mode: "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+                };
+                if ($.trim(match) === "") {
+                    tree.clearFilter();
+                    return;
+                }
+                filterFunc.call(tree, match, opts);
+            }
+            , onSearch: function (searchFilter) {
+                var setting = DocTree.Config.getSetting();
+                setting.search.enabled = true;
+                setting.search.searchFilter = searchFilter;
+                DocTree.refreshTree();
+            }
             , Source: {
                 source: function () {
                     var src = [];
@@ -1778,6 +1817,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         } else if (menuCorrespondenceForms) {
                             menuCorrespondenceForms.children = this.makeSubMenu(DocTree.correspondenceForms);
                         }
+                        // On active search disable Cut & Copy
+                        var cutMenu = _.find(menu, {cmd: "cut"});
+                        var copyMenu = _.find(menu, {cmd: "copy"});
+                        var disabled = DocTree.Config.getSetting().search.enabled;
+                        cutMenu.disabledExpression = disabled;
+                        copyMenu.disabledExpression = disabled;
+
                         //} else {
                         //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
                         //    menu = [{
@@ -2062,6 +2108,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , Op: {
                 retrieveFolderList: function (folderNode, callbackSuccess) {
                     var dfd = $.Deferred();
+                    var fetchData = Ecm.retrieveFolderList;
                     if (!DocTree.isFolderNode(folderNode)) {
                         dfd.reject();
 
@@ -2085,9 +2132,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             param.sortBy = setting.sortBy;
                             param.sortDir = setting.sortDirection;
                         }
+                        if (setting.search.enabled) {
+                            if (setting.search.searchFilter.trim() !== "") {
+                                fetchData = Ecm.retrieveFlatSearchResultList;
+                                param.searchFilter = setting.search.searchFilter;
+                            } else {
+                                setting.search.enabled = false;
+                            }
+                        }
 
                         Util.serviceCall({
-                            service: Ecm.retrieveFolderList
+                            service: fetchData
                             , param: param
                             , onSuccess: function (data) {
                                 if (Validator.validateFolderList(data)) {
@@ -2119,8 +2174,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             , function (errorData) {
                                 DocTree.markNodeError(folderNode);
                                 dfd.reject();
-                            }
-                        );
+                            });
                     }
 
                     return dfd.promise();
@@ -3088,6 +3142,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     var cellTemplate = columnDef.cellTemplate;
                     var displayName = $translate.instant(columnDef.displayName);
                     var headTemplate = columnDef.headTemplate;
+                    var icon = columnDef.icon;
                     if ("checkbox" == name) {
                         headTemplate = "<input type='checkbox'/>";
                     }
@@ -3097,7 +3152,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         //.text(displayName)
                         .appendTo(jqTrHead);
                     if (headTemplate) {
-                        $(headTemplate).appendTo(jqTh);
+                        var header = $(headTemplate);
+                        header.text(displayName);
+                        if (icon) {
+                            $(icon).appendTo(header);
+                        }
+                        $(header).appendTo(jqTh);
                     } else {
                         jqTh.text(displayName);
                     }
@@ -3542,6 +3602,48 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
             }
 
+            , onClickBtnSort: function (event, ctrl) {
+                var headers = $('.doc-tree-header');
+                var icon = $(ctrl).find('i');
+                var sortBy = $(icon).data('sort');
+                var sortDir = $(icon).data('dir');
+
+                if (sortDir === 'ASC') {
+                    $(icon).data('dir', 'DESC');
+                    $(icon).toggleClass('fa-sort-asc');
+                } else if (sortDir === 'DESC') {
+                    $(icon).data('dir', '');
+                    $(icon).toggleClass('fa-sort-asc');
+                    $(icon).toggleClass('fa-sort-desc');
+                } else if (sortDir === '') {
+                    $(icon).data('dir', 'ASC');
+                    $(icon).toggleClass('fa-sort-desc');
+                }
+
+                _.forEach(headers, function (label) {
+                    if ($(label).attr('id') != $(ctrl).attr('id')) {
+                        var icon = $(label).find('i');
+                        icon.removeClass('fa-sort-desc');
+                        icon.removeClass('fa-sort-asc');
+                        icon.data('dir', 'ASC');
+                    }
+                });
+
+                if (!sortDir) {
+                    var title = _.find(headers, function (it) {
+                        return $(it).attr('id') === 'title';
+                    });
+                    var titleIcon = $(title).find('i');
+                    if (titleIcon) {
+                        titleIcon.addClass('fa-sort-asc');
+                        titleIcon.data('dir', 'DESC');
+                    }
+                }
+                DocTree.Config._setting.sortBy = sortBy;
+                DocTree.Config._setting.sortDirection = sortDir;
+                DocTree.refreshTree();
+            }
+
 
             , Key: {
                 KEY_SEPARATOR: "/"
@@ -3582,6 +3684,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     maxRows: 16
                     , sortBy: null
                     , sortDirection: null
+                    , search: {
+                        enabled: false,
+                        searchFilter: null
+                    }
                 }
                 , getSetting: function () {
                     return this._setting;
@@ -4405,7 +4511,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.objectInfo = null;
                 DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
-                    }); //if not defined, do nothing
+                }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
@@ -4420,7 +4526,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         DocTree.CustomData.addData(args.model);
                         DocTree.Column.addRenderer(args.name, args.renderer);
                     }
-                    , getDocTreeObject: function() {
+                    , getDocTreeObject: function () {
                         return DocTree;
                     }
                 };
@@ -4497,9 +4603,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
                     DocTree.treeConfig.emailSendConfiguration = res.data;
                 });
+
+                DocTree.scope.$bus.subscribe('onFilterDocTree', function (data) {
+                    DocTree.onFilter(data.filter);
+                });
+
+                DocTree.scope.$bus.subscribe('onSearchDocTree', function (data) {
+                    DocTree.onSearch(data.searchFilter);
+                });
             }
         };
-
     }
 ]);
 

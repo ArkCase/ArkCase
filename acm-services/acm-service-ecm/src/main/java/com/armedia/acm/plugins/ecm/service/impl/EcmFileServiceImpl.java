@@ -567,14 +567,27 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
-                                                      int startRow, int maxRows, String category) throws AcmListObjectsFailedException
+    public AcmCmisObjectList listFlatSearchResults(Authentication auth, AcmContainer container, String category, String sortBy,
+            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
-                + container.getContainerObjectType();
 
-        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:"
-                + category.toUpperCase() + ") AND hidden_b:false"; // in
+        String query = String.format("object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s",
+                container.getContainerObjectType(), container.getContainerObjectId());
+
+        String fq = String.format("fq=name:*%s* AND hidden_b:false", searchFilter);
+
+        return findObjects(auth, container, container.getFolder().getId(), category, query, fq, startRow, maxRows, sortBy, sortDirection);
+    }
+
+    @Override
+    public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy,
+            String sortDirection, int startRow, int maxRows, String category) throws AcmListObjectsFailedException
+    {
+        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:" + container
+                .getContainerObjectType();
+
+        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase()
+                        + ") AND hidden_b:false"; // in
         // case
         // some
         // bad
