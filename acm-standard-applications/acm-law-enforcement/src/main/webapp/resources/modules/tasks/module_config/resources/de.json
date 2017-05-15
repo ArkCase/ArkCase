@@ -126,7 +126,8 @@
     }
   },
   "tasks.comp.diagram": {
-    "title": "de_Process Diagram"
+    "title": "de_Process Diagram",
+    "error.loading": "de_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "de_eSignatures",

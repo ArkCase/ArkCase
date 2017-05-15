@@ -7,7 +7,14 @@
             <div class="loader"></div>
         </div>
         <div ng-switch-when="false">
-            <img class="img-responsive" ng-src="{{diagramData}}"/>
+            <div ng-switch on="showError">
+                <div ng-switch-when="true">
+                    <span translate>tasks.comp.diagram.error.loading</span>
+                </div>
+                <div ng-switch-when="false">
+                    <img class="img-responsive" ng-src="{{diagramData}}"/>
+                </div>
+            </div>
         </div>
     </div>
 </div>

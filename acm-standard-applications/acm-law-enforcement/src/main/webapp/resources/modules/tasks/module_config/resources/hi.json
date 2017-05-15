@@ -126,7 +126,8 @@
     }
   },
   "tasks.comp.diagram": {
-    "title": "hi_Process Diagram"
+    "title": "hi_Process Diagram",
+    "error.loading": "hi_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "hi_eSignatures",

@@ -126,7 +126,8 @@
     }
   },
   "tasks.comp.diagram": {
-    "title": "ja_Process Diagram"
+    "title": "ja_Process Diagram",
+    "error.loading": "ja_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "ja_eSignatures",

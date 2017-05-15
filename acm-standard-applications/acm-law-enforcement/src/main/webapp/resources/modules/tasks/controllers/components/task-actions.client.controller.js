@@ -93,6 +93,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                     },
                     showLoader: function() {
                         return true;
+                    },
+                    showError: function() {
+                        return false;
                     }
                 }
             });
@@ -322,12 +325,17 @@ angular.module('tasks').controller('Tasks.SignatureDialogController', ['$scope',
         }
     ]
 );
-angular.module('tasks').controller('Tasks.DiagramDialogController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId' , 'showLoader',
-        function ($scope, $modalInstance, TaskWorkflowService, taskId, showLoader) {
+angular.module('tasks').controller('Tasks.DiagramDialogController', ['$scope', '$modalInstance', 'Task.WorkflowService', 'taskId' , 'showLoader', 'showError',
+        function ($scope, $modalInstance, TaskWorkflowService, taskId, showLoader, showError) {
             $scope.showLoader = showLoader;
+            $scope.showError = showError;
             TaskWorkflowService.diagram(taskId).then(function(response){
                 $scope.showLoader = false;
+                $scope.showError = false;
                 $scope.diagramData = 'data:image/png;base64,' + response.data;
+            }, function(error){
+                $scope.showLoader = false;
+                $scope.showError = true;
             });
             $scope.onClickClose = function () {
                 $modalInstance.dismiss('Close');
