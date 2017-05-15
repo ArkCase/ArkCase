@@ -4,20 +4,22 @@
 package com.armedia.acm.plugins.report.model;
 
 import com.armedia.acm.objectonverter.adapter.DateMillisecondAdapter;
-
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author riste.tutureski
  *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Report implements Serializable{
 
 	private static final long serialVersionUID = -8652555531179054044L;
