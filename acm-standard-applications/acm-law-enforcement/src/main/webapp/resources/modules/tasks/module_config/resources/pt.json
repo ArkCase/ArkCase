@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "pt_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "pt_Process Diagram",
     "eSignature.button": "pt_Sign",
     "subscribe.button": "pt_Subscribe",
     "unsubscribe.button": "pt_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "pt_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "pt_Error",
-      "btnOk.text": "pt_OK"
+      "btnOk.text": "pt_OK",
+      "btnClose.text": "pt_Close"
     }
   },
   "tasks.comp.details": {
@@ -122,6 +124,10 @@
       "startDateTime": "pt_Start",
       "endDateTime": "pt_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "pt_Process Diagram",
+    "error.loading": "pt_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "pt_eSignatures",
