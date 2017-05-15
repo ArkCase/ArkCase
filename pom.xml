@@ -1846,6 +1846,7 @@
                 <groupId>jmimemagic</groupId>
                 <artifactId>jmimemagic</artifactId>
                 <version>${magic.matcher.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

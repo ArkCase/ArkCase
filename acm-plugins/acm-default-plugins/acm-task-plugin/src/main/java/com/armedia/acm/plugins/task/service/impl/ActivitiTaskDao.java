@@ -57,6 +57,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -1248,19 +1249,32 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         byte[] diagram = null;
         if (id != null)
         {
+            InputStream inputStream = null;
             try
             {
                 Task task = getActivitiTaskService().createTaskQuery().taskId(id.toString()).singleResult();
                 BpmnModel model = getActivitiRepositoryService().getBpmnModel(task.getProcessDefinitionId());
                 List<String> activeActivityIds = getActivitiRuntimeService().getActiveActivityIds(task.getExecutionId());
-                InputStream inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);
+                inputStream = ProcessDiagramGenerator.generateDiagram(model, "png", activeActivityIds);
                 diagram = IOUtils.toByteArray(inputStream);
-                inputStream.close();
-
             }
             catch (Exception e)
             {
                 log.warn("Cannot take diagram for task id=[{}]", id);
+            }
+            finally
+            {
+                if (inputStream != null)
+                {
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Can't close input stream after generating task diagram image.", e);
+                    }
+                }
             }
         }
 
