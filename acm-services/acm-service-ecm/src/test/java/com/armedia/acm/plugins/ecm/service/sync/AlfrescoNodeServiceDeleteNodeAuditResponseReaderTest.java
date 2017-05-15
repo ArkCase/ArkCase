@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
-import com.armedia.acm.plugins.ecm.model.sync.EcmDeleteEvent;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoNodeServiceDeleteNodeAuditResponseReader;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ public class AlfrescoNodeServiceDeleteNodeAuditResponseReaderTest
 {
 
     private JSONObject alfrescoNodeServiceDeleteNodeAuditResponseJson;
-    private DeleteNodesResponseReader unit = new AlfrescoNodeServiceDeleteNodeAuditResponseReader();
+    private EcmAuditResponseReader unit = new AlfrescoNodeServiceDeleteNodeAuditResponseReader();
 
     @Before
     public void setUp() throws Exception
@@ -34,24 +35,26 @@ public class AlfrescoNodeServiceDeleteNodeAuditResponseReaderTest
     @Test
     public void readResponse() throws Exception
     {
-        List<EcmDeleteEvent> deleteEvents = unit.read(alfrescoNodeServiceDeleteNodeAuditResponseJson);
+        List<EcmEvent> deleteEvents = unit.read(alfrescoNodeServiceDeleteNodeAuditResponseJson);
 
         assertNotNull(deleteEvents);
         assertEquals(3, deleteEvents.size());
 
 
         Object[][] expectedData = {
-                // userid, node id
-                {"admin", "workspace://SpacesStore/faf7562e-0731-4dfc-8b94-36a2f5df0f0d"},
-                {"admin", "workspace://SpacesStore/b021e743-3d85-4ff9-8c0b-cc318376ee70"},
-                {"admin", "workspace://SpacesStore/b2f2bde5-2499-48ac-8bab-907e6d031e58"}
+                // event type, audit id, userid, node id
+                {EcmEventType.DELETE, 44L, "admin", "workspace://SpacesStore/faf7562e-0731-4dfc-8b94-36a2f5df0f0d"},
+                {EcmEventType.DELETE, 54L, "admin", "workspace://SpacesStore/b021e743-3d85-4ff9-8c0b-cc318376ee70"},
+                {EcmEventType.DELETE, 62L, "admin", "workspace://SpacesStore/b2f2bde5-2499-48ac-8bab-907e6d031e58"}
         };
 
         int index = 0;
-        for (EcmDeleteEvent ede : deleteEvents)
+        for (EcmEvent ede : deleteEvents)
         {
-            assertEquals("User #" + index, expectedData[index][0], ede.getUserId());
-            assertEquals("nodeId #" + index, expectedData[index][1], ede.getNodeId());
+            assertEquals("Event type #" + index, expectedData[index][0], ede.getEcmEventType());
+            assertEquals("audit id #" + index, expectedData[index][1], ede.getAuditId());
+            assertEquals("User #" + index, expectedData[index][2], ede.getUserId());
+            assertEquals("nodeId #" + index, expectedData[index][3], ede.getNodeId());
 
             ++index;
         }

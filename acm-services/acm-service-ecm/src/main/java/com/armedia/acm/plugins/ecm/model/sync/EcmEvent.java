@@ -6,8 +6,9 @@ import org.springframework.context.ApplicationEvent;
 /**
  * Created by dmiller on 5/12/17.
  */
-public class EcmCreateEvent extends ApplicationEvent
+public class EcmEvent extends ApplicationEvent
 {
+
     private String userId;
 
     private String nodeId;
@@ -20,7 +21,11 @@ public class EcmCreateEvent extends ApplicationEvent
 
     private String parentNodeType;
 
-    public EcmCreateEvent(JSONObject source)
+    private EcmEventType ecmEventType;
+
+    private long auditId;
+
+    public EcmEvent(JSONObject source)
     {
         super(source);
     }
@@ -85,16 +90,38 @@ public class EcmCreateEvent extends ApplicationEvent
         this.parentNodeType = parentNodeType;
     }
 
+    public EcmEventType getEcmEventType()
+    {
+        return ecmEventType;
+    }
+
+    public void setEcmEventType(EcmEventType ecmEventType)
+    {
+        this.ecmEventType = ecmEventType;
+    }
+
+    public long getAuditId()
+    {
+        return auditId;
+    }
+
+    public void setAuditId(long auditId)
+    {
+        this.auditId = auditId;
+    }
+
     @Override
     public String toString()
     {
-        return "EcmCreateEvent{" +
+        return "EcmEvent{" +
                 "userId='" + userId + '\'' +
                 ", nodeId='" + nodeId + '\'' +
                 ", nodeName='" + nodeName + '\'' +
                 ", nodeType='" + nodeType + '\'' +
                 ", parentNodeId='" + parentNodeId + '\'' +
                 ", parentNodeType='" + parentNodeType + '\'' +
+                ", ecmEventType=" + ecmEventType +
+                ", auditId=" + auditId +
                 '}';
     }
 }
