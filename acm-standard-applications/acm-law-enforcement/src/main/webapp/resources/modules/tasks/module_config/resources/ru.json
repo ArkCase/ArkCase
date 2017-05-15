@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "ru_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "ru_Process Diagram",
     "eSignature.button": "ru_Sign",
     "subscribe.button": "ru_Subscribe",
     "unsubscribe.button": "ru_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "ru_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "ru_Error",
-      "btnOk.text": "ru_OK"
+      "btnOk.text": "ru_OK",
+      "btnClose.text": "ru_Close"
     }
   },
   "tasks.comp.details": {
@@ -122,6 +124,10 @@
       "startDateTime": "ru_Start",
       "endDateTime": "ru_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "ru_Process Diagram",
+    "error.loading": "ru_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "ru_eSignatures",
