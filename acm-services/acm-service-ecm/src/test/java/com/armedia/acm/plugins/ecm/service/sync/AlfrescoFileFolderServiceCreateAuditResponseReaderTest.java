@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmCreateEvent;
-import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceAuditResponseReader;
+import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoFileFolderServiceCreateAuditResponseReader;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -17,24 +17,24 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by dmiller on 5/12/17.
  */
-public class AlfrescoFileFolderServiceAuditResponseReaderTest
+public class AlfrescoFileFolderServiceCreateAuditResponseReaderTest
 {
 
-    private JSONObject fileFolderServiceAuditResponseJson;
-    private CreateNodesResponseReader unit = new AlfrescoFileFolderServiceAuditResponseReader();
+    private JSONObject fileFolderServiceCreateAuditResponseJson;
+    private CreateNodesResponseReader unit = new AlfrescoFileFolderServiceCreateAuditResponseReader();
 
     @Before
     public void setUp() throws Exception
     {
-        final Resource fileFolderServiceAuditResponseResource = new ClassPathResource("json/SampleAlfrescoFileFolderServiceAuditResponse.json");
-        String fileFolderServiceAuditResponseString = FileUtils.readFileToString(fileFolderServiceAuditResponseResource.getFile());
-        fileFolderServiceAuditResponseJson = new JSONObject(fileFolderServiceAuditResponseString);
+        final Resource fileFolderServiceCreateAuditResponseResource = new ClassPathResource("json/SampleAlfrescoFileFolderServiceCreateAuditResponse.json");
+        String fileFolderServiceCreateAuditResponseString = FileUtils.readFileToString(fileFolderServiceCreateAuditResponseResource.getFile());
+        fileFolderServiceCreateAuditResponseJson = new JSONObject(fileFolderServiceCreateAuditResponseString);
     }
 
     @Test
     public void readResponse() throws Exception
     {
-        List<EcmCreateEvent> createEvents = unit.read(fileFolderServiceAuditResponseJson);
+        List<EcmCreateEvent> createEvents = unit.read(fileFolderServiceCreateAuditResponseJson);
 
         assertNotNull(createEvents);
         assertEquals(2, createEvents.size());
