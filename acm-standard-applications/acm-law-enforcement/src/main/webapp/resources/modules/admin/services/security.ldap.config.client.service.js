@@ -53,7 +53,7 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http'
             return $http({
                 method: "POST",
                 url: "api/latest/plugin/admin/ldapconfiguration/directories",
-                data: angular.toJson(dir),
+                data: dir,
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -97,7 +97,7 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http'
             return $http({
                 method: "PUT",
                 url: url,
-                data: angular.toJson(dir),
+                data: dir,
                 headers: {
                     "Content-Type": "application/json"
                 }
