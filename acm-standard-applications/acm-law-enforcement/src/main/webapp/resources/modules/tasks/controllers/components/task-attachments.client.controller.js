@@ -92,5 +92,13 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         };
 
         $scope.correspondenceForms = {};
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
     }
 ]);

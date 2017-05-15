@@ -83,11 +83,15 @@
   "tasks.comp.parentdocs": {
     "title": "Parent Documents",
     "noParentDataMessage": "No parent documents for standalone task",
-    "sendEmail": "Send Email"
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "tasks.comp.attachments": {
     "title": "Attachments",
-    "sendEmail": "Send Email"
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "tasks.comp.notes": {
     "title": "Notes",

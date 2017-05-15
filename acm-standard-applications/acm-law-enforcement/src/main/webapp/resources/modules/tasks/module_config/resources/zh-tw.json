@@ -82,10 +82,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "zh-tw_Parent Documents",
-    "noParentDataMessage": "zh-tw_No parent documents for standalone task"
+    "noParentDataMessage": "zh-tw_No parent documents for standalone task",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.attachments": {
-    "title": "zh-tw_Attachments"
+    "title": "zh-tw_Attachments",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.notes": {
     "title": "zh-tw_Notes",

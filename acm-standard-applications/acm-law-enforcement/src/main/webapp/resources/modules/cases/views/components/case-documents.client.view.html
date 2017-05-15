@@ -3,17 +3,39 @@
         <div class="panel-heading">
             <div class="panel-title">
                 <span translate>cases.comp.documents.title</span>
-
-                <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-click="sendEmail()">
-                        <span translate>
-                            cases.comp.documents.sendEmail
-                        </span>
-                    </button>
-                    <folder-actions></folder-actions>
-                    <button type="button" class="btn btn-default btn-xs" ng-click="onClickRefresh()">
-                        <i class="fa fa-lg fa-refresh"></i>
-                    </button>
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" class="input-sm form-control" style="height: 24px;"
+                               placeholder="{{ 'cases.comp.documents.filterInputPlaceholder' | translate }}"
+                               ng-model="filter" ng-keyup="onFilter()">
+                    </div>
+                    <div class="col-md-3">
+                        <form name="filesSearch" ng-submit="onSearch()">
+                            <div class="input-group">
+                                <input type="text" class="input-sm form-control" style="height: 24px;"
+                                       placeholder="{{ 'cases.comp.documents.searchInputPlaceholder' | translate }}"
+                                       ng-model="searchFilter">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm" type="submit" style="height: 24px;padding-top: 2px;">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button class="btn btn-default btn-xs" ng-click="sendEmail()">
+                                    <span translate>
+                                        cases.comp.documents.sendEmail
+                                    </span>
+                            </button>
+                            <folder-actions></folder-actions>
+                            <button type="button" class="btn btn-default btn-xs" ng-click="onClickRefresh()">
+                                <i class="fa fa-lg fa-refresh"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -82,10 +82,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "pt_Parent Documents",
-    "noParentDataMessage": "pt_No parent documents for standalone task"
+    "noParentDataMessage": "pt_No parent documents for standalone task",
+    "sendEmail": "pt_Send Email",
+    "filterInputPlaceholder": "pt_Filter",
+    "searchInputPlaceholder": "pt_Search"
   },
   "tasks.comp.attachments": {
-    "title": "pt_Attachments"
+    "title": "pt_Attachments",
+    "sendEmail": "pt_Send Email",
+    "filterInputPlaceholder": "pt_Filter",
+    "searchInputPlaceholder": "pt_Search"
   },
   "tasks.comp.notes": {
     "title": "pt_Notes",
