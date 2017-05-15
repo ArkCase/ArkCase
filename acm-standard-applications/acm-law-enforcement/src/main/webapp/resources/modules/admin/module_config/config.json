@@ -8,7 +8,7 @@
       "menuItemTitle": "admin.menus.leftnav.item",
       "moduleId": "admin",
       "iconClass": "fa fa-wrench",
-      "position": 150
+      "position": 180
     }
   ],
   "components": [
@@ -18,6 +18,16 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "directoryTypes": [
+        {
+          "name": "OpenLDAP",
+          "value": "openldap"
+        },
+        {
+          "name": "Active Directory",
+          "value": "activedirectory"
+        }
+      ],
       "columnDefs": [
         {
           "name": "authUserDn",
@@ -695,6 +705,14 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.emailConfiguration.title",
+          "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.exchangeConfiguration.title",
+          "templateName": "security-exchange-configuration"
         }
       ]
     },

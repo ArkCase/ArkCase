@@ -7,26 +7,20 @@
     <form name="relatedForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <div>
-                    <label for="organization_{{::$id}}"
-                           translate>organizations.comp.related.modal.organization.label</label>
-                </div>
-                <input id="organization_{{::$id}}" class="form-control" type="text" ng-model="organizationName"
-                       ng-click="pickOrganization()" required>
+                    <label for="organization"
+                        translate>organizations.comp.related.modal.organization.label</label><span class="required-asterisk">*</span>
+                    <input id="organization" class="form-control" type="text" ng-model="organizationName"
+                        ng-click="pickOrganization()" required="required">
             </div>
             <div class="col-sm-6 form-group">
                 <div>
-                    <label for="relationshipTypes_{{::$id}}"
+                    <label for="relationshipTypes"
                            translate>organizations.comp.related.modal.type.label</label>
                 </div>
-                <select id="relationshipTypes_{{::$id}}"
+                <select id="relationshipTypes"
                         ng-model="relationshipType"
                         ng-options="item.type as item.name for item in relationshipTypes"></select>
             </div>
-        </div>
-        <div class="row">
-            <label for="description_{{::$id}}"/>
-            <textarea id="description_{{::$id}}" ng-model="description"></textarea>
         </div>
     </form>
 </div>

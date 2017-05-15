@@ -37,13 +37,10 @@
     "moreItemsTooltip": "Load more items",
     "moreItemsBegin": "More items...",
     "email": {
-      "defaultTitle": "ArkCase Documents",
-      "headerForLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
-      "footerForLinks": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "subjectForAttachment": "Documents from ArkCase",
-      "bodyForAttachment": "Please find attached the documents sent to you from ArkCase.",
-      "headerForAttachment": "Hello,",
-      "footerForAttachment": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultBodyLinks": "Please follow the links below to view the document(s). Links expire in 3 days.",
+      "defaultBodyAttachments": "Please find attached the documents sent to you from ArkCase.",
+      "defaultFooter": "Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "successMessage": "The email was sent successfully"
     },
     "menu": {
       "noop": "(Select Item)",
@@ -69,9 +66,24 @@
     },
     "emailDialog": {
       "title": "Email",
-      "recipients": "Recipients:",
+      "recipients.label": "Recipients:",
+      "recipients.placeholder": "Choose recipients",
+      "subject.label": "Subject:",
+      "subject.placeholder": "Enter subject",
+      "attachments.label": "Attachments:",
+      "deliveryMethod.label": "Delivery Method:",
+      "sendWithAttachments.checkbox": "Send Email with Attachment",
+      "sendWithHyperlink.checkbox": "Send Email with Hyperlink",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Send Email",
+      "btnOk.text": "Send Email"
+    },
+    "recipientsDialog":{
+      "title": "Choose Recipients",
+      "search.placeholder": "Search Recipients",
+      "recipients.label": "Recipients:",
+      "externalRecipients.placeholder": "Enter external email addresses",
+      "cancel.button": "Cancel",
+      "addRecipients.button": "Add Recipients",
       "gridColumns": {
         "name": "Name",
         "email": "Email"
@@ -164,7 +176,9 @@
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
       "error.owninggroupUnique": "Only one owning group is allowed.",
-      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed."
+      "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
     }
   },
   "common.directive.progressIndicator": {
@@ -296,6 +310,7 @@
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organizatoin",
     "organization.label": "Organization",
+    "description": "Description",
     "type.label": "Organization Type",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Add Organization"
@@ -362,5 +377,8 @@
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
     }
+  },
+  "common.labels": {
+    "primary": " [Primary]"
   }
 }

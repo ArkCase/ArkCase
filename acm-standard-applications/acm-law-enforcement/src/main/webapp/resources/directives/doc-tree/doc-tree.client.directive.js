@@ -84,9 +84,12 @@
  </example>
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
-    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService', 'EcmService'
+    , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
+    , 'EcmService', 'Admin.EmailSenderConfigurationService'
     , function ($q, $translate, $modal, $filter, $log, $injector
-        , Store, Util, UtilDateService, ConfigService, UserInfoService, Ecm) {
+        , Store, Util, UtilDateService, ConfigService, UserInfoService
+        , Ecm, EmailSenderConfigurationService
+    ) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -1805,6 +1808,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     allow = onAllowCmd(nodes);
                                 }
                             }
+                        }
+
+                        /*email document should not be available when it's not configured*/
+                        if(!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
+                            item.invisible = true;
                         }
 
                         promiseArray.push(allow);
@@ -4397,7 +4405,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.objectInfo = null;
                 DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
-                }); //if not defined, do nothing
+                    }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {
@@ -4411,6 +4419,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     , addColumnRenderer: function (args) {
                         DocTree.CustomData.addData(args.model);
                         DocTree.Column.addRenderer(args.name, args.renderer);
+                    }
+                    , getDocTreeObject: function() {
+                        return DocTree;
                     }
                 };
 
@@ -4481,6 +4492,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                     });
+                });
+                /*Get send email configuration*/
+                EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
+                    DocTree.treeConfig.emailSendConfiguration = res.data;
                 });
             }
         };

@@ -1,6 +1,6 @@
 {
   "id": "people",
-  "title": "people",
+  "title": "People",
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -10,7 +10,7 @@
       "menuItemTitle": "people.menus.leftnav.item",
       "moduleId": "person",
       "iconClass": "fa fa-user",
-      "position": 80
+      "position": 40
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "people.menus.topbar.item",
       "moduleId": "person",
       "iconClass": "fa fa-user",
-      "position": 30
+      "position": 40
     }
   ],
   "tree": {
@@ -128,7 +128,7 @@
       },
       {
         "type": "p/PERSON/pho",
-        "label": "Phones",
+        "label": "Phone Numbers",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -136,7 +136,7 @@
       },
       {
         "type": "p/PERSON/ema",
-        "label": "Emails",
+        "label": "Email Addresses",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/PERSON/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/PERSON/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/PERSON/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -217,6 +217,36 @@
       "type": "empty",
       "editable": false,
       "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "people.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "people.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "people.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        }
       ]
     },
     {
@@ -243,7 +273,7 @@
     {
       "id": "pictures",
       "title": "Pictures",
-      "icon": "fa fa-file-image-o",
+      "icon": "fa fa-picture-o",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -265,11 +295,10 @@
         },
         {
           "name": "title",
-          "field": "title_parseable",
           "displayName": "people.comp.pictures.table.columns.title",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -298,7 +327,7 @@
     {
       "id": "addresses",
       "title": "Addresses",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -319,7 +348,8 @@
         {
           "name": "streetAddress",
           "displayName": "people.comp.addresses.table.columns.streetAddress",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.streetAddress}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "streetAddress2",
@@ -384,7 +414,8 @@
         {
           "name": "value",
           "displayName": "people.comp.phones.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -395,8 +426,7 @@
           "name": "modifier",
           "displayName": "people.comp.phones.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -411,7 +441,7 @@
     {
       "id": "emails",
       "title": "Email Addresses",
-      "icon": "fa fa-address-book-o",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -431,7 +461,8 @@
         {
           "name": "value",
           "displayName": "people.comp.emails.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -442,8 +473,7 @@
           "name": "modifier",
           "displayName": "people.comp.emails.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -478,7 +508,8 @@
         {
           "name": "value",
           "displayName": "people.comp.urls.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -489,8 +520,7 @@
           "name": "modifier",
           "displayName": "people.comp.urls.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -505,7 +535,7 @@
     {
       "id": "aliases",
       "title": "Aliases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -519,10 +549,9 @@
       "columnDefs": [
         {
           "name": "aliasValue",
-          "field": "aliasValue",
           "displayName": "people.comp.aliases.table.columns.aliasValue",
-          "enableCellEdit": false,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.aliasValue}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "aliasType",
@@ -549,15 +578,14 @@
           "name": "modifier",
           "displayName": "people.comp.aliases.table.columns.modifier",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "lookup": "userFullNames"
         }
       ]
     },
     {
       "id": "organizations",
       "title": "Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -606,7 +634,7 @@
     {
       "id": "ids",
       "title": "IDs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -631,7 +659,8 @@
         {
           "name": "identificationNumber",
           "displayName": "people.comp.ids.table.columns.number",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.identificationNumber}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "identificationIssuer",
@@ -641,14 +670,14 @@
         {
           "name": "identificationYearIssued",
           "displayName": "people.comp.ids.table.columns.yearIssued",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modifier",
           "displayName": "people.comp.ids.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -663,7 +692,7 @@
     {
       "id": "cases",
       "title": "Cases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -724,7 +753,7 @@
     {
       "id": "complaints",
       "title": "Complaints",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -785,7 +814,7 @@
     {
       "id": "related",
       "title": "Related People",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,

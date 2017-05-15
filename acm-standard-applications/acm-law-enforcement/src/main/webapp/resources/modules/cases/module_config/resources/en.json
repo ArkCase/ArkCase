@@ -46,7 +46,8 @@
     }
   },
   "cases.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email"
   },
   "cases.comp.people": {
     "title": "People",

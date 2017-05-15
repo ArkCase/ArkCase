@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h3 translate>common.directive.docTree.recipientsDialog.title</h3>
+</div>
+
+<div>
+    <search-modal config="config"
+                  filter='"Object Type": USER'
+                  on-items-selected="onSelectRecipient"
+                  search-placeholder="{{'common.directive.docTree.recipientsDialog.search.placeholder' | translate}}">
+
+    </search-modal>
+</div>
+<div class="row well-sm">
+    <div class="col-sm-12">
+        <label class="pull-left">
+            <span translate>common.directive.docTree.recipientsDialog.recipients.label</span>
+        </label>
+    </div>
+    <div class="col-sm-12">
+        <tags-input ng-model="recipients" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="{{'common.directive.docTree.recipientsDialog.externalRecipients.placeholder' | translate}}" on-tag-added="addAdditionalRecipients($tag)"></tags-input>
+    </div>
+</div>
+<div class="modal-footer">
+    <br/>
+    <button type="button" class="btn btn-secondary" ng-click="cancel()" translate>
+        common.directive.docTree.recipientsDialog.cancel.button
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="addRecipients()" translate>
+        common.directive.docTree.recipientsDialog.addRecipients.button
+    </button>
+</div>

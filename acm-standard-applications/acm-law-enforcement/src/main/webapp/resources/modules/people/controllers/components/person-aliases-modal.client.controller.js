@@ -15,7 +15,8 @@ angular.module('people').controller('Person.AliasesModalController', ['$scope', 
                 $modalInstance.close(
                     {
                         alias: $scope.alias,
-                        isDefault: $scope.isDefault
+                        isDefault: $scope.isDefault,
+                        isEdit: $scope.isEdit
                     }
                 );
             };

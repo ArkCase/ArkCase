@@ -1,6 +1,6 @@
 {
   "id": "organizations",
-  "title": "organizations",
+  "title": "Organizations",
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -10,7 +10,7 @@
       "menuItemTitle": "organizations.menus.leftnav.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 90
+      "position": 50
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "organizations.menus.topbar.item",
       "moduleId": "organization",
       "iconClass": "fa fa-building",
-      "position": 40
+      "position": 50
     }
   ],
   "tree": {
@@ -120,7 +120,7 @@
       },
       {
         "type": "p/ORGANIZATION/pho",
-        "label": "Phones",
+        "label": "Phone Numbers",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -128,7 +128,7 @@
       },
       {
         "type": "p/ORGANIZATION/fax",
-        "label": "Faxes",
+        "label": "Fax Numbers",
         "icon": "fa fa-fax",
         "components": [
           "faxes"
@@ -136,7 +136,7 @@
       },
       {
         "type": "p/ORGANIZATION/ema",
-        "label": "Emails",
+        "label": "Email Addresses",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -175,19 +175,19 @@
         ]
       },
       {
-        "type": "p/ORGANIZATION/cas",
-        "label": "Cases",
-        "icon": "fa fa-folder",
-        "components": [
-          "cases"
-        ]
-      },
-      {
         "type": "p/ORGANIZATION/com",
         "label": "Complaints",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/cas",
+        "label": "Cases",
+        "icon": "fa fa-folder",
+        "components": [
+          "cases"
         ]
       },
       {
@@ -217,6 +217,36 @@
       "type": "empty",
       "editable": false,
       "widgets": [
+        {
+          "id": "details",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "details",
+              "displayName": "organizations.comp.details.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "displayName": "organizations.comp.details.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            },
+            {
+              "width": 150,
+              "name": "modifier",
+              "displayName": "organizations.comp.details.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "history",
+          "type": "component"
+        }
       ]
     },
     {
@@ -243,7 +273,7 @@
     {
       "id": "addresses",
       "title": "Addresses",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -264,7 +294,8 @@
         {
           "name": "streetAddress",
           "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.streetAddress}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "streetAddress2",
@@ -329,7 +360,8 @@
         {
           "name": "value",
           "displayName": "organizations.comp.phones.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -340,8 +372,7 @@
           "name": "modifier",
           "displayName": "organizations.comp.phones.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -356,7 +387,7 @@
     {
       "id": "faxes",
       "title": "Fax Numbers",
-      "icon": "fa fa-phone",
+      "icon": "fa fa-fax",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -376,7 +407,8 @@
         {
           "name": "value",
           "displayName": "organizations.comp.faxes.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -387,8 +419,7 @@
           "name": "modifier",
           "displayName": "organizations.comp.faxes.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -403,7 +434,7 @@
     {
       "id": "emails",
       "title": "Email Addresses",
-      "icon": "fa fa-address-book-o",
+      "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -423,7 +454,8 @@
         {
           "name": "value",
           "displayName": "organizations.comp.emails.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -434,8 +466,7 @@
           "name": "modifier",
           "displayName": "organizations.comp.emails.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -457,8 +488,7 @@
       "paginationPageSizes": [
         5,
         10,
-        20,
-        50
+        20
       ],
       "paginationPageSize": 10,
       "columnDefs": [
@@ -470,7 +500,8 @@
         {
           "name": "value",
           "displayName": "organizations.comp.urls.table.columns.value",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -481,8 +512,7 @@
           "name": "modifier",
           "displayName": "organizations.comp.urls.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -497,7 +527,7 @@
     {
       "id": "dbas",
       "title": "DBAs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -512,8 +542,8 @@
         {
           "name": "value",
           "displayName": "organizations.comp.dbas.table.columns.value",
-          "enableCellEdit": false,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "type",
@@ -539,15 +569,14 @@
           "name": "modifier",
           "displayName": "organizations.comp.dbas.table.columns.modifier",
           "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "width": 150
+          "lookup": "userFullNames"
         }
       ]
     },
     {
       "id": "people",
       "title": "People",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-users",
       "enabled": true,
       "type": "grid",
       "multiSelect": false,
@@ -597,7 +626,7 @@
     {
       "id": "ids",
       "title": "IDs",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -622,7 +651,8 @@
         {
           "name": "identificationNumber",
           "displayName": "organizations.comp.ids.table.columns.number",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.identificationNumber}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "identificationIssuer",
@@ -632,14 +662,14 @@
         {
           "name": "identificationYearIssued",
           "displayName": "organizations.comp.ids.table.columns.yearIssued",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modifier",
           "displayName": "organizations.comp.ids.table.columns.modifier",
           "headerCellFilter": "translate",
-          "lookup": "userFullNames",
-          "width": 150
+          "lookup": "userFullNames"
         },
         {
           "name": "modified",
@@ -654,7 +684,7 @@
     {
       "id": "cases",
       "title": "Cases",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -715,7 +745,7 @@
     {
       "id": "complaints",
       "title": "Complaints",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
@@ -776,7 +806,7 @@
     {
       "id": "related",
       "title": "Related Organizations",
-      "icon": "fa fa-info-circle",
+      "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
