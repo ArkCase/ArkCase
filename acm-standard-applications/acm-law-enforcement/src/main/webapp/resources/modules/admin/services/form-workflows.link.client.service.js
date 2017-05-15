@@ -52,7 +52,7 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($htt
         return $http({
             method: "PUT",
             url: "api/latest/plugin/admin/linkformsworkflows/configuration",
-            data: angular.toJson(reports),
+            data: reports,
             headers: {
                 "Content-Type": "application/json"
             }

@@ -10,7 +10,7 @@
       "menuItemTitle": "timeTracking.menus.leftnav.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
-      "position": 130
+      "position": 160
     },
     {
       "menuId": "topbar",
@@ -18,7 +18,7 @@
       "menuItemTitle": "timeTracking.menus.topbar.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
-      "position": 40
+      "position": 80
     }
   ],
   "tree": {

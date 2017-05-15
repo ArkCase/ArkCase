@@ -76,7 +76,49 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
             solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        solrDoc.setAdditionalProperty("default_organization_s", person.getDefaultOrganization() != null ? person.getDefaultOrganization().getParentTitle() : null);
+        solrDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(person));
+        solrDoc.setAdditionalProperty("default_location_s", getDefaultAddress(person));
+
         return solrDoc;
+    }
+
+    private String getDefaultPhone(Person person)
+    {
+        if (person.getDefaultPhone() == null)
+        {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(person.getDefaultPhone().getValue());
+        if (person.getDefaultPhone().getSubType() != null)
+        {
+            sb.append(" [").append(person.getDefaultPhone().getSubType()).append("]");
+        }
+        return sb.toString();
+    }
+
+    private String getDefaultAddress(Person person)
+    {
+        if (person.getDefaultAddress() == null)
+        {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (person.getDefaultAddress().getCity() != null)
+        {
+            sb.append(person.getDefaultAddress().getCity());
+        }
+        if (person.getDefaultAddress().getState() != null)
+        {
+            if (sb.length() > 0)
+            {
+                sb.append(", ");
+            }
+            sb.append(person.getDefaultAddress().getState());
+        }
+        return sb.toString();
     }
 
     @Override

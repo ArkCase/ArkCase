@@ -8,7 +8,7 @@
       "menuItemTitle": "search.menus.leftnav.item",
       "moduleId": "search",
       "iconClass": "fa fa-search",
-      "position": 70
+      "position": 100
     }
   ],
   "components": [

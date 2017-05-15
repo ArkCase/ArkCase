@@ -2,7 +2,9 @@ package com.armedia.acm.services.tag.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "acm_tag")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmTag implements AcmEntity, Serializable, AcmObject {
 
     public static final String OBJECT_TYPE = "TAG";

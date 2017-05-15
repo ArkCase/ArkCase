@@ -7,6 +7,7 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
         , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
 
         $scope.docRepo = {};
+        $scope.loading = false;
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.assignee = {};
@@ -57,9 +58,12 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
 
         $scope.saveNewDocumentRepository = function () {
             setParticipants();
+            $scope.loading = true;
             DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function (data) {
                 ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
+                $scope.loading = false;
             }, function (error) {
+                $scope.loading = false;
                 if (error.data && error.data.message){
                     $scope.error = error.data.message;
                 }else{

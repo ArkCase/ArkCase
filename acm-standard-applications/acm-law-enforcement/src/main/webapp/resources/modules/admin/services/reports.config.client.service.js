@@ -87,7 +87,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         return $http({
             method: "POST",
             url: "api/latest/plugin/report/reporttogroupsmap",
-            data: angular.toJson(reportsUserGroups),
+            data: reportsUserGroups,
             headers: {
                 "Content-Type": "application/json"
             }
@@ -108,7 +108,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         return $http({
             method: "POST",
             url: "api/latest/plugin/report/save",
-            data: angular.toJson(reports),
+            data: reports,
             headers: {
                 "Content-Type": "application/json"
             }

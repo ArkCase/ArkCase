@@ -8,7 +8,13 @@
     "allowDuplicate": false
   },
   "docTree": {
-    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
+    "extensions": [
+      "DocTreeExt.Checkin",
+      "DocTreeExt.Email",
+      "DocTreeExt.WebDAV",
+      "DocTreeExt.Record",
+      "DocTreeExt.Template"
+    ],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -542,17 +548,17 @@
     },
     "emailDialog": {
       "enableFiltering": false,
-      "multiSelect": false,
+      "multiSelect": true,
       "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "email_lcs",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
           "headerCellFilter": "translate"
         }
       ],
@@ -601,5 +607,95 @@
       "start": 0
     },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+  },
+  "dialogPersonPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "first_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.givenName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "last_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.familyName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_organization_s",
+        "displayName": "common.dialogPersonPicker.table.columns.organization",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogPersonPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogPersonPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "dialogOrganizationPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "name",
+        "displayName": "common.dialogOrganizationPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_identification_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.identification",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "type_lcs",
+        "displayName": "common.dialogOrganizationPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "primary_contact_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.contact",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
   }
 }

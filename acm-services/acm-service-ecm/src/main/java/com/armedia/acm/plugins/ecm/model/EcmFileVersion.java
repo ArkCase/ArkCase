@@ -2,7 +2,9 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +23,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_file_version")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 {
     private static final String OBJECT_TYPE = "FILE_VERSION";
