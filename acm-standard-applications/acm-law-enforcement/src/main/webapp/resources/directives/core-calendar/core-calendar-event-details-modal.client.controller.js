@@ -57,7 +57,7 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 		};
 
 		$scope.editEvent = function() {
-			if($scope.eventDetails.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
+			if ($scope.eventDetails.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
 				var params = {
 					eventDataModel: $scope.eventDetails,
 					objectId: $scope.objectId,
@@ -111,8 +111,7 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 
 				modalInstance.result.then(function(data) {
 					$modalInstance.close('EDIT_EVENT');
-				}, function() {
-				});
+				}, function() {});
 			}
 		};
 

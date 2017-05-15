@@ -1,7 +1,7 @@
 <div class="panel-body">
     <div class="row">
         <div class="col-sm-12 form-group">
-            <button type="file" ngf-select ng-model="attachmentModel.files" multiple ngf-max-size="20MB" ngf-keep="true" ngf-keep-distinct="true" class="btn btn-secondary">
+            <button type="file" ngf-select ng-model="attachmentModel.filesToAttach" multiple ngf-max-size="20MB" ngf-keep="true" ngf-keep-distinct="true" class="btn btn-secondary">
 				<span translate>
 					common.directive.coreCalendar.addNewEventDialog.form.browseFiles.button
 				</span>
@@ -17,11 +17,11 @@
             </label>
         </div>
         <div class="col-sm-12 form-group">
-			<span ng-if="attachmentModel.files.length === 0" class="well-sm" translate>
+			<span ng-if="attachmentModel.filesToAttach.length === 0" class="well-sm" translate>
 				common.directive.coreCalendar.addNewEventDialog.form.noFiles.label
 			</span>
-            <ul ng-if="attachmentModel.files.length > 0" class="list-unstyled well-sm">
-                <li ng-repeat="file in attachmentModel.files">
+            <ul ng-if="attachmentModel.filesToAttach.length > 0" class="list-unstyled well-sm">
+                <li ng-repeat="file in attachmentModel.filesToAttach">
                     <i class="fa fa-file" aria-hidden="true"></i>
                     <strong>{{file.name}}</strong>
                     <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeSelectedFile($index)"></i>
@@ -39,10 +39,10 @@
         </div>
         <div class="col-sm-12 form-group">
             <ul class="list-unstyled well-sm">
-                <li ng-repeat="file in eventDataModel.fileNames">
+                <li ng-repeat="file in attachmentModel.attachedFiles">
                     <i class="fa fa-file" aria-hidden="true"></i>
                     <strong>{{file}}</strong>
-                    <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeAttachedFile($index)"></i>
+                    <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeAttachedFile($index, file)"></i>
                 </li>
             </ul>
         </div>
