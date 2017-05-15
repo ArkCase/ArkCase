@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "zh-cn_LDAP Url",
     "security.ldapConfig.table.directoryName": "zh-cn_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "zh-cn_Ldap User Attributes Template",
+      "groupAttributesTemplate": "zh-cn_Ldap Group Attributes Template",
       "addNewDirectory": "zh-cn_Add New Directory",
       "editRecord": "zh-cn_Edit Record",
       "id": "zh-cn_ID",
+      "directoryType": "zh-cn_Select directory server",
       "ldapUrl": "zh-cn_LDAP Url",
       "base": "zh-cn_Base",
       "directoryName": "zh-cn_Directory Name",

@@ -10,9 +10,11 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -48,6 +50,7 @@ import java.util.List;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = AcmCostsheet.class)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.services.costsheet.model.AcmCostsheet")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStatefulEntity, AcmParentObjectInfo
 {
 

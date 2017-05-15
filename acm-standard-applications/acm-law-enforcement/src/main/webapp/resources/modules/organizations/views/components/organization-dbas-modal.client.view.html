@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.dbas.modal.addDBA</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.dbas.modal.editDBA</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="dbasForm">
+        <div class="row">
+           <div class="col-sm-6 form-group">
+            	<label for="value" translate>organizations.comp.dbas.modal.value.label</label><span class="required-asterisk">*</span>
+            	<input id="value" ng-model="dba.value" class="input-md form-control"  required="required"
+                       placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
+           </div>
+           <div class="col-sm-6 form-group">
+              <label for="type" translate>organizations.comp.dbas.modal.aliasType.label</label><span class="required-asterisk">*</span>
+                <select id="type"
+                        ng-model="dba.type" class="input-md form-control"  required="required"
+                        ng-options="item.type as item.name for item in dbasTypes"></select>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+              <label translate>organizations.comp.dbas.modal.setPrimary</label><span class="required-asterisk">*</span><br/>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="true">
+                 <translate>organizations.comp.dbas.modal.yes</translate>
+              </label>
+              <label>
+                 <input type="radio" ng-model="isDefault" ng-value="false">
+                 <translate>organizations.comp.dbas.modal.no</translate>
+              </label>
+           </div>
+        </div>
+        <div class="row">
+           <div class="col-sm-12 form-group">
+           	<label for="description" translate>organizations.comp.dbas.modal.description</label>
+            <textarea id="description" class="input-md form-control" ng-model="dba.description"></textarea>
+           </div>
+        </div>  
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.dbas.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="dbasForm.$invalid">
+        <span translate>organizations.comp.dbas.modal.btnOk.text</span>
+    </button>
+</div>

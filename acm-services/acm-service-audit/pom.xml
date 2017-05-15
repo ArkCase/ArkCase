@@ -130,6 +130,11 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.voodoodyne.jackson.jsog</groupId>
+            <artifactId>jackson-jsog</artifactId>
+        </dependency>
     </dependencies>
 
 

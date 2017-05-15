@@ -3,11 +3,11 @@
 angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService'
+    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $q, $modal
         , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
-        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService) {
+        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -93,13 +93,10 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                 });
 
             $scope.isreadOnly = false;
-            // Using the parentInfo to enforce the editing permission
-            // Uncomment this when `editAttachments` access rules are added for case, complaints, etc
-            /*
-             PermissionsService.getActionPermission('editAttachments', $scope.parentInfo).then(function (result) {
+            // Using the parentInfo and parentObjectType to enforce the editing permission
+            PermissionsService.getActionPermission('editAttachments', $scope.parentInfo, {objectType: $scope.parentObjectType}).then(function (result) {
              $scope.isReadOnly = !result;
              });
-             */
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
@@ -135,6 +132,12 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
+        };
+
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
         };
     }
 ]);
