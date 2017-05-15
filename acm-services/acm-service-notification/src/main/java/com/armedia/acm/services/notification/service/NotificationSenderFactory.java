@@ -1,57 +1,52 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.services.notification.model.NotificationConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.armedia.acm.files.AbstractConfigurationFileEvent;
+import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
+import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
+
+import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
 
-public class NotificationSenderFactory
+public class NotificationSenderFactory implements ApplicationListener<AbstractConfigurationFileEvent>
 {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private PropertyFileManager propertyFileManager;
-    private String notificationPropertyFileLocation;
     private Map<String, NotificationSender> notificationSenderMap;
+    private EmailSenderConfigurationServiceImpl emailSenderConfigurationService;
+    String flowType = "smtp";
 
     public NotificationSender getNotificationSender()
     {
-        String flowType = NotificationConstants.SMTP;
-        try
-        {
-            flowType = getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_TYPE, NotificationConstants.SMTP);
-            Boolean startTLS = Boolean.valueOf(getPropertyFileManager().load(getNotificationPropertyFileLocation(), NotificationConstants.EMAIL_FLOW_STARTTLS, "false"));
-            if(startTLS && flowType.equalsIgnoreCase(NotificationConstants.SMTP))
-            {
-                flowType = NotificationConstants.SMTP_STARTTLS;
-            }
-        } catch (AcmEncryptionException e)
-        {
-            log.error("Encryption error: {}", e.getMessage());
-        }
-
         return getNotificationSenderMap().get(flowType);
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    @Override
+    public void onApplicationEvent(AbstractConfigurationFileEvent event)
     {
-        return propertyFileManager;
+
+        if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
+        {
+            EmailSenderConfiguration senderConfigurationUpdated = getEmailSenderConfigurationService().readConfiguration();
+            flowType = senderConfigurationUpdated.getType();
+        }
+
     }
 
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
+    /**
+     * @return the emailSenderConfigurationService
+     */
+    public EmailSenderConfigurationServiceImpl getEmailSenderConfigurationService()
     {
-        this.propertyFileManager = propertyFileManager;
+        return emailSenderConfigurationService;
     }
 
-    public String getNotificationPropertyFileLocation()
+    /**
+     * @param emailSenderConfigurationService
+     *            the emailSenderConfigurationService to set
+     */
+    public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {
-        return notificationPropertyFileLocation;
-    }
-
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
-    {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
+        this.emailSenderConfigurationService = emailSenderConfigurationService;
     }
 
     public Map<String, NotificationSender> getNotificationSenderMap()

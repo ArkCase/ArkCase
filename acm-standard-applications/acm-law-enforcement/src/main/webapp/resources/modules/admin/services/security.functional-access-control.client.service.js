@@ -87,7 +87,7 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
         return $http({
             method: 'POST',
             url: 'api/latest/functionalaccess/rolestogroups',
-            data: angular.toJson(appRolesToGroups),
+            data: appRolesToGroups,
             headers: {
                 'Content-Type': 'application/json'
             }

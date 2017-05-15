@@ -1,10 +1,11 @@
-<div ng-controller="DocumentRepository.ActionsController">
+<div ng-controller="DocumentRepository.ActionsController" class="well-sm">
     <div class="row">
         <div class="col-xs-4">
             <div class="checkbox">
                 <label>
                     <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
-                           permission="restrictDocumentRepository" permission-properties="objectInfo"
+                           permission="restrictDocumentRepository" permission-object-type="DOC_REPO"
+                           permission-properties="objectInfo"
                            permission-action="disabled">
                     <span translate>document-repository.comp.actions.restrict</span>
                 </label>

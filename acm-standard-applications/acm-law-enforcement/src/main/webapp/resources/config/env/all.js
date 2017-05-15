@@ -94,7 +94,8 @@ module.exports = {
                 'lib/angular-hotkeys/build/hotkeys.js',
                 'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js',
                 'lib/crypto-js/crypto-js.js',
-                'lib/angular-google-analytics/dist/angular-google-analytics.js'
+                'lib/angular-google-analytics/dist/angular-google-analytics.js',
+                'lib/jsog/lib/JSOG.js'
             ]
         },
         css: [
