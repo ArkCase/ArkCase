@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "zh-cn_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "zh-cn_Process Diagram",
     "eSignature.button": "zh-cn_Sign",
     "subscribe.button": "zh-cn_Subscribe",
     "unsubscribe.button": "zh-cn_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "zh-cn_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "zh-cn_Error",
-      "btnOk.text": "zh-cn_OK"
+      "btnOk.text": "zh-cn_OK",
+      "btnClose.text": "zh-cn_Close"
     }
   },
   "tasks.comp.details": {
@@ -122,6 +124,10 @@
       "startDateTime": "zh-cn_Start",
       "endDateTime": "zh-cn_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "zh-cn_Process Diagram",
+    "error.loading": "zh-cn_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "zh-cn_eSignatures",

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.13-SNAPSHOT</version>
+    <version>3.1.16-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -121,6 +120,7 @@
         <powermock.version>1.6.5</powermock.version>
         <netty.version>4.1.7.Final</netty.version>
         <json-path.version>2.2.0</json-path.version>
+        <magic.matcher.version>0.1.2</magic.matcher.version>
     </properties>
 
     <organization>
@@ -1839,6 +1839,13 @@
                         <artifactId>httpcore</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>jmimemagic</groupId>
+                <artifactId>jmimemagic</artifactId>
+                <version>${magic.matcher.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

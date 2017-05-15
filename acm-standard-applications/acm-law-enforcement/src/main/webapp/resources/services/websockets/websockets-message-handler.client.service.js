@@ -147,6 +147,14 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 removeFromCache(subKey, 'CostSheets');
                 removeFromCache(subKey, 'TimeSheets');
             }
+
+            if (objectType === 'TASK'){
+                var cacheInfo = new Store.CacheFifo('TaskDiagram');
+                var item = cacheInfo.get(objectId);
+                if (item != null) {
+                    cacheInfo.remove(objectId);
+                }
+            }
         }
 
         function getCacheInfoName(objectType) {
