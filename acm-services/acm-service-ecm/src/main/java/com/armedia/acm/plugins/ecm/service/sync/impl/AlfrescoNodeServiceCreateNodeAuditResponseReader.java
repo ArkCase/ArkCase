@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
-import com.armedia.acm.plugins.ecm.model.sync.EcmCreateEvent;
-import com.armedia.acm.plugins.ecm.service.sync.CreateNodesResponseReader;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,20 +22,20 @@ import static java.util.stream.Collectors.toList;
  * For now, from the node service we are interested only in new folders.  This reader ignores all other new
  * content types.
  */
-public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements CreateNodesResponseReader
+public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAuditResponseReader
 {
     private final Map<String, String> alfrescoTypeToArkCaseType = ImmutableMap.of(
             "{http://www.alfresco.org/model/content/1.0}folder", "folder"
     );
 
     @Override
-    public List<EcmCreateEvent> read(JSONObject createNodesJson)
+    public List<EcmEvent> read(JSONObject createNodesJson)
     {
         int count = createNodesJson.getInt("count");
 
         JSONArray auditEvents = createNodesJson.getJSONArray("entries");
 
-        List<EcmCreateEvent> events = IntStream.range(0, count)
+        List<EcmEvent> events = IntStream.range(0, count)
                 .mapToObj(auditEvents::getJSONObject)
                 .map(this::buildEcmCreateEvent)
                 .filter(Objects::nonNull)
@@ -43,7 +44,7 @@ public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements CreateN
         return events;
     }
 
-    protected EcmCreateEvent buildEcmCreateEvent(JSONObject createEvent)
+    protected EcmEvent buildEcmCreateEvent(JSONObject createEvent)
     {
         // this reader only cares about folders
         JSONObject values = createEvent.getJSONObject("values");
@@ -53,8 +54,12 @@ public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements CreateN
         if (alfrescoTypeToArkCaseType.containsKey(alfrescoContentType))
         {
 
-            EcmCreateEvent retval = new EcmCreateEvent(createEvent);
+            EcmEvent retval = new EcmEvent(createEvent);
+            retval.setEcmEventType(EcmEventType.CREATE);
             retval.setUserId(createEvent.getString("user"));
+
+            long auditId = createEvent.getLong("id");
+            retval.setAuditId(auditId);
 
             retval.setNodeType(alfrescoTypeToArkCaseType.get(alfrescoContentType));
 

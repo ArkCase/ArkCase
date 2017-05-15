@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
-import com.armedia.acm.plugins.ecm.model.sync.EcmDeleteEvent;
-import com.armedia.acm.plugins.ecm.service.sync.DeleteNodesResponseReader;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,16 +20,16 @@ import static java.util.stream.Collectors.toList;
  * For now, from the node service we are interested only in new folders.  This reader ignores all other new
  * content types.
  */
-public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements DeleteNodesResponseReader
+public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements EcmAuditResponseReader
 {
     @Override
-    public List<EcmDeleteEvent> read(JSONObject deleteNodesJson)
+    public List<EcmEvent> read(JSONObject deleteNodesJson)
     {
         int count = deleteNodesJson.getInt("count");
 
         JSONArray auditEvents = deleteNodesJson.getJSONArray("entries");
 
-        List<EcmDeleteEvent> events = IntStream.range(0, count)
+        List<EcmEvent> events = IntStream.range(0, count)
                 .mapToObj(auditEvents::getJSONObject)
                 .map(this::buildEcmCreateEvent)
                 .filter(Objects::nonNull)
@@ -37,11 +38,16 @@ public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements DeleteN
         return events;
     }
 
-    protected EcmDeleteEvent buildEcmCreateEvent(JSONObject deleteEvent)
+    protected EcmEvent buildEcmCreateEvent(JSONObject deleteEvent)
     {
         // the deleteNode method won't generate very much audit information... we can only get the actual node ID
         // that was deleted.
-        EcmDeleteEvent retval = new EcmDeleteEvent(deleteEvent);
+        EcmEvent retval = new EcmEvent(deleteEvent);
+        retval.setEcmEventType(EcmEventType.DELETE);
+
+        Long auditId = deleteEvent.getLong("id");
+        retval.setAuditId(auditId);
+        
         retval.setUserId(deleteEvent.getString("user"));
 
         JSONObject values = deleteEvent.getJSONObject("values");

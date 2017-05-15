@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
-import com.armedia.acm.plugins.ecm.model.sync.EcmCreateEvent;
-import com.armedia.acm.plugins.ecm.service.sync.CreateNodesResponseReader;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
+import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.google.common.collect.ImmutableMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,7 +23,7 @@ import static java.util.stream.Collectors.toList;
  * For now, from the file/folder service we are interested only in new content files.  This reader ignores all other new
  * content types.
  */
-public class AlfrescoFileFolderServiceCreateAuditResponseReader implements CreateNodesResponseReader
+public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAuditResponseReader
 {
     protected final Map<String, String> alfrescoTypeToArkCaseType = ImmutableMap.of(
             "{http://www.alfresco.org/model/content/1.0}content", "document",
@@ -32,13 +33,13 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements Creat
     protected final List<String> typesToIncludeInResults = Arrays.asList("document");
 
     @Override
-    public List<EcmCreateEvent> read(JSONObject createNodesJson)
+    public List<EcmEvent> read(JSONObject createNodesJson)
     {
         int count = createNodesJson.getInt("count");
 
         JSONArray auditEvents = createNodesJson.getJSONArray("entries");
 
-        List<EcmCreateEvent> events = IntStream.range(0, count)
+        List<EcmEvent> events = IntStream.range(0, count)
                 .mapToObj(auditEvents::getJSONObject)
                 .map(this::buildEcmCreateEvent)
                 .filter(Objects::nonNull)
@@ -47,7 +48,7 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements Creat
         return events;
     }
 
-    protected EcmCreateEvent buildEcmCreateEvent(JSONObject createEvent)
+    protected EcmEvent buildEcmCreateEvent(JSONObject createEvent)
     {
         // this reader only cares about documents
         JSONObject values = createEvent.getJSONObject("values");
@@ -59,8 +60,12 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements Creat
         if (includeThisNode)
         {
 
-            EcmCreateEvent retval = new EcmCreateEvent(createEvent);
+            EcmEvent retval = new EcmEvent(createEvent);
+            retval.setEcmEventType(EcmEventType.CREATE);
             retval.setUserId(createEvent.getString("user"));
+
+            long auditId = createEvent.getLong("id");
+            retval.setAuditId(auditId);
 
             retval.setNodeType(alfrescoTypeToArkCaseType.get(alfrescoContentType));
 
