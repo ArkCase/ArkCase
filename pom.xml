@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -29,6 +30,7 @@
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-codec>1.9</apache-commons-codec>
+        <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-poi.version>3.15</apache-poi.version>
         <apache-tika-parsers.version>1.13</apache-tika-parsers.version>
@@ -119,6 +121,7 @@
         <powermock.version>1.6.5</powermock.version>
         <netty.version>4.1.7.Final</netty.version>
         <json-path.version>2.2.0</json-path.version>
+        <magic.matcher.version>0.1.2</magic.matcher.version>
     </properties>
 
     <organization>
@@ -569,7 +572,6 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
-                    <classifier>feature</classifier>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -1473,6 +1475,11 @@
                 <artifactId>httpclient</artifactId>
                 <version>${apache-httpcomponents-httpclient.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${apache-commons-net.version}</version>
+            </dependency>
 
             <!-- json -->
             <dependency>
@@ -1833,6 +1840,13 @@
                         <artifactId>httpcore</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>jmimemagic</groupId>
+                <artifactId>jmimemagic</artifactId>
+                <version>${magic.matcher.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

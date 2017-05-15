@@ -11,7 +11,7 @@
       "menuItemTitle": "document-repository.menus.leftnav.item",
       "moduleId": "document-repository",
       "iconClass": "fa fa-folder",
-      "position": 50
+      "position": 60
     },
     {
       "menuId": "topbar",
@@ -20,7 +20,7 @@
       "moduleId": "document-repository",
       "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
-      "position": 20
+      "position": 60
     }
   ],
   "tree": {

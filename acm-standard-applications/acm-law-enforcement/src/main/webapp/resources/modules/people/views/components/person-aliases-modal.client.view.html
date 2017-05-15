@@ -10,47 +10,48 @@
 <div class="modal-body">
     <form name="aliasForm">
         <div class="row">
-        	<div class="col-sm-6 form-group">
-        
-        		<label for="aliasValue" translate>people.comp.aliases.modal.aliasValue</label>
-                <input id="aliasValue" class="input-md form-control" ng-model="alias.aliasValue"
-                       placeholder="{{ 'people.comp.aliases.modal.value.placeholder' | translate }}">
-        
-        	</div>
-        	<div class="col-sm-6 form-group">
-        	
-        		<label for="aliasType" translate>people.comp.aliases.modal.type</label>
-                <select id="aliasType" class="input-md form-control" ng-model="alias.aliasType">
-                    <option ng-repeat="option in aliasTypes" value="{{option.type}}">{{option.name}}</option>
-                </select>
-        	
-        	</div>
-        </div>
-        
-        <div class="row">
-        	<div class="col-sm-12 form-group">
-        
-        		<label translate>people.comp.aliases.modal.setPrimary</label>
-                <label>
-                <input type="radio" ng-model="isDefault" ng-value="true">
-                <translate>people.comp.aliases.modal.yes</translate>
-                </label>
-                
-                <input type="radio" ng-model="isDefault" ng-value="false">
-                <translate>people.comp.aliases.modal.no</translate>
-        
-        	</div>
-        </div>
-        
-        <div class="row">
-        	<div class="col-sm-12 form-group">
-        	
-        		<label for="aliasDescription" translate>people.comp.aliases.modal.description</label>
-                <textarea id="aliasDescription" class="input-md form-control" ng-model="alias.description"></textarea>
-        
-        	</div>
-        </div>
-        
+            <div class="col-sm-6 form-group">
+                <label for="aliasValue" translate>people.comp.aliases.modal.aliasValue</label><span
+                    class="required-asterisk">*</span>
+                <div class="col-sm-6 form-group">
+                    <label for="aliasValue"><span translate>people.comp.aliases.modal.aliasValue</span>
+                        <span class="required-asterisk">*</span></label>
+                    <input id="aliasValue" class="input-md form-control" ng-model="alias.aliasValue" required="required"
+                           placeholder="{{ 'people.comp.aliases.modal.value.placeholder' | translate }}">
+                </div>
+                <div class="col-sm-6 form-group">
+                    <label for="aliasType" translate>people.comp.aliases.modal.type</label><span
+                        class="required-asterisk">*</span>
+                    <select id="aliasType" class="input-md form-control" ng-model="alias.aliasType" required="required">
+                        <option ng-repeat="option in aliasTypes" value="{{option.type}}">{{option.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label translate>people.comp.aliases.modal.setPrimary</label><span
+                        class="required-asterisk">*</span><br/>
+                    <label>
+                        <input type="radio" ng-model="isDefault" ng-value="true">
+                        <translate>people.comp.aliases.modal.yes</translate>
+                    </label>
+                    <label>
+                        <input type="radio" ng-model="isDefault" ng-value="false">
+                        <translate>people.comp.aliases.modal.no</translate>
+                    </label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="aliasDescription" translate>people.comp.aliases.modal.description</label>
+                    <textarea id="aliasDescription" class="input-md form-control"
+                              ng-model="alias.description"></textarea>
+
+                </div>
+            </div>
+
     </form>
 </div>
 <div class="modal-footer">

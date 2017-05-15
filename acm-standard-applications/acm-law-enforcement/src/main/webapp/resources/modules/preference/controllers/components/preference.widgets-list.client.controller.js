@@ -107,7 +107,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
 
 
                     DashboardService.saveConfig({
-                        dashboardConfig: angular.toJson(model),
+                        dashboardConfig: model,
                         module: $scope.moduleName
                     });
                 })

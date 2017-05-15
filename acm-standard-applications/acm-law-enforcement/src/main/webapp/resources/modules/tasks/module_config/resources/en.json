@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "Process Diagram",
     "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "Error",
-      "btnOk.text": "OK"
+      "btnOk.text": "OK",
+      "btnClose.text": "Close"
     }
   },
   "tasks.comp.details": {
@@ -82,10 +84,12 @@
   },
   "tasks.comp.parentdocs": {
     "title": "Parent Documents",
-    "noParentDataMessage": "No parent documents for standalone task"
+    "noParentDataMessage": "No parent documents for standalone task",
+    "sendEmail": "Send Email"
   },
   "tasks.comp.attachments": {
-    "title": "Attachments"
+    "title": "Attachments",
+    "sendEmail": "Send Email"
   },
   "tasks.comp.notes": {
     "title": "Notes",
@@ -122,6 +126,10 @@
       "startDateTime": "Start",
       "endDateTime": "End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "Process Diagram",
+    "error.loading": "Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "eSignatures",

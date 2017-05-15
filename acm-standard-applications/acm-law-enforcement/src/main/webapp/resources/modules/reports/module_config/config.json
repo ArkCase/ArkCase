@@ -8,7 +8,7 @@
       "menuItemTitle": "reports.menus.leftnav.item",
       "moduleId": "report",
       "iconClass": "fa fa-bar-chart",
-      "position": 80
+      "position": 110
     }
   ],
   "components": [

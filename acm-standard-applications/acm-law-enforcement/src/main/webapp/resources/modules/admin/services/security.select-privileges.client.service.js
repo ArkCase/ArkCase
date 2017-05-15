@@ -77,7 +77,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
         return $http({
             method: 'PUT',
             url: url,
-            data: angular.toJson(data),
+            data: data,
             headers: {
                 'Content-Type': 'application/json'
             }
@@ -124,7 +124,7 @@ angular.module('admin').service('Admin.SelectPrivilegesService', function ($http
         return $http({
             method: oldRoleName ? 'PUT' : 'POST',
             url: url,
-            data: angular.toJson(data),
+            data: data,
             headers: {
                 'Content-Type': 'application/json'
             }
