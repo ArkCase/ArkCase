@@ -39,7 +39,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-drools-rule-monitor.xml"})
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-object-lock.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class EcmFileDaoIT
 {

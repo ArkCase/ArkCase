@@ -10,6 +10,7 @@ import org.activiti.engine.task.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -131,4 +132,6 @@ public interface TaskDao
 
     AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
                                     String taskEventName);
+
+    byte[] getDiagram(Long id) throws AcmTaskException;
 }
