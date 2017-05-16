@@ -1,5 +1,7 @@
 package com.armedia.acm.calendar.service;
 
+import static com.armedia.acm.calendar.DateTimeAdjuster.adjustDateTimeString;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -25,17 +27,7 @@ public class ZonedDateTimeDeserializer extends JsonDeserializer<ZonedDateTime>
     @Override
     public ZonedDateTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException
     {
-
-        StringBuilder dateText = new StringBuilder(jp.getText());
-        if (dateText.charAt(10) == ' ')
-        {
-            dateText.replace(10, 11, "T");
-        }
-        if (dateText.charAt(dateText.length() - 3) != ':')
-        {
-            dateText.insert(dateText.length() - 2, ":");
-        }
-        return ZonedDateTime.parse(dateText, DateTimeFormatter.ISO_DATE_TIME);
+        return ZonedDateTime.parse(adjustDateTimeString(jp.getText()), DateTimeFormatter.ISO_DATE_TIME);
     }
 
 }
