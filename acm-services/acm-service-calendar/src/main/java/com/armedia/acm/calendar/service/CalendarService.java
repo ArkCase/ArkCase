@@ -43,12 +43,11 @@ public interface CalendarService
     /**
      * @param user
      * @param auth
-     * @param calendarId
      * @param calendarEvent
      * @param attachments
      * @throws CalendarServiceException
      */
-    void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
+    void addCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
             throws CalendarServiceException;
 
     /**

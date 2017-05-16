@@ -29,7 +29,6 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import microsoft.exchange.webservices.data.core.enumeration.search.SortDirection;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -42,7 +41,6 @@ import microsoft.exchange.webservices.data.property.complex.FolderPermissionColl
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
-import microsoft.exchange.webservices.data.search.ItemView;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 11, 2017
@@ -248,7 +246,6 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
             String sort, String sortDirection, int start, int maxItems, String objectId, boolean restricted)
             throws ServiceLocalException, Exception
     {
-        ItemView view = new ItemView(maxItems, start);
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());
         CalendarView calendarView = new CalendarView(startDate, endDate, maxItems);
@@ -256,16 +253,17 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
         PropertyDefinition orderBy = sort == null || sort.trim().isEmpty() || !sortFields.containsKey(sort) ? ItemSchema.DateTimeReceived
                 : sortFields.get(sort);
 
-        view.getOrderBy().add(orderBy, "ASC".equals(sortDirection) ? SortDirection.Ascending : SortDirection.Descending);
+        calendarView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start, AppointmentSchema.End, orderBy));
 
-        PropertySet allProperties = new PropertySet();
-        allProperties.addRange(PropertyDefinitionHolder.standardProperties);
+        CalendarFolder calendar = restricted ? CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)))
+                : CalendarFolder.bind(service, WellKnownFolderName.Calendar);
+        FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
 
-        FindItemsResults<Appointment> findResults = restricted
-                ? service.findAppointments(new FolderId(getCalendarId(objectId)), calendarView)
-                : service.findAppointments(WellKnownFolderName.Calendar, calendarView);
         if (!findResults.getItems().isEmpty())
         {
+            PropertySet allProperties = new PropertySet();
+            allProperties.addRange(PropertyDefinitionHolder.standardProperties);
+
             List<Item> appointmentItems = findResults.getItems().stream().map(item -> {
                 return (Item) item;
             }).collect(Collectors.toList());
