@@ -120,7 +120,10 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             promiseSavePerson.then(
                 function (objectInfo) {
                     $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("people.comp.newPerson.informSaved"));
+                    MessageService.info($translate.instant("people.comp.editPerson.informCreated", {
+                        firstName: objectInfo.givenName,
+                        lastName: objectInfo.familyName
+                    }));
                     $state.go('people');
                     return objectInfo;
                 }
