@@ -29,7 +29,6 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.ParticipantConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -133,6 +132,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
         }
+    }
+
+    @Override
+    public byte[] getDiagram(Long id) throws AcmTaskException
+    {
+        return taskDao.getDiagram(id);
     }
 
     @Override
