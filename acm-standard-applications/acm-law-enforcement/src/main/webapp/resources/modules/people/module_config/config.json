@@ -120,7 +120,7 @@
       },
       {
         "type": "p/PERSON/add",
-        "label": "Addresses",
+        "label": "Locations",
         "icon": "fa fa-map-marker",
         "components": [
           "addresses"
@@ -326,7 +326,7 @@
     },
     {
       "id": "addresses",
-      "title": "Addresses",
+      "title": "Locations",
       "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
