@@ -87,6 +87,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             var modalInstance = $modal.open({
                 templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
                 controller: 'Tasks.DiagramModalController',
+                windowClass: 'modal-width-80',
                 resolve:{
                     taskId: function(){
                         return $scope.objectInfo.taskId;

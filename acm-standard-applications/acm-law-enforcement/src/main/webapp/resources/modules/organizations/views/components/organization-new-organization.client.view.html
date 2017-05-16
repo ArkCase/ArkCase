@@ -1,9 +1,26 @@
 <div ng-controller="Organizations.NewOrganizationController" class="module-content">
-    <form name="organizationForm" ng-submit="save()">
-    <div class="module-header">
-        <h3><span translate>organizations.comp.newOrganization.title</span></h3>
-    </div>
     <div class="content-body">
+        <form name="organizationForm" ng-submit="save()">
+            <div class="module-header">
+                <h3><span translate>organizations.comp.newOrganization.title</span></h3>
+            </div>
+            <div class="well-sm">
+                <div class="row">
+                    <div class="well-sm">
+                        <div class="pull-right">
+							<div class="btn-group">
+								<button type="submit"
+									ng-disabled="organizationForm.$invalid || saved"
+									class="btn btn-primary" data-toggle="tooltip" id="saveButton"
+									data-title="Save">
+									<i class="fa fa-floppy-o"></i> <span translate>
+										organizations.comp.newOrganization.saveButton</span>
+								</button>
+							</div>
+						</div>
+                    </div>
+                </div>
+            </div>
             <div class="row well-sm">
                 <div class="col-sm-4 form-group">
                     <label for="organizationName" translate> organizations.comp.newOrganization.name </label>
@@ -467,14 +484,6 @@
                     </div>
                 </div>
             </div>
+        </form>
     </div>
-    <div class="modal-footer">
-        <button type="submit" ng-disabled="organizationForm.$invalid || saved"
-                class="btn btn-primary" data-toggle="tooltip"
-                id="saveButton" data-title="Save">
-            <i class="fa fa-floppy-o"></i>
-            <span translate> organizations.comp.newOrganization.saveButton</span>
-        </button>
-    </div>
-</form>
 </div>
