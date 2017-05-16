@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by riste.tutureski on 5/16/2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-library-test-activiti-process-definition-service.xml"})
+@ContextConfiguration(locations = {"classpath:/spring/spring-library-test-activiti-process-definition-diagram.xml"})
 public class WorkflowDiagramIT
 {
     @Autowired
