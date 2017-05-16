@@ -7,7 +7,6 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = {"/api/v1/plugin/people", "/api/latest/plugin/people"})
@@ -37,7 +37,7 @@ public class PeopleAPIController
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
 
-    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person upsertPerson(
             @RequestBody Person in,
@@ -49,13 +49,34 @@ public class PeopleAPIController
 
         if (in.getId() == null)
         {
-            log.info("person before {}", ToStringBuilder.reflectionToString(in));
             Person person = personService.createPerson(in, auth);
-            log.info("person after {}", ToStringBuilder.reflectionToString(person));
             return person;
         } else
         {
             Person person = personService.savePerson(in, auth);
+            return person;
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public Person upsertPersonMultipart(
+            @RequestPart(name = "person") Person in,
+            @RequestPart(name = "pictures") List<MultipartFile> pictures,
+            Authentication auth
+    ) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        log.debug("Persist a Person: [{}];", in);
+
+        if (in.getId() == null)
+        {
+            Person person = personService.createPerson(in, pictures, auth);
+
+            return person;
+        } else
+        {
+            Person person = personService.savePerson(in, pictures, auth);
             return person;
         }
     }
@@ -78,7 +99,6 @@ public class PeopleAPIController
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
         }
-
     }
 
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -174,7 +194,6 @@ public class PeopleAPIController
             throw new AcmObjectNotFoundException("Person", null, String.format("Could not retrieve %s for person id[%s]", objectType, personId).toString(), e);
         }
     }
-
 
 
     public void setPersonService(PersonService personService)
