@@ -31,10 +31,6 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
             console.log('button import clicked');
         };
 
-        $scope.delete = function () {
-            console.log('button delete clicked');
-        };
-
         $scope.activate = function () {
             console.log('button activate clicked');
         };
