@@ -218,6 +218,13 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.bpmn.upload": "Upload",
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
+    "workflows.config.bpmn.modal": {        
+        "label.description": "Description",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
       "success": "Process succesfully activated."
