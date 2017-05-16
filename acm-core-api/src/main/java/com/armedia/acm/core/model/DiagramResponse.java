@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.task.model;
+package com.armedia.acm.core.model;
 
 import java.io.Serializable;
 
