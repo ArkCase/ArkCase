@@ -5,9 +5,10 @@
                 <span translate>organizations.comp.addresses.title</span>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs" ng-click="map()">
+                        <i class="fa fa-map"></i>
                         <span translate>organizations.comp.addresses.actions.map</span>
                     </button>
-                    <button class="btn btn-default btn-xs" ng-click="addNew()">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
                         <i class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
