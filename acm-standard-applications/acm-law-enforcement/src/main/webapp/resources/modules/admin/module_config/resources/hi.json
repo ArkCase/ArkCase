@@ -242,11 +242,19 @@
     "workflows.config.links": {
       "download": "hi_Download",
       "replaceFile": "hi_Replace File",
-      "versionHistory": "hi_Version History"
+      "versionHistory": "hi_Version History",
+      "diagram": "hi_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "hi_Successfully uploaded new process definition",
       "error": "hi_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "hi_Process Diagram",
+      "error.loading": "hi_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "hi_Close"
+      }
     },
     "formWorkflows.title": "hi_Form/Workflow Link",
     "formWorkflows.link": "hi_Link Forms/Workflows",

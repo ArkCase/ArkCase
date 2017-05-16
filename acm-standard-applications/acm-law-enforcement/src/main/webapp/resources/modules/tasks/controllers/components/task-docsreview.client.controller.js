@@ -51,9 +51,11 @@ angular.module('tasks').controller('Tasks.DocsReviewController', ['$scope', '$q'
 
         $scope.onClickObjLink = function (event, rowEntity) {
             event.preventDefault();
-            var targetType = Util.goodMapValue(rowEntity, "container.containerObjectType");
-            var targetId = Util.goodMapValue(rowEntity, "container.containerObjectId");
-            gridHelper.showObject(targetType, targetId);
+            var targetId = Util.goodMapValue(rowEntity, "fileId");
+            var parentId = Util.goodMapValue(rowEntity, "container.containerObjectId");
+            var fileName = Util.goodMapValue(rowEntity, "containerObjectTitle");
+            var parentType = Util.goodMapValue(rowEntity, "container.containerObjectType");
+            gridHelper.openObject(targetId, parentId, fileName, parentType);
         };
 
         $scope.onDownloadFile = function (event, rowEntity) {
