@@ -1,5 +1,7 @@
 package com.armedia.acm.calendar.web.api;
 
+import static com.armedia.acm.calendar.DateTimeAdjuster.adjustDateTimeString;
+
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
@@ -174,7 +176,7 @@ public class AcmCalendarAPIController
     {
         if (after != null && !after.isEmpty())
         {
-            return fixTimeZone(after);
+            return adjustDateTimeString(after);
         }
         return ZonedDateTime.now().with(TemporalAdjusters.firstDayOfMonth()).toString();
     }
@@ -187,22 +189,9 @@ public class AcmCalendarAPIController
     {
         if (before != null && !before.isEmpty())
         {
-            return fixTimeZone(before);
+            return adjustDateTimeString(before);
         }
         return ZonedDateTime.now().with(TemporalAdjusters.lastDayOfMonth()).toString();
-    }
-
-    /**
-     * @param time
-     * @return
-     */
-    private String fixTimeZone(String time)
-    {
-        if (time.charAt(time.length() - 3) != ':')
-        {
-            return new StringBuilder(time).insert(time.length() - 2, ":").toString();
-        }
-        return time;
     }
 
     /**
