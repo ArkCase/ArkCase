@@ -73,6 +73,13 @@
           "headerCellFilter": "translate",
           "enableSorting": true,
           "width": 150
+        },
+        {
+          "name": "create_date_tdt",
+          "displayName": "dashboard.widgets.myCases.table.header.created",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "width": 70
         }
       ]
     },
