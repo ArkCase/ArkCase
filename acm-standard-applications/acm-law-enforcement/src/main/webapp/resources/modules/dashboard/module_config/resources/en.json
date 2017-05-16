@@ -33,6 +33,8 @@
             "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
+            "created": "Created",
+            "modified": "Modified",
             "status": "Status"
           },
           "overdue.tooltip": "Case is Overdue",
@@ -48,6 +50,7 @@
             "title": "Title",
             "priority": "Priority",
             "created": "Created",
+            "modified": "Modified",
             "status": "Status"
           },
           "overdue.tooltip": "Complaint is Overdue",
