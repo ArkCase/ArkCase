@@ -1,5 +1,6 @@
 package com.armedia.acm.activiti.services;
 
+import com.armedia.acm.activiti.exceptions.AcmBpmnException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 
 import java.io.File;
@@ -30,5 +31,7 @@ public interface AcmBpmnService {
     public AcmProcessDefinition getActive(String processDefinitionKey);
 
     public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version);
+
+    public byte[] getDiagram(String deploymentId, String key, Integer version) throws AcmBpmnException;
 
 }
