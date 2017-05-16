@@ -37,6 +37,21 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
+          "field": "alerts",
+          "displayName": "",
+          "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myCases.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myCases.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+          "width": 40,
+          "enableSorting": false,
+          "enableColumnMenu": false
+        },
+        {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.priority",
+          "headerCellFilter": "translate",
+          "enableSorting": true,
+          "width": 70
+        },
+        {
           "name": "name",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
@@ -58,13 +73,6 @@
           "headerCellFilter": "translate",
           "enableSorting": true,
           "width": 150
-        },
-        {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myCases.table.header.priority",
-          "headerCellFilter": "translate",
-          "enableSorting": true,
-          "width": 70
         }
       ]
     },
@@ -88,6 +96,12 @@
           "enableColumnMenu": false
         },
         {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myTasks.table.header.priority",
+          "headerCellFilter": "translate",
+          "width": 75
+        },
+        {
           "name": "object_id_s",
           "displayName": "dashboard.widgets.myTasks.table.header.taskId",
           "headerCellFilter": "translate",
@@ -103,10 +117,10 @@
           "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myTasks.table.header.priority",
+          "name": "status_lcs",
+          "displayName": "dashboard.widgets.myTasks.table.header.status",
           "headerCellFilter": "translate",
-          "width": 75
+          "width": 100
         },
         {
           "name": "dueDate_tdt",
@@ -114,12 +128,6 @@
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
-        },
-        {
-          "name": "status_lcs",
-          "displayName": "dashboard.widgets.myTasks.table.header.status",
-          "headerCellFilter": "translate",
-          "width": 100
         },
         {
           "name": "parent_id_s",
@@ -142,6 +150,20 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
+          "field": "alerts",
+          "displayName": "",
+          "cellTemplate": "<div><a ng-if=\"row.entity.isOverdue\" tooltip=\"{{'dashboard.widgets.myComplaints.table.overdue.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-overdue\"><i class=\"fa fa-exclamation-circle icon-overdue\"></i></a><a ng-if=\"row.entity.isDeadline\" tooltip=\"{{'dashboard.widgets.myComplaints.table.deadline.tooltip' | translate}}\" tooltip-append-to-body=\"true\" tooltip-class=\"tooltip-due-soon\"><i class=\"fa fa-exclamation-triangle icon-due-soon\"></i></a></div>",
+          "width": 40,
+          "enableSorting": false,
+          "enableColumnMenu": false
+        },
+        {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
+          "headerCellFilter": "translate",
+          "width": 75
+        },
+        {
           "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
@@ -155,10 +177,10 @@
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
+          "name": "status_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.status",
           "headerCellFilter": "translate",
-          "width": 75
+          "width": 100
         },
         {
           "name": "create_date_tdt",
@@ -166,12 +188,6 @@
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
-        },
-        {
-          "name": "status_lcs",
-          "displayName": "dashboard.widgets.myComplaints.table.header.status",
-          "headerCellFilter": "translate",
-          "width": 100
         }
       ]
     },
