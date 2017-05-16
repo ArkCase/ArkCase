@@ -189,7 +189,37 @@
             </div>
             <div id="collapsePicture" class="panel-collapse collapse">
                 <div class="panel-body">
-
+                    <div class="panel-body" data-ng-repeat="picture in pictures">
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label translate>people.comp.pictures.dialog.title</label><span
+                                    class="required-asterisk">*</span><br/>
+                                <button ngf-select ng-model="pictures[$index]" ng-hide="pictures[$index].name"
+                                        ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                                        class="btn btn-sm btn-default"><span
+                                        translate>people.comp.pictures.dialog.browse</span></button>
+                                {{pictures[$index].name}}
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <div class="pull-left" ng-show="picture.name">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control"
+                                            ng-click="removePerson(pictures[$index])">
+                                        <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
+                                    </button>
+                                </div>
+                                <div class="pull-left">
+                                    <label class="control-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-link form-control"
+                                            ng-click="addEmptyPerson();"
+                                            ng-show="$last && picture.name">
+                                        <i class="fa fa-plus text-success"></i><span
+                                            translate>people.comp.editPerson.addAnother</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
