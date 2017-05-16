@@ -29,7 +29,6 @@ import java.util.EnumSet;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 30, 2017
- * @param <EventRecurrence>
  *
  */
 @JsonInclude(Include.NON_NULL)
