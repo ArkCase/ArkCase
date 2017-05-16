@@ -33,6 +33,7 @@
             "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
+            "created": "Created",
             "status": "Status"
           },
           "overdue.tooltip": "Case is Overdue",
