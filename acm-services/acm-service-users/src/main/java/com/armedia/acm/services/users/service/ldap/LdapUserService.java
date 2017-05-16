@@ -256,9 +256,10 @@ public class LdapUserService
     }
 
     @Transactional
-    public AcmUser removeLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
+    public AcmUser removeLdapUser(String userId, String directory) throws AcmLdapActionFailedException
     {
-        log.debug("Removing User:{} from database", acmUser.getUserId());
+        AcmUser existingUser = getUserDao().findByUserId(userId);
+        log.debug("Removing User:{} from database", existingUser.getUserId());
         getUserDao().markUserAsDeleted(userId);
 
         //TODO sync to Ldap and remove User from Ldap
@@ -268,16 +269,15 @@ public class LdapUserService
 
         try
         {
-            log.debug("Deleting User:{} with DN:{} in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
-            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(acmUser.getDistinguishedName(),
+            log.debug("Deleting User:{} with DN:{} in LDAP", existingUser.getUserId(), existingUser.getDistinguishedName());
+            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingUser.getDistinguishedName(),
                     ldapSyncConfig.getBaseDC())));
-            log.debug("User:{} with DN:{} successfully deleted in DB and LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
+            log.debug("User:{} with DN:{} successfully deleted in DB and LDAP", existingUser.getUserId(), existingUser.getDistinguishedName());
         } catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
-
-        return acmUser;
+        return existingUser;
     }
 
     private String buildDnForUser(String userFullName, String userId, AcmLdapSyncConfig syncConfig)

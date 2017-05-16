@@ -8,7 +8,9 @@ import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.stereotype.Controller;
@@ -98,15 +100,15 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AcmUser removeLdapUser(@RequestBody AcmUser acmUser, @PathVariable String userId,
-                                  @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeLdapUser(@PathVariable String userId,
+                                            @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.removeLdapUser(acmUser, userId, directory);
+            ldapUserService.removeLdapUser(userId, directory);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e)
         {
             log.error("Removing LDAP user failed!", e);

@@ -431,14 +431,6 @@
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
 
-    <changeSet id="23-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
-        <comment>New column for tracking when an AcmUser has been deleted</comment>
-        <addColumn tableName="acm_user">
-            <column name="cm_user_deleted_at" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
 
     <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mssql,oracle,postgresql">
         <addColumn tableName="acm_user">
@@ -458,6 +450,16 @@
             <column name="cm_country_abbreviation" type="TEXT"/>
             <column name="cm_company" type="TEXT"/>
             <column name="cm_title" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="25-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
 
