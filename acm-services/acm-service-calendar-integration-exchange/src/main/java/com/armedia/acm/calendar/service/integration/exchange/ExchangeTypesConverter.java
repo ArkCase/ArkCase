@@ -69,7 +69,7 @@ public class ExchangeTypesConverter
             calendarEvent.setStart(ZonedDateTime.now());
         }
         OlsonTimeZoneDefinition startTimeZoneDefinition = new OlsonTimeZoneDefinition(
-                TimeZone.getTimeZone(calendarEvent.getStart().getZone().toString()));
+                TimeZone.getTimeZone(calendarEvent.getStart().getZone()));
         appointment.setStartTimeZone(startTimeZoneDefinition);
         Date startDate = Date.from(calendarEvent.getStart().toInstant());
         appointment.setStart(startDate);
@@ -77,8 +77,7 @@ public class ExchangeTypesConverter
         {
             calendarEvent.setEnd(ZonedDateTime.now().plusHours(1));
         }
-        OlsonTimeZoneDefinition endTimeZoneDefinition = new OlsonTimeZoneDefinition(
-                TimeZone.getTimeZone(calendarEvent.getEnd().getZone().toString()));
+        OlsonTimeZoneDefinition endTimeZoneDefinition = new OlsonTimeZoneDefinition(TimeZone.getTimeZone(calendarEvent.getEnd().getZone()));
         appointment.setEndTimeZone(endTimeZoneDefinition);
         appointment.setEnd(Date.from(calendarEvent.getEnd().toInstant()));
         appointment.setIsAllDayEvent(calendarEvent.isAllDayEvent());
