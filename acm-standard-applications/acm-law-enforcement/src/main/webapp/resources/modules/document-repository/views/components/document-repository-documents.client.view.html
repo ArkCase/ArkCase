@@ -5,18 +5,16 @@
                 <span translate>document-repository.comp.documents.title</span>
                     <div class="row">
                         <div class="col-md-3">
-                            <input type="text" class="input-sm form-control" style="height: 24px;"
-                                   placeholder="{{ 'document-repository.comp.documents.filterInputPlaceholder' | translate }}"
-                                   ng-model="filter" ng-keyup="onFilter()">
+                            <input type="text" class="input-xs form-control" ng-model="filter" ng-keyup="onFilter()"
+                                   placeholder="{{ 'document-repository.comp.documents.filterInputPlaceholder' | translate }}">
                         </div>
                         <div class="col-md-3">
                             <form name="filesSearch" ng-submit="onSearch()">
                                 <div class="input-group">
-                                    <input type="text" class="input-sm form-control" style="height: 24px;"
-                                           placeholder="{{ 'document-repository.comp.documents.searchInputPlaceholder' | translate }}"
-                                           ng-model="searchFilter">
+                                    <input type="text" class="input-xs form-control" ng-model="searchFilter"
+                                           placeholder="{{ 'document-repository.comp.documents.searchInputPlaceholder' | translate }}">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-primary btn-sm" type="submit" style="height: 24px;padding-top: 2px;">
+                                        <button class="btn btn-primary btn-xs" type="submit">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>
