@@ -42,6 +42,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             var modalInstance = $modal.open({
                 templateUrl: "modules/admin/views/components/workflows.config.diagram-modal.client.view.html",
                 controller: 'Admin.WorkflowsConfigDiagramController',
+                windowClass: 'modal-width-80',
                 resolve:{
                     deploymentId: function(){
                         return entity.deploymentId;
