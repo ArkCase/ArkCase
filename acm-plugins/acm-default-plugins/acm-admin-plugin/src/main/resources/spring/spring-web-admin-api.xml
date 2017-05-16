@@ -198,6 +198,10 @@
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
+    <bean id="workflowConfigurationDiagramAPIController" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+    </bean>
+
     <!-- Link forms Workflows -->
     <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsService">
         <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
