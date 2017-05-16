@@ -176,6 +176,25 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
             }
         }
+        
+        for (AcmParticipant existingParticipant : existing)
+        {
+            for (AcmParticipant updatedParticipant : updated)
+            {
+                if (existingParticipant.getId() != null && updatedParticipant.getId() != null)
+                {
+                    if (existingParticipant.getId().equals(updatedParticipant.getId()))
+                    {
+                        if (!existingParticipant.getParticipantType().equals(updatedParticipant.getParticipantType()))
+                        {
+                            // participant changed
+                            getCaseFileEventUtility()
+                                    .raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, ipAddress, "changed");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private boolean isStatusChanged(CaseFile caseFile, CaseFile updatedCaseFile)
