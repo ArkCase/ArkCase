@@ -73,30 +73,4 @@
         </property>
     </bean>
 
-
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="org.h2.Driver" />
-        <property name="url" value="jdbc:h2:mem:activiti;DB_CLOSE_DELAY=1000" />
-        <property name="username" value="sa" />
-        <property name="password" value="" />
-    </bean>
-
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
-
-
-    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
-        <property name="dataSource" ref="dataSource" />
-        <property name="transactionManager" ref="transactionManager" />
-        <property name="databaseSchemaUpdate" value="true" />
-        <property name="jobExecutorActivate" value="false" />
-    </bean>
-
-    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
-        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
-    </bean>
-
-    <bean id="repositoryService" factory-bean="processEngine" factory-method="getRepositoryService" />
-
 </beans>
