@@ -113,7 +113,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().once();
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
@@ -165,7 +165,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().times(1);
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
@@ -177,7 +177,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
 
-        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(1l), pd1.getId());
@@ -231,7 +231,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().times(2);
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
@@ -243,7 +243,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
 
-        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(2l), pd1.getId());

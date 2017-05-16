@@ -109,7 +109,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
 
     @Override
     @Transactional
-    public AcmProcessDefinition deploy(File processDefinitionFile, boolean makeActive, boolean deleteFileAfterDeploy) {
+    public AcmProcessDefinition deploy(File processDefinitionFile, String fileDescription, boolean makeActive, boolean deleteFileAfterDeploy) {
         //verify that folder for keeping process definition files exists before deployment
         verifyFolderExists();
         String digest = getDigest(processDefinitionFile);
@@ -162,7 +162,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
             //create entry to our database
             AcmProcessDefinition acmProcessDefinition = new AcmProcessDefinition();
             acmProcessDefinition.setDeploymentId(pd.getDeploymentId());
-            acmProcessDefinition.setDescription(pd.getDescription());
+            acmProcessDefinition.setDescription(fileDescription);
             acmProcessDefinition.setKey(pd.getKey());
             acmProcessDefinition.setName(pd.getName());
             acmProcessDefinition.setVersion(pd.getVersion());
