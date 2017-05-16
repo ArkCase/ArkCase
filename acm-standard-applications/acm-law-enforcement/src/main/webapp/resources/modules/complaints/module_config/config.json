@@ -891,7 +891,7 @@
           "name": "parentName",
           "displayName": "complaints.comp.references.table.columns.parentName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
         },
         {
           "name": "modified",
