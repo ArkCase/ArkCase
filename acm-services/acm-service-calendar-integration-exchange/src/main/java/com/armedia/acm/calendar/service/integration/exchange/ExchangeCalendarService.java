@@ -248,18 +248,9 @@ public class ExchangeCalendarService
      * com.armedia.acm.calendar.service.AcmCalendarEvent, org.springframework.web.multipart.MultipartFile[])
      */
     @Override
-    public void addCalendarEvent(AcmUser user, Authentication auth, String calendarId, AcmCalendarEvent calendarEvent,
-            MultipartFile[] attachments) throws CalendarServiceException
+    public void addCalendarEvent(AcmUser user, Authentication auth, AcmCalendarEvent calendarEvent, MultipartFile[] attachments)
+            throws CalendarServiceException
     {
-        if (calendarId == null && calendarEvent.getCalendarId() == null
-                || calendarId != null && calendarEvent.getCalendarId() != null && !calendarId.equals(calendarEvent.getCalendarId()))
-        {
-            log.error("Calendar ID not properly set. 'calendarId argument was {}, AcmCalendarEvent.calendarId field was {}.", calendarId,
-                    calendarEvent.getCalendarId());
-            throw new CalendarServiceException(
-                    String.format("Calendar ID not properly set. 'calendarId argument was %s, AcmCalendarEvent.calendarId field was %s.",
-                            calendarId, calendarEvent.getCalendarId()));
-        }
         if (!configurationsByType.containsKey(calendarEvent.getObjectType())
                 || !configurationsByType.get(calendarEvent.getObjectType()).isIntegrationEnabled())
         {
@@ -267,8 +258,6 @@ public class ExchangeCalendarService
             throw new CalendarServiceConfigurationException(
                     String.format("Calendar integration is not enabled for %s object type.", calendarEvent.getObjectType()));
         }
-
-        calendarId = calendarId != null ? calendarId : calendarEvent.getCalendarId();
 
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(calendarEvent.getObjectType()))
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
@@ -294,7 +283,9 @@ public class ExchangeCalendarService
         {
             Appointment appointment = new Appointment(exchangeService);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
-            appointment.save(new FolderId(calendarId));
+            FolderId folderId = restricted ? new FolderId(handler.getCalendarId(calendarEvent.getObjectId()))
+                    : new FolderId(WellKnownFolderName.Calendar);
+            appointment.save(folderId);
         } catch (Exception e)
         {
             log.debug("Error while trying to create eventfor object with id: {} of {} type.", calendarEvent.getObjectId(),
