@@ -223,7 +223,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     @Transactional
     public AcmUser markUserAsDeleted(String name)
     {
-        Query query = getEm().createQuery("SELECT user FROM AcmUser user WHERE user.id = :userId");
+        Query query = getEm().createQuery("SELECT user FROM AcmUser user WHERE user.userId = :userId");
         query.setParameter("userId", name);
 
         AcmUser markedUser = (AcmUser) query.getSingleResult();
