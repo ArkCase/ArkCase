@@ -1,8 +1,12 @@
 package com.armedia.acm.plugins.dashboard.model.widget;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 /**
  * Created by marjan.stefanoski on 10/1/2014.
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class WidgetRoleName
 {
 
