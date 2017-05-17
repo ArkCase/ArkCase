@@ -3,10 +3,13 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
+
     <property name="cmFileEcmIdLength" value="4000" dbms="postgresql,oracle"/>
     <property name="cmFileEcmIdLength" value="255" dbms="mysql,mssql"/>
+
     <changeSet id="files-04-update-file-type-column" author="dmiller">
         <update tableName="acm_file">
             <column name="cm_file_type" value="complaint"/>
@@ -45,6 +48,7 @@
             <where>cm_file_type IS NULL</where>
         </update>
     </changeSet>
+
     <changeSet id="files-06-populate-container-folder" author="dmiller" dbms="oracle">
         <preConditions onFail="WARN">
             <and>
@@ -53,6 +57,7 @@
                 <columnExists tableName="acm_complaint" columnName="cm_complaint_ecm_folder_id"/>
             </and>
         </preConditions>
+
         <sql>
             <comment>Get complaint folder ids</comment>
             INSERT INTO acm_container_folder
@@ -68,6 +73,7 @@
             WHERE cm_complaint_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-07-populate-container-folder-from-case-file" author="dmiller" dbms="oracle">
         <preConditions onFail="WARN">
             <and>
@@ -91,6 +97,7 @@
             WHERE cm_case_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-08-populate-container-folder-from-user-profile" author="dmiller" dbms="oracle">
         <preConditions onFail="WARN">
             <and>
@@ -113,9 +120,11 @@
             WHERE cm_profile_ecm_folder_id IS NOT NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-09-rename-acm-container-folder" author="dmiller" failOnError="false">
         <renameTable oldTableName="acm_container_folder" newTableName="acm_container"/>
     </changeSet>
+
     <changeSet id="files-11-populate-folder-from-container-folder" author="dmiller" dbms="oracle">
         <preConditions onFail="WARN">
             <and>
@@ -135,6 +144,7 @@
             FROM acm_container ac
         </sql>
     </changeSet>
+
     <changeSet id="files-13-populate-container-folder-id" author="dmiller" dbms="oracle">
         <!-- ANSI standard SQL, should work on any database -->
         <sql>
@@ -150,6 +160,7 @@
             AND ac.cm_folder_id IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-16-populate-file-version-from-file" author="dmiller" dbms="oracle">
         <preConditions onFail="WARN">
             <and>
@@ -170,6 +181,7 @@
             FROM acm_file af
         </sql>
     </changeSet>
+
     <changeSet id="files-18-update-new-columns-in-acm-file" author="dmiller" dbms="postgresql,oracle">
         <preConditions>
             <and>
@@ -220,6 +232,7 @@
             AND acm_file.cm_file_category IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-19-fix-acm-file-category" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file
@@ -243,6 +256,7 @@
         </sql>
         <addNotNullConstraint tableName="acm_file" columnName="cm_file_category" columnDataType="VARCHAR(128)"/>
     </changeSet>
+
     <!-- we have multiple acm_object_association rows for the same file (same file is linked to
          multiple containers, it happens when a complaint is merged into a new case file).
          So we will try to get the complaint folder id into the existing file objects, then
@@ -297,6 +311,7 @@
             AND acm_file.cm_folder_id IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-20-update-file-folder-id-for-complaint" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
@@ -345,6 +360,7 @@
             AND acm_file.cm_folder_id IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-21-update-file-folder-id-for-case" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
@@ -393,6 +409,7 @@
             AND acm_file.cm_folder_id IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-22-update-file-folder-id-for-profile-images" author="dmiller" dbms="postgresql,oracle">
         <sql>
             UPDATE acm_file af
@@ -441,6 +458,7 @@
             AND acm_file.cm_folder_id IS NULL
         </sql>
     </changeSet>
+
     <!-- need to fix the unique key on acm_file before inserting the files from cases where those
          files are also in a complaint -->
     <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller" failOnError="false">
@@ -449,6 +467,7 @@
                              columnNames="cm_version_series_id, cm_folder_id"
                              constraintName="uk_file_folder"/>
     </changeSet>
+
     <!-- add rows to acm_file for files that belong to case files, where the case file was created
          based on a complaint.  This is to fix the situation where we have one row in acm_file
          linked to both the old complaint and the new case file. -->
@@ -509,6 +528,7 @@
             AND aoa.cm_target_id = af.cm_file_id
         </sql>
     </changeSet>
+
     <!-- any acm_file rows where the cm_folder_id is still null is an orphan... there's no way we can
          link them to a folder, short of writing a batch script to crawl Alfresco.  So we will
          remove them.  -->
@@ -520,6 +540,7 @@
             <where>cm_folder_id IS NULL</where>
         </delete>
     </changeSet>
+
     <changeSet id="files-29-populate-file-container-id" author="dmiller" dbms="oracle">
         <sql>
             UPDATE acm_file af
@@ -541,6 +562,7 @@
             )
         </sql>
     </changeSet>
+
     <changeSet id="files-32-update-container-title-case-files" author="dmiller" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -568,6 +590,7 @@
             AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-33-update-container-title-complaints" author="dmiller" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -595,6 +618,7 @@
             AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-34-update-container-title-user-profiles" author="dmiller" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -622,6 +646,7 @@
             AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
+
     <!-- This SQL is in general a REALLY BAD IDEA!!! We shouldn't query Activiti directly!
          I'm only doing this since it's only needed because I keep changing the document management
          data model during implementation.  -Dave -->
@@ -652,6 +677,7 @@
             AND c.cm_object_title IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-38-update-attachment-folder-id-in-container-table" author="riste.tutureski" dbms="oracle">
         <preConditions onFail="MARK_RAN">
             <and>
@@ -666,6 +692,7 @@
             WHERE c.cm_attachment_folder_id IS NULL
         </sql>
     </changeSet>
+
     <changeSet id="files-39-acm_file_version-add-mime-type" author="sasko.tanaskoski" dbms="postgresql">
         <sql>
             UPDATE acm_file_version fv
@@ -703,6 +730,7 @@
             (
             SELECT f.cm_file_mime_type
             FROM acm_file f
+
             WHERE acm_file_version.cm_file_id = f.cm_file_id
             )
             WHERE EXISTS
@@ -719,6 +747,7 @@
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+
     <changeSet id="files-40-acm-file-pop-extension" author="dmiller" dbms="postgresql">
         <sql>
             UPDATE acm_file
@@ -735,6 +764,7 @@
             WHERE cm_file_active_version_name_extension IS NULL;
         </sql>
     </changeSet>
+
     <!-- this SQL accounts for the common MIME types as found on the core dev site -->
     <changeSet id="files-41-acm-file-version-pop-extension" author="dmiller" dbms="postgresql,mssql">
         <sql>
@@ -758,6 +788,7 @@
             WHERE cm_file_version_name_extension IS NULL;
         </sql>
     </changeSet>
+
     <changeSet id="files-42-add-file-and-folder-discriminator" author="ilinpetar">
         <addColumn tableName="acm_file">
             <column name="cm_file_cmis_repository_id" type="VARCHAR(255)" defaultValue="alfresco">
@@ -770,6 +801,7 @@
             </column>
         </addColumn>
     </changeSet>
+
     <changeSet id="files-43-add-container-discriminator" author="ilinpetar" dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_container">
             <column name="cm_cmis_repository_id" type="VARCHAR(255)" defaultValue="alfresco">
@@ -779,7 +811,7 @@
         <dropUniqueConstraint tableName="acm_container" constraintName="acm_container_folder_cm_object_id_cm_object_type_key"/>
         <addUniqueConstraint tableName="acm_container" columnNames="cm_object_id, cm_object_type, cm_cmis_repository_id"/>
     </changeSet>
-
+    
     <changeSet id="files-43-add-container-discriminator" author="ilinpetar" dbms="mysql">
         <addColumn tableName="acm_container">
             <column name="cm_cmis_repository_id" type="VARCHAR(255)" defaultValue="alfresco">
@@ -789,4 +821,6 @@
         <dropUniqueConstraint tableName="acm_container" constraintName="cm_object_id"/>
         <addUniqueConstraint tableName="acm_container" columnNames="cm_object_id, cm_object_type, cm_cmis_repository_id"/>
     </changeSet>
+
 </databaseChangeLog>
+
