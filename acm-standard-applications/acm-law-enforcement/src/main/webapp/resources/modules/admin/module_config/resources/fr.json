@@ -237,6 +237,7 @@
     },
     "workflows.config.btn": {
       "createNew": "fr_Create New Model",
+      "createNewUrl": "activiti.alfresco.com",
       "uploadNew": "fr_Upload New BPMN"
     },
     "workflows.config.links": {
