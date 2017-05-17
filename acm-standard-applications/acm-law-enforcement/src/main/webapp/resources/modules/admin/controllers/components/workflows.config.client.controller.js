@@ -31,6 +31,36 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             reloadGrid();
         });
         
+        $scope.diagram = function (entity) {
+            var modalInstance = $modal.open({
+                templateUrl: "modules/admin/views/components/workflows.config.diagram-modal.client.view.html",
+                controller: 'Admin.WorkflowsConfigDiagramController',
+                windowClass: 'modal-width-80',
+                resolve:{
+                    deploymentId: function(){
+                        return entity.deploymentId;
+                    },
+                    key: function(){
+                        return entity.key;
+                    },
+                    version: function(){
+                        return entity.version;
+                    },
+                    showLoader: function() {
+                        return true;
+                    },
+                    showError: function() {
+                        return false;
+                    }
+                }
+            });
+            modalInstance.result.then(function (result) {
+                if (result) {
+                    // Do nothing
+                }
+            });
+        };
+
         function getActionsColumn() {
             return {
                 "name": "active",
@@ -42,6 +72,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "cellTemplate": "<a target='_blank' href='api/latest/plugin/admin/workflowconfiguration/workflows/{{row.entity.key}}/versions/{{row.entity.version}}/file'><i class='fa fa-download text-active'>{{'admin.workflows.config.links.download' | translate}}</i></a>"
                 + " | " + "<a ng-disabled='uploadingInProgress' ng-click='grid.appScope.uploadReplaceBpmn()' href=''><i class='fa fa-upload text-active'>{{'admin.workflows.config.links.replaceFile' | translate}}</i></a>"
                 + " | " + "<a ng-click='grid.appScope.showHistory(row.entity)' href='' <i class='fa fa-retweet text-active'>{{'admin.workflows.config.links.versionHistory' | translate}}</i></a>"
+                + " | " + "<a ng-click='grid.appScope.diagram(row.entity)' href='' <i class='fa fa-sitemap text-active'>{{'admin.workflows.config.links.diagram' | translate}}</i></a>"
             }
         }
 

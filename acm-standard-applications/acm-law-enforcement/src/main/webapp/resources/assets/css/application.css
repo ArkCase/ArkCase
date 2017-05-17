@@ -1370,3 +1370,11 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.modal-width-80 > .modal-dialog{
+    width: 80%;
+}
+
+.modal-width-80  .img-responsive {
+    margin: 0 auto;
+}
