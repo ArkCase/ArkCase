@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService',
-    function ($scope, workflowsConfigService, $modal, $translate, messageService) {
+angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService', '$window',
+    function ($scope, workflowsConfigService, $modal, $translate, messageService, $window) {
         $scope.uploadingInProgress = false;
         $scope.loadingProgress = 0;
         $scope.selectedBPMNFile = null;
@@ -30,7 +30,20 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
 
             reloadGrid();
         });
-        
+
+        $scope.openProcessModeler = function()
+        {
+            var goToUrl = $translate.instant('admin.workflows.config.btn.createNewUrl');
+            $window.open(goToUrl);
+        }
+
+        $scope.replaceFile = function (file, entity) {
+            //TODO add logic for replace file, now only uploads the file as new.
+            if (file) {
+                $scope.uploadDefinition(file);
+            }
+        };
+
         $scope.diagram = function (entity) {
             var modalInstance = $modal.open({
                 templateUrl: "modules/admin/views/components/workflows.config.diagram-modal.client.view.html",
