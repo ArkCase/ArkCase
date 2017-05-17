@@ -5,9 +5,8 @@
 			        class="fa fa-sitemap"/>
 			    <span translate>admin.workflows.config.btn.createNew</span>
 			</button>
-			<button class="btn btn-xs btn-link" ngf-select="uploadDefinition($file)" ng-disabled="uploadingInProgress"
-			        data-ng-model="selectedBPMNFile" accept="application/xml"><i
-			        class="fa fa-cloud-upload text"/>
+			<button class="btn btn-xs btn-link" ng-click="uploadReplaceBpmn()" ng-disabled="uploadingInProgress">
+				<i class="fa fa-cloud-upload text"/>
 			    <span translate>admin.workflows.config.btn.uploadNew</span>
 			</button>
 		</div>

@@ -80,7 +80,7 @@ public class WorkflowConfigurationService {
      * Replace workflow file
      * @param fileInputStream
      */
-    public void uploadBpmnFile(InputStream fileInputStream) throws AcmWorkflowConfigurationException {
+    public void uploadBpmnFile(InputStream fileInputStream, String fileDescription) throws AcmWorkflowConfigurationException {
         // Create temp dir if required
         File tempDir = new File(temporaryFolder);
         tempDir.mkdirs();
@@ -89,7 +89,7 @@ public class WorkflowConfigurationService {
         try {
             tmpFile = File.createTempFile("bpmn-", ".xml", tempDir);
             FileUtils.copyInputStreamToFile(fileInputStream, tmpFile);
-            acmBpmnService.deploy(tmpFile, false, true);
+            acmBpmnService.deploy(tmpFile, fileDescription, false, true);
         } catch (Exception e) {
             throw new AcmWorkflowConfigurationException("Can't replace bpmn file", e);
         } finally {
