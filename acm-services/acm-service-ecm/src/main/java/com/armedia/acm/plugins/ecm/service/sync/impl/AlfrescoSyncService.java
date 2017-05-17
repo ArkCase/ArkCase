@@ -4,14 +4,19 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
+import com.armedia.acm.web.api.MDCConstants;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by dmiller on 5/15/17.
@@ -32,6 +37,12 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
         for (Map.Entry<String, EcmAuditResponseReader> auditApplication : getAuditApplications().entrySet())
         {
 
+            if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
+            {
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+            }
+
             String lastAuditIdFetched = null;
             String applicationName = auditApplication.getKey();
             EcmAuditResponseReader reader = auditApplication.getValue();
@@ -44,17 +55,18 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
 
                 lastAuditIdFetched = getPropertyFileManager().load(getAuditApplicationLastAuditIdsFilename(),
                         lastAuditIdKey, "0");
+                // start from the *next* audit Id
                 long lastAuditId = Long.valueOf(lastAuditIdFetched);
-                JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, lastAuditId);
+                long startingAuditId = lastAuditId + 1;
+                JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, startingAuditId);
+                updatePropertiesWithLastAuditId(lastAuditIdKey, auditEntries);
 
                 List<EcmEvent> events = reader.read(auditEntries);
 
                 if (events != null && !events.isEmpty())
                 {
-                    log.info("Fetched {} audit records for audit application {}", applicationName);
+                    log.info("Fetched {} audit records for audit application {}", events.size(), applicationName);
 
-                    getPropertyFileManager().store(lastAuditIdKey,
-                            String.valueOf(events.get(events.size() - 1).getAuditId()), getAuditApplicationLastAuditIdsFilename());
 
                     for (EcmEvent e : events)
                     {
@@ -76,6 +88,21 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
 
         }
 
+    }
+
+    protected void updatePropertiesWithLastAuditId(String lastAuditIdKey, JSONObject fullAuditResponse)
+    {
+        // some of the readers ignore some events.  So we want to store the last audit id from the full
+        // response... not the last audit id returned by the reader.
+        JSONArray allAudits = fullAuditResponse.getJSONArray("entries");
+        int numAudits = allAudits.length();
+
+        if (numAudits > 0)
+        {
+            long lastAuditFromFullResponse = allAudits.getJSONObject(numAudits - 1).getLong("id");
+            Map<String, String> properties = Collections.singletonMap(lastAuditIdKey, String.valueOf(lastAuditFromFullResponse));
+            getPropertyFileManager().storeMultiple(properties, getAuditApplicationLastAuditIdsFilename(), false);
+        }
     }
 
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
