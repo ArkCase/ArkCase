@@ -242,11 +242,19 @@
     "workflows.config.links": {
       "download": "es_Download",
       "replaceFile": "es_Replace File",
-      "versionHistory": "es_Version History"
+      "versionHistory": "es_Version History",
+      "diagram": "es_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "es_Successfully uploaded new process definition",
       "error": "es_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "es_Process Diagram",
+      "error.loading": "es_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "es_Close"
+      }
     },
     "formWorkflows.title": "es_Form/Workflow Link",
     "formWorkflows.link": "es_Link Forms/Workflows",
