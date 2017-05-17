@@ -48,4 +48,31 @@ public class DateTimeAdjuster
         return dateText.toString();
     }
 
+    private static final String UTC = "(UTC";
+
+    /**
+     * @param msName
+     * @return
+     */
+    public static String guessTimeZone(String msName)
+    {
+        // (UTC+02:00) Harare, Pretoria
+        if (msName.contains(UTC) && msName.contains(")") && (msName.contains("+") || msName.contains("-")))
+        {
+            StringBuilder tzBuilder = new StringBuilder("GMT");
+            final int signPosition = msName.lastIndexOf(UTC) + UTC.length();
+            char charAt = msName.charAt(signPosition);
+            String offset = msName.substring(signPosition + 1, msName.indexOf(')'));
+            if (charAt == '+')
+            {
+                return tzBuilder.append('-').append(offset).toString();
+            } else if (charAt == '-')
+            {
+                return tzBuilder.append('+').append(offset).toString();
+            }
+        }
+        // was not possible to guess
+        return "GMT+00:00";
+    }
+
 }

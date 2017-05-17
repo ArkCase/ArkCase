@@ -1,5 +1,7 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
+import static com.armedia.acm.calendar.DateTimeAdjuster.guessTimeZone;
+
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEvent.Priority;
 import com.armedia.acm.calendar.service.Attendee;
@@ -352,11 +354,11 @@ public class ExchangeTypesConverter
         event.setLocation(appointment.getLocation());
 
         TimeZoneDefinition startTimeZoneDefinititon = appointment.getStartTimeZone();
-        TimeZone startTimeZone = TimeZone.getTimeZone(startTimeZoneDefinititon.getId());
+        TimeZone startTimeZone = TimeZone.getTimeZone(guessTimeZone(startTimeZoneDefinititon.getName()));
         event.setStart(ZonedDateTime.ofInstant(appointment.getStart().toInstant(), ZoneId.of(startTimeZone.getID())));
 
         TimeZoneDefinition endTimeZoneDefinition = appointment.getEndTimeZone();
-        TimeZone endTimeZone = TimeZone.getTimeZone(endTimeZoneDefinition.getId());
+        TimeZone endTimeZone = TimeZone.getTimeZone(guessTimeZone(endTimeZoneDefinition.getName()));
         event.setEnd(ZonedDateTime.ofInstant(appointment.getEnd().toInstant(), ZoneId.of(endTimeZone.getID())));
 
         event.setAllDayEvent(appointment.getIsAllDayEvent());
