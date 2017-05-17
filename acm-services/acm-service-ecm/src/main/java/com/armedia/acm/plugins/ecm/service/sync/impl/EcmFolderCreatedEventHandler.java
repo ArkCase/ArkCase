@@ -74,11 +74,11 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
         try
         {
             AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
-            log.debug("ArkCase already has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
+            log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
             return found;
         } catch (NoResultException e)
         {
-            log.debug("No such folder in ArkCase yet: {}", folderCmisId);
+            log.debug("No such folder in ArkCase: {}", folderCmisId);
             return null;
         }
     }

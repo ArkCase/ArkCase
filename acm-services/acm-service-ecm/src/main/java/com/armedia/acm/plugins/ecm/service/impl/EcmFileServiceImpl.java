@@ -109,6 +109,23 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
+    {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
+        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectById.in", cmisId, properties);
+
+        if (muleMessage.getInboundProperty("findObjectByIdException") != null)
+        {
+            throw (Exception) muleMessage.getInboundProperty("findObjectByIdException");
+        }
+
+        return (CmisObject) muleMessage.getPayload();
+
+    }
+
+    @Override
     @Transactional
     public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
                           String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
@@ -597,7 +614,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("File with id: {} does not exists", fileId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
-            } else
+            }
+            else
             {
                 if (!((EcmFileConstants.RECORD).equals(ecmFile.getStatus())))
                 {
@@ -621,7 +639,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
-            } else
+            }
+            else
             {
                 for (AcmCmisObject file : folder.getChildren())
                 {
@@ -876,10 +895,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException {
+    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
+    {
 
         EcmFile file = getEcmFileDao().find(ecmFile.getId());
-        if ( file == null )
+        if (file == null)
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
         }
@@ -930,7 +950,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 }
 
                 startRow += maxRows;
-            } while (docs != null && docs.length() > 0);
+            }
+            while (docs != null && docs.length() > 0);
         } catch (MuleException e)
         {
             log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);

@@ -25,6 +25,8 @@ public interface EcmFileService
 {
     CmisObject findObjectByPath(String path) throws Exception;
 
+    CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception;
+
     EcmFile upload(
             String originalFileName,
             String fileType,
