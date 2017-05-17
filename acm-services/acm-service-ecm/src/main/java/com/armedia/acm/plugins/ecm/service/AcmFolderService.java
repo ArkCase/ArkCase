@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -72,6 +73,10 @@ public interface AcmFolderService
                                AcmFolder rootFolderOfCopy) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException;
 
     AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException;
+
+    AcmContainer findContainerByFolderIdTransactionIndependent(Long folderId) throws AcmObjectNotFoundException;
+
+    List<AcmFolder> findModifiedSince(Date lastModified, int start, int pageSize);
 
     /**
      * retrieves root folder

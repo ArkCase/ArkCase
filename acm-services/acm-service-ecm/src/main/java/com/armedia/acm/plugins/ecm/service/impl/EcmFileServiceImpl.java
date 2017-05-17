@@ -571,10 +571,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
 
-        String query = String.format("object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s",
-                container.getContainerObjectType(), container.getContainerObjectId());
+        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
+                        + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
+                container.getContainerObjectType(), container.getContainerObjectId(), container.getContainerObjectType(),
+                container.getContainerObjectId());
 
-        String fq = String.format("fq=name:*%s* AND hidden_b:false", searchFilter);
+        String fq = String.format("fq=name_partial:%s AND hidden_b:false", searchFilter);
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, fq, startRow, maxRows, sortBy, sortDirection);
     }

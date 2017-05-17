@@ -22,7 +22,7 @@ angular.module('services').factory('EcmService', ['$resource'
             }
             , retrieveFlatSearchResultList: {
                 method: 'GET',
-                url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId/search/:searchFilter?start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId/search?fq=:filter&start=:start&n=:n&s=:sortBy&dir=:sortDir',
                 cache: false,
                 isArray: false
             }
