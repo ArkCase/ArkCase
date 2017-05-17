@@ -5,7 +5,6 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +28,9 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             throw new PipelineProcessException("ecmFile is null");
         }
 
-        if (!pipelineContext.getIsAppend())
+        if (!pipelineContext.getIsAppend() && pipelineContext.getCmisDocument() == null)
         {
+
             try
             {
                 // Adds the file to the Alfresco content repository as a new document

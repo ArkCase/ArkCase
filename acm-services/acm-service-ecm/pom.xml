@@ -186,6 +186,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Chemistry API -->
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-api</artifactId>
+            <version>${chemistry.version}</version>
+        </dependency>
+
         <!-- apache libraries -->
         <dependency>
             <groupId>commons-fileupload</groupId>
