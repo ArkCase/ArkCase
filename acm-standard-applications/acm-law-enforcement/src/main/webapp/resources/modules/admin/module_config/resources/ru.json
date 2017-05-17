@@ -242,11 +242,19 @@
     "workflows.config.links": {
       "download": "ru_Download",
       "replaceFile": "ru_Replace File",
-      "versionHistory": "ru_Version History"
+      "versionHistory": "ru_Version History",
+      "diagram": "ru_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "ru_Successfully uploaded new process definition",
       "error": "ru_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "ru_Process Diagram",
+      "error.loading": "ru_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "ru_Close"
+      }
     },
     "formWorkflows.title": "ru_Form/Workflow Link",
     "formWorkflows.link": "ru_Link Forms/Workflows",
