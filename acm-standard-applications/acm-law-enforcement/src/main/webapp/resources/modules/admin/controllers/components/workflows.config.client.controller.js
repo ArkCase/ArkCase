@@ -107,7 +107,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/admin/views/components/workflows.config.upload-replace.modal.client.view.html',
-                controller: ['$scope', '$modalInstance', 'Admin.WorkflowsConfigService', function ($scope, $modalInstance, correspondenceService) {
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                     
                     $scope.selectedFiles = [];
                     
