@@ -34,11 +34,11 @@ public class CalendarComplaintHanlder extends CalendarEntityHandlerBase
         Query query;
         if (restrictedOnly)
         {
-            query = getEm().createQuery("SELECT cо FROM Complaint co WHERE co.id = :objectId AND co.restricted = :restricted");
+            query = getEm().createQuery("SELECT co FROM Complaint co WHERE co.complaintId = :objectId AND co.restricted = :restricted");
             query.setParameter("restricted", true);
         } else
         {
-            query = getEm().createQuery("SELECT co FROM Complaint co WHERE cof.id = :objectId");
+            query = getEm().createQuery("SELECT co FROM Complaint co WHERE co.complaintId = :objectId");
         }
         query.setParameter("objectId", Long.valueOf(objectId));
         List<?> resultList = query.getResultList();
