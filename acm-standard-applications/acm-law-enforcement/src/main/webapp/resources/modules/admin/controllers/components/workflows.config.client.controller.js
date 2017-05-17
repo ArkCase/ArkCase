@@ -83,7 +83,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "visible": true,
                 "headerCellFilter": "translate",
                 "cellTemplate": "<a target='_blank' href='api/latest/plugin/admin/workflowconfiguration/workflows/{{row.entity.key}}/versions/{{row.entity.version}}/file'><i class='fa fa-download text-active'>{{'admin.workflows.config.links.download' | translate}}</i></a>"
-                + " | " + "<a ng-disabled='uploadingInProgress' ngf-select='grid.appScope.replaceFile($file,row.entity.version)' href=''><i class='fa fa-upload text-active'>{{'admin.workflows.config.links.replaceFile' | translate}}</i></a>"
+                + " | " + "<a ng-disabled='uploadingInProgress' ng-click='grid.appScope.uploadReplaceBpmn()' href=''><i class='fa fa-upload text-active'>{{'admin.workflows.config.links.replaceFile' | translate}}</i></a>"
                 + " | " + "<a ng-click='grid.appScope.showHistory(row.entity)' href='' <i class='fa fa-retweet text-active'>{{'admin.workflows.config.links.versionHistory' | translate}}</i></a>"
                 + " | " + "<a ng-click='grid.appScope.diagram(row.entity)' href='' <i class='fa fa-sitemap text-active'>{{'admin.workflows.config.links.diagram' | translate}}</i></a>"
             }
@@ -96,10 +96,10 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             });
         }
 
-        $scope.uploadDefinition = function (file) {
+        $scope.uploadDefinition = function (file, description) {
             if (file) {
                 $scope.uploadingInProgress = true;
-                workflowsConfigService.uploadDefinition(file).then(
+                workflowsConfigService.uploadDefinition(file, description).then(
                     function (result) {
                         reloadGrid();
                         $scope.uploadingInProgress = false;
@@ -111,6 +111,44 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 );
             }
         };
+        
+        //dialog for upload/replace BPMN
+        $scope.uploadReplaceBpmn = function () {
+            var modalScope = $scope.$new();
+            modalScope.config = $scope.config;
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: 'modules/admin/views/components/workflows.config.upload-replace.modal.client.view.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    
+                    $scope.selectedFiles = [];
+                    
+                    $scope.upload = function upload(files) {
+                        $scope.selectedFiles = files;
+                    };
+                   
+                    $scope.onClickOk = function (files) {
+                    	 $modalInstance.close(
+                                 {
+                                     selectedFiles:$scope.selectedFiles,
+                                     description : $scope.bpmn.description
+                                 }
+                             );
+                    };
+                    $scope.onClickCancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+
+                }],
+                size: 'md',
+                backdrop: 'static'
+            });
+            
+            modalInstance.result.then(function (data) {
+            	$scope.uploadDefinition(data.selectedFiles, data.description);            	
+            });        
+        }
 
 
         //dialog for edit or create new role

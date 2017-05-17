@@ -13,24 +13,34 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
         $scope.ecmFileParticipants = [];
         $scope.userList = [];
         $scope.caseInfo = {};
-
-
+        $scope.fileInfo = {
+            id: $stateParams['id'],
+            containerId: $stateParams['containerId'],
+            containerType: $stateParams['containerType'],
+            name: $stateParams['name'],
+            selectedIds: $stateParams['selectedIds']
+        };
+        
         /**
          * Builds the snowbound url based on the parameters passed into the controller state and opens the
          * specified document in an iframe which points to snowbound
          */
         $scope.openSnowboundViewer = function () {
-            var fileInfo = {
-                id: $stateParams['id'],
-                containerId: $stateParams['containerId'],
-                containerType: $stateParams['containerType'],
-                name: $stateParams['name'],
-                selectedIds: $stateParams['selectedIds']
-            };
-            var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, fileInfo);
+            var viewerUrl = SnowboundService.buildSnowboundUrl($scope.ecmFileProperties, $scope.acmTicket, $scope.userId, $scope.fileInfo);
             $scope.documentViewerUrl = $sce.trustAsResourceUrl(viewerUrl);
         };
 
+        $scope.$bus.subscribe('update-viewer-opened-versions', function (openedVersions) {
+            $scope.fileInfo.selectedIds = openedVersions.map(function (openedVersion, index) {
+                if (index == 0) {
+                    $scope.fileInfo.id = $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+                }
+                return $stateParams['selectedIds'] + ":" + openedVersion.versionTag;
+            }).join(',');
+            
+            $scope.openSnowboundViewer();
+        });
+        
         // Obtains authentication token for ArkCase
         var ticketInfo = TicketService.getArkCaseTicket();
 
