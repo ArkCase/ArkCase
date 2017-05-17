@@ -47,7 +47,7 @@ public class AcmBpmnDao
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc)
     {
         String queryText =
-                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
+                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MAX(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
         TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class).setFirstResult(start).setMaxResults(length);
         return query.getResultList();
     }
