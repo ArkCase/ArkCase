@@ -29,7 +29,7 @@ public class WorkflowConfigurationReplaceBpmnFile {
     )
     @ResponseBody
     public String replaceFile(
-            @RequestParam("file") MultipartFile file) throws IOException, AcmWorkflowConfigurationException
+            @RequestParam("file") MultipartFile file, @RequestParam("description") String description) throws IOException, AcmWorkflowConfigurationException
     {
 
         try {
@@ -37,7 +37,7 @@ public class WorkflowConfigurationReplaceBpmnFile {
                 throw new AcmWorkflowConfigurationException("Uploaded BPMN File is empty");
             }
             InputStream fileInputStream = file.getInputStream();
-            workflowConfigurationService.uploadBpmnFile(fileInputStream);
+            workflowConfigurationService.uploadBpmnFile(fileInputStream, description);
             return "{}";
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
