@@ -15,7 +15,8 @@ angular.module('organizations').controller('Organizations.DBAsModalController', 
                 $modalInstance.close(
                     {
                         dba: $scope.dba,
-                        isDefault: $scope.isDefault
+                        isDefault: $scope.isDefault,
+                        isEdit: $scope.isEdit
                     }
                 );
             };
