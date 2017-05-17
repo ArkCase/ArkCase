@@ -242,11 +242,19 @@
     "workflows.config.links": {
       "download": "zh-tw_Download",
       "replaceFile": "zh-tw_Replace File",
-      "versionHistory": "zh-tw_Version History"
+      "versionHistory": "zh-tw_Version History",
+      "diagram": "zh-tw_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "zh-tw_Successfully uploaded new process definition",
       "error": "zh-tw_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "zh-tw_Process Diagram",
+      "error.loading": "zh-tw_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "zh-tw_Close"
+      }
     },
     "formWorkflows.title": "zh-tw_Form/Workflow Link",
     "formWorkflows.link": "zh-tw_Link Forms/Workflows",

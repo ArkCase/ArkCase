@@ -34,7 +34,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "Addresses",
+    "title": "Locations",
     "table.columns": {
       "type": "Type",
       "streetAddress": "Address 1",

@@ -261,6 +261,22 @@ public class PersonServiceImpl implements PersonService
         return person;
     }
 
+    /**
+     * Creates new Person and persists in database, and then uploads pictures
+     *
+     * @param person         Person data
+     * @param pictures       Person pictures
+     * @param authentication Authentication
+     * @return Person created Person
+     */
+    @Override
+    public Person createPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        Person savedPerson = createPerson(person, authentication);
+
+        return uploadPicturesForPerson(savedPerson, pictures, authentication);
+    }
+
     private String getPersonRootFolderName(Person person)
     {
         ExpressionParser ep = new SpelExpressionParser();
@@ -273,6 +289,57 @@ public class PersonServiceImpl implements PersonService
     public Person savePerson(Person person, Authentication authentication)
     {
         return personDao.save(person);
+    }
+
+    /**
+     * save person data
+     *
+     * @param person         person data
+     * @param pictures       person pictures
+     * @param authentication authentication
+     * @return Person saved person
+     */
+    @Override
+    public Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException
+    {
+
+        Person savedPerson = savePerson(person, authentication);
+        return uploadPicturesForPerson(savedPerson, pictures, authentication);
+    }
+
+    private Person uploadPicturesForPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        //find pictures folder
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        if (pictures != null)
+        {
+            for (MultipartFile picture : pictures)
+            {
+                try
+                {
+                    EcmFile uploaded = ecmFileService.upload(picture.getOriginalFilename(),
+                            PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
+                            PersonOrganizationConstants.PERSON_PICTURE_CATEGORY,
+                            picture.getInputStream(),
+                            picture.getContentType(),
+                            picture.getOriginalFilename(),
+                            authentication,
+                            picturesFolderObj.getCmisFolderId(),
+                            PersonOrganizationConstants.PERSON_OBJECT_TYPE,
+                            person.getId());
+                    if (person.getDefaultPicture() == null)
+                    {
+                        //use first picture from the list to be default one
+                        person.setDefaultPicture(uploaded);
+                        person = personDao.save(person);
+                    }
+                } catch (IOException e)
+                {
+                    log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
+                }
+            }
+        }
+        return person;
     }
 
     public PersonDao getPersonDao()

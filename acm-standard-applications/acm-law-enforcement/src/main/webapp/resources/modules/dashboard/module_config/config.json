@@ -72,7 +72,14 @@
           "displayName": "dashboard.widgets.myCases.table.header.status",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "width": 150
+          "width": 100
+        },
+        {
+          "name": "modified_date_tdt",
+          "displayName": "dashboard.widgets.myCases.table.header.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "width": 70
         }
       ]
     },
@@ -161,14 +168,14 @@
           "name": "priority_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.priority",
           "headerCellFilter": "translate",
-          "width": 75
+          "width": 70
         },
         {
           "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
-          "width": 175
+          "width": 130
         },
         {
           "name": "title_parseable",
@@ -183,10 +190,10 @@
           "width": 100
         },
         {
-          "name": "create_date_tdt",
-          "displayName": "dashboard.widgets.myComplaints.table.header.created",
+          "name": "modified_date_tdt",
+          "displayName": "dashboard.widgets.myComplaints.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "width": 70
         }
       ]
