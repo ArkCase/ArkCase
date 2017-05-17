@@ -31,7 +31,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             reloadGrid();
         });
 
-        $scope.RedirectToAlfresco = function()
+        $scope.openProcessModeler = function()
         {
             var goToUrl = $translate.instant('admin.workflows.config.btn.createNewUrl');
             $window.open(goToUrl);
