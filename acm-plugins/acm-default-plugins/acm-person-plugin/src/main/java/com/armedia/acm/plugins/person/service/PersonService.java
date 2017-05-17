@@ -96,6 +96,16 @@ public interface PersonService
     Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException;
 
     /**
+     * Creates new Person and persists in database, and then uploads pictures
+     *
+     * @param person   Person data
+     * @param pictures Person pictures
+     * @param authentication     Authentication
+     * @return Person created Person
+     */
+    Person createPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    /**
      * save person data
      *
      * @param person         person data
@@ -104,4 +114,15 @@ public interface PersonService
      */
     @Transactional
     Person savePerson(Person person, Authentication authentication);
+
+    /**
+     * save person data
+     *
+     * @param person         person data
+     * @param pictures       person pictures
+     * @param authentication authentication
+     * @return Person saved person
+     */
+    @Transactional
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException;
 }
