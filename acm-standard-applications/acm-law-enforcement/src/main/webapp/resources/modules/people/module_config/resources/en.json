@@ -136,7 +136,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Phone Number",
+      "btnOk.text": "Save Phone Number",
       "type.label": "Phone Type",
       "type.placeholder": "Enter Phone Type",
       "value.label": "Phone Number",
@@ -168,7 +168,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Email Address",
+      "btnOk.text": "Save Email Address",
       "type.label": "Email Type",
       "type.placeholder": "Enter Email Type",
       "value.label": "Email Address",
@@ -200,7 +200,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add URL",
+      "btnOk.text": "Save URL",
       "type.label": "Type",
       "type.placeholder": "Enter Type",
       "value.label": "URL",
@@ -233,7 +233,7 @@
       "yes": "Yes",
       "no": "No",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Alias",
+      "btnOk.text": "Save Alias",
       "value.label": "Alias",
       "value.placeholder": "Enter Alias",
       "description": "Description",
@@ -277,7 +277,7 @@
       "yearIssued.label": "Year Issued",
       "yearIssued.placeholder": "Enter Year Issued",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add ID"
+      "btnOk.text": "Save ID"
     }
   },
   "people.comp.organizations": {
@@ -342,7 +342,7 @@
       "person.label": "Person",
       "person.placeholder": "Search People",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Related Person"
+      "btnOk.text": "Save Related Person"
     }
   },
   "people.comp.editPerson": {
