@@ -230,7 +230,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         if (markedUser != null)
         {
             markedUser.setUserState("Deleted");
-            //TODO add deleted_at field maybe
             markedUser.setDeletedAt(new Date());
         }
         return markedUser;

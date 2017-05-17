@@ -262,7 +262,6 @@ public class LdapUserService
         log.debug("Removing User:{} from database", existingUser.getUserId());
         getUserDao().markUserAsDeleted(userId);
 
-        //TODO sync to Ldap and remove User from Ldap
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directory));
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
