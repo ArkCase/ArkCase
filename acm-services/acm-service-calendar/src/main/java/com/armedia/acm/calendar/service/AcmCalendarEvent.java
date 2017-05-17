@@ -22,7 +22,7 @@ import java.util.List;
 public class AcmCalendarEvent
 {
 
-    static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm:ssXXX";
+    static final String ZONED_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ssXXX";
 
     public static enum Priority
     {

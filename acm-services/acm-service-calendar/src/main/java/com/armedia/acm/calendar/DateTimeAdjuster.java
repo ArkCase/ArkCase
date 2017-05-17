@@ -1,8 +1,13 @@
 package com.armedia.acm.calendar;
 
+import microsoft.exchange.webservices.data.util.TimeZoneUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -11,6 +16,7 @@ import java.util.TimeZone;
  */
 public class DateTimeAdjuster
 {
+    public static Logger LOG = LoggerFactory.getLogger(DateTimeAdjuster.class);
 
     /**
      * @param text
@@ -46,6 +52,32 @@ public class DateTimeAdjuster
             }
         }
         return dateText.toString();
+    }
+
+    private static final String UTC = "(UTC";
+
+    /**
+     * @param msName
+     * @return
+     */
+    public static String guessTimeZone(String msName)
+    {
+        String timeZone = "Europe/Berlin";
+
+        try
+        {
+            Map<String, String> microsoftTimeZones = TimeZoneUtils.createOlsonTimeZoneToMsMap();
+            if (microsoftTimeZones != null)
+            {
+                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey).findFirst().orElse(null);
+            }
+        }
+        catch (Exception e)
+        {
+            LOG.warn("Cannot take Java TimeZone name from Microsoft TimeZone name = [{}]. Default TimeZone [{}] will be used instead.", msName, timeZone);
+        }
+
+        return timeZone;
     }
 
 }
