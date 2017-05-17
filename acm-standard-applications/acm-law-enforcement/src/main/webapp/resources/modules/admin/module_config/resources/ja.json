@@ -242,11 +242,19 @@
     "workflows.config.links": {
       "download": "ja_Download",
       "replaceFile": "ja_Replace File",
-      "versionHistory": "ja_Version History"
+      "versionHistory": "ja_Version History",
+      "diagram": "ja_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "ja_Successfully uploaded new process definition",
       "error": "ja_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "ja_Process Diagram",
+      "error.loading": "ja_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "ja_Close"
+      }
     },
     "formWorkflows.title": "ja_Form/Workflow Link",
     "formWorkflows.link": "ja_Link Forms/Workflows",

@@ -4,12 +4,14 @@ import com.armedia.acm.activiti.exceptions.AcmBpmnException;
 import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
+import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -232,6 +234,65 @@ public class AcmBpmnServiceImpl implements AcmBpmnService {
     @Override
     public AcmProcessDefinition getByKeyAndVersion(String processDefinitionKey, int version) {
         return acmBpmnDao.getByKeyAndVersion(processDefinitionKey, version);
+    }
+
+    @Override
+    public byte[] getDiagram(String deploymentId, String key, Integer version) throws AcmBpmnException
+    {
+        byte[] diagram = null;
+        ProcessDefinition processDefinition = getProcessDefinition(deploymentId, key, version);
+
+        if (processDefinition != null)
+        {
+            InputStream inputStream = null;
+            try
+            {
+                inputStream = activitiRepositoryService.getProcessDiagram(processDefinition.getId());
+                diagram = IOUtils.toByteArray(inputStream);
+            }
+            catch (Exception e)
+            {
+                log.warn("Cannot take diagram for deploymentId=[{}], key=[{}] and version=[{}]", deploymentId, key, version);
+            }
+            finally
+            {
+                if (inputStream != null)
+                {
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Can't close input stream after generating workflow diagram image.", e);
+                    }
+                }
+            }
+        }
+
+        if (diagram == null)
+        {
+            log.debug("Diagram for deploymentId=[{}], key=[{}] and version=[{}] cannot be retrieved", deploymentId, key, version);
+            throw new AcmBpmnException("Diagram for deploymentId=[" + deploymentId + "], key=[" + key + "] and version=[" + version + "] cannot be retrieved");
+        }
+
+        return diagram;
+    }
+
+    private ProcessDefinition getProcessDefinition(String deploymentId, String key, int version)
+    {
+        ProcessDefinition processDefinition = null;
+
+        try
+        {
+            processDefinition = activitiRepositoryService.createProcessDefinitionQuery().deploymentId(deploymentId).processDefinitionKey(key).processDefinitionVersion(version).singleResult();
+        }
+        catch (ActivitiException e)
+        {
+            log.warn("Cannot find process definition for deploymentId=[{}], key=[{}] and version=[{}]", deploymentId, key, version);
+        }
+
+        return processDefinition;
     }
 
     public void setActivitiRepositoryService(RepositoryService activitiRepositoryService) {
