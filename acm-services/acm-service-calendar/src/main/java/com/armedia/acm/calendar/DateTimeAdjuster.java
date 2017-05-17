@@ -1,8 +1,13 @@
 package com.armedia.acm.calendar;
 
+import microsoft.exchange.webservices.data.util.TimeZoneUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -11,6 +16,7 @@ import java.util.TimeZone;
  */
 public class DateTimeAdjuster
 {
+    public static Logger LOG = LoggerFactory.getLogger(DateTimeAdjuster.class);
 
     /**
      * @param text
@@ -56,23 +62,22 @@ public class DateTimeAdjuster
      */
     public static String guessTimeZone(String msName)
     {
-        // (UTC+02:00) Harare, Pretoria
-        if (msName.contains(UTC) && msName.contains(")") && (msName.contains("+") || msName.contains("-")))
+        String timeZone = "Europe/Berlin";
+
+        try
         {
-            StringBuilder tzBuilder = new StringBuilder("GMT");
-            final int signPosition = msName.lastIndexOf(UTC) + UTC.length();
-            char charAt = msName.charAt(signPosition);
-            String offset = msName.substring(signPosition + 1, msName.indexOf(')'));
-            if (charAt == '+')
+            Map<String, String> microsoftTimeZones = TimeZoneUtils.createOlsonTimeZoneToMsMap();
+            if (microsoftTimeZones != null)
             {
-                return tzBuilder.append('-').append(offset).toString();
-            } else if (charAt == '-')
-            {
-                return tzBuilder.append('+').append(offset).toString();
+                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey).findFirst().orElse(null);
             }
         }
-        // was not possible to guess
-        return "GMT+00:00";
+        catch (Exception e)
+        {
+            LOG.warn("Cannot take Java TimeZone name from Microsoft TimeZone name = [{}]. Default TimeZone [{}] will be used instead.", msName, timeZone);
+        }
+
+        return timeZone;
     }
 
 }

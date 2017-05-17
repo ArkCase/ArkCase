@@ -354,12 +354,12 @@ public class ExchangeTypesConverter
         event.setLocation(appointment.getLocation());
 
         TimeZoneDefinition startTimeZoneDefinititon = appointment.getStartTimeZone();
-        TimeZone startTimeZone = TimeZone.getTimeZone(guessTimeZone(startTimeZoneDefinititon.getName()));
-        event.setStart(ZonedDateTime.ofInstant(appointment.getStart().toInstant(), ZoneId.of(startTimeZone.getID())));
+        ZoneId startTimeZone = ZoneId.of(guessTimeZone(startTimeZoneDefinititon.getId()));
+        event.setStart(ZonedDateTime.ofInstant(appointment.getStart().toInstant(), startTimeZone));
 
         TimeZoneDefinition endTimeZoneDefinition = appointment.getEndTimeZone();
-        TimeZone endTimeZone = TimeZone.getTimeZone(guessTimeZone(endTimeZoneDefinition.getName()));
-        event.setEnd(ZonedDateTime.ofInstant(appointment.getEnd().toInstant(), ZoneId.of(endTimeZone.getID())));
+        ZoneId endTimeZone = ZoneId.of(guessTimeZone(endTimeZoneDefinition.getId()));
+        event.setEnd(ZonedDateTime.ofInstant(appointment.getEnd().toInstant(), endTimeZone));
 
         event.setAllDayEvent(appointment.getIsAllDayEvent());
 
@@ -410,7 +410,7 @@ public class ExchangeTypesConverter
      * @throws ServiceLocalException
      * @throws ServiceValidationException
      */
-    private static void processRecurrence(AcmCalendarEvent event, Appointment appointment, TimeZone startTimeZone, TimeZone endTimeZone)
+    private static void processRecurrence(AcmCalendarEvent event, Appointment appointment, ZoneId startTimeZone, ZoneId endTimeZone)
             throws ServiceLocalException, ServiceValidationException
     {
         Recurrence recurrence = appointment.getRecurrence();
@@ -470,11 +470,11 @@ public class ExchangeTypesConverter
             if (recurrence.getStartDate() != null)
             {
                 recurrenceDetails
-                        .setStartAt(ZonedDateTime.ofInstant(recurrence.getStartDate().toInstant(), ZoneId.of(startTimeZone.getID())));
+                        .setStartAt(ZonedDateTime.ofInstant(recurrence.getStartDate().toInstant(), startTimeZone));
             }
             if (recurrence.getEndDate() != null)
             {
-                recurrenceDetails.setEndBy(ZonedDateTime.ofInstant(recurrence.getEndDate().toInstant(), ZoneId.of(endTimeZone.getID())));
+                recurrenceDetails.setEndBy(ZonedDateTime.ofInstant(recurrence.getEndDate().toInstant(), endTimeZone));
             }
             event.setRecurrenceDetails(recurrenceDetails);
 

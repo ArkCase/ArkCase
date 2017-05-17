@@ -18,7 +18,7 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
         var onObjectInfoRetrieved = function(objectInfo) {
             $scope.objectInfoRetrieved = true;
             $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-            $scope.objectId = objectInfo.id;
+            $scope.objectId = objectInfo.complaintId;
         };
     }
 ]);
