@@ -104,7 +104,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Phone Number",
+      "btnOk.text": "Save Phone Number",
       "type.label": "Phone Type",
       "type.placeholder": "Enter Phone Type",
       "value.label": "Phone Number",
@@ -136,7 +136,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Fax Number",
+      "btnOk.text": "Save Fax Number",
       "type.label": "Fax Type",
       "type.placeholder": "Enter Fax Type",
       "value.label": "Fax Number",
@@ -168,7 +168,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Email Address",
+      "btnOk.text": "Save Email Address",
       "type.label": "Email Type",
       "type.placeholder": "Enter Email Type",
       "value.label": "Email Address",
@@ -200,7 +200,7 @@
       "no": "No",
       "description": "Description",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add URL",
+      "btnOk.text": "Save URL",
       "type.label": "Type",
       "type.placeholder": "Enter Type",
       "value.label": "URL",
@@ -231,8 +231,7 @@
       "yes": "Yes",
       "no": "No",
       "btnCancel.text": "Cancel",
-      "btnNew.text": "Add DBA",
-      "btnSave.text": "Save DBA",
+      "btnOk.text": "Save DBA",
       "value.label": "DBA",
       "value.placeholder": "Enter DBA",
       "description": "Description",
@@ -276,7 +275,7 @@
       "yearIssued.label": "Year Issued",
       "yearIssued.placeholder": "Enter Year Issued",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add ID"
+      "btnOk.text": "Save ID"
     }
   },
   "organizations.comp.people": {
@@ -336,7 +335,7 @@
       "organization.label": "Organization",
       "organization.placeholder": "Search Organizations",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Add Related Organization"
+      "btnOk.text": "Save Related Organization"
     }
   },
   "organizations.comp.history": {
