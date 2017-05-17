@@ -11,6 +11,9 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": true,
+      "enableRowSelection": true,
+      "enableRowHeaderSelection": true,
+      "enableFullRowSelection": true,
       "paginationPageSizes": [
         5,
         10,
@@ -89,6 +92,9 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "enableRowSelection": true,
+      "enableRowHeaderSelection": true,
+      "enableFullRowSelection": true,
       "paginationPageSizes": [
         5,
         10,
