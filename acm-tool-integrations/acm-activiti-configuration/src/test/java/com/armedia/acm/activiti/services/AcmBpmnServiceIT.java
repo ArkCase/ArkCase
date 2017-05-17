@@ -155,7 +155,7 @@ public class AcmBpmnServiceIT
 
         assertTrue(f.exists());
 
-        AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
+        AcmProcessDefinition apd = acmBpmnService.deploy(f, "", false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
@@ -171,12 +171,12 @@ public class AcmBpmnServiceIT
     public void deployExistingProcessDefinition() throws Exception
     {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
-        AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
+        AcmProcessDefinition apd = acmBpmnService.deploy(f, "", false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
         File f1 = new File(getClass().getResource("/activiti/TestActivitiSpringProcessNotChanged.bpmn20.xml").toURI());
-        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, false, false);
+        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, "", false, false);
         filesToDelete.add(apd1.getFileName());
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         assertEquals(apd.getId(), apd1.getId());
@@ -190,12 +190,12 @@ public class AcmBpmnServiceIT
     public void deployNotExistingProcessDefinition() throws Exception
     {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
-        AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
+        AcmProcessDefinition apd = acmBpmnService.deploy(f, "", false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
         File f1 = new File(getClass().getResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml").toURI());
-        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, false, false);
+        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, "", false, false);
         filesToDelete.add(apd1.getFileName());
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd1);
@@ -210,12 +210,12 @@ public class AcmBpmnServiceIT
     public void getHistoryOfProcessDefinition() throws Exception
     {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
-        AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
+        AcmProcessDefinition apd = acmBpmnService.deploy(f, "", false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
         File f1 = new File(getClass().getResource("/activiti/TestActivitiSpringProcessChanged.bpmn20.xml").toURI());
-        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, false, false);
+        AcmProcessDefinition apd1 = acmBpmnService.deploy(f1, "", false, false);
         deploymentsIdToDelete.add(apd1.getDeploymentId());
         filesToDelete.add(apd1.getFileName());
         log.info("AcmProcessDefinition deployed: " + apd1);
@@ -239,7 +239,7 @@ public class AcmBpmnServiceIT
     public void deployProcessDefinitionAndDownloadFile() throws Exception
     {
         File f = new File(getClass().getResource("/activiti/TestActivitiSpringProcess.bpmn20.xml").toURI());
-        AcmProcessDefinition apd = acmBpmnService.deploy(f, false, false);
+        AcmProcessDefinition apd = acmBpmnService.deploy(f, "", false, false);
         filesToDelete.add(apd.getFileName());
         deploymentsIdToDelete.add(apd.getDeploymentId());
         log.info("AcmProcessDefinition deployed: " + apd);
