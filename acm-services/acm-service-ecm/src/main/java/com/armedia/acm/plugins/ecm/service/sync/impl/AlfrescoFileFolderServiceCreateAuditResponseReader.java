@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
@@ -26,11 +27,11 @@ import static java.util.stream.Collectors.toList;
 public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAuditResponseReader
 {
     protected final Map<String, String> alfrescoTypeToArkCaseType = ImmutableMap.of(
-            "{http://www.alfresco.org/model/content/1.0}content", "document",
-            "{http://www.alfresco.org/model/content/1.0}folder", "folder"
+            "{http://www.alfresco.org/model/content/1.0}content", EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT,
+            "{http://www.alfresco.org/model/content/1.0}folder", EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER
     );
 
-    protected final List<String> typesToIncludeInResults = Arrays.asList("document");
+    protected final List<String> typesToIncludeInResults = Arrays.asList(EcmFileConstants.ECM_SYNC_NODE_TYPE_DOCUMENT);
 
     @Override
     public List<EcmEvent> read(JSONObject createNodesJson)
