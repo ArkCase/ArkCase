@@ -15,6 +15,9 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             return moduleConfig;
         });
 
+        $scope.pictures = [{}];
+        $scope.userPicture = null;
+
         //new person with predefined values
         $scope.person = {
             className: 'com.armedia.acm.plugins.person.model.Person',
@@ -114,9 +117,29 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
+        $scope.addEmptyPerson = function () {
+            $scope.pictures.push({});
+            $timeout(function () {
+                //add empty object
+            }, 0);
+        };
+
+        $scope.removePerson = function (toBeRemoved) {
+            $timeout(function () {
+                _.remove($scope.pictures, function (object) {
+                    return object === toBeRemoved;
+                });
+                if ($scope.pictures.length < 1) {
+                    $scope.pictures.push({});
+                }
+            }, 0);
+        };
+
+
         $scope.save = function () {
 
-            var promiseSavePerson = PersonInfoService.savePersonInfo(clearNotFilledElements(_.cloneDeep($scope.person)));
+            var clearedPersonInfo = clearNotFilledElements(_.cloneDeep($scope.person));
+            var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.pictures);
             promiseSavePerson.then(
                 function (objectInfo) {
                     $scope.$emit("report-object-updated", objectInfo);
@@ -144,6 +167,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 });
             }, 0);
         };
+
 
         $scope.searchOrganization = function (index) {
             var params = {};
@@ -187,6 +211,15 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     }, 0);
                 }
             });
+        };
+
+        $scope.selectPicture = function () {
+            $timeout(function () {
+                if ($scope.userPicture) {
+                    $scope.pictures.push($scope.userPicture);
+                    $scope.userPicture = null;
+                }
+            }, 0);
         };
 
         function clearNotFilledElements(person) {
