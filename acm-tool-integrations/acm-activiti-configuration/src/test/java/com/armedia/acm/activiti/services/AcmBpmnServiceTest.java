@@ -120,7 +120,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
@@ -172,7 +172,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
@@ -238,7 +238,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
@@ -250,7 +250,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals("4", pd1.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd1.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v2.bpmn20.xml", pd1.getFileName());
-        assertEquals(null, pd1.getDescription());
+        assertEquals("", pd1.getDescription());
         assertEquals(2, pd1.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd1.getKey());
 
