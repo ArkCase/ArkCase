@@ -69,7 +69,7 @@ public class DateTimeAdjuster
             Map<String, String> microsoftTimeZones = TimeZoneUtils.createOlsonTimeZoneToMsMap();
             if (microsoftTimeZones != null)
             {
-                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey).findFirst().orElse(null);
+                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey).findFirst().orElse(timeZone);
             }
         }
         catch (Exception e)
