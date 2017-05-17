@@ -68,6 +68,7 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
             };
             showModal(item, false);
         };
+
         $scope.editRow = function (rowEntity) {
             $scope.dba = rowEntity;
             var item = {
@@ -152,11 +153,7 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.organizationDBAs) {
-                id = $scope.objectInfo.organizationDBAs.id
-            }
-            return data.id == id;
+            return data === $scope.objectInfo.defaultDBA;
         };
     }
 ]);
