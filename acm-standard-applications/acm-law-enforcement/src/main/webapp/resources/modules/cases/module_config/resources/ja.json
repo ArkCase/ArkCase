@@ -46,7 +46,10 @@
     }
   },
   "cases.comp.documents": {
-    "title": "ja_Documents"
+    "title": "ja_Documents",
+    "sendEmail": "ja_Send Email",
+    "filterInputPlaceholder": "ja_Filter",
+    "searchInputPlaceholder": "ja_Search"
   },
   "cases.comp.people": {
     "title": "ja_People",
