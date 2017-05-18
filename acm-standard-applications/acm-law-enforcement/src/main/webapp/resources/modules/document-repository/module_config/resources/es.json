@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "es_Documents"
+    "title": "es_Documents",
+    "sendEmail": "es_Send Email",
+    "filterInputPlaceholder": "es_Filter",
+    "searchInputPlaceholder": "es_Search"
   },
   "document-repository.comp.participants": {
     "title": "es_Participants",
