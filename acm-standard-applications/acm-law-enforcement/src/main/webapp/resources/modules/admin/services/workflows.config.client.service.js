@@ -124,15 +124,17 @@ angular.module('admin').service('Admin.WorkflowsConfigService', ['$http', 'Uploa
          * Performs upload the BPMN file
          *
          * @param {object} file file to be uploaded
+         * @param {string} description description of the file
          *
          *
          * @returns {HttpPromise} Future info about file upload progress
          */
-        function uploadDefinition(file) {
+        function uploadDefinition(file, description) {
             return Upload.upload({
                 url: 'api/latest/plugin/admin/workflowconfiguration/files',
                 method: 'POST',
-                file: file
+                params: {description: description},
+                file: file,
             });
         };
     }]);

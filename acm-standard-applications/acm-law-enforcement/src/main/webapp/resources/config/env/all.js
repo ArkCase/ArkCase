@@ -95,6 +95,7 @@ module.exports = {
                 'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js',
                 'lib/crypto-js/crypto-js.js',
                 'lib/angular-google-analytics/dist/angular-google-analytics.js',
+                'lib/rrule/lib/rrule.js',
                 'lib/jsog/lib/JSOG.js'
             ]
         },

@@ -27,7 +27,7 @@ public class BpmnFileAddedMonitor implements ApplicationListener<ConfigurationFi
                 if (log.isDebugEnabled()) {
                     log.debug("Deploying new Activiti file: " + eventFile.getCanonicalPath());
                 }
-                acmBpmnService.deploy(eventFile, false, false);
+                acmBpmnService.deploy(eventFile, "", false, false);
 
                 if (log.isDebugEnabled()) {
                     log.debug("... finished deploying from: " + eventFile.getCanonicalPath());
