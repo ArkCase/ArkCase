@@ -17,25 +17,28 @@
  *
  * @param {Object} object-data Arkcase object data
  * @param {Boolean} is-parent If true builds href for parent arkcase object. Default value is false
+ * @param {Boolean} is-viewer-link If true builds href to the external or integrated viewer, for example snowbound. Default value is false
  * @param {String} url If url exists in object-data, it can be used as such and will not be built. For example notification object already has url as attribute.
  *
  * @example
  <example>
  <file name="index.html">
- <a arkcase-href object-data='row.entity' is-parent='false' url='row.entity.notification_link_s'>{{row.entity.name}}</a>
+ <a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' url='row.entity.notification_link_s'>{{row.entity.name}}</a>
  </file>
  </example>
  */
 angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectService', 'Object.LookupService'
     , function (Util, ObjectService, ObjectLookupService) {
         var defaults = {
-            isParent: false
+            isParent: false,
+            isViewerLink: false
         };
         return {
             restrict: 'A',
             scope: {
                 objectData: '=',
                 isParent: '=',
+                isViewerLink: '=',
                 url: '='
             },
             link: function(scope, element, attrs) {
@@ -59,8 +62,8 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                             objectType = (Util.goodMapValue(objectData, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
                         }
                         if (objectType == ObjectService.ObjectTypes.FILE) {
-                            var containerType = parentReference.substring(parentReference.indexOf('-') + 1);
-                            if (containerType == ObjectService.ObjectTypes.DOC_REPO) {
+                            if (scope.isViewerLink) {
+                                var containerType = parentReference.substring(parentReference.indexOf('-') + 1);
                                 var containerId = parentReference.substring(0, parentReference.indexOf('-'));
                                 var name = Util.goodMapValue(objectData, "title_parseable");
                                 objectUrlKey = "viewerUrl";
