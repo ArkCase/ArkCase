@@ -50,6 +50,7 @@ import javax.persistence.PersistenceException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1307,19 +1308,46 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @Override
     public AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException
     {
-        Long inputId = folderId;
-        try
+        AcmFolder acmFolder = folderDao.find(folderId);
+        if (acmFolder != null)
         {
-            while (folderDao.find(folderId).getParentFolder() != null)
-            {
-                folderId = folderDao.find(folderId).getParentFolder().getId();
-            }
-            return getContainerDao().findByFolderId(folderId);
-        } catch (Exception e)
+            AcmFolder rootFolder = findRootParentFolder(acmFolder);
+            return getContainerDao().findByFolderId(rootFolder.getId());
+        } else
         {
-            log.error("Couldn't find the container of the folder with ID {}", inputId);
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Container not found", e);
+            log.warn("Couldn't find folder with id [{}]", folderId);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found");
         }
+    }
+
+    @Override
+    public AcmContainer findContainerByFolderIdTransactionIndependent(Long folderId) throws AcmObjectNotFoundException
+    {
+        AcmFolder acmFolder = folderDao.find(folderId);
+        if (acmFolder != null)
+        {
+            AcmFolder rootFolder = findRootParentFolder(acmFolder);
+            return getContainerDao().findByFolderIdTransactionIndependent(rootFolder.getId());
+        } else
+        {
+            log.warn("Couldn't find folder with id [{}]", folderId);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found");
+        }
+    }
+
+    @Override
+    public List<AcmFolder> findModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getFolderDao().findModifiedSince(lastModified, start, pageSize);
+    }
+
+    private AcmFolder findRootParentFolder(AcmFolder folder)
+    {
+        if (folder.getParentFolder() == null)
+        {
+            return folder;
+        }
+        return findRootParentFolder(folder.getParentFolder());
     }
 
     /**
