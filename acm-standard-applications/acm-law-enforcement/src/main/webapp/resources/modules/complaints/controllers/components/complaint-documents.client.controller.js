@@ -89,5 +89,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         $scope.onSearch = function () {
             $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
         };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

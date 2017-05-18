@@ -511,9 +511,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             /**
              * @description Recursive function which will expand the folders in the tree based on their value
              * in the nodesStatusBeforeRefresh array
-             * Used in DocTree.refreshtree() together with DocTree.saveNodesStatus()
+             * Used in DocTree.refreshTree() together with DocTree.saveNodesStatus()
              *
-             * NOTE - the children param. must be the chhildren array from the node used as starting node in DocTree.saveNodesStatus()
+             * NOTE - the children param. must be the children array from the node used as starting node in DocTree.saveNodesStatus()
              *
              * @param children The children of the first node
              * @param nodesStatusBeforeRefresh The array in which the tree structure and it's types of
@@ -531,7 +531,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             /**
              * @description Refresh tree and try to keep current open branches
              */
-            , refreshTree: function () {
+            , refreshTree: function (nodeToExpand) {
                 var objType = DocTree.getObjType();
                 var objId = DocTree.getObjId();
                 if (!Util.isEmpty(objType) && !Util.isEmpty(objId)) {
@@ -581,7 +581,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.expandAfterRefresh(rootNode.children, []);
                         });
                     });
-                } else {
+                } else if (nodeToExpand){
+                    DocTree.tree.reload(DocTree.Source.source()).then(function () {
+                        DocTree.expandTopNode().then(function () {
+                            var rootNode = DocTree.getTopNode();
+                                var theChild;
+                                _.forEach(rootNode.children, function (child) {
+                                    if (child.data.objectId == nodeToExpand.data.objectId &&
+                                        child.data.objectType == nodeToExpand.data.objectType) {
+                                        theChild = child;
+                                    }
+                                });
+                                if (theChild) {
+                                    theChild.load(true).done(function () {
+                                        theChild.setExpanded();
+                                    });
+                                }
+                            DocTree.expandAfterRefresh(rootNode.children, []);
+                        });
+                    });
+                }
+                else {
                     var nodesStatusBeforeRefresh = [];// Array in which the tree structure will be replicated before the reload is started
                     var rootNode = DocTree.getTopNode();// We want the iteration to start from the root node of the tree
                     DocTree.saveNodesStatus(rootNode, nodesStatusBeforeRefresh);
@@ -590,7 +610,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.expandTopNode().then(function () {
                                 var rootNode = DocTree.getTopNode();
                                 DocTree.expandAfterRefresh(rootNode.children, nodesStatusBeforeRefresh);
-                            })
+                            });
                         }
                     });
                 }
@@ -822,6 +842,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (DocTree.readOnly) {
                     return;
                 }
+                var setting = DocTree.Config.getSetting();
+                if (DocTree.isFolderNode(data.node) && setting.search.enabled) {
+                    DocTree.Op.removeSearchFilter();
+                    DocTree.refreshTree(data.node);
+                    return false;
+                }
                 var tree = $(this).fancytree("getTree"),
                     node = tree.getActiveNode();
                 if (!DocTree.editSetting.isEditing) {
@@ -832,7 +858,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
-                if (data.targetType !== "expander" && !DocTree.Config._setting.search.enabled) {
+                var setting = DocTree.Config.getSetting();
+                if (data.targetType === "expander" && setting.search.enabled) {
+                    if (DocTree.isFolderNode(data.node)) {
+                        DocTree.Op.removeSearchFilter();
+                        DocTree.refreshTree(data.node);
+                        return false;
+                    }
+                }
+                if (data.targetType !== "expander" && data.targetType !== "title") {
                     if (DocTree.isFolderNode(data.node)) {
                         DocTree.Op.addFolderActionBtns();
                     }
@@ -869,9 +903,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , onSearch: function (searchFilter) {
                 var setting = DocTree.Config.getSetting();
-                setting.search.enabled = true;
-                setting.search.searchFilter = searchFilter;
-                DocTree.refreshTree();
+                if(searchFilter){
+                    setting.search.enabled = true;
+                    setting.search.searchFilter = searchFilter;
+                    DocTree.refreshTree();
+                }
             }
             , Source: {
                 source: function () {
@@ -1821,9 +1857,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var cutMenu = _.find(menu, {cmd: "cut"});
                         var copyMenu = _.find(menu, {cmd: "copy"});
                         var disabled = DocTree.Config.getSetting().search.enabled;
+                        if(cutMenu && copyMenu){
                         cutMenu.disabledExpression = disabled;
                         copyMenu.disabledExpression = disabled;
-
+                        }
+                        var newFolderMenu = _.find(menu, {cmd: "newFolder"});
+                        var newFileMenu = _.find(menu, {cmd: "subMenuFileTypes"});
+                        if(newFolderMenu && newFileMenu){
+                            newFolderMenu.disabledExpression = disabled;
+                            newFileMenu.disabledExpression = disabled;
+                        }
                         //} else {
                         //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];
                         //    menu = [{
@@ -2135,7 +2178,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (setting.search.enabled) {
                             if (setting.search.searchFilter.trim() !== "") {
                                 fetchData = Ecm.retrieveFlatSearchResultList;
-                                param.searchFilter = setting.search.searchFilter;
+                                param.filter = setting.search.searchFilter;
                             } else {
                                 setting.search.enabled = false;
                             }
@@ -3091,6 +3134,12 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 , removeFolderActionBtns: function () {
                     DocTree.scope.$bus.publish('hideFolderActionBtns');
+                }
+                , removeSearchFilter: function () {
+                    var setting = DocTree.Config.getSetting();
+                    setting.search.enabled = false;
+                    setting.search.searchFilter = "";
+                    DocTree.scope.$bus.publish('removeSearchFilter');
                 }
             } // end Op
 

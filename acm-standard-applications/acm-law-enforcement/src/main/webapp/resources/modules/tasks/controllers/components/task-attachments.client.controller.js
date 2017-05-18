@@ -100,5 +100,9 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         $scope.onSearch = function () {
             $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
         };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);
