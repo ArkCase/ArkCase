@@ -17,6 +17,9 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
+            }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -37,30 +40,33 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
             }
         };
 
-        if (Util.goodPositive(componentHelper.currentObjectId, false)) {
-        	$scope.newCostsheetParamsFromObject = {
-        		objectId: componentHelper.currentObjectId,
-                type: ObjectService.ObjectTypes.COMPLAINT
-            }
-        	ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
-                function (costsheets) {
-                    componentHelper.promiseConfig.then(function (config) {
-                        for (var i = 0; i < costsheets.length; i++) {
-                            costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
-                            costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
-                                return total + Util.goodValue(n.value, 0);
-                            }, 0);
-                        }
-
-                        $scope.gridOptions = $scope.gridOptions || {};
-                        $scope.gridOptions.data = costsheets;
-                        $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
-                        return config;
-                    });
-                    return costsheets;
+        var onObjectInfoRetrieved = function (objectInfo) {
+            if (Util.goodPositive(componentHelper.currentObjectId, false)) {
+                $scope.newCostsheetParamsFromObject = {
+                    objectId: componentHelper.currentObjectId,
+                    type: ObjectService.ObjectTypes.COMPLAINT,
+                    objectNumber: objectInfo.complaintNumber
                 }
-            );
-        }
+                ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.COMPLAINT, componentHelper.currentObjectId).then(
+                    function (costsheets) {
+                        componentHelper.promiseConfig.then(function (config) {
+                            for (var i = 0; i < costsheets.length; i++) {
+                                costsheets[i].acm$_formName = $translate.instant("complaints.comp.cost.formNamePrefix") + " " + Util.goodValue(costsheets[i].parentNumber);
+                                costsheets[i].acm$_costs = _.reduce(Util.goodArray(costsheets[i].costs), function (total, n) {
+                                    return total + Util.goodValue(n.value, 0);
+                                }, 0);
+                            }
+
+                            $scope.gridOptions = $scope.gridOptions || {};
+                            $scope.gridOptions.data = costsheets;
+                            $scope.gridOptions.totalItems = Util.goodValue(costsheets.length, 0);
+                            return config;
+                        });
+                        return costsheets;
+                    }
+                );
+            }
+        };
         
         $scope.editRow = function(rowEntity){
         	$state.go('frevvo.edit-costsheet',{id: rowEntity.id});
