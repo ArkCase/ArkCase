@@ -581,22 +581,22 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.expandAfterRefresh(rootNode.children, []);
                         });
                     });
-                } else if (nodeToExpand){
+                } else if (nodeToExpand) {
                     DocTree.tree.reload(DocTree.Source.source()).then(function () {
                         DocTree.expandTopNode().then(function () {
                             var rootNode = DocTree.getTopNode();
-                                var theChild;
-                                _.forEach(rootNode.children, function (child) {
-                                    if (child.data.objectId == nodeToExpand.data.objectId &&
-                                        child.data.objectType == nodeToExpand.data.objectType) {
-                                        theChild = child;
-                                    }
-                                });
-                                if (theChild) {
-                                    theChild.load(true).done(function () {
-                                        theChild.setExpanded();
-                                    });
+                            var theChild;
+                            _.forEach(rootNode.children, function (child) {
+                                if (child.data.objectId == nodeToExpand.data.objectId &&
+                                    child.data.objectType == nodeToExpand.data.objectType) {
+                                    theChild = child;
                                 }
+                            });
+                            if (theChild) {
+                                theChild.load(true).done(function () {
+                                    theChild.setExpanded();
+                                });
+                            }
                             DocTree.expandAfterRefresh(rootNode.children, []);
                         });
                     });
@@ -903,11 +903,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             }
             , onSearch: function (searchFilter) {
                 var setting = DocTree.Config.getSetting();
-                if(searchFilter){
+                if (searchFilter) {
                     setting.search.enabled = true;
                     setting.search.searchFilter = searchFilter;
-                    DocTree.refreshTree();
+                } else {
+                    setting.search.enabled = false;
                 }
+                DocTree.refreshTree();
             }
             , Source: {
                 source: function () {
@@ -1857,13 +1859,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var cutMenu = _.find(menu, {cmd: "cut"});
                         var copyMenu = _.find(menu, {cmd: "copy"});
                         var disabled = DocTree.Config.getSetting().search.enabled;
-                        if(cutMenu && copyMenu){
-                        cutMenu.disabledExpression = disabled;
-                        copyMenu.disabledExpression = disabled;
+                        if (cutMenu && copyMenu) {
+                            cutMenu.disabledExpression = disabled;
+                            copyMenu.disabledExpression = disabled;
                         }
                         var newFolderMenu = _.find(menu, {cmd: "newFolder"});
                         var newFileMenu = _.find(menu, {cmd: "subMenuFileTypes"});
-                        if(newFolderMenu && newFileMenu){
+                        if (newFolderMenu && newFileMenu) {
                             newFolderMenu.disabledExpression = disabled;
                             newFileMenu.disabledExpression = disabled;
                         }
@@ -1900,7 +1902,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         /*email document should not be available when it's not configured*/
-                        if(!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
+                        if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
                             item.invisible = true;
                         }
 
@@ -4649,7 +4651,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     });
                 });
                 /*Get send email configuration*/
-                EmailSenderConfigurationService.getEmailSenderConfiguration().then(function(res) {
+                EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (res) {
                     DocTree.treeConfig.emailSendConfiguration = res.data;
                 });
 
