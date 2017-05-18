@@ -147,7 +147,7 @@ angular.module('services').factory('Complaint.InfoService', ['$resource', '$tran
             return Util.serviceCall({
                 service: ObjectInfoService.save
                 , param: {type: "complaint"}
-                , data: complaintInfo
+                , data: JSOG.encode(complaintInfo)
                 , onSuccess: function (data) {
                     if (Service.validateComplaintInfo(data)) {
                         var complaintInfo = data;

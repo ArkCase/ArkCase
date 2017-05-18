@@ -35,7 +35,9 @@
   },
   "document-repository.comp.documents": {
     "title": "Documents",
-    "sendEmail": "Send Email"
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "document-repository.comp.participants": {
     "title": "Participants",

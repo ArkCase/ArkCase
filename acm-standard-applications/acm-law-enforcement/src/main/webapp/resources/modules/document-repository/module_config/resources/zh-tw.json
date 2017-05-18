@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "zh-tw_Documents"
+    "title": "zh-tw_Documents",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "document-repository.comp.participants": {
     "title": "zh-tw_Participants",
