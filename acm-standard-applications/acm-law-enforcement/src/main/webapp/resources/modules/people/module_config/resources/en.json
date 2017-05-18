@@ -112,7 +112,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "Phones Numbers",
+    "title": "Phone Numbers",
     "table.columns": {
       "type": "Type",
       "value": "Phone Number",
