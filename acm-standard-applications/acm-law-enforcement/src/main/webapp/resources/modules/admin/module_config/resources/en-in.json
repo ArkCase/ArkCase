@@ -218,6 +218,14 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.bpmn.upload": "Upload",
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
+    "workflows.config.bpmn.modal": {        
+        "label.description": "Description",
+        "label.noFileSelected": "No File Selected",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
       "success": "Process succesfully activated."
@@ -237,6 +245,7 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {
