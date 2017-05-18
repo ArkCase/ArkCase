@@ -83,5 +83,9 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
         $scope.onSearch = function () {
             $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
         };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);
