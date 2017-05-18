@@ -161,7 +161,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "visible": true,
                 "enableSorting": false,
                 width: 100,
-                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN.version' ng-value='{{row.entity.version}}' ng-change='grid.appScope.changeActive()'/>",
+                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN' ng-value='{{row.entity}}' ng-change='grid.appScope.changeActive()'/>",
                 "headerCellFilter": "translate"
             });
             historyPromise.then(function (payload) {
