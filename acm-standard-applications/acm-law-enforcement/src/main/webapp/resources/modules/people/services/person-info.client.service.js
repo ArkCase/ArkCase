@@ -30,6 +30,14 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             save: {
                 method: 'POST',
                 url: 'api/latest/plugin/people',
+                transformRequest: function (data, headersGetter) {
+                    var contentType = headersGetter()['content-type'] || '';
+                    if (data && contentType.indexOf('application/json') > -1) {
+                        //we need angular.copy just to remove angular specific fields
+                        return JSOG.stringify(angular.copy(data));
+                    }
+                    return data;
+                },
                 cache: false
             },
 
@@ -182,7 +190,8 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             // The browser will not set the content-type of the json object automatically,
             // so we need to set it manualy. The only way to do that is to convert the data to Blob.
             // In that way we can set the desired content-type.
-            var data = new Blob([angular.toJson(personInfo)], {
+
+            var data = new Blob([JSOG.stringify(angular.copy(personInfo))], {
                 type: 'application/json'
             });
             formData.append('person', data);

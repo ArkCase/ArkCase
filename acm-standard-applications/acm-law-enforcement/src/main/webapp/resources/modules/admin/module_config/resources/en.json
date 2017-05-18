@@ -211,6 +211,34 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.calendarConfiguration": {
+      "title": "Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "Enter System Email Address",
+        "password.placeholder": "Enter System Password",
+        "purge.placeholder": "Choose Purge Option",
+        "purgeDays.placeholder": "Enter Days",
+        "save.button": "Save",
+        "validate.button": "Validate",
+        "purge.label": "Purge",
+        "email.label": "System Email Address",
+        "password.label": "System Password",
+        "purgeDays.label": "Days",
+        "emailValid": "System Email Address is valid",
+        "emailNotValid": "System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "Retain Indefinitely",
+          "objectClosed": "Object = 'Closed'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "Cases",
+          "complaints.label": "Complaints",
+          "tasks.label": "Tasks"
+        }
+      }
+    },
     "security.emailConfiguration": {
       "title": "Document Delivery Policy",
       "emailConfigForm": {
@@ -218,7 +246,7 @@
         "deliveryMethods.label": "Delivery Methods",
         "enableDocumentEmail.checkbox": "Documents can be emailed",
         "enableDocumentAttach.checkbox": "Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",        
+        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
         "serverSettings.label": "Server Settings",
         "serverType.label": "Server Type",
         "serverType.placeholder": "Choose Email Server Type",
@@ -236,8 +264,8 @@
         "encryptionOptions": {
           "off": "OFF",
           "ssl-tls": "SSL/TLS",
-          "starttls": "STARTTLS",
-        },        
+          "starttls": "STARTTLS"
+        },
         "username.label": "Username",
         "username.placeholder": "Enter Username",
         "password.label": "Password",
@@ -284,7 +312,7 @@
           "Contributor": "Contributor",
           "FreeBusyTimeOnly": "FreeBusyTimeOnly",
           "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "Custom"   
+          "Custom": "Custom"
         }
       }
     },
@@ -297,6 +325,14 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.bpmn.upload": "Upload",
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
+    "workflows.config.bpmn.modal": {        
+        "label.description": "Description",
+        "label.noFileSelected": "No File Selected",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
       "success": "Process succesfully activated."
@@ -316,6 +352,7 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {

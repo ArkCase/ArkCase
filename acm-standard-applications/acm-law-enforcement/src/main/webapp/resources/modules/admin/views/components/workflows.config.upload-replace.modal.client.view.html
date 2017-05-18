@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h3>
+        <span translate>admin.workflows.config.bpmn.upload</span>
+    </h3>
+
+</div>
+<div class="modal-body">
+    <form name="workflowForm">
+        <div class="well-sm">
+            <div class="row">
+                <div class="btn-group">
+                    <button ngf-select ngf-change="upload($files)" class="btn btn-xs btn-link" ngf-multiple="false"
+                            accept=".xml">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                        <span translate>admin.workflows.config.bpmn.addNewWorkflow</span>
+                    </button>
+                </div>
+                <div>
+                    <ul>
+                        <li ng-if="selectedFiles.length == 0">
+                            <span translate>admin.workflows.config.bpmn.modal.label.noFileSelected</span>
+                        </li>
+                        <li ng-repeat="file in selectedFiles">{{file.name}}</li>
+                    </ul>
+                </div>
+            </div>            
+            <div class="row">
+                <label for="label"><span translate>admin.workflows.config.bpmn.modal.label.description</span>
+                    <span class="required-asterisk">*</span></label>
+                <input id="description" class="form-control" type="text" ng-model="bpmn.description"
+                       required>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.workflows.config.bpmn.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk(selectedFiles)"
+            ng-disabled="workflowForm.$invalid || selectedFiles.length == 0">
+        <span translate>admin.workflows.config.bpmn.modal.btnOk.text</span>
+    </button>
+</div>
