@@ -608,6 +608,35 @@
     },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
   },
+  "coreCalendar": {
+    "chooseEventAttendeesDialog": {
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": true,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "email_lcs",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.email",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
+    }
+  },
   "dialogPersonPicker": {
     "enableFiltering": false,
     "multiSelect": false,

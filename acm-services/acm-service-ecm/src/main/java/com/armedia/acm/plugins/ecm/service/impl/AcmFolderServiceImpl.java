@@ -636,7 +636,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
+
     public void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmObjectNotFoundException,
             AcmUserActionFailedException
     {
@@ -663,16 +663,23 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         folderContentEntries.putAll(folderContentFolderEntries);
 
-        log.info("Putting object locks");
-        putObjectLocks(folderContentEntries, authentication);
-
-        log.info("Deleting folder tree");
-        deleteFolderTree(folderId, authentication);
+        lockAndDeleteFolderTree(folderId, authentication, folderContentEntries);
 
         log.info("Removing object locks");
         // Remove LOCK for all sub-folders
         // For FILE the LOCK is removed with deleting the FILE handled with cascade remove
         removeObjectLocks(folderContentFolderEntries, authentication);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    private void lockAndDeleteFolderTree (Long folderId, Authentication authentication, Map<String, String> folderContentEntries)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        log.info("Putting object locks");
+        putObjectLocks(folderContentEntries, authentication);
+
+        log.info("Deleting folder tree");
+        deleteFolderTree(folderId, authentication);
     }
 
     @Override
@@ -754,7 +761,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
     }
 
-    private void removeObjectLocks(Map<String, String> folderContentEntries, Authentication authentication) throws AcmUserActionFailedException
+    private void removeObjectLocks(Map<String, String> folderContentEntries, Authentication authentication)
     {
         for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
         {
@@ -766,15 +773,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             } catch (AcmObjectLockException e)
             {
                 log.warn("Can't remove locks for object: {} with id: {} ", entry.getValue(), id, e);
-                throw new AcmUserActionFailedException("can't remove object lock", entry.getValue(), id,
-                        String.format("Can't remove lock from object %s: %s", entry.getValue(), id), e);
             }
         }
     }
 
-
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
     {
         AcmFolder rootFolder = container.getFolder();
@@ -796,14 +799,21 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         folderContentEntries.putAll(folderContentFolderEntries);
 
-        log.info("Putting object locks");
-        putObjectLocks(folderContentEntries, authentication);
-
-        log.info("Deleting container and it's content");
-        deleteContainer(container.getId(), authentication);
+        deleteAndLockContainer(container.getId(), authentication, folderContentEntries);
 
         log.info("Removing object locks");
-        removeObjectLocks(folderContentFolderEntries, authentication);
+        removeObjectLocks(folderContentEntries, authentication);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    private void deleteAndLockContainer(Long containerId, Authentication authentication, Map<String, String> contentEntries)
+            throws AcmUserActionFailedException
+    {
+        log.info("Putting object locks");
+        putObjectLocks(contentEntries, authentication);
+
+        log.info("Deleting container and it's content");
+        deleteContainer(containerId, authentication);
     }
 
     @Override
@@ -817,7 +827,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     public void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator,
-                                        int progressCounter, int total)
+            int progressCounter, int total)
     {
         for (EcmFile file : files)
         {
@@ -831,7 +841,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     public void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator,
-                                          int progressCounter, int total)
+            int progressCounter, int total)
     {
         for (AcmFolder subFolder : folders)
         {
@@ -843,7 +853,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             progressCounter++;
         }
     }
-
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -967,7 +976,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
     void findFolderChildren(AcmFolder folder, Set<EcmFile> childFiles, Set<AcmFolder> childFolders)
     {
-        if (folder == null) return;
+        if (folder == null)
+            return;
 
         childFiles.addAll(fileDao.findByFolderId(folder.getId()));
 
