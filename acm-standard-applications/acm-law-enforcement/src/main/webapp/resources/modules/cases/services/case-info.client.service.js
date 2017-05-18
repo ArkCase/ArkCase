@@ -104,7 +104,7 @@ angular.module('services').factory('Case.InfoService', ['$resource', '$translate
             return Util.serviceCall({
                 service: ObjectInfoService.save
                 , param: {type: "casefile"}
-                , data: caseInfo
+                , data: JSOG.encode(caseInfo)
                 , onSuccess: function (data) {
                     if (Service.validateCaseInfo(data)) {
                         var caseInfo = data;
