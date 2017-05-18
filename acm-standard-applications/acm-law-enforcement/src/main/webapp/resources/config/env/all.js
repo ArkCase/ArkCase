@@ -73,6 +73,7 @@ module.exports = {
                 'lib/fancytree/dist/src/jquery.fancytree.gridnav.js',
                 'lib/fancytree/dist/src/jquery.fancytree.edit.js',
                 'lib/fancytree/dist/src/jquery.fancytree.dnd.js',
+                'lib/fancytree/dist/src/jquery.fancytree.filter.js',
                 'lib/ng-file-upload/ng-file-upload.min.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.min.js',
                 'lib/ng-tags-input/ng-tags-input.min.js',
