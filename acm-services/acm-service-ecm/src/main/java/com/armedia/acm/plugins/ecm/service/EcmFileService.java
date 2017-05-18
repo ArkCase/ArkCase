@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,13 @@ public interface EcmFileService
             String parentObjectType,
             Long parentObjectId,
             String cmisRepositoryId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    @Transactional
+    EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents,
+                   String fileContentType, String fileName, Authentication authentication,
+                   String targetCmisFolderId, String parentObjectType, Long parentObjectId,
+                   String cmisRepositoryId, Document existingCmisDocument)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
      * This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
@@ -157,7 +165,7 @@ public interface EcmFileService
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
     AcmCmisObjectList listFlatSearchResults(Authentication auth, AcmContainer container, String category, String sortBy,
-            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
+                                            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
 
     AcmCmisObjectList listFileFolderByCategory(Authentication auth,
                                                AcmContainer container,
