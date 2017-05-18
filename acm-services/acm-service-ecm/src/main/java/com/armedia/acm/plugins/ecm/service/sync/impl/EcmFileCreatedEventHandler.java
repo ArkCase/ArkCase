@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -10,21 +12,19 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
-import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.services.pipeline.PipelineManager;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.spring.SpringContextHolder;
+import com.armedia.acm.web.api.MDCConstants;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
+import java.util.UUID;
 
 /**
  * Created by dmiller on 5/17/17.
@@ -38,9 +38,6 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
 
     private EcmFileDao fileDao;
     private EcmFileService fileService;
-    private SpringContextHolder springContextHolder;
-
-    private FolderAndFilesUtils folderAndFilesUtils = new FolderAndFilesUtils();
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -50,7 +47,7 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         AcmFolder parentFolder = lookupArkCaseFolder(ecmEvent.getParentNodeId());
         if (parentFolder == null)
         {
-            log.debug("Parent folder is not in ArkCase, so not creating the new folder {}", ecmEvent.getNodeId());
+            log.debug("Parent folder is not in ArkCase, so not creating the new file {}", ecmEvent.getNodeId());
             return;
         }
 
@@ -67,6 +64,11 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             return;
         }
 
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, ecmEvent.getUserId());
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+
+
         String cmisRepositoryId = getFolderService().getCmisRepositoryId(parentFolder);
 
         Document cmisDocument = lookupCmisDocument(cmisRepositoryId, ecmEvent.getNodeId());
@@ -76,48 +78,34 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             return;
         }
 
-        // get the pipeline manager and load the file
-        PipelineManager<EcmFile, EcmFileTransactionPipelineContext> pipelineManager =
-                getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager", PipelineManager.class);
-        EcmFileTransactionPipelineContext context = buildContext(ecmEvent, container);
-        EcmFile newFile = buildFile(ecmEvent, parentFolder, cmisDocument);
+
         try
         {
-            EcmFile addedToArkCase = pipelineManager.executeOperation(newFile, context, () ->
-            {
-                return newFile;
-            });
-        } catch (PipelineProcessException e)
+            getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
+
+            EcmFile addedToArkCase = getFileService().upload(
+                    ecmEvent.getNodeName(),
+                    findFileType(cmisDocument),
+                    "Document",
+                    cmisDocument.getContentStream().getStream(),
+                    cmisDocument.getContentStreamMimeType(),
+                    ecmEvent.getNodeName(),
+                    new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()),
+                    parentFolder.getCmisFolderId(),
+                    container.getContainerObjectType(),
+                    container.getContainerObjectId(),
+                    parentFolder.getCmisRepositoryId(),
+                    cmisDocument);
+            log.info("Added file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), addedToArkCase.getId());
+
+        } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
-            log.error("Error loading new file: {}", e.getMessage(), e);
+            log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
         }
 
+
     }
 
-    protected EcmFile buildFile(EcmEvent ecmEvent, AcmFolder parentFolder, Document cmisDocument)
-    {
-        EcmFile newFile = new EcmFile();
-
-        newFile.setFileActiveVersionMimeType(cmisDocument.getContentStreamMimeType());
-        newFile.setFileActiveVersionNameExtension(folderAndFilesUtils.getFileNameExtension(ecmEvent.getNodeName()));
-        newFile.setFileName(ecmEvent.getNodeName());
-        newFile.setFileType(findFileType(cmisDocument));
-        newFile.setCmisRepositoryId(parentFolder.getCmisRepositoryId());
-        return newFile;
-    }
-
-    protected EcmFileTransactionPipelineContext buildContext(EcmEvent ecmEvent, AcmContainer container)
-    {
-        EcmFileTransactionPipelineContext context = new EcmFileTransactionPipelineContext();
-
-        context.setCmisFolderId(ecmEvent.getParentNodeId());
-        context.setContainer(container);
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(ecmEvent.getUserId(), ecmEvent.getUserId()));
-        context.setOriginalFileName(ecmEvent.getNodeName());
-
-        // TODO: need to set the byte array in the context
-        return context;
-    }
 
     /**
      * So subtypes can set the file type as needed.
@@ -130,7 +118,7 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         return "Other";
     }
 
-    private Document lookupCmisDocument(String cmisRepositoryId, String nodeId)
+    protected Document lookupCmisDocument(String cmisRepositoryId, String nodeId)
     {
         try
         {
@@ -257,13 +245,4 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
         return fileService;
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder)
-    {
-        this.springContextHolder = springContextHolder;
-    }
-
-    public SpringContextHolder getSpringContextHolder()
-    {
-        return springContextHolder;
-    }
 }

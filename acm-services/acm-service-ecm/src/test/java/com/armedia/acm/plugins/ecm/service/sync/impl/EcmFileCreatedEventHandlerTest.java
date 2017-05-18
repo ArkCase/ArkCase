@@ -10,18 +10,18 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
-import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.pipeline.PipelineManager;
-import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.core.Authentication;
 
 import javax.persistence.NoResultException;
+import java.io.InputStream;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
@@ -39,11 +39,11 @@ public class EcmFileCreatedEventHandlerTest
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = createMock(AuditPropertyEntityAdapter.class);
     private EcmFileService ecmFileService = createMock(EcmFileService.class);
     private Document cmisDocument = createMock(Document.class);
-    private PipelineManager pipelineManager = createMock(PipelineManager.class);
-    private SpringContextHolder springContextHolder = createMock(SpringContextHolder.class);
+    private ContentStream contentStream = createMock(ContentStream.class);
+    private InputStream inputStream = createMock(InputStream.class);
 
     private Object[] mocks = {acmFolderDao, acmFolderService, ecmFileDao, auditPropertyEntityAdapter, ecmFileService,
-            cmisDocument, pipelineManager, springContextHolder};
+            cmisDocument, contentStream, inputStream};
     private EcmEvent fileCreated;
 
     @Before
@@ -56,7 +56,6 @@ public class EcmFileCreatedEventHandlerTest
         unit.setFolderDao(acmFolderDao);
         unit.setFileDao(ecmFileDao);
         unit.setFileService(ecmFileService);
-        unit.setSpringContextHolder(springContextHolder);
 
         fileCreated = new EcmEvent(new JSONObject());
         fileCreated.setEcmEventType(EcmEventType.CREATE);
@@ -76,15 +75,14 @@ public class EcmFileCreatedEventHandlerTest
 
         AcmContainer container = new AcmContainer();
         container.setId(600L);
+        container.setContainerObjectType("containerObjectType");
+        container.setContainerObjectId(700L);
 
         String mimeType = "mime/type";
-        String extension = ".txt";
         String fileType = "Other";
         String category = "Document";
 
-
-        Capture<EcmFileTransactionPipelineContext> actualContext = Capture.newInstance();
-        Capture<EcmFile> actualFile = Capture.newInstance();
+        Capture<Authentication> actualAuthentication = Capture.newInstance();
 
         // parent folder does exist
         expect(acmFolderDao.findByCmisFolderId(fileCreated.getParentNodeId())).andReturn(parentFolder);
@@ -104,10 +102,25 @@ public class EcmFileCreatedEventHandlerTest
         // cmis properties
         expect(cmisDocument.getContentStreamMimeType()).andReturn(mimeType);
 
-        // run the file save pipeline
-        expect(springContextHolder.getBeanByName("ecmFileUploadPipelineManager", PipelineManager.class)).andReturn(pipelineManager);
+        expect(cmisDocument.getContentStream()).andReturn(contentStream);
+        expect(contentStream.getStream()).andReturn(inputStream);
 
-        expect(pipelineManager.executeOperation(capture(actualFile), capture(actualContext), anyObject(PipelineManager.PipelineManagerOperation.class))).andReturn(new EcmFile());
+        auditPropertyEntityAdapter.setUserId(fileCreated.getUserId());
+
+        // call the file service to save the file
+        expect(ecmFileService.upload(
+                eq(fileCreated.getNodeName()),
+                eq(fileType),
+                eq(category),
+                eq(inputStream),
+                eq(mimeType),
+                eq(fileCreated.getNodeName()),
+                capture(actualAuthentication),
+                eq(parentFolder.getCmisFolderId()),
+                eq(container.getContainerObjectType()),
+                eq(container.getContainerObjectId()),
+                eq(parentFolder.getCmisRepositoryId()),
+                eq(cmisDocument))).andReturn(new EcmFile());
 
         replay(mocks);
 
@@ -115,20 +128,8 @@ public class EcmFileCreatedEventHandlerTest
 
         verify(mocks);
 
-        EcmFileTransactionPipelineContext foundContext = actualContext.getValue();
-        assertEquals(fileCreated.getParentNodeId(), foundContext.getCmisFolderId());
-        assertEquals(container, foundContext.getContainer());
-        assertEquals(fileCreated.getUserId(), foundContext.getAuthentication().getName());
-        assertEquals(fileCreated.getNodeName(), foundContext.getOriginalFileName());
-
-        EcmFile foundFile = actualFile.getValue();
-        assertEquals(mimeType, foundFile.getFileActiveVersionMimeType());
-        assertEquals(extension, foundFile.getFileActiveVersionNameExtension());
-        assertEquals(fileCreated.getNodeName(), foundFile.getFileName());
-        assertEquals(fileType, foundFile.getFileType());
-        assertEquals(category, foundFile.getCategory());
-        assertEquals(parentFolder.getCmisRepositoryId(), foundFile.getCmisRepositoryId());
-
+        Authentication foundAuthentication = actualAuthentication.getValue();
+        assertEquals(fileCreated.getUserId(), foundAuthentication.getName());
 
     }
 

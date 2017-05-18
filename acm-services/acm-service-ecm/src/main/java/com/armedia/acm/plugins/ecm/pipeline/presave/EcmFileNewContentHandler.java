@@ -28,7 +28,9 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
             throw new PipelineProcessException("ecmFile is null");
         }
 
-        if (!pipelineContext.getIsAppend() && pipelineContext.getCmisDocument() == null)
+        pipelineContext.setFileAlreadyInEcmSystem(pipelineContext.getCmisDocument() != null);
+
+        if (!pipelineContext.getIsAppend() && !pipelineContext.isFileAlreadyInEcmSystem())
         {
 
             try
@@ -43,6 +45,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 throw new PipelineProcessException(e);
             }
         }
+
+
     }
 
     @Override
@@ -51,7 +55,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
         log.debug("mule pre save handler rollback called");
 
         // JPA cannot rollback content in the Alfresco repository so it must be manually deleted
-        if (!pipelineContext.getIsAppend())
+        if (!pipelineContext.getIsAppend() && !pipelineContext.isFileAlreadyInEcmSystem())
         {
             try
             {
