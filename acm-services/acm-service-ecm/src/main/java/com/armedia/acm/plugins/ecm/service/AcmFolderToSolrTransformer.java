@@ -80,8 +80,8 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
             try
             {
                 AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(parentFolder.getId());
-                doc.setAdditionalProperty("parent_container_object_type_s", container.getContainerObjectType());
-                doc.setAdditionalProperty("parent_container_object_id_s", container.getContainerObjectId());
+                doc.getAdditionalProperties().put("parent_container_object_type_s", container.getContainerObjectType());
+                doc.getAdditionalProperties().put("parent_container_object_id_s", container.getContainerObjectId());
             } catch (AcmObjectNotFoundException e)
             {
                 log.debug("Failed to index AcmContainer info fields for folder with id: [{}] ", in.getId(), e);
