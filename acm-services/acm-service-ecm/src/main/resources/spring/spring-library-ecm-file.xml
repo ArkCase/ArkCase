@@ -177,8 +177,8 @@
     </bean>
 
     <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
-        <property name="dao" ref="acmFolderDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="folderService" ref="acmFolderService"/>
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"

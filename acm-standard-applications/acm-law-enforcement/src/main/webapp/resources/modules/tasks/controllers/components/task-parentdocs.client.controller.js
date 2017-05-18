@@ -139,5 +139,17 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
             var DocTree = $scope.treeControl.getDocTreeObject();
             DocTreeExtEmail.openModal(DocTree, nodes);
         };
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

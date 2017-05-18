@@ -1,8 +1,10 @@
 package com.armedia.acm.plugins.ecm.model;
 
-/**
- * Created by marjan.stefanoski on 03.04.2015.
- */
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class MoveCopyFileDto {
 
     private Long id;
