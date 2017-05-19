@@ -1,0 +1,32 @@
+{
+  "count": 3,
+  "entries": [
+    {
+      "id": 44,
+      "application": "AuditArkCaseDeleteExtractors",
+      "user": "admin",
+      "time": "2017-05-12T20:51:23.445Z",
+      "values": {
+        "\/auditarkcasedeleteextractors\/delete\/in\/a": "workspace:\/\/SpacesStore\/faf7562e-0731-4dfc-8b94-36a2f5df0f0d"
+      }
+    },
+    {
+      "id": 54,
+      "application": "AuditArkCaseDeleteExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:00:44.639Z",
+      "values": {
+        "\/auditarkcasedeleteextractors\/delete\/in\/a": "workspace:\/\/SpacesStore\/b021e743-3d85-4ff9-8c0b-cc318376ee70"
+      }
+    },
+    {
+      "id": 62,
+      "application": "AuditArkCaseDeleteExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:12:38.927Z",
+      "values": {
+        "\/auditarkcasedeleteextractors\/delete\/in\/a": "workspace:\/\/SpacesStore\/b2f2bde5-2499-48ac-8bab-907e6d031e58"
+      }
+    }
+  ]
+}
