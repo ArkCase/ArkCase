@@ -44,7 +44,7 @@
 <footer id="footer">
 	<div class="text-center padder">
 		<p>
-			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
+			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
 		</p>
 	</div>
 </footer>
