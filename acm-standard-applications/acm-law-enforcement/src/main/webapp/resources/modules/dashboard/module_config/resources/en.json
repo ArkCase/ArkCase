@@ -108,6 +108,22 @@
         },
         "noDataMessage": "Currently there are no team tasks info"
       },
+      "workflowReport": {
+        "title": "Workflow Report",
+        "description": "Displays Workflow Report",
+        "rowNumbers.label": "Default Row Numbers",
+        "rowNumbers.placeholder": "Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "Task ID",
+            "taskParentType": "Parent Type",
+            "taskParentName": "Parent Name",
+            "processName": "Business Process Name",
+            "taskName": "Task Name"
+          }
+        },
+        "noDataMessage": "Currently there is no workflow report info"
+      },
       "weather": {
         "description": "Displays weather",
         "label": {
