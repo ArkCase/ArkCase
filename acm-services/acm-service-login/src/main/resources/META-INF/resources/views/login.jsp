@@ -49,8 +49,14 @@ Time: 12:44
     </header>
     <p></p>
 
-    <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
-        <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+    <c:if test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+        <div class="alert alert-danger">Must enter a user name</div>
+    </c:if>
+    <c:if test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+        <div class="alert alert-danger">Must enter a password</div>
+    </c:if>
+    <c:if test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+        <div class="alert alert-danger">Bad credentials. Please try again</div>
     </c:if>
 
     <c:if test="${'1'.equals(param.login_error)}">
