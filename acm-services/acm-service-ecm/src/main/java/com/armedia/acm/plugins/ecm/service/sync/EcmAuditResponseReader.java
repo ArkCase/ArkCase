@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface EcmAuditResponseReader
 {
-    List<EcmEvent> read(JSONObject createNodesJson);
+    List<EcmEvent> read(JSONObject auditResponseJson);
 }

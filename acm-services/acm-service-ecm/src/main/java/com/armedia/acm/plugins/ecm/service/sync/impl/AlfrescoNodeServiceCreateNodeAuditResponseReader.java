@@ -30,11 +30,11 @@ public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAudi
     );
 
     @Override
-    public List<EcmEvent> read(JSONObject createNodesJson)
+    public List<EcmEvent> read(JSONObject auditResponseJson)
     {
-        int count = createNodesJson.getInt("count");
+        int count = auditResponseJson.getInt("count");
 
-        JSONArray auditEvents = createNodesJson.getJSONArray("entries");
+        JSONArray auditEvents = auditResponseJson.getJSONArray("entries");
 
         List<EcmEvent> events = IntStream.range(0, count)
                 .mapToObj(auditEvents::getJSONObject)

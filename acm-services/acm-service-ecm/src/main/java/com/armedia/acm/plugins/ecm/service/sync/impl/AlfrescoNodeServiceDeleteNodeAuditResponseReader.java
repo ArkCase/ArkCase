@@ -23,11 +23,11 @@ import static java.util.stream.Collectors.toList;
 public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements EcmAuditResponseReader
 {
     @Override
-    public List<EcmEvent> read(JSONObject deleteNodesJson)
+    public List<EcmEvent> read(JSONObject auditResponseJson)
     {
-        int count = deleteNodesJson.getInt("count");
+        int count = auditResponseJson.getInt("count");
 
-        JSONArray auditEvents = deleteNodesJson.getJSONArray("entries");
+        JSONArray auditEvents = auditResponseJson.getJSONArray("entries");
 
         List<EcmEvent> events = IntStream.range(0, count)
                 .mapToObj(auditEvents::getJSONObject)
@@ -47,7 +47,7 @@ public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements EcmAudi
 
         Long auditId = deleteEvent.getLong("id");
         retval.setAuditId(auditId);
-        
+
         retval.setUserId(deleteEvent.getString("user"));
 
         JSONObject values = deleteEvent.getJSONObject("values");
