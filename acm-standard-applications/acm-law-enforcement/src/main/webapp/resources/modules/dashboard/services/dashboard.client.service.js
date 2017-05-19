@@ -44,6 +44,13 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 isArray: false,
                 data: ''
             },
+            queryWorkflowReport: {
+                method: 'GET',
+                url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:TASK+'
+                + 'AND+adhocTask_b\\:false&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
+                data: ''
+            },
             queryMyComplaints: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' +

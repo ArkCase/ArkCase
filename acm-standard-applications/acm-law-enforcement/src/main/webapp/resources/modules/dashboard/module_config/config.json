@@ -199,6 +199,46 @@
       ]
     },
     {
+      "id": "workflowReport",
+      "title": "Workflow Report",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        25
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskId",
+          "headerCellFilter": "translate",
+          "type": "number",
+          "enableSorting": true,
+          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "width": 70
+        },
+        {
+          "name": "parent_type_s",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskParentType",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "business_process_name_lcs",
+          "displayName": "dashboard.widgets.workflowReport.table.header.processName",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "name",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskName",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        }
+      ]
+    },
+    {
       "id": "newComplaints",
       "title": "New Complaints",
       "redirectSettings": {
