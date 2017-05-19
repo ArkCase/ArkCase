@@ -33,7 +33,10 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
     protected AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
     {
-        String fullName = MapperUtils.getAttribute(adapter, "cn");
+        user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
+        user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
+
+        String fullName = String.format("%s %s", user.getFirstName(), user.getLastName());
 
         user.setFullName(fullName);
 
@@ -49,8 +52,7 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             user.setUserState("VALID");
         }
 
-        user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
-        user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
+
         user.setUserId(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
         user.setCountry(MapperUtils.getAttribute(adapter, "co"));
