@@ -475,7 +475,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "modifier",
@@ -535,7 +536,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
