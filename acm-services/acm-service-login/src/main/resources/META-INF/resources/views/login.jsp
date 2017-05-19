@@ -49,14 +49,20 @@ Time: 12:44
     </header>
     <p></p>
 
-    <c:if test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-        <div class="alert alert-danger">Must enter a user name</div>
-    </c:if>
-    <c:if test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-        <div class="alert alert-danger">Must enter a password</div>
-    </c:if>
-    <c:if test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-        <div class="alert alert-danger">Bad credentials. Please try again</div>
+    <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
+
+        <c:if test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+            <div class="alert alert-danger">Must enter user name</div>
+        </c:if>
+
+        <c:if test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+            <div class="alert alert-danger">Must enter a password</div>
+        </c:if>
+
+        <c:if test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+            <div class="alert alert-danger">Bad credentials. Please try again</div>
+        </c:if>
+
     </c:if>
 
     <c:if test="${'1'.equals(param.login_error)}">
@@ -111,7 +117,7 @@ Time: 12:44
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
+            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016</span></small>
         </p>
         <p>
             Version: ${version}
