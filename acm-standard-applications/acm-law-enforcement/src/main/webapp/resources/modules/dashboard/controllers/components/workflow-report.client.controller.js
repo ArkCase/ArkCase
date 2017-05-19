@@ -68,8 +68,8 @@ angular.module('dashboard.workflow-report')
                         pageSize: paginationOptions.pageSize
                     },
                     function (data) {
-                        vm.gridOptions.data = data.response.docs;
-                        vm.gridOptions.totalItems = data.response.numFound;
+                        vm.gridOptions.data = data;
+                        vm.gridOptions.totalItems = data.length;
                     }
                 );
             }
