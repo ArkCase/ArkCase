@@ -866,9 +866,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         return false;
                     }
                 }
-                if (data.targetType !== "expander" && data.targetType !== "title") {
-                    if (DocTree.isFolderNode(data.node)) {
-                        DocTree.Op.addFolderActionBtns();
+                if (data.targetType !== "expander") {
+                    if(!setting.search.enabled) {
+                        if (DocTree.isFolderNode(data.node)) {
+                            DocTree.Op.addFolderActionBtns();
+                        }
                     }
                     if (DocTree.isFileNode(data.node)) {
                         DocTree.Op.removeFolderActionBtns();
@@ -906,6 +908,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (searchFilter) {
                     setting.search.enabled = true;
                     setting.search.searchFilter = searchFilter;
+                    DocTree.Op.removeFolderActionBtns();
                 } else {
                     setting.search.enabled = false;
                 }
