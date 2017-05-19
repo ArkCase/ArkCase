@@ -43,7 +43,7 @@ angular.module('complaints').controller('Complaints.CostController', ['$scope', 
         var onObjectInfoRetrieved = function (objectInfo) {
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 $scope.newCostsheetParamsFromObject = {
-                    objectId: componentHelper.currentObjectId,
+                    objectId: objectInfo.complaintId,
                     type: ObjectService.ObjectTypes.COMPLAINT,
                     objectNumber: objectInfo.complaintNumber
                 }
