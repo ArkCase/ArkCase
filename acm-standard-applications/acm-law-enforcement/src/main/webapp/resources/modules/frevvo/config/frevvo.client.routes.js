@@ -42,7 +42,7 @@ angular.module('frevvo').config(['$stateProvider',
                 params: {name: 'new-costsheet'}
             })
             .state('frevvo.new-costsheet-from-object', {
-            	url: '/new-costsheet/:type/:objectId',
+            	url: '/new-costsheet/:type/:objectId/:objectNumber',
                 params: {name: 'new-costsheet'}
             })
             .state('frevvo.edit-costsheet', {
