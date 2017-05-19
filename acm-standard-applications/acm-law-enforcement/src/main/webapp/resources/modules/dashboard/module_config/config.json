@@ -215,7 +215,7 @@
           "headerCellFilter": "translate",
           "type": "number",
           "enableSorting": true,
-          "cellTemplate": "<a data-ui-sref=\"tasks.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a arkcase-href object-data='row.entity'>{{row.entity.object_id_s}}</a>",
           "width": 70
         },
         {
@@ -223,6 +223,12 @@
           "displayName": "dashboard.widgets.workflowReport.table.header.taskParentType",
           "headerCellFilter": "translate",
           "enableSorting": true
+        },
+        {
+          "name": "parent_name",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskParentName",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true'>{{row.entity.parent_name}}</a>",
+          "headerCellFilter": "translate"
         },
         {
           "name": "business_process_name_lcs",
