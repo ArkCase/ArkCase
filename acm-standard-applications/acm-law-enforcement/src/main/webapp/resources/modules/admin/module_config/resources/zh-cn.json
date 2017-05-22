@@ -130,7 +130,12 @@
           "btn": {
             "cancel": "zh-cn_Cancel",
             "ok": "zh-cn_Add Ldap User"
-          }
+          },
+          "username": "zh-cn_Enter username",
+          "firstName": "zh-cn_Enter first name",
+          "lastName": "zh-cn_Enter last name",
+          "email": "zh-cn_Enter email",
+          "password": "zh-cn_Enter password"
         },
         "editLdapMember": {
           "title": "zh-cn_Edit Ldap Member",
@@ -139,7 +144,7 @@
             "ok": "zh-cn_Edit Ldap User"
           }
         },
-        "username": "zh-cn_Username",
+        "username": "zh-cn_UserName",
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
