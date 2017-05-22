@@ -14,7 +14,7 @@ angular.module('dashboard.workflow-report')
             var paginationOptions = {
                 pageNumber: 1,
                 pageSize: 5,
-                sortBy: 'id',
+                sortBy: 'create_date_tdt',
                 sortDir: 'desc'
             };
 
@@ -67,9 +67,12 @@ angular.module('dashboard.workflow-report')
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,
                         pageSize: paginationOptions.pageSize
                     },
-                    function (data) {
-                        vm.gridOptions.data = data;
-                        vm.gridOptions.totalItems = data.length;
+                    function (response) {
+                        vm.gridOptions.data = [];
+                        vm.gridOptions.totalItems = response.numFound;
+                         _.forEach(response.data, function (value) {
+                             vm.gridOptions.data.push(value);
+                         });
                     }
                 );
             }
