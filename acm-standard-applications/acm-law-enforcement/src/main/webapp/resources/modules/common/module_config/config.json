@@ -32,6 +32,8 @@
       {
         "name": "title",
         "displayName": "common.directive.docTree.table.columns.title",
+        "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
         "width": "30%",
         "index": 2
       },
@@ -44,6 +46,8 @@
       {
         "name": "type",
         "displayName": "common.directive.docTree.table.columns.type",
+        "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "12%",
         "index": 4
@@ -51,6 +55,8 @@
       {
         "name": "created",
         "displayName": "common.directive.docTree.table.columns.created",
+        "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
         "index": 5
@@ -58,6 +64,8 @@
       {
         "name": "modified",
         "displayName": "common.directive.docTree.table.columns.modified",
+        "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
         "index": 6
@@ -66,6 +74,8 @@
         "name": "author",
         "field": "creator",
         "displayName": "common.directive.docTree.table.columns.author",
+        "headTemplate": "<label id='author' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='author' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",

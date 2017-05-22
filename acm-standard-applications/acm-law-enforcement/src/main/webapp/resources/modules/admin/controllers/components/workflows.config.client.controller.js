@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService', '$window',
-    function ($scope, workflowsConfigService, $modal, $translate, messageService, $window) {
+angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService', '$window', 'Helper.UiGridService',
+    function ($scope, workflowsConfigService, $modal, $translate, messageService, $window, HelperUiGridService) {
         $scope.uploadingInProgress = false;
         $scope.loadingProgress = 0;
         $scope.selectedBPMNFile = null;
         $scope.workflowsHistoryDialogConfig = undefined;
-
-        $scope.gridOptions = {
-            enableColumnResizing: true,
-            enableRowSelection: true,
-            enableColumnMenus: false,
-            enableRowHeaderSelection: false,
-            multiSelect: false,
-            noUnselect: false,
-            data: []
+        
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        
+        var onConfigRetrieved = function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);            
+            gridHelper.setUserNameFilter(promiseUsers);            
         };
 
         //get config and init grid settings
@@ -28,6 +28,8 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
 
             $scope.gridOptions.columnDefs = columnDefs;
 
+            onConfigRetrieved(componentConfig);
+            
             reloadGrid();
         });
 
@@ -161,7 +163,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "visible": true,
                 "enableSorting": false,
                 width: 100,
-                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN.version' ng-value='{{row.entity.version}}' ng-change='grid.appScope.changeActive()'/>",
+                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN' ng-value='{{row.entity}}' ng-change='grid.appScope.changeActive()'/>",
                 "headerCellFilter": "translate"
             });
             historyPromise.then(function (payload) {
@@ -169,10 +171,12 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                     messageService.error($translate.instant('admin.workflows.config.noHistory'));
                     return;
                 }
+                var params = {};
+                params.config = $scope.workflowsHistoryDialogConfig;
                 var modalInstance = $modal.open({
                     animation: true,
                     templateUrl: 'modules/admin/views/components/workflows.config.show-history.dialog.view.html',
-                    controller: function ($scope, $modalInstance) {
+                    controller: ['$scope', '$modalInstance','Helper.UiGridService', 'params', function ($scope, $modalInstance, HelperUiGridService, params) {
                         //initial values
                         $scope.activeBPMN = undefined;
                         $scope.initialActiveBPMNVersion = undefined;
@@ -193,18 +197,18 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                                 $scope.initialActiveBPMNVersion = row.version;
                             }
                         });
-
-                        $scope.gridOptions = {
-                            enableColumnResizing: true,
-                            enableRowSelection: true,
-                            pinSelectionCheckbox: true,
-                            enableColumnMenus: false,
-                            enableRowHeaderSelection: false,
-                            multiSelect: false,
-                            noUnselect: false,
-                            columnDefs: colDefs,
-                            data: payload.data
+                        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                        var promiseUsers = gridHelper.getUsers();
+                        
+                        var onConfigRetrieved = function (config) {
+                            gridHelper.setColumnDefs(config);
+                            gridHelper.setBasicOptions(config);
+                            gridHelper.disableGridScrolling(config);            
+                            gridHelper.setUserNameFilter(promiseUsers);            
                         };
+                        
+                        onConfigRetrieved(params.config);                                                
+                        $scope.gridOptions.data= payload.data;
 
                         $scope.activate = function () {
                             $modalInstance.close($scope.activeBPMN);
@@ -212,8 +216,13 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                         $scope.cancel = function () {
                             $modalInstance.dismiss('cancel');
                         };
-                    },
-                    size: 'lg'
+                    }],
+                    size: 'lg',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
                 });
 
                 //handle the result

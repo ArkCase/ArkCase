@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
@@ -20,6 +21,11 @@ public interface EcmFileTransaction
                                InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container, String cmisRepositoryId)
             throws MuleException, IOException;
 
+    EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
+                               String fileCategory, InputStream fileContents, String fileContentType, String fileName,
+                               String targetCmisFolderId, AcmContainer container, String cmisRepositoryId,
+                               Document existingCmisDocument) throws MuleException, IOException;
+
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException;
 
@@ -29,5 +35,4 @@ public interface EcmFileTransaction
     String downloadFileTransaction(EcmFile ecmFile) throws MuleException;
 
     InputStream downloadFileTransactionAsInputStream(EcmFile ecmFile) throws MuleException;
-
 }

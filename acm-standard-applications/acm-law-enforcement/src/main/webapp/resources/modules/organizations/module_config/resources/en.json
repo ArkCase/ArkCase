@@ -80,7 +80,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "Phones Numbers",
+    "title": "Phone Numbers",
     "table.columns": {
       "type": "Phone Type",
       "value": "Phone Number",
