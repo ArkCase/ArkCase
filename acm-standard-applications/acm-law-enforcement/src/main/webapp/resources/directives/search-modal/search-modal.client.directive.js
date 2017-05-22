@@ -108,31 +108,32 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.selectedItems = [];
                 var filterInitialValue = scope.filter;
                 scope.queryExistingItems = function () {
+                    if (!Util.isEmpty(scope.searchQuery)) {
+                        var query = '';
+                        if (scope.extraFilter) {
+                            scope.filters = filterInitialValue + scope.extraFilter + '*' + scope.searchQuery + '*';
+                        }
 
-                    var query = '';
-                    if (scope.extraFilter) {
-                        scope.filters = filterInitialValue + scope.extraFilter + '*' + scope.searchQuery + '*';
-                    }
+                        if (scope.findGroups) {
+                            query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                        } else {
+                            query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                        }
 
-                    if (scope.findGroups) {
-                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
-                    } else {
-                        query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
-                    }
-                    
-                    if (query) {
-                        scope.showNoData = false;
-                        SearchService.queryFilteredSearch({
-                                query: query
-                            },
-                            function (data) {
-                                updateFacets(data.facet_counts.facet_fields);
-                                scope.gridOptions.data = data.response.docs;
-                                if (scope.gridOptions.data.length < 1) {
-                                    scope.showNoData = true;
-                                }
-                                scope.gridOptions.totalItems = data.response.numFound;
-                            });
+                        if (query) {
+                            scope.showNoData = false;
+                            SearchService.queryFilteredSearch({
+                                    query: query
+                                },
+                                function (data) {
+                                    updateFacets(data.facet_counts.facet_fields);
+                                    scope.gridOptions.data = data.response.docs;
+                                    if (scope.gridOptions.data.length < 1) {
+                                        scope.showNoData = true;
+                                    }
+                                    scope.gridOptions.totalItems = data.response.numFound;
+                                });
+                        }
                     }
                 };
 

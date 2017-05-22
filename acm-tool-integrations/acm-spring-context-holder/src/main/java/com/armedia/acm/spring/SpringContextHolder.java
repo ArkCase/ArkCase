@@ -7,10 +7,10 @@ import com.armedia.acm.files.ConfigurationFileDeletedEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
@@ -73,7 +73,8 @@ public class SpringContextHolder
                 {
                     log.error("Could not add context from file: " + e.getMessage(), e);
                 }
-            } else if (isSpringConfigFolderModified(eventFile))
+            }
+            else if (isSpringConfigFolderModified(eventFile))
             {
                 try
                 {
@@ -104,7 +105,8 @@ public class SpringContextHolder
                 if (eventFile.isDirectory())
                 {
                     addContextFromFolder(eventFile);
-                } else
+                }
+                else
                 {
                     addContextFromFile(eventFile);
                 }
@@ -136,7 +138,8 @@ public class SpringContextHolder
         if (eventFile.isFile())
         {
             return eventFile.getParentFile().getName().startsWith("spring-config");
-        } else
+        }
+        else
         {
             return eventFile.isDirectory() && eventFile.getName().startsWith("spring-config");
         }
@@ -241,5 +244,27 @@ public class SpringContextHolder
     public <T> T getBeanByName(String name, Class<T> type)
     {
         return toplevelContext.getBean(name, type);
+    }
+
+    public <T> T getBeanByNameIncludingChildContexts(String name, Class<T> type)
+    {
+        if (toplevelContext.containsBean(name))
+        {
+            return toplevelContext.getBean(name, type);
+        }
+
+
+        T retval = null;
+        for (Map.Entry<String, AbstractApplicationContext> c : childContextMap.entrySet())
+        {
+            log.debug("context name: {}", c.getKey());
+            log.debug("bean names: {}", Arrays.asList(c.getValue().getBeanDefinitionNames()));
+            if (c.getValue().containsBean(name))
+            {
+                return c.getValue().getBean(name, type);
+            }
+        }
+
+        throw new NoSuchBeanDefinitionException(name);
     }
 }

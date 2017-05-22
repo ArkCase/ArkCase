@@ -46,7 +46,10 @@
     }
   },
   "cases.comp.documents": {
-    "title": "zh-cn_Documents"
+    "title": "zh-cn_Documents",
+    "sendEmail": "zh-cn_Send Email",
+    "filterInputPlaceholder": "zh-cn_Filter",
+    "searchInputPlaceholder": "zh-cn_Search"
   },
   "cases.comp.people": {
     "title": "zh-cn_People",

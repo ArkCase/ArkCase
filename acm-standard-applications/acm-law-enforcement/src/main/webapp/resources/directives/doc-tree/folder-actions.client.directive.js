@@ -19,8 +19,8 @@
  </example>
  */
 
-angular.module('directives').directive('folderActions', ['ConfigService', '$modal'
-    , function (ConfigService, $modal) {
+angular.module('directives').directive('folderActions', ['ConfigService', '$modal', '$timeout'
+    , function (ConfigService, $modal, $timeout) {
         return {
             restrict: 'E',
             templateUrl: 'directives/doc-tree/folder-actions.html',
@@ -36,15 +36,15 @@ angular.module('directives').directive('folderActions', ['ConfigService', '$moda
                 scope.showFolderActions = false;
                 scope.$bus.subscribe('showFolderActionBtns', function (ctx) {
                     context = ctx;
-                    scope.$apply(function () {
+                    $timeout(function () {
                         scope.showFolderActions = true;
-                    });
+                    }, 0);
                 });
 
                 scope.$bus.subscribe('hideFolderActionBtns', function(e){
-                    scope.$apply(function () {
+                    $timeout(function () {
                         scope.showFolderActions = false;
-                    });
+                    }, 0);
                 });
 
                 scope.onAddFile = function () {
