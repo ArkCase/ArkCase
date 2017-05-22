@@ -12,24 +12,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 
-            $scope.radioChanged = function () {
-                if ($scope.selectExisting != 0) {
-                    $scope.isNew = false;
-                    $scope.organizationId = '';
-                    $scope.organizationName = '';
-                    $scope.organization = '';
-                    $scope.pickOrganization();
-                }
-                else {
-                    $scope.isNew = true;
-                    $scope.organizationId = '';
-                    $scope.organizationName = '';
-                    $scope.organization = '';
-                    $scope.addNewOrganization();
-                }
-            };
-
-
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
@@ -45,6 +27,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             };
 
             $scope.pickOrganization = function () {
+                $scope.isNew = false;
+                $scope.organizationId = '';
+                $scope.organizationName = '';
+                $scope.organization = '';
+
                 var params = {};
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION';
@@ -76,7 +63,10 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             };
 
             $scope.addNewOrganization = function () {
-
+                $scope.isNew = true;
+                $scope.organizationId = '';
+                $scope.organizationName = '';
+                $scope.organization = '';
                 var modalInstance = $modal.open({
                     scope: $scope,
                     animation: true,

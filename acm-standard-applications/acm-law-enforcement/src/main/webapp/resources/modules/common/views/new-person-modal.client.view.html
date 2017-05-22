@@ -192,12 +192,12 @@
                     <div class="panel-body" data-ng-repeat="picture in pictures">
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate>people.comp.pictures.dialog.title</label><span
+                                <label translate>common.newPerson.picture.title</label><span
                                     class="required-asterisk">*</span><br/>
                                 <button ngf-select ng-model="pictures[$index]" ng-hide="pictures[$index].name"
                                         ngf-pattern="'image/*'" ngf-accept="'image/*'"
                                         class="btn btn-sm btn-default"><span
-                                        translate>people.comp.pictures.dialog.browse</span></button>
+                                        translate>common.newPerson.picture.browse</span></button>
                                 {{pictures[$index].name}}
                             </div>
                             <div class="col-sm-4 form-group">
@@ -205,7 +205,7 @@
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
                                             ng-click="removePerson(pictures[$index])">
-                                        <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
+                                        <i class="fa fa-minus text-danger"></i><span translate>common.newPerson.remove</span>
                                     </button>
                                 </div>
                                 <div class="pull-left">
@@ -214,7 +214,7 @@
                                             ng-click="addEmptyPerson();"
                                             ng-show="$last && picture.name">
                                         <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                            translate>common.newPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
@@ -240,11 +240,11 @@
                                     <input type="text" ng-model="organization.parentTitle"
                                            ng-click="searchOrganization($index)"
                                            class="input-md form-control"
-                                           placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
+                                           placeholder="{{ 'common.newPerson.organizations.searchExisting.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>
-                                        people.comp.editPerson.organizations.organizationType</label>
+                                        common.newPerson.organizations.organizationType</label>
                                     <select class="form-control" ng-disabled="!organization.parentId"
                                             ng-model="organization.personType">
                                         <option ng-repeat="relation in personOrganizationRelationTypes"
@@ -258,7 +258,7 @@
                                         <label class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="removeOrganization(organization)" ng-show="!$first">
-                                            <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
+                                            <i class="fa fa-minus text-danger"></i><span translate>common.newPerson.remove</span>
                                         </button>
                                     </div>
                                     <div class="pull-left">
@@ -266,7 +266,7 @@
                                         <button type="button" class="btn btn-link form-control"
                                                 ng-click="addNewOrganization();">
                                             <i class="fa fa-plus text-success"></i><span
-                                                translate>people.comp.editPerson.addAnother</span>
+                                                translate>common.newPerson.addAnother</span>
                                         </button>
                                     </div>
                                 </div>
