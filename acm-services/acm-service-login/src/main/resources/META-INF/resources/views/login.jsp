@@ -51,17 +51,23 @@ Time: 12:44
 
     <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
 
-        <c:if test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-            <div class="alert alert-danger">Must enter user name</div>
-        </c:if>
+        <c:choose>
+            <c:when test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Must enter user name</div>
+            </c:when>
 
-        <c:if test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-            <div class="alert alert-danger">Must enter a password</div>
-        </c:if>
+            <c:when test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Must enter a password</div>
+            </c:when>
 
-        <c:if test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-            <div class="alert alert-danger">Bad credentials. Please try again</div>
-        </c:if>
+            <c:when test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Bad credentials. Please try again</div>
+            </c:when>
+
+            <c:otherwise>
+                <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+            </c:otherwise>
+        </c:choose>
 
     </c:if>
 
