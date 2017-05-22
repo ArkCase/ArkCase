@@ -112,7 +112,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "Phones Numbers",
+    "title": "Phone Numbers",
     "table.columns": {
       "type": "Type",
       "value": "Phone Number",
@@ -356,6 +356,8 @@
     "middleName": "Middle Name",
     "middleName.placeholder": "Enter Middle Name",
     "saveButton": "Save Person",
+    "informCreated":"{{firstName}} {{lastName}} Created.",
+    "informUpdated":"{{firstName}} {{lastName}} Updated",
     "communicationAccounts": {
       "title": "Communication Accounts",
       "phone": "Phone",

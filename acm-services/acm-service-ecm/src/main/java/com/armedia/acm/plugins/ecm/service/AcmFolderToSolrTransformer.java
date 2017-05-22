@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.ecm.service;
 
-import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -15,14 +18,16 @@ import java.util.List;
  */
 public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmFolder>
 {
-    private AcmFolderDao dao;
+    private AcmFolderService folderService;
 
     private SearchAccessControlFields searchAccessControlFields;
+
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public List<AcmFolder> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
-        return getDao().findModifiedSince(lastModified, start, pageSize);
+        return getFolderService().findModifiedSince(lastModified, start, pageSize);
     }
 
     @Override
@@ -35,6 +40,8 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrDocument toSolrQuickSearch(AcmFolder in)
     {
+
+        AcmFolder parentFolder = in.getParentFolder();
 
         SolrDocument doc = new SolrDocument();
 
@@ -49,9 +56,9 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         doc.setLast_modified_tdt(in.getModified());
         doc.setName(in.getName());
         doc.setModifier_s(in.getModifier());
-        doc.setParent_object_id_i(in.getParentFolder() == null ? null : in.getParentFolder().getId());
-        doc.setParent_object_id_s(in.getParentFolder() == null ? null : "" + in.getParentFolder().getId());
-        doc.setParent_object_type_s(in.getParentFolder() == null ? null : in.getObjectType());
+        doc.setParent_object_id_i(parentFolder == null ? null : parentFolder.getId());
+        doc.setParent_object_id_s(parentFolder == null ? null : "" + parentFolder.getId());
+        doc.setParent_object_type_s(parentFolder == null ? null : in.getObjectType());
         doc.setTitle_parseable(in.getName());
         doc.setTitle_t(in.getName());
 
@@ -62,10 +69,24 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         // need an _lcs field for sorting
         doc.setName_lcs(in.getName());
 
-        doc.setParent_folder_id_i(in.getParentFolder() == null ? null : in.getParentFolder().getId());
+        doc.setParent_folder_id_i(parentFolder == null ? null : parentFolder.getId());
 
         doc.setStatus_s(in.getStatus());
 
+        doc.setAdditionalProperty("name_partial", in.getName());
+
+        if (parentFolder != null)
+        {
+            try
+            {
+                AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(parentFolder.getId());
+                doc.getAdditionalProperties().put("parent_container_object_type_s", container.getContainerObjectType());
+                doc.getAdditionalProperties().put("parent_container_object_id_s", container.getContainerObjectId());
+            } catch (AcmObjectNotFoundException e)
+            {
+                log.debug("Failed to index AcmContainer info fields for folder with id: [{}] ", in.getId(), e);
+            }
+        }
         return doc;
     }
 
@@ -82,16 +103,6 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
         return AcmFolder.class.equals(acmObjectType);
     }
 
-    public AcmFolderDao getDao()
-    {
-        return dao;
-    }
-
-    public void setDao(AcmFolderDao dao)
-    {
-        this.dao = dao;
-    }
-
     public SearchAccessControlFields getSearchAccessControlFields()
     {
         return searchAccessControlFields;
@@ -106,5 +117,15 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
     public Class<?> getAcmObjectTypeSupported()
     {
         return AcmFolder.class;
+    }
+
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
     }
 }

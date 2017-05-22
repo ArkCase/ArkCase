@@ -21,6 +21,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private Document cmisDocument;
     private EcmFile ecmFile;
     private boolean isAppend;
+    private boolean fileAlreadyInEcmSystem;
 
     private byte[] mergedFileByteArray;
 
@@ -122,5 +123,15 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setMergedFileByteArray(byte[] mergedFileByteArray)
     {
         this.mergedFileByteArray = mergedFileByteArray;
+    }
+
+    public boolean isFileAlreadyInEcmSystem()
+    {
+        return fileAlreadyInEcmSystem;
+    }
+
+    public void setFileAlreadyInEcmSystem(boolean fileAlreadyInEcmSystem)
+    {
+        this.fileAlreadyInEcmSystem = fileAlreadyInEcmSystem;
     }
 }
