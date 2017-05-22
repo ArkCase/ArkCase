@@ -84,10 +84,10 @@ angular.module('admin').controller('Admin.FormWorkflowsLinkController', ['$scope
             var handsontableInstance = hotRegisterer.getInstance('formWorkflowsLink');
             formWorkflowsLinkService.saveData(handsontableInstance.getData()).then(function () {
                 //success saved
-                messageService.info($translate.instant('admin.form-workflows.link.edit-role.save.success'));
+                messageService.info($translate.instant('admin.formWorkflows.link.editRole.save.success'));
             }, function (payload) {
                 //error saving
-                messageService.error($translate.instant('admin.form-workflows.link.edit-role.save.error'));
+                messageService.error($translate.instant('admin.formWorkflows.link.editRole.save.error'));
             });
         };
 

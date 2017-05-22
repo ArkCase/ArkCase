@@ -32,5 +32,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.person',
     'dashboard.expenses',
     'dashboard.hoursSummary',
-    'dashboard.new-cases'
+    'dashboard.new-cases',
+    'dashboard.workflow-report'
 ]);

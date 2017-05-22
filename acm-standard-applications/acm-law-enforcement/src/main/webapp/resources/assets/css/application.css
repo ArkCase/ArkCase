@@ -647,10 +647,11 @@ span.fancytree-title {
 .expandableRow{
 	height: auto !important;
 }
-
+/*
 .ui-grid-canvas {
 	height: auto !important;
 }
+*/
 
 .ui-grid-canvas .panel.panel-success {
 	margin: 0px !important;
@@ -1332,8 +1333,8 @@ a.no-outline:hover, a.no-outline:focus {
     font-size: 15px;
 }
 
-/* In the results table from a Seearch all NOTE and TAG rows returned show have
-   Links disbled under the Name column
+/* In the results table from a Search all NOTE and TAG rows returned show have
+   Links disabled under the Name column
 */
 .no-link {
     text-decoration: none;
@@ -1353,6 +1354,13 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 .user-picker-input {
     background-color: white !important;
     cursor: pointer;
+}
+.input-xs {
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
 }
 
 .cursor-pointer {
