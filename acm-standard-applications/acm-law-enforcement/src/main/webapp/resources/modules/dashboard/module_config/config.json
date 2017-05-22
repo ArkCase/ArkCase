@@ -199,6 +199,52 @@
       ]
     },
     {
+      "id": "workflowReport",
+      "title": "Workflow Report",
+      "enableFiltering": false,
+      "paginationPageSizes": [
+        5,
+        10,
+        25
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "object_id_s",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskId",
+          "headerCellFilter": "translate",
+          "type": "number",
+          "enableSorting": true,
+          "cellTemplate": "<a arkcase-href object-data='row.entity'>{{row.entity.object_id_s}}</a>",
+          "width": 70
+        },
+        {
+          "name": "parent_type_s",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskParentType",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "parent_name",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskParentName",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true'>{{row.entity.parent_name}}</a>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "business_process_name_lcs",
+          "displayName": "dashboard.widgets.workflowReport.table.header.processName",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "name",
+          "displayName": "dashboard.widgets.workflowReport.table.header.taskName",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        }
+      ]
+    },
+    {
       "id": "newComplaints",
       "title": "New Complaints",
       "redirectSettings": {

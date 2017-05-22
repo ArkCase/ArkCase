@@ -12,24 +12,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 
-            $scope.radioChanged = function () {
-                if ($scope.selectExisting != 0) {
-                    $scope.isNew = false;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.pickPerson();
-                }
-                else {
-                    $scope.isNew = true;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.addNewPerson();
-                }
-            };
-
-
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
@@ -45,6 +27,11 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             };
 
             $scope.pickPerson = function () {
+                $scope.isNew = false;
+                $scope.personId = '';
+                $scope.personName = '';
+                $scope.person = '';
+
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
                 params.filter = '"Object Type": PERSON';
@@ -76,6 +63,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             };
 
             $scope.addNewPerson = function () {
+                $scope.isNew = true;
+                $scope.personId = '';
+                $scope.personName = '';
+                $scope.person = '';
 
                 var modalInstance = $modal.open({
                     scope: $scope,

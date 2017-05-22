@@ -104,4 +104,7 @@ public interface EcmFileConstants
     String VERSIONING_STATE = "versioningState";
     String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
     String ALL_VERSIONS = "allVersions";
+
+    String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
+    String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";
 }
