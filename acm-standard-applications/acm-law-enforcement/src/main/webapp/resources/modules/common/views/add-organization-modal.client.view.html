@@ -6,28 +6,19 @@
 <div class="modal-body">
     <form name="addOrganizationForm">
         <div id="selectRadio row">
-            <div class="col-sm-12 form-group">
-                <input ng-model="selectExisting" value="0"
-                       type="radio" ng-change="radioChanged()" id="addNew"
-                       class="radio-inline">
-                <label class="radio-inline" for="addNew">
-                    <span translate>common.addOrganization.addNew.label</span>
-                </label>
-
-                <input ng-model="selectExisting" value="1" type="radio"
-                       ng-change="radioChanged()" id="selectExisting"
-                       class="radio-inline">
-                <label class="radio-inline" for="selectExisting">
-                    <span translate>common.addOrganization.selectExisting.label</span>
-                </label>
-            </div>
+            <button type="button" class="btn btn-primary"
+                    ng-click="addNewOrganization()" translate>
+                common.addOrganization.addNew.label
+            </button>
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label for="organization"
                        translate>common.addOrganization.organization.label</label>
-                <input id="organization" class="input-md form-control" type="text" ng-model="organizationValue"
-                       ng-click="radioChanged()" required>
+                <input id="organization" class="input-md form-control" type="text"
+                       ng-model="organizationValue"
+                       placeholder="{{common.addOrganization.selectExisting.label | translate}}"
+                       ng-click="pickOrganization()" required>
             </div>
             <div class="col-sm-6 form-group">
                 <label for="types" translate>common.addOrganization.type.label</label>

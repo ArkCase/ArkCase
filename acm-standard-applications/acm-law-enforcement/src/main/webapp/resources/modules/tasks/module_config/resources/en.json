@@ -203,7 +203,7 @@
     "datepicker.close": "Done",
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
-    "saveButton": "Save",
+    "saveButton": "Save Task",
     "overdue.tooltip": "Task is Overdue",
     "deadline.tooltip": "Deadline is Approaching",
     "groupToggle.label": "Group Task?",

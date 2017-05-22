@@ -56,7 +56,7 @@
       "map": "Map"
     },
     "modal": {
-      "addAddress": "Add Address",
+      "addAddress": "Add Location",
       "editAddress": "Edit Record",
       "type.label": "Address Type",
       "type.placeholder": "Enter Address Type",
@@ -73,7 +73,7 @@
       "country.label": "Country",
       "country.placeholder": "Enter Country",
       "btnCancel.text": "Cancel",
-      "btnOk.text": "Save Address",
+      "btnOk.text": "Save Location",
       "setPrimary": "Set as Primary?",
       "yes": "Yes",
       "no": "No"
