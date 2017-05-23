@@ -229,7 +229,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmUser markedUser = (AcmUser) query.getSingleResult();
         if (markedUser != null)
         {
-            markedUser.setUserState("Deleted");
+            markedUser.setUserState("INVALID");
             markedUser.setDeletedAt(new Date());
         }
         return markedUser;
