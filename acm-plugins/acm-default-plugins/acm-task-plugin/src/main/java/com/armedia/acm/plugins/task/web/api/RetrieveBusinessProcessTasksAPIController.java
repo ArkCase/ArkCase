@@ -39,12 +39,13 @@ public class RetrieveBusinessProcessTasksAPIController
     @ResponseBody
     public String getBusinessProcessTasks(Authentication authentication,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows)
+            @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sort)
     {
 
         log.info("Getting business process tasks");
 
-        String results = getTasks(authentication, start, maxRows);
+        String results = getTasks(authentication, start, maxRows, sort);
         SearchResults searchResults = new SearchResults();
         JSONArray tasks = searchResults.getDocuments(results);
         for (int i = 0; i < tasks.length(); i++)
@@ -54,8 +55,11 @@ public class RetrieveBusinessProcessTasksAPIController
             JSONObject parent = searchResults.getDocuments(parentResult).getJSONObject(0);
             task.put("parent_name", parent.get("name"));
         }
-
-        return tasks.toString();
+        JSONObject businessProcessTasks = new JSONObject();
+        businessProcessTasks.put("numFound", searchResults.getNumFound(results));
+        businessProcessTasks.put("start", start);
+        businessProcessTasks.put("data", tasks);
+        return businessProcessTasks.toString();
     }
 
     /**
@@ -65,7 +69,7 @@ public class RetrieveBusinessProcessTasksAPIController
      *            - authentication object
      * @return - Solr response in string representation
      */
-    private String getTasks(Authentication authentication, int start, int maxRows)
+    private String getTasks(Authentication authentication, int start, int maxRows, String sort)
     {
         String solrQuery = "object_type_s:TASK+AND+adhocTask_b:FALSE";
         String solrResponse = "";
@@ -73,7 +77,7 @@ public class RetrieveBusinessProcessTasksAPIController
         try
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, start,
-                    maxRows, "create_date_tdt DESC");
+                    maxRows, sort);
         } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", solrQuery, e);

@@ -5,24 +5,10 @@
 </div>
 <div class="modal-body">
     <form name="addPersonForm">
-        <div id="selectRadio">
-            <div>
-                <input ng-model="selectExisting" value="0"
-                       type="radio" ng-change="radioChanged()" id="addNew"
-                       class="radio-inline">
-                <label class="radio-inline" for="addNew">
-                    <span translate>common.addPerson.addNew.label</span>
-                </label>
-            </div>
-            <div>
-                <input ng-model="selectExisting" value="1" type="radio"
-                       ng-change="radioChanged()" id="selectExisting"
-                       class="radio-inline">
-                <label class="radio-inline" for="selectExisting">
-                    <span translate>common.addPerson.selectExisting.label</span>
-                </label>
-            </div>
-        </div>
+        <button type="button" class="btn btn-primary"
+                ng-click="addNewPerson()" translate>
+            common.addPerson.addNew.label
+        </button>
         <div class="row">
             <div class="col-sm-6 form-group">
                 <div>
@@ -30,7 +16,8 @@
                            translate>common.addPerson.person.label</label>
                 </div>
                 <input id="person" class="form-control" type="text" ng-model="personName"
-                       ng-click="radioChanged()" required>
+                       ng-click="pickPerson()" placeholder="{{'common.addPerson.selectExisting.label' | translate}}"
+                       required>
             </div>
             <div class="col-sm-6 form-group">
                 <div>
@@ -38,13 +25,16 @@
                            translate>common.addPerson.type.label</label>
                 </div>
                 <select id="types"
+                        class="form-control"
                         ng-model="type"
                         ng-options="item.type as item.name for item in types"></select>
             </div>
         </div>
         <div class="row" ng-show="showDescription">
-            <label for="description"/>
-            <textarea id="description" ng-model="description"></textarea>
+            <div class="col-sm-12">
+                <label for="description"/>
+                <textarea id="description" class="form-control" ng-model="description"></textarea>
+            </div>
         </div>
     </form>
 </div>

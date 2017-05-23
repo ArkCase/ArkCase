@@ -654,11 +654,11 @@ span.fancytree-title {
 .expandableRow{
 	height: auto !important;
 }
-/*
+
 .ui-grid-canvas {
 	height: auto !important;
 }
-*/
+
 
 .ui-grid-canvas .panel.panel-success {
 	margin: 0px !important;
@@ -706,7 +706,7 @@ thead {
 	top: -1px;
 }
 
-.ui-grid .ui-grid-cell div["ui-grid-cell"] {
+.ui-grid .ui-grid-cell div {
 	padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -719,21 +719,11 @@ thead {
 	position: relative;
 }
 
-.ui-grid-cell .ui-grid-selection-row-header-buttons.ui-grid-icon-ok {
-    padding: 4px !important;
-    white-space: nowrap;
+/* Fixing Checkbox Height and Row (Thank You Petar Ilin!)
+
+.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
+    height: 23px;
 }
-
-.ui-grid-selection-row-header-buttons.ui-grid-icon-ok:hover {
-    white-space: nowrap !important;
-}
-
-.ui-grid-header-cell .ui-grid-selection-row-header-buttons.ui-grid-icon-ok {
-    padding: 0px !important;
-    white-space: nowrap;
-}
-
-
 
 .ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
