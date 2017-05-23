@@ -187,7 +187,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         metadata.setFileType(fileType);
         metadata.setFileName(file.getName());
         metadata.setFileActiveVersionMimeType(file.getContentType());
-        return upload(authentication, originalFileName, file, targetCmisFolderId, parentObjectType, parentObjectId, metadata);
+        return upload(authentication, file, targetCmisFolderId, parentObjectType, parentObjectId, metadata);
     }
 
     @Override
@@ -243,7 +243,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile upload(Authentication authentication, String originalFileName, MultipartFile file,
+    public EcmFile upload(Authentication authentication, MultipartFile file,
                           String targetCmisFolderId, String parentObjectType, Long parentObjectId, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
@@ -265,8 +265,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null
                     ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId") : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, originalFileName, container,
-                    targetCmisFolderId, file.getInputStream(), metadata);
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(),
+                    container, targetCmisFolderId, file.getInputStream(), metadata);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
