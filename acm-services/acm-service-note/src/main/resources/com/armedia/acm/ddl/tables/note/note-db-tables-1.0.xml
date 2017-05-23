@@ -85,9 +85,7 @@
         <addColumn tableName="acm_note">
             <column name="cm_note_author" type="VARCHAR(128)"/>
         </addColumn>
-
         <sql>UPDATE acm_note SET cm_note_author=cm_note_creator</sql>
-
     </changeSet>
 
     <changeSet id="07-acm_note-set-created-date-default-value" author="matt.reese">
