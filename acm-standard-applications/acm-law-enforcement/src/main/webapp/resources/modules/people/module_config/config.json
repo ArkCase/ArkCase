@@ -343,13 +343,13 @@
           "name": "type",
           "displayName": "people.comp.addresses.table.columns.type",
           "headerCellFilter": "translate",
-          "lookup": "addressTypes"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.type}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+          "width": "*"
         },
         {
           "name": "streetAddress",
           "displayName": "people.comp.addresses.table.columns.streetAddress",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.streetAddress}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "streetAddress2",
