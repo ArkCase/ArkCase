@@ -49,15 +49,11 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                 function buildUrl(objectData) {
                     if (scope.url == undefined) {
                         var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
-                        var objectType = Util.goodMapValue(objectData, "object_type_s");
-                        var objectId = Util.goodMapValue(objectData, "object_id_s");
+                        var objectType = scope.isParent ? parentReference.substring(parentReference.indexOf('-') + 1) : Util.goodMapValue(objectData, "object_type_s");
+                        var objectId = scope.isParent ? parentReference.substring(0, parentReference.indexOf('-')) : Util.goodMapValue(objectData, "object_id_s");
                         var objectUrlKey = 'url';
                         var pathVariables = {":id": objectId};
-
-                        if (scope.isParent) {
-                            objectType = parentReference.substring(parentReference.indexOf('-') + 1);
-                            objectId = parentReference.substring(0, parentReference.indexOf('-'));
-                        }
+                        
                         if (objectType == ObjectService.ObjectTypes.TASK) {
                             objectType = (Util.goodMapValue(objectData, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
                         }
