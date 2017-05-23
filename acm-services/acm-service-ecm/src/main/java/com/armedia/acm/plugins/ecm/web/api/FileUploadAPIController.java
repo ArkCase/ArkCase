@@ -192,7 +192,8 @@ public class FileUploadAPIController
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Destination Folder not found", null);
             }
             folderCmisId = folder.getCmisFolderId();
-        } else
+        }
+        else
         {
             AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
             if (container.getFolder() == null)
