@@ -125,7 +125,6 @@ public interface EcmFileService
 
     EcmFile upload(
             Authentication authentication,
-            String originalFileName,
             MultipartFile file,
             String targetCmisFolderId,
             String parentObjectType,

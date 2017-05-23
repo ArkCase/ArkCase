@@ -13,7 +13,6 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
-import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +42,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private FolderAndFilesUtils folderAndFilesUtils;
     private EcmTikaFileServiceImpl ecmTikaFileService;
     private FileEventPublisher fileEventPublisher;
-    private SpringContextHolder springContextHolder;
+    private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager;
     private CmisConfigUtils cmisConfigUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -75,9 +74,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Calling pipeline manager handlers");
-            PipelineManager pipelineManager = getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager",
-                    PipelineManager.class);
-            pipelineManager.executeOperation(metadata, pipelineContext, () -> metadata);
+            getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
@@ -220,9 +217,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Calling pipeline manager handlers");
-            PipelineManager pipelineManager = (PipelineManager) getSpringContextHolder().getBeanByName("ecmFileUpdatePipelineManager",
-                    PipelineManager.class);
-            pipelineManager.executeOperation(ecmFile, pipelineContext, () ->
+            getEcmFileUploadPipelineManager().executeOperation(ecmFile, pipelineContext, () ->
             {
                 return ecmFile;
             });
@@ -373,14 +368,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         this.fileEventPublisher = fileEventPublisher;
     }
 
-    public SpringContextHolder getSpringContextHolder()
+    public PipelineManager<EcmFile, EcmFileTransactionPipelineContext> getEcmFileUploadPipelineManager()
     {
-        return springContextHolder;
+        return ecmFileUploadPipelineManager;
     }
 
-    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    public void setEcmFileUploadPipelineManager(PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager)
     {
-        this.springContextHolder = springContextHolder;
+        this.ecmFileUploadPipelineManager = ecmFileUploadPipelineManager;
     }
 
     public EcmTikaFileServiceImpl getEcmTikaFileService()
