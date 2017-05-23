@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ import java.util.Map;
 public class LdapUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
+    private AcmUserEventPublisher acmUserEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -63,6 +65,7 @@ public class LdapUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addLdapUser(
+
             @RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -104,10 +107,13 @@ public class LdapUserAPIController extends SecureLdapController
     public ResponseEntity<?> removeLdapUser(@PathVariable String userId,
                                             @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        AcmUser source = getLdapUserService().getUserDao().findByUserId(userId);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             ldapUserService.removeLdapUser(userId, directory);
+            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source);
+
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e)
         {
@@ -158,4 +164,13 @@ public class LdapUserAPIController extends SecureLdapController
         this.ldapUserService = ldapUserService;
     }
 
+    public AcmUserEventPublisher getAcmUserEventPublisher()
+    {
+        return acmUserEventPublisher;
+    }
+
+    public void setAcmUserEventPublisher(AcmUserEventPublisher acmUserEventPublisher)
+    {
+        this.acmUserEventPublisher = acmUserEventPublisher;
+    }
 }
