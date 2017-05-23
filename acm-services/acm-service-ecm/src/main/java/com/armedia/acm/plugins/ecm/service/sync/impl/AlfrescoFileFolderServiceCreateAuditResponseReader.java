@@ -33,17 +33,12 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAu
         // this reader only cares about documents
         JSONObject values = createEvent.getJSONObject("values");
 
-        if (!values.has("/auditarkcasecreate/create/in/c"))
-        {
-            return null;
-        }
         String alfrescoContentType = values.getString("/auditarkcasecreate/create/in/c");
         String arkcaseContentType = alfrescoTypeToArkCaseType.get(alfrescoContentType);
         boolean includeThisNode = typesToIncludeInResults.contains(arkcaseContentType);
 
         if (includeThisNode)
         {
-
             EcmEvent retval = new EcmEvent(createEvent);
             retval.setEcmEventType(EcmEventType.CREATE);
             retval.setUserId(createEvent.getString("user"));

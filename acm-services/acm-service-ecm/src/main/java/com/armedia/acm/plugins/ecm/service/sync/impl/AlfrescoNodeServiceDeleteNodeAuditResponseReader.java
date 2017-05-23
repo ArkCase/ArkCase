@@ -26,10 +26,6 @@ public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements EcmAudi
     @Override
     public EcmEvent buildEcmEvent(JSONObject deleteEvent)
     {
-        if (!deleteEvent.has("/auditarkcasedeleteextractors/delete/in/a"))
-        {
-            return null;
-        }
         // the deleteNode method won't generate very much audit information... we can only get the actual node ID
         // that was deleted.
         EcmEvent retval = new EcmEvent(deleteEvent);

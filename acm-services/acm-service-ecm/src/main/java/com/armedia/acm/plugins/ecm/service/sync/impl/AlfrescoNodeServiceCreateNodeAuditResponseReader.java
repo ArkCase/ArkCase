@@ -28,11 +28,6 @@ public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAudi
         // this reader only cares about folders
         JSONObject values = createEvent.getJSONObject("values");
 
-        if (!values.has("/auditarkcaseextractors/create/in/b"))
-        {
-            return null;
-        }
-
         String alfrescoContentType = values.getString("/auditarkcaseextractors/create/in/b");
 
         if (alfrescoTypeToArkCaseType.containsKey(alfrescoContentType))
