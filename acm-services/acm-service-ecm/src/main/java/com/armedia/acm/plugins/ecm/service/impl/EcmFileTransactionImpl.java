@@ -48,20 +48,58 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Override
-    public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, InputStream fileInputStream,
-                                      String mimeType, String fileName, String cmisFolderId, AcmContainer container, String cmisRepositoryId) throws MuleException, IOException
-    {
-        // by default, files are documents
-        String category = "Document";
-        EcmFile retval = addFileTransaction(originalFileName, authentication, fileType, category, fileInputStream, mimeType, fileName,
-                cmisFolderId, container, cmisRepositoryId);
 
-        return retval;
+    @Override
+    public EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+                                      String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+                                      Document existingCmisDocument) throws MuleException, IOException
+    {
+        log.debug("Creating ecm file pipeline context");
+
+        EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                fileContents, targetCmisFolderId, container, originalFileName, existingCmisDocument);
+
+        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(originalFileName,
+                metadata.getFileActiveVersionMimeType(), pipelineContext.getFileByteArray());
+        String finalMimeType = mimeTypeAndExtension.getLeft();
+        String finalExtension = mimeTypeAndExtension.getRight();
+
+        originalFileName = getFolderAndFilesUtils().getBaseFileName(originalFileName, finalExtension);
+        pipelineContext.setOriginalFileName(originalFileName);
+
+        String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
+        metadata.setFileName(fileName);
+        metadata.setFileActiveVersionMimeType(finalMimeType);
+        metadata.setFileActiveVersionNameExtension(finalExtension);
+
+        try
+        {
+            log.debug("Calling pipeline manager handlers");
+            PipelineManager pipelineManager = getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager",
+                    PipelineManager.class);
+            pipelineManager.executeOperation(metadata, pipelineContext, () -> metadata);
+        } catch (Exception e)
+        {
+            log.error("pipeline handler call failed: {}", e.getMessage(), e);
+        }
+
+        log.debug("Returning from addFileTransaction method");
+        return pipelineContext.getEcmFile();
+
     }
 
+    @Override
+    public EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+                                      String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
+            throws MuleException, IOException
+    {
+        Document existingCmisDocument = null;
+        return addFileTransaction(authentication, originalFileName, container, targetCmisFolderId, fileContents,
+                metadata, existingCmisDocument);
+    }
 
     @Override
+    @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
                                       String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
                                       String cmisFolderId, AcmContainer container, String cmisRepositoryId)
@@ -73,6 +111,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
+    @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
                                       String fileCategory, InputStream fileContents, String fileContentType,
                                       String fileName, String targetCmisFolderId, AcmContainer container,
@@ -81,35 +120,17 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
 
         log.debug("Creating ecm file pipeline context");
-        EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                fileContents, targetCmisFolderId, container, originalFileName, existingCmisDocument);
 
-        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(originalFileName, fileContentType,
-                pipelineContext.getFileByteArray());
-        String finalMimeType = mimeTypeAndExtension.getLeft();
-        String finalExtension = mimeTypeAndExtension.getRight();
+        EcmFile metadata = new EcmFile();
+        metadata.setFileActiveVersionMimeType(fileContentType);
+        metadata.setFileType(fileType);
+        metadata.setFileName(fileName);
+        metadata.setCategory(fileCategory);
+        metadata.setCmisRepositoryId(cmisRepositoryId);
 
+        return addFileTransaction(authentication, originalFileName, container, targetCmisFolderId, fileContents,
+                metadata, existingCmisDocument);
 
-        originalFileName = getFolderAndFilesUtils().getBaseFileName(originalFileName, finalExtension);
-        pipelineContext.setOriginalFileName(originalFileName);
-
-        fileName = getFolderAndFilesUtils().getBaseFileName(fileName, finalExtension);
-
-        final EcmFile ecmFile = buildEcmFileForUploadTransaction(fileType, fileCategory, finalMimeType,
-                fileName, finalExtension, cmisRepositoryId);
-        try
-        {
-            log.debug("Calling pipeline manager handlers");
-            PipelineManager pipelineManager = getSpringContextHolder().getBeanByName("ecmFileUploadPipelineManager",
-                    PipelineManager.class);
-            pipelineManager.executeOperation(ecmFile, pipelineContext, () -> ecmFile);
-        } catch (Exception e)
-        {
-            log.error("pipeline handler call failed: {}", e.getMessage(), e);
-        }
-
-        log.debug("Returning from addFileTransaction method");
-        return pipelineContext.getEcmFile();
     }
 
 
@@ -132,28 +153,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         }
 
         // do not change content type in case of freevo
-        if (mimeType.contains("frevvo"))
+        if (mimeType != null && mimeType.contains("frevvo"))
         {
             finalMimeType = mimeType;
         }
 
         return Pair.of(finalMimeType, finalExtension);
-    }
-
-    protected EcmFile buildEcmFileForUploadTransaction(String fileType, String fileCategory, String mimeType,
-                                                       String fileName, String fileExtension, String cmisRepositoryId,
-                                                       Object... otherArgs)
-    {
-        final EcmFile ecmFile = new EcmFile();
-
-        ecmFile.setFileActiveVersionMimeType(mimeType);
-
-        ecmFile.setFileActiveVersionNameExtension(fileExtension);
-        ecmFile.setFileName(fileName);
-        ecmFile.setFileType(fileType);
-        ecmFile.setCategory(fileCategory);
-        ecmFile.setCmisRepositoryId(cmisRepositoryId);
-        return ecmFile;
     }
 
     protected EcmFileTransactionPipelineContext buildEcmFileTransactionPipelineContext(Authentication authentication,
