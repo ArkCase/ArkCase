@@ -67,7 +67,7 @@ public interface EcmFileService
      * @param parentObjectType
      * @param parentObjectId
      * @param targetCmisFolderId
-     * @param originalFileName
+     * @param arkcaseFileName
      * @param fileContents
      * @param metadata
      * @return
@@ -76,7 +76,7 @@ public interface EcmFileService
      */
     @Transactional
     EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
-                   String targetCmisFolderId, String originalFileName, InputStream fileContents, EcmFile metadata)
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
@@ -86,7 +86,7 @@ public interface EcmFileService
      * @param parentObjectType
      * @param parentObjectId
      * @param targetCmisFolderId
-     * @param originalFileName
+     * @param arkcaseFileName
      * @param fileContents
      * @param metadata
      * @param existingCmisDocument
@@ -96,7 +96,7 @@ public interface EcmFileService
      */
     @Transactional
     EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
-                   String targetCmisFolderId, String originalFileName, InputStream fileContents, EcmFile metadata,
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata,
                    Document existingCmisDocument)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
@@ -115,7 +115,7 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
-            String originalFileName,
+            String arkcaseFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,

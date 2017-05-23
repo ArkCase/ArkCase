@@ -35,15 +35,21 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
 
             try
             {
-                // Adds the file to the Alfresco content repository as a new document
+                // Adds the file to the ECM content repository as a new document... using the context filename
+                // as the filename for the repository.
+                String arkcaseFilename = entity.getFileName();
+                entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
                         new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                // now, restore the ArkCase file name
+                entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
             } catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);
             }
+
         }
 
 
