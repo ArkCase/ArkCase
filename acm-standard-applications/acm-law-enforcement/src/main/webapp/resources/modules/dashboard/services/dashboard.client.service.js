@@ -46,8 +46,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             },
             queryWorkflowReport: {
                 method: 'GET',
-                url: 'api/v1/plugin/task/businessProcessTasks?start=:startWith&n=:pageSize',
-                isArray: true,
+                url: 'api/v1/plugin/task/businessProcessTasks?start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
                 data: ''
             },
             queryMyComplaints: {
