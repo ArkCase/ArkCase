@@ -51,6 +51,7 @@ public class FacetedSearchAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
             @RequestParam(value = "filters", required = false, defaultValue = "") String[] filters,
+            @RequestParam(value = "join", required = false, defaultValue = "") String joinQuery,
             @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sortSpec,
             @RequestParam(value = "fields", required = false,
                     defaultValue = "parent_number_lcs, parent_type_s, modified_date_tdt") String[] exportFields,
@@ -98,6 +99,9 @@ public class FacetedSearchAPIController
         query = getFacetedSearchService().updateQueryWithExcludedObjects(query, rowQueryParameters);
         query += getFacetedSearchService().buildHiddenDocumentsFilter();
         query = URLEncoder.encode(query, SearchConstants.FACETED_SEARCH_ENCODING);
+
+        rowQueryParameters += SearchConstants.SOLR_FILTER_QUERY_ATTRIBUTE_NAME + joinQuery;
+
         if (StringUtils.isNotEmpty(export))
         {
             startRow = 0;
