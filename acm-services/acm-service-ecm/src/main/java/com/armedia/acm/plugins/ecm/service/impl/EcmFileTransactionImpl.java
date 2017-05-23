@@ -49,22 +49,22 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
 
     @Override
-    public EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+    public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
                                       String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
                                       Document existingCmisDocument) throws MuleException, IOException
     {
         log.debug("Creating ecm file pipeline context");
 
         EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                fileContents, targetCmisFolderId, container, originalFileName, existingCmisDocument);
+                fileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument);
 
-        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(originalFileName,
+        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(ecmUniqueFilename,
                 metadata.getFileActiveVersionMimeType(), pipelineContext.getFileByteArray());
         String finalMimeType = mimeTypeAndExtension.getLeft();
         String finalExtension = mimeTypeAndExtension.getRight();
 
-        originalFileName = getFolderAndFilesUtils().getBaseFileName(originalFileName, finalExtension);
-        pipelineContext.setOriginalFileName(originalFileName);
+        ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+        pipelineContext.setOriginalFileName(ecmUniqueFilename);
 
         String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
         metadata.setFileName(fileName);
@@ -86,12 +86,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     @Override
-    public EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+    public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
                                       String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
-        return addFileTransaction(authentication, originalFileName, container, targetCmisFolderId, fileContents,
+        return addFileTransaction(authentication, ecmUniqueFilename, container, targetCmisFolderId, fileContents,
                 metadata, existingCmisDocument);
     }
 

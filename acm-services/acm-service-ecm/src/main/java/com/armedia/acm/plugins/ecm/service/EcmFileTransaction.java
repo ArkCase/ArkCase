@@ -14,11 +14,11 @@ import java.io.InputStream;
  */
 public interface EcmFileTransaction
 {
-    EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+    EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
                                String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
                                Document existingCmisDocument) throws MuleException, IOException;
 
-    EcmFile addFileTransaction(Authentication authentication, String originalFileName, AcmContainer container,
+    EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
                                String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
             throws MuleException, IOException;
 
