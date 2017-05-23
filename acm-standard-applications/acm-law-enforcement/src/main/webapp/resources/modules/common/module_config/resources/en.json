@@ -470,7 +470,8 @@
       "organizationType": "Relation Type"
     },
     "picture": {
-      "title": "Picture"
+      "title": "Picture",
+      "browse": "Browse"
     },
     "locations": {
       "title": "Locations",
