@@ -9,7 +9,7 @@
                                {{objectInfo.givenName || "Unknown"}}</a>,
                             <a href="#" editable-text="objectInfo.middleName" onaftersave="savePerson()"
                                permission="editCase" permission-properties="objectInfo" permission-action="disable">
-                               {{objectInfo.middleName !== null ? objectInfo.middleName + ",&nbsp;" : ""}}
+                               {{objectInfo.middleName}}</a><span ng-show="objectInfo.middleName !== null">,</span>
                             <a href="#" editable-text="objectInfo.familyName" onaftersave="savePerson()"
                                 permission="editCase" permission-properties="objectInfo" permission-action="disable">
                                 {{objectInfo.familyName || "Unknown"}}</a></h4></div>
