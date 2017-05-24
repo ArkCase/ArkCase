@@ -599,35 +599,39 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "name",
+          "name": "organization.organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "default_identification_s",
+          "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "people.comp.organizations.table.columns.identification",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{rowEntity.organization.defaultIdentification ? rowEntity.organization.defaultIdentification.identificationNumber + '[' + rowEntity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
         },
         {
-          "name": "type_lcs",
+          "name": "organization.organizationType",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "primary_contact_s",
+          "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.contact",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{rowEntity.organization.defaultContact ? rowEntity.organization.defaultContact.value + '[' + rowEntity.organization.defaultContact.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_phone_s",
+          "name": "phone",
           "displayName": "people.comp.organizations.table.columns.phone",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{rowEntity.organization.defaultPhone ? rowEntity.organization.defaultPhone.value + '[' + rowEntity.organization.defaultPhone.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_location_s",
+          "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{rowEntity.organization.defaultAddress ? rowEntity.organization.defaultAddress.city + ', ' + rowEntity.organization.defaultAddress.state : ''}}</span>"
         }
       ]
     },

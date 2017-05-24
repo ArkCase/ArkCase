@@ -77,7 +77,7 @@
       "btnCancel.text": "Cancel",
       "btnOk.text": "Send Email"
     },
-    "recipientsDialog":{
+    "recipientsDialog": {
       "title": "Choose Recipients",
       "search.placeholder": "Search Recipients",
       "recipients.label": "Recipients:",
@@ -323,7 +323,7 @@
         "months.text": "month(s)",
         "the.text": "The"
       },
-      "yearlyRecurrence":{
+      "yearlyRecurrence": {
         "recurEvery.text": "Recur every",
         "years.text": "year(s)",
         "on.text": "On:",
@@ -538,12 +538,15 @@
   "common.addOrganization": {
     "title": "Add organization",
     "addNew.label": "Add new Organization",
-    "selectExisting.label": "Select existing organizatoin",
+    "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
     "description": "Description",
     "type.label": "Organization Type",
     "btnCancel.text": "Cancel",
-    "btnOk.text": "Add Organization"
+    "btnOk.text": "Add Organization",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No"
   },
   "common.newOrganization": {
     "title": "Organization",
