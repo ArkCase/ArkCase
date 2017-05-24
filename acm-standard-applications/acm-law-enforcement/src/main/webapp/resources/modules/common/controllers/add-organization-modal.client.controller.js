@@ -17,7 +17,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
-            $scope.type = params.type;
+            $scope.type = _.find($scope.types, function (type) {
+                return type.type == params.type;
+            });
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
@@ -28,8 +30,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 var retValue = {
                     organizationId: $scope.organizationId,
                     organizationValue: $scope.organizationValue,
-                    type: $scope.type,
-                    inverseType: $scope.inverseType,
+                    type: $scope.type.type,
+                    inverseType: $scope.type.inverseType,
                     organization: $scope.organization,
                     isNew: $scope.isNew
                 };
