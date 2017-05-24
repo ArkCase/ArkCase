@@ -1,7 +1,7 @@
 angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-            , ObjectLookupService, Util, ConfigService, params) {
+        , ObjectLookupService, Util, ConfigService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
@@ -11,25 +11,41 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
+            $scope.showSetPrimary = params.showSetPrimary;
+
+            $scope.organizationId = params.organizationId;
+            $scope.organizationValue = params.organizationValue;
+            $scope.isDefault = params.isDefault;
+            $scope.description = params.description;
+            $scope.type = params.type;
+            $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function () {
-                $modalInstance.close({
+                var retValue = {
                     organizationId: $scope.organizationId,
-                    description: $scope.description,
+                    organizationValue: $scope.organizationValue,
                     type: $scope.type,
+                    inverseType: $scope.inverseType,
                     organization: $scope.organization,
                     isNew: $scope.isNew
-                });
+                };
+                if ($scope.showSetPrimary) {
+                    retValue['isDefault'] = $scope.isDefault;
+                }
+                if ($scope.showDescription) {
+                    retValue['description'] = $scope.description;
+                }
+                $modalInstance.close(retValue);
             };
 
             $scope.pickOrganization = function () {
                 $scope.isNew = false;
                 $scope.organizationId = '';
-                $scope.organizationName = '';
+                $scope.organizationValue = '';
                 $scope.organization = '';
 
                 var params = {};
@@ -65,7 +81,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.addNewOrganization = function () {
                 $scope.isNew = true;
                 $scope.organizationId = '';
-                $scope.organizationName = '';
+                $scope.organizationValue = '';
                 $scope.organization = '';
                 var modalInstance = $modal.open({
                     scope: $scope,
