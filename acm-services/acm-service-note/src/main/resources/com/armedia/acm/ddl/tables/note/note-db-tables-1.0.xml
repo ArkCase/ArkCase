@@ -88,8 +88,8 @@
         <sql>UPDATE acm_note SET cm_note_author=cm_note_creator</sql>
     </changeSet>
 
-    <changeSet id="07-acm_note-set-created-date-default-value" author="matt.reese">
-        <sql>ALTER TABLE arkcase.acm_note MODIFY cm_note_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
+    <changeSet id="07-acm_note-set-created-date-default-value" author="matt.reese" dbms="mysql">
+        <sql>ALTER TABLE acm_note MODIFY cm_note_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
     </changeSet>
 
 </databaseChangeLog>
