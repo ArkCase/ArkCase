@@ -61,6 +61,47 @@ public interface EcmFileService
             throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
+     * Service method allowing for extensions to subtype the EcmFIle.
+     *
+     * @param authentication
+     * @param parentObjectType
+     * @param parentObjectId
+     * @param targetCmisFolderId
+     * @param arkcaseFileName
+     * @param fileContents
+     * @param metadata
+     * @return
+     * @throws AcmCreateObjectFailedException
+     * @throws AcmUserActionFailedException
+     */
+    @Transactional
+    EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    /**
+     * Special method for ECM file sync, where the ECM repository already has the file we want to load into Alfresco.
+     *
+     * @param authentication
+     * @param parentObjectType
+     * @param parentObjectId
+     * @param targetCmisFolderId
+     * @param arkcaseFileName
+     * @param fileContents
+     * @param metadata
+     * @param existingCmisDocument
+     * @return
+     * @throws AcmCreateObjectFailedException
+     * @throws AcmUserActionFailedException
+     */
+    @Transactional
+    EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata,
+                   Document existingCmisDocument)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+
+    /**
      * This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
      *
@@ -74,13 +115,21 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
-            String originalFileName,
+            String arkcaseFileName,
             String fileType,
             MultipartFile file,
             Authentication authentication,
             String targetCmisFolderId,
             String parentObjectType,
             Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    EcmFile upload(
+            Authentication authentication,
+            MultipartFile file,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
      * @param ecmFile
