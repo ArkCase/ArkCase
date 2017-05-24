@@ -123,7 +123,7 @@ Time: 12:44
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016</span></small>
+            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
         </p>
         <p>
             Version: ${version}
