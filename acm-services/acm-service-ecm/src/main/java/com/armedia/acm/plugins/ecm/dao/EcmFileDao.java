@@ -120,7 +120,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return file;
     }
 
-    public EcmFile findByCmisFileId(String cmisFileId)
+    public List<EcmFile> findByCmisFileId(String cmisFileId)
     {
         String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId";
 
@@ -128,15 +128,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         query.setParameter("cmisFileId", cmisFileId);
 
-        EcmFile ecmFile = null;
-        try
-        {
-            ecmFile = query.getSingleResult();
-        } catch (NoResultException e)
-        {
-            LOG.debug("Cannot find EcmFile for versionSeriesId: [{}]", cmisFileId, e);
-        }
-        return ecmFile;
+        return query.getResultList();
     }
 
     @Transactional
