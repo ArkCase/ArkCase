@@ -81,6 +81,7 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
             param.sort = Util.goodValue(sort);
             param.filters = Util.goodValue(filters);
             param.query = Util.goodValue(query);
+            param.activeOnly = false;
 
             var cachePeopleList = new Store.CacheFifo(Service.CacheNames.PEOPLE_LIST);
             var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
