@@ -224,6 +224,9 @@
         <addColumn tableName="acm_postal_address">
             <column name="cm_class_name" type="VARCHAR(400)"/>
         </addColumn>
+        <addColumn tableName="acm_contact_method">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>
