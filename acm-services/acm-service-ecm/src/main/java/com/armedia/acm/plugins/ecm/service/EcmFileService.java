@@ -130,6 +130,16 @@ public interface EcmFileService
             String parentObjectType,
             Long parentObjectId,
             EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+    
+    EcmFile upload(
+            String arkcaseFileName,
+            String fileType,
+            String fileLang,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
      * @param ecmFile
