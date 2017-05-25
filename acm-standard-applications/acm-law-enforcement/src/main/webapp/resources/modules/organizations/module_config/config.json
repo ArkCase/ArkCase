@@ -32,7 +32,7 @@
       },
       {
         "desc": "All I've Created",
-        "name": "my-organizations-created",
+        "name": "my-created",
         "value": "fq=author_s:${user}"
       },
       {
