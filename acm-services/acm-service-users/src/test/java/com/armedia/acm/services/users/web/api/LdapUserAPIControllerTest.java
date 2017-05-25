@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -49,7 +50,7 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         setMockMvc(MockMvcBuilders.standaloneSetup(getUnit()).setHandlerExceptionResolvers(getExceptionResolver()).build());
         setMockAuthentication(createMock(Authentication.class));
         setMockUserDao(createMock(UserDao.class));
-
+        setMockLdapUserService(createMock(LdapUserService.class));
     }
 
     @Test
@@ -62,20 +63,21 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         user.setFirstName("First Name");
         user.setLastName("Last Name");
 
-        expect(getMockUserDao().findByUserId(user.getUserId())).andReturn(user.getUserId());
+        expect(getMockUserDao().findByUserId(user.getUserId())).andReturn(user);
+        expect(mockLdapUserService.removeLdapUser(user.getUserId(), directory)).andReturn(null);
+
+        expect(getMockAuthentication().getName()).andReturn("user");
 
         replayAll();
 
         MvcResult result = getMockMvc().perform(
-                delete("/api/v1/ldap/" + directory + +"/users/" + user.getUserId())
+                delete("/api/v1/ldap/" + directory + "/users/" + user.getUserId())
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(getMockAuthentication()))
                 .andReturn();
 
         LOG.info("Results: " + result.getResponse().getContentAsString());
-
-        verifyAll();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
