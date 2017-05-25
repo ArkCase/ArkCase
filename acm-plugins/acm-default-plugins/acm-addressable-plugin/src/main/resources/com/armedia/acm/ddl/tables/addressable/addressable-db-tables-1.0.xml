@@ -219,5 +219,12 @@
             <column name="cm_description" type="TEXT"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-add-discriminator-column-extensibility" author="manoj.dhungana">
+        <addColumn tableName="acm_postal_address">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
