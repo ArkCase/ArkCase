@@ -174,4 +174,9 @@
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
+    <!-- Swagger documentation configuration class -->
+    <bean id="swagger2Config" class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"></bean>
+
+    <!-- default servlet handler so that spring auto-detects the default servlet for the container on startup -->
+    <mvc:default-servlet-handler/>
 </beans>
