@@ -5,15 +5,9 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.google.common.collect.ImmutableMap;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Read Alfresco audit records generated from the Alfresco NodeService createNode method.  Alfresco uses the NodeService
@@ -25,27 +19,11 @@ import static java.util.stream.Collectors.toList;
  */
 public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAuditResponseReader
 {
-    private final Map<String, String> alfrescoTypeToArkCaseType = ImmutableMap.of(
-            "{http://www.alfresco.org/model/content/1.0}folder", EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER
-    );
+    private final Map<String, String> alfrescoTypeToArkCaseType = ImmutableMap
+            .of("{http://www.alfresco.org/model/content/1.0}folder", EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER);
 
     @Override
-    public List<EcmEvent> read(JSONObject auditResponseJson)
-    {
-        int count = auditResponseJson.getInt("count");
-
-        JSONArray auditEvents = auditResponseJson.getJSONArray("entries");
-
-        List<EcmEvent> events = IntStream.range(0, count)
-                .mapToObj(auditEvents::getJSONObject)
-                .map(this::buildEcmCreateEvent)
-                .filter(Objects::nonNull)
-                .collect(toList());
-
-        return events;
-    }
-
-    protected EcmEvent buildEcmCreateEvent(JSONObject createEvent)
+    public EcmEvent buildEcmEvent(JSONObject createEvent)
     {
         // this reader only cares about folders
         JSONObject values = createEvent.getJSONObject("values");
