@@ -38,13 +38,13 @@ import static com.armedia.acm.scheduler.AcmSchedulerConstants.*;
  * file that contains the scheduler and scheduled tasks configuration. A sample JSON configuration file: <code>
    {
     "scheduleEnabled": "true",
-    "scheduleIntervalInMinutes": "1",
+    "scheduleIntervalInSeconds": "60",
     "tasks": [{
-        "howOftenInMinutes": "5",
+        "howOftenInSeconds": "300",
         "name": "billingQueuePurger",
         "beanName": "scheduledBillingQueuePurger"
     },{
-        "howOftenInMinutes": "10",
+        "howOftenInSeconds": "600",
         "name": "queueLogger",
         "beanName": "scheduledQueueLogger"
     }]
@@ -268,8 +268,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
             JSONObject taskConfiguration = tasksConfigurations.getJSONObject(i);
             String taskName = taskConfiguration.getString(NAME_KEY);
             keys.add(taskName);
-            // how often in the configuration is given in minutes, needs to be converted in milliseconds.
-            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 60 * 1000;
+            // how often in the configuration is given in seconds, needs to be converted in milliseconds.
+            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 1000;
             if (tasks.containsKey(taskName))
             {
                 AcmSchedulerTask task = tasks.get(taskName);
@@ -307,8 +307,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private void setupScheduler(JSONObject configuration)
     {
-        // the interval in the configuration is given in minutes, needs to be converted in milliseconds.
-        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 60 * 1000;
+        // the interval in the configuration is given in seconds, needs to be converted in milliseconds.
+        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 1000;
 
         if (scheduleInterval != this.scheduleInterval)
         {
