@@ -161,8 +161,8 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    if (Service.validateSolrData(JSON.parse(data))) {
-                        var searchObj = JSON.parse(data);
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
                         return searchObj;
                     }
                 }
@@ -185,8 +185,8 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {
-                    if (Service.validateSolrData(JSON.parse(data))) {
-                        var searchObj = JSON.parse(data);
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
                         return searchObj;
                     }
                 }
