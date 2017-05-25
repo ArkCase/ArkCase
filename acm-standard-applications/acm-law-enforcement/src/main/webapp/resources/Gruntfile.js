@@ -5,14 +5,15 @@ var nunjucks = require('nunjucks'),
     fs = require('fs-extra'),
     os = require('os'),
     path = require('path'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    homedir = require('homedir');
 
 
 module.exports = function (grunt) {
     // Path to .arkcase folder, used for sync-dev task
     var destPath = null;
     try {
-        destPath = path.join(os.homedir(), '.arkcase');
+        destPath = path.join(homedir(), '.arkcase');
     } catch (ex) {
         console.log('Can\'t get HOME DIR for dev tasks ... continue')
     }
