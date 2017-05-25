@@ -76,6 +76,13 @@
 
     <bean id="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
+        <property name="pluginProperties" ref="personPluginProperties"/>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>PERSON</value>
+                <value>ORGANIZATION</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">

@@ -25,25 +25,9 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All Open organizations",
-        "name": "all-open-organizations",
-        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
-        "default": true
-      },
-      {
         "desc": "All I've Created",
         "name": "my-organizations-created",
         "value": "fq=author_s:${user}"
-      },
-      {
-        "desc": "All I'm Assigned",
-        "name": "my-organizations-assigned",
-        "value": "fq=assignee_s:${user}"
-      },
-      {
-        "desc": "All I'm Following",
-        "name": "my-organizations-following",
-        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
       },
       {
         "desc": "(No Filter)",
@@ -54,24 +38,24 @@
     "sorters": [
       {
         "desc": "Sort Date Created Ascending",
-        "name": "create_tdt ASC",
+        "name": "sort-date-asc",
         "default": true
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "create_tdt DESC"
+        "name": "sort-date-desc"
       },
       {
         "desc": "Sort Organization ID Ascending",
-        "name": "id ASC"
+        "name": "sort-by-id-asc"
       },
       {
         "desc": "Sort Organization ID Descending",
-        "name": "id DESC"
+        "name": "sort-by-id-desc"
       },
       {
         "desc": "Sort By Organization Name",
-        "name": "name DESC"
+        "name": "sort-by-name-desc"
       }
     ],
     "nodeTypes": [
