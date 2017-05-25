@@ -126,6 +126,7 @@
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
+        <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
