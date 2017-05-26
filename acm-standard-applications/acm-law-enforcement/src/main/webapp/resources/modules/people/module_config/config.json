@@ -38,12 +38,12 @@
     "sorters": [
       {
         "desc": "Sort Date Created Ascending",
-        "name": "sort-date-asc",
-        "default": true
+        "name": "sort-date-asc"
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "sort-date-desc"
+        "name": "sort-date-desc",
+        "default": true
       },
       {
         "desc": "Sort People ID Ascending",

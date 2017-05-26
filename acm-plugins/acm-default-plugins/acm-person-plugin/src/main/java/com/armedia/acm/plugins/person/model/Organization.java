@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -51,7 +52,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class Organization implements Serializable, AcmEntity
+public class Organization implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
@@ -463,6 +464,13 @@ public class Organization implements Serializable, AcmEntity
         this.associationsToObjects = associationsToObjects;
     }
 
+    @Override
+    @XmlTransient
+    public Long getId()
+    {
+        return getOrganizationId();
+    }
+    
     public String getObjectType()
     {
         return objectType;
