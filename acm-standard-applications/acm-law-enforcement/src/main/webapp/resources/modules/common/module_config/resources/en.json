@@ -74,10 +74,11 @@
       "deliveryMethod.label": "Delivery Method:",
       "sendWithAttachments.checkbox": "Send Email with Attachment",
       "sendWithHyperlink.checkbox": "Send Email with Hyperlink",
+      "sendWithAttachmentsAndHyperlink.checkbox": "Send As Attachment and Hyperlink",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Send Email"
     },
-    "recipientsDialog":{
+    "recipientsDialog": {
       "title": "Choose Recipients",
       "search.placeholder": "Search Recipients",
       "recipients.label": "Recipients:",
@@ -323,7 +324,7 @@
         "months.text": "month(s)",
         "the.text": "The"
       },
-      "yearlyRecurrence":{
+      "yearlyRecurrence": {
         "recurEvery.text": "Recur every",
         "years.text": "year(s)",
         "on.text": "On:",
@@ -427,7 +428,9 @@
     "TIMESHEET": "Timesheet",
     "COSTSHEET": "Costsheet",
     "FILE": "File",
-    "DOC_REPO": "Document Repository"
+    "DOC_REPO": "Document Repository",
+    "PERSON": "Person",
+    "ORGANIZATION": "Organization"
   },
   "frevvo.dialogUserPicker": {
     "header": "Choose User",

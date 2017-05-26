@@ -54,6 +54,28 @@ angular.module('services').factory('Person.PicturesService', ['$resource', '$tra
                 method: 'GET',
                 url: 'api/latest/plugin/people/:personId/images',
                 cache: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name delete
+             * @methodOf services:Person.PicturesService
+             *
+             * @description
+             * Delete image data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.personId  Person ID
+             * @param {Number} params.imageId  Image ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            delete: {
+                method: 'DELETE',
+                url: 'api/latest/plugin/people/:personId/images/:imageId',
+                cache: false
             }
 
         });
@@ -87,6 +109,62 @@ angular.module('services').factory('Person.PicturesService', ['$resource', '$tra
 
         /**
          * @ngdoc method
+         * @name deletePersonPictures
+         * @methodOf services:Person.PicturesService
+         *
+         * @description
+         * Query person pictures
+         *
+         * @param {Number} personId  Person ID
+         * @param {Number} imageId  Image ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.deletePersonPictures = function (personId, imageId) {
+            return Util.serviceCall({
+                service: Service.delete
+                , param: {
+                    personId: personId,
+                    imageId: imageId
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name insertPersonPicture
+         * @methodOf services:Person.PicturesService
+         *
+         * @description
+         * Save person data
+         *
+         * @param {Long} personId  person id
+         * @param {Object} file  file data
+         * @param {boolean} isDefault  if is default picture or not
+         * @param {String} description description for the picture
+         *
+         * @returns {Object} Promise
+         */
+        Service.insertPersonPicture = function (personId, file, isDefault, description) {
+            return Upload.upload({
+                url: 'api/latest/plugin/people/' + personId + '/images',
+                method: 'POST',
+                fields: {
+                    data: {
+                        default: isDefault,
+                        description: description
+                    }
+                },
+                sendFieldsAs: 'json-blob',
+                file: file
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name savePersonPicture
          * @methodOf services:Person.PicturesService
          *
@@ -96,15 +174,21 @@ angular.module('services').factory('Person.PicturesService', ['$resource', '$tra
          * @param {Long} personId  person id
          * @param {Object} file  file data
          * @param {boolean} isDefault  if is default picture or not
+         * @param {Object} ecmFile data
          *
          * @returns {Object} Promise
          */
-        Service.savePersonPicture = function (personId, file, isDefault) {
+        Service.savePersonPicture = function (personId, file, isDefault, ecmFile) {
             return Upload.upload({
                 url: 'api/latest/plugin/people/' + personId + '/images',
+                method: 'PUT',
                 fields: {
-                    default: isDefault
+                    data: {
+                        default: isDefault,
+                        ecmFile: ecmFile
+                    }
                 },
+                sendFieldsAs: 'json-blob',
                 file: file
             });
         };

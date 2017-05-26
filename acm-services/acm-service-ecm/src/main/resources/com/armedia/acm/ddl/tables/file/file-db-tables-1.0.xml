@@ -584,5 +584,13 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="53-acm_file-add-description-column" author="dragan.simonovski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_description" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

@@ -13,11 +13,13 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -56,6 +58,7 @@ public class PersonServiceImpl implements PersonService
     private String personOwnFolder = null;
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public Person get(Long id)
@@ -88,7 +91,7 @@ public class PersonServiceImpl implements PersonService
                 {
                     if (person.getIdentifications() == null)
                     {
-                        person.setIdentifications(new ArrayList<Identification>());
+                        person.setIdentifications(new ArrayList<>());
                     }
 
                     Identification pi = new Identification();
@@ -189,7 +192,7 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
@@ -218,12 +221,49 @@ public class PersonServiceImpl implements PersonService
                 picturesFolderObj.getCmisFolderId(),
                 PersonOrganizationConstants.PERSON_OBJECT_TYPE,
                 personId);
+
+        if (StringUtils.isNotEmpty(description))
+        {
+            uploaded.setDescription(description);
+            uploaded = ecmFileService.updateFile(uploaded);
+        }
+
         if (isDefault)
         {
             person.setDefaultPicture(uploaded);
             savePerson(person, auth);
         }
 
+        return uploaded;
+    }
+
+    @Override
+    public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
+    {
+        Person person = personDao.find(personId);
+        Objects.requireNonNull(person, "Person not found.");
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
+
+        EcmFile uploaded;
+
+        if (image != null)
+        {
+            String fileName = image.getOriginalFilename();
+            String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileName);
+
+            metadata.setFileName(fileName);
+            uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId, picturesFolderObj.getCmisFolderId(),
+                    uniqueFileName, image.getInputStream(), metadata);
+        } else
+        {
+            uploaded = ecmFileService.updateFile(metadata);
+        }
+        if (isDefault)
+        {
+            person.setDefaultPicture(uploaded);
+            savePerson(person, auth);
+        }
         return uploaded;
     }
 
@@ -375,5 +415,10 @@ public class PersonServiceImpl implements PersonService
     public void setAcmFolderService(AcmFolderService acmFolderService)
     {
         this.acmFolderService = acmFolderService;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }
