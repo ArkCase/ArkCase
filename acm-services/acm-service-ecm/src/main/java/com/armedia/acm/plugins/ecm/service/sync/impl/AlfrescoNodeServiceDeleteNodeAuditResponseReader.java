@@ -22,23 +22,9 @@ import static java.util.stream.Collectors.toList;
  */
 public class AlfrescoNodeServiceDeleteNodeAuditResponseReader implements EcmAuditResponseReader
 {
+
     @Override
-    public List<EcmEvent> read(JSONObject auditResponseJson)
-    {
-        int count = auditResponseJson.getInt("count");
-
-        JSONArray auditEvents = auditResponseJson.getJSONArray("entries");
-
-        List<EcmEvent> events = IntStream.range(0, count)
-                .mapToObj(auditEvents::getJSONObject)
-                .map(this::buildEcmCreateEvent)
-                .filter(Objects::nonNull)
-                .collect(toList());
-
-        return events;
-    }
-
-    protected EcmEvent buildEcmCreateEvent(JSONObject deleteEvent)
+    public EcmEvent buildEcmEvent(JSONObject deleteEvent)
     {
         // the deleteNode method won't generate very much audit information... we can only get the actual node ID
         // that was deleted.
