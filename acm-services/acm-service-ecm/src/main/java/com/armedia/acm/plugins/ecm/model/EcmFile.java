@@ -142,6 +142,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
 
+    @Column(name = "cm_file_description")
+    private String description;
+
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
@@ -443,6 +446,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setLock(AcmObjectLock lock)
     {
         this.lock = lock;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     @Override
