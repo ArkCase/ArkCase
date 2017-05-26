@@ -183,7 +183,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         additionalProperties.put("page_count_i", in.getPageCount());
         additionalProperties.put("name_partial", in.getFileName());
-        additionalProperties.put("file_lang", in.getFileLang());
+        additionalProperties.put("file_lang_s", in.getFileLang());
     }
 
     @Override
