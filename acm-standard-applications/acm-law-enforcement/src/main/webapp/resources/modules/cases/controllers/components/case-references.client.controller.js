@@ -35,6 +35,42 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+
+            // If the reference is a CASE_FILE, retrieve its title, as it may have changed since reference was created
+            /**
+             * Initially attemped to use the below code
+             * However, the index i is out of scope in the onFulfilled function
+             *
+             * if($scope.objectInfo.references[i].targetType == "CASE_FILE") {
+                    CaseInfoService.getCaseInfo($scope.objectInfo.references[i].targetId).then(
+						function(caseInfo) {
+							$scope.objectInfo.references[i].targetTitle = caseInfo.title;
+						}
+					);
+                }
+             *
+             * As a result, we need to use Closures to be able to pass the index variable into the onFulfilled case
+             *
+             * Since i and the fulfillment function of getCaseInfo are both defined in the distinct scope of
+             * getIterablePromises, the fulfillment function still has access to i
+             *
+             * @param index
+             */
+            function getIterablePromises(index) {
+                var i = index;
+                CaseInfoService.getCaseInfo($scope.objectInfo.references[i].targetId).then(
+                    function(caseInfo) {
+                        $scope.objectInfo.references[i].targetTitle = caseInfo.title;
+                    }
+                );
+            }
+
+            // See above, this iterates over all found references and updates case tites where required
+            for (var i = 0; i < $scope.objectInfo.references.length; i++) {
+                if($scope.objectInfo.references[i].targetType == "CASE_FILE") {
+                    getIterablePromises(i);
+                }
+            }
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
         };
