@@ -10,11 +10,12 @@
                         <div class="pull-right">
 							<div class="btn-group">
 								<button type="submit"
-									ng-disabled="organizationForm.$invalid || saved"
+									ng-disabled="organizationForm.$invalid || loading"
 									class="btn btn-primary" data-toggle="tooltip" id="saveButton"
 									data-title="Save">
-									<i class="fa fa-floppy-o"></i> <span translate>
-										organizations.comp.newOrganization.saveButton</span>
+                                    <i class="fa fa-floppy-o" ng-hide="loading"></i>
+                                    <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
+									<span translate>organizations.comp.newOrganization.saveButton</span>
 								</button>
 							</div>
 						</div>

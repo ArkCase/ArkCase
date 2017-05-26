@@ -9,10 +9,11 @@
                     <div class="well-sm">
                         <div class="pull-right">
                             <div class="btn-group">
-                                <button type="submit" ng-disabled="personForm.$invalid || saved"
+                                <button type="submit" ng-disabled="personForm.$invalid || loading"
                                         class="btn btn-primary btn-sm" data-toggle="tooltip"
                                         id="saveButton" data-title="Save">
-                                    <i class="fa fa-floppy-o"></i>
+                                    <i class="fa fa-floppy-o" ng-hide="loading"></i>
+                                    <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
                                     <span translate> people.comp.editPerson.saveButton</span>
                                 </button>
                             </div>

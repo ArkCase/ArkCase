@@ -181,6 +181,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (objectType == 'TIMESHEET') {
                 cacheInfoStoreName = 'TimesheetInfo';
             }
+            if (objectType == 'PERSON') {
+                cacheInfoStoreName = 'PersonInfo';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheInfoStoreName = 'OrganizationInfo';
+            }
             return cacheInfoStoreName;
         }
 
@@ -203,6 +209,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
             if (objectType == 'TIMESHEET') {
                 cacheListStoreName = 'TimesheetList';
+            }
+            if (objectType == 'PERSON') {
+                cacheListStoreName = 'PersonList';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheListStoreName = 'OrganizationList';
             }
             return cacheListStoreName;
         }
