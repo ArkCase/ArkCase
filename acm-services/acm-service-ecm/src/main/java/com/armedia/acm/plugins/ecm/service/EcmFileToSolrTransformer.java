@@ -183,6 +183,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         additionalProperties.put("page_count_i", in.getPageCount());
         additionalProperties.put("name_partial", in.getFileName());
+        additionalProperties.put("description_s", in.getDescription());
+
         additionalProperties.put("file_lang_s", in.getFileLang());
     }
 
@@ -201,7 +203,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
             if ((mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_XML)
                     && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
                     || (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG)
-                            && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
+                    && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
             {
                 return true;
             }
