@@ -88,7 +88,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
         function handleSubCacheLists(objectType, objectId) {
             // invalidate audit cache
             var cacheKey = objectType + '.' + objectId;
-            var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA)
+            var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA);
             var cacheKeys = cacheStore.keys();
             _.each(cacheKeys, function (key) {
                 if (key == null) {
@@ -148,7 +148,7 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 removeFromCache(subKey, 'TimeSheets');
             }
 
-            if (objectType === 'TASK'){
+            if (objectType === 'TASK') {
                 var cacheInfo = new Store.CacheFifo('TaskDiagram');
                 var item = cacheInfo.get(objectId);
                 if (item != null) {
@@ -181,6 +181,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (objectType == 'TIMESHEET') {
                 cacheInfoStoreName = 'TimesheetInfo';
             }
+            if (objectType == 'PERSON') {
+                cacheInfoStoreName = 'PersonInfo';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheInfoStoreName = 'OrganizationInfo';
+            }
             return cacheInfoStoreName;
         }
 
@@ -203,6 +209,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
             if (objectType == 'TIMESHEET') {
                 cacheListStoreName = 'TimesheetList';
+            }
+            if (objectType == 'PERSON') {
+                cacheListStoreName = 'PersonList';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheListStoreName = 'OrganizationList';
             }
             return cacheListStoreName;
         }
