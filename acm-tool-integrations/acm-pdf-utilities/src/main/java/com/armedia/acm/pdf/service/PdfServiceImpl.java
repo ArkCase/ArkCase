@@ -361,7 +361,6 @@ public class PdfServiceImpl implements PdfService
     @Override
     public InputStream extractPages(InputStream is, String filename, List<Integer> pageNumbers) throws PdfServiceException
     {
-        InputStream extractedDocumentInputStream;
         try
         {
             PDDocument extractedDocument = new PDDocument();
@@ -381,12 +380,12 @@ public class PdfServiceImpl implements PdfService
             log.debug("Successfully extracted pages from [{}]", filename);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             extractedDocument.save(baos);
-            extractedDocumentInputStream = new ByteArrayInputStream(baos.toByteArray());
+            // return input stream of newly generated document
+            return new ByteArrayInputStream(baos.toByteArray());
         } catch (IOException | IndexOutOfBoundsException e)
         {
             log.error("Unable to extract pages from [{}]", filename, e);
             throw new PdfServiceException(e);
         }
-        return extractedDocumentInputStream;
     }
 }
