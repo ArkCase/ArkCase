@@ -222,10 +222,16 @@
 
     <changeSet id="06-add-discriminator-column-extensibility" author="manoj.dhungana">
         <addColumn tableName="acm_postal_address">
-            <column name="cm_class_name" type="VARCHAR(400)"/>
+            <column name="cm_class_name" type="VARCHAR(400)"
+                    defaultValue="com.armedia.acm.plugins.addressable.model.PostalAddress">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
         <addColumn tableName="acm_contact_method">
-            <column name="cm_class_name" type="VARCHAR(400)"/>
+            <column name="cm_class_name" type="VARCHAR(400)"
+                    defaultValue="com.armedia.acm.plugins.addressable.model.ContactMethod">
+                <constraints nullable="false"/>
+            </column>
         </addColumn>
     </changeSet>
 
