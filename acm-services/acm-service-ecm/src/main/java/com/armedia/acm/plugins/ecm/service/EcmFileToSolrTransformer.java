@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -23,6 +24,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
+    private SearchAccessControlFields searchAccessControlFields;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -41,7 +43,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         if (enableContentFileIndexing)
         {
             return mapDocumentProperties(in);
-        } else
+        }
+        else
         {
             return null;
         }
@@ -53,7 +56,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         if (enableContentFileIndexing)
         {
             return null;
-        } else
+        }
+        else
         {
             return mapDocumentProperties(in);
         }
@@ -64,9 +68,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     {
         SolrDocument doc = new SolrDocument();
 
-        // no access control on files (yet)
-        doc.setPublic_doc_b(true);
-        doc.setProtected_object_b(false);
+        getSearchAccessControlFields().setAccessControlFields(doc, in);
 
         doc.setAuthor_s(in.getCreator());
         doc.setAuthor(in.getCreator());
@@ -118,6 +120,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
+        getSearchAccessControlFields().setAccessControlFields(solr, in);
+
         solr.setId(in.getId() + "-" + in.getObjectType());
         solr.setObject_id_s(in.getId() + "");
         solr.setObject_type_s(in.getObjectType());
@@ -143,9 +147,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setType_lcs(in.getFileType());
 
-        solr.setPublic_doc_b(true);
-        solr.setProtected_object_b(false);
-
         solr.setHidden_b(isHidden(in));
 
         mapAdditionalProperties(in, solr.getAdditionalProperties());
@@ -156,7 +157,8 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
             solr.setAssignee_full_name_lcs(creator.getFullName());
-        } else
+        }
+        else
         {
             solr.setAssignee_full_name_lcs(in.getCreator());
         }
@@ -184,7 +186,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         additionalProperties.put("page_count_i", in.getPageCount());
         additionalProperties.put("name_partial", in.getFileName());
         additionalProperties.put("description_s", in.getDescription());
-
         additionalProperties.put("file_lang_s", in.getFileLang());
     }
 
@@ -204,6 +205,12 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
                     && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_URL))
                     || (mimeType != null && mimeType.contains(EcmFileConstants.MIME_TYPE_PNG)
                     && mimeType.contains(EcmFileConstants.MIME_TYPE_FREVVO_SIGNATURE_KEY)))
+            {
+                return true;
+            }
+
+            // rendition support - to be moved from the MVA extension to core soon
+            if ("Rendition".equals(file.getFileType()))
             {
                 return true;
             }
@@ -246,5 +253,15 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public Class<?> getAcmObjectTypeSupported()
     {
         return EcmFile.class;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }
