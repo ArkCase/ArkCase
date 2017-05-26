@@ -1982,6 +1982,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.cmd = "file/" + subTypes[i].type;
                                         item.data = {};
                                         item.data.uploadFile = true;
+                                        
+                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
+                                        	var languages = [];                                        
+                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
+                                            	languages.push({
+                                            		title: DocTree.fileLanguages[lang].desc,
+                                            		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
+                                            	});
+                                            }                                        
+                                            item.children = languages;
+                                        }
                                     }
                                 }
                                 else if (!Util.isEmpty(subTypes[i].templateFilename)) {
@@ -4621,7 +4632,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return moduleConfig;
                 });
 
-                scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes'], function (newValues, oldValues, scope) {
+                scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes', 'treeConfig.fileLanguages'], function (newValues, oldValues, scope) {
 
                     promiseCommon.then(function () {
 
@@ -4642,6 +4653,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.fileTypes = fileTypes;
                             var jqTreeBody = DocTree.jqTree.find("tbody");
                             DocTree.Menu.useContextMenu(jqTreeBody);
+                            var fileLanguages = Util.goodMapValue(DocTree.treeConfig.fileLanguages, "locales", []);
+                            DocTree.fileLanguages = fileLanguages;
 
                             var extensions = Util.goodMapValue(DocTree.treeConfig, "extensions", []);
                             for (var i = 0; i < extensions.length; i++) {
