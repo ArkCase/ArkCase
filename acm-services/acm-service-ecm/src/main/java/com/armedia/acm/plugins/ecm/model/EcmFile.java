@@ -104,6 +104,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
 
     @Column(name = "cm_file_type")
     private String fileType;
+    
+    @Column(name = "cm_file_lang")
+    private String fileLang;
 
     @Column(name = "cm_file_active_version_tag")
     private String activeVersionTag;
@@ -288,6 +291,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setFileType(String fileType)
     {
         this.fileType = fileType;
+    }       
+
+    public String getFileLang()
+    {
+        return fileLang;
+    }
+
+    public void setFileLang(String fileLang)
+    {
+        this.fileLang = fileLang;
     }
 
     public String getCmisRepositoryId()

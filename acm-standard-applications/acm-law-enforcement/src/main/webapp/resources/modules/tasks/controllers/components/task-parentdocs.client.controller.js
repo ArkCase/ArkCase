@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
     , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $q, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
+        , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
         , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
 
@@ -47,6 +47,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
 
             var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
             var promiseFileTypes = ObjectLookupService.getFileTypes();
+            var promiseFileLanguages = LocaleService.getSettings();
             var promiseCorrespondenceForms;
 
             switch ($scope.parentObjectType) {
@@ -85,11 +86,12 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                     promiseCorrespondenceForms = {};
             }
 
-            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms]).then(
+            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
+                    $scope.treeConfig.fileLanguages = data[3];
                 });
 
             $scope.isreadOnly = false;
