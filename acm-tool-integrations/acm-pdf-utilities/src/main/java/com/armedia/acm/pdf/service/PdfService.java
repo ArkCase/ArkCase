@@ -7,6 +7,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import javax.xml.transform.Source;
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -124,4 +125,15 @@ public interface PdfService
      * @throws PdfServiceException on error creating merged document
      */
     void mergeSources(PDFMergerUtility pdfMergerUtility, String filename) throws PdfServiceException;
+
+    /**
+     * Create new document out of extracted pages from another document.
+     *
+     * @param is          input stream of the source document
+     * @param filename    source document filename
+     * @param pageNumbers list of page numbers (1-based) to be extracted from source
+     * @return new document stream
+     * @throws PdfServiceException on error creating extracted document
+     */
+    InputStream extractPages(InputStream is, String filename, List<Integer> pageNumbers) throws PdfServiceException;
 }
