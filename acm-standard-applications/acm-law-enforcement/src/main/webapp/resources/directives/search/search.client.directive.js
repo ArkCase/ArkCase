@@ -125,7 +125,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
 
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted("\"" + scope.searchQuery + "\"", scope.filters, scope.joinQuery, scope.pageSize, scope.start, scope.sort);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\"" + scope.searchQuery + "\""), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                             isSelected = false;
                         } else {
                             scope.searchQuery = searchObject.searchQuery;
