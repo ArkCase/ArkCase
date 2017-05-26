@@ -16,6 +16,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -103,6 +106,40 @@ public class PdfServiceImplTest
         assertEquals(mergedPageCount, abstractPageCount + authorizationPageCount + invoicePageCount);
     }
 
+    @Test
+    public void extractPages() throws Exception
+    {
+        String filename = "multipage_document.pdf";
+        List<Integer> pageNumbers = Arrays.asList(1, 2, 4);
+        assertNotNull(pdfService);
+
+        FileSystemResource sourcePdf = new FileSystemResource(this.getClass().getResource("/pdfs/" + filename).getFile());
+        assertTrue(sourcePdf.exists());
+
+        InputStream sourceDocInputStream = sourcePdf.getInputStream();
+        InputStream extractedDocInputStream = pdfService.extractPages(sourceDocInputStream, filename, pageNumbers);
+        PDDocument extractedDoc = PDDocument.load(extractedDocInputStream);
+        int extractedPageCount = extractedDoc.getNumberOfPages();
+        log.debug("Number of pages in extracted document [{}]", extractedPageCount);
+        extractedDoc.close();
+        extractedDocInputStream.close();
+
+        assertEquals(extractedPageCount, pageNumbers.size());
+    }
+
+    @Test(expected = PdfServiceException.class)
+    public void failPageExtraction() throws Exception
+    {
+        String filename = "multipage_document.pdf";
+        List<Integer> pageNumbers = Arrays.asList(1, 2, 9); // the source document has 4 pages only
+        assertNotNull(pdfService);
+
+        FileSystemResource sourcePdf = new FileSystemResource(this.getClass().getResource("/pdfs/" + filename).getFile());
+        assertTrue(sourcePdf.exists());
+
+        InputStream sourceDocInputStream = sourcePdf.getInputStream();
+        pdfService.extractPages(sourceDocInputStream, filename, pageNumbers);
+    }
 
     @After
     public void tearDown() throws Exception
