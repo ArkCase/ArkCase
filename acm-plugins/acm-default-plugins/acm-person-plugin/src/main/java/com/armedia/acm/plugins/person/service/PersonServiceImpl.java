@@ -19,7 +19,6 @@ import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -222,11 +221,8 @@ public class PersonServiceImpl implements PersonService
                 PersonOrganizationConstants.PERSON_OBJECT_TYPE,
                 personId);
 
-        if (StringUtils.isNotEmpty(description))
-        {
-            uploaded.setDescription(description);
-            uploaded = ecmFileService.updateFile(uploaded);
-        }
+        uploaded.setDescription(description);
+        uploaded = ecmFileService.updateFile(uploaded);
 
         if (isDefault)
         {

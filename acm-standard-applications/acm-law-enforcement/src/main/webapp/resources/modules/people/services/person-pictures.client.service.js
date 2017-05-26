@@ -149,13 +149,14 @@ angular.module('services').factory('Person.PicturesService', ['$resource', '$tra
          * @returns {Object} Promise
          */
         Service.insertPersonPicture = function (personId, file, isDefault, description) {
+            var desc = description || "";
             return Upload.upload({
                 url: 'api/latest/plugin/people/' + personId + '/images',
                 method: 'POST',
                 fields: {
                     data: {
                         default: isDefault,
-                        description: description
+                        description: desc
                     }
                 },
                 sendFieldsAs: 'json-blob',

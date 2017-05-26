@@ -23,7 +23,6 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
 
         $scope.gridOptions = $scope.gridOptions || {};
-        $scope.personInfo = null;
 
         var currentUser = '';
 
@@ -43,7 +42,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.personInfo = objectInfo;
+            $scope.objectInfo = objectInfo;
             var eventName = "object.changed/" + objectInfo.objectType + "/" + objectInfo.id;
             //we want to subscribe to changes because the data is from solr and on edit it
             //will take time to get it so we need to wait for message
@@ -69,7 +68,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
             var imageId = Util.goodMapValue(rowEntity, "object_id_s", 0);
             if (imageId) {
-                PersonPicturesService.deletePersonPictures($scope.personInfo.id, imageId).then(function () {
+                PersonPicturesService.deletePersonPictures($scope.objectInfo.id, imageId).then(function () {
                     $scope.reloadGrid();
                     MessageService.succsessAction();
                 }, function () {
@@ -102,14 +101,14 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
             modalInstance.result.then(function (data) {
 
                 if (data.isEdit) {
-                    PersonPicturesService.savePersonPicture($scope.personInfo.id, data.file, data.isDefault, data.image).then(function () {
+                    PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(function () {
                         MessageService.succsessAction();
                         $scope.refresh();
                     }, function () {
                         MessageService.errorAction();
                     });
                 } else if (data.file) {
-                    PersonPicturesService.insertPersonPicture($scope.personInfo.id, data.file, data.isDefault, data.image.description).then(function () {
+                    PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
                         MessageService.succsessAction();
                         $scope.refresh();
                     }, function () {
@@ -134,14 +133,17 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                 }
                 return data.fileId == id;
             }
+            if ($scope.images && $scope.images.length == 0) {
+                return true;
+            }
             return false;
         };
 
         $scope.reloadGrid = function () {
 
-            if ($scope.personInfo.id) {
-                PersonPicturesService.listPersonPictures($scope.personInfo.id).then(function (result) {
-
+            if ($scope.objectInfo.id) {
+                $scope.gridOptions.data = [];
+                PersonPicturesService.listPersonPictures($scope.objectInfo.id).then(function (result) {
                     $scope.images = result.response.docs;
                     $scope.gridOptions.data = $scope.images;
                 });
