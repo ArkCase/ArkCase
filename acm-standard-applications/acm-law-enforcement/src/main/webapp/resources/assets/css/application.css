@@ -719,12 +719,6 @@ thead {
 	position: relative;
 }
 
-/* Fixing Checkbox Height and Row (Thank You Petar Ilin!) */
-
-.ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
-    height: 27.5px;
-}
-
 .ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
 	overflow: normal;
