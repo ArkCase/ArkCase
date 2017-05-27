@@ -178,6 +178,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
     @Override
     @Deprecated
+    @Transactional
     public EcmFile upload(String arkcaseFileName, String fileType, MultipartFile file, Authentication authentication,
                           String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
