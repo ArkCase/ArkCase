@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
@@ -465,10 +466,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     }
 
     @Override
-    @XmlTransient
+    @JsonIgnore
     public Long getId()
     {
-        return getOrganizationId();
+        return organizationId;
     }
     
     public String getObjectType()
