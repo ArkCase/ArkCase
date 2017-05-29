@@ -8,14 +8,17 @@
                 <span translate>common.directive.docTree.emailDialog.recipients.label</span>
                 <span class="required-asterisk">*</span>
             </label>
-            <textarea name="textarea" id="recipients" ng-model="recipientsStr" class="user-picker-input input-md form-control"
-                      placeholder="{{ 'common.directive.docTree.emailDialog.recipients.placeholder' | translate }}" ng-click="chooseRecipients()" readonly required></textarea>
+            <textarea name="textarea" id="recipients" ng-model="recipientsStr"
+                      class="user-picker-input input-md form-control"
+                      placeholder="{{ 'common.directive.docTree.emailDialog.recipients.placeholder' | translate }}"
+                      ng-click="chooseRecipients()" readonly required></textarea>
         </div>
         <div class="col-sm-12 form-group">
             <label for="subject">
                 <span translate>common.directive.docTree.emailDialog.subject.label</span>
             </label>
-            <input name="subject" type="text" class="form-control" ng-model="emailDataModel.subject" placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
+            <input id="subject" name="subject" type="text" class="form-control" ng-model="emailDataModel.subject"
+                   placeholder="{{'common.directive.docTree.emailDialog.subject.placeholder' | translate}}">
         </div>
         <div class="col-sm-12 form-group" ng-form="emailBodyForm">
             <summernote config="summernoteOptions" name="emailBody" ng-model="emailDataModel.body"></summernote>
@@ -43,15 +46,25 @@
             </label>
             <fieldset id="deliveryMethod" class="well-sm">
                 <label ng-if="emailSendConfiguration.allowAttachments" class="radio-inline">
-                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS" ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS"
+                           ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
                     <span translate>
                     common.directive.docTree.emailDialog.sendWithAttachments.checkbox
                 </span>
                 </label>
                 <label ng-if="emailSendConfiguration.allowHyperlinks" class="radio-inline">
-                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_HYPERLINKS" ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_HYPERLINKS"
+                           ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
                     <span translate>
                                   common.directive.docTree.emailDialog.sendWithHyperlink.checkbox
+                              </span>
+                </label>
+                <label ng-if="emailSendConfiguration.allowAttachments && emailSendConfiguration.allowHyperlinks"
+                       class="radio-inline">
+                    <input type="radio" ng-model="emailDataModel.deliveryMethod" value="SEND_ATTACHMENTS_AND_HYPERLINKS"
+                           ng-change="onDeliveryMethodChange(emailDataModel.deliveryMethod)">
+                    <span translate>
+                                  common.directive.docTree.emailDialog.sendWithAttachmentsAndHyperlink.checkbox
                               </span>
                 </label>
             </fieldset>

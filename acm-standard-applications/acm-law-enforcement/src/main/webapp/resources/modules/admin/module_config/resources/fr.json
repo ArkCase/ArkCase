@@ -130,7 +130,12 @@
           "btn": {
             "cancel": "fr_Cancel",
             "ok": "fr_Add Ldap User"
-          }
+          },
+          "username": "fr_Enter username",
+          "firstName": "fr_Enter first name",
+          "lastName": "fr_Enter last name",
+          "email": "fr_Enter email",
+          "password": "fr_Enter password"
         },
         "editLdapMember": {
           "title": "fr_Edit Ldap Member",
@@ -139,7 +144,7 @@
             "ok": "fr_Edit Ldap User"
           }
         },
-        "username": "fr_Username",
+        "username": "fr_UserName",
         "firstName": "fr_FirstName",
         "lastName": "fr_LastName",
         "email": "fr_Email",

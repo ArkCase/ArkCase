@@ -15,6 +15,7 @@
           "type": "Type",
           "title": "Title",
           "parent": "Parent",
+          "assignee": "Assignee",
           "modified": "Modified"
         }
       }
