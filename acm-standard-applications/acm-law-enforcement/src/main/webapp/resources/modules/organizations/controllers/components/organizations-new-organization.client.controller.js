@@ -264,11 +264,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
             //identifications
             if (organization.defaultIdentification) {
-                if (!organization.defaultIdentification.identificationID) {
-                    organization.defaultIdentification = null;
-                } else {
-                    organization.identifications.push(organization.defaultIdentification);
-                }
+                organization.identifications.push(organization.defaultIdentification);
             }
 
             //addresses

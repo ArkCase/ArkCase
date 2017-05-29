@@ -246,11 +246,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }
             //identifications
             if (person.defaultIdentification) {
-                if (!person.defaultIdentification.identificationID) {
-                    person.defaultIdentification = null;
-                } else {
-                    person.identifications.push(person.defaultIdentification);
-                }
+                person.identifications.push(person.defaultIdentification);
             }
 
             //remove empty organizations before save

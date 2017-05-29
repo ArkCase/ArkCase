@@ -24,8 +24,9 @@
             <div class="row well-sm">
                 <div class="col-sm-4 form-group">
                     <label for="organizationName" translate> organizations.comp.newOrganization.name </label>
+                    <span class="required-asterisk">*</span>
                     <input id="organizationName" type="text" ng-model="organization.organizationValue"
-                           class="input-md form-control"
+                           class="input-md form-control" required="required"
                            placeholder="{{ 'organizations.comp.newOrganization.name.placeholder' | translate }}"
                            style="background-color: white;">
                 </div>
@@ -33,7 +34,8 @@
                     <label for="orgType" class="control-label">{{ 'organizations.comp.newOrganization.type'
                         |
                         translate}}</label>
-                    <select id="orgType" class="form-control"
+                    <span class="required-asterisk">*</span>
+                    <select id="orgType" class="form-control" required="required"
                             ng-model="organization.organizationType">
                         <option ng-repeat="option in organizationTypes" value="{{option.type}}">
                             {{option.name}}
@@ -63,23 +65,18 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label for="identificationID" translate>
-                                        organizations.comp.newOrganization.identification.identificationID</label>
-                                    <input id="identificationID" type="text" ng-model="organization.defaultIdentification.identificationID"
-                                           class="input-md form-control"
-                                           placeholder="{{ 'organizations.comp.newOrganization.identification.identificationID.placeholder' | translate }}">
-                                </div>
-                                <div class="col-sm-4 form-group">
                                     <label for="identificationNumber" translate>
                                         organizations.comp.newOrganization.identification.identificationNumber</label>
+                                    <span class="required-asterisk">*</span>
                                     <input id="identificationNumber" type="text"
                                            ng-model="organization.defaultIdentification.identificationNumber"
-                                           class="input-md form-control"
+                                           class="input-md form-control" required="required"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label for="identificationType" translate>organizations.comp.newOrganization.identification.identificationType</label>
-                                    <select id="identificationType" class="form-control"
+                                    <span class="required-asterisk">*</span>
+                                    <select id="identificationType" required="required" class="form-control"
                                             ng-model="organization.defaultIdentification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -120,23 +117,18 @@
                             <div ng-repeat="identification in organization.identifications">
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
-                                        <label for="identificationID" translate>
-                                            organizations.comp.newOrganization.identification.identificationID</label>
-                                        <input id="identificationID" type="text" ng-model="identification.identificationID"
-                                               class="input-md form-control"
-                                               placeholder="{{ 'organizations.comp.newOrganization.identification.identificationID.placeholder' | translate }}">
-                                    </div>
-                                    <div class="col-sm-4 form-group">
                                         <label for="identificationNumber" translate>
                                             organizations.comp.newOrganization.identification.identificationNumber</label>
+                                        <span class="required-asterisk">*</span>
                                         <input id="identificationNumber" type="text" ng-model="identification.identificationNumber"
-                                               class="input-md form-control"
+                                               class="input-md form-control" required="required"
                                                placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label for="identificationType" translate>
                                             organizations.comp.newOrganization.identification.identificationType</label>
-                                        <select id="identificationType" class="form-control"
+                                        <span class="required-asterisk">*</span>
+                                        <select id="identificationType" required="required" class="form-control"
                                                 ng-model="identification.identificationType">
                                             <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                                 {{option.name}}
