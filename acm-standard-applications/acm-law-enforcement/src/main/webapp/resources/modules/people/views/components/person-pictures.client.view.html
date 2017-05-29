@@ -2,20 +2,10 @@
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
-                <span> {{'people.comp.pictures.title' | translate}}</span>
+                <span translate>people.comp.pictures.title</span>
                 <div class="pull-right">
-                    <button class="btn btn-xs btn-default" ng-disabled="disableBtnDelete()" ng-click="delete()">
-                        <i class="fa fa-ban"></i>
-                        <span translate>people.comp.pictures.actions.delete</span>
-                    </button>
-                    <button class="btn btn-xs btn-default" ng-disabled="disableBtnSetPrimary()" ng-click="setPrimary()">
-                        <i class="fa fa-star"></i>
-                        <span translate>people.comp.pictures.actions.setPrimary</span>
-                    </button>
-                    <button class="btn btn-xs btn-default" ng-click="upload()">
-                        <i class="fa fa-cloud-upload"></i>
-                        <span translate>people.comp.pictures.actions.upload</span>
-                    </button>
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
+                        <i class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
         </div>
@@ -25,13 +15,7 @@
                  ui-grid-auto-resize
                  ui-grid-pagination
                  adjust-table-height="gridOptions.data.length"
-                 ng-hide="gridOptions.noData"
                  class="grid">
-            </div>
-            <div class="alert" ng-if="gridOptions.noData">
-                <p class="text-center">
-                    <span>{{noDataMessage}}</span>
-                </p>
             </div>
         </div>
     </div>

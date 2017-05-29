@@ -43,6 +43,10 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
 
     public void onEcmFileCreated(EcmEvent ecmEvent)
     {
+
+        getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
+
+
         // parent folder must already be in ArkCase
         AcmFolder parentFolder = lookupArkCaseFolder(ecmEvent.getParentNodeId());
         if (parentFolder == null)
@@ -81,7 +85,6 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
 
         try
         {
-            getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
             EcmFile addedToArkCase = getFileService().upload(
                     ecmEvent.getNodeName(),

@@ -3,11 +3,21 @@
 var nunjucks = require('nunjucks'),
     glob = require('glob'),
     fs = require('fs-extra'),
+    os = require('os'),
     path = require('path'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    homedir = require('homedir');
 
 
 module.exports = function (grunt) {
+    // Path to .arkcase folder, used for sync-dev task
+    var destPath = null;
+    try {
+        destPath = path.join(homedir(), '.arkcase');
+    } catch (ex) {
+        console.log('Can\'t get HOME DIR for dev tasks ... continue')
+    }
+
     var config = require('./config/env/all');
     try {
         var customConfig = require('./config/env/customConfig');
@@ -57,6 +67,74 @@ module.exports = function (grunt) {
             dist: {
                 src: '<%= vendorsJavaScriptFiles %>',
                 dest: 'assets/dist/vendors.min.js'
+            }
+        },
+
+        /////////////////////////////////////
+        // Developemnet tasks
+        /////////////////////////////////////
+        concurrent: {
+            default: {
+                tasks: ['watch:resources'],
+                options: {
+                    logConcurrentOutput: true,
+                    limit: 10
+                }
+            }
+        },
+        sync: {
+            resources: {
+                files: [
+                    {
+                        cwd: 'assets/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/assets/')
+                    },
+                    {
+                        cwd: 'directives/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/directives/')
+                    },
+                    {
+                        cwd: 'filters/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/filters/')
+                    },
+                    {
+                        cwd: 'modules/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/modules/')
+                    },
+                    {
+                        cwd: 'modules_config/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/modules_config/')
+                    },
+                    {
+                        cwd: 'services/',
+                        src: ['**'],
+                        dest: path.join(destPath, 'custom/services/')
+                    }
+                ],
+                verbose: true,
+                updateAndDelete: false,
+                compareUsing: 'mtime'
+            }
+        },
+
+        watch: {
+            resources: {
+                files: [
+                    'assets/**',
+                    'directives/**',
+                    'filters/**',
+                    'modules/**',
+                    'modules_config/**',
+                    'service/**'
+                ],
+                tasks: [
+                    'sync:resources'
+                ]
             }
         }
     });
@@ -198,4 +276,7 @@ module.exports = function (grunt) {
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
     grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'updateModulesConfig']);
+
+    // Task syncs current folder with $user/.arkcase/custom/ folder
+    grunt.registerTask('sync-dev', ['concurrent:default'])
 };
