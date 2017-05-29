@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -15,6 +16,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -35,21 +37,6 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-
-import org.apache.commons.codec.digest.DigestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
@@ -75,6 +62,20 @@ import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.mule.api.MuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 4/20/15.
@@ -101,7 +102,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+                                                         boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
@@ -129,7 +130,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookTaskItem> findTaskItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+                                                         boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
@@ -158,7 +159,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     private void populateResultHeaderFields(OutlookResults<? extends OutlookItem> results, int start, int maxItems, String sortField,
-            boolean sortAscending, int totalCount, boolean isMoreAvailable, int nextStartRow)
+                                            boolean sortAscending, int totalCount, boolean isMoreAvailable, int nextStartRow)
     {
         results.setTotalItems(totalCount);
         results.setMoreItemsAvailable(isMoreAvailable);
@@ -285,7 +286,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookCalendarItem> findCalendarItems(String folderId, AcmOutlookUser user, int start, int maxItems,
-            String sortField, boolean sortAscending, SearchFilter filter)
+                                                                 String sortField, boolean sortAscending, SearchFilter filter)
             throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
@@ -301,7 +302,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             FindItemsResults<Item> items = folderId != null
                     ? getDao().findItems(service, folderId, calendarProperties, start, maxItems, sortField, sortAscending, filter)
                     : getDao().findItems(service, WellKnownFolderName.Calendar, calendarProperties, start, maxItems, sortField,
-                            sortAscending, filter);
+                    sortAscending, filter);
 
             populateResultHeaderFields(results, start, maxItems, sortField, sortAscending, items.getTotalCount(), items.isMoreAvailable(),
                     items.getNextPageOffset() == null ? -1 : items.getNextPageOffset());
@@ -319,7 +320,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user,
-            Authentication authentication) throws Exception
+                                         Authentication authentication) throws Exception
     {
 
         if (getSendFromSystemUser())
@@ -381,8 +382,78 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
+    public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, AcmOutlookUser user,
+                                                 Authentication authentication) throws Exception
+    {
+
+        if (getSendFromSystemUser())
+        {
+            user = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        }
+
+        sendEmail(emailWithAttachmentsAndLinksDTO, user, authentication);
+    }
+
+    @Override
+    public void sendEmail(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, AcmOutlookUser user, Authentication authentication)
+            throws Exception
+    {
+        ExchangeService service = connect(user);
+
+        if (emailWithAttachmentsAndLinksDTO.getEmailAddresses() != null && !emailWithAttachmentsAndLinksDTO.getEmailAddresses().isEmpty())
+        {
+            for (String emailAddress : emailWithAttachmentsAndLinksDTO.getEmailAddresses())
+            {
+
+                try
+                {
+                    EmailMessage emailMessage = new EmailMessage(service);
+                    emailMessage.getToRecipients().add(emailAddress);
+                    emailMessage.setSubject(emailWithAttachmentsAndLinksDTO.getSubject());
+                    emailMessage.setBody(MessageBody.getMessageBodyFromText(generateBody(emailWithAttachmentsAndLinksDTO, emailAddress, authentication)));
+                    emailMessage.getBody().setBodyType(BodyType.HTML);
+
+                    List<EcmFile> attachedFiles = new ArrayList<>();
+                    addAttachments(emailWithAttachmentsAndLinksDTO, emailMessage, attachedFiles);
+
+                    emailMessage.sendAndSaveCopy();
+
+                    /*// Fires an audit event for each successfully emailed file
+                    for (EcmFile emailedFile : attachedFiles)
+                    {
+                        outlookEventPublisher.publishFileEmailedEvent(emailedFile, authentication);
+                    }*/
+
+                } catch (Exception e)
+                {
+                    log.error(String.format("Could not send email to %s from %s.", emailAddress, user.getEmailAddress()));
+                }
+            }
+        }
+    }
+
+    private void addAttachments(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, EmailMessage emailMessage, List<EcmFile> attachedFiles) throws MuleException, AcmUserActionFailedException, ServiceLocalException
+    {
+        if (emailWithAttachmentsAndLinksDTO.getAttachmentIds() != null && !emailWithAttachmentsAndLinksDTO.getAttachmentIds().isEmpty())
+        {
+            for (Long attachmentId : emailWithAttachmentsAndLinksDTO.getAttachmentIds())
+            {
+                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                String fileName = ecmFile.getFileName();
+                if (ecmFile.getFileActiveVersionNameExtension() != null)
+                {
+                    fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                }
+                emailMessage.getAttachments().addFileAttachment(fileName, contents);
+                attachedFiles.add(ecmFile);
+            }
+        }
+    }
+
+    @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO, AcmOutlookUser outlookUser,
-            Authentication authentication) throws Exception
+                                                                            Authentication authentication) throws Exception
     {
 
         if (getSendFromSystemUser())
@@ -442,7 +513,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailWithEmbeddedLinksDTO emailDTO,
-            Authentication authentication)
+                                                      Authentication authentication)
     {
         String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
         AuthenticationToken authenticationToken = new AuthenticationToken();
@@ -456,7 +527,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public OutlookResults<OutlookContactItem> findContactItems(AcmOutlookUser user, int start, int maxItems, String sortField,
-            boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
+                                                               boolean sortAscending, SearchFilter filter) throws AcmOutlookConnectionFailedException, AcmOutlookListItemsFailedException
     {
         ExchangeService service = connect(user);
 
@@ -613,7 +684,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     @Override
     public void deleteAllItemsFoundByExtendedProperty(String folderId, AcmOutlookUser user,
-            ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue)
+                                                      ExtendedPropertyDefinition extendedPropertyDefinition, Object extendedPropertyValue)
     {
         // disconnectAndRetry is not needed here since this method calls other public methods in this service class,
         // and does not call any DAO methods.

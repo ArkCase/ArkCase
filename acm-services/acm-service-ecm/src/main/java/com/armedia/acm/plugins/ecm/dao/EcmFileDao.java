@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class EcmFileDao extends AcmAbstractDao<EcmFile>
 {
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
     protected Class<EcmFile> getPersistenceClass()
@@ -105,7 +105,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     }
 
 
-    public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId) {
+    public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId)
+    {
 
         String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId and e.folder.id=:folderId";
 
@@ -118,13 +119,27 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         return file;
     }
+
+    public List<EcmFile> findByCmisFileId(String cmisFileId)
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("cmisFileId", cmisFileId);
+
+        return query.getResultList();
+    }
+
     @Transactional
-    public void deleteFile(Long id) {
+    public void deleteFile(Long id)
+    {
         EcmFile file = getEm().find(getPersistenceClass(),id);
         getEm().remove(file);
     }
 
-    public List<EcmFile> findByFolderId(Long folderId) {
+    public List<EcmFile> findByFolderId(Long folderId)
+    {
         String jpql = "SELECT e FROM EcmFile e WHERE e.folder.id=:folderId";
 
         TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -132,7 +147,6 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         query.setParameter("folderId", folderId);
 
         return query.getResultList();
-
 
     }
 }

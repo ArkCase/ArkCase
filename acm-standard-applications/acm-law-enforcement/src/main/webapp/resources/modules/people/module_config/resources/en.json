@@ -65,7 +65,8 @@
       "cancel": "Cancel",
       "upload": "Upload Picture",
       "noPictureSelected": "No Files Selected.",
-      "browse": "Browse"
+      "browse": "Browse",
+      "description": "Description"
     }
   },
   "people.comp.addresses": {
@@ -356,8 +357,8 @@
     "middleName": "Middle Name",
     "middleName.placeholder": "Enter Middle Name",
     "saveButton": "Save Person",
-    "informCreated":"{{firstName}} {{lastName}} Created.",
-    "informUpdated":"{{firstName}} {{lastName}} Updated",
+    "informCreated": "{{firstName}} {{lastName}} Created.",
+    "informUpdated": "{{firstName}} {{lastName}} Updated",
     "communicationAccounts": {
       "title": "Communication Accounts",
       "phone": "Phone",
