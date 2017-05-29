@@ -224,7 +224,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
-                    ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.id);
+                    ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                     $scope.loading = false;
                 }
                 , function (error) {
