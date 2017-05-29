@@ -16,7 +16,7 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
 
         Service.SessionCacheNames = {};
         Service.CacheNames = {
-            PEOPLE_LIST: "PeopleList"
+            PERSON_LIST: "PersonList"
         };
 
         /**
@@ -30,7 +30,7 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
          * @returns None
          */
         Service.resetPeopleTreeData = function () {
-            var cachePeopleList = new Store.CacheFifo(Service.CacheNames.PEOPLE_LIST);
+            var cachePeopleList = new Store.CacheFifo(Service.CacheNames.PERSON_LIST);
             cachePeopleList.reset();
         };
 
@@ -52,7 +52,7 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.updatePeopleTreeData = function (start, n, sort, filters, query, nodeData) {
-            ObjectListService.updateObjectTreeData(Service.CacheNames.PEOPLE_LIST
+            ObjectListService.updateObjectTreeData(Service.CacheNames.PERSON_LIST
                 , start, n, sort, filters, query, nodeData
             );
         };
@@ -83,7 +83,7 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
             param.query = Util.goodValue(query);
             param.activeOnly = false;
 
-            var cachePeopleList = new Store.CacheFifo(Service.CacheNames.PEOPLE_LIST);
+            var cachePeopleList = new Store.CacheFifo(Service.CacheNames.PERSON_LIST);
             var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;
             var treeData = cachePeopleList.get(cacheKey);
 

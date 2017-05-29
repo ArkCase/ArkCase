@@ -1287,7 +1287,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
 
                     var files = args.files;
-                    var promiseUploadFile = DocTree.doSubmitFormUploadFile(files);
+                    var fileLang = args.fileLang; 
+                    var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, fileLang);
                     $q.when(promiseUploadFile).then(function (data) {
                         args.data = data;
                         DocTree.uploadSetting = null;
@@ -1540,7 +1541,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "file/",
                             getArgs: function (data) {
-                                return {fileType: data.cmd.substring(this.name.length)};
+                                return {
+                                		fileType: data.cmd.split("/")[1],
+                                		fileLang: data.cmd.split("/")[2]
+                                	};
                             },
                             execute: function (nodes, args) {
                                 var selectFiles = DocTree.Command.findHandler("selectFiles/");
@@ -1978,6 +1982,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.cmd = "file/" + subTypes[i].type;
                                         item.data = {};
                                         item.data.uploadFile = true;
+                                        
+                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
+                                        	var languages = [];                                        
+                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
+                                            	languages.push({
+                                            		title: DocTree.fileLanguages[lang].desc,
+                                            		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
+                                            	});
+                                            }                                        
+                                            item.children = languages;
+                                        }
                                     }
                                 }
                                 else if (!Util.isEmpty(subTypes[i].templateFilename)) {
@@ -2283,7 +2298,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                     return dfd.promise();
                 }
-                , uploadFiles: function (formData, folderNode, names, fileType) {
+                , uploadFiles: function (formData, folderNode, names, fileType, fileLang) {
                     var dfd = $.Deferred();
                     if (!DocTree.isFolderNode(folderNode)) {
                         dfd.reject();
@@ -2294,6 +2309,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var promiseUploadFiles = Util.serviceCall({
                             service: Ecm.uploadFiles
                             , data: formData
+                            , param: {
+                            	fileLang: fileLang
+                            }
                             , onSuccess: function (data) {
                                 if (Validator.validateUploadInfo(data)) {
                                     var uploadInfo = data;
@@ -3500,7 +3518,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
             }
             //, doSubmitFormUploadFile: function (files, doRefresh) {
-            , doSubmitFormUploadFile: function (files) {
+            , doSubmitFormUploadFile: function (files, fileLang) {
                 if (!DocTree.uploadSetting) {
                     return Util.errorPromise("upload file error");
                 }
@@ -3529,7 +3547,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 var cacheKey = DocTree.getCacheKeyByNode(folderNode);
                 if (DocTree.uploadSetting.uploadFileNew) {
-                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType)
+                    DocTree.Op.uploadFiles(fd, folderNode, names, fileType, fileLang)
                         .then(function (data) {
                                 _.each(data.nodes, function (node) {
                                     DocTree.markNodeOk(node)
@@ -4614,7 +4632,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return moduleConfig;
                 });
 
-                scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes'], function (newValues, oldValues, scope) {
+                scope.$watchGroup(['treeConfig', 'objectInfo', 'treeConfig.fileTypes', 'treeConfig.fileLanguages'], function (newValues, oldValues, scope) {
 
                     promiseCommon.then(function () {
 
@@ -4635,6 +4653,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.fileTypes = fileTypes;
                             var jqTreeBody = DocTree.jqTree.find("tbody");
                             DocTree.Menu.useContextMenu(jqTreeBody);
+                            var fileLanguages = Util.goodMapValue(DocTree.treeConfig.fileLanguages, "locales", []);
+                            DocTree.fileLanguages = fileLanguages;
 
                             var extensions = Util.goodMapValue(DocTree.treeConfig, "extensions", []);
                             for (var i = 0; i < extensions.length; i++) {
