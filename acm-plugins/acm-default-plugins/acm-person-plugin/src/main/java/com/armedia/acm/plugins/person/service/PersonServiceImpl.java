@@ -4,7 +4,6 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
@@ -27,6 +26,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -195,20 +195,12 @@ public class PersonServiceImpl implements PersonService
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
+        if (person.getContainer() == null)
+        {
+            person = CreateContainerAndPictureFolder(person, auth);
+        }
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
-        try
-        {
-            List objects = ecmFileService.allFilesForFolder(auth, person.getContainer(), picturesFolderObj.getId()).getChildren();
-            if (objects.size() < 1)
-            {
-                //there are not images in pictures folder, so first uploaded image is the default image
-                isDefault = true;
-            }
-        } catch (AcmListObjectsFailedException e)
-        {
-            log.error("Could't list files for folder [{}].", picturesFolderObj.getId(), e);
-        }
 
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(),
                 PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
@@ -234,10 +226,12 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
+    @Transactional
     public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
+
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
@@ -255,6 +249,7 @@ public class PersonServiceImpl implements PersonService
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
+
         if (isDefault)
         {
             person.setDefaultPicture(uploaded);
@@ -268,7 +263,13 @@ public class PersonServiceImpl implements PersonService
     {
         //save person
         person = savePerson(person, auth);
+        person = CreateContainerAndPictureFolder(person, auth);
 
+        return person;
+    }
+
+    private Person CreateContainerAndPictureFolder(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
         //generate person root folder
         String personRootFolderName = getPersonRootFolderName(person);
 
@@ -293,7 +294,6 @@ public class PersonServiceImpl implements PersonService
 
         //create Pictures folder
         acmFolderService.addNewFolder(person.getContainer().getFolder(), picturesFolder);
-
         return person;
     }
 
