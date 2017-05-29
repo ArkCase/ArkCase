@@ -130,7 +130,12 @@
           "btn": {
             "cancel": "Cancel",
             "ok": "Add Ldap User"
-          }
+          },
+          "username": "Enter username",
+          "firstName": "Enter first name",
+          "lastName": "Enter last name",
+          "email": "Enter email",
+          "password": "Enter password"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -139,7 +144,7 @@
             "ok": "Edit Ldap User"
           }
         },
-        "username": "Username",
+        "username": "UserName",
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",

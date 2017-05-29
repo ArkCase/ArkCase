@@ -126,6 +126,7 @@
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
         <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
+        <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
         <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
@@ -172,6 +173,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
