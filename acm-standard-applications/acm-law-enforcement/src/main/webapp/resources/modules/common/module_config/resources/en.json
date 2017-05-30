@@ -431,8 +431,8 @@
     "COSTSHEET": "Costsheet",
     "FILE": "File",
     "DOC_REPO": "Document Repository",
-    "PERSON": "Person",
-    "ORGANIZATION": "Organization"
+    "ORGANIZATION": "Organization",
+    "PERSON": "Person"
   },
   "frevvo.dialogUserPicker": {
     "header": "Choose User",
