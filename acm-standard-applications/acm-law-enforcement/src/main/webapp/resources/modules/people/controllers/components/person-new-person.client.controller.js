@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('people').controller('People.NewPersonController', ['$scope', '$stateParams', '$translate'
-    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService'
-    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService) {
+    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService'
+    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService) {
+        
+        $scope.loading = false;
+        
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -137,22 +140,21 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
 
         $scope.save = function () {
-
+            $scope.loading = true;
             var clearedPersonInfo = clearNotFilledElements(_.cloneDeep($scope.person));
             var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.pictures);
             promiseSavePerson.then(
                 function (objectInfo) {
-                    $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("people.comp.editPerson.informCreated", {
-                        firstName: objectInfo.givenName,
-                        lastName: objectInfo.familyName
-                    }));
-                    $state.go('people');
-                    return objectInfo;
+                    ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
+                    $scope.loading = false;
                 }
                 , function (error) {
-                    $scope.$emit("report-object-update-failed", error);
-                    return error;
+                    $scope.loading = false;
+                    if (error.data && error.data.message) {
+                        $scope.error = error.data.message;
+                    } else {
+                        MessageService.error(error);
+                    }
                 }
             );
         };
@@ -246,11 +248,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }
             //identifications
             if (person.defaultIdentification) {
-                if (!person.defaultIdentification.identificationID) {
-                    person.defaultIdentification = null;
-                } else {
-                    person.identifications.push(person.defaultIdentification);
-                }
+                person.identifications.push(person.defaultIdentification);
             }
 
             //remove empty organizations before save

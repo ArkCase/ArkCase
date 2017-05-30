@@ -59,12 +59,13 @@ public class FileUploadAPIController
             @RequestParam("parentObjectId") Long parentObjectId,
             @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
+            @RequestParam(value = "fileLang", required = false) String fileLang,
             MultipartHttpServletRequest request,
             Authentication authentication,
             HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
     {
         String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
-        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
+        List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang, folderCmisId, request, session);
         return uploaded;
     }
 
@@ -107,6 +108,21 @@ public class FileUploadAPIController
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
     {
 
+        return uploadFiles(authentication, parentObjectType, parentObjectId, fileType, null, folderCmisId, request, session);
+    }
+    
+    protected List<EcmFile> uploadFiles(
+            Authentication authentication,
+            String parentObjectType,
+            Long parentObjectId,
+            String fileType,
+            String fileLang,
+            String folderCmisId,
+            MultipartHttpServletRequest request,
+            HttpSession session)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, IOException
+    {
+
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
         //for multiple files
@@ -137,6 +153,7 @@ public class FileUploadAPIController
                         EcmFile temp = getEcmFileService().upload(
                                 attachment.getOriginalFilename(),
                                 fileType,
+                                fileLang,
                                 f,
                                 authentication,
                                 folderCmisId,

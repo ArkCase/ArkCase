@@ -2,6 +2,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -13,7 +14,6 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -23,7 +23,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -204,8 +203,83 @@ public class SmtpNotificationSender extends NotificationSender implements Applic
     }
 
     @Override
+    public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user) throws Exception
+    {
+
+        in.setTemplate(notificationTemplate);
+        Exception exception;
+
+        Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
+        messageProps.put("subject", in.getSubject());
+        boolean firstIteration = true;
+        for (String emailAddress : in.getEmailAddresses())
+        {
+            List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
+            try
+            {
+                messageProps.put("to", emailAddress);
+                Map<String, DataHandler> attachments = new HashMap<>();
+                if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
+                {
+                    for (Long attachmentId : in.getAttachmentIds())
+                    {
+                        InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                        EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                        String fileName = ecmFile.getFileName();
+                        if (ecmFile.getFileActiveVersionNameExtension() != null)
+                        {
+                            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                        }
+                        attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
+
+                        if (firstIteration)
+                        {
+                            sentEvents.add(
+                                    new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
+                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
+                        }
+                    }
+                }
+                // Adding non ecmFile(s) as attachments
+                if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
+                {
+                    for (String filePath : in.getFilePaths())
+                    {
+                        File file = new File(filePath);
+                        FileInputStream contents = new FileInputStream(file);
+                        attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
+                    }
+                }
+                MuleMessage received = getMuleContextManager().send(flow, makeNote(emailAddress, in, authentication), attachments, messageProps);
+                exception = received.getInboundProperty("sendEmailException");
+
+            } catch (MuleException e)
+            {
+                exception = e;
+            }
+
+            if (exception != null)
+            {
+                LOG.error("Email message not sent ...", exception);
+            }
+
+            if (firstIteration)
+            {
+                for (SmtpEventSentEvent event : sentEvents)
+                {
+                    boolean success = (exception == null);
+                    event.setSucceeded(success);
+                    eventPublisher.publishEvent(event);
+                }
+                firstIteration = false;
+            }
+        }
+    }
+
+
+    @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+                                                                            AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();

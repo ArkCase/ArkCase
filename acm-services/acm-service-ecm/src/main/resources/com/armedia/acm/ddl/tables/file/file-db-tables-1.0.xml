@@ -583,6 +583,26 @@
             <column name="cm_file_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
+    
+       <changeSet id="53-acm_file-add-file-lang-column" author="marko.stojanoski" dbms="mysql">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_lang" type="TEXT"></column>
+        </addColumn>
+    </changeSet>
+        
+    <changeSet id="53-acm_file-add-file-lang-column" author="marko.stojanoski" dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_lang" type="VARCHAR(255)"></column>
+        </addColumn>
+    </changeSet>    
+
+    <changeSet id="53-acm_file-add-description-column" author="dragan.simonovski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_description" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
 

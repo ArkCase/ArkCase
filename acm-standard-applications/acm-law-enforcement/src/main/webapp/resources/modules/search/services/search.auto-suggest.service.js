@@ -35,7 +35,7 @@ angular.module('search').factory('Search.AutoSuggestService', ['$q', '$http', 'S
                             core: core
                         },
                         function (res) {
-                            deferred.resolve(SearchService.validateSolrData(res));
+                            deferred.resolve(res.response.docs);
                         });
                     return deferred.promise;
                 } else {
@@ -44,7 +44,7 @@ angular.module('search').factory('Search.AutoSuggestService', ['$q', '$http', 'S
                             core: core
                         },
                         function (res) {
-                            deferred.resolve(SearchService.validateSolrData(res));
+                            deferred.resolve(res.response.docs);
                         });
                     return deferred.promise;
                 }
