@@ -101,6 +101,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
             modalInstance.result.then(function (data) {
 
                 if (data.isEdit) {
+                    data.image.modified = null;
                     PersonPicturesService.savePersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image).then(function () {
                         MessageService.succsessAction();
                         $scope.refresh();
