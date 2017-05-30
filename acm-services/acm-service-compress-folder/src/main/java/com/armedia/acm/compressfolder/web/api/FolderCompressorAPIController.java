@@ -64,10 +64,8 @@ public class FolderCompressorAPIController
     {
         if (filePath != null)
         {
-            InputStream fileOutput = null;
-            try
+            try (InputStream fileOutput = FileUtils.openInputStream(new File(filePath)))
             {
-                fileOutput = FileUtils.openInputStream(new File(filePath));
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
                 response.setContentType("application/zip");
                 byte[] buffer = new byte[1024];
@@ -82,18 +80,9 @@ public class FolderCompressorAPIController
                 }
                 while (read > 0);
                 response.getOutputStream().flush();
-            } finally
+            } catch (IOException e)
             {
-                if (fileOutput != null)
-                {
-                    try
-                    {
-                        fileOutput.close();
-                    } catch (IOException e)
-                    {
-                        log.error("Could not close stream: {}", e.getMessage(), e);
-                    }
-                }
+                log.error("Could not close stream: {}", e.getMessage(), e);
             }
         }
     }
