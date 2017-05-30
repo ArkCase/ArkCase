@@ -9,10 +9,11 @@
                     <div class="well-sm">
                         <div class="pull-right">
                             <div class="btn-group">
-                                <button type="submit" ng-disabled="personForm.$invalid || saved"
+                                <button type="submit" ng-disabled="personForm.$invalid || loading"
                                         class="btn btn-primary btn-sm" data-toggle="tooltip"
                                         id="saveButton" data-title="Save">
-                                    <i class="fa fa-floppy-o"></i>
+                                    <i class="fa fa-floppy-o" ng-hide="loading"></i>
+                                    <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
                                     <span translate> people.comp.editPerson.saveButton</span>
                                 </button>
                             </div>
@@ -24,8 +25,9 @@
             <div class="row well-sm">
                 <div class="col-sm-4 form-group">
                     <label for="familyName" translate> people.comp.editPerson.familyName </label>
+                    <span class="required-asterisk">*</span>
                     <input type="text" id="familyName" ng-model="person.familyName"
-                           class="input-md form-control"
+                           class="input-md form-control" required="required"
                            placeholder="{{ 'people.comp.editPerson.familyName.placeholder' | translate }}"
                            style="background-color: white;">
                 </div>
@@ -41,8 +43,9 @@
                 <div class="col-sm-4">
                     <label for="givenName" class="control-label">{{ 'people.comp.editPerson.givenName' |
                         translate}}</label>
+                    <span class="required-asterisk">*</span>
                     <input type="text" id="givenName" ng-model="person.givenName"
-                           class="input-md form-control"
+                           class="input-md form-control" required="required"
                            placeholder="{{ 'people.comp.editPerson.givenName.placeholder' | translate }}">
                 </div>
             </div>
@@ -58,21 +61,17 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate> people.comp.editPerson.identification.identificationID</label>
-                                    <input type="text" ng-model="person.defaultIdentification.identificationID"
-                                           class="input-md form-control"
-                                           placeholder="{{ 'people.comp.editPerson.identification.identificationID.placeholder' | translate }}">
-                                </div>
-                                <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationNumber</label>
+                                    <span class="required-asterisk">*</span>
                                     <input type="text" ng-model="person.defaultIdentification.identificationNumber"
-                                           class="input-md form-control"
+                                           class="input-md form-control" required="required"
                                            placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>people.comp.editPerson.identification.identificationType</label>
-                                    <select class="form-control"
+                                    <span class="required-asterisk">*</span>
+                                    <select class="form-control" required="required"
                                             ng-model="person.defaultIdentification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -112,22 +111,18 @@
                             <div ng-repeat="identification in person.identifications">
                                 <div class="row">
                                     <div class="col-sm-4 form-group">
-                                        <label translate> people.comp.editPerson.identification.identificationID</label>
-                                        <input type="text" ng-model="identification.identificationID"
-                                               class="input-md form-control"
-                                               placeholder="{{ 'people.comp.editPerson.identification.identificationID.placeholder' | translate }}">
-                                    </div>
-                                    <div class="col-sm-4 form-group">
                                         <label translate>
                                             people.comp.editPerson.identification.identificationNumber</label>
+                                        <span class="required-asterisk">*</span>
                                         <input type="text" ng-model="identification.identificationNumber"
-                                               class="input-md form-control"
+                                               class="input-md form-control" required="required"
                                                placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
                                     </div>
                                     <div class="col-sm-4 form-group">
                                         <label translate>
                                             people.comp.editPerson.identification.identificationType</label>
-                                        <select class="form-control"
+                                        <span class="required-asterisk">*</span>
+                                        <select class="form-control" required="required"
                                                 ng-model="identification.identificationType">
                                             <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                                 {{option.name}}
