@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -60,7 +61,7 @@ public class PeopleAPIController
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
-    public Person upsertPersonMultipart(
+    public Person insertPersonMultipart(
             @RequestPart(name = "person") Person in,
             @RequestPart(name = "pictures") List<MultipartFile> pictures,
             Authentication auth
@@ -147,15 +148,31 @@ public class PeopleAPIController
     @ResponseBody
     public ResponseEntity uploadImage(
             @PathVariable("personId") Long personId,
-            @RequestParam("default") boolean isDefault,
+            @RequestPart("data") UploadImageRequest data,
             @RequestPart(value = "file", required = false) MultipartFile image,
             Authentication auth
-    ) throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException
+    ) throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         log.debug("Insert Image for a Person: [{}];", personId);
 
-        personService.insertImageForPerson(personId, image, isDefault, auth);
+        personService.insertImageForPerson(personId, image, data.isDefault(), data.getDescription(), auth);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{personId}/images", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    public ResponseEntity saveImage(
+            @PathVariable("personId") Long personId,
+            @RequestPart("data") UploadImageRequest data,
+            @RequestPart(value = "file", required = false) MultipartFile image,
+            Authentication auth
+    ) throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        log.debug("Save Image for a Person: [{}];", personId);
+
+        personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
