@@ -3,9 +3,9 @@
 angular.module('organizations').controller('Organizations.NewOrganizationController', ['$scope', '$stateParams', '$translate'
     , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService'
     , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService) {
-        
+
         $scope.loading = false;
-        
+
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -239,6 +239,14 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
         };
 
         function clearNotFilledElements(organization) {
+
+            //remove opened property added for the datePickers
+            if (organization.identifications && organization.identifications.length) {
+                organization.identifications = _.map(organization.identifications, function (obj) {
+                    return _.omit(obj, 'opened');
+                });
+            }
+
             //phones
             if (!organization.defaultPhone.value) {
                 organization.defaultPhone = null;
