@@ -54,6 +54,7 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
             var email = {};
             email.created = Util.dateToIsoString(new Date());
             email.creator = $scope.userId;
+            email.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.email = email;

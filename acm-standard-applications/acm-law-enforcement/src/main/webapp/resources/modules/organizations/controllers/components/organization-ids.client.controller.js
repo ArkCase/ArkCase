@@ -72,7 +72,7 @@ angular.module('organizations').controller('Organizations.IDsController', ['$sco
                 identificationType: rowEntity.identificationType,
                 identificationNumber: rowEntity.identificationNumber,
                 identificationIssuer: rowEntity.identificationIssuer,
-                identificationYearIssued: rowEntity.identificationYearIssued
+                identificationYearIssued: new Date(rowEntity.identificationYearIssued)
             };
             showModal(item, true);
         };
@@ -154,6 +154,9 @@ angular.module('organizations').controller('Organizations.IDsController', ['$sco
             var id = 0;
             if ($scope.objectInfo.defaultIdentification) {
                 id = $scope.objectInfo.defaultIdentification.identificationID;
+            }
+            if ($scope.objectInfo.identifications && $scope.objectInfo.identifications.length == 0) {
+                return true;
             }
             return data.identificationID == id;
         };
