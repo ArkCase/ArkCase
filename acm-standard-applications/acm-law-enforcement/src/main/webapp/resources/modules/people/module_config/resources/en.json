@@ -408,7 +408,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   }
 }
