@@ -176,15 +176,31 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
 
-    @Transactional
     @Override
     @Deprecated
+    @Transactional
     public EcmFile upload(String arkcaseFileName, String fileType, MultipartFile file, Authentication authentication,
                           String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
+        return upload(arkcaseFileName, fileType, null, file, authentication, targetCmisFolderId, parentObjectType, parentObjectId);
+    }
+    
+    @Transactional
+    @Override
+    public EcmFile upload(
+            String arkcaseFileName,
+            String fileType,
+            String fileLang,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
         EcmFile metadata = new EcmFile();
         metadata.setFileType(fileType);
+        metadata.setFileLang(fileLang);
         metadata.setFileName(arkcaseFileName);
         metadata.setFileActiveVersionMimeType(file.getContentType());
         return upload(authentication, file, targetCmisFolderId, parentObjectType, parentObjectId, metadata);

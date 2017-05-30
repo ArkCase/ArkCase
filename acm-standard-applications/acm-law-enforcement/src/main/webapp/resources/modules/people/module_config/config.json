@@ -38,12 +38,12 @@
     "sorters": [
       {
         "desc": "Sort Date Created Ascending",
-        "name": "sort-date-asc",
-        "default": true
+        "name": "sort-date-asc"
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "sort-date-desc"
+        "name": "sort-date-desc",
+        "default": true
       },
       {
         "desc": "Sort People ID Ascending",
@@ -274,18 +274,18 @@
           "displayName": "people.comp.pictures.table.columns.thumbnail",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<center><img src='api/latest/plugin/ecm/download?ecmFileId={{row.entity.object_id_s}}' height='50px'></img></center>",
+          "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
           "width": 100
         },
         {
-          "name": "title",
+          "name": "title_parseable",
           "displayName": "people.comp.pictures.table.columns.title",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title_parseable}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
-          "name": "description",
+          "name": "description_s",
           "displayName": "people.comp.pictures.table.columns.description",
           "enableCellEdit": false,
           "headerCellFilter": "translate"
