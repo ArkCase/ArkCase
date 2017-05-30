@@ -78,6 +78,23 @@ public class LdapGroupAPIController extends SecureLdapController
         }
     }
 
+    @RequestMapping(value = "/{directory}/groups/{groupId}/remove", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmGroup removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupId") String groupId) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            //TODO CALL to ldapGroupService.
+            return ldapGroupService.deleteLdapGroup(groupId, directory);
+        } catch (Exception e)
+        {
+            log.error("Deleting LDAP group failed!", e);
+            throw new AcmUserActionFailedException("Delete", "Ldap group", -1L, "Removing LDAP group failed!", e);
+        }
+    }
+
+
     public LdapGroupService getLdapGroupService()
     {
         return ldapGroupService;
