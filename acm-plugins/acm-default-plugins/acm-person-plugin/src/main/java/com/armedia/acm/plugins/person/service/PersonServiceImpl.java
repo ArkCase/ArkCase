@@ -197,7 +197,7 @@ public class PersonServiceImpl implements PersonService
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
         {
-            person = CreateContainerAndPictureFolder(person, auth);
+            person = createContainerAndPictureFolder(person, auth);
         }
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
@@ -263,12 +263,12 @@ public class PersonServiceImpl implements PersonService
     {
         //save person
         person = savePerson(person, auth);
-        person = CreateContainerAndPictureFolder(person, auth);
+        person = createContainerAndPictureFolder(person, auth);
 
         return person;
     }
 
-    private Person CreateContainerAndPictureFolder(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    protected Person createContainerAndPictureFolder(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         //generate person root folder
         String personRootFolderName = getPersonRootFolderName(person);
