@@ -415,7 +415,6 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        //TODO DOUBLE CHECK AND CALL THE FUNCTION
         function deleteGroupMember(ldapUser) {
             return Util.serviceCall({
                 service: Service._deleteLdapUser
