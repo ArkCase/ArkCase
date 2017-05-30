@@ -98,6 +98,13 @@ span.fancytree-title {
     margin: 0px;
 }
 
+.form-group.required label:after {
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 8px;
+}
+
 .img-circle.img-responsive {
     width: 100px;
     height: 100px;

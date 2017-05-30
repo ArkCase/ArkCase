@@ -3,16 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="listNotificationsAPIController" class="com.armedia.acm.services.notification.web.api.ListAllNotificationsAPIController">
+    <bean id="listNotificationsAPIController"
+          class="com.armedia.acm.services.notification.web.api.ListAllNotificationsAPIController">
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
-    
-    <bean id="getUnreadPopupNotificationsForUserAPIController" class="com.armedia.acm.services.notification.web.api.GetUnreadPopupNotificationsForUserAPIController">
+
+    <bean id="getUnreadPopupNotificationsForUserAPIController"
+          class="com.armedia.acm.services.notification.web.api.GetUnreadPopupNotificationsForUserAPIController">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
-    <bean id="deleteNotificationByNotificationId" class="com.armedia.acm.services.notification.web.api.DeleteNotificationByIdAPIController">
+    <bean id="deleteNotificationByNotificationId"
+          class="com.armedia.acm.services.notification.web.api.DeleteNotificationByIdAPIController">
         <property name="notificationDao" ref="notificationDao"/>
     </bean>
 
@@ -25,14 +28,18 @@
           class="com.armedia.acm.services.notification.web.api.SendEmailWithAttachmentsAPIController">
         <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
-    
+
     <bean id="sendEmailWithEmbeddedLinksAPIController"
           class="com.armedia.acm.services.notification.web.api.SendEmailWithEmbeddedLinksAPIController">
+        <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
+    </bean>
+    <bean id="sendEmailWithAttachmentsAndLinksAPIController"
+          class="com.armedia.acm.services.notification.web.api.SendEmailWithAttachmentsAndLinksAPIController">
         <property name="notificationSenderFactory" ref="notificationSenderFactory"/>
     </bean>
 
     <bean id="notificationUiController" class="com.armedia.acm.services.notification.web.NotificationUiController">
         <property name="pluginProperties" ref="notificationProperties"/>
     </bean>
-    
+
 </beans>
