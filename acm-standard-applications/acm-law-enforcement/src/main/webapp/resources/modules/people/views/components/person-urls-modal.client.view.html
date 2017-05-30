@@ -26,12 +26,12 @@
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label translate>people.comp.urls.modal.setPrimary</label><span class="required-asterisk">*</span>
+                <label translate>people.comp.urls.modal.setPrimary</label><span class="required-asterisk">*</span><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.urls.modal.yes</translate>
                 </label>
-                <label>
+                <label ng-hide="hideNoField">
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.urls.modal.no</translate>
                 </label>
