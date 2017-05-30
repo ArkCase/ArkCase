@@ -274,7 +274,7 @@
           "displayName": "people.comp.pictures.table.columns.thumbnail",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<center><img ng-src='api/latest/plugin/ecm/download?ecmFileId={{row.entity.object_id_s}}' height='50px'></img></center>",
+          "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
           "width": 100
         },
         {
