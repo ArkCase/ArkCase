@@ -142,6 +142,16 @@ public class LdapGroupService
         return acmGroup;
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public AcmGroup deleteLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
+    {
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
+        AcmGroup acmGroup = getGroupDao().markGroupDelete(group);
+        log.debug("Group:{} with DN:{} was deleted in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
+        return acmGroup;
+    }
+
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)
     {
         return String.format("cn=%s,%s,%s", cn, ldapSyncConfig.getGroupSearchBase(), ldapSyncConfig.getBaseDC());
