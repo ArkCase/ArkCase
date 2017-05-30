@@ -83,7 +83,14 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             });
 
             modalInstance.result.then(function (data) {
-                savePersonAssociation(rowEntity, data);
+                if (data.organization) {
+                    savePersonAssociation(rowEntity, data);
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        data['organization'] = organization;
+                        savePersonAssociation(rowEntity, data);
+                    });
+                }
             });
         };
 
@@ -114,24 +121,20 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             });
 
             modalInstance.result.then(function (data) {
-                savePersonAssociation({}, data);
+                if (data.organization) {
+                    savePersonAssociation({}, data);
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        data['organization'] = organization;
+                        savePersonAssociation({}, data);
+                    });
+                }
             });
         };
 
         function savePersonAssociation(association, data) {
-            var organization;
-            if (data.organization) {
-                //for created new organization
-                organization = data.organization;
-            } else {
-                //picked already exiting organization
-                organization = {
-                    organizationId: data.organizationId
-                }
-            }
-
             association['person'] = {id: $scope.objectInfo.id};
-            association['organization'] = organization;
+            association['organization'] = data.organization;
             association['personToOrganizationAssociationType'] = data.type;
             association['organizationToPersonAssociationType'] = data.inverseType;
 
