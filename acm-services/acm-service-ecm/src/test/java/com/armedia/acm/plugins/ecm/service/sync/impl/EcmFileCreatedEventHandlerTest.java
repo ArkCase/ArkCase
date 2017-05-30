@@ -139,6 +139,8 @@ public class EcmFileCreatedEventHandlerTest
         AcmFolder parentFolder = new AcmFolder();
         parentFolder.setId(500L);
 
+        auditPropertyEntityAdapter.setUserId(fileCreated.getUserId());
+
         // parent folder does exist
         expect(acmFolderDao.findByCmisFolderId(fileCreated.getParentNodeId())).andReturn(parentFolder);
 
@@ -163,6 +165,8 @@ public class EcmFileCreatedEventHandlerTest
         AcmFolder parentFolder = new AcmFolder();
         parentFolder.setId(500L);
 
+        auditPropertyEntityAdapter.setUserId(fileCreated.getUserId());
+
         expect(acmFolderDao.findByCmisFolderId(fileCreated.getParentNodeId())).andReturn(parentFolder);
 
         expect(ecmFileDao.findByCmisFileIdAndFolderId(fileCreated.getNodeId(), parentFolder.getId())).andReturn(new EcmFile());
@@ -177,6 +181,7 @@ public class EcmFileCreatedEventHandlerTest
     @Test
     public void onEcmFileCreated_ifParentFolderNotInArkcase_thenNoFurtherAction() throws Exception
     {
+        auditPropertyEntityAdapter.setUserId(fileCreated.getUserId());
 
         expect(acmFolderDao.findByCmisFolderId(fileCreated.getParentNodeId())).andThrow(new NoResultException());
 

@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.NewOrganizationController', ['$scope', '$stateParams', '$translate'
-    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService'
-    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService) {
+    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService'
+    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService) {
+        
+        $scope.loading = false;
+        
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -217,18 +220,20 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
         };
 
         $scope.save = function () {
-
+            $scope.loading = true;
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
-                    $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("organization.comp.newOrganization.informSaved"));
-                    $state.go('organizations');
-                    return objectInfo;
+                    ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
+                    $scope.loading = false;
                 }
                 , function (error) {
-                    $scope.$emit("report-object-update-failed", error);
-                    return error;
+                    $scope.loading = false;
+                    if (error.data && error.data.message) {
+                        $scope.error = error.data.message;
+                    } else {
+                        MessageService.error(error);
+                    }
                 }
             );
         };
@@ -264,11 +269,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
             //identifications
             if (organization.defaultIdentification) {
-                if (!organization.defaultIdentification.identificationID) {
-                    organization.defaultIdentification = null;
-                } else {
-                    organization.identifications.push(organization.defaultIdentification);
-                }
+                organization.identifications.push(organization.defaultIdentification);
             }
 
             //addresses

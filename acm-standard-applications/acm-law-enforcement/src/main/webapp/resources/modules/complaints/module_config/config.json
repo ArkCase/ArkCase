@@ -611,7 +611,7 @@
       "columnDefs": [
         {
           "name": "associationType",
-          "displayName": "complaints.comp.people.table.columns.associationType",
+          "displayName": "complaints.comp.organizations.table.columns.associationType",
           "headerCellFilter": "translate"
         },
         {

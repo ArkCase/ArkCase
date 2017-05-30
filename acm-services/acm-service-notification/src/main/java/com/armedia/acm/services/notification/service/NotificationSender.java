@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.services.notification.service;
 
@@ -7,6 +7,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -15,7 +16,6 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.springframework.core.io.Resource;
 import org.springframework.security.core.Authentication;
 
@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
- *
  */
 public abstract class NotificationSender
 {
@@ -46,9 +45,8 @@ public abstract class NotificationSender
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
      * {@link NotificationConstants#STATE_SENT}, otherwise it sets it to {@link NotificationConstants#STATE_NOT_SENT}
-     * 
-     * @param notification
-     *            the notification to send
+     *
+     * @param notification the notification to send
      * @return the notification with state set
      */
     public abstract Notification send(Notification notification);
@@ -60,8 +58,10 @@ public abstract class NotificationSender
 
     public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
 
+    public abstract void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user) throws Exception;
+
     public abstract List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in,
-            Authentication authentication, AcmUser user) throws Exception;
+                                                                                     Authentication authentication, AcmUser user) throws Exception;
 
     public NotificationUtils getNotificationUtils()
     {
@@ -112,8 +112,7 @@ public abstract class NotificationSender
     }
 
     /**
-     * @param emailSenderPropertyFileLocation
-     *            the emailSenderPropertyFileLocation to set
+     * @param emailSenderPropertyFileLocation the emailSenderPropertyFileLocation to set
      */
     public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
     {
