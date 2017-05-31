@@ -49,17 +49,11 @@ public class PeopleAPIController
 
         log.debug("Persist a Person: [{}];", in);
 
-        if (in.getId() == null)
-        {
-            Person person = personService.createPerson(in, auth);
-            getPersonEventPublisher().publishPersonUpsertEvent(person, true, true);
-            return person;
-        } else
-        {
-            Person person = personService.savePerson(in, auth);
-            getPersonEventPublisher().publishPersonUpsertEvent(person, false, true);
-            return person;
-        }
+        boolean isNew = in.getId() == null;
+
+        Person person = personService.createPerson(in, auth);
+        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
+        return person;
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -71,17 +65,11 @@ public class PeopleAPIController
 
         log.debug("Persist a Person: [{}];", in);
 
-        if (in.getId() == null)
-        {
-            Person person = personService.createPerson(in, pictures, auth);
-            getPersonEventPublisher().publishPersonUpsertEvent(person, true, true);
-            return person;
-        } else
-        {
-            Person person = personService.savePerson(in, pictures, auth);
-            getPersonEventPublisher().publishPersonUpsertEvent(person, false, true);
-            return person;
-        }
+        boolean isNew = in.getId() == null;
+        Person person = personService.createPerson(in, pictures, auth);
+        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
+        return person;
+
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
