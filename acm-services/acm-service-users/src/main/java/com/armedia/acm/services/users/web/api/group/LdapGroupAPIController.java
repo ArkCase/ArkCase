@@ -84,14 +84,14 @@ public class LdapGroupAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "/{directory}/groups/{groupId}/remove", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupId") String groupId) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    @RequestMapping(value = "/{directory}/groups/{groupName}/remove", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupName") String groupName) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
-        AcmGroup source = getLdapGroupService().getGroupDao().findByGroupId(groupId);
+        AcmGroup source = getLdapGroupService().getGroupDao().findByGroupId(groupName);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            ldapGroupService.removeLdapGroup(groupId, directory);
+            ldapGroupService.removeLdapGroup(groupName, directory);
             getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
 
             return new ResponseEntity<>(HttpStatus.OK);
