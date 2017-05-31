@@ -615,7 +615,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             };
             modalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.removeLdapGroup(group).then(function (payload) {
+                organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
