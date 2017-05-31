@@ -493,13 +493,14 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          *
          * @returns {HttpPromise} Future info about create ldap subgroup
          */
-        function deleteLdapGroup(group, directoryName) {
+        function deleteLdapGroup(ldapGroup) {
             return Util.serviceCall({
                 service: Service._deleteLdapGroup
                 , param: {
-                    directoryName: directoryName
+                    directoryName: ldapGroup.directoryName,
+                    group: ldapGroup.groupName
                 }
-                , data: group
+                , data: ldapGroup
                 , onSuccess: function (data) {
                     return data;
                 }
