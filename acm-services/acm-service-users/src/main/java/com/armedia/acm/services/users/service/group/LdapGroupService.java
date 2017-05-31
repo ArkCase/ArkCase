@@ -143,7 +143,7 @@ public class LdapGroupService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup deleteLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
+    public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));

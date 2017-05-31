@@ -10,7 +10,9 @@ import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,16 +84,17 @@ public class LdapGroupAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "/{directory}/groups/{groupId}/remove", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public AcmGroup removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupId") String groupId) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    @RequestMapping(value = "/{directory}/groups/{groupId}/remove", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupId") String groupId) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         AcmGroup source = getLdapGroupService().getGroupDao().findByGroupId(groupId);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
+            ldapGroupService.removeLdapGroup(groupId, directory);
             getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
-            return ldapGroupService.deleteLdapGroup(groupId, directory);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e)
         {
             log.error("Deleting LDAP group failed!", e);
