@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
+    private AcmGroupEventPublisher acmGroupEventPublisher;
+
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST,
@@ -82,10 +86,11 @@ public class LdapGroupAPIController extends SecureLdapController
     @ResponseBody
     public AcmGroup removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupId") String groupId) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        AcmGroup source = getLdapGroupService().getGroupDao().findByGroupId(groupId);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            //TODO CALL to ldapGroupService.
+            getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
             return ldapGroupService.deleteLdapGroup(groupId, directory);
         } catch (Exception e)
         {
@@ -105,4 +110,13 @@ public class LdapGroupAPIController extends SecureLdapController
         this.ldapGroupService = ldapGroupService;
     }
 
+    public AcmGroupEventPublisher getAcmGroupEventPublisher()
+    {
+        return acmGroupEventPublisher;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
+    {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
+    }
 }
