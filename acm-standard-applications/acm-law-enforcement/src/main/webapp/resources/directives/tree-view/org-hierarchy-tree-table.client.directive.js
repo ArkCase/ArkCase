@@ -23,7 +23,8 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 onAddLdapMember: "=",
                 onEditLdapMember: "=",
                 onAddExistingMembersToLdapGroup: "=",
-                onAddLdapSubgroup: "="
+                onAddLdapSubgroup: "=",
+                onDeleteLdapGroup: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -82,7 +83,9 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                                 if (scope.enableEditingLdapUsers[node.data.directory_name_s]) {
                                     $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
                                         "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>" +
-                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>")(scope));
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='deleteLdapGroup($event)' name='deleteGroup' title='Delete LDAP Group'><i class='fa fa-trash-o'></i></button>"
+                                    )(scope));
                                 }
                             }
 
@@ -207,6 +210,20 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         //success
                         node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        //error
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
+                    });
+                };
+
+                scope.deleteLdapGroup = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onDeleteLdapGroup(node.data).then(function () {
+                        //success
+                        node.remove();
                         messageService.succsessAction();
                     }, function (error) {
                         //error

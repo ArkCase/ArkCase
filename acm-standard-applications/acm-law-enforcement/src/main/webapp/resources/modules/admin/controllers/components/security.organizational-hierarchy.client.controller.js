@@ -170,7 +170,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             };
             modalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.removeGroup(group).then(function (payload) {
+                organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
@@ -604,6 +604,28 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     messageService.errorAction();
                 });
         }
+
+        $scope.onDeleteLdapGroup = function (group) {
+            var deferred = $q.defer();
+            var modalOptions = {
+                closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
+                actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.deleteBtn'),
+                headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name,
+                bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
+            };
+            modalDialogService.showModal({}, modalOptions).then(function () {
+                //ok btn
+                organizationalHierarchyService.removeLdapGroup(group).then(function (payload) {
+                    deferred.resolve(payload);
+                }, function (payload) {
+                    deferred.reject(payload);
+                });
+            }, function () {
+                //cancel btn
+                deferred.reject();
+            });
+            return deferred.promise;
+        };
 
         var groupController = function (seeDirectorySelect, group, errorMessage, parentGroup, onOK, directoryServers) {
             return function ($scope, $modalInstance) {
