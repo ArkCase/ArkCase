@@ -41,9 +41,9 @@ public class OrganizationAPIController
 
         Organization saved = organizationService.saveOrganization(in);
 
-        boolean isInsert = in.getId() == null;
+        boolean isNew = in.getId() == null;
 
-        getOrganizationEventPublisher().publishOrganizationUpsertEvent(saved, isInsert, true);
+        getOrganizationEventPublisher().publishOrganizationUpsertEvent(saved, isNew, true);
 
         return saved;
 
