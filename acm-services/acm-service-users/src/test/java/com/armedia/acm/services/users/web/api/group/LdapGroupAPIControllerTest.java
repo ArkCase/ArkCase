@@ -82,7 +82,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
     private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
     {
         when(mockLdapGroupService.getGroupDao()).thenReturn(mockGroupDao);
-        when(mockGroupDao.findByGroupId(anyString())).thenReturn(group);
+        when(mockGroupDao.findByName(anyString())).thenReturn(group);
         when(mockLdapGroupService.removeLdapGroup(anyString(), anyString())).thenReturn(group);
         doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
     }

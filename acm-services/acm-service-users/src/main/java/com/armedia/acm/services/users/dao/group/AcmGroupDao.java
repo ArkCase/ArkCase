@@ -37,11 +37,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    public AcmGroup findByGroupId(String groupId)
-    {
-        return getEntityManager().find(AcmGroup.class, groupId);
-    }
-
     @Transactional
     public AcmGroup findByName(String name)
     {
