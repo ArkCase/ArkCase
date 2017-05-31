@@ -145,11 +145,27 @@ public class LdapGroupService
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
     {
+        AcmGroup existingGroup = getGroupDao().findByName(group);
+        log.debug("Removing group:{} from database", existingGroup.getName());
+        getGroupDao().markGroupDelete(group);
+
+
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
-        AcmGroup acmGroup = getGroupDao().markGroupDelete(group);
-        log.debug("Group:{} with DN:{} was deleted in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
-        return acmGroup;
+        LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+
+        try
+        {
+            log.debug("Deleting group:{} with DN:{} in LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
+            //todo check how sync with ldap should be done in order to unbind the group
+            /*new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingGroup.getDistinguishedName(),
+                    ldapSyncConfig.getBaseDC())));*/
+            log.debug("Group:{} with DN:{} was successfully deleted in DB and LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
+        } catch (Exception e)
+        {
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
+        return existingGroup;
     }
 
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)
