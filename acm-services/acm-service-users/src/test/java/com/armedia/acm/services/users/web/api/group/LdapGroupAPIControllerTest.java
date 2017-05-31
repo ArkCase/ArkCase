@@ -84,6 +84,6 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
         when(mockLdapGroupService.getGroupDao()).thenReturn(mockGroupDao);
         when(mockGroupDao.findByName(anyString())).thenReturn(group);
         when(mockLdapGroupService.removeLdapGroup(anyString(), anyString())).thenReturn(group);
-        doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
+        //doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
     }
 }
