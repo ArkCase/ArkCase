@@ -497,8 +497,8 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return Util.serviceCall({
                 service: Service._deleteLdapGroup
                 , param: {
-                    directoryName: ldapGroup.directoryName,
-                    group: ldapGroup.groupName
+                    directoryName: ldapGroup.directory_name_s,
+                    groupName: ldapGroup.name
                 }
                 , data: ldapGroup
                 , onSuccess: function (data) {
