@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import org.mule.api.MuleException;
@@ -19,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+
 @Controller
 @RequestMapping(value = {"/api/v1/plugin/organizations", "/api/latest/plugin/organizations"})
 public class OrganizationAPIController
@@ -29,20 +36,35 @@ public class OrganizationAPIController
     private OrganizationService organizationService;
     private ExecuteSolrQuery executeSolrQuery;
 
+    private OrganizationEventPublisher organizationEventPublisher;
+
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Organization upsertOrganization(
             @RequestBody Organization in,
-            Authentication auth
+            Authentication auth,
+            HttpSession httpSession
     ) throws AcmCreateObjectFailedException
     {
 
         log.debug("Persist a Organization: [{}];", in);
+        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
+        Organization saved;
+        try
+        {
+            boolean isNew = in.getId() == null;
+            // explicitly set modifier and modified to trigger transformer to reindex data
+            // fixes problem when some child objects are changed (e.g participants) and solr document is not updated
+            in.setModifier(AuthenticationUtils.getUsername());
+            in.setModified(new Date());
 
-        Organization saved = organizationService.saveOrganization(in);
-
-        return saved;
-
+            saved = organizationService.saveOrganization(in, auth, ipAddress);
+            organizationEventPublisher.publishOrganizationEvent(saved, ipAddress, isNew, true);
+            return saved;
+        } catch (PipelineProcessException | PersistenceException e)
+        {
+            throw new AcmCreateObjectFailedException("Organization", e.getMessage(), e);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -110,5 +132,10 @@ public class OrganizationAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public void setOrganizationEventPublisher(OrganizationEventPublisher organizationEventPublisher)
+    {
+        this.organizationEventPublisher = organizationEventPublisher;
     }
 }
