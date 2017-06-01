@@ -35,7 +35,6 @@ public class OrganizationAPIController
 
     private OrganizationService organizationService;
     private ExecuteSolrQuery executeSolrQuery;
-
     private OrganizationEventPublisher organizationEventPublisher;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -95,7 +94,9 @@ public class OrganizationAPIController
     {
         try
         {
-            return organizationService.getOrganization(organizationId);
+            Organization organization = organizationService.getOrganization(organizationId);
+            getOrganizationEventPublisher().publishOrganizationViewedEvent(organization, true);
+            return organization;
         } catch (Exception e)
         {
             log.error("Error while retrieving Organization with id: [{}]", organizationId, e);
@@ -132,6 +133,11 @@ public class OrganizationAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public OrganizationEventPublisher getOrganizationEventPublisher()
+    {
+        return organizationEventPublisher;
     }
 
     public void setOrganizationEventPublisher(OrganizationEventPublisher organizationEventPublisher)
