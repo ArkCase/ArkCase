@@ -4,12 +4,12 @@ import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 import org.springframework.security.core.Authentication;
 
 /**
- * Store all the case file saving-related references in this context.
+ * Store all the organization saving-related references in this context.
  */
 public class OrganizationPipelineContext extends AbstractPipelineContext
 {
     /**
-     * Flag showing whether new case file is created.
+     * Flag showing whether new organization is created.
      */
     private boolean newOrganization;
 
