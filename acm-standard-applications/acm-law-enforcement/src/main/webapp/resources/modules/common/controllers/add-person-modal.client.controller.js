@@ -1,7 +1,7 @@
 angular.module('common').controller('Common.AddPersonModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-            , ObjectLookupService, Util, ConfigService, params) {
+        , ObjectLookupService, Util, ConfigService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
@@ -12,18 +12,37 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 
+            $scope.showSetPrimary = params.showSetPrimary;
+
+            $scope.personId = params.personId;
+            $scope.personName = params.personName;
+            $scope.isDefault = params.isDefault;
+            $scope.description = params.description;
+            $scope.type = _.find($scope.types, function (type) {
+                return type.type == params.type;
+            });
+            $scope.isNew = params.isNew;
+
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function () {
-                $modalInstance.close({
+                var retValue = {
                     personId: $scope.personId,
-                    description: $scope.description,
-                    type: $scope.type,
+                    type: $scope.type.type,
+                    inverseType: $scope.type.inverseType,
                     person: $scope.person,
+                    personImages: $scope.personImages,
                     isNew: $scope.isNew
-                });
+                };
+                if ($scope.showSetPrimary) {
+                    retValue['isDefault'] = $scope.isDefault;
+                }
+                if ($scope.showDescription) {
+                    retValue['description'] = $scope.description;
+                }
+                $modalInstance.close(retValue);
             };
 
             $scope.pickPerson = function () {
@@ -80,6 +99,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                     $scope.personId = '';
                     $scope.personName = data.person.givenName + ' ' + data.person.familyName;
                     $scope.person = data.person;
+                    $scope.personImages = data.images;
                 });
             };
         }

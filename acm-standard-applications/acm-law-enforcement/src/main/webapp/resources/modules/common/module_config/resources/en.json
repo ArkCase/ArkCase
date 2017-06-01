@@ -511,7 +511,10 @@
     "person.label": "Person",
     "type.label": "Person Type",
     "btnCancel.text": "Cancel",
-    "btnOk.text": "Add Person"
+    "btnOk.text": "Add Person",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No"
   },
   "common.dialogPersonPicker": {
     "header": "Search for People",
