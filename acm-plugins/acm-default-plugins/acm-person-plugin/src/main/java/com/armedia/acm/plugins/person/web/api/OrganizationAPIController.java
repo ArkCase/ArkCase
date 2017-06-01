@@ -59,7 +59,7 @@ public class OrganizationAPIController
             in.setModified(new Date());
 
             saved = organizationService.saveOrganization(in, auth, ipAddress);
-            organizationEventPublisher.publishOrganizationEvent(saved, ipAddress, isNew, true);
+            organizationEventPublisher.publishOrganizationUpsertEvent(saved, isNew, true);
             return saved;
         } catch (PipelineProcessException | PersistenceException e)
         {
