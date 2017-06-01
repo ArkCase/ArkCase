@@ -23,9 +23,9 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishEvent(Person event)
+    public void publishEvent(Person source)
     {
-        eventPublisher.publishEvent(event);
+        eventPublisher.publishEvent(source);
     }
 
     public void publishPersonViewedEvent(Person source, boolean succeeded)
