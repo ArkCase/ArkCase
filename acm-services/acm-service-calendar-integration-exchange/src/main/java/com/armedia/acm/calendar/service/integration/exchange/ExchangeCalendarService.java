@@ -14,13 +14,11 @@ import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -120,8 +118,6 @@ public class ExchangeCalendarService
 
     private Map<String, CalendarEntityHandler> entityHandlers;
 
-    private OutlookService outlookService;
-
     private OutlookDao outlookDao;
 
     private Map<String, CalendarConfiguration> configurationsByType;
@@ -188,7 +184,7 @@ public class ExchangeCalendarService
                         String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
 
         boolean restricted = handler.isRestricted(objectId);
-        AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, objectType) : getPublicOutlookUser(user, auth);
+        AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, objectType);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
         if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
@@ -199,7 +195,7 @@ public class ExchangeCalendarService
                     String.format("User %s does not have READ permission to access object with %s id of %s type.", user.getFullName(),
                             objectId, objectType));
         }
-        return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId, restricted));
+        return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
     }
 
     /*
@@ -213,8 +209,6 @@ public class ExchangeCalendarService
             int start, int maxItems) throws CalendarServiceException
     {
         List<AcmCalendarInfo> result = new ArrayList<>();
-        AcmOutlookUser outlookUser = getPublicOutlookUser(user, auth);
-        ExchangeService exchangeService = outlookDao.connect(outlookUser);
         if (objectType != null)
         {
             if (configurationsByType.containsKey(objectType) && configurationsByType.get(objectType).isIntegrationEnabled())
@@ -222,6 +216,8 @@ public class ExchangeCalendarService
                 CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                         .orElseThrow(() -> new CalendarServiceConfigurationException(
                                 String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
+                AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, objectType);
+                ExchangeService exchangeService = outlookDao.connect(outlookUser);
                 result.addAll(handler.listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
             }
         } else
@@ -233,6 +229,8 @@ public class ExchangeCalendarService
                 {
                     continue;
                 }
+                AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, handlerEntry.getKey());
+                ExchangeService exchangeService = outlookDao.connect(outlookUser);
                 result.addAll(handlerEntry.getValue().listCalendars(exchangeService, user, auth, sort, sortDirection, start, maxItems));
             }
         }
@@ -265,8 +263,7 @@ public class ExchangeCalendarService
 
         boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
 
-        AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType())
-                : getPublicOutlookUser(user, auth);
+        AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, calendarEvent.getObjectType());
 
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
@@ -283,8 +280,7 @@ public class ExchangeCalendarService
         {
             Appointment appointment = new Appointment(exchangeService);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
-            FolderId folderId = restricted ? new FolderId(handler.getCalendarId(calendarEvent.getObjectId()))
-                    : new FolderId(WellKnownFolderName.Calendar);
+            FolderId folderId = new FolderId(handler.getCalendarId(calendarEvent.getObjectId()));
             appointment.save(folderId);
         } catch (Exception e)
         {
@@ -320,8 +316,7 @@ public class ExchangeCalendarService
                             String.format("No CalendarEntityHandler registered for %s object type.", calendarEvent.getObjectType())));
 
             boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
-            AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, calendarEvent.getObjectType())
-                    : getPublicOutlookUser(user, auth);
+            AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, calendarEvent.getObjectType());
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
             if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
@@ -439,7 +434,7 @@ public class ExchangeCalendarService
                             String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
 
             boolean restricted = handler.isRestricted(objectId);
-            AcmOutlookUser outlookUser = restricted ? getRestrictedOutlookUser(auth, objectType) : getPublicOutlookUser(user, auth);
+            AcmOutlookUser outlookUser = getOutlookUserForObjectType(auth, objectType);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
             if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
@@ -482,33 +477,19 @@ public class ExchangeCalendarService
      * @param auth
      * @param objectType
      * @return
+     * @throws CalendarServiceException
      */
-    private AcmOutlookUser getRestrictedOutlookUser(Authentication auth, String objectType)
+    private AcmOutlookUser getOutlookUserForObjectType(Authentication auth, String objectType) throws CalendarServiceException
     {
         String userId = auth.getName();
         CalendarConfiguration configuration = configurationsByType.get(objectType);
-        return new AcmOutlookUser(userId, configuration.getSystemEmail(), configuration.getPassword());
-    }
-
-    /**
-     * @param user
-     * @param handler
-     * @param calendarEvent
-     * @return
-     * @throws CalendarServiceException
-     */
-    private AcmOutlookUser getPublicOutlookUser(AcmUser user, Authentication auth) throws CalendarServiceException
-    {
-        try
+        if (configuration.getSystemEmail() == null || configuration.getSystemEmail().isEmpty() || configuration.getPassword() == null
+                || configuration.getPassword().isEmpty())
         {
-            String userId = auth.getName();
-            OutlookDTO outlookDTO = outlookService.retrieveOutlookPassword(auth);
-            return new AcmOutlookUser(userId, user.getMail(), outlookDTO.getOutlookPassword());
-        } catch (AcmEncryptionException e)
-        {
-            log.debug("Error while trying to decript password for user {}.", auth.getName(), e);
-            throw new CalendarServiceException(e);
+            log.warn("Not proper exchange configuration for object type {}.", objectType);
+            throw new CalendarServiceException(String.format("Not proper exchange configuration for object type %s.", objectType));
         }
+        return new AcmOutlookUser(userId, configuration.getSystemEmail(), configuration.getPassword());
     }
 
     /*
@@ -560,7 +541,6 @@ public class ExchangeCalendarService
      */
     public void setOutlookService(OutlookService outlookService)
     {
-        this.outlookService = outlookService;
     }
 
     /**
