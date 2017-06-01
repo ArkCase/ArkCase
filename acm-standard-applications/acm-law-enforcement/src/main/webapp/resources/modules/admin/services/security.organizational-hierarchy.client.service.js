@@ -76,7 +76,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
 
             _deleteLdapGroup: {
                 method: 'DELETE',
-                url: 'api/latest/ldap/:directoryName/groups/:groupName'
+                url: 'api/latest/ldap/:directoryName/groups/:groupName/remove'
             }
         });
 
