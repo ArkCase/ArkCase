@@ -62,6 +62,7 @@ public class OrganizationAPIController
             return saved;
         } catch (PipelineProcessException | PersistenceException e)
         {
+            log.error("Error while saving Organization: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Organization", e.getMessage(), e);
         }
     }
