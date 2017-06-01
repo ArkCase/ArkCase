@@ -1,5 +1,4 @@
 /**
- * Pipeline context implementation for case File.
- * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
+ * Pipeline context implementation for organization.
  */
 package com.armedia.acm.plugins.person.pipeline;
