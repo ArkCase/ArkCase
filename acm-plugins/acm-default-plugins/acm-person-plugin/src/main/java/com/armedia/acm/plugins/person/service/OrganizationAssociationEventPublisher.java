@@ -12,8 +12,9 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociationDeletedEvent;
 import com.armedia.acm.plugins.person.model.OrganizationAssociationModifiedEvent;
 import com.armedia.acm.plugins.person.model.OrganizationAssociationPersistenceEvent;
 import com.armedia.acm.plugins.person.model.OrganizationAssociationUpdatedEvent;
-import com.armedia.acm.plugins.person.model.OrganizationModifiedEvent;
+import com.armedia.acm.plugins.person.model.OrganizationEvent;
 import com.armedia.acm.plugins.person.model.Person;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +27,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 public class OrganizationAssociationEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -38,25 +38,20 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishOrganizationAssociationEvent(
-            OrganizationAssociation source,
-            String ipAddress,
-            boolean newOrganizationAssociation,
+    public void publishOrganizationAssociationEvent(OrganizationAssociation source, String ipAddress, boolean newOrganizationAssociation,
             boolean succeeded)
     {
         log.debug("Publishing a organization event.");
 
-        OrganizationAssociationPersistenceEvent organizationAssociationPersistenceEvent =
-                newOrganizationAssociation ? new OrganizationAssociationAddEvent(source, source.getParentType(), source.getParentId()) :
-                        new OrganizationAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
+        OrganizationAssociationPersistenceEvent organizationAssociationPersistenceEvent = newOrganizationAssociation
+                ? new OrganizationAssociationAddEvent(source, source.getParentType(), source.getParentId())
+                : new OrganizationAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
         organizationAssociationPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(organizationAssociationPersistenceEvent);
     }
 
-    public void publishOrganizationAssociationEvent(
-            String organizationAssociationHistory,
-            OrganizationAssociation source,
+    public void publishOrganizationAssociationEvent(String organizationAssociationHistory, OrganizationAssociation source,
             boolean succeeded)
     {
         log.debug("Publishing a organization event.");
@@ -78,17 +73,13 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForAddressRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-                                              String parentType, Long parentId)
+            String parentType, Long parentId)
     {
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = existingOrganization.getAddresses();
         List<PostalAddress> updatedAddresses = updatedOrganization.getAddresses();
-        Set<Long> updatedIds = updatedAddresses.stream()
-                .map(PostalAddress::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingAddresses.stream()
-                .map(PostalAddress::getId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -111,12 +102,10 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 
     private boolean isPostalAddressEdited(List<PostalAddress> existingAddresses, List<PostalAddress> updatedAddresses)
     {
-        List<PostalAddress> sortedExisting = existingAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedExisting = existingAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
-        List<PostalAddress> sortedUpdated = updatedAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedUpdated = updatedAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
@@ -124,17 +113,13 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForContactRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-                                              String parentType, Long parentId)
+            String parentType, Long parentId)
     {
         boolean isContactAddedOrRemoved = false;
         List<ContactMethod> existingContacts = existingOrganization.getContactMethods();
         List<ContactMethod> updatedContacts = updatedOrganization.getContactMethods();
-        Set<Long> updatedIds = updatedContacts.stream()
-                .map(ContactMethod::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingContacts.stream()
-                .map(ContactMethod::getId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedContacts.stream().map(ContactMethod::getId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingContacts.stream().map(ContactMethod::getId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -157,18 +142,15 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 
     private boolean isContactMethodEdited(List<ContactMethod> existingContacts, List<ContactMethod> updatedContacts)
     {
-        List<ContactMethod> sortedExisting = existingContacts.stream()
-                .sorted(Comparator.comparing(ContactMethod::getId))
+        List<ContactMethod> sortedExisting = existingContacts.stream().sorted(Comparator.comparing(ContactMethod::getId))
                 .collect(Collectors.toList());
 
-        List<ContactMethod> sortedUpdated = updatedContacts.stream()
-                .sorted(Comparator.comparing(ContactMethod::getId))
+        List<ContactMethod> sortedUpdated = updatedContacts.stream().sorted(Comparator.comparing(ContactMethod::getId))
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
                 .anyMatch(i -> !isContactMethodChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
-
 
     private boolean isObjectAdded(Set<Long> existingIds, Set<Long> updatedIds)
     {
@@ -180,12 +162,13 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         return existingIds.stream().anyMatch(id -> !updatedIds.contains(id));
     }
 
-    public void publishOrganizationEvent(Organization organization, String eventAction, boolean succeeded, String parentType, Long parentId)
+    public void publishOrganizationEvent(Organization organization, String eventStatus, boolean succeeded, String parentType, Long parentId)
     {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
-        OrganizationModifiedEvent organizationEvent = new OrganizationModifiedEvent(organization, ipAddress);
+        OrganizationEvent organizationEvent = new OrganizationEvent(organization);
+        organizationEvent.setIpAddress(ipAddress);
         organizationEvent.setSucceeded(succeeded);
-        organizationEvent.setEventAction(eventAction);
+        organizationEvent.setEventStatus(eventStatus);
         organizationEvent.setParentObjectType(parentType);
         organizationEvent.setParentObjectId(parentId);
         eventPublisher.publishEvent(organizationEvent);
@@ -199,36 +182,34 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         organizationAssociationEvent.setEventAction(eventAction);
         organizationAssociationEvent.setParentObjectType(source.getParentType());
         organizationAssociationEvent.setParentObjectId(source.getParentId());
-        organizationAssociationEvent.setEventDescription("Organization " + eventAction + " (" + source.getOrganization().getOrganizationValue() + ")");
+        organizationAssociationEvent
+                .setEventDescription("Organization " + eventAction + " (" + source.getOrganization().getOrganizationValue() + ")");
         eventPublisher.publishEvent(organizationAssociationEvent);
     }
 
     public void publishOrganizationAssociationDeletedEvent(OrganizationAssociation source)
     {
-        OrganizationAssociationDeletedEvent event = new OrganizationAssociationDeletedEvent(source, source.getParentType(), source.getParentId());
+        OrganizationAssociationDeletedEvent event = new OrganizationAssociationDeletedEvent(source, source.getParentType(),
+                source.getParentId());
         event.setSucceeded(true);
         eventPublisher.publishEvent(event);
     }
 
     private boolean isContactMethodChanged(ContactMethod ex, ContactMethod up)
     {
-        return Objects.equals(ex.getType(), up.getType())
-                && Objects.equals(ex.getValue(), up.getValue());
+        return Objects.equals(ex.getType(), up.getType()) && Objects.equals(ex.getValue(), up.getValue());
     }
 
     private boolean isPostalAddressChanged(PostalAddress ex, PostalAddress up)
     {
-        return Objects.equals(ex.getType(), up.getType())
-                && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
-                && Objects.equals(ex.getCity(), up.getCity())
-                && Objects.equals(ex.getCountry(), up.getCountry())
-                && Objects.equals(ex.getZip(), up.getZip())
-                && Objects.equals(ex.getState(), up.getState());
+        return Objects.equals(ex.getType(), up.getType()) && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
+                && Objects.equals(ex.getCity(), up.getCity()) && Objects.equals(ex.getCountry(), up.getCountry())
+                && Objects.equals(ex.getZip(), up.getZip()) && Objects.equals(ex.getState(), up.getState());
     }
 
     private boolean isPersonChanged(Person ex, Person up)
     {
-        //TODO there are lot more fields to check if changed
+        // TODO there are lot more fields to check if changed
         return Objects.equals(ex.getFamilyName(), up.getFamilyName());
     }
 }
