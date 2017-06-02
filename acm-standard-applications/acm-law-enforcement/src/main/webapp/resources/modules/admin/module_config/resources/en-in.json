@@ -135,7 +135,8 @@
           "firstName": "Enter first name",
           "lastName": "Enter last name",
           "email": "Enter email",
-          "password": "Enter password"
+          "password": "Enter password",
+          "passwordRuleText": "Enter password containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
