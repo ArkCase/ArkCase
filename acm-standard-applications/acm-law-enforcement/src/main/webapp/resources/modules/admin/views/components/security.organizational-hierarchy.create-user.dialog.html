@@ -8,7 +8,7 @@
         <div class="form-group required" ng-class="{ 'has-error' : error }" ng-if="addUser">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |
                 translate}}</label>
-            <input type="text" class="form-control" id="username"
+            <input type="text" class="form-control" id="username" name="user.username"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
                    ng-model="user.userId" required>
             <p class="help-block" ng-show="error">
@@ -38,9 +38,13 @@
         <div class="form-group required" ng-if="addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
+            <div class="help-tip">
+                <p>{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.passwordRuleText' | translate}}</p>
+            </div>
             <input type="password" class="form-control" id="password"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
-                   ng-model="data.password" required>
+                   ng-model="data.password" maxlength="7" ng-pattern="^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$"
+                   required>
         </div>
     </div>
     <div class=" modal-footer">

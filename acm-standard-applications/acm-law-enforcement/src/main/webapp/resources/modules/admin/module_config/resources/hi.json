@@ -135,7 +135,8 @@
           "firstName": "hi_Enter first name",
           "lastName": "hi_Enter last name",
           "email": "hi_Enter email",
-          "password": "hi_Enter password"
+          "password": "hi_Enter password",
+          "passwordRuleText": "hi_Enter password containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "hi_Edit Ldap Member",

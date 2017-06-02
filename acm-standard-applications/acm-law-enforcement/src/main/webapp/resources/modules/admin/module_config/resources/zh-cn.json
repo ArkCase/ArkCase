@@ -148,7 +148,8 @@
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
-        "password": "zh-cn_Password"
+        "password": "zh-cn_Password",
+        "passwordRuleText": "zh-cn_Enter password containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
       },
       "addMembersGridColumns": {
         "name": "zh-cn_Name",
