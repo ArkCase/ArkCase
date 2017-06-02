@@ -54,21 +54,21 @@
             <column name="cm_organization_id" type="${fkIdType}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_description" type="VARCHAR(1024)"/>
-            <column name="cm_person_to_org_assoc_type" type="VARCHAR(128)"/>
-            <column name="cm_org_to_person_assoc_type" type="VARCHAR(128)"/>
-            <column name="cm_class_name" type="VARCHAR(512)"/>
+            <column name="cm_description" type="TEXT"/>
+            <column name="cm_person_to_org_assoc_type" type="TEXT"/>
+            <column name="cm_org_to_person_assoc_type" type="TEXT"/>
+            <column name="cm_class_name" type="TEXT"/>
             <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})"/>
             <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_creator" type="VARCHAR(1024)">
+            <column name="cm_creator" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_modifier" type="VARCHAR(1024)">
+            <column name="cm_modifier" type="TEXT">
                 <constraints nullable="false"/>
             </column>
         </createTable>

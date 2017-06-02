@@ -4,7 +4,6 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
@@ -13,6 +12,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
@@ -26,6 +26,7 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class PersonServiceImpl implements PersonService
     private String personOwnFolder = null;
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
+    private FolderAndFilesUtils folderAndFilesUtils;
 
     @Override
     public Person get(Long id)
@@ -88,7 +90,7 @@ public class PersonServiceImpl implements PersonService
                 {
                     if (person.getIdentifications() == null)
                     {
-                        person.setIdentifications(new ArrayList<Identification>());
+                        person.setIdentifications(new ArrayList<>());
                     }
 
                     Identification pi = new Identification();
@@ -189,24 +191,16 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException
+    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
+        if (person.getContainer() == null)
+        {
+            person = createContainerAndPictureFolder(person, auth);
+        }
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
-        try
-        {
-            List objects = ecmFileService.allFilesForFolder(auth, person.getContainer(), picturesFolderObj.getId()).getChildren();
-            if (objects.size() < 1)
-            {
-                //there are not images in pictures folder, so first uploaded image is the default image
-                isDefault = true;
-            }
-        } catch (AcmListObjectsFailedException e)
-        {
-            log.error("Could't list files for folder [{}].", picturesFolderObj.getId(), e);
-        }
 
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(),
                 PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
@@ -218,6 +212,10 @@ public class PersonServiceImpl implements PersonService
                 picturesFolderObj.getCmisFolderId(),
                 PersonOrganizationConstants.PERSON_OBJECT_TYPE,
                 personId);
+
+        uploaded.setDescription(description);
+        uploaded = ecmFileService.updateFile(uploaded);
+
         if (isDefault)
         {
             person.setDefaultPicture(uploaded);
@@ -228,11 +226,50 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
+    @Transactional
+    public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
+    {
+        Person person = personDao.find(personId);
+        Objects.requireNonNull(person, "Person not found.");
+
+        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
+        Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
+
+        EcmFile uploaded;
+
+        if (image != null)
+        {
+            String fileName = image.getOriginalFilename();
+            String uniqueFileName = folderAndFilesUtils.createUniqueIdentificator(fileName);
+
+            metadata.setFileName(fileName);
+            uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId, picturesFolderObj.getCmisFolderId(),
+                    uniqueFileName, image.getInputStream(), metadata);
+        } else
+        {
+            uploaded = ecmFileService.updateFile(metadata);
+        }
+
+        if (isDefault)
+        {
+            person.setDefaultPicture(uploaded);
+            savePerson(person, auth);
+        }
+        return uploaded;
+    }
+
+    @Override
     public Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException
     {
         //save person
         person = savePerson(person, auth);
+        person = createContainerAndPictureFolder(person, auth);
 
+        return person;
+    }
+
+    protected Person createContainerAndPictureFolder(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
         //generate person root folder
         String personRootFolderName = getPersonRootFolderName(person);
 
@@ -257,7 +294,6 @@ public class PersonServiceImpl implements PersonService
 
         //create Pictures folder
         acmFolderService.addNewFolder(person.getContainer().getFolder(), picturesFolder);
-
         return person;
     }
 
@@ -375,5 +411,10 @@ public class PersonServiceImpl implements PersonService
     public void setAcmFolderService(AcmFolderService acmFolderService)
     {
         this.acmFolderService = acmFolderService;
+    }
+
+    public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
+    {
+        this.folderAndFilesUtils = folderAndFilesUtils;
     }
 }

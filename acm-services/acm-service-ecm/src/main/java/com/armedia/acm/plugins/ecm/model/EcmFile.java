@@ -6,6 +6,8 @@ import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -51,7 +53,8 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.ecm.model.EcmFile")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity, AcmParentObjectInfo
+public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulEntity, AcmLegacySystemEntity,
+        AcmParentObjectInfo, AcmAssignedObject
 {
     private static final long serialVersionUID = -5177153023458655846L;
     private static final String OBJECT_TYPE = "FILE";
@@ -105,6 +108,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_file_type")
     private String fileType;
 
+    @Column(name = "cm_file_lang")
+    private String fileLang;
+
     @Column(name = "cm_file_active_version_tag")
     private String activeVersionTag;
 
@@ -139,8 +145,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
 
+    @Column(name = "cm_file_description")
+    private String description;
+
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    private List<AcmParticipant> participants = new ArrayList<>();
+
 
     @PrePersist
     protected void beforeInsert()
@@ -167,6 +181,12 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         {
             version.setFile(this);
         }
+
+        for (AcmParticipant ap : getParticipants())
+        {
+            ap.setObjectId(getId());
+            ap.setObjectType(getObjectType());
+        }
     }
 
     protected void setDefaultCmisRepositoryId()
@@ -185,6 +205,17 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setFileId(Long fileId)
     {
         this.fileId = fileId;
+    }
+
+    @Override
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
     }
 
     @Override
@@ -285,6 +316,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setFileType(String fileType)
     {
         this.fileType = fileType;
+    }
+
+    public String getFileLang()
+    {
+        return fileLang;
+    }
+
+    public void setFileLang(String fileLang)
+    {
+        this.fileLang = fileLang;
     }
 
     public String getCmisRepositoryId()
@@ -430,6 +471,16 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setLock(AcmObjectLock lock)
     {
         this.lock = lock;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     @Override

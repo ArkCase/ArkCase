@@ -76,14 +76,28 @@ public interface PersonService
     /**
      * insert image for a person. If is the only image than is set as default image for the person
      *
+     * @param personId    Long personId
+     * @param image       MultipartFile image
+     * @param isDefault   boolean should this picture be set as default
+     * @param description description for the image
+     * @param auth        Authentication authentication
+     * @return boolean true if successfully inserted
+     */
+    @Transactional
+    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+
+    /**
+     * save image for a person with new file and metadata
+     *
      * @param personId  Long personId
      * @param image     MultipartFile image
      * @param isDefault boolean should this picture be set as default
+     * @param metadata  EcmFile metadata
      * @param auth      Authentication authentication
      * @return boolean true if successfully inserted
      */
     @Transactional
-    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException;
+    EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 
     /**
      * Creates new Person and persists in database
@@ -98,9 +112,9 @@ public interface PersonService
     /**
      * Creates new Person and persists in database, and then uploads pictures
      *
-     * @param person   Person data
-     * @param pictures Person pictures
-     * @param authentication     Authentication
+     * @param person         Person data
+     * @param pictures       Person pictures
+     * @param authentication Authentication
      * @return Person created Person
      */
     Person createPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
