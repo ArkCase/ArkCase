@@ -73,6 +73,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
                 log.debug("Required privilege for {} {}: {}; user has privilege: {}", method, url, requiredPrivilege,
                         userPrivileges.containsKey(requiredPrivilege));
                 hasPrivilege = userPrivileges.containsKey(requiredPrivilege) ? userPrivileges.get(requiredPrivilege) : false;
+                break;
             }
         }
         return hasPrivilege;
