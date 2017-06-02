@@ -201,6 +201,9 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     @JoinColumn(name = "cm_parent_organization")
     private Organization parentOrganization;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
+    List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
+
     @PostLoad
     protected void postLoad()
     {
@@ -241,6 +244,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         for (OrganizationDBA dba : getOrganizationDBAs())
         {
             dba.setOrganization(this);
+        }
+        for (PersonOrganizationAssociation poa : getPersonAssociations())
+        {
+            poa.setOrganization(this);
         }
     }
 
@@ -530,5 +537,15 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     public void setParentOrganization(Organization parentOrganization)
     {
         this.parentOrganization = parentOrganization;
+    }
+
+    public List<PersonOrganizationAssociation> getPersonAssociations()
+    {
+        return personAssociations;
+    }
+
+    public void setPersonAssociations(List<PersonOrganizationAssociation> personAssociations)
+    {
+        this.personAssociations = personAssociations;
     }
 }
