@@ -18,6 +18,7 @@
         <property name="personDao" ref="acmPersonDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="peopleRootFolder" value="${person.folder.root}"/>
         <property name="personOwnFolder" value="${person.folder.own.spel}"/>
         <property name="picturesFolder" value="${person.folder.pictures}"/>
@@ -111,7 +112,8 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
     </bean>
-    <bean id="organizationAssociationService" class="com.armedia.acm.plugins.person.service.OrganizationAssociationServiceImpl">
+    <bean id="organizationAssociationService"
+          class="com.armedia.acm.plugins.person.service.OrganizationAssociationServiceImpl">
         <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
         <property name="organizationAssociationEventPublisher" ref="organizationAssociationEventPublisher"/>
     </bean>

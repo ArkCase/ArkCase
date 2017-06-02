@@ -43,6 +43,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private EcmTikaFileServiceImpl ecmTikaFileService;
     private FileEventPublisher fileEventPublisher;
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager;
+    private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -217,7 +218,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Calling pipeline manager handlers");
-            getEcmFileUploadPipelineManager().executeOperation(ecmFile, pipelineContext, () ->
+            getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () ->
             {
                 return ecmFile;
             });
@@ -376,6 +377,16 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public void setEcmFileUploadPipelineManager(PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUploadPipelineManager)
     {
         this.ecmFileUploadPipelineManager = ecmFileUploadPipelineManager;
+    }
+
+    public PipelineManager<EcmFile, EcmFileTransactionPipelineContext> getEcmFileUpdatePipelineManager()
+    {
+        return ecmFileUpdatePipelineManager;
+    }
+
+    public void setEcmFileUpdatePipelineManager(PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager)
+    {
+        this.ecmFileUpdatePipelineManager = ecmFileUpdatePipelineManager;
     }
 
     public EcmTikaFileServiceImpl getEcmTikaFileService()

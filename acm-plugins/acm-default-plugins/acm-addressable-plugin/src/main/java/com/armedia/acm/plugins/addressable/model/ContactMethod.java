@@ -2,15 +2,21 @@ package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -25,6 +31,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_contact_method")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className", defaultImpl = ContactMethod.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.addressable.model.ContactMethod")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ContactMethod implements Serializable, AcmEntity
 {
@@ -74,6 +84,9 @@ public class ContactMethod implements Serializable, AcmEntity
 
     @Column(name = "cm_description")
     private String description;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @PrePersist
     protected void beforeInsert()
@@ -226,6 +239,16 @@ public class ContactMethod implements Serializable, AcmEntity
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
 }

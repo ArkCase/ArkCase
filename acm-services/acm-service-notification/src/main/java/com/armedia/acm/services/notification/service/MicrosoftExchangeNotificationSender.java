@@ -2,6 +2,7 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.service.outlook.dao.impl.ExchangeWebServicesOutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -12,7 +13,6 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConst
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -106,8 +106,17 @@ public class MicrosoftExchangeNotificationSender extends NotificationSender
     }
 
     @Override
+    public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user) throws Exception
+    {
+        in.setTemplate(notificationTemplate);
+        OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
+        AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
+        getOutlookService().sendEmailWithAttachmentsAndLinks(in, outlookUser, authentication);
+    }
+
+    @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+                                                                            AcmUser user) throws Exception
     {
         in.setTemplate(notificationTemplate);
         OutlookDTO outlookDTO = getOutlookService().retrieveOutlookPassword(authentication);
