@@ -15,6 +15,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.showSetPrimary = params.showSetPrimary;
 
             $scope.personId = params.personId;
+            $scope.person = params.person;
             $scope.personName = params.personName;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
