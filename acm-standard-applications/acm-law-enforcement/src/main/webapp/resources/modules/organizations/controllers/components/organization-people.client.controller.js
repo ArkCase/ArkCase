@@ -41,7 +41,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "delete", null, null, "isDefault");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -63,10 +63,11 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             var params = {
                 showSetPrimary: true,
                 types: $scope.personAssociationTypes,
-                personId: rowEntity.person.personId,
+                personId: rowEntity.person.id,
+                person: rowEntity.person,
                 personName: rowEntity.person.givenName + ' ' + rowEntity.person.familyName,
                 type: rowEntity.organizationToPersonAssociationType,
-                isDefault: rowEntity === $scope.objectInfo.primaryContact
+                isDefault: $scope.isDefault(rowEntity)
             };
 
             var modalInstance = $modal.open({
@@ -88,10 +89,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                     if (!data.person.id) {
                         PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (savedPerson) {
                             data['person'] = savedPerson;
-                            savePersonAssociation({}, data);
+                            savePersonAssociation(rowEntity, data);
                         });
                     } else {
-                        savePersonAssociation({}, data);
+                        savePersonAssociation(rowEntity, data);
                     }
                 } else {
                     PersonInfoService.getPersonInfo(data.organizationId).then(function (person) {
