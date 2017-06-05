@@ -1,10 +1,13 @@
 package com.armedia.acm.services.email.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
  *
  */
-public class EmailBodyTemplate
+public class EmailTemplateConfiguration
 {
 
     private String emailPattern;
@@ -13,7 +16,9 @@ public class EmailBodyTemplate
 
     private EmailSource source;
 
-    private String template;
+    private String templateName;
+
+    private List<String> actions = new ArrayList<>();
 
     /**
      * @return the emailPattern
@@ -67,20 +72,37 @@ public class EmailBodyTemplate
     }
 
     /**
-     * @return the template
+     * @return the templateName
      */
-    public String getTemplate()
+    public String getTemplateName()
     {
-        return template;
+        return templateName;
     }
 
     /**
-     * @param template
-     *            the template to set
+     * @param templateName
+     *            the templateName to set
      */
-    public void setTemplate(String template)
+    public void setTemplateName(String templateName)
     {
-        this.template = template;
+        this.templateName = templateName;
+    }
+
+    /**
+     * @return the actions
+     */
+    public List<String> getActions()
+    {
+        return actions;
+    }
+
+    /**
+     * @param actions
+     *            the actions to set
+     */
+    public void setActions(List<String> actions)
+    {
+        this.actions = actions;
     }
 
 }
