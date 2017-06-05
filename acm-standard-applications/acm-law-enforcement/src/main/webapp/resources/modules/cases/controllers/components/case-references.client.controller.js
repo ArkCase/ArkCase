@@ -67,12 +67,16 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 var searchQuery = '*';
 
                 // build the solr filter based on the object's ID as well as its type
+                /**
                 var filter = 'fq=fq="object_type_s": ' + $scope.objectInfo.references[i].targetType + '&fq="object_id_s": '
                                 + $scope.objectInfo.references[i].targetId;
 
                 var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
+*/
+                var query = 'object_type_s:' + $scope.objectInfo.references[i].targetType + '+AND+object_id_s:'
+                                + $scope.objectInfo.references[i].targetId;
 
-                SearchService.queryFilteredSearch({
+                SearchService.querySimpleSearch({
                     query: query
                 },
                 // If the solr query fails, the title won't get updated, so it will just use whatever is in the DB
