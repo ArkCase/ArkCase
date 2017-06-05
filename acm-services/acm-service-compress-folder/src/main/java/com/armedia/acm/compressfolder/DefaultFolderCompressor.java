@@ -152,7 +152,7 @@ public class DefaultFolderCompressor implements FolderCompressor
             String objectType = obj.getObjectType().toUpperCase();
             if (OBJECT_FILE_TYPE.equals(objectType))
             {
-                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, EcmFile.class.cast(obj).getFileName())));
+                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, EcmFile.class.cast(obj).getFileName() + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
                 InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
                 copy(fileByteStream, zos);
             } else if (OBJECT_FOLDER_TYPE.equals(objectType))
