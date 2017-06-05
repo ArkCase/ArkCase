@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -65,15 +64,7 @@ public class LdapEntryTransformer
 
             } else if (key.equals(AcmLdapConstants.LDAP_UNICODE_PASSWORD_ATTR))
             {
-                final byte[] password;
-                try
-                {
-                    password = String.format("\"%s\"", userPassword).getBytes("UTF-16LE");
-                    context.setAttributeValue(attr, password);
-                } catch (UnsupportedEncodingException e)
-                {
-                    log.warn("Unsupported encoding in password");
-                }
+                context.setAttributeValue(attr, MapperUtils.encodeUTF16LE(userPassword));
             } else if (key.equals(AcmLdapConstants.LDAP_UID_NUMBER_ATTR))
             {
                 context.setAttributeValue(attr, Long.toString(timestamp));

@@ -44,14 +44,15 @@ public class LdapAuthenticateService
     }
 
 
-    public void changeUserPassword(String userName, String password) throws AcmUserActionFailedException
+    public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
         AcmUser acmUser = userDao.findByUserId(userName);
         try
         {
-            ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), password, ldapTemplate, getLdapAuthenticateConfig());
+            ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
+                    getLdapAuthenticateConfig());
             log.debug("Password changed successfully for user:{}", userName);
         } catch (AcmLdapActionFailedException e)
         {
