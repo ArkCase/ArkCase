@@ -3,9 +3,9 @@
 angular.module('organizations').controller('Organizations.NewOrganizationController', ['$scope', '$stateParams', '$translate'
     , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService'
     , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService) {
-        
+
         $scope.loading = false;
-        
+
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -224,6 +224,12 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
+                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.ORGANIZATION);
+                    var organizationCreatedMessage = $translate.instant('organizations.comp.newOrganization.informCreated', {
+                        objectType: objectTypeString,
+                        organizationValue: objectInfo.organizationValue
+                    });
+                    MessageService.info(organizationCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                     $scope.loading = false;
                 }
