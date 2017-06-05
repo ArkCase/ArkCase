@@ -124,8 +124,10 @@ public class FolderCompressorTest extends EasyMockSupport
             } else
             {
                 //child.getName returns fileName and extension, need to remove the extension
-                expect(mockedLevel1File.getFileName()).andReturn(child.getName().replace("." + FilenameUtils.getExtension(child.getName()), ""));
-                expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn("." + FilenameUtils.getExtension(child.getName()));
+                String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
+                String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
+                expect(mockedLevel1File.getFileName()).andReturn(childFileName);
+                expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
                 expect(mockedLevel1File.getId()).andReturn(101l);
                 expect(mockedFileService.downloadAsInputStream(101l)).andReturn(new FileInputStream(child));
             }
@@ -144,8 +146,10 @@ public class FolderCompressorTest extends EasyMockSupport
             } else
             {
                 //child.getName returns fileName and extension, need to remove the extension
-                expect(mockedLevel2File.getFileName()).andReturn(child.getName().replace("." + FilenameUtils.getExtension(child.getName()), ""));
-                expect(mockedLevel2File.getFileActiveVersionNameExtension()).andReturn("." + FilenameUtils.getExtension(child.getName()));
+                String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
+                String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
+                expect(mockedLevel2File.getFileName()).andReturn(childFileName);
+                expect(mockedLevel2File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
                 expect(mockedLevel2File.getId()).andReturn(102l);
                 expect(mockedFileService.downloadAsInputStream(102l)).andReturn(new FileInputStream(child));
             }
@@ -158,8 +162,10 @@ public class FolderCompressorTest extends EasyMockSupport
             if (!child.isDirectory())
             {
                 //child.getName returns fileName and extension, need to remove the extension
-                expect(mockedLevel3File.getFileName()).andReturn(child.getName().replace("." + FilenameUtils.getExtension(child.getName()), ""));
-                expect(mockedLevel3File.getFileActiveVersionNameExtension()).andReturn("." + FilenameUtils.getExtension(child.getName()));
+                String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
+                String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
+                expect(mockedLevel3File.getFileName()).andReturn(childFileName);
+                expect(mockedLevel3File.getFileActiveVersionNameExtension()).andReturn(childFileExtension);
                 expect(mockedLevel3File.getId()).andReturn(103l);
                 expect(mockedFileService.downloadAsInputStream(103l)).andReturn(new FileInputStream(child));
             }
