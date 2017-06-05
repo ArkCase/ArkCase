@@ -408,7 +408,8 @@
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
-    }
+    },
+    "informCreated": "{{objectType}} {{organizationValue}} was created."
   },
   "organizations.menus.topbar.item": "New Organization"
 }
