@@ -155,7 +155,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.claim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
-            CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
+            var caseInfo = Util.omitNg(objectInfo);
+            CaseInfoService.saveCaseInfo(caseInfo).then(function (response) {
                 //success
                 $scope.refresh();
             });
@@ -163,7 +164,8 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
         $scope.unclaim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, "");
-            CaseInfoService.saveCaseInfo(objectInfo).then(function (response) {
+            var caseInfo = Util.omitNg(objectInfo);
+            CaseInfoService.saveCaseInfo(caseInfo).then(function (response) {
                 //success
                 $scope.refresh();
             });

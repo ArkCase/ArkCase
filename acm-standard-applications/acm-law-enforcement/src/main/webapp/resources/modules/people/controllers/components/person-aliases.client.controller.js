@@ -156,6 +156,9 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
             if ($scope.objectInfo.defaultAlias) {
                 id = $scope.objectInfo.defaultAlias.id
             }
+            if ($scope.objectInfo.personAliases && $scope.objectInfo.personAliases.length == 0) {
+                return true;
+            }
             return data.id == id;
         };
     }

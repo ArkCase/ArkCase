@@ -10,6 +10,7 @@ angular.module('organizations').controller('Organizations.FaxesModalController',
             $scope.fax = params.fax;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

@@ -7,6 +7,7 @@ angular.module('organizations').controller('Organizations.DBAsModalController', 
             $scope.dba = params.dba;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

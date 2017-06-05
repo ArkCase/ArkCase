@@ -157,4 +157,21 @@
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="10-person-organization-drop-foreign-keys" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_default_organization_assoc"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization_assoc"/>
+    </changeSet>
+
+    <changeSet id="11-person-organization-foreign-keys" author="nebojsha.davidovikj">
+        <addForeignKeyConstraint baseTableName="acm_person"
+                                 baseColumnNames="cm_default_organization"
+                                 constraintName="fk_default_organization_assoc"
+                                 referencedTableName="acm_person_org_assoc"
+                                 referencedColumnNames="cm_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
 </databaseChangeLog>
