@@ -61,7 +61,8 @@ public class LdapGroupService
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -107,7 +108,8 @@ public class LdapGroupService
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -124,14 +126,16 @@ public class LdapGroupService
                     .retryResult(() -> ldapTemplate.lookupContext(parentGroupDnStrippedBase));
             parentGroupContext.addAttributeValue("member", acmGroup.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(parentGroupContext));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Updating parent-group DN:{} failed! Rollback saved sub-group DN:{} ",
                     parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
             try
             {
                 new RetryExecutor().retry(() -> ldapTemplate.unbind(parentGroupDnStrippedBase));
-            } catch (Exception ee)
+            }
+            catch (Exception ee)
             {
                 log.warn("Rollback failed", ee);
             }
@@ -157,11 +161,11 @@ public class LdapGroupService
         try
         {
             log.debug("Deleting group:{} with DN:{} in LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
-            //todo check how sync with ldap should be done in order to unbind the group
-            /*new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingGroup.getDistinguishedName(),
-                    ldapSyncConfig.getBaseDC())));*/
+            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingGroup.getDistinguishedName(),
+                    ldapSyncConfig.getBaseDC())));
             log.debug("Group:{} with DN:{} was successfully deleted in DB and LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
