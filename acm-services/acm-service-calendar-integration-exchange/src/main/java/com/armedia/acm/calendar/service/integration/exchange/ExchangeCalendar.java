@@ -14,7 +14,6 @@ import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
@@ -37,22 +36,18 @@ public class ExchangeCalendar implements AcmCalendar
 
     private String objectId;
 
-    private boolean restricted;
-
     /**
      * @param service
      * @param handler
      * @param objectType
      * @param objectId
-     * @param restricted
      */
-    public ExchangeCalendar(ExchangeService service, CalendarEntityHandler handler, String objectType, String objectId, boolean restricted)
+    public ExchangeCalendar(ExchangeService service, CalendarEntityHandler handler, String objectType, String objectId)
     {
         this.service = service;
         this.handler = handler;
         this.objectType = objectType;
         this.objectId = objectId;
-        this.restricted = restricted;
     }
 
     /*
@@ -65,8 +60,7 @@ public class ExchangeCalendar implements AcmCalendar
     {
         try
         {
-            CalendarFolder folder = restricted ? CalendarFolder.bind(service, new FolderId(handler.getCalendarId(objectId)))
-                    : CalendarFolder.bind(service, WellKnownFolderName.Calendar);
+            CalendarFolder folder = CalendarFolder.bind(service, new FolderId(handler.getCalendarId(objectId)));
             // TODO: fill out the 'description' properly.
             return new AcmCalendarInfo(folder.getId().getUniqueId(), objectType, objectId, folder.getDisplayName(), "");
         } catch (Exception e)
@@ -86,7 +80,7 @@ public class ExchangeCalendar implements AcmCalendar
     public List<AcmCalendarEventInfo> listItemsInfo(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
             int maxItems) throws CalendarServiceException
     {
-        return handler.listItemsInfo(service, objectId, restricted, after, before, sort, sortDirection, start, maxItems);
+        return handler.listItemsInfo(service, objectId, after, before, sort, sortDirection, start, maxItems);
     }
 
     /*
@@ -99,7 +93,7 @@ public class ExchangeCalendar implements AcmCalendar
     public List<AcmCalendarEvent> listItems(ZonedDateTime after, ZonedDateTime before, String sort, String sortDirection, int start,
             int maxItems) throws CalendarServiceException
     {
-        return handler.listItems(service, objectId, restricted, after, before, sort, sortDirection, start, maxItems);
+        return handler.listItems(service, objectId, after, before, sort, sortDirection, start, maxItems);
     }
 
     /*
