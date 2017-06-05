@@ -148,7 +148,7 @@
     "title": "Email Addresses",
     "table.columns": {
       "type": "Type",
-      "value": "Emails Address",
+      "value": "Email Address",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
@@ -277,6 +277,7 @@
       "issuer.placeholder": "Enter Issuer",
       "yearIssued.label": "Year Issued",
       "yearIssued.placeholder": "Enter Year Issued",
+      "yearIssued.close.button": "Close",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Save ID"
     }
@@ -357,7 +358,7 @@
     "middleName": "Middle Name",
     "middleName.placeholder": "Enter Middle Name",
     "saveButton": "Save Person",
-    "informCreated": "{{firstName}} {{lastName}} Created.",
+    "informCreated": "{{personType}} {{firstName}} {{lastName}} was created.",
     "informUpdated": "{{firstName}} {{lastName}} Updated",
     "communicationAccounts": {
       "title": "Communication Accounts",
@@ -408,7 +409,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   }
 }

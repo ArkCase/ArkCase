@@ -155,5 +155,15 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
         $scope.isDefault = function (data) {
             return data === $scope.objectInfo.defaultDBA;
         };
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultDBA) {
+                id = $scope.objectInfo.defaultDBA.id
+            }
+            if ($scope.objectInfo.organizationDBAs && $scope.objectInfo.organizationDBAs.length == 0) {
+                return true;
+            }
+            return data.id == id;
+        };
     }
 ]);

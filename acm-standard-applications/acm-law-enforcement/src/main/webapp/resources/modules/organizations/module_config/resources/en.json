@@ -147,7 +147,7 @@
     "title": "Email Addresses",
     "table.columns": {
       "type": "Email Address Type",
-      "value": "Emails Address",
+      "value": "Email Address",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
@@ -274,6 +274,7 @@
       "issuer.placeholder": "Enter Issuer",
       "yearIssued.label": "Year Issued",
       "yearIssued.placeholder": "Enter Year Issued",
+      "yearIssued.close.button": "Close",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Save ID"
     }
@@ -407,7 +408,8 @@
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
       "identificationYearIssued.placeholder": "Select Identification Issued"
-    }
+    },
+    "informCreated": "{{objectType}} {{organizationValue}} was created."
   },
   "organizations.menus.topbar.item": "New Organization"
 }

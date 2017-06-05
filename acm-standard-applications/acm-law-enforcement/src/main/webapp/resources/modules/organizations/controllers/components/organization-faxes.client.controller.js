@@ -54,6 +54,7 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
             var fax = {};
             fax.created = Util.dateToIsoString(new Date());
             fax.creator = $scope.userId;
+            fax.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.fax = fax;
@@ -157,6 +158,10 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
             var id = 0;
             if ($scope.objectInfo.defaultFax) {
                 id = $scope.objectInfo.defaultFax.id
+            }
+            var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
+            if (faxes && faxes.length == 0) {
+                return true;
             }
             return data.id == id;
         };

@@ -13,7 +13,7 @@
                     <entry key="COMPLAINT" value-ref="complaintEntityHandler"/>
                 </map>
             </property>
-            <property name="outlookService" ref="outlookService"/>
+            <!-- <property name="outlookService" ref="outlookService"/> -->
             <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
             <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
         </bean>

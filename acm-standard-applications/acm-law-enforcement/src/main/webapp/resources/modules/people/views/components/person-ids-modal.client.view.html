@@ -35,20 +35,36 @@
             </div>
             <div class="col-sm-6 form-group">
                 <label for="identificationYearIssued" translate>people.comp.ids.modal.yearIssued.label</label>
-                <input id="identificationYearIssued" type="text" class="input-md form-control"
-                       ng-model="identification.identificationYearIssued"
-                       placeholder="{{ 'people.comp.ids.modal.yearIssued.placeholder' | translate }}">
+                <p class="input-group">
+                    <input id="identificationYearIssued" type="text"
+                           class="form-control"
+                           placeholder="{{'people.comp.ids.modal.yearIssued.placeholder' | translate}}"
+                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           datepicker-append-to-body="false"
+                           ng-model="identification.identificationYearIssued"
+                           is-open="opened"
+                           close-on-date-selection="true"
+                           show-button-bar="true"
+                           on-open-focus="false"
+                           close-text="{{'people.comp.ids.modal.yearIssued.close.button' | translate}}"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"
+                                            ng-click="opened = !opened">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                </p>
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label translate>people.comp.ids.modal.setPrimary</label><span class="required-asterisk">*</span>
+                <label translate>people.comp.ids.modal.setPrimary</label><span class="required-asterisk">*</span><br/>
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.ids.modal.yes</translate>
                 </label>
-                <label>
+                <label ng-hide="hideNoField">
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.ids.modal.no</translate>
                 </label>
