@@ -123,6 +123,7 @@
         <json-path.version>2.2.0</json-path.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <springfox-version>2.5.0</springfox-version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <organization>
@@ -1841,6 +1842,12 @@
                         <artifactId>cglib-nodep</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
             </dependency>
             <!-- end of testing -->
 
