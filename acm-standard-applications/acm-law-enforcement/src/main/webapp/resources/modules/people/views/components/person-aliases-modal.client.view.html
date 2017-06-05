@@ -33,7 +33,7 @@
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.aliases.modal.yes</translate>
                 </label>
-                <label>
+                <label ng-hide="hideNoField">
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.aliases.modal.no</translate>
                 </label>

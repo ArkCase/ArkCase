@@ -43,7 +43,7 @@
       {
         "desc": "Sort Date Created Descending",
         "name": "sort-date-desc",
-         "default": true
+        "default": true
       },
       {
         "desc": "Sort Organization ID Ascending",
@@ -279,8 +279,7 @@
         {
           "name": "streetAddress",
           "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.streetAddress}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "streetAddress2",
