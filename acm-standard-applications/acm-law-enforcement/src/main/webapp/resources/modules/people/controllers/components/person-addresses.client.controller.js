@@ -55,6 +55,7 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             var address = {};
             address.created = Util.dateToIsoString(new Date());
             address.creator = $scope.userId;
+            address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
             $scope.address = address;
             var item = {
                 id: '',
@@ -168,6 +169,9 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             var id = 0;
             if ($scope.objectInfo.defaultAddress) {
                 id = $scope.objectInfo.defaultAddress.id
+            }
+            if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
+                return true;
             }
             return data.id == id;
         };

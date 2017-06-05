@@ -10,6 +10,7 @@ angular.module('people').controller('People.UrlsModalController', ['$scope', '$m
             $scope.url = params.url;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
