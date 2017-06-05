@@ -94,6 +94,25 @@
                                            ng-model="person.defaultIdentification.identificationYearIssued"
                                            class="input-md form-control"
                                            placeholder="{{ 'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate }}">
+                                    <p class="input-group">
+                                        <input type="text"
+                                               class="form-control"
+                                               placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
+                                               datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                               datepicker-append-to-body="false"
+                                               ng-model="person.defaultIdentification.identificationYearIssued"
+                                               is-open="opened"
+                                               close-on-date-selection="true"
+                                               show-button-bar="true"
+                                               on-open-focus="false"
+                                               close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}"/>
+                                          <span class="input-group-btn">
+                                                 <button type="button" class="btn btn-default"
+                                                         ng-click="defaultID.opened = !defaultID.opened">
+                                                         <i class="fa fa-calendar"></i>
+                                                 </button>
+                                          </span>
+                                    </p>
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
