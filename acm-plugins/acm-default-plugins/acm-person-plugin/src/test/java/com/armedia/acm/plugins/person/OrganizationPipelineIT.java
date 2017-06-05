@@ -6,7 +6,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.service.OrganizationServiceImpl;
+import com.armedia.acm.plugins.person.service.OrganizationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +49,7 @@ public class OrganizationPipelineIT
 {
 
     @Autowired
-    private OrganizationServiceImpl organizationService;
+    private OrganizationService organizationService;
 
     @Autowired
     private OrganizationDao organizationDao;
