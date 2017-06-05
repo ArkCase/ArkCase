@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = { "/api/v1/plugin/people", "/api/latest/plugin/people" })
+@RequestMapping(value = {"/api/v1/plugin/people", "/api/latest/plugin/people"})
 public class PeopleAPIController
 {
 
@@ -51,7 +51,7 @@ public class PeopleAPIController
 
         boolean isNew = in.getId() == null;
 
-        Person person = personService.createPerson(in, auth);
+        Person person = isNew ? personService.createPerson(in, auth) : personService.savePerson(in, auth);
         getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
         return person;
     }
@@ -59,14 +59,14 @@ public class PeopleAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public Person insertPersonMultipart(@RequestPart(name = "person") Person in,
-            @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
+                                        @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         log.debug("Persist a Person: [{}];", in);
 
         boolean isNew = in.getId() == null;
-        Person person = personService.createPerson(in, pictures, auth);
+        Person person = isNew ? personService.createPerson(in, auth) : personService.savePerson(in, pictures, auth);
         getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
         return person;
 
@@ -75,8 +75,8 @@ public class PeopleAPIController
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getPeople(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+                            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+                            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:PERSON AND -parent_id_s:*&sort=title_parseable %s", s);
         try
@@ -110,9 +110,9 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getImagesForPerson(Authentication auth, @PathVariable("personId") Long personId,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+                                     @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                                     @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+                                     @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         log.debug("Get images for Person: [{}];", personId);
 
@@ -132,7 +132,7 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
-            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
+                                      @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
             throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -146,7 +146,7 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity saveImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
-            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
+                                    @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
             throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
@@ -173,8 +173,8 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getChildObjects(Authentication auth, @PathVariable("personId") Long personId,
-            @PathVariable("objectType") String objectType, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
+                                  @PathVariable("objectType") String objectType, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+                                  @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
     {
         String query = String.format(
                 "{!join from=parent_ref_s to=id}object_type_s:PERSON-ASSOCIATION AND parent_type_s:%s AND child_id_s:%s", objectType,
@@ -209,8 +209,7 @@ public class PeopleAPIController
     }
 
     /**
-     * @param personEventPublisher
-     *            the personEventPublisher to set
+     * @param personEventPublisher the personEventPublisher to set
      */
     public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
     {

@@ -54,6 +54,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             var url = {};
             url.created = Util.dateToIsoString(new Date());
             url.creator = $scope.userId;
+            url.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.url = url;
@@ -158,6 +159,10 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             var id = 0;
             if ($scope.objectInfo.defaultUrl) {
                 id = $scope.objectInfo.defaultUrl.id
+            }
+            var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
+            if (urls && urls.length == 0) {
+                return true;
             }
             return data.id == id;
         };

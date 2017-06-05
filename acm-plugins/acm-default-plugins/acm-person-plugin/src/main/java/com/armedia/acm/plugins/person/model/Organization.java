@@ -192,7 +192,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
      */
     @OneToOne
     @JoinColumn(name = "cm_primary_contact")
-    private OrganizationAssociation primaryContact;
+    private PersonOrganizationAssociation primaryContact;
 
     /**
      * Parent Organization
@@ -519,12 +519,12 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         this.defaultDBA = defaultDBA;
     }
 
-    public OrganizationAssociation getPrimaryContact()
+    public PersonOrganizationAssociation getPrimaryContact()
     {
         return primaryContact;
     }
 
-    public void setPrimaryContact(OrganizationAssociation primaryContact)
+    public void setPrimaryContact(PersonOrganizationAssociation primaryContact)
     {
         this.primaryContact = primaryContact;
     }
