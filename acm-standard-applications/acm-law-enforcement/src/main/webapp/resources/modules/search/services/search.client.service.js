@@ -190,6 +190,31 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                         return searchObj;
                     }
                 }
+            },
+
+            /**
+             * @ngdoc method
+             * @name querySimpleSearch
+             * @methodOf services:Search.SearchService
+             *
+             * @description
+             * Performs a very basic search with a simple query call to the advancedSearch API
+             * Good for simple queries
+             *
+             * @param {String} query Query to send to the server, no added facets
+             * @returns {HttpPronmise} Future info about advanced search
+             */
+            querySimpleSearch: {
+                method: 'GET',
+                url: "api/v1/plugin/search/advancedSearch?q=:query",
+                cache: false,
+                isArray: false,
+                transformResponse: function(data, headerGetter) {
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
+                        return searchObj;
+                    }
+                }
             }
         });
 
