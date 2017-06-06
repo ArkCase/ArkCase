@@ -26,7 +26,8 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException
+    {
         String method = request.getMethod();
         String url = request.getServletPath();
 
