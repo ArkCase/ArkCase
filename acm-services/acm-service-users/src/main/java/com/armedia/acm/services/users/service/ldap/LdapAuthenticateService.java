@@ -53,7 +53,7 @@ public class LdapAuthenticateService
         {
             ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
                     getLdapAuthenticateConfig());
-            log.debug("Password changed successfully for user:{}", userName);
+            log.debug("Password changed successfully for User: {}", userName);
         } catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null,

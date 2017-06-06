@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -25,8 +26,8 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword,
-                                                          String baseDC)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
+            throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
 
@@ -36,8 +37,11 @@ public class LdapEntryTransformer
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
 
-        userAttributes.forEach((attr, value) ->
+        for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
         {
+            String attr = attributeEntry.getKey();
+            String value = attributeEntry.getValue();
+
             String key = ldapAddUserPropertiesFile.getProperty(attr);
             if (key.equals(AcmLdapConstants.LDAP_OBJECT_CLASS_ATTR))
             {
@@ -81,15 +85,15 @@ public class LdapEntryTransformer
             {
                 context.setAttributeValue(attr, value);
             }
-        });
+        }
 
         return context;
     }
 
     public DirContextOperations createContextForEditUserEntry(DirContextOperations context, AcmUser user, String directoryName)
     {
-        AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class).
-                get(String.format("%s_userSync", directoryName));
+        AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class)
+                .get(String.format("%s_userSync", directoryName));
 
         Map<String, String> userAttributes = config.getAttributes();
 
@@ -121,13 +125,12 @@ public class LdapEntryTransformer
         return context;
     }
 
-    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String parentGroupName,
-                                                           String baseDC)
+    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String parentGroupName, String baseDC)
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC));
 
-        AcmLdapGroupSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapGroupSyncConfig.class).
-                get(String.format("%s_groupSync", directoryName));
+        AcmLdapGroupSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapGroupSyncConfig.class)
+                .get(String.format("%s_groupSync", directoryName));
 
         Map<String, String> groupAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
