@@ -10,7 +10,9 @@ import javax.persistence.*;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author riste.tutureski
@@ -18,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_time")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmTime implements Serializable, AcmObject, AcmEntity {
 
 	private static final long serialVersionUID = -7170976917435850080L;

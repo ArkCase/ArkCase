@@ -14,6 +14,9 @@
     <bean id="retrieveTasksAPIController" class="com.armedia.acm.plugins.task.web.api.RetrieveTasksAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
+    <bean id="retrieveBusinessProcessTasksAPIController" class="com.armedia.acm.plugins.task.web.api.RetrieveBusinessProcessTasksAPIController">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
     <bean id="completeTaskAPIController" class="com.armedia.acm.plugins.task.web.api.CompleteTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
@@ -67,6 +70,10 @@
           class="com.armedia.acm.plugins.task.web.api.TaskNotifierAPIController">
         <property name="upcomingTasksNotifier" ref="upcomingTasksNotifier"/>
         <property name="overdueTasksNotifier" ref="overdueTasksNotifier"/>
+    </bean>
+
+    <bean id="diagramTaskAPIController" class="com.armedia.acm.plugins.task.web.api.DiagramTaskAPIController">
+        <property name="acmTaskService" ref="acmTaskService"/>
     </bean>
 
 </beans>

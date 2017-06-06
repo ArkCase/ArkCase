@@ -113,14 +113,14 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().once();
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
@@ -165,19 +165,19 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().times(1);
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
 
-        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(1l), pd1.getId());
@@ -231,26 +231,26 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expectLastCall().times(2);
         EasyMock.replay(acmBpmnDao);
 
-        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, false, false);
+        AcmProcessDefinition pd = processDefinitionManagementService.deploy(f, "", false, false);
         filesToDelete.add(pd.getFileName());
         assertNotNull(pd);
         assertEquals(Long.valueOf(1l), pd.getId());
         assertEquals("1", pd.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v1.bpmn20.xml", pd.getFileName());
-        assertEquals(null, pd.getDescription());
+        assertEquals("", pd.getDescription());
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
 
-        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, false, false);
+        AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
         assertEquals(Long.valueOf(2l), pd1.getId());
         assertEquals("4", pd1.getDeploymentId());
         assertEquals("Testing Activiti Spring Module", pd1.getName());
         assertEquals("TestActivitiSpringProcessUnitTest_v2.bpmn20.xml", pd1.getFileName());
-        assertEquals(null, pd1.getDescription());
+        assertEquals("", pd1.getDescription());
         assertEquals(2, pd1.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd1.getKey());
 

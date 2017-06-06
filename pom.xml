@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.13-SNAPSHOT</version>
+    <version>3.1.16-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -29,6 +30,7 @@
         <apache-commons-lang3.version>3.5</apache-commons-lang3.version>
         <apache-commons-vfs2.version>2.0</apache-commons-vfs2.version>
         <apache-commons-codec>1.9</apache-commons-codec>
+        <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
         <apache-poi.version>3.15</apache-poi.version>
         <apache-tika-parsers.version>1.13</apache-tika-parsers.version>
@@ -43,7 +45,8 @@
         <eclipselink-jpa.version>2.6.0</eclipselink-jpa.version>
         <ehcache.version>2.6.9</ehcache.version>
         <exchange-web-services.version>2.0</exchange-web-services.version>
-        <fasterxml-jackson-core.version>2.6.1</fasterxml-jackson-core.version>
+        <fasterxml-jackson-core.version>2.7.2</fasterxml-jackson-core.version>
+        <voodoodyne-jackson-jsog.version>1.1.1</voodoodyne-jackson-jsog.version>
         <google-collections.version>1.0</google-collections.version>
         <gson.version>1.7.1</gson.version>
         <h2.version>1.3.169</h2.version>
@@ -108,7 +111,7 @@
         <zt-exec.version>1.8</zt-exec.version>
         <xmlgraphics.version>2.0.1</xmlgraphics.version>
         <fop.version>2.0</fop.version>
-        <pdfbox.version>2.0.0</pdfbox.version>
+        <pdfbox.version>2.0.6</pdfbox.version>
         <barcode4j.version>2.1</barcode4j.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
         <milton.version>2.7.1.3</milton.version>
@@ -118,6 +121,8 @@
         <powermock.version>1.6.5</powermock.version>
         <netty.version>4.1.7.Final</netty.version>
         <json-path.version>2.2.0</json-path.version>
+        <magic.matcher.version>0.1.2</magic.matcher.version>
+        <springfox-version>2.5.0</springfox-version>
     </properties>
 
     <organization>
@@ -549,6 +554,14 @@
             <id>milton-repo</id>
             <url>http://milton.io/maven</url>
         </repository>
+
+
+        <!-- swagger -->
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -817,6 +830,20 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox-version}</version>
+            </dependency>
+
+            <!-- swagger ui -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${springfox-version}</version>
+            </dependency>
 
             <!-- milton -->
             <dependency>
@@ -1471,6 +1498,11 @@
                 <artifactId>httpclient</artifactId>
                 <version>${apache-httpcomponents-httpclient.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${apache-commons-net.version}</version>
+            </dependency>
 
             <!-- json -->
             <dependency>
@@ -1489,7 +1521,6 @@
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
-                <scope>runtime</scope>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -1501,6 +1532,14 @@
                 <artifactId>jackson-datatype-jsr310</artifactId>
                 <version>${fasterxml-jackson-core.version}</version>
             </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.voodoodyne.jackson.jsog/jackson-jsog -->
+            <dependency>
+                <groupId>com.voodoodyne.jackson.jsog</groupId>
+                <artifactId>jackson-jsog</artifactId>
+                <version>${voodoodyne-jackson-jsog.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -1789,6 +1828,19 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib-nodep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!-- end of testing -->
 
             <dependency>
@@ -1810,6 +1862,13 @@
                         <artifactId>httpcore</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>jmimemagic</groupId>
+                <artifactId>jmimemagic</artifactId>
+                <version>${magic.matcher.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

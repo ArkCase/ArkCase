@@ -20,7 +20,8 @@
   "document-repository.comp.actions": {
     "restrict": "zh-cn_Restrict?",
     "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe"
+    "unsubscribe.button": "zh-cn_Unsubscribe",
+    "confirm.delete.documentRepository.msg": "zh-cn_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "zh-cn_Details",
@@ -32,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "zh-cn_Documents"
+    "title": "zh-cn_Documents",
+    "sendEmail": "zh-cn_Send Email",
+    "filterInputPlaceholder": "zh-cn_Filter",
+    "searchInputPlaceholder": "zh-cn_Search"
   },
   "document-repository.comp.participants": {
     "title": "zh-cn_Participants",

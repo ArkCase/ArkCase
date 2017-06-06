@@ -8,7 +8,7 @@
       "menuItemTitle": "admin.menus.leftnav.item",
       "moduleId": "admin",
       "iconClass": "fa fa-wrench",
-      "position": 170
+      "position": 180
     }
   ],
   "components": [
@@ -18,6 +18,16 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "directoryTypes": [
+        {
+          "name": "OpenLDAP",
+          "value": "openldap"
+        },
+        {
+          "name": "Active Directory",
+          "value": "activedirectory"
+        }
+      ],
       "columnDefs": [
         {
           "name": "authUserDn",
@@ -72,6 +82,22 @@
           "displayName": "admin.security.ldapConfig.data.userSearchBase",
           "visible": false,
           "headerCellFilter": "translate"
+        }
+      ]
+    },{
+      "id": "securityCalendarConfig",
+      "configurableObjectTypes": [
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.cases.label",
+          "id": "CASE_FILE"
+        },
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
+          "id": "COMPLAINT"
+        },
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.tasks.label",
+          "id": "TASK"
         }
       ]
     },
@@ -449,7 +475,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "modifier",
@@ -509,7 +536,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
@@ -695,6 +723,18 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.calendarConfiguration.title",
+          "templateName": "security-calendar-configuration"
+		},
+		{
+          "title": "admin.security.emailConfiguration.title",
+          "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.exchangeConfiguration.title",
+          "templateName": "security-exchange-configuration"
         }
       ]
     },

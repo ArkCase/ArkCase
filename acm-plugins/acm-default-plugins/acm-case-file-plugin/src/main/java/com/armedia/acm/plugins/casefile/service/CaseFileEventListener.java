@@ -60,50 +60,53 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     String json = acmObjectHistoryExisting.getObjectString();
                     CaseFile existing = converter.unmarshall(json, CaseFile.class);
 
-                    acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
-
-                    if (isPriorityChanged(existing, updatedCaseFile))
+                    if (existing != null)
                     {
-                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "priority.changed");
-                    }
+                        acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
-                    if (isDetailsChanged(existing, updatedCaseFile))
-                    {
-                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
-                    }
-
-                    String title = existing.getTitle();
-                    String updatedTitle = updatedCaseFile.getTitle();
-                    if (!Objects.equals(title, updatedTitle))
-                    {
-                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "title.changed",
-                                "Case File Title changed from " + title + " to " + updatedTitle);
-                    }
-
-
-                    String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
-                    String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
-                    if (!Objects.equals(owningGroup, updatedOwningGroup))
-                    {
-                        AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
-                        getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
-                                "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
-                    }
-
-                    checkParticipants(existing, updatedCaseFile, event.getIpAddress());
-
-                    if (isStatusChanged(existing, updatedCaseFile))
-                    {
-                        String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                        if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed)
-                                && shouldDeleteCalendarFolder && calId != null)
+                        if (isPriorityChanged(existing, updatedCaseFile))
                         {
-
-                            //delete shared calendar if case closed
-                            getCalendarService().deleteFolder(updatedCaseFile.getContainer().getContainerObjectId(),
-                                    calId, DeleteMode.MoveToDeletedItems);
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "priority.changed");
                         }
-                        getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
+
+                        if (isDetailsChanged(existing, updatedCaseFile))
+                        {
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "details.changed");
+                        }
+
+                        String title = existing.getTitle();
+                        String updatedTitle = updatedCaseFile.getTitle();
+                        if (!Objects.equals(title, updatedTitle))
+                        {
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "title.changed",
+                                    "Case File Title changed from " + title + " to " + updatedTitle);
+                        }
+
+
+                        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
+                        String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
+                        if (!Objects.equals(owningGroup, updatedOwningGroup))
+                        {
+                            AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
+                                    "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
+                        }
+
+                        checkParticipants(existing, updatedCaseFile, event.getIpAddress());
+
+                        if (isStatusChanged(existing, updatedCaseFile))
+                        {
+                            String calId = updatedCaseFile.getContainer().getCalendarFolderId();
+                            if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed)
+                                    && shouldDeleteCalendarFolder && calId != null)
+                            {
+
+                                //delete shared calendar if case closed
+                                getCalendarService().deleteFolder(updatedCaseFile.getContainer().getContainerObjectId(),
+                                        calId, DeleteMode.MoveToDeletedItems);
+                            }
+                            getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
+                        }
                     }
                 }
 
@@ -174,6 +177,25 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 // participant added
                 getCaseFileEventUtility()
                         .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
+            }
+        }
+        
+        for (AcmParticipant existingParticipant : existing)
+        {
+            for (AcmParticipant updatedParticipant : updated)
+            {
+                if (existingParticipant.getId() != null && updatedParticipant.getId() != null)
+                {
+                    if (existingParticipant.getId().equals(updatedParticipant.getId()))
+                    {
+                        if (!existingParticipant.getParticipantType().equals(updatedParticipant.getParticipantType()))
+                        {
+                            // participant changed
+                            getCaseFileEventUtility()
+                                    .raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, ipAddress, "changed");
+                        }
+                    }
+                }
             }
         }
     }

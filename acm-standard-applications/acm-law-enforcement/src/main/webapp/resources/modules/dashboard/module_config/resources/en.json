@@ -33,8 +33,12 @@
             "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
+            "created": "Created",
+            "modified": "Modified",
             "status": "Status"
-          }
+          },
+          "overdue.tooltip": "Case is Overdue",
+          "deadline.tooltip": "Deadline is Approaching"
         }
       },
       "myComplaints": {
@@ -46,8 +50,11 @@
             "title": "Title",
             "priority": "Priority",
             "created": "Created",
+            "modified": "Modified",
             "status": "Status"
           },
+          "overdue.tooltip": "Complaint is Overdue",
+          "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
         }
       },
@@ -100,6 +107,22 @@
           "all": "All"
         },
         "noDataMessage": "Currently there are no team tasks info"
+      },
+      "workflowReport": {
+        "title": "Workflow Report",
+        "description": "Displays Workflow Report",
+        "rowNumbers.label": "Default Row Numbers",
+        "rowNumbers.placeholder": "Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "Task ID",
+            "taskParentType": "Parent Type",
+            "taskParentName": "Parent Name",
+            "processName": "Business Process Name",
+            "taskName": "Task Name"
+          }
+        },
+        "noDataMessage": "Currently there is no workflow report info"
       },
       "weather": {
         "description": "Displays weather",

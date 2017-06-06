@@ -8,7 +8,13 @@
     "allowDuplicate": false
   },
   "docTree": {
-    "extensions": ["DocTreeExt.Checkin", "DocTreeExt.Email", "DocTreeExt.WebDAV", "DocTreeExt.Record", "DocTreeExt.Template"],
+    "extensions": [
+      "DocTreeExt.Checkin",
+      "DocTreeExt.Email",
+      "DocTreeExt.WebDAV",
+      "DocTreeExt.Record",
+      "DocTreeExt.Template"
+    ],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -26,6 +32,8 @@
       {
         "name": "title",
         "displayName": "common.directive.docTree.table.columns.title",
+        "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
         "width": "30%",
         "index": 2
       },
@@ -38,6 +46,8 @@
       {
         "name": "type",
         "displayName": "common.directive.docTree.table.columns.type",
+        "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "12%",
         "index": 4
@@ -45,6 +55,8 @@
       {
         "name": "created",
         "displayName": "common.directive.docTree.table.columns.created",
+        "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
         "index": 5
@@ -52,6 +64,8 @@
       {
         "name": "modified",
         "displayName": "common.directive.docTree.table.columns.modified",
+        "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
         "width": "10%",
         "index": 6
@@ -60,6 +74,8 @@
         "name": "author",
         "field": "creator",
         "displayName": "common.directive.docTree.table.columns.author",
+        "headTemplate": "<label id='author' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='author' data-dir='ASC'></i>",
         "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
@@ -542,17 +558,17 @@
     },
     "emailDialog": {
       "enableFiltering": false,
-      "multiSelect": false,
+      "multiSelect": true,
       "showFacets": false,
       "columnDefs": [
         {
           "name": "name",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.name",
           "headerCellFilter": "translate"
         },
         {
           "name": "email_lcs",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
           "headerCellFilter": "translate"
         }
       ],
@@ -601,5 +617,124 @@
       "start": 0
     },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+  },
+  "coreCalendar": {
+    "chooseEventAttendeesDialog": {
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": true,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "email_lcs",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.email",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
+    }
+  },
+  "dialogPersonPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "first_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.givenName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "last_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.familyName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_organization_s",
+        "displayName": "common.dialogPersonPicker.table.columns.organization",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogPersonPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogPersonPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "dialogOrganizationPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "name",
+        "displayName": "common.dialogOrganizationPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_identification_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.identification",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "type_lcs",
+        "displayName": "common.dialogOrganizationPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "primary_contact_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.contact",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
   }
 }

@@ -23,19 +23,20 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
              *
              * @param {String} actionName Name of action, for example 'printOrderUI'
              * @param {Object} objectProperties Object representing current state of application, like orderInfo, queueInfo
+             * @param {Object} opts other info to be passed to permission checker e.g, objectType, objectSubType
              *
              * @returns {Promise} Future result of permission : true (enabled) or false (disabled)
              * @description
              * Retrieves a new acm authentication ticket for the currently logged in user
              */
-            getActionPermission: function (actionName, objectProperties) {
+            getActionPermission: function (actionName, objectProperties, opts) {
                 if (!actionName) {
                     $log.error('Permission Action name is undefined');
                     return $q.resolve(null);
                 }
 
                 if (rules && rules.data && rules.data.accessControlRuleList && userProfile && userProfile.$resolved) {
-                    return $q.resolve(processAction(actionName, objectProperties));
+                    return $q.resolve(processAction(actionName, objectProperties, opts));
                 } else {
                     var deferred = $q.defer();
                     var userProfilePromise = Authentication.queryUserInfo();
@@ -45,7 +46,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                             function success(result) {
                                 rules = result[0];
                                 userProfile = result[1];
-                                var permissionResult = processAction(actionName, objectProperties);
+                                var permissionResult = processAction(actionName, objectProperties, opts);
                                 deferred.resolve(permissionResult);
                             },
                             function error() {
@@ -102,11 +103,18 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
          *
          * @param {String }actionName
          * @param {Object} objectProperties
+         * @param {Obejct} opts Other info to be passed to permission checker e.g, objectType, objectSubType
          * @returns {Boolean} true if action is enabled, or false if action is disabled
          */
-        function processAction(actionName, objectProperties) {
+        function processAction(actionName, objectProperties, opts) {
             var isEnabled = true;
-            var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
+            if (opts && opts.objectType)
+                var actions = _.filter(rules.data.accessControlRuleList, {
+                    actionName: actionName,
+                    objectType: opts.objectType
+                });
+            else
+                var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
             // If actions found
             if (actions.length > 0) {
                 // Process all found actions objects

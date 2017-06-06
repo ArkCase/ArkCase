@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "zh-cn_LDAP Url",
     "security.ldapConfig.table.directoryName": "zh-cn_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "zh-cn_Ldap User Attributes Template",
+      "groupAttributesTemplate": "zh-cn_Ldap Group Attributes Template",
       "addNewDirectory": "zh-cn_Add New Directory",
       "editRecord": "zh-cn_Edit Record",
       "id": "zh-cn_ID",
+      "directoryType": "zh-cn_Select directory server",
       "ldapUrl": "zh-cn_LDAP Url",
       "base": "zh-cn_Base",
       "directoryName": "zh-cn_Directory Name",
@@ -127,7 +130,12 @@
           "btn": {
             "cancel": "zh-cn_Cancel",
             "ok": "zh-cn_Add Ldap User"
-          }
+          },
+          "username": "zh-cn_Enter username",
+          "firstName": "zh-cn_Enter first name",
+          "lastName": "zh-cn_Enter last name",
+          "email": "zh-cn_Enter email",
+          "password": "zh-cn_Enter password"
         },
         "editLdapMember": {
           "title": "zh-cn_Edit Ldap Member",
@@ -136,7 +144,7 @@
             "ok": "zh-cn_Edit Ldap User"
           }
         },
-        "username": "zh-cn_Username",
+        "username": "zh-cn_UserName",
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
@@ -234,16 +242,25 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-cn_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "zh-cn_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "zh-cn_Download",
       "replaceFile": "zh-cn_Replace File",
-      "versionHistory": "zh-cn_Version History"
+      "versionHistory": "zh-cn_Version History",
+      "diagram": "zh-cn_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "zh-cn_Successfully uploaded new process definition",
       "error": "zh-cn_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "zh-cn_Process Diagram",
+      "error.loading": "zh-cn_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "zh-cn_Close"
+      }
     },
     "formWorkflows.title": "zh-cn_Form/Workflow Link",
     "formWorkflows.link": "zh-cn_Link Forms/Workflows",

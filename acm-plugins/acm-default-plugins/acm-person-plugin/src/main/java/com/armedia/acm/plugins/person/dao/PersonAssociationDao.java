@@ -34,10 +34,10 @@ public class PersonAssociationDao extends AcmAbstractDao<PersonAssociation>
     {
         if (toSave.getId() != null && toSave.getPerson() != null)
         {
-            Optional<PersonAssociation> found = toSave.getPerson().getPersonAssociations().stream().filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
+            Optional<PersonAssociation> found = toSave.getPerson().getAssociationsFromObjects().stream().filter(pa -> pa.getId().equals(toSave.getId())).findFirst();
             if (found == null || !found.isPresent())
             {
-                toSave.getPerson().getPersonAssociations().add(toSave);
+                toSave.getPerson().getAssociationsFromObjects().add(toSave);
             }
         }
         return super.save(toSave);

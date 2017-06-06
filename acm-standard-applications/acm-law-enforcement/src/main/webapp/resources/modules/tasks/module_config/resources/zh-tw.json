@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "zh-tw_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "zh-tw_Process Diagram",
     "eSignature.button": "zh-tw_Sign",
     "subscribe.button": "zh-tw_Subscribe",
     "unsubscribe.button": "zh-tw_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "zh-tw_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "zh-tw_Error",
-      "btnOk.text": "zh-tw_OK"
+      "btnOk.text": "zh-tw_OK",
+      "btnClose.text": "zh-tw_Close"
     }
   },
   "tasks.comp.details": {
@@ -82,10 +84,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "zh-tw_Parent Documents",
-    "noParentDataMessage": "zh-tw_No parent documents for standalone task"
+    "noParentDataMessage": "zh-tw_No parent documents for standalone task",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.attachments": {
-    "title": "zh-tw_Attachments"
+    "title": "zh-tw_Attachments",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.notes": {
     "title": "zh-tw_Notes",
@@ -122,6 +130,10 @@
       "startDateTime": "zh-tw_Start",
       "endDateTime": "zh-tw_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "zh-tw_Process Diagram",
+    "error.loading": "zh-tw_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "zh-tw_eSignatures",

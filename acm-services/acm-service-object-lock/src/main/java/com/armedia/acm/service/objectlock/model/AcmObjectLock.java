@@ -1,6 +1,8 @@
 package com.armedia.acm.service.objectlock.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import java.util.Date;
 @XmlRootElement
 @Entity
 @Table(name = "acm_object_lock")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmObjectLock implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 4579477797364149888L;

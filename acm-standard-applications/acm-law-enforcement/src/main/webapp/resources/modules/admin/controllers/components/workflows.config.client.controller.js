@@ -1,20 +1,20 @@
 'use strict';
 
-angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService',
-    function ($scope, workflowsConfigService, $modal, $translate, messageService) {
+angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService', '$window', 'Helper.UiGridService',
+    function ($scope, workflowsConfigService, $modal, $translate, messageService, $window, HelperUiGridService) {
         $scope.uploadingInProgress = false;
         $scope.loadingProgress = 0;
         $scope.selectedBPMNFile = null;
         $scope.workflowsHistoryDialogConfig = undefined;
-
-        $scope.gridOptions = {
-            enableColumnResizing: true,
-            enableRowSelection: true,
-            enableColumnMenus: false,
-            enableRowHeaderSelection: false,
-            multiSelect: false,
-            noUnselect: false,
-            data: []
+        
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+        
+        var onConfigRetrieved = function (config) {
+            gridHelper.setColumnDefs(config);
+            gridHelper.setBasicOptions(config);
+            gridHelper.disableGridScrolling(config);            
+            gridHelper.setUserNameFilter(promiseUsers);            
         };
 
         //get config and init grid settings
@@ -28,14 +28,52 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
 
             $scope.gridOptions.columnDefs = columnDefs;
 
+            onConfigRetrieved(componentConfig);
+            
             reloadGrid();
         });
+
+        $scope.openProcessModeler = function()
+        {
+            var goToUrl = $translate.instant('admin.workflows.config.btn.createNewUrl');
+            $window.open(goToUrl);
+        }
 
         $scope.replaceFile = function (file, entity) {
             //TODO add logic for replace file, now only uploads the file as new.
             if (file) {
                 $scope.uploadDefinition(file);
             }
+        };
+
+        $scope.diagram = function (entity) {
+            var modalInstance = $modal.open({
+                templateUrl: "modules/admin/views/components/workflows.config.diagram-modal.client.view.html",
+                controller: 'Admin.WorkflowsConfigDiagramController',
+                windowClass: 'modal-width-80',
+                resolve:{
+                    deploymentId: function(){
+                        return entity.deploymentId;
+                    },
+                    key: function(){
+                        return entity.key;
+                    },
+                    version: function(){
+                        return entity.version;
+                    },
+                    showLoader: function() {
+                        return true;
+                    },
+                    showError: function() {
+                        return false;
+                    }
+                }
+            });
+            modalInstance.result.then(function (result) {
+                if (result) {
+                    // Do nothing
+                }
+            });
         };
 
         function getActionsColumn() {
@@ -47,8 +85,9 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "visible": true,
                 "headerCellFilter": "translate",
                 "cellTemplate": "<a target='_blank' href='api/latest/plugin/admin/workflowconfiguration/workflows/{{row.entity.key}}/versions/{{row.entity.version}}/file'><i class='fa fa-download text-active'>{{'admin.workflows.config.links.download' | translate}}</i></a>"
-                + " | " + "<a ng-disabled='uploadingInProgress' ngf-select='grid.appScope.replaceFile($file,row.entity.version)' href=''><i class='fa fa-upload text-active'>{{'admin.workflows.config.links.replaceFile' | translate}}</i></a>"
+                + " | " + "<a ng-disabled='uploadingInProgress' ng-click='grid.appScope.uploadReplaceBpmn()' href=''><i class='fa fa-upload text-active'>{{'admin.workflows.config.links.replaceFile' | translate}}</i></a>"
                 + " | " + "<a ng-click='grid.appScope.showHistory(row.entity)' href='' <i class='fa fa-retweet text-active'>{{'admin.workflows.config.links.versionHistory' | translate}}</i></a>"
+                + " | " + "<a ng-click='grid.appScope.diagram(row.entity)' href='' <i class='fa fa-sitemap text-active'>{{'admin.workflows.config.links.diagram' | translate}}</i></a>"
             }
         }
 
@@ -59,10 +98,10 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             });
         }
 
-        $scope.uploadDefinition = function (file) {
+        $scope.uploadDefinition = function (file, description) {
             if (file) {
                 $scope.uploadingInProgress = true;
-                workflowsConfigService.uploadDefinition(file).then(
+                workflowsConfigService.uploadDefinition(file, description).then(
                     function (result) {
                         reloadGrid();
                         $scope.uploadingInProgress = false;
@@ -74,6 +113,44 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 );
             }
         };
+        
+        //dialog for upload/replace BPMN
+        $scope.uploadReplaceBpmn = function () {
+            var modalScope = $scope.$new();
+            modalScope.config = $scope.config;
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: 'modules/admin/views/components/workflows.config.upload-replace.modal.client.view.html',
+                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    
+                    $scope.selectedFiles = [];
+                    
+                    $scope.upload = function upload(files) {
+                        $scope.selectedFiles = files;
+                    };
+                   
+                    $scope.onClickOk = function (files) {
+                    	 $modalInstance.close(
+                                 {
+                                     selectedFiles:$scope.selectedFiles,
+                                     description : $scope.bpmn.description
+                                 }
+                             );
+                    };
+                    $scope.onClickCancel = function () {
+                        $modalInstance.dismiss('cancel');
+                    };
+
+                }],
+                size: 'md',
+                backdrop: 'static'
+            });
+            
+            modalInstance.result.then(function (data) {
+            	$scope.uploadDefinition(data.selectedFiles, data.description);            	
+            });        
+        }
 
 
         //dialog for edit or create new role
@@ -86,7 +163,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                 "visible": true,
                 "enableSorting": false,
                 width: 100,
-                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN.version' ng-value='{{row.entity.version}}' ng-change='grid.appScope.changeActive()'/>",
+                cellTemplate: "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN' ng-value='{{row.entity}}' ng-change='grid.appScope.changeActive()'/>",
                 "headerCellFilter": "translate"
             });
             historyPromise.then(function (payload) {
@@ -94,10 +171,12 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                     messageService.error($translate.instant('admin.workflows.config.noHistory'));
                     return;
                 }
+                var params = {};
+                params.config = $scope.workflowsHistoryDialogConfig;
                 var modalInstance = $modal.open({
                     animation: true,
                     templateUrl: 'modules/admin/views/components/workflows.config.show-history.dialog.view.html',
-                    controller: function ($scope, $modalInstance) {
+                    controller: ['$scope', '$modalInstance','Helper.UiGridService', 'params', function ($scope, $modalInstance, HelperUiGridService, params) {
                         //initial values
                         $scope.activeBPMN = undefined;
                         $scope.initialActiveBPMNVersion = undefined;
@@ -118,18 +197,18 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                                 $scope.initialActiveBPMNVersion = row.version;
                             }
                         });
-
-                        $scope.gridOptions = {
-                            enableColumnResizing: true,
-                            enableRowSelection: true,
-                            pinSelectionCheckbox: true,
-                            enableColumnMenus: false,
-                            enableRowHeaderSelection: false,
-                            multiSelect: false,
-                            noUnselect: false,
-                            columnDefs: colDefs,
-                            data: payload.data
+                        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                        var promiseUsers = gridHelper.getUsers();
+                        
+                        var onConfigRetrieved = function (config) {
+                            gridHelper.setColumnDefs(config);
+                            gridHelper.setBasicOptions(config);
+                            gridHelper.disableGridScrolling(config);            
+                            gridHelper.setUserNameFilter(promiseUsers);            
                         };
+                        
+                        onConfigRetrieved(params.config);                                                
+                        $scope.gridOptions.data= payload.data;
 
                         $scope.activate = function () {
                             $modalInstance.close($scope.activeBPMN);
@@ -137,8 +216,13 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
                         $scope.cancel = function () {
                             $modalInstance.dismiss('cancel');
                         };
-                    },
-                    size: 'lg'
+                    }],
+                    size: 'lg',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
                 });
 
                 //handle the result

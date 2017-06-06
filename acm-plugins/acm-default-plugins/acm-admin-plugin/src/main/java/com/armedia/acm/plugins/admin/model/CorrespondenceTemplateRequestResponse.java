@@ -1,11 +1,16 @@
 package com.armedia.acm.plugins.admin.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.Date;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
  *
  */
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CorrespondenceTemplateRequestResponse
 {
 

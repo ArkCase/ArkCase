@@ -10,8 +10,8 @@
 
  * Email service for ECM.
  */
-angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , function ($resource, Store, Util) {
+angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService'
+    , function ($resource, $translate, Store, Util, MessageService) {
 
         var Service = $resource('api/latest/service', {}, {
             /**
@@ -42,6 +42,20 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
             , _sendEmailWithAttachments: {
                 method: 'POST',
                 url: 'api/latest/service/notification/email/withattachments'
+            }
+            /**
+             * @ngdoc method
+             * @name _sendEmailWithAttachmentsAndLinks
+             * @methodOf services:Ecm.EmailService
+             *
+             * @description
+             * Send email with attachments
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _sendEmailWithAttachmentsAndLinks: {
+                method: 'POST',
+                url: 'api/latest/service/notification/email/withattachmentsandlinks'
             }
         });
 
@@ -100,7 +114,38 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
                 , param: {}
                 , data: emailData
                 , onSuccess: function (data) {
-                    if (Service.validateSentEmails(data)) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                    if (Service.validateSentEmail(data)) {
+                        return data;
+                    }
+                }
+                , onInvalid: function (data) {
+                    return failed;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name sendEmailWithAttachmentsAndLinks
+         * @methodOf services:Ecm.EmailService
+         *
+         * @description
+         * Send email with attachments
+         *
+         * @param {Object} emailData Email data
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        Service.sendEmailWithAttachmentsAndLinks = function (emailData) {
+            var failed = "";
+            return Util.serviceCall({
+                service: Service._sendEmailWithAttachmentsAndLinks
+                , param: {}
+                , data: emailData
+                , onSuccess: function (data) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                    if (Service.validateSentEmail(data)) {
                         return data;
                     }
                 }
@@ -150,6 +195,11 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
             if (Util.isEmpty(data)) {
                 return false;
             }
+
+            if (!Util.isEmpty(data.emailAddresses) && !Util.isArrayEmpty(data.emailAddresses)) {
+                return true;
+            }
+
             if (Util.isEmpty(data.state)) {
                 return false;
             }

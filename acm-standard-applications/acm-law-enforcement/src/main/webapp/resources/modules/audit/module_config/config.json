@@ -8,7 +8,7 @@
       "menuItemTitle": "audit.menus.leftnav.item",
       "moduleId": "audit",
       "iconClass": "fa fa-bolt",
-      "position": 140
+      "position": 170
     }
   ],
   "components": [
@@ -36,6 +36,18 @@
         {
           "id": "FILE",
           "name": "Files"
+        },
+        {
+          "id": "DOC_REPO",
+          "name": "Documents"
+        },
+        {
+          "id": "PERSON",
+          "name": "People"
+        },
+        {
+          "id": "ORGANIZATION",
+          "name": "Organizations"
         }
       ]
     },

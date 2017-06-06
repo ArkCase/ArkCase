@@ -109,25 +109,118 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception
+    {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
+        MuleMessage muleMessage = getMuleContextManager().send("vm://getObjectById.in", cmisId, properties);
+
+        if (muleMessage.getInboundProperty("findObjectByIdException") != null)
+        {
+            throw (Exception) muleMessage.getInboundProperty("findObjectByIdException");
+        }
+
+        return (CmisObject) muleMessage.getPayload();
+
+    }
+
+    @Override
     @Transactional
-    public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
+    @Deprecated
+    public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
                           String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
-        return upload(originalFileName, fileType, fileCategory, fileContents, fileContentType,
+        return upload(arkcaseFileName, fileType, fileCategory, fileContents, fileContentType,
                 fileName, authentication, targetCmisFolderId, parentObjectType, parentObjectId, cmisRepositoryId);
     }
 
     @Override
     @Transactional
-    public EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
+    @Deprecated
+    public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents, String fileContentType,
                           String fileName, Authentication authentication, String targetCmisFolderId, String parentObjectType, Long parentObjectId, String cmisRepositoryId)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
+        // the normal method, when a file is uploaded from ArkCase, so there is no existing file in the ECM repository yet
+        Document cmisDocument = null;
+
+        return upload(arkcaseFileName, fileType, fileCategory, fileContents, fileContentType, fileName, authentication,
+                targetCmisFolderId, parentObjectType, parentObjectId, cmisRepositoryId, cmisDocument);
+    }
+
+    @Override
+    @Transactional
+    public EcmFile upload(String arkcaseFileName, String fileType, String fileCategory, InputStream fileContents,
+                          String fileContentType, String fileName, Authentication authentication,
+                          String targetCmisFolderId, String parentObjectType, Long parentObjectId,
+                          String cmisRepositoryId, Document existingCmisDocument)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        // typically this method is calld directly only by the ECM file sync feature, when a user has added a file to the
+        // ECM system directly, without using ArkCase.
+
         log.info("The user '{}' uploaded file: '{}'", authentication.getName(), fileName);
 
-        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId, cmisRepositoryId);
+
+        EcmFile metadata = new EcmFile();
+        metadata.setFileType(fileType);
+        metadata.setCategory(fileCategory);
+        metadata.setFileActiveVersionMimeType(fileContentType);
+        metadata.setFileName(arkcaseFileName);
+        metadata.setCmisRepositoryId(cmisRepositoryId);
+        return upload(authentication, parentObjectType, parentObjectId, targetCmisFolderId, fileName,
+                fileContents, metadata, existingCmisDocument);
+    }
+
+
+    @Override
+    @Deprecated
+    @Transactional
+    public EcmFile upload(String arkcaseFileName, String fileType, MultipartFile file, Authentication authentication,
+                          String targetCmisFolderId, String parentObjectType, Long parentObjectId)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        return upload(arkcaseFileName, fileType, null, file, authentication, targetCmisFolderId, parentObjectType, parentObjectId);
+    }
+    
+    @Transactional
+    @Override
+    public EcmFile upload(
+            String arkcaseFileName,
+            String fileType,
+            String fileLang,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        EcmFile metadata = new EcmFile();
+        metadata.setFileType(fileType);
+        metadata.setFileLang(fileLang);
+        metadata.setFileName(arkcaseFileName);
+        metadata.setFileActiveVersionMimeType(file.getContentType());
+        return upload(authentication, file, targetCmisFolderId, parentObjectType, parentObjectId, metadata);
+    }
+
+    @Override
+    public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                          String targetCmisFolderId, String arkcaseFileName, InputStream fileContents,
+                          EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        return upload(authentication, parentObjectType, parentObjectId, targetCmisFolderId, arkcaseFileName,
+                fileContents, metadata, null);
+    }
+
+    @Override
+    public EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                          String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata,
+                          Document existingCmisDocument) throws AcmCreateObjectFailedException, AcmUserActionFailedException
+    {
+        AcmContainer container = getOrCreateContainer(parentObjectType, parentObjectId, metadata.getCmisRepositoryId());
 
         // TODO: disgusting hack here.  getOrCreateContainer is transactional, and may update the container or the
         // container folder, e.g. by adding participants.  If it does, the object we get back won't have those changes,
@@ -140,8 +233,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
         try
         {
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(originalFileName, authentication, fileType, fileCategory,
-                    fileContents, fileContentType, fileName, targetCmisFolderId, container, cmisRepositoryId);
+            String cmisRepositoryId = metadata.getCmisRepositoryId() == null
+                    ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId") : metadata.getCmisRepositoryId();
+            metadata.setCmisRepositoryId(cmisRepositoryId);
+
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, arkcaseFileName, container,
+                    targetCmisFolderId, fileContents, metadata, existingCmisDocument);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
@@ -157,14 +254,13 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 applicationEventPublisher.publishEvent(event);
             }
             log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(fileName, e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getMessage(), e);
         }
     }
 
-    @Transactional
     @Override
-    public EcmFile upload(String originalFileName, String fileType, MultipartFile file, Authentication authentication,
-                          String targetCmisFolderId, String parentObjectType, Long parentObjectId)
+    public EcmFile upload(Authentication authentication, MultipartFile file,
+                          String targetCmisFolderId, String parentObjectType, Long parentObjectId, EcmFile metadata)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
         log.info("The user '{}' uploaded file: '{}'", authentication.getName(), file.getOriginalFilename());
@@ -182,9 +278,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         try
         {
 
-            String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
-            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(originalFileName, authentication, fileType, file.getInputStream(),
-                    file.getContentType(), file.getOriginalFilename(), targetCmisFolderId, container, cmisRepositoryId);
+            String cmisRepositoryId = metadata.getCmisRepositoryId() == null
+                    ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId") : metadata.getCmisRepositoryId();
+            metadata.setCmisRepositoryId(cmisRepositoryId);
+            EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(),
+                    container, targetCmisFolderId, file.getInputStream(), metadata);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());
@@ -330,20 +428,6 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             throw new AcmUserActionFailedException("Find container folder", objectType, objectId, pe.getMessage(), pe);
         }
-    }
-
-    /**
-     * Objects should really have a folder already. Since we got here the object does not actually have one. The
-     * application doesn't really care where the folder is, so we'll just create a folder in a sensible location.
-     *
-     * @param objectType
-     * @param objectId
-     * @return
-     */
-    private AcmContainer createContainerFolder(String objectType, Long objectId) throws AcmCreateObjectFailedException
-    {
-        String cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
-        return createContainerFolder(objectType, objectId, cmisRepositoryId);
     }
 
     /**
@@ -567,14 +651,29 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
-                                                      int startRow, int maxRows, String category) throws AcmListObjectsFailedException
+    public AcmCmisObjectList listFlatSearchResults(Authentication auth, AcmContainer container, String category, String sortBy,
+                                                   String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
-        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:"
-                + container.getContainerObjectType();
 
-        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:"
-                + category.toUpperCase() + ") AND hidden_b:false"; // in
+        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
+                        + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
+                container.getContainerObjectType(), container.getContainerObjectId(), container.getContainerObjectType(),
+                container.getContainerObjectId());
+
+        String fq = String.format("fq=name_partial:%s AND hidden_b:false", searchFilter);
+
+        return findObjects(auth, container, container.getFolder().getId(), category, query, fq, startRow, maxRows, sortBy, sortDirection);
+    }
+
+    @Override
+    public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy,
+                                                      String sortDirection, int startRow, int maxRows, String category) throws AcmListObjectsFailedException
+    {
+        String query = "parent_object_id_i:" + container.getContainerObjectId() + " AND parent_object_type_s:" + container
+                .getContainerObjectType();
+
+        String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:" + category.toUpperCase()
+                + ") AND hidden_b:false"; // in
         // case
         // some
         // bad
@@ -597,7 +696,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("File with id: {} does not exists", fileId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
-            } else
+            }
+            else
             {
                 if (!((EcmFileConstants.RECORD).equals(ecmFile.getStatus())))
                 {
@@ -621,7 +721,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
-            } else
+            }
+            else
             {
                 for (AcmCmisObject file : folder.getChildren())
                 {
@@ -876,10 +977,11 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException {
+    public EcmFile updateFile(EcmFile ecmFile) throws AcmObjectNotFoundException
+    {
 
         EcmFile file = getEcmFileDao().find(ecmFile.getId());
-        if ( file == null )
+        if (file == null)
         {
             throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, ecmFile.getId(), "File  not found", null);
         }
@@ -930,7 +1032,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 }
 
                 startRow += maxRows;
-            } while (docs != null && docs.length() > 0);
+            }
+            while (docs != null && docs.length() > 0);
         } catch (MuleException e)
         {
             log.error("Cannot take total count. 'Parent Object Type': {}, 'Parent Object ID': {}", parentObjectType, parentObjectId);
