@@ -1,6 +1,5 @@
 package com.armedia.acm.services.email.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public class EmailTemplateConfiguration
 
     private String templateName;
 
-    private List<String> actions = new ArrayList<>();
+    private List<String> actions;
 
     /**
      * @return the emailPattern
