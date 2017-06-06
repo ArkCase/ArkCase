@@ -52,10 +52,6 @@ angular.module('services').factory('DocTreeExt.Media', ['$q', '$modal', '$transl
                 ];
             }
 
-            , arkcaseUrl: "localhost"
-            , arkcasePort: ""
-            , API_DOWNLOAD_DOCUMENT: "/api/v1/plugin/ecm/download?ecmFileId="
-
             , openModal: function (DocTree, nodes) {
                 var params = {
                     nodes: nodes,
@@ -92,26 +88,17 @@ angular.module('services').factory('DocTreeExt.Media', ['$q', '$modal', '$transl
 ]);
 
 angular.module('directives').controller('directives.DocTreeMediaDialogController', ['$scope', '$modalInstance'
-        , 'UtilService', 'params', 'DocTreeExt.Media', '$modal', '$translate'
-        , function ($scope, $modalInstance, Util, params, DocTreeExtMedia, $modal, $translate) {
+        , 'UtilService', 'params', 'DocTreeExt.Media', '$modal', '$translate', '$sce'
+        , function ($scope, $modalInstance, Util, params, DocTreeExtMedia, $modal, $translate, $sce) {
             $scope.modalInstance = $modalInstance;
             $scope.config = params.config;
             $scope.DocTree = params.DocTree;
             $scope.nodes = _.filter(params.nodes, function (node) {
                 return !node.folder;
             });
-            $scope.mediaModel = {};
-            $scope.mediaModel.selectedFiles = DocTreeExtMedia._extractFileIds($scope.nodes);
-
-            $scope.onSelectFile = function (fileId) {
-                var idx = $scope.mediaModel.selectedFiles.indexOf(fileId);
-
-                if (idx > -1) {
-                    $scope.mediaModel.selectedFiles.splice(idx, 1);
-                } else {
-                    $scope.mediaModel.selectedFiles.push(fileId);
-                }
-            };
+            
+            $scope.selectedFiles = DocTreeExtMedia._extractFileIds($scope.nodes);
+            $scope.trustedUrl = $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.selectedFiles[0]);
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss();
