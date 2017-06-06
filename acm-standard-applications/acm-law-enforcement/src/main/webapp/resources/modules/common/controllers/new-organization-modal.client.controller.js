@@ -275,10 +275,13 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             }
 
             //addresses
-            if (organization.defaultAddress && !organization.defaultAddress.streetAddress) {
-                organization.defaultAddress = null;
-            } else {
-                organization.addresses.push(organization.defaultAddress);
+            if (organization.defaultAddress) {
+                if (!organization.defaultAddress.streetAddress) {
+                    organization.defaultAddress = null;
+                }
+                else {
+                    organization.addresses.push(organization.defaultAddress);
+                }
             }
 
             //remove empty organizations before save

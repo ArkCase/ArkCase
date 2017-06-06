@@ -224,6 +224,12 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
+                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.ORGANIZATION);
+                    var organizationCreatedMessage = $translate.instant('organizations.comp.newOrganization.informCreated', {
+                        objectType: objectTypeString,
+                        organizationValue: objectInfo.organizationValue
+                    });
+                    MessageService.info(organizationCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                     $scope.loading = false;
                 }

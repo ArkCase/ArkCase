@@ -145,10 +145,18 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.pictures);
             promiseSavePerson.then(
                 function (objectInfo) {
+                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.PERSON);
+                    var personWasCreatedMessage = $translate.instant('people.comp.editPerson.informCreated', {
+                        personType: objectTypeString,
+                        firstName: objectInfo.data.givenName,
+                        lastName: objectInfo.data.familyName
+                    });
+                    MessageService.info(personWasCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
                     $scope.loading = false;
                 }
-                , function (error) {
+                ,
+                function (error) {
                     $scope.loading = false;
                     if (error.data && error.data.message) {
                         $scope.error = error.data.message;
@@ -156,7 +164,8 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                         MessageService.error(error);
                     }
                 }
-            );
+            )
+            ;
         };
 
         $scope.addNewOrganization = function () {
