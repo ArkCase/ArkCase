@@ -1,8 +1,10 @@
 package com.armedia.acm.services.users.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
@@ -22,6 +24,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
@@ -36,6 +41,9 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
 
     @Mock
     private UserDao mockUserDao;
+
+    @Mock
+    private AcmGroupDao mockGroupDao;
 
     @Mock
     private AcmUserEventPublisher mockUserEventPublisher;
@@ -53,6 +61,7 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
     {
         mockMvc = MockMvcBuilders.standaloneSetup(ldapUserAPIController).build();
         mockLdapUserService.setUserDao(mockUserDao);
+        mockLdapUserService.setGroupDao(mockGroupDao);
     }
 
     @Test
@@ -66,7 +75,11 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         user.setFirstName("First Name");
         user.setLastName("Last Name");
 
-        mockBehaviour(user);
+        AcmGroup acmGroup = new AcmGroup();
+        List<AcmGroup> groups = new ArrayList<>();
+        groups.add(acmGroup);
+
+        mockBehaviour(user, groups);
 
         MvcResult result = mockMvc.perform(
                 delete("/api/v1/ldap/" + directory + "/users/" + user.getUserId())
@@ -82,10 +95,13 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
 
     }
 
-    private void mockBehaviour(AcmUser user) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
+    private void mockBehaviour(AcmUser user, List<AcmGroup> groups) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
     {
         when(mockLdapUserService.getUserDao()).thenReturn(mockUserDao);
         when(mockUserDao.findByUserId(anyString())).thenReturn(user);
+
+        when(mockLdapUserService.getGroupDao()).thenReturn(mockGroupDao);
+        when(mockGroupDao.findByUserMember(user)).thenReturn(groups);
         when(mockLdapUserService.removeLdapUser(anyString(), anyString())).thenReturn(user);
         doNothing().when(ldapUserAPIController).checkIfLdapManagementIsAllowed(anyString());
     }
