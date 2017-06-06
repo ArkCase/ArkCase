@@ -138,7 +138,8 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
         $scope.save = function () {
             $modalInstance.close({
-                person: clearNotFilledElements(_.cloneDeep($scope.person))
+                person: clearNotFilledElements(_.cloneDeep($scope.person)),
+                images: $scope.pictures
             });
         };
 

@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService'
+    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService
+        , referenceService, ObjectService, SearchService, SearchQueryBuilder
     ) {
 
         new HelperObjectBrowserService.Component({
@@ -35,6 +35,55 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+
+            // If the reference is a CASE_FILE, retrieve its title, as it may have changed since reference was created
+            /**
+             * Initially attemped to use the below code
+             * However, the index i is out of scope in the onFulfilled function
+             *
+             * if($scope.objectInfo.references[i].targetType == "CASE_FILE") {
+                    CaseInfoService.getCaseInfo($scope.objectInfo.references[i].targetId).then(
+						function(caseInfo) {
+							$scope.objectInfo.references[i].targetTitle = caseInfo.title;
+						}
+					);
+                }
+             *
+             * As a result, we need to use Closures to be able to pass the index variable into the onFulfilled case
+             *
+             * Since i and the fulfillment function of getCaseInfo are both defined in the distinct scope of
+             * getIterablePromises, the fulfillment function still has access to i
+             *
+             * The function has been updated to use solr SearchService instead of CaseInfoService
+             *
+             * @param index
+             */
+            function updateIterableTitleReferences(index) {
+                var i = index;
+
+                // build solr query
+                var size = 1;
+                var start = 0;
+                var searchQuery = '*';
+
+                // build the solr filter based on the object's ID as well as its type
+                var query = 'object_type_s:' + $scope.objectInfo.references[i].targetType + '+AND+object_id_s:'
+                                + $scope.objectInfo.references[i].targetId;
+
+                SearchService.querySimpleSearch({
+                    query: query
+                },
+                // If the solr query fails, the title won't get updated, so it will just use whatever is in the DB
+                function(data) {
+                    var caseTitle = data.response.docs[0].title_parseable
+                    $scope.objectInfo.references[i].targetTitle = caseTitle;
+                });
+            }
+
+            // See above, this iterates over all found references and updates case titles where required
+            for (var i = 0; i < $scope.objectInfo.references.length; i++) {
+                updateIterableTitleReferences(i);
+            }
             $scope.gridOptions = $scope.gridOptions || {};
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
         };
