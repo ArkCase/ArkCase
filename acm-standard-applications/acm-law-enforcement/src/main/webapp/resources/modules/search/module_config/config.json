@@ -8,7 +8,7 @@
       "menuItemTitle": "search.menus.leftnav.item",
       "moduleId": "search",
       "iconClass": "fa fa-search",
-      "position": 70
+      "position": 100
     }
   ],
   "components": [
@@ -44,7 +44,8 @@
           "name": "title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "search.comp.grid.columns.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
         },
         {
           "name": "parent_number_lcs",

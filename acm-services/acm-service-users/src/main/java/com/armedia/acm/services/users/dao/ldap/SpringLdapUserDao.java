@@ -1,9 +1,9 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
@@ -13,10 +13,15 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.AuthenticationException;
+import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.naming.directory.Attribute;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import java.util.List;
 
@@ -57,18 +62,44 @@ public class SpringLdapUserDao
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
     }
 
-    public void changeUserPassword(String dn, String password, LdapTemplate ldapTemplate, AcmLdapConfig config)
+    public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)
             throws AcmLdapActionFailedException
     {
         String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
+
         try
         {
-            DirContextOperations context = new RetryExecutor<DirContextOperations>()
-                    .retryResult(() -> ldapTemplate.lookupContext(strippedBaseDn));
-            context.setAttributeValue("userPassword", password.getBytes());
-            new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
+            String passwordAttribute;
+            byte[] passwordBytes;
+            Attribute oldPassword;
+            ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
+            DirContext context = contextSource.getContext(dn, password);
+
+            if (AcmLdapConstants.LDAP_AD.equals(config.getDirectoryType()))
+            {
+                passwordBytes = MapperUtils.encodeUTF16LE(newPassword);
+                passwordAttribute = "unicodePwd";
+                oldPassword = new BasicAttribute(passwordAttribute, MapperUtils.encodeUTF16LE(password));
+            } else
+            {
+                passwordBytes = newPassword.getBytes();
+                passwordAttribute = "userPassword";
+                oldPassword = new BasicAttribute(passwordAttribute, password.getBytes());
+            }
+            // set old/new password attributes
+            ModificationItem[] mods = new ModificationItem[2];
+            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, oldPassword);
+            mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(passwordAttribute, passwordBytes));
+            // Perform the update
+            new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
+            context.close();
+        } catch (AuthenticationException e)
+        {
+            log.warn("User: {} failed to authenticate. ", dn);
+            throw e;
         } catch (Exception e)
         {
+            log.warn("Changing the password for User: {} failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
     }

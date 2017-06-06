@@ -10,7 +10,7 @@
       "menuItemTitle": "tasks.menus.leftnav.item",
       "moduleId": "task",
       "iconClass": "fa fa-check-circle",
-      "position": 60
+      "position": 30
     },
     {
       "menuId": "topbar",

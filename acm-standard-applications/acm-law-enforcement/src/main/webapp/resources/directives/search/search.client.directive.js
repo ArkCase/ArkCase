@@ -100,7 +100,6 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 var isSelected = searchObject.isSelected;
                 scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
-                    scope.labelSelected = $label;
                     isSelected = true;
                 };
 
@@ -117,25 +116,20 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        if (scope.multiFilter && !scope.isAutoSuggestActive) {
+                        if (scope.isMultiFilter) {
                             if (scope.searchQuery) {
-                                if (scope.filters.indexOf("Tag Token") <= 0) {
-                                    scope.filters += "&fq" + scope.multiFilter;
-                                }
-                                _.map(scope.searchQuery, function (tag) {
-                                    scope.filters += tag.tag_token_lcs + "|";
-                                });
+                                // AFDP-3698: use Solr join query in tags module
+                                var joinQueryStr = scope.multiFilter.replace("${tagName}", scope.searchQuery);
+                                scope.join = joinQueryStr;
                             }
                         }
 
                         if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
-                            scope.searchQuery = scope.labelSelected;
-                            searchObject.searchQuery = scope.labelSelected;
-                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted("\"" + scope.searchQuery + "\"", scope.filters, scope.pageSize, scope.start, scope.sort);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\"" + scope.searchQuery + "\""), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                             isSelected = false;
                         } else {
                             scope.searchQuery = searchObject.searchQuery;
-                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start, scope.sort);
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                         }
                         if (query) {
                             setExportUrl(query);
@@ -259,7 +253,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             var hidden = false;
                             if (typeof scope.config.hiddenFacets !== 'undefined' &&
                                 Util.isArray(scope.config.hiddenFacets)) {
-                                hidden = scope.config.hiddenFacets.includes(key);
+                                hidden = _.includes(scope.config.hiddenFacets, key);
                             }
                             if (!hidden && value) {
                                 scope.facets.push({"name": key, "fields": value});
@@ -417,8 +411,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             }
                         };
 
+                        scope.join = "";
                         scope.isMultiFilter = false;
                         if (config.multiFilter) {
+                            scope.multiFilter = scope.config.multiFilter;
                             scope.isMultiFilter = true;
                         }
                         //hideTypeahead is false by default, it will be changed in true if it is added in config

@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
-    , '$modal', '$q', '$timeout', 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService'
+    , '$modal', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , function ($scope, $stateParams, $modal, $q, $timeout, Util, ConfigService, ObjectService, ObjectLookupService
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
+    , function ($scope, $stateParams, $modal, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -38,14 +38,16 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.DOC_REPO);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
 
-            $q.all([promiseFormTypes, promiseFileTypes]).then(
+            $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.fileLanguages = data[2]; 
                 });
         };
 
@@ -66,10 +68,26 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
         };
 
-
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
         };
 
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
+        };
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

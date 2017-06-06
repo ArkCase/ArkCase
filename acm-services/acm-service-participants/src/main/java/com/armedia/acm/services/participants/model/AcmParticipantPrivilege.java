@@ -1,7 +1,9 @@
 package com.armedia.acm.services.participants.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_participant_privilege")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmParticipantPrivilege implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -2774839599422346798L;

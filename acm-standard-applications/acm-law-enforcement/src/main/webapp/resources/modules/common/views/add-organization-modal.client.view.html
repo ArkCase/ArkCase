@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h3>
+        <span translate>common.addOrganization.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="addOrganizationForm">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-primary"
+                        ng-click="addNewOrganization()" translate>
+                    common.addOrganization.addNew.label
+                </button>
+            </div>
+            <div class="col-sm-6 form-group" ng-show="showSetPrimary">
+                <label translate>common.addOrganization.setPrimary.label</label><span class="required-asterisk">*</span>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>common.addOrganization.radioYes.text</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>common.addOrganization.radioNo.text</translate>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="organization"
+                       translate>common.addOrganization.organization.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="organization" class="input-md form-control" type="text"
+                       ng-model="organizationValue"
+                       placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
+                       ng-click="pickOrganization()" required>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="types" translate>common.addOrganization.type.label</label><span
+                    class="required-asterisk">*</span>
+                <select class="input-md form-control" id="types" ng-model="type" ng-options="o as o.name for o in types" required></select>
+            </div>
+        </div>
+        <div class="row" ng-show="showDescription">
+            <div class="col-sm-12 form-group">
+                <label for="description" translate>common.addOrganization.description</label>
+                <textarea id="description" class="input-md form-control" ng-model="description"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>common.addOrganization.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid">
+        <span translate>common.addOrganization.btnOk.text</span>
+    </button>
+</div>

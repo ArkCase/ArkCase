@@ -20,7 +20,8 @@
   "document-repository.comp.actions": {
     "restrict": "en-in_Restrict?",
     "subscribe.button": "en-in_Subscribe",
-    "unsubscribe.button": "en-in_Unsubscribe"
+    "unsubscribe.button": "en-in_Unsubscribe",
+    "confirm.delete.documentRepository.msg": "en-in_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "en-in_Details",
@@ -32,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "en-in_Documents"
+    "title": "en-in_Documents",
+    "sendEmail": "en-in_Send Email",
+    "filterInputPlaceholder": "en-in_Filter",
+    "searchInputPlaceholder": "en-in_Search"
   },
   "document-repository.comp.participants": {
     "title": "en-in_Participants",

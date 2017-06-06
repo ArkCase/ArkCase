@@ -38,14 +38,13 @@ angular.module('document-repository').controller('DocumentRepository.ActionsCont
             });
         };
 
-        $scope.onClickRestrict = function ($event) {
+        $scope.onClickRestrict = function () {
             if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var docRepoInfo = Util.omitNg($scope.objectInfo);
                 DocumentRepositoryInfoService.saveDocumentRepository(docRepoInfo)
                     .then(function () {
-
                     }, function () {
                         $scope.restricted = !$scope.restricted;
                     });
@@ -60,6 +59,7 @@ angular.module('document-repository').controller('DocumentRepository.ActionsCont
                     return data;
                 });
         };
+
         $scope.unsubscribe = function (docRepoInfo) {
             ObjectSubscriptionService.unsubscribe($scope.userId, ObjectService.ObjectTypes.DOC_REPO, docRepoInfo.id)
                 .then(function (data) {
@@ -67,6 +67,10 @@ angular.module('document-repository').controller('DocumentRepository.ActionsCont
                     $scope.showBtnUnsubscribe = !$scope.showBtnSubscribe;
                     return data;
                 });
+        };
+
+        $scope.delete = function (docRepoId) {
+          DocumentRepositoryInfoService.deleteDocumentRepository(docRepoId);
         };
 
         $scope.refresh = function () {

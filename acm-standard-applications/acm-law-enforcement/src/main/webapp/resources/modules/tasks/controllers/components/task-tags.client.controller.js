@@ -95,7 +95,7 @@ angular.module('tasks').controller('Tasks.TagsController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.objectParentTitle = $scope.objectInfo.parentObjectName;
+            $scope.objectParentTitle = $scope.objectInfo.title;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "taskId");
             if (Util.goodPositive(currentObjectId, false)) {

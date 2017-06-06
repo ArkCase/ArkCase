@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,8 @@ import java.util.List;
 public interface EcmFileService
 {
     CmisObject findObjectByPath(String path) throws Exception;
+
+    CmisObject findObjectById(String cmisRepositoryId, String cmisId) throws Exception;
 
     EcmFile upload(
             String originalFileName,
@@ -50,6 +53,54 @@ public interface EcmFileService
             Long parentObjectId,
             String cmisRepositoryId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
 
+    @Transactional
+    EcmFile upload(String originalFileName, String fileType, String fileCategory, InputStream fileContents,
+                   String fileContentType, String fileName, Authentication authentication,
+                   String targetCmisFolderId, String parentObjectType, Long parentObjectId,
+                   String cmisRepositoryId, Document existingCmisDocument)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    /**
+     * Service method allowing for extensions to subtype the EcmFIle.
+     *
+     * @param authentication
+     * @param parentObjectType
+     * @param parentObjectId
+     * @param targetCmisFolderId
+     * @param arkcaseFileName
+     * @param fileContents
+     * @param metadata
+     * @return
+     * @throws AcmCreateObjectFailedException
+     * @throws AcmUserActionFailedException
+     */
+    @Transactional
+    EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    /**
+     * Special method for ECM file sync, where the ECM repository already has the file we want to load into Alfresco.
+     *
+     * @param authentication
+     * @param parentObjectType
+     * @param parentObjectId
+     * @param targetCmisFolderId
+     * @param arkcaseFileName
+     * @param fileContents
+     * @param metadata
+     * @param existingCmisDocument
+     * @return
+     * @throws AcmCreateObjectFailedException
+     * @throws AcmUserActionFailedException
+     */
+    @Transactional
+    EcmFile upload(Authentication authentication, String parentObjectType, Long parentObjectId,
+                   String targetCmisFolderId, String arkcaseFileName, InputStream fileContents, EcmFile metadata,
+                   Document existingCmisDocument)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+
     /**
      * This method is meant to be called via Frevvo form submissions and any other file upload method aside from the
      * webapp file uploader.
@@ -64,8 +115,26 @@ public interface EcmFileService
      * @throws AcmCreateObjectFailedException
      */
     EcmFile upload(
-            String originalFileName,
+            String arkcaseFileName,
             String fileType,
+            MultipartFile file,
+            Authentication authentication,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    EcmFile upload(
+            Authentication authentication,
+            MultipartFile file,
+            String targetCmisFolderId,
+            String parentObjectType,
+            Long parentObjectId,
+            EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
+    
+    EcmFile upload(
+            String arkcaseFileName,
+            String fileType,
+            String fileLang,
             MultipartFile file,
             Authentication authentication,
             String targetCmisFolderId,
@@ -154,6 +223,8 @@ public interface EcmFileService
                                          String category, String sortBy,
                                          String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException;
 
+    AcmCmisObjectList listFlatSearchResults(Authentication auth, AcmContainer container, String category, String sortBy,
+                                            String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException;
 
     AcmCmisObjectList listFileFolderByCategory(Authentication auth,
                                                AcmContainer container,

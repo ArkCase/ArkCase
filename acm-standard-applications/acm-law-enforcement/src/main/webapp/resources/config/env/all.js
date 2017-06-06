@@ -73,6 +73,7 @@ module.exports = {
                 'lib/fancytree/dist/src/jquery.fancytree.gridnav.js',
                 'lib/fancytree/dist/src/jquery.fancytree.edit.js',
                 'lib/fancytree/dist/src/jquery.fancytree.dnd.js',
+                'lib/fancytree/dist/src/jquery.fancytree.filter.js',
                 'lib/ng-file-upload/ng-file-upload.min.js',
                 'lib/ng-file-upload-shim/ng-file-upload-shim.min.js',
                 'lib/ng-tags-input/ng-tags-input.min.js',
@@ -94,7 +95,9 @@ module.exports = {
                 'lib/angular-hotkeys/build/hotkeys.js',
                 'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js',
                 'lib/crypto-js/crypto-js.js',
-                'lib/angular-google-analytics/dist/angular-google-analytics.js'
+                'lib/angular-google-analytics/dist/angular-google-analytics.js',
+                'lib/rrule/lib/rrule.js',
+                'lib/jsog/lib/JSOG.js'
             ]
         },
         css: [

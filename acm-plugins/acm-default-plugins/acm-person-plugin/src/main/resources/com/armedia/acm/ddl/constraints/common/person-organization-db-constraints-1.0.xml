@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-person-organization-foreign-keys" author="nebojsha.davidovikj">
+
+        <addForeignKeyConstraint baseTableName="acm_person_org_assoc" baseColumnNames="cm_person_id"
+                                 constraintName="fk_person_org_assoc_person_id"
+                                 referencedTableName="acm_person"
+                                 referencedColumnNames="cm_person_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+
+        <addForeignKeyConstraint baseTableName="acm_person_org_assoc" baseColumnNames="cm_organization_id"
+                                 constraintName="fk_person_org_assoc_org_id"
+                                 referencedTableName="acm_organization"
+                                 referencedColumnNames="cm_organization_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+</databaseChangeLog>

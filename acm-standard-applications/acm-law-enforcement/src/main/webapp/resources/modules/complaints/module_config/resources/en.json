@@ -39,74 +39,38 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "complaints.comp.people": {
     "title": "People",
     "table.columns": {
-      "entity": "Entity",
-      "type": "Type",
+      "type": "Role",
       "firstName": "FirstName",
-      "lastName": "LastName"
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
+    }
+  },
+  "complaints.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "associationType": "Role",
+      "type": "Type",
+      "identification": "ID",
+      "value": "Organization",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     },
-    "contactMethods": {
-      "title": "ContactMethods",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organizations",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "addresses": {
-      "title": "Locations",
-      "table.columns": {
-        "type": "Type",
-        "streetAddress": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "aliases": {
-      "title": "Aliases",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "Security Tags",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New",
+      "addExisting": "Add New"
     }
   },
   "complaints.comp.participants": {

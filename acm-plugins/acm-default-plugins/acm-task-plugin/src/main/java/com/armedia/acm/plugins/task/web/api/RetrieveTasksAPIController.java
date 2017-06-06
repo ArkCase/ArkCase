@@ -6,7 +6,6 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -25,10 +24,9 @@ import java.util.List;
 
 /**
  * @author sasko.tanaskoski
- *
  */
 @Controller
-@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
+@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
 public class RetrieveTasksAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -38,10 +36,8 @@ public class RetrieveTasksAPIController
     /**
      * REST controller for retrieving tasks by user for due date.
      *
-     * @param authentication
-     *            authentication object
-     * @param due
-     *            due date
+     * @param authentication authentication object
+     * @param due            due date
      * @return list of TaskByUser objects
      */
     @RequestMapping(value = "/getListByDueDate/{due}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -70,10 +66,8 @@ public class RetrieveTasksAPIController
     /**
      * This method will return grouping results in the list from the Solr
      *
-     * @param authentication
-     *            - authentication object
-     * @param dueDate
-     *            - dueDate string
+     * @param authentication - authentication object
+     * @param dueDate        - dueDate string
      * @return - list of user tasks pairs
      */
     private List<Object> retrieveUserTasksCount(Authentication authentication, String dueDate)
@@ -98,10 +92,8 @@ public class RetrieveTasksAPIController
     /**
      * This method returns Solr response for grouping search
      *
-     * @param authentication
-     *            - authentication object
-     * @param dueDate
-     *            - due date string
+     * @param authentication - authentication object
+     * @param dueDate        - due date string
      * @return - Solr response in string representation
      */
     private String getSolrResponse(Authentication authentication, String dueDate)
@@ -110,20 +102,20 @@ public class RetrieveTasksAPIController
         String solrResponse = "";
         switch (AcmTasksForAPeriod.getTasksForPeriodByText(dueDate))
         {
-        case PAST_DUE:
-            solrQuery += "+AND+due_tdt:[* TO NOW]";
-            break;
-        case DUE_TOMORROW:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW+1DAY]";
-            break;
-        case DUE_IN_7_DAYS:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW+7DAYS]";
-            break;
-        case DUE_IN_30_DAYS:
-            solrQuery += "+AND+due_tdt:[NOW TO NOW+30DAYS]";
-            break;
-        case ALL:
-        default:
+            case PAST_DUE:
+                solrQuery += "+AND+due_tdt:[* TO NOW]";
+                break;
+            case DUE_TOMORROW:
+                solrQuery += "+AND+due_tdt:[NOW TO NOW%2B1DAY]";
+                break;
+            case DUE_IN_7_DAYS:
+                solrQuery += "+AND+due_tdt:[NOW TO NOW%2B7DAYS]";
+                break;
+            case DUE_IN_30_DAYS:
+                solrQuery += "+AND+due_tdt:[NOW TO NOW%2B30DAYS]";
+                break;
+            case ALL:
+            default:
         }
 
         solrQuery += "&rows=0&fl=id&wt=json&indent=true&facet=true&facet.mincount=1&facet.field=" + SearchConstants.PROPERTY_ASSIGNEE_ID;

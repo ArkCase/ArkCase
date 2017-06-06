@@ -41,13 +41,14 @@ angular.module('search').factory('Search.QueryBuilderService', [
              *
              * @param {String} input Search term input by user
              * @param {String} filters Filters to send to the faceted search service
+             * @param {String} join Filter using solr join query
              * @param {String} n Total row count
              * @param {String} start Starting row count
              * @param {String} sort Sorting specification(sortBy + " " + direction)
              * @returns {HttpPromise} Future info about cancel status
              */
-            buildFacetedSearchQuerySorted: function (input, filters, n, start, sort) {
-                return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&n=" + n + "&start=" + start + "&s=" + sort));
+            buildFacetedSearchQuerySorted: function (input, filters, join, n, start, sort) {
+                return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort));
             },
 
             /**

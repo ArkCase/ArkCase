@@ -43,13 +43,13 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
     }
 
     function changeLdapPassword(credentials) {
-        var request = $http({
+        return $http({
             method: "POST",
             url: 'api/latest/ldap/' + credentials.userInfo.directoryName + '/users/' + credentials.userInfo.userId + '/password',
             data: {
-                "password": credentials.password
+                currentPassword: credentials.currentPassword,
+                newPassword: credentials.newPassword
             }
         });
-        return (request.then(handleSuccess, handleError));
     }
 });
