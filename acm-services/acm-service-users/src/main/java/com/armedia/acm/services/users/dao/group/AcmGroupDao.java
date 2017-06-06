@@ -32,9 +32,6 @@ import java.util.Set;
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Transactional
@@ -59,15 +56,18 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = dbQuery.getSingleResult();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (e instanceof NoResultException)
             {
                 LOG.info("There is no any group with name = " + name);
-            } else if (e instanceof NonUniqueResultException)
+            }
+            else if (e instanceof NonUniqueResultException)
             {
                 LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
-            } else
+            }
+            else
             {
                 LOG.error("Error while retrieving group by group name = " + name, e);
             }
@@ -87,7 +87,8 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             getEm().remove(groupToBeDeleted);
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -262,13 +263,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = (AcmGroup) dbQuery.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             LOG.info("There is no any group with name = {}", name);
-        } catch (NonUniqueResultException e)
+        }
+        catch (NonUniqueResultException e)
         {
             LOG.info("There is no unique group found with name = {}. More than one group has this name.", name);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while retrieving group by group name = {}", name, e);
         }
@@ -281,13 +285,4 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return AcmGroup.class;
     }
 
-    public EntityManager getEntityManager()
-    {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager)
-    {
-        this.entityManager = entityManager;
-    }
 }

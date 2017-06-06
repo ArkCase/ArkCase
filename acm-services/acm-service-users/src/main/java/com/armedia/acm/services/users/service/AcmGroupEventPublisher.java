@@ -17,10 +17,7 @@ public class AcmGroupEventPublisher implements ApplicationEventPublisherAware
 
     public void publishLdapGroupDeletedEvent(AcmGroup source)
     {
-        if (log.isDebugEnabled())
-        {
-            log.debug("Publishing Ldap group deleted event.");
-        }
+        log.debug("Publishing LDAP group: {} deleted event.", source.getName());
         LdapGroupDeletedEvent event = new LdapGroupDeletedEvent(source, source.getName());
         event.setSucceeded(true);
         applicationEventPublisher.publishEvent(event);

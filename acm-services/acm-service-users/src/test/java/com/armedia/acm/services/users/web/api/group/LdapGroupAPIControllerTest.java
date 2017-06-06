@@ -66,7 +66,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
         mockBehaviour(group);
 
         MvcResult result = mockMvc.perform(
-                delete("/api/v1/ldap/" + directory + "/groups/" + group.getName() + "/remove")
+                delete("/api/v1/ldap/" + directory + "/groups/" + group.getName())
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
