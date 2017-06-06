@@ -99,6 +99,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
             , NODE_TYPE_NEXT: "next"
             , NODE_TYPE_FILE: "file"
             , NODE_TYPE_FOLDER: "folder"
+            , mediaTypes: [".mp4", ".webm", ".ogg"]
 
             , jqTree: null
             , tree: null
@@ -852,7 +853,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node = tree.getActiveNode();
                 if (!DocTree.editSetting.isEditing) {
                     if (DocTree.isFileNode(node)) {
-                        $(this).trigger("command", {cmd: "open"});
+                        if (DocTree.mediaTypes.indexOf(node.data.ext) > -1) {
+                            $(this).trigger("command", {cmd: "play"});
+                        } else {
+                            $(this).trigger("command", {cmd: "open"});
+                        }
                     }
                 }
                 //return false;
@@ -1908,11 +1913,28 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
 
-                        /*email document should not be available when it's not configured*/
-                        if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
-                            item.invisible = true;
+                        switch (item.cmd) {
+                        case 'email':
+                            if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments) {
+                                item.invisible = true;
+                            }
+                            break;
+                        case 'play':
+                            if (DocTree.mediaTypes.indexOf(nodes[0].data.ext) > -1) {
+                                item.invisible = false;
+                            } else {
+                                item.invisible = true;
+                            }
+                            break;
+                        case 'open':
+                            if (DocTree.mediaTypes.indexOf(nodes[0].data.ext) > -1) {
+                                item.invisible = true;
+                            } else {
+                                item.invisible = false;
+                            }
+                            break;
                         }
-
+                        
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {
                             if ("invisible" == allowResult) {
