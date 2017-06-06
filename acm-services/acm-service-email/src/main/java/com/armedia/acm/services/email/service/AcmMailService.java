@@ -50,12 +50,10 @@ public interface AcmMailService
     List<EmailTemplateConfiguration> getTemplateConfigurations();
 
     /**
-     * @param user
-     * @param auth
      * @param templateData
      * @param template
      */
-    void updateEmailTemplate(AcmUser user, Authentication auth, EmailTemplateConfiguration templateData, MultipartFile template);
+    void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template);
 
     /**
      *

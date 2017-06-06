@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,12 +62,17 @@ public class AcmMailConfigurationServiceAPIController
     }
 
     @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<?> updateEmailTemplate(HttpSession session, Authentication auth,
-            @RequestPart("data") EmailTemplateConfiguration templateConfiguration,
+    public ResponseEntity<?> updateEmailTemplate(@RequestPart("data") EmailTemplateConfiguration templateConfiguration,
             @RequestPart(value = "file", required = false) MultipartFile template)
     {
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        mailService.updateEmailTemplate(user, auth, templateConfiguration, template);
+        mailService.updateEmailTemplate(templateConfiguration, template);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
+    {
+        mailService.deleteTemplate(templateName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

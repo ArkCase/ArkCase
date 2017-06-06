@@ -12,7 +12,7 @@ public class EmailTemplateConfiguration
 
     private String emailPattern;
 
-    private String objectType;
+    private List<String> objectTypes;
 
     private EmailSource source;
 
@@ -38,20 +38,20 @@ public class EmailTemplateConfiguration
     }
 
     /**
-     * @return the objectType
+     * @return the objectTypes
      */
-    public String getObjectType()
+    public List<String> getObjectTypes()
     {
-        return objectType;
+        return objectTypes;
     }
 
     /**
-     * @param objectType
-     *            the objectType to set
+     * @param objectTypes
+     *            the objectTypes to set
      */
-    public void setObjectType(String objectType)
+    public void setObjectTypes(List<String> objectTypes)
     {
-        this.objectType = objectType;
+        this.objectTypes = objectTypes;
     }
 
     /**
