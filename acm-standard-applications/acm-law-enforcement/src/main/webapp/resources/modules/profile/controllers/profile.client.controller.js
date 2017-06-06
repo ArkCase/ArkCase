@@ -91,8 +91,8 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
 ]);
 
 angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance'
-    , '$modal', '$timeout', 'Profile.ChangePasswordService', 'Authentication', 'MessageService'
-    , function ($scope, $modalInstance, $modal, $timeout, ChangePasswordService, Authentication, MessageService) {
+    , '$modal', '$translate', 'Profile.ChangePasswordService', 'Authentication', 'MessageService'
+    , function ($scope, $modalInstance, $modal, $translate, ChangePasswordService, Authentication, MessageService) {
 
         Authentication.queryUserInfo().then(function (userInfo) {
             $scope.userInfo = userInfo;
@@ -117,6 +117,7 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
                 ChangePasswordService.changeLdapPassword(data).then(function () {
                     $modalInstance.close('done');
                     $scope.loading = false;
+                    MessageService.info($translate.instant("profile.modal.success"));
                 }, function (errorData) {
                     $scope.loading = false;
                     var message = errorData.data.authError;

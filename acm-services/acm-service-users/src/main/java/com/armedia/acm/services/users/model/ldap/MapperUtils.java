@@ -66,16 +66,8 @@ public class MapperUtils
         return dn;
     }
 
-    public static byte[] encodeUTF16LE(String str)
+    public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
     {
-        try
-        {
-            return String.format("\"%s\"", str).getBytes("UTF-16LE");
-
-        } catch (UnsupportedEncodingException e)
-        {
-            log.warn("Unsupported encoding", e);
-        }
-        return str.getBytes();
+        return String.format("\"%s\"", str).getBytes("UTF-16LE");
     }
 }

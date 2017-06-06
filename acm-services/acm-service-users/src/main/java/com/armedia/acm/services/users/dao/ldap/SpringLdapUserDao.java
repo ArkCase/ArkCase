@@ -80,7 +80,6 @@ public class SpringLdapUserDao
                 passwordBytes = MapperUtils.encodeUTF16LE(newPassword);
                 passwordAttribute = "unicodePwd";
                 oldPassword = new BasicAttribute(passwordAttribute, MapperUtils.encodeUTF16LE(password));
-
             } else
             {
                 passwordBytes = newPassword.getBytes();
@@ -92,15 +91,15 @@ public class SpringLdapUserDao
             mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, oldPassword);
             mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(passwordAttribute, passwordBytes));
             // Perform the update
-            context.modifyAttributes(strippedBaseDn, mods);
+            new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
         } catch (AuthenticationException e)
         {
-            log.warn("User: [{}] failed to authenticate. ", dn);
+            log.warn("User: {} failed to authenticate. ", dn);
             throw e;
         } catch (Exception e)
         {
-            log.warn("Changing the password for User: [{}] failed. ", dn, e);
+            log.warn("Changing the password for User: {} failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
     }

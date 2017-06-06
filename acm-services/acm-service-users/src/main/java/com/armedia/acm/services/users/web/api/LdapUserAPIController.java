@@ -115,10 +115,12 @@ public class LdapUserAPIController extends SecureLdapController
         } catch (AuthenticationException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            log.error("Changing password failed!", e);
             return Collections.singletonMap("authError", "Failed to authenticate! Wrong password.");
         } catch (AcmUserActionFailedException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            log.error("Changing password failed!", e);
             return Collections.singletonMap("message", e.getMessage());
         } catch (Exception e)
         {
