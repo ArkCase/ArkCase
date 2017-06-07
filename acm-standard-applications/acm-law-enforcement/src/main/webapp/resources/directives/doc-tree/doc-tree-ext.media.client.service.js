@@ -91,30 +91,23 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
         , 'UtilService', 'params', 'DocTreeExt.Media', '$modal', '$translate', '$sce'
         , function ($scope, $modalInstance, Util, params, DocTreeExtMedia, $modal, $translate, $sce) {
             $scope.modalInstance = $modalInstance;
-            $scope.config = params.config;
-            $scope.DocTree = params.DocTree;
             $scope.nodes = _.filter(params.nodes, function (node) {
                 return !node.folder;
             });
-            
-            $scope.selectedFiles = DocTreeExtMedia._extractFileIds($scope.nodes);
-            $scope.trustedUrl = $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.selectedFiles[0]);
+            $scope.config = {
+                sources: [
+                    {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId), type: $scope.nodes[0].data.mimeType}
+                ],
+                theme: "lib/videogular-themes-default/videogular.css",
+                plugins: {
+                    poster: "branding/loginlogo.png"
+                },
+                autoPlay: true
+            };
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss();
             };
-            
-            function VideoControl(videoElement) {
-                this.videoElement = videoElement;
-            }
-
-            VideoControl.prototype.play = function() {
-                this.videoElement.play();
-            }
-
-            VideoControl.prototype.pause = function() {
-                this.videoElement.pause();
-            }
         }
     ]
 );
