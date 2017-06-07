@@ -358,7 +358,7 @@
     "middleName": "Middle Name",
     "middleName.placeholder": "Enter Middle Name",
     "saveButton": "Save Person",
-    "informCreated": "{{firstName}} {{lastName}} Created.",
+    "informCreated": "{{personType}} {{firstName}} {{lastName}} was created.",
     "informUpdated": "{{firstName}} {{lastName}} Updated",
     "communicationAccounts": {
       "title": "Communication Accounts",
