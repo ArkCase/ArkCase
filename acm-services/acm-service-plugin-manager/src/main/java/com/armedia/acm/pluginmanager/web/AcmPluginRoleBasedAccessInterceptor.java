@@ -1,5 +1,6 @@
 package com.armedia.acm.pluginmanager.web;
 
+import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 
@@ -25,7 +26,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws AcmNotAuthorizedException
     {
         String method = request.getMethod();
         String url = request.getServletPath();
@@ -46,7 +47,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // no user privileges. somehow the user is logged in and is calling a plugin URL, but does not have
             // privileges in the user session. Somehow the login success handler did not run. This is an
             // anomalous situation. Better return HTTP 403.
-            response.setStatus(response.SC_FORBIDDEN);
+            throw new AcmNotAuthorizedException(request.getServletPath());
         } else
         {
             List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
@@ -54,7 +55,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
 
             if (!hasPrivilege)
             {
-                response.setStatus(response.SC_FORBIDDEN);
+                throw new AcmNotAuthorizedException(request.getServletPath());
             }
         }
 
@@ -73,6 +74,7 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
                 log.debug("Required privilege for {} {}: {}; user has privilege: {}", method, url, requiredPrivilege,
                         userPrivileges.containsKey(requiredPrivilege));
                 hasPrivilege = userPrivileges.containsKey(requiredPrivilege) ? userPrivileges.get(requiredPrivilege) : false;
+                break;
             }
         }
         return hasPrivilege;
