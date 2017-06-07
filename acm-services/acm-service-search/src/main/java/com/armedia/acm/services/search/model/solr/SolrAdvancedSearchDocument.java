@@ -22,6 +22,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String object_sub_type_s;
     private String name;
     private String ext_s;
+    private String mime_type_s;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
     private String creator_lcs;
@@ -226,6 +227,23 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setExt_s(String ext_s)
     {
         this.ext_s = ext_s;
+    }
+
+    /**
+     * @return the mime_type_s
+     */
+    public String getMime_type_s()
+    {
+        return mime_type_s;
+    }
+
+    /**
+     * @param mime_type_s
+     *            the mime_type_s to set
+     */
+    public void setMime_type_s(String mime_type_s)
+    {
+        this.mime_type_s = mime_type_s;
     }
 
     public Date getIncident_date_tdt()

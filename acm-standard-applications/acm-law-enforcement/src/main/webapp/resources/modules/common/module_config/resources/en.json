@@ -90,6 +90,10 @@
         "email": "Email"
       }
     },
+    "mediaDialog": {
+      "title": "ArkCase Media Player",
+      "btnCancel.text": "Cancel"
+    },
     "comment": {
       "title": "Checkin New Document",
       "addComent": "Detailed Note",
