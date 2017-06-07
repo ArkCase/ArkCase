@@ -6,6 +6,7 @@ import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+import com.armedia.acm.plugins.ecm.model.Range;
 import com.armedia.acm.plugins.ecm.service.StreamVideoService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
@@ -125,11 +126,11 @@ public class StreamVideoServiceImpl implements StreamVideoService
             List<Range> ranges = new ArrayList<>();
 
             // Validate and process Range and If-Range headers.
-            String range = request.getHeader("Range");
-            if (range != null)
+            String rangeHeaderValue = request.getHeader("Range");
+            if (rangeHeaderValue != null)
             {
                 // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
-                if (!range.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$"))
+                if (!rangeHeaderValue.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$"))
                 {
                     response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
                     response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
@@ -158,7 +159,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 // If any valid If-Range header, then process each part of byte range.
                 if (ranges.isEmpty())
                 {
-                    for (String part : range.substring(6).split(","))
+                    for (String part : rangeHeaderValue.substring(6).split(","))
                     {
                         // Assuming a file with length of 100, the following examples returns bytes at:
                         // 50-80 (50 to 80), 40- (40 to length=100), -20 (length-20=80 to length=100).
@@ -218,24 +219,24 @@ public class StreamVideoServiceImpl implements StreamVideoService
             if (ranges.isEmpty() || ranges.get(0) == full)
             {
                 // Return full file.
-                Range r = full;
+                Range range = full;
                 response.setContentType(contentType);
-                response.setHeader("Content-Length", String.valueOf(r.length));
+                response.setHeader("Content-Length", String.valueOf(range.getLength()));
 
                 // Copy full range.
-                copy(input, output, totalSize, r.start, r.length);
+                copy(input, output, totalSize, range.getStart(), range.getLength());
 
             }
             else if (ranges.size() == 1)
             {
                 // Return single part of file.
-                Range r = ranges.get(0);
+                Range range = ranges.get(0);
                 response.setContentType(contentType);
-                response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
-                response.setHeader("Content-Length", String.valueOf(r.length));
+                response.setHeader("Content-Range", "bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
+                response.setHeader("Content-Length", String.valueOf(range.getLength()));
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-                copy(input, output, totalSize, r.start, r.length);
+                copy(input, output, totalSize, range.getStart(), range.getLength());
             }
             else
             {
@@ -247,16 +248,16 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 ServletOutputStream sos = (ServletOutputStream) output;
 
                 // Copy multi part range.
-                for (Range r : ranges)
+                for (Range range : ranges)
                 {
                     // Add multipart boundary and header fields for every range.
                     sos.println();
                     sos.println("--" + MULTIPART_BOUNDARY);
                     sos.println("Content-Type: " + contentType);
-                    sos.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
+                    sos.println("Content-Range: bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
 
                     // Copy single part range of multi part range.
-                    copy(input, output, totalSize, r.start, r.length);
+                    copy(input, output, totalSize, range.getStart(), range.getLength());
                 }
 
                 // End with multipart boundary.
@@ -466,26 +467,5 @@ public class StreamVideoServiceImpl implements StreamVideoService
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
-    }
-
-    protected class Range {
-        long start;
-        long end;
-        long length;
-        long total;
-
-        /**
-         * Construct a byte range.
-         * @param start Start of the byte range.
-         * @param end End of the byte range.
-         * @param total Total length of the byte source.
-         */
-        public Range(long start, long end, long total) {
-            this.start = start;
-            this.end = end;
-            this.length = end - start + 1;
-            this.total = total;
-        }
-
     }
 }
