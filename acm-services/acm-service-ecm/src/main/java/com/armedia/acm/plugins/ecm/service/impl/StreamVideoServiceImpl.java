@@ -67,7 +67,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
         InputStream input = null;
         OutputStream output = null;
         ByteArrayOutputStream baos = null;
-        try (InputStream inputStream = payload.getStream())
+        try(InputStream inputStream = payload.getStream())
         {
             baos = copy(inputStream);
             input = new ByteArrayInputStream(baos.toByteArray());
@@ -197,8 +197,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
             // If content type is unknown, then set the default value.
             // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
             // To add new content types, add new mime-mapping entry in web.xml.
-            if (contentType == null)
-            {
+            if (contentType == null) {
                 contentType = "application/octet-stream";
             }
 
@@ -278,9 +277,8 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
     /**
      * Returns true if the given match header matches the given value.
-     *
      * @param header The match header.
-     * @param value  The value to be matched.
+     * @param value The value to be matched.
      * @return True if the given match header matches the given value.
      */
     private boolean matches(String header, String value)
@@ -293,10 +291,9 @@ public class StreamVideoServiceImpl implements StreamVideoService
     /**
      * Returns a substring of the given string value from the given begin index to the given end
      * index as a long. If the substring is empty, then -1 will be returned
-     *
-     * @param value      The string value to return a substring as long for.
+     * @param value The string value to return a substring as long for.
      * @param beginIndex The begin index of the substring to be returned as long.
-     * @param endIndex   The end index of the substring to be returned as long.
+     * @param endIndex The end index of the substring to be returned as long.
      * @return A substring of the given string value as long or -1 if substring is empty.
      */
     private long sublong(String value, int beginIndex, int endIndex)
@@ -307,9 +304,8 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
     /**
      * Returns true if the given accept header accepts the given value.
-     *
      * @param header The accept header.
-     * @param value  The value to be accepted.
+     * @param value The value to be accepted.
      * @return True if the given accept header accepts the given value.
      */
     private boolean accepts(String header, String value)
@@ -323,11 +319,10 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
     /**
      * Copy the given byte range of the given input to the given output.
-     *
-     * @param input  The input to copy the given range to the given output for.
+     * @param input The input to copy the given range to the given output for.
      * @param output The output to copy the given range from the given input for.
-     * @param total  Full bytes of the input.
-     * @param start  Start of the byte range.
+     * @param total Full bytes of the input.
+     * @param start Start of the byte range.
      * @param length Length of the byte range.
      * @throws IOException If something fails at I/O level.
      */
@@ -365,7 +360,6 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
     /**
      * Close the given resource.
-     *
      * @param resource The resource to be closed.
      */
     private static void close(Closeable resource)
@@ -385,7 +379,6 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
     /**
      * Get MimeType for the requested file
-     *
      * @param payload The stream returned from the Mule flow
      * @param ecmFile The EcmFile object
      * @param version The version of the requested file

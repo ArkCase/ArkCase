@@ -144,6 +144,6 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
         assertEquals(response.getResponse().getContentType(), "application/zip");
         assertEquals(response.getResponse().getHeader("Content-Disposition"), "attachment; filename=\"acm-101-ROOT.zip\"");
 
-
+        
     }
 }

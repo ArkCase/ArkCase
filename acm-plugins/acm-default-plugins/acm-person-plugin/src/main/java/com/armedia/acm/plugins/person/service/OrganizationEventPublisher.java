@@ -2,15 +2,12 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.OrganizationAddEvent;
-import com.armedia.acm.plugins.person.model.OrganizationModifiedEvent;
-import com.armedia.acm.plugins.person.model.OrganizationPersistenceEvent;
-import com.armedia.acm.plugins.person.model.OrganizationUpdatedEvent;
+import com.armedia.acm.plugins.person.model.OrganizationEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
 
 public class OrganizationEventPublisher implements ApplicationEventPublisherAware
 {
@@ -23,29 +20,35 @@ public class OrganizationEventPublisher implements ApplicationEventPublisherAwar
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishOrganizationEvent(Organization source, String ipAddress, boolean newOrganization, boolean succeeded)
+    public void publishEvent(OrganizationEvent event)
     {
-        log.debug("Publishing a organization event.");
-        OrganizationPersistenceEvent organizationPersistenceEvent =
-                newOrganization ? new OrganizationAddEvent(source) : new OrganizationUpdatedEvent(source, ipAddress);
-        organizationPersistenceEvent.setSucceeded(succeeded);
-        eventPublisher.publishEvent(organizationPersistenceEvent);
+        eventPublisher.publishEvent(event);
     }
 
-    public void publishOrganizationEvent(Organization source, boolean newOrganization, boolean succeeded)
+    public void publishOrganizationViewedEvent(Organization source, boolean succeeded)
+    {
+        log.debug("Publishing a Document Repository viewed event.");
+        OrganizationEvent event = new OrganizationEvent(source, "viewed");
+        event.setSucceeded(succeeded);
+        event.setIpAddress(AuthenticationUtils.getUserIpAddress());
+        eventPublisher.publishEvent(event);
+    }
+
+    public void publishOrganizationUpsertEvent(Organization source, boolean newOrganization, boolean succeeded)
     {
         log.debug("Publishing a organization event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
-        OrganizationModifiedEvent organizationPersistenceEvent = new OrganizationModifiedEvent(source, ipAddress);
+        OrganizationEvent organizationEvent = new OrganizationEvent(source);
+        organizationEvent.setIpAddress(ipAddress);
         if (newOrganization)
         {
-            organizationPersistenceEvent.setEventAction("created");
+            organizationEvent.setEventStatus("created");
         } else
         {
-            organizationPersistenceEvent.setEventAction("updated");
+            organizationEvent.setEventStatus("updated");
         }
-        organizationPersistenceEvent.setSucceeded(succeeded);
-        eventPublisher.publishEvent(organizationPersistenceEvent);
+        organizationEvent.setSucceeded(succeeded);
+        eventPublisher.publishEvent(organizationEvent);
     }
 
 }

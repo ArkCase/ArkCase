@@ -34,7 +34,7 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                     var contentType = headersGetter()['content-type'] || '';
                     if (data && contentType.indexOf('application/json') > -1) {
                         //we need angular.copy just to remove angular specific fields
-                        return JSOG.stringify(angular.copy(data));
+                        return angular.toJson(JSOG.encode(data));
                     }
                     return data;
                 },
@@ -191,16 +191,18 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             // so we need to set it manualy. The only way to do that is to convert the data to Blob.
             // In that way we can set the desired content-type.
 
-            var data = new Blob([JSOG.stringify(angular.copy(personInfo))], {
+            var data = new Blob([angular.toJson(JSOG.encode(personInfo))], {
                 type: 'application/json'
             });
             formData.append('person', data);
 
             // Second part: file type
             // The browser will automatically set the content-type for the files
-            for (var i = 0; i < images.length; i++) {
-                //add each file to the form data
-                formData.append('pictures', images[i]);
+            if (images) {
+                for (var i = 0; i < images.length; i++) {
+                    //add each file to the form data
+                    formData.append('pictures', images[i]);
+                }
             }
 
             // when we are sending data the request

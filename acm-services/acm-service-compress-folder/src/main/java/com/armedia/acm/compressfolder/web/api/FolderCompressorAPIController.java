@@ -80,8 +80,7 @@ public class FolderCompressorAPIController
                 }
                 while (read > 0);
                 response.getOutputStream().flush();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 log.error("Could not close stream: {}", e.getMessage(), e);
             }

@@ -202,7 +202,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         };
 
         function clearNotFilledElements(person) {
-
+            
             //remove opened property added for the datePickers
             if (person.identifications && person.identifications.length) {
                 person.identifications = _.map(person.identifications, function (obj) {
