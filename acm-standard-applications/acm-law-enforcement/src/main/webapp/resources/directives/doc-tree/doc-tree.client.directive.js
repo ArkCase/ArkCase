@@ -852,7 +852,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node = tree.getActiveNode();
                 if (!DocTree.editSetting.isEditing) {
                     if (DocTree.isFileNode(node)) {
-                        $(this).trigger("command", {cmd: "open"});
+                        if (node.data.mimeType.startsWith("video")) {
+                            $(this).trigger("command", {cmd: "play"});
+                        } else {
+                            $(this).trigger("command", {cmd: "open"});
+                        }
                     }
                 }
                 //return false;
@@ -1908,11 +1912,28 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
 
-                        /*email document should not be available when it's not configured*/
-                        if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
-                            item.invisible = true;
+                        switch (item.cmd) {
+                        case 'email':
+                            if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments) {
+                                item.invisible = true;
+                            }
+                            break;
+                        case 'play':
+                            if (nodes[0].data.mimeType.startsWith("video")) {
+                                item.invisible = false;
+                            } else {
+                                item.invisible = true;
+                            }
+                            break;
+                        case 'open':
+                            if (nodes[0].data.mimeType.startsWith("video")) {
+                                item.invisible = true;
+                            } else {
+                                item.invisible = false;
+                            }
+                            break;
                         }
-
+                        
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {
                             if ("invisible" == allowResult) {
@@ -2389,6 +2410,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                             var replaced = DocTree.findFolderItemIdx(fileId, folderList);
                                             if (0 <= replaced) {
                                                 folderList.children[replaced].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
+                                                folderList.children[replaced].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
                                                 folderList.children[replaced].modified = Util.goodValue(replaceInfo.modified);
                                                 folderList.children[replaced].version = Util.goodValue(replaceInfo.activeVersionTag);
 
@@ -2397,6 +2419,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                     for (var i = 0; i < replaceInfo.versions.length; i++) {
                                                         var ver = {};
                                                         ver.ext = replaceInfo.versions[i].versionFileNameExtension;
+                                                        ver.mimeType = replaceInfo.versions[i].versionFileMimeType;
                                                         ver.versionTag = replaceInfo.versions[i].versionTag;
                                                         ver.created = replaceInfo.versions[i].created;
                                                         ver.modified = replaceInfo.versions[i].modified;
@@ -2415,6 +2438,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             function (replacedFile) {
                                 if (replacedFile && fileNode) {
                                     fileNode.data.ext = replacedFile.ext;
+                                    fileNode.data.mimeType = replacedFile.mimeType;
                                     fileNode.data.modified = replacedFile.modified;
                                     fileNode.data.version = replacedFile.version;
                                     fileNode.data.versionList = replacedFile.versionList;
@@ -3127,6 +3151,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                 if (0 <= idx) {
                                                     folderList.children[idx].activeVersionTag = Util.goodValue(activeVersion.activeVersionTag);
                                                     folderList.children[idx].ext = Util.goodValue(activeVersion.fileActiveVersionNameExtension);
+                                                    folderList.children[idx].mimeType = Util.goodValue(activeVersion.fileActiveVersionMimeType);
                                                     DocTree.cacheFolderList.put(cacheKey, folderList);
                                                     return activeVersion;
                                                 }
@@ -3139,6 +3164,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.data.activeVertionTag = Util.goodValue(activeVersion);
                                     fileNode.data.version = Util.goodValue(activeVersion.activeVersionTag);
                                     fileNode.data.ext = Util.goodValue(activeVersion.fileActiveVersionNameExtension);
+                                    fileNode.data.mimeType = Util.goodValue(activeVersion.fileActiveVersionMimeType);
                                     DocTree.markNodeOk(fileNode);
                                     fileNode.renderTitle();
                                     dfd.resolve();
@@ -3305,6 +3331,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     "title": name,
                     "name": name,
                     "ext": "",
+                    "mimeType": "",
                     "type": type
                 });
                 DocTree.markNodePending(fileNode);
@@ -3462,6 +3489,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     nodeData.tooltip = Util.goodValue(fileData.name);
                     nodeData.data.name = Util.goodValue(fileData.name);
                     nodeData.data.ext = Util.goodValue(fileData.ext);
+                    nodeData.data.mimeType = Util.goodValue(fileData.mimeType);
                     nodeData.data.type = Util.goodValue(fileData.type);
                     nodeData.data.objectId = Util.goodValue(fileData.objectId, 0);
                     nodeData.data.objectType = Util.goodValue(fileData.objectType);
@@ -3807,13 +3835,19 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 } else if (!Util.isEmpty(fileData.name)) {
                     solrData.name = fileData.name;
                 }
-
+                
                 if (!Util.isEmpty(fileData.fileActiveVersionNameExtension)) {
                     solrData.ext = fileData.fileActiveVersionNameExtension;
                 } else if (!Util.isEmpty(fileData.ext)) {
                     solrData.ext = fileData.ext;
                 }
 
+                if (!Util.isEmpty(fileData.fileActiveVersionMimeType)) {
+                    solrData.mimeType = fileData.fileActiveVersionMimeType;
+                } else if (!Util.isEmpty(fileData.mimeType)) {
+                    solrData.mimeType = fileData.mimeType;
+                }
+                
                 if (!Util.isEmpty(fileData.fileType)) {
                     solrData.type = fileData.fileType;
                 } else if (!Util.isEmpty(fileData.type)) {
@@ -3867,6 +3901,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 solrData.modifier = Util.goodValue(folderData.modifier);
                 solrData.name = Util.goodValue(folderData.name);
                 solrData.ext = Util.goodValue(folderData.ext);
+                solrData.mimeType = Util.goodValue(folderData.mimeType);
                 solrData.status = Util.goodValue(folderData.status);
                 if (!Util.isEmpty(folderData.parentFolderId, 0)) {
                     solrData.folderId = Util.goodValue(folderData.parentFolderId, 0);
