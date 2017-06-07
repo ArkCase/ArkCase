@@ -1,6 +1,6 @@
 [
     {
-        "emailPattern": "*",
+        "emailPattern": ".*",
         "objectTypes": ["CASE_FILE", "COMPLAINT"],
         "source": "MANUAL",
         "templateName": "testTemplate",

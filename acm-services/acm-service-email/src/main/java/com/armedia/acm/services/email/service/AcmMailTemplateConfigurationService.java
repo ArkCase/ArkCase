@@ -29,11 +29,12 @@ public interface AcmMailTemplateConfigurationService
      * @param email
      * @param objectType
      * @param source
-     * @param actions
-     *            TODO
+     * @param action
      * @return
+     * @throws AcmEmailConfigurationException
      */
-    List<EmailTemplateConfiguration> getTemplateCandidates(String email, String objectType, EmailSource source, List<String> actions);
+    List<EmailTemplateConfiguration> getMatchingTemplates(String email, String objectType, EmailSource source, String action)
+            throws AcmEmailConfigurationException;
 
     /**
      *

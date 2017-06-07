@@ -1,5 +1,7 @@
 package com.armedia.acm.services.email.service;
 
+import static java.util.regex.Pattern.matches;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -16,6 +18,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 6, 2017
@@ -62,7 +66,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     @Override
     public void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template) throws AcmEmailConfigurationException
     {
-        File templateFolder = new File(System.getProperty("user.home") + File.separator + templateFolderPath);
+        File templateFolder = getTemplateFolder();
 
         List<EmailTemplateConfiguration> configurations;
         try
@@ -128,10 +132,15 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)
      */
     @Override
-    public List<EmailTemplateConfiguration> getTemplateCandidates(String email, String objectType, EmailSource source, List<String> actions)
+    public List<EmailTemplateConfiguration> getMatchingTemplates(String email, String objectType, EmailSource source, String action)
+            throws AcmEmailConfigurationException
     {
-        // TODO Auto-generated method stub
-        return null;
+        List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
+        Stream<EmailTemplateConfiguration> filteredConfigurations = configurations.stream()
+                .filter(c -> c.getObjectTypes().contains(objectType)).filter(c -> c.getActions().contains(action))
+                .filter(c -> c.getSource().equals(source)).filter(c -> matches(c.getEmailPattern(), email));
+
+        return filteredConfigurations.collect(Collectors.toList());
     }
 
     /*
@@ -170,6 +179,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    /**
+     * @return
+     */
+    private File getTemplateFolder()
+    {
+        return new File(System.getProperty("user.home") + File.separator + templateFolderPath);
     }
 
     /**

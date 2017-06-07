@@ -49,7 +49,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
      */
     private static final String TEMPLATES_FOLDER_NAME = "templates";
 
-    private static final String EMAIL_PATTERN = "*";
+    private static final String EMAIL_PATTERN = ".*";
 
     private static final String CASE_FILE = "CASE_FILE";
 
@@ -341,13 +341,36 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getTemplateCandidates(java.lang.String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)}.
+     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getMatchingTemplates(java.lang.String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)}.
+     *
+     * @throws Exception
+     * @throws FileNotFoundException
      */
     @Test
-    @Ignore
-    public void testGetTemplateCandidates()
+    public void testGetMatchingTemplates() throws Exception
     {
-        fail("Not yet implemented");
+        // given
+        String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
+        when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
+
+        // when
+        List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.com", CASE_FILE, EmailSource.MANUAL,
+                SEND_AS_ATTACHMENTS);
+
+        // then
+        assertThat(candidates.size(), is(2));
+
+        // we don't have to always check all the properties, but since it's a small size collection and simple POJOs, it
+        // is doable/acceptable
+        assertThat(candidates,
+                containsInAnyOrder(
+                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN)), hasProperty("source", is(EmailSource.MANUAL)),
+                                hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
+                                hasProperty("objectTypes", containsInAnyOrder(CASE_FILE, COMPLAINT)),
+                                hasProperty("actions", containsInAnyOrder(SEND_AS_LINKS, SEND_AS_ATTACHMENTS))),
+                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
+                                hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME)),
+                                hasProperty("objectTypes", contains(CASE_FILE)), hasProperty("actions", contains(SEND_AS_ATTACHMENTS)))));
     }
 
     /**
