@@ -102,7 +102,7 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
                 plugins: {
                     poster: "branding/loginlogo.png"
                 },
-                autoPlay: true
+                autoPlay: false
             };
 
             $scope.onClickCancel = function () {
