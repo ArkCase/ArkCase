@@ -14,6 +14,7 @@
     "security.ldapConfig.deleteLdapGroup": "Delete LDAP group",
     "security.ldapConfig.removeGroup": "Remove Group",
     "security.ldapConfig.addOrEditSupervisor": "Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "Edit Member",
     "security.ldapConfig.removeMember": "Remove Member",
     "security.ldapConfig.table.ldapUrl": "LDAP Url",
     "security.ldapConfig.table.directoryName": "Directory Name",
