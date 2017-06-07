@@ -2,18 +2,13 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.StreamVideoService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
-import org.apache.commons.collections.map.HashedMap;
+import org.apache.catalina.connector.ClientAbortException;
 import org.mule.api.MuleException;
-import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -23,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Created by riste.tutureski on 6/5/2017.
@@ -52,7 +45,16 @@ public class StreamVideoFileAPIController
 
         EcmFile file = getEcmFileService().findById(id);
         String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(file, version);
-        getStreamVideoService().stream(cmisFileId, request, response, file, version);
+
+        try
+        {
+            getStreamVideoService().stream(cmisFileId, request, response, file, version);
+        }
+        catch (ClientAbortException e)
+        {
+            LOG.debug("The connection is terminated by the client");
+            // Do nothing. The connection is closed by the client and writing to the output should be terminated
+        }
     }
 
     public StreamVideoService getStreamVideoService()

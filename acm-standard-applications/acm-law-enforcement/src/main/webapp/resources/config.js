@@ -34,7 +34,11 @@ var ApplicationConfiguration = (function () {
         'ngTagsInput',
         'ui.ace',
         'cfp.hotkeys',
-        'angular-google-analytics'
+        'angular-google-analytics',
+        "com.2fdevs.videogular",
+        "com.2fdevs.videogular.plugins.controls",
+        "com.2fdevs.videogular.plugins.overlayplay",
+        "com.2fdevs.videogular.plugins.poster"
     ];
 
     // Init list of errors that should not be shown to the end user
