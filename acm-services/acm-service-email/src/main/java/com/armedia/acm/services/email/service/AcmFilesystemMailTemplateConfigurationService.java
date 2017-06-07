@@ -2,13 +2,20 @@ package com.armedia.acm.services.email.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 6, 2017
@@ -19,7 +26,9 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Resource templateConfigurations;
+    private FileSystemResource templateConfigurations;
+
+    private String templateFolderPath;
 
     /*
      * (non-Javadoc)
@@ -30,9 +39,9 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     public List<EmailTemplateConfiguration> getTemplateConfigurations() throws AcmEmailConfigurationException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        try
+        try (InputStream is = templateConfigurations.getInputStream())
         {
-            List<EmailTemplateConfiguration> readConfigurationList = objectMapper.readValue(templateConfigurations.getInputStream(),
+            List<EmailTemplateConfiguration> readConfigurationList = objectMapper.readValue(is,
                     objectMapper.getTypeFactory().constructParametricType(List.class, EmailTemplateConfiguration.class));
             return readConfigurationList;
         } catch (IOException e)
@@ -51,9 +60,64 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * services.email.service.EmailTemplateConfiguration, org.springframework.web.multipart.MultipartFile)
      */
     @Override
-    public void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template)
+    public void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template) throws AcmEmailConfigurationException
     {
-        // TODO Auto-generated method stub
+        File templateFolder = new File(System.getProperty("user.home") + File.separator + templateFolderPath);
+
+        List<EmailTemplateConfiguration> configurations;
+        try
+        {
+            configurations = getTemplateConfigurations();
+        } catch (AcmEmailConfigurationException e)
+        {
+            if (templateConfigurations.getFile().length() == 0)
+            {
+                configurations = new ArrayList<>();
+            } else
+            {
+                // just re-throw here, if the error was during reading of the configuration it is already logged in the
+                // 'getTemplateConfigurations()' method.
+                throw e;
+            }
+        }
+
+        Optional<EmailTemplateConfiguration> existingConfiguration = configurations.stream()
+                .filter(c -> c.getTemplateName().equals(templateData.getTemplateName())).findFirst();
+        if (existingConfiguration.isPresent())
+        {
+            try
+            {
+                BeanUtils.copyProperties(existingConfiguration.get(), templateData);
+            } catch (IllegalAccessException | InvocationTargetException e)
+            {
+                log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
+                        templateData.getTemplateName(), e);
+                throw new AcmEmailConfigurationException(
+                        String.format("Error while updating email template configuration for configuration with %s value for templateName.",
+                                templateData.getTemplateName()),
+                        e);
+            }
+        } else
+        {
+            configurations.add(templateData);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try (OutputStream os = templateConfigurations.getOutputStream())
+        {
+            mapper.writeValue(os, configurations);
+            File templateFile = new File(templateFolder, templateData.getTemplateName());
+            template.transferTo(templateFile);
+        } catch (IOException e)
+        {
+            log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
+                    templateData.getTemplateName(), e);
+            throw new AcmEmailConfigurationException(
+                    String.format("Error while updating email template configuration for configuration with %s value for templateName.",
+                            templateData.getTemplateName()),
+                    e);
+        }
 
     }
 
@@ -102,8 +166,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * services.email.service.AcmEmailServiceException)
      */
     @Override
-    public <ME extends AcmEmailServiceException> AcmEmailServiceExceptionMapper<ME> getExceptionMapper(
-            AcmEmailServiceException e)
+    public <ME extends AcmEmailServiceException> AcmEmailServiceExceptionMapper<ME> getExceptionMapper(AcmEmailServiceException e)
     {
         // TODO Auto-generated method stub
         return null;
@@ -113,9 +176,18 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * @param templateConfigurations
      *            the templateConfigurations to set
      */
-    public void setTemplateConfigurations(Resource templateConfigurations)
+    public void setTemplateConfigurations(FileSystemResource templateConfigurations)
     {
         this.templateConfigurations = templateConfigurations;
+    }
+
+    /**
+     * @param templateFolderPath
+     *            the templateFolderPath to set
+     */
+    public void setTemplateFolderPath(String templateFolderPath)
+    {
+        this.templateFolderPath = templateFolderPath;
     }
 
 }

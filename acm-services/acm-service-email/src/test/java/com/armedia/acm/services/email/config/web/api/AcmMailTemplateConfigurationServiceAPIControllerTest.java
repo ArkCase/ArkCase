@@ -209,15 +209,10 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
 
     /**
      * @param emailPattern
-     *            TODO
      * @param objectTypes
-     *            TODO
      * @param source
-     *            TODO
      * @param templateName
-     *            TODO
      * @param actions
-     *            TODO
      * @return
      */
     private EmailTemplateConfiguration setupConfiguration(String emailPattern, List<String> objectTypes, EmailSource source,
@@ -226,7 +221,7 @@ public class AcmMailTemplateConfigurationServiceAPIControllerTest
         EmailTemplateConfiguration configuration = new EmailTemplateConfiguration();
         configuration.setEmailPattern(emailPattern);
         configuration.setObjectTypes(objectTypes);
-        configuration.setSource(EmailSource.MANUAL);
+        configuration.setSource(source);
         configuration.setTemplateName(templateName);
         configuration.setActions(actions);
         return configuration;
