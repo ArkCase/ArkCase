@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -84,7 +83,10 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     @Override
     public boolean isRestricted(String objectId)
     {
-        return getEntity(objectId, true) != null;
+        // return getEntity(objectId, true) != null;
+        // Always return false temporarily until there is a clarification of what `restricted` object means in context
+        // of the calendar enhancements.
+        return false;
     }
 
     @Override
@@ -171,13 +173,13 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     }
 
     @Override
-    public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
-            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+    public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
+                                                    String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
         try
         {
             FindItemsResults<Appointment> findResults = retreiveAppointments(service, after, before, sort, sortDirection, start, maxItems,
-                    objectId, restricted);
+                    objectId);
 
             List<AcmCalendarEventInfo> events = new ArrayList<>();
             for (Appointment appointment : findResults.getItems())
@@ -202,14 +204,14 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     }
 
     @Override
-    public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, boolean restricted, ZonedDateTime after,
-            ZonedDateTime before, String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+    public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
+                                            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
 
         try
         {
             FindItemsResults<Appointment> findResults = retreiveAppointments(service, after, before, sort, sortDirection, start, maxItems,
-                    objectId, restricted);
+                    objectId);
 
             List<AcmCalendarEvent> events = new ArrayList<>();
             for (Appointment appointment : findResults.getItems())
@@ -243,8 +245,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
      * @throws Exception
      */
     private FindItemsResults<Appointment> retreiveAppointments(ExchangeService service, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems, String objectId, boolean restricted)
-            throws ServiceLocalException, Exception
+                                                               String sort, String sortDirection, int start, int maxItems, String objectId) throws ServiceLocalException, Exception
     {
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());
@@ -255,8 +256,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
 
         calendarView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start, AppointmentSchema.End, orderBy));
 
-        CalendarFolder calendar = restricted ? CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)))
-                : CalendarFolder.bind(service, WellKnownFolderName.Calendar);
+        CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)));
         FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
 
         if (!findResults.getItems().isEmpty())

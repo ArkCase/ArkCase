@@ -183,4 +183,7 @@
         </property>
     </bean>
 
+    <bean id="acmUserEventPublisher" class="com.armedia.acm.services.users.service.AcmUserEventPublisher"/>
+
+
 </beans>

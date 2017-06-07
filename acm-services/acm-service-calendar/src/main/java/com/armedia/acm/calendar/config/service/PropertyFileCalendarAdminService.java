@@ -291,23 +291,22 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
             {
                 calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.SYSTEM_EMAIL.name()),
                         configuration.getSystemEmail());
-                if (configuration.getSystemEmail() != null)
+                try
                 {
-                    try
+                    calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.PASSWORD.name()),
+                            encryptablePropertyUtils.encryptPropertyValue(
+                                    configuration.getPassword() != null ? configuration.getPassword() : loadedConfiguration.getPassword()));
+                }
+                catch (AcmEncryptionException e)
+                {
+                    log.error("Could not encrypt password for calendar configuration for object type {}.", objectType);
+                    if (cce == null)
                     {
-                        calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.PASSWORD.name()),
-                                encryptablePropertyUtils.encryptPropertyValue(configuration.getPassword()));
-                    } catch (AcmEncryptionException e)
-                    {
-                        log.error("Could not encrypt password for calendar configuration for object type {}.", objectType);
-                        if (cce == null)
-                        {
-                            cce = new CalendarConfigurationException("Exception during writing calendar configuration properties.");
-                        }
-                        cce.addSuppressed(new CalendarConfigurationException(
-                                String.format("Could not encrypt password for calendar configuration for object type %s.", objectType), e,
-                                objectType));
+                        cce = new CalendarConfigurationException("Exception during writing calendar configuration properties.");
                     }
+                    cce.addSuppressed(new CalendarConfigurationException(
+                            String.format("Could not encrypt password for calendar configuration for object type %s.", objectType), e,
+                            objectType));
                 }
             }
         }
@@ -323,8 +322,8 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     private boolean checkEmailInput(CalendarConfiguration configuration, CalendarConfiguration loadedConfiguration)
     {
         // for new configurations both system email and password have to be provided
-        return (loadedConfiguration == null && StringUtils.isEmpty(configuration.getSystemEmail())
-                || StringUtils.isEmpty(configuration.getPassword()))
+        return (loadedConfiguration == null
+                && (StringUtils.isEmpty(configuration.getSystemEmail()) || StringUtils.isEmpty(configuration.getPassword())))
                 // for existing configurations email has to be provided, and in case email has changed, an accompanying
                 // password must be provided
                 || (loadedConfiguration != null && (StringUtils.isEmpty(configuration.getSystemEmail())
