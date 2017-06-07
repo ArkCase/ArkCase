@@ -7,6 +7,7 @@ angular.module('people').controller('Person.AliasesModalController', ['$scope', 
             $scope.alias = params.alias;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

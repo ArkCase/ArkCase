@@ -12,9 +12,8 @@ public class Range
 
     /**
      * Construct a byte range.
-     *
      * @param start Start of the byte range.
-     * @param end   End of the byte range.
+     * @param end End of the byte range.
      * @param total Total length of the byte source.
      */
     public Range(long start, long end, long total)
@@ -25,8 +24,7 @@ public class Range
         this.total = total;
     }
 
-    public long getStart()
-    {
+    public long getStart() {
         return start;
     }
 
@@ -45,8 +43,7 @@ public class Range
         this.end = end;
     }
 
-    public long getLength()
-    {
+    public long getLength() {
         return length;
     }
 

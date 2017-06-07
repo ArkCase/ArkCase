@@ -296,8 +296,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                     calendarProperties.setProperty(String.format("%s.%s", objectType, CalendarPropertyKeys.PASSWORD.name()),
                             encryptablePropertyUtils.encryptPropertyValue(
                                     configuration.getPassword() != null ? configuration.getPassword() : loadedConfiguration.getPassword()));
-                }
-                catch (AcmEncryptionException e)
+                } catch (AcmEncryptionException e)
                 {
                     log.error("Could not encrypt password for calendar configuration for object type {}.", objectType);
                     if (cce == null)

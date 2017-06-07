@@ -60,8 +60,7 @@ public class OrganizationAPIController
             saved = organizationService.saveOrganization(in, auth, ipAddress);
             organizationEventPublisher.publishOrganizationUpsertEvent(saved, isNew, true);
             return saved;
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Organization: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Organization", e.getMessage(), e);

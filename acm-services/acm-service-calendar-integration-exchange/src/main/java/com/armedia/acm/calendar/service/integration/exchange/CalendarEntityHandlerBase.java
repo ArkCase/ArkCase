@@ -174,7 +174,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
 
     @Override
     public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                                    String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
         try
         {
@@ -205,7 +205,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
 
     @Override
     public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
 
         try
@@ -245,7 +245,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
      * @throws Exception
      */
     private FindItemsResults<Appointment> retreiveAppointments(ExchangeService service, ZonedDateTime after, ZonedDateTime before,
-                                                               String sort, String sortDirection, int start, int maxItems, String objectId) throws ServiceLocalException, Exception
+            String sort, String sortDirection, int start, int maxItems, String objectId) throws ServiceLocalException, Exception
     {
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());

@@ -90,6 +90,10 @@
         "email": "Email"
       }
     },
+    "mediaDialog": {
+      "title": "ArkCase Media Player",
+      "btnCancel.text": "Cancel"
+    },
     "comment": {
       "title": "Checkin New Document",
       "addComent": "Detailed Note",
@@ -506,7 +510,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   },
   "common.addPerson": {
@@ -516,7 +521,10 @@
     "person.label": "Person",
     "type.label": "Person Type",
     "btnCancel.text": "Cancel",
-    "btnOk.text": "Add Person"
+    "btnOk.text": "Add Person",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No"
   },
   "common.dialogPersonPicker": {
     "header": "Search for People",
@@ -543,12 +551,15 @@
   "common.addOrganization": {
     "title": "Add organization",
     "addNew.label": "Add new Organization",
-    "selectExisting.label": "Select existing organizatoin",
+    "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
     "description": "Description",
     "type.label": "Organization Type",
     "btnCancel.text": "Cancel",
-    "btnOk.text": "Add Organization"
+    "btnOk.text": "Add Organization",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No"
   },
   "common.newOrganization": {
     "title": "Organization",
@@ -610,7 +621,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   },
   "common.labels": {

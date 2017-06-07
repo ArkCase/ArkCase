@@ -79,8 +79,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         {
             unit.preHandle(mockRequest, mockResponse, null);
             fail("Expecting AcmNotAuthorizedException but did not happen");
-        }
-        catch (AcmNotAuthorizedException exception)
+        } catch (AcmNotAuthorizedException exception)
         {
             // do nothing, should throw exception
         }
@@ -103,8 +102,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         {
             unit.preHandle(mockRequest, mockResponse, null);
             fail("Expecting AcmNotAuthorizedException but did not happen");
-        }
-        catch (AcmNotAuthorizedException exception)
+        } catch (AcmNotAuthorizedException exception)
         {
             // do nothing, should throw exception
         }
@@ -143,8 +141,7 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         {
             unit.preHandle(mockRequest, mockResponse, null);
             fail("Expecting AcmNotAuthorizedException but did not happen");
-        }
-        catch (AcmNotAuthorizedException exception)
+        } catch (AcmNotAuthorizedException exception)
         {
             // do nothing, should throw exception
         }

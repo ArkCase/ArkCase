@@ -68,16 +68,16 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
                 // build the solr filter based on the object's ID as well as its type
                 var query = 'object_type_s:' + $scope.objectInfo.references[i].targetType + '+AND+object_id_s:'
-                    + $scope.objectInfo.references[i].targetId;
+                                + $scope.objectInfo.references[i].targetId;
 
                 SearchService.querySimpleSearch({
-                        query: query
-                    },
-                    // If the solr query fails, the title won't get updated, so it will just use whatever is in the DB
-                    function (data) {
-                        var caseTitle = data.response.docs[0].title_parseable
-                        $scope.objectInfo.references[i].targetTitle = caseTitle;
-                    });
+                    query: query
+                },
+                // If the solr query fails, the title won't get updated, so it will just use whatever is in the DB
+                function(data) {
+                    var caseTitle = data.response.docs[0].title_parseable
+                    $scope.objectInfo.references[i].targetTitle = caseTitle;
+                });
             }
 
             // See above, this iterates over all found references and updates case titles where required
