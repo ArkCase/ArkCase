@@ -2,9 +2,9 @@ package com.armedia.acm.services.email.config.web.api;
 
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
+import com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper;
 import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
-import com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +40,7 @@ public class AcmMailTemplateConfigurationServiceAPIController
 
     @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateEmailTemplate(@RequestPart("data") EmailTemplateConfiguration templateConfiguration,
-            @RequestPart(value = "file", required = false) MultipartFile template)
+            @RequestPart(value = "file", required = false) MultipartFile template) throws AcmEmailConfigurationException
     {
         mailService.updateEmailTemplate(templateConfiguration, template);
         return new ResponseEntity<>(HttpStatus.OK);

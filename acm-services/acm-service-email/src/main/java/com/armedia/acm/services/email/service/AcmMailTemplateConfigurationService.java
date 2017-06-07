@@ -20,8 +20,9 @@ public interface AcmMailTemplateConfigurationService
     /**
      * @param templateData
      * @param template
+     * @throws AcmEmailConfigurationException
      */
-    void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template);
+    void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template) throws AcmEmailConfigurationException;
 
     /**
      *
@@ -51,7 +52,6 @@ public interface AcmMailTemplateConfigurationService
      * @param ce
      * @return
      */
-    <ME extends AcmEmailServiceException> AcmEmailServiceExceptionMapper<ME> getExceptionMapper(
-            AcmEmailServiceException e);
+    <ME extends AcmEmailServiceException> AcmEmailServiceExceptionMapper<ME> getExceptionMapper(AcmEmailServiceException e);
 
 }
