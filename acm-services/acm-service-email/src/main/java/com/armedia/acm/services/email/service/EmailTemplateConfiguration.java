@@ -1,6 +1,7 @@
 package com.armedia.acm.services.email.service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -9,6 +10,11 @@ import java.util.List;
 public class EmailTemplateConfiguration
 {
 
+    /**
+     * {@link #emailPattern} should be a valid java.util.regex.Pattern pattern
+     * 
+     * @see Pattern
+     */
     private String emailPattern;
 
     private List<String> objectTypes;
