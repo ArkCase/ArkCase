@@ -1,10 +1,13 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Function;
@@ -15,6 +18,8 @@ import java.util.stream.Collectors;
  */
 public class MapperUtils
 {
+    private static Logger log = LoggerFactory.getLogger(MapperUtils.class);
+
     public static final Function<String, String> MEMBER_TO_COMMON_NAME_UPPERCASE = element ->
     {
         if (StringUtils.isBlank(element))
@@ -59,5 +64,10 @@ public class MapperUtils
             dn = dn.substring(0, dn.indexOf(base));
         }
         return dn;
+    }
+
+    public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
+    {
+        return String.format("\"%s\"", str).getBytes("UTF-16LE");
     }
 }

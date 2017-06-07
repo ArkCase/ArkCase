@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-xs-12 col-md-4">
                         <div class="h4 font-bold">
-                            {{objectInfo.organizations[0].name}}
+                            {{objectInfo.defaultOrganization.organization.organizationValue}}
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
                     </div>
@@ -54,8 +54,8 @@
                 </div>
             </div>
             <div class="col-xs-12 col-md-2" ng-show="objectInfo.defaultPicture">
-                <img alt="Image" ng-src='api/latest/plugin/ecm/download?ecmFileId={{objectInfo.defaultPicture.fileId}}'
-                     ng-style="{ height : 100 }">
+                <img alt="Image"
+                     ng-src='{{objectInfo.defaultPicture.fileId | personPictureSrc}}' ng-style="{ height : 100 }">
             </div>
         </div>
     </div>

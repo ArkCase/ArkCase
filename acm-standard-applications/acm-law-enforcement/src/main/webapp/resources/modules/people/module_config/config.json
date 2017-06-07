@@ -38,12 +38,12 @@
     "sorters": [
       {
         "desc": "Sort Date Created Ascending",
-        "name": "sort-date-asc",
-        "default": true
+        "name": "sort-date-asc"
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "sort-date-desc"
+        "name": "sort-date-desc",
+        "default": true
       },
       {
         "desc": "Sort People ID Ascending",
@@ -274,7 +274,7 @@
           "displayName": "people.comp.pictures.table.columns.thumbnail",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<center><img ng-src='api/latest/plugin/ecm/download?ecmFileId={{row.entity.object_id_s}}' height='50px'></img></center>",
+          "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
           "width": 100
         },
         {
@@ -583,35 +583,39 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "name",
+          "name": "organization.organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "default_identification_s",
+          "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "people.comp.organizations.table.columns.identification",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
         },
         {
-          "name": "type_lcs",
+          "name": "organization.organizationType",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "primary_contact_s",
+          "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.contact",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultContact ? row.entity.organization.defaultContact.value + '[' + row.entity.organization.defaultContact.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_phone_s",
+          "name": "phone",
           "displayName": "people.comp.organizations.table.columns.phone",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_location_s",
+          "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
         }
       ]
     },

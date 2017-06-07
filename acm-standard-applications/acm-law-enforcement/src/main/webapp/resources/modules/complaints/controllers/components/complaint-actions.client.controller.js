@@ -90,7 +90,8 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
         $scope.claim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
-            ComplaintInfoService.saveComplaintInfo(objectInfo).then(function (response) {
+            var complaintInfo = Util.omitNg(objectInfo);
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function (response) {
                 //success
                 $scope.refresh();
             });
@@ -98,7 +99,8 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
 
         $scope.unclaim = function (objectInfo) {
             ObjectModelService.setAssignee(objectInfo, "");
-            ComplaintInfoService.saveComplaintInfo(objectInfo).then(function (response) {
+            var complaintInfo = Util.omitNg(objectInfo);
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function (response) {
                 //success
                 $scope.refresh();
             });

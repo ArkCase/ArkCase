@@ -39,6 +39,6 @@ angular.module('people').controller('People.InfoController', ['$scope', '$stateP
                 );
             }
             return promiseSaveInfo;
-        }
+        };
     }
 ]);
