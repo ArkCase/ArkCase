@@ -5,15 +5,31 @@
 </div>
 <div class="modal-body">
     <form name="addPersonForm">
-        <button type="button" class="btn btn-primary"
-                ng-click="addNewPerson()" translate>
-            common.addPerson.addNew.label
-        </button>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label>&nbsp;</label>
+                <button type="button" class="btn btn-primary"
+                        ng-click="addNewPerson()" translate>
+                    common.addPerson.addNew.label
+                </button>
+            </div>
+            <div class="col-sm-6 form-group" ng-show="showSetPrimary">
+                <label translate>common.addPerson.setPrimary.label</label><span class="required-asterisk">*</span>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>common.addPerson.radioYes.text</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>common.addPerson.radioNo.text</translate>
+                </label>
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-6 form-group">
                 <div>
-                    <label for="person"
-                           translate>common.addPerson.person.label</label>
+                    <label for="person" translate>common.addPerson.person.label</label>
+                    <span class="required-asterisk">*</span>
                 </div>
                 <input id="person" class="form-control" type="text" ng-model="personName"
                        ng-click="pickPerson()" placeholder="{{'common.addPerson.selectExisting.label' | translate}}"
@@ -21,13 +37,11 @@
             </div>
             <div class="col-sm-6 form-group">
                 <div>
-                    <label for="types"
-                           translate>common.addPerson.type.label</label>
+                    <label for="types" translate>common.addPerson.type.label</label>
+                    <span class="required-asterisk">*</span>
                 </div>
-                <select id="types"
-                        class="form-control"
-                        ng-model="type"
-                        ng-options="item.type as item.name for item in types"></select>
+                <select class="input-md form-control" id="types" ng-model="type" ng-options="o as o.name for o in types"
+                        required></select>
             </div>
         </div>
         <div class="row" ng-show="showDescription">

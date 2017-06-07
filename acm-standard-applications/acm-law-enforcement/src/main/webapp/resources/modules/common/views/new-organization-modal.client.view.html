@@ -97,10 +97,25 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newOrganization.identification.identificationYearIssued</label>
-                                <input type="text"
-                                       ng-model="organization.defaultIdentification.identificationYearIssued"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'common.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
+                                <p class="input-group">
+                                    <input type="text"
+                                           class="input-md form-control"
+                                           placeholder="{{'common.newOrganization.identification.identificationYearIssued.placeholder' | translate}}"
+                                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                           datepicker-append-to-body="false"
+                                           ng-model="organization.defaultIdentification.identificationYearIssued"
+                                           is-open="defaultOpened"
+                                           close-on-date-selection="true"
+                                           show-button-bar="true"
+                                           on-open-focus="false"
+                                           close-text="{{'common.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
+                                    <span class="input-group-btn">
+                                                 <button type="button" class="btn btn-default"
+                                                         ng-click="defaultOpened = !defaultOpened">
+                                                         <i class="fa fa-calendar"></i>
+                                                 </button>
+                                          </span>
+                                </p>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -154,10 +169,25 @@
                                     <div>
                                         <label translate>
                                             common.newOrganization.identification.identificationYearIssued</label>
-                                        <input type="text"
-                                               ng-model="identification.identificationYearIssued"
-                                               class="input-md form-control"
-                                               placeholder="{{ 'common.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
+                                        <p class="input-group">
+                                            <input type="text"
+                                                   class="input-md form-control"
+                                                   placeholder="{{'common.newOrganization.identification.identificationYearIssued.placeholder' | translate}}"
+                                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                                   datepicker-append-to-body="false"
+                                                   ng-model="identification.identificationYearIssued"
+                                                   is-open="identification.opened"
+                                                   close-on-date-selection="true"
+                                                   show-button-bar="true"
+                                                   on-open-focus="false"
+                                                   close-text="{{'common.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
+                                            <span class="input-group-btn">
+                                                 <button type="button" class="btn btn-default"
+                                                         ng-click="identification.opened = !identification.opened">
+                                                         <i class="fa fa-calendar"></i>
+                                                 </button>
+                                          </span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
