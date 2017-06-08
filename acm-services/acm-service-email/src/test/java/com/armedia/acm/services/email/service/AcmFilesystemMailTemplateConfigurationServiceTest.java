@@ -44,9 +44,6 @@ import java.util.List;
 public class AcmFilesystemMailTemplateConfigurationServiceTest
 {
 
-    /**
-     *
-     */
     private static final String TEMPLATES_FOLDER_NAME = "templates";
 
     private static final String EMAIL_PATTERN = ".*";
@@ -298,7 +295,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         when(templateConfigurations.getDescription()).thenReturn("absolute_path_to_resource");
         when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
         when(mockedConfigurationsFile.length()).thenReturn(10l);
-        exception.expect(AcmEmailConfigurationException.class);
+        exception.expect(AcmEmailConfigurationIOException.class);
         exception.expectMessage(is(
                 String.format("Error while reading email templates configuration from %s file.", templateConfigurations.getDescription())));
         exception.expectCause(is(ioException));
@@ -347,7 +344,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
      * @throws FileNotFoundException
      */
     @Test
-    public void testGetMatchingTemplates() throws Exception
+    public void testGetMatchingTemplates_MatchesAll() throws Exception
     {
         // given
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
@@ -364,24 +361,78 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         // is doable/acceptable
         assertThat(candidates,
                 containsInAnyOrder(
-                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN)), hasProperty("source", is(EmailSource.MANUAL)),
-                                hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
+                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
+                                hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
                                 hasProperty("objectTypes", containsInAnyOrder(CASE_FILE, COMPLAINT)),
                                 hasProperty("actions", containsInAnyOrder(SEND_AS_LINKS, SEND_AS_ATTACHMENTS))),
-                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
-                                hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME)),
-                                hasProperty("objectTypes", contains(CASE_FILE)), hasProperty("actions", contains(SEND_AS_ATTACHMENTS)))));
+                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN)), hasProperty("source", is(EmailSource.MANUAL)),
+                                hasProperty("templateName", is(TEMPLATE_NAME)), hasProperty("objectTypes", contains(CASE_FILE)),
+                                hasProperty("actions", contains(SEND_AS_ATTACHMENTS)))));
+    }
+
+    /**
+     * Test method for
+     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getMatchingTemplates(java.lang.String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)}.
+     *
+     * @throws Exception
+     * @throws FileNotFoundException
+     */
+    @Test
+    public void testGetMatchingTemplates_MatchesOne() throws Exception
+    {
+        // given
+        String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
+        when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
+
+        // when
+        List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.com", COMPLAINT, EmailSource.MANUAL,
+                SEND_AS_ATTACHMENTS);
+
+        // then
+        assertThat(candidates.size(), is(1));
+
+        // we don't have to always check all the properties, but since it's a small size collection and simple POJOs, it
+        // is doable/acceptable
+        assertThat(candidates,
+                containsInAnyOrder(allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
+                        hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
+                        hasProperty("objectTypes", containsInAnyOrder(CASE_FILE, COMPLAINT)),
+                        hasProperty("actions", containsInAnyOrder(SEND_AS_LINKS, SEND_AS_ATTACHMENTS)))));
+    }
+
+    /**
+     * Test method for
+     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getMatchingTemplates(java.lang.String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)}.
+     *
+     * @throws Exception
+     * @throws FileNotFoundException
+     */
+    @Test
+    public void testGetMatchingTemplates_MatchesNone() throws Exception
+    {
+        // given
+        String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
+        when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
+
+        // when
+        List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.mk", COMPLAINT, EmailSource.MANUAL,
+                SEND_AS_ATTACHMENTS);
+
+        // then
+        assertThat(candidates.size(), is(0));
     }
 
     /**
      * Test method for
      * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getTemplate(java.lang.String)}.
+     *
+     * @throws Exception
      */
     @Test
     @Ignore
-    public void testGetTemplate()
+    public void testGetTemplate() throws Exception
     {
-        fail("Not yet implemented");
+        fail("Not implemented due to interaction with the filesystem.");
     }
 
     /**
@@ -392,18 +443,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     @Ignore
     public void testDeleteTemplate()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for
-     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#getExceptionMapper(com.armedia.acm.services.email.service.AcmEmailServiceException)}.
-     */
-    @Test
-    @Ignore
-    public void testGetExceptionMapper()
-    {
-        fail("Not yet implemented");
+        fail("Not implemented due to interaction with the filesystem.");
     }
 
     /**

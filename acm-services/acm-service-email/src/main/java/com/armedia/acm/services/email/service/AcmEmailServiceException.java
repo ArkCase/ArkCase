@@ -10,6 +10,14 @@ public class AcmEmailServiceException extends Exception
     private static final long serialVersionUID = 1L;
 
     /**
+     * @param message
+     */
+    public AcmEmailServiceException(String message)
+    {
+        super(message);
+    }
+
+    /**
      * @param string
      * @param e
      */

@@ -48,6 +48,7 @@ public class AcmMailTemplateConfigurationServiceAPIController
 
     @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
+            throws AcmEmailConfigurationException
     {
         mailService.deleteTemplate(templateName);
         return new ResponseEntity<>(HttpStatus.OK);

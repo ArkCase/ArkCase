@@ -2,12 +2,16 @@ package com.armedia.acm.services.email.service;
 
 import static java.util.regex.Pattern.matches;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -15,9 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,11 +38,62 @@ import java.util.stream.Stream;
 public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTemplateConfigurationService
 {
 
+    /**
+     * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
+     *
+     */
+    public class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
+            implements AcmEmailServiceExceptionMapper<ME>
+    {
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see
+         * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
+         * email.service.AcmEmailServiceException)
+         */
+        @Override
+        public Object mapException(ME me)
+        {
+            Map<String, Object> errorDetails = new HashMap<>();
+            if (me instanceof AcmEmailConfigurationIOException)
+            {
+                errorDetails.put("error_cause", "READ_WRITE_ERROR.");
+            } else if (me instanceof AcmEmailConfigurationJsonException)
+            {
+                errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
+            } else if (me instanceof AcmEmailConfigurationException)
+            {
+                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
+            } else
+            {
+                errorDetails.put("error_cause", "UNKOWN_ERROR.");
+            }
+            errorDetails.put("error_message", me.getMessage());
+            return errorDetails;
+        }
+
+        /*
+         * (non-Javadoc)
+         *
+         * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
+         */
+        @Override
+        public HttpStatus getStatusCode()
+        {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+    }
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private FileSystemResource templateConfigurations;
 
     private String templateFolderPath;
+
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /*
      * (non-Javadoc)
@@ -43,16 +104,26 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     public List<EmailTemplateConfiguration> getTemplateConfigurations() throws AcmEmailConfigurationException
     {
         ObjectMapper objectMapper = new ObjectMapper();
+        Lock readLock = lock.readLock();
+        readLock.lock();
         try (InputStream is = templateConfigurations.getInputStream())
         {
             List<EmailTemplateConfiguration> readConfigurationList = objectMapper.readValue(is,
                     objectMapper.getTypeFactory().constructParametricType(List.class, EmailTemplateConfiguration.class));
             return readConfigurationList;
+        } catch (JsonParseException | JsonMappingException e)
+        {
+            log.warn("Error while deserializing email templates configuration from {} file.", templateConfigurations.getDescription(), e);
+            throw new AcmEmailConfigurationJsonException(String.format(
+                    "Error while deserializing email templates configuration from %s file.", templateConfigurations.getDescription()), e);
         } catch (IOException e)
         {
             log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
-            throw new AcmEmailConfigurationException(String.format("Error while reading email templates configuration from %s file.",
+            throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
                     templateConfigurations.getDescription()), e);
+        } finally
+        {
+            readLock.unlock();
         }
     }
 
@@ -108,19 +179,29 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
         ObjectMapper mapper = new ObjectMapper();
 
+        Lock writeLock = lock.writeLock();
+        writeLock.lock();
         try (OutputStream os = templateConfigurations.getOutputStream())
         {
             mapper.writeValue(os, configurations);
             File templateFile = new File(templateFolder, templateData.getTemplateName());
             template.transferTo(templateFile);
+        } catch (JsonParseException | JsonMappingException e)
+        {
+            log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(), e);
+            throw new AcmEmailConfigurationJsonException(String.format("Error while serializing email templates configuration to %s file.",
+                    templateConfigurations.getDescription()), e);
         } catch (IOException e)
         {
             log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
                     templateData.getTemplateName(), e);
-            throw new AcmEmailConfigurationException(
+            throw new AcmEmailConfigurationIOException(
                     String.format("Error while updating email template configuration for configuration with %s value for templateName.",
                             templateData.getTemplateName()),
                     e);
+        } finally
+        {
+            writeLock.unlock();
         }
 
     }
@@ -149,10 +230,29 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#getTemplate(java.lang.String)
      */
     @Override
-    public String getTemplate(String templateName)
+    public String getTemplate(String templateName) throws AcmEmailConfigurationException
     {
-        // TODO Auto-generated method stub
-        return null;
+        File templateFolder = getTemplateFolder();
+        File templateFile = new File(templateFolder, templateName);
+        Lock readLock = lock.readLock();
+        try
+        {
+            readLock.lock();
+            if (!templateFile.exists())
+            {
+                log.warn("Email template {} does not exist.", templateName);
+                throw new AcmEmailConfigurationIOException(String.format("Email template %s does not exist.", templateName));
+            }
+            return FileUtils.readFileToString(templateFile, "UTF-8");
+        } catch (IOException e)
+        {
+            log.warn("Error while reading contents of {} email template.", templateName, e);
+            throw new AcmEmailConfigurationIOException(String.format("Error while reading contents of %s email template.", templateName),
+                    e);
+        } finally
+        {
+            readLock.unlock();
+        }
     }
 
     /*
@@ -161,10 +261,35 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#deleteTemplate(java.lang.String)
      */
     @Override
-    public void deleteTemplate(String templateName)
+    public void deleteTemplate(String templateName) throws AcmEmailConfigurationException
     {
-        // TODO Auto-generated method stub
-
+        List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
+        if (configurations.removeIf(c -> c.getTemplateName().equals(templateName)))
+        {
+            File templateFolder = getTemplateFolder();
+            File templateFile = new File(templateFolder, templateName);
+            ObjectMapper mapper = new ObjectMapper();
+            Lock writeLock = lock.writeLock();
+            writeLock.lock();
+            try (OutputStream os = templateConfigurations.getOutputStream())
+            {
+                mapper.writeValue(os, configurations);
+                Files.deleteIfExists(templateFile.toPath());
+            } catch (JsonParseException | JsonMappingException e)
+            {
+                log.warn("Error while deleting email templates configuration from {} file.", templateConfigurations.getDescription(), e);
+                throw new AcmEmailConfigurationJsonException(String.format(
+                        "Error while deleting email templates configuration from %s file.", templateConfigurations.getDescription()), e);
+            } catch (IOException e)
+            {
+                log.warn("Error while deleting {} email template from the file system.", templateName, e);
+                throw new AcmEmailConfigurationIOException(
+                        String.format("Error while deleting %s email template from the file system.", templateName), e);
+            } finally
+            {
+                writeLock.unlock();
+            }
+        }
     }
 
     /*
@@ -177,8 +302,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     @Override
     public <ME extends AcmEmailServiceException> AcmEmailServiceExceptionMapper<ME> getExceptionMapper(AcmEmailServiceException e)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new FilesystemMailTemplateConfigurationExceptionMapper<>();
     }
 
     /**
