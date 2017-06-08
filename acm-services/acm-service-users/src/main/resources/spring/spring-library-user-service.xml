@@ -183,4 +183,6 @@
         </property>
     </bean>
 
+    <bean id="acmGroupEventPublisher" class="com.armedia.acm.services.users.service.AcmGroupEventPublisher"/>
+
 </beans>

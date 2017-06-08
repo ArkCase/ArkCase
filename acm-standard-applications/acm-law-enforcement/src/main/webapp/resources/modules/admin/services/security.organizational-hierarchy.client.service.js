@@ -72,6 +72,11 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             _createLdapSubgroup: {
                 method: 'POST',
                 url: 'api/latest/ldap/:directoryName/groups/:parentGroupName'
+            },
+
+            _deleteLdapGroup: {
+                method: 'DELETE',
+                url: 'api/latest/ldap/:directoryName/groups/:groupName'
             }
         });
 
@@ -96,7 +101,8 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             editGroupMember: editGroupMember,
             addExistingMembersToLdapGroup: addExistingMembersToLdapGroup,
             createLdapGroup: createLdapGroup,
-            createLdapSubgroup: createLdapSubgroup
+            createLdapSubgroup: createLdapSubgroup,
+            deleteLdapGroup: deleteLdapGroup
         });
 
         /**
@@ -469,6 +475,32 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                     parentGroupName: parentGroupName,
                     directoryName: directoryName
                 }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name deleteLdapGroup
+         * @methodOf admin.service:Admin.OrganizationalHierarchyService
+         *
+         * @description
+         * Performs delete of a ldap group
+         *
+         * param {object} group object to be deleted
+         *
+         * @returns {HttpPromise} Future info about create ldap subgroup
+         */
+        function deleteLdapGroup(ldapGroup) {
+            return Util.serviceCall({
+                service: Service._deleteLdapGroup
+                , param: {
+                    directoryName: ldapGroup.directory_name_s,
+                    groupName: ldapGroup.name
+                }
+                , data: ldapGroup
                 , onSuccess: function (data) {
                     return data;
                 }
