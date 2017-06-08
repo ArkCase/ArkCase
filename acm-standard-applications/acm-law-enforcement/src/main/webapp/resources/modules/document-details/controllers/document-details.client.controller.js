@@ -85,7 +85,9 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                     $scope.fileType = $scope.ecmFile.fileType;
                 }
 
-                if ($scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0) {
+                $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other"); 
+                
+                if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
                     $scope.config = {
                             sources: [
                                 {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.ecmFile.fileId), type: $scope.ecmFile.fileActiveVersionMimeType}
