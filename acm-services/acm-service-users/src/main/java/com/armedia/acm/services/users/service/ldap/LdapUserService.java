@@ -272,7 +272,10 @@ public class LdapUserService
 
         if (lookupGroups != null)
         {
-            lookupGroups.remove(existingUser);
+            for (AcmGroup group : lookupGroups)
+            {
+                group.removeMember(existingUser);
+            }
         }
 
         log.debug("Removing User:{} from database", existingUser.getUserId());

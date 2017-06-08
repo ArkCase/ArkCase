@@ -1913,27 +1913,27 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         switch (item.cmd) {
-                        case 'email':
-                            if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments) {
-                                item.invisible = true;
-                            }
-                            break;
-                        case 'play':
-                            if (nodes[0].data.mimeType.startsWith("video")) {
-                                item.invisible = false;
-                            } else {
-                                item.invisible = true;
-                            }
-                            break;
-                        case 'open':
-                            if (nodes[0].data.mimeType.startsWith("video")) {
-                                item.invisible = true;
-                            } else {
-                                item.invisible = false;
-                            }
-                            break;
+                            case 'email':
+                                if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments) {
+                                    item.invisible = true;
+                                }
+                                break;
+                            case 'play':
+                                if (nodes[0].data.mimeType.startsWith("video")) {
+                                    item.invisible = false;
+                                } else {
+                                    item.invisible = true;
+                                }
+                                break;
+                            case 'open':
+                                if (nodes[0].data.mimeType.startsWith("video")) {
+                                    item.invisible = true;
+                                } else {
+                                    item.invisible = false;
+                                }
+                                break;
                         }
-                        
+
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {
                             if ("invisible" == allowResult) {
@@ -3835,7 +3835,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 } else if (!Util.isEmpty(fileData.name)) {
                     solrData.name = fileData.name;
                 }
-                
+
                 if (!Util.isEmpty(fileData.fileActiveVersionNameExtension)) {
                     solrData.ext = fileData.fileActiveVersionNameExtension;
                 } else if (!Util.isEmpty(fileData.ext)) {
