@@ -209,7 +209,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                 url: "api/v1/plugin/search/advancedSearch?q=:query",
                 cache: false,
                 isArray: false,
-                transformResponse: function(data, headerGetter) {
+                transformResponse: function (data, headerGetter) {
                     var searchObj = JSON.parse(data);
                     if (Service.validateSolrData(searchObj)) {
                         return searchObj;

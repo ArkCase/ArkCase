@@ -63,7 +63,8 @@ public class RetryExecutor<T>
         {
             retryAttempts--;
             action.execute();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (retryAttempts > 0)
             {
