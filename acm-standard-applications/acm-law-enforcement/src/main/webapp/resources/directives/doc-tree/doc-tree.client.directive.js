@@ -852,11 +852,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node = tree.getActiveNode();
                 if (!DocTree.editSetting.isEditing) {
                     if (DocTree.isFileNode(node)) {
-                        if (node.data.mimeType.startsWith("video")) {
-                            $(this).trigger("command", {cmd: "play"});
-                        } else {
-                            $(this).trigger("command", {cmd: "open"});
-                        }
+                        $(this).trigger("command", {cmd: "open"});
                     }
                 }
                 //return false;
@@ -1912,26 +1908,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             }
                         }
 
-                        switch (item.cmd) {
-                        case 'email':
-                            if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments) {
-                                item.invisible = true;
-                            }
-                            break;
-                        case 'play':
-                            if (nodes[0].data.mimeType.startsWith("video")) {
-                                item.invisible = false;
-                            } else {
-                                item.invisible = true;
-                            }
-                            break;
-                        case 'open':
-                            if (nodes[0].data.mimeType.startsWith("video")) {
-                                item.invisible = true;
-                            } else {
-                                item.invisible = false;
-                            }
-                            break;
+                        /*email document should not be available when it's not configured*/
+                        if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
+                            item.invisible = true;
                         }
                         
                         promiseArray.push(allow);
