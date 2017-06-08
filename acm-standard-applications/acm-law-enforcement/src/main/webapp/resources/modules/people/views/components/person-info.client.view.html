@@ -26,14 +26,15 @@
                         <small class="text-muted"><span translate>people.comp.info.phone.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-4">
-                        <div class="h4 font-bold">
+                        <div class="h4 font-bold" ng-show="objectInfo.defaultOrganization">
                             {{objectInfo.defaultOrganization.organization.organizationValue}}
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.organization.label</span></small>
                     </div>
                     <div class="col-xs-12 col-md-3">
-                        <div class="h4 font-bold">
+                        <div class="h4 font-bold" ng-show="objectInfo.defaultIdentification">
                             {{objectInfo.defaultIdentification.identificationNumber}}
+                            ({{objectInfo.defaultIdentification.identificationType}})
                         </div>
                         <small class="text-muted"><span translate>people.comp.info.identification.label</span></small>
                     </div>
