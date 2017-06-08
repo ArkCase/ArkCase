@@ -22,6 +22,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -98,6 +100,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = DocumentRepositoryConstants.OBJECT_TYPE;
 
+    @Column(name = "cm_doc_repo_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DocumentRepositoryType repositoryType;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
@@ -124,12 +130,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isBlank(getStatus()))
+        if (StringUtils.isBlank(status))
         {
-            setStatus("DRAFT");
+            status = "DRAFT";
         }
-        setNameUpperCase(getName().toUpperCase());
+        nameUpperCase = name.toUpperCase();
         setupChildPointers();
+        if(repositoryType == null)
+        {
+            repositoryType = DocumentRepositoryType.GENERAL;
+        }
     }
 
     private void setupChildPointers()
@@ -271,6 +281,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
+    }
+
+    public DocumentRepositoryType getRepositoryType()
+    {
+        return repositoryType;
+    }
+
+    public void setRepositoryType(DocumentRepositoryType repositoryType)
+    {
+        this.repositoryType = repositoryType;
     }
 
     @Override
