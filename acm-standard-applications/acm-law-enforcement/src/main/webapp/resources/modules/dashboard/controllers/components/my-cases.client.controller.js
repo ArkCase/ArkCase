@@ -11,16 +11,27 @@
  * Loads cases in the "My Cases" widget.
  */
 angular.module('dashboard.my-cases')
-    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, Authentication, DashboardService, ConfigService) {
 
             var vm = this;
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'myCases');
-
             vm.config = null;
             var userInfo = null;
+            ConfigService.getComponentConfig("dashboard", "myCases").then(function (config) {
+                vm.config = config;
+                vm.gridOptions.columnDefs = config.columnDefs;
+                vm.gridOptions.enableFiltering = config.enableFiltering;
+                vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                vm.gridOptions.paginationPageSize = config.paginationPageSize;
+                paginationOptions.pageSize = config.paginationPageSize;
+
+                Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    userInfo = responseUserInfo;
+                    getPage();
+                    return userInfo;
+                });
+            });
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -75,22 +86,6 @@ angular.module('dashboard.my-cases')
                 }
             };
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'myCases') {
-                    vm.config = config;
-                    vm.gridOptions.columnDefs = config.columnDefs;
-                    vm.gridOptions.enableFiltering = config.enableFiltering;
-                    vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                    vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                    paginationOptions.pageSize = config.paginationPageSize;
-
-                    Authentication.queryUserInfo().then(function (responseUserInfo) {
-                        userInfo = responseUserInfo;
-                        getPage();
-                        return userInfo;
-                    });
-                }
-            }
 
             function getPage() {
                 DashboardService.queryMyCases({

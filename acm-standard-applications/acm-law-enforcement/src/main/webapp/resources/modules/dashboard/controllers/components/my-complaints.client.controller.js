@@ -1,13 +1,11 @@
 'use strict';
 
 angular.module('dashboard.my-complaints')
-    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService',
-        function ($scope, $translate, Authentication, DashboardService) {
+    .controller('Dashboard.MyComplaintsController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, $translate, Authentication, DashboardService, ConfigService) {
 
             var vm = this;
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'myComplaints');
             vm.config = null;
             var userInfo = null;
 
@@ -48,23 +46,20 @@ angular.module('dashboard.my-complaints')
                 }
             };
 
+            ConfigService.getComponentConfig("dashboard", "myComplaints").then(function (config) {
+                vm.config = config;
+                vm.gridOptions.columnDefs = vm.config.columnDefs;
+                vm.gridOptions.enableFiltering = vm.config.enableFiltering;
+                vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
+                vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
+                paginationOptions.pageSize = vm.config.paginationPageSize;
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'myComplaints') {
-                    vm.config = config;
-                    vm.gridOptions.columnDefs = vm.config.columnDefs;
-                    vm.gridOptions.enableFiltering = vm.config.enableFiltering;
-                    vm.gridOptions.paginationPageSizes = vm.config.paginationPageSizes;
-                    vm.gridOptions.paginationPageSize = vm.config.paginationPageSize;
-                    paginationOptions.pageSize = vm.config.paginationPageSize;
-
-                    Authentication.queryUserInfo().then(function (responseUserInfo) {
-                        userInfo = responseUserInfo;
-                        getPage();
-                        return userInfo;
-                    });
-                }
-            }
+                Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    userInfo = responseUserInfo;
+                    getPage();
+                    return userInfo;
+                });
+            });
 
             function getPage() {
                 DashboardService.queryMyComplaints({

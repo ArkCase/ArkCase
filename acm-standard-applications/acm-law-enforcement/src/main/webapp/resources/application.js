@@ -57,7 +57,13 @@ angular
                             localStorage.AcmLocale = null;
                         } else if (0 >= lastLocale.locales.length) {
                             localStorage.AcmLocale = null;
-                        } else if (!lastLocale.locales[0].locale) {
+                        } else if (lastLocale.locales[0].locale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].native) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.code) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.iso) {
                             localStorage.AcmLocale = null;
                         }
                     }

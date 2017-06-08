@@ -1,10 +1,25 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', ['$rootScope', '$scope', '$translate', 'dashboard', 'ConfigService', 'Dashboard.DashboardService',
-    function ($rootScope, $scope, $translate, dashboard, ConfigService, DashboardService) {
-        $scope.config = ConfigService.getModule({moduleId: 'dashboard'});
-        $scope.$on('req-component-config', onConfigRequest);
+angular.module('dashboard').controller('DashboardController', ['$rootScope', '$scope', '$translate', 'dashboard', '$timeout'
+    , 'Acm.StoreService', 'UtilService', 'Config.LocaleService', 'ConfigService', 'Dashboard.DashboardService', 'ArkCaseDashboard'
+    , function ($rootScope, $scope, $translate, dashboard, $timeout
+        , Store, Util, LocaleService, ConfigService, DashboardService, ArkCaseDashboard
+    ) {
+		var promiseConfig = ConfigService.getModuleConfig("dashboard").then(function (moduleConfig) {
+			$scope.config = moduleConfig;
+            return moduleConfig;
+        });
 
+		//Phased out code for backward compatibility.
+        //Keep it for now just in case there are still widgets using 'req-component-config'
+        $scope.$on('req-component-config', onConfigRequest);
+        function onConfigRequest(e, componentId) {
+            promiseConfig.then(function (config) {
+                var componentConfig = _.find(config.components, {id: componentId});
+                $scope.$broadcast('component-config', componentId, componentConfig);
+            });
+        }
+        //TODO: remove above phased out block, after long enough time for all users to update the code changes
 
         // //Update all dashboard widget titles and descriptions
         // _.forEach(dashboard.widgets, function (widget, widgetId) {
@@ -19,8 +34,6 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
             collapsible: false,
             maximizable: false,
             model: {
-                //titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html',
-                //editTemplateUrl: 'modules/dashboard/views/dashboard-edit.client.view.html',
                 titleTemplateUrl: 'modules/dashboard/templates/widget-title.html',
                 editTemplateUrl: 'modules/dashboard/templates/dashboard-edit.html',
                 addTemplateUrl : "modules/dashboard/templates/widget-add.html",
@@ -28,10 +41,6 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
             }
         };
 
-        var a1 = $translate.instant("ADF_COMMON_TITLE");
-        var a2 = $translate.instant("dashboard.widgets.myTasks.title");
-
-        //TODO: remove fixOldCode_removeLater()
         //make old code compatible. remove fixOldCode_removeLater() after enough time for all users run the new code
         var fixOldCode_removeLater = function() {
             var m = $scope.dashboard.model;
@@ -116,6 +125,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
                 }
             }
         };
+        //TODO: remove above fixOldCode_removeLater()
 
         DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
@@ -140,14 +150,34 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
 
         });
 
-        var setLocale = function(scope, locale) {
-            scope.locale = locale;
+        var setLocale = function(iso) {
+            $timeout(function () {
+                ArkCaseDashboard.setLocale(iso);
+            }, 0);
         };
-        setLocale($scope, 'sv-SE');
-        $rootScope.$on('$translateChangeSuccess', function(event, data) {
-            setLocale($scope, 'sv-SE');
-        });
 
+        var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
+        var lastLocale = cacheLocale.get();
+        if (Util.isEmpty(lastLocale)) {
+            lastLocale = {};
+            lastLocale.locales = LocaleService.DEFAULT_LOCALES;
+            lastLocale.code = LocaleService.DEFAULT_CODE;
+            lastLocale.iso = LocaleService.DEFAULT_ISO;
+            cacheLocale.set(lastLocale);
+        }
+        var locales = Util.goodMapValue(lastLocale, "locales", LocaleService.DEFAULT_LOCALES);
+        var localeCode = Util.goodMapValue(lastLocale, "code", LocaleService.DEFAULT_CODE);
+        var localeIso = Util.goodMapValue(lastLocale, "iso", LocaleService.DEFAULT_ISO);
+        $translate.use(localeCode);
+        setLocale(localeIso);
+
+        $rootScope.$on('$translateChangeSuccess', function(event, data) {
+            var locale = _.find(locales, {code: data.language});
+            if (locale) {
+                var iso = Util.goodMapValue(locale, "iso", LocaleService.DEFAULT_ISO);
+                setLocale(iso);
+            }
+        });
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
@@ -157,16 +187,5 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
             $scope.dashboard.model = model;
         });
 
-        /**
-         * Handles 'req-component-config' event
-         * @param e
-         * @param componentId
-         */
-        function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-            });
-        }
     }
 ]);
