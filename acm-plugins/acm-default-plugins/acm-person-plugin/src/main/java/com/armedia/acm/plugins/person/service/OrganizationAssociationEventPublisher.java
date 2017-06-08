@@ -39,7 +39,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     public void publishOrganizationAssociationEvent(OrganizationAssociation source, String ipAddress, boolean newOrganizationAssociation,
-            boolean succeeded)
+                                                    boolean succeeded)
     {
         log.debug("Publishing a organization event.");
 
@@ -52,7 +52,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     public void publishOrganizationAssociationEvent(String organizationAssociationHistory, OrganizationAssociation source,
-            boolean succeeded)
+                                                    boolean succeeded)
     {
         log.debug("Publishing a organization event.");
         if (organizationAssociationHistory == null)
@@ -73,7 +73,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForAddressRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-            String parentType, Long parentId)
+                                              String parentType, Long parentId)
     {
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = existingOrganization.getAddresses();
@@ -113,7 +113,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForContactRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-            String parentType, Long parentId)
+                                              String parentType, Long parentId)
     {
         boolean isContactAddedOrRemoved = false;
         List<ContactMethod> existingContacts = existingOrganization.getContactMethods();

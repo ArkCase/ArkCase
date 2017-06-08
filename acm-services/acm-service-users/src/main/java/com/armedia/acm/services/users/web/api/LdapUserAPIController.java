@@ -99,16 +99,25 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeLdapUser(@PathVariable String userId,
+                                            @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        AcmUser source = getLdapUserService().getUserDao().findByUserId(userId);
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            ldapUserService.removeLdapUser(userId, directory);
+            getAcmUserEventPublisher().publishLdapUserDeletedEvent(source);
 
-
-
-
-
-
-
-
-
-
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (Exception e)
+        {
+            log.error("Deleting LDAP user failed!", e);
+            throw new AcmUserActionFailedException("Delete LDAP user", null, null, "Removing LDAP user failed!", e);
+        }
+    }
 
     @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

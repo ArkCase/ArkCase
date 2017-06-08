@@ -12,17 +12,17 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 
-            $scope.showSetPrimary = params.showSetPrimary;
+        $scope.showSetPrimary = params.showSetPrimary;
 
-            $scope.personId = params.personId;
-            $scope.person = params.person;
-            $scope.personName = params.personName;
-            $scope.isDefault = params.isDefault;
-            $scope.description = params.description;
-            $scope.type = _.find($scope.types, function (type) {
-                return type.type == params.type;
-            });
-            $scope.isNew = params.isNew;
+        $scope.personId = params.personId;
+        $scope.person = params.person;
+        $scope.personName = params.personName;
+        $scope.isDefault = params.isDefault;
+        $scope.description = params.description;
+        $scope.type = _.find($scope.types, function (type) {
+            return type.type == params.type;
+        });
+        $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
