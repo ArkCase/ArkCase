@@ -24,7 +24,8 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                 onEditLdapMember: "=",
                 onAddExistingMembersToLdapGroup: "=",
                 onAddLdapSubgroup: "=",
-                onDeleteLdapMember: "="
+                onDeleteLdapMember: "=",
+                onDeleteLdapGroup: "="
             },
             link: function (scope, element, attrs) {
                 var $tbl = $("#org");
@@ -67,30 +68,32 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                             hideColumn(3, "#actions", $tdList)
                         } else {
                             if (!node.data.isMember && node.data.object_sub_type_s != "LDAP_GROUP") {
-                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' title='Add Subgroup'><i class='fa fa-users'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' title='Add Members'><i class='fa fa-user'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' title='Remove Group'><i class='fa fa-trash-o'></i></button>")(scope));
+                                $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' tooltip=\"{{'admin.security.ldapConfig.addSubgroup' | translate}}\"><i class='fa fa-users'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' tooltip=\"{{'admin.security.ldapConfig.addMembers' | translate}\"><i class='fa fa-user'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' tooltip=\"{{'admin.security.ldapConfig.removeGroup' | translate}}\"><i class='fa fa-trash-o'></i></button>")(scope));
                                 if (scope.showSupervisor) {
-                                    $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' title='Add/Edit Supervisor'><i class='fa fa-edit'></i></button>")(scope));
+                                    $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' tooltip=\"{{'admin.security.ldapConfig.addOrEditSupervisor' | translate}}\"><i class='fa fa-edit'></i></button>")(scope));
                                 }
                             }
                             if (node.data.isMember && node.parent.data.object_sub_type_s != "LDAP_GROUP") {
-                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' title='Remove Member'><i class='fa fa-trash-o'></i></button>")(scope));
+                                $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs' type='button' ng-click='removeUserBtn($event)' name='removeMember' tooltip=\"{{'admin.security.ldapConfig.removeMember' | translate}}\"><i class='fa fa-trash-o'></i></button>")(scope));
                             }
 
                             if (node.data.object_sub_type_s == "LDAP_GROUP") {
                                 // check if editing is allowed for the directory server this group belongs
                                 if (scope.enableEditingLdapUsers[node.data.directory_name_s]) {
-                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' title='Add Existing Members'><i class='fa fa-user'></i></button>" +
-                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' title='Add New Member'><i class='fa fa-user-plus'></i></button>" +
-                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' title='Add LDAP Subgroup'><i class='fa fa-users'></i></button>")(scope));
+                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addExistingUserToLdapGroup($event)' name='addExistingMembers' tooltip=\"{{'admin.security.ldapConfig.addExistingMembers' | translate}}\"><i class='fa fa-user'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapUser($event)' name='addMember' tooltip=\"{{'admin.security.ldapConfig.addNewMember' | translate}}\"><i class='fa fa-user-plus'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='addLdapSubgroup($event)' name='addSubGroup' tooltip=\"{{'admin.security.ldapConfig.addLdapSubgroup' | translate}}\"><i class='fa fa-users'></i></button>" +
+                                        "<button class='btn btn-link btn-xs' type='button' ng-click='deleteLdapGroup($event)' name='deleteGroup' tooltip=\"{{'admin.security.ldapConfig.deleteLdapGroup' | translate}}\"><i class='fa fa-trash-o'></i></button>"
+                                    )(scope));
                                 }
                             }
 
                             if (node.data.isMember && node.parent.data.object_sub_type_s == "LDAP_GROUP") {
                                 // check if editing is allowed for the directory server this sub-group belongs
                                 if (scope.enableEditingLdapUsers[node.parent.data.directory_name_s]) {
-                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' title='Edit Member'><i class='fa fa-pencil'></i></button>" + "<button class='btn btn-link btn-xs' type='button' ng-click='deleteLdapUser($event)' name='deleteMember' title='Delete Member'><i class='fa fa-trash-o'></i></button>")(scope));
+                                    $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='editLdapUser($event)' name='editMember' tooltip=\"{{'admin.security.ldapConfig.editMember' | translate}}\"><i class='fa fa-pencil'></i></button>" + "<button class='btn btn-link btn-xs' type='button' ng-click='deleteLdapUser($event)' name='deleteMember' title='Delete Member'><i class='fa fa-trash-o'></i></button>")(scope));
                                 }
                             }
                         }
@@ -220,6 +223,20 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         //success
                         node.addNode(subGroup, 'firstChild');
                         node.setExpanded();
+                        messageService.succsessAction();
+                    }, function (error) {
+                        //error
+                        if (error != "cancel") {
+                            messageService.errorAction();
+                        }
+                    });
+                };
+
+                scope.deleteLdapGroup = function (event) {
+                    var node = $.ui.fancytree.getNode(event);
+                    scope.onDeleteLdapGroup(node.data).then(function () {
+                        //success
+                        node.remove();
                         messageService.succsessAction();
                     }, function (error) {
                         //error
