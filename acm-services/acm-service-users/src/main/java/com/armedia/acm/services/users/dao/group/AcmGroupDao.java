@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -54,15 +56,18 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = dbQuery.getSingleResult();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             if (e instanceof NoResultException)
             {
                 LOG.info("There is no any group with name = " + name);
-            } else if (e instanceof NonUniqueResultException)
+            }
+            else if (e instanceof NonUniqueResultException)
             {
                 LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
-            } else
+            }
+            else
             {
                 LOG.error("Error while retrieving group by group name = " + name, e);
             }
@@ -82,7 +87,8 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             getEm().remove(groupToBeDeleted);
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -257,13 +263,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = (AcmGroup) dbQuery.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             LOG.info("There is no any group with name = {}", name);
-        } catch (NonUniqueResultException e)
+        }
+        catch (NonUniqueResultException e)
         {
             LOG.info("There is no unique group found with name = {}. More than one group has this name.", name);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while retrieving group by group name = {}", name, e);
         }
