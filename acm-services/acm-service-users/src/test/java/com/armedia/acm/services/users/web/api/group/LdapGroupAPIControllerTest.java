@@ -4,8 +4,10 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
+import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -39,6 +43,9 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     @Mock
     private AcmGroupEventPublisher mockGroupEventPublisher;
+
+    @Mock
+    SpringContextHolder springContextHolder;
 
     @Mock
     LdapGroupService mockLdapGroupService;
@@ -63,7 +70,11 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
         group.setName("test-group");
         group.setDescription("test ldap group");
 
+        AcmLdapAuthenticateConfig config = new AcmLdapAuthenticateConfig();
+        config.setEnableEditingLdapUsers(true);
+
         mockBehaviour(group);
+        when(springContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class)).thenReturn(Collections.singletonMap("armedia_authenticate", config));
 
         MvcResult result = mockMvc.perform(
                 delete("/api/v1/ldap/" + directory + "/groups/" + group.getName())
