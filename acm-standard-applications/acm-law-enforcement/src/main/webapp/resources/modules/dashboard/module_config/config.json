@@ -289,6 +289,10 @@
       "configName": "document-repository"
     },
     {
+      "name": "DOC_REPO",
+      "configName": "my-documents"
+    },
+    {
       "name": "PERSON",
       "configName": "people"
     },
