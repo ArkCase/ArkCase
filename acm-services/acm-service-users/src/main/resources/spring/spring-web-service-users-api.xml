@@ -73,6 +73,7 @@
     <bean id="ldapUserAPIController" class="com.armedia.acm.services.users.web.api.LdapUserAPIController"
           parent="secureLdapController">
         <property name="ldapUserService" ref="ldapUserService"/>
+        <property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
     </bean>
 
     <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController"

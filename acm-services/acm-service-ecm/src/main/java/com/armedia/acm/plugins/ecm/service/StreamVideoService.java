@@ -16,5 +16,6 @@ import java.io.IOException;
 public interface StreamVideoService
 {
     public void stream(String cmisId, HttpServletRequest request, HttpServletResponse response, EcmFile ecmFile, String version) throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException;
+
     public void stream(HttpServletRequest request, HttpServletResponse response, ContentStream payload, EcmFile ecmFile, String version) throws IOException;
 }

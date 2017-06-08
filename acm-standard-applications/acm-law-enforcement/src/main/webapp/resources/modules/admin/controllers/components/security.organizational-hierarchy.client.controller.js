@@ -412,6 +412,28 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
 
+
+        $scope.onDeleteLdapMember = function (member) {
+            var deferred = $q.defer();
+            var modalOptions = {
+                closeButtonText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.btn.cancel'),
+                actionButtonText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.btn.ok'),
+                headerText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.title'),
+            };
+            modalDialogService.showModal({}, modalOptions).then(function () {
+                //ok btn
+                organizationalHierarchyService.deleteGroupMember(member).then(function (payload) {
+                    deferred.resolve(payload);
+                }, function (payload) {
+                    deferred.reject(payload);
+                });
+            }, function () {
+                //cancel btn
+                deferred.reject();
+            });
+            return deferred.promise;
+        };
+
         $scope.onLazyLoad = function (event, groupNode) {
 
             var parentId = groupNode.object_id_s;
