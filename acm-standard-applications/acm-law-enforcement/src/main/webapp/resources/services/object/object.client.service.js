@@ -65,8 +65,6 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     function (objectTypes) {
                         var found = _.find(objectTypes, {key: objTypeKey});
                         var objType = Util.goodMapValue(found, "type");
-                        console.log("Object found");
-                        console.log(found);
                         if (Util.goodMapValue(found, "state", false)) {
                             var params = {id: objId, type: objType};
                             $state.transitionTo(found.state, params, {reload: true, notify: true});
