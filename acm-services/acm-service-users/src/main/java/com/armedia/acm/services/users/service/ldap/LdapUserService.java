@@ -275,6 +275,7 @@ public class LdapUserService
             for (AcmGroup group : lookupGroups)
             {
                 group.removeMember(existingUser);
+                getGroupDao().save(group);
             }
         }
 
