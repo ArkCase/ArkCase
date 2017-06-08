@@ -40,14 +40,16 @@ public interface AcmMailTemplateConfigurationService
      *
      * @param templateName
      * @return
+     * @throws AcmEmailConfigurationException
      */
-    String getTemplate(String templateName);
+    String getTemplate(String templateName) throws AcmEmailConfigurationException;
 
     /**
      *
      * @param templateName
+     * @throws AcmEmailConfigurationException
      */
-    void deleteTemplate(String templateName);
+    void deleteTemplate(String templateName) throws AcmEmailConfigurationException;
 
     /**
      * @param ce
