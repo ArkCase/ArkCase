@@ -51,6 +51,11 @@ public class NotificationFormatter
         return notification;
 
     }
+    
+    public String replaceSubscriptionTitle(String title, String placeholder, String objectType)
+    {
+        return replaceObjectTypeLabel(title, placeholder, objectType);
+    }
 
     private String replaceObjectTypeLabel(String withPlaceholder, String placeholder, String parentType)
     {
