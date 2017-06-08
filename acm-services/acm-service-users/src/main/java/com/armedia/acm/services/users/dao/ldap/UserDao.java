@@ -231,6 +231,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmUser markedUser = query.getSingleResult();
         markedUser.setUserState("INVALID");
         markedUser.setDeletedAt(new Date());
+        getEntityManager().persist(markedUser);
+
         return markedUser;
     }
 

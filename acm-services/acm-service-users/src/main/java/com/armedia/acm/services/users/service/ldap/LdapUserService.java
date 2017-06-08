@@ -264,7 +264,7 @@ public class LdapUserService
         return ldapUsers;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmUser removeLdapUser(String userId, String directory) throws AcmLdapActionFailedException
     {
         AcmUser existingUser = getUserDao().findByUserId(userId);
