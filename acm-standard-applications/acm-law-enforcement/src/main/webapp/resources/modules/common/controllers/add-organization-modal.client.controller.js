@@ -1,7 +1,7 @@
 angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-        , ObjectLookupService, Util, ConfigService, params) {
+            , ObjectLookupService, Util, ConfigService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
@@ -30,16 +30,18 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 var retValue = {
                     organizationId: $scope.organizationId,
                     organizationValue: $scope.organizationValue,
-                    type: $scope.type.type,
-                    inverseType: $scope.type.inverseType,
                     organization: $scope.organization,
                     isNew: $scope.isNew
                 };
+                if ($scope.types && $scope.type) {
+                    retValue.type = $scope.type.type;
+                    retValue.inverseType = $scope.type.inverseType;
+                }
                 if ($scope.showSetPrimary) {
-                    retValue['isDefault'] = $scope.isDefault;
+                    retValue.isDefault = $scope.isDefault;
                 }
                 if ($scope.showDescription) {
-                    retValue['description'] = $scope.description;
+                    retValue.description = $scope.description;
                 }
                 $modalInstance.close(retValue);
             };
