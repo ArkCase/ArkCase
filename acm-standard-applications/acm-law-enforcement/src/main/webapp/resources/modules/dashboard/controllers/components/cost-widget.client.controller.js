@@ -14,9 +14,10 @@ angular.module('dashboard.cost', ['adf.provider'])
             });
     })
     .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate'
-        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService',
-        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util
-            , ObjectCostService) {
+        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService'
+        , function ($scope, config, $state, $stateParams, $translate
+            , DashboardService, HelperObjectBrowserService, Util, ObjectCostService
+        ) {
 
             var vm = this;
 

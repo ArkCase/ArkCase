@@ -31,19 +31,23 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             $scope.gridOptions.columnDefs = columnDefs;
             var nsPromise = LabelsConfigService.retrieveNamespaces().$promise;
             var settingsPromise = LabelsConfigService.retrieveSettings().$promise;
+            var localSettingsPromise = LocaleService.getSettings();
 
-            $q.all([nsPromise, settingsPromise]).then(function (result) {
+            $q.all([nsPromise, settingsPromise, localSettingsPromise]).then(function (result) {
                 var namespaces = result[0];
                 $scope.namespacesDropdownOptions = _.sortBy(namespaces, 'name');
                 $scope.selectedNamespace = $scope.namespacesDropdownOptions[0];
 
                 var settings = result[1];
                 $scope.settings = settings;
-                var locales = Util.goodMapValue($scope.settings, "locales", []);
-                var defaultLocale = Util.goodMapValue($scope.settings, "defaultLocale", LocaleService.DEFAULT_SETTINGS.defaultLocale);
+                var localeCode = Util.goodMapValue($scope.settings, "localeCode", LocaleService.DEFAULT_CODE);
+
+                $scope.localSettings = result[2];
+                var locales = Util.goodMapValue($scope.localSettings, "locales", LocaleService.DEFAULT_LOCALES);
+
                 $scope.languagesDropdownOptions = locales;
-                $scope.selectedLocale = _.find(locales, {locale: defaultLocale});
-                $scope.defaultLocale = _.find(locales, {locale: defaultLocale});
+                $scope.selectedLocale = _.find(locales, {code: localeCode});
+                $scope.defaultLocale = _.find(locales, {code: localeCode});
 
                 reloadGrid();
             });
@@ -53,7 +57,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             if ($scope.selectedNamespace && $scope.selectedLocale.locale) {
                 $scope.disabledInputs = true;
                 LabelsConfigService.retrieveResource({
-                        lang: $scope.selectedLocale.locale,
+                        lang: $scope.selectedLocale.code,
                         ns: $scope.selectedNamespace.id
                     },
                     function (data) {
@@ -72,9 +76,9 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         //changing default language
         $scope.changeDefaultLocale = function ($event, newLocale) {
             $event.preventDefault();
-            var locales = Util.goodMapValue($scope.settings, "locales", []);
-            $scope.defaultLocale = _.find(locales, {locale: newLocale});
-            $scope.settings.defaultLocale = newLocale;
+            var locales = Util.goodMapValue($scope.localSettings, "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.defaultLocale = _.find(locales, {code: newLocale});
+            $scope.settings.localeCode = newLocale;
             LabelsConfigService.updateSettings(
                 angular.toJson($scope.settings)
             )
@@ -84,7 +88,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         $scope.resetCurrentModuleResources = function () {
             $scope.disabledInputs = true;
             LabelsConfigService.resetResource({
-                lng: [$scope.selectedLocale.locale],
+                lng: [$scope.selectedLocale.code],
                 ns: [$scope.selectedNamespace.id]
             }, function () {
             	//success
@@ -102,7 +106,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
             $scope.disabledInputs = true;
             LabelsConfigService.resetResource({
-                lng: [$scope.selectedLocale.locale],
+                lng: [$scope.selectedLocale.code],
                 ns: allNamespaces
             }, function () {
             	//success
@@ -119,7 +123,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
             $scope.disabledInputs = true;
             LabelsConfigService.refreshResource({
-                lng: [$scope.selectedLocale.locale],
+                lng: [$scope.selectedLocale.code],
                 ns: allNamespaces
             }, function () {
             	//success
@@ -135,7 +139,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         //updating value for Description for selected record in grid
         $scope.updateLabelDesc = function (desc, rowEntity) {
             LabelsConfigService.updateResource({
-                lang: $scope.selectedLocale.locale,
+                lang: $scope.selectedLocale.code,
                 ns: $scope.selectedNamespace.id
             }, angular.toJson({
                 id: rowEntity.id,
@@ -147,7 +151,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         //updating value for Value for selected record in grid
         $scope.updateLabelValue = function (value, rowEntity) {
             LabelsConfigService.updateResource({
-                lang: $scope.selectedLocale.locale,
+                lang: $scope.selectedLocale.code,
                 ns: $scope.selectedNamespace.id
             }, angular.toJson({
                 id: rowEntity.id,

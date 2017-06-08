@@ -8,11 +8,8 @@
  *
  *{@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard.arkcase.provider.js modules/dashboard/services/dashboard.arkcase.provider.js}
  *
- *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates.
+ *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates. It also expose dashboard provider functions to be used.
  */
-
-// angular.module('services').factory('Dashboard.ArkCaseProvider', ['$q'//, 'adf.provider', 'dashboardProvider'
-//     , function ($q//, adfProvider, dashboardProvider
 
 angular.module('adf.provider').provider('ArkCaseDashboard', function (dashboardProvider) {
 
@@ -40,9 +37,6 @@ angular.module('adf.provider').provider('ArkCaseDashboard', function (dashboardP
      // this.widgetsPath = function(path){
      // return this;
      // };
-     // this.structure = function(name, structure){
-     // return this;
-     // };
      // this.messageTemplate = function(template){
      // return this;
      // };
@@ -62,19 +56,19 @@ angular.module('adf.provider').provider('ArkCaseDashboard', function (dashboardP
      // return this;
      // };
 
+	var that = this;
     this.$get = function(){
-        console.log("=============================in ArkCaseDashboardProvider.$get=============================");
         return {
-             // widgets: widgets,
-             // widgetsPath: widgetsPath,
-             // structures: structures,
-             // messageTemplate: messageTemplate,
-             // loadingTemplate: loadingTemplate,
-             // setLocale: this.setLocale,
-             // locales: getLocales,
-             // activeLocale: getActiveLocale,
-             // translate: translate,
-             // customWidgetTemplatePath: customWidgetTemplatePath
+            widgets: this.widgets,
+            structure: this.structure,
+            setLocale: this.setLocale,
+            addLocale: this.addLocale
+            // messageTemplate: messageTemplate,
+            // loadingTemplate: loadingTemplate,
+            // locales: this.getLocales,
+            // activeLocale: getActiveLocale,
+            // translate: translate,
+            // customWidgetTemplatePath: customWidgetTemplatePath
         };
     };
 
