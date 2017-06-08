@@ -88,6 +88,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     scope.emptySearch = scope.config.emptySearch;
                 }
 
+                scope.facetLimit = 10; //default value for facetLimit
+                if (typeof scope.config.facetLimit !== 'undefined') {
+                    scope.facetLimit = scope.config.facetLimit;
+                }
+
                 var searchObject = new Object();
                 try {
                     searchObject = JSON.parse(scope.searchQuery);
@@ -256,7 +261,11 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 hidden = _.includes(scope.config.hiddenFacets, key);
                             }
                             if (!hidden && value) {
-                                scope.facets.push({"name": key, "fields": value});
+                                scope.facets.push({
+                                    name: key,
+                                    fields: value,
+                                    limit: scope.facetLimit
+                                });
                             }
                         });
 
@@ -354,6 +363,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     for (var selection in selections) {
                         selections[selection] = false;
                     }
+                };
+
+                scope.increaseFacetLimit = function (facet) {
+                    facet.limit = facet.fields.length;
+                };
+
+                scope.decreaseFacetLimit = function (facet) {
+                    facet.limit = scope.facetLimit;
                 };
 
                 //prepare the UI-grid
