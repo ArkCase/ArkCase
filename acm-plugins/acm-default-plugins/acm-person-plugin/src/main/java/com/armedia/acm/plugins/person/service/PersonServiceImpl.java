@@ -58,11 +58,14 @@ public class PersonServiceImpl implements PersonService
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private PersonEventPublisher personEventPublisher;
 
     @Override
     public Person get(Long id)
     {
-        return getPersonDao().find(id);
+        Person person = getPersonDao().find(id);
+        getPersonEventPublisher().publishPersonViewedEvent(person, true);
+        return person;
     }
 
     @Override
@@ -221,7 +224,7 @@ public class PersonServiceImpl implements PersonService
             person.setDefaultPicture(uploaded);
             savePerson(person, auth);
         }
-
+        getPersonEventPublisher().publishPersonImageEvent(person, true);
         return uploaded;
     }
 
@@ -255,17 +258,8 @@ public class PersonServiceImpl implements PersonService
             person.setDefaultPicture(uploaded);
             savePerson(person, auth);
         }
+        getPersonEventPublisher().publishPersonImageEvent(person, true);
         return uploaded;
-    }
-
-    @Override
-    public Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException
-    {
-        //save person
-        person = savePerson(person, auth);
-        person = createContainerAndPictureFolder(person, auth);
-
-        return person;
     }
 
     protected Person createContainerAndPictureFolder(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
@@ -297,22 +291,6 @@ public class PersonServiceImpl implements PersonService
         return person;
     }
 
-    /**
-     * Creates new Person and persists in database, and then uploads pictures
-     *
-     * @param person         Person data
-     * @param pictures       Person pictures
-     * @param authentication Authentication
-     * @return Person created Person
-     */
-    @Override
-    public Person createPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException
-    {
-        Person savedPerson = createPerson(person, authentication);
-
-        return uploadPicturesForPerson(savedPerson, pictures, authentication);
-    }
-
     private String getPersonRootFolderName(Person person)
     {
         ExpressionParser ep = new SpelExpressionParser();
@@ -322,9 +300,16 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public Person savePerson(Person person, Authentication authentication)
+    public Person savePerson(Person in, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        return personDao.save(person);
+        boolean isNew = in.getId() == null;
+        Person person = personDao.save(in);
+        if (isNew)
+        {
+            person = createContainerAndPictureFolder(person, authentication);
+        }
+        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
+        return person;
     }
 
     /**
@@ -336,9 +321,8 @@ public class PersonServiceImpl implements PersonService
      * @return Person saved person
      */
     @Override
-    public Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException
+    public Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
-
         Person savedPerson = savePerson(person, authentication);
         return uploadPicturesForPerson(savedPerson, pictures, authentication);
     }
@@ -416,5 +400,21 @@ public class PersonServiceImpl implements PersonService
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    /**
+     * @return the personEventPublisher
+     */
+    public PersonEventPublisher getPersonEventPublisher()
+    {
+        return personEventPublisher;
+    }
+
+    /**
+     * @param personEventPublisher the personEventPublisher to set
+     */
+    public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
+    {
+        this.personEventPublisher = personEventPublisher;
     }
 }

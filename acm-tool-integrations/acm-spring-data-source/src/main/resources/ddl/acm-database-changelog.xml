@@ -21,9 +21,9 @@
     <property name="nextValFromSequence" value="SEQ_GEN_IDENTITY.NEXTVAL" dbms="oracle"/>
     <property name="nextValFromSequence" value="nextVal('SEQ_GEN_IDENTITY')" dbms="postgresql"/>
 
-    <property  name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
-    <property  name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
-    <property  name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql,mssql"/>
+    <property name="timestampFunction" value="SYSTIMESTAMP" dbms="oracle"/>
+    <property name="timestampFunction" value="localtimestamp" dbms="postgresql"/>
+    <property name="timestampFunction" value="CURRENT_TIMESTAMP" dbms="mysql,mssql"/>
 
     <property name="timestampType" value="TIMESTAMP WITH TIME ZONE" dbms="oracle,postgresql"/>
     <property name="timestampType" value="TIMESTAMP" dbms="mysql,mssql"/>
@@ -41,6 +41,12 @@
     <property name="excludeMSSQL" value="oracle" dbms="oracle"/>
     <property name="excludeMSSQL" value="postgresql" dbms="postgresql"/>
     <property name="excludeMSSQL" value="EXCLUDE" dbms="mssql"/>
+
+    <property name="maxVarChar" value="VARCHAR(512)" dbms="oracle,postgresql"/>
+    <property name="maxVarChar" value="TEXT" dbms="mysql,mssql"/>
+
+    <!--<property name="maxVarChar" value="512" dbms="postgresql,oracle"/>
+    <property name="maxVarChar" value="128" dbms="mysql,mssql"/>-->
 
 
     <!-- drop constraints need to be first of all, in case we make any structure changes involving
@@ -70,10 +76,10 @@
     <!-- packages before triggers, since triggers can call packages. Note we have some Oracle specific
          assumptions here.  When we support other databases we will have to configure Spring to load a
          database-specific changelog file. -->
-    <includeAll path="classpath*:/com/armedia/acm/ddl/packageSpecs" relativeToChangelogFile="false" />
+    <includeAll path="classpath*:/com/armedia/acm/ddl/packageSpecs" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/packageSpecs" relativeToChangelogFile="false"/>
 
-    <includeAll path="classpath*:/com/armedia/acm/ddl/packageBodies" relativeToChangelogFile="false" />
+    <includeAll path="classpath*:/com/armedia/acm/ddl/packageBodies" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/packageBodies" relativeToChangelogFile="false"/>
 
     <!-- then triggers.  -->

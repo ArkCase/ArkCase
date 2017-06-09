@@ -80,7 +80,8 @@ public class SpringLdapUserDao
                 passwordBytes = MapperUtils.encodeUTF16LE(newPassword);
                 passwordAttribute = "unicodePwd";
                 oldPassword = new BasicAttribute(passwordAttribute, MapperUtils.encodeUTF16LE(password));
-            } else
+            }
+            else
             {
                 passwordBytes = newPassword.getBytes();
                 passwordAttribute = "userPassword";
@@ -93,7 +94,8 @@ public class SpringLdapUserDao
             // Perform the update
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
-        } catch (AuthenticationException e)
+        }
+        catch (AuthenticationException e)
         {
             log.warn("User: {} failed to authenticate. ", dn);
             throw e;
