@@ -133,6 +133,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         solr.setName(in.getFileName());
         solr.setExt_s(in.getFileActiveVersionNameExtension());
+        solr.setMime_type_s(in.getFileActiveVersionMimeType());
         solr.setContent_type(in.getFileActiveVersionMimeType());
         solr.setStatus_lcs(in.getStatus());
         solr.setTitle_parseable(in.getFileName());

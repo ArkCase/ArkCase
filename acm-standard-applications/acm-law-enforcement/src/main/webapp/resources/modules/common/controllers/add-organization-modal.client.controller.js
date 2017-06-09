@@ -11,16 +11,16 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
-            $scope.showSetPrimary = params.showSetPrimary;
+        $scope.showSetPrimary = params.showSetPrimary;
 
-            $scope.organizationId = params.organizationId;
-            $scope.organizationValue = params.organizationValue;
-            $scope.isDefault = params.isDefault;
-            $scope.description = params.description;
-            $scope.type = _.find($scope.types, function (type) {
-                return type.type == params.type;
-            });
-            $scope.isNew = params.isNew;
+        $scope.organizationId = params.organizationId;
+        $scope.organizationValue = params.organizationValue;
+        $scope.isDefault = params.isDefault;
+        $scope.description = params.description;
+        $scope.type = _.find($scope.types, function (type) {
+            return type.type == params.type;
+        });
+        $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

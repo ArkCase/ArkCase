@@ -1,13 +1,10 @@
 package com.armedia.acm.pluginmanager.web;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertTrue;
-
+import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.model.AcmPluginPrivilege;
 import com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,11 +13,14 @@ import org.springframework.http.HttpMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static junit.framework.TestCase.fail;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by armdev on 5/14/14.
@@ -72,15 +72,20 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         expect(mockRequest.getSession(false)).andReturn(mockSession);
         expect(mockSession.getAttribute("acm_privileges")).andReturn(null);
-        mockResponse.setStatus(403);
 
         replayAll();
 
-        boolean proceed = unit.preHandle(mockRequest, mockResponse, null);
+        try
+        {
+            unit.preHandle(mockRequest, mockResponse, null);
+            fail("Expecting AcmNotAuthorizedException but did not happen");
+        }
+        catch (AcmNotAuthorizedException exception)
+        {
+            // do nothing, should throw exception
+        }
 
         verifyAll();
-        assertTrue(proceed);
-
     }
 
     @Test
@@ -91,11 +96,19 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
-        mockResponse.setStatus(403);
 
         replayAll();
 
-        unit.preHandle(mockRequest, mockResponse, null);
+        try
+        {
+            unit.preHandle(mockRequest, mockResponse, null);
+            fail("Expecting AcmNotAuthorizedException but did not happen");
+        }
+        catch (AcmNotAuthorizedException exception)
+        {
+            // do nothing, should throw exception
+        }
+
 
         verifyAll();
     }
@@ -123,11 +136,19 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         expect(mockRequest.getServletPath()).andReturn("/url").atLeastOnce();
         expect(mockRequest.getMethod()).andReturn(HttpMethod.GET.name());
-        mockResponse.setStatus(403);
 
         replayAll();
 
-        unit.preHandle(mockRequest, mockResponse, null);
+        try
+        {
+            unit.preHandle(mockRequest, mockResponse, null);
+            fail("Expecting AcmNotAuthorizedException but did not happen");
+        }
+        catch (AcmNotAuthorizedException exception)
+        {
+            // do nothing, should throw exception
+        }
+
 
         verifyAll();
 

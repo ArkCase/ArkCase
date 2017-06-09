@@ -14,6 +14,7 @@ angular.module('people').controller('People.AddressesModalController', ['$scope'
             $scope.address = params.address;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

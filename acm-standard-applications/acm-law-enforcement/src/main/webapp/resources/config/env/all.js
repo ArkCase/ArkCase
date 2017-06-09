@@ -97,7 +97,12 @@ module.exports = {
                 'lib/crypto-js/crypto-js.js',
                 'lib/angular-google-analytics/dist/angular-google-analytics.js',
                 'lib/rrule/lib/rrule.js',
-                'lib/jsog/lib/JSOG.js'
+                'lib/jsog/lib/JSOG.js',
+                'lib/videogular/videogular.js',
+                'lib/videogular-controls/vg-controls.js',
+                'lib/videogular-overlay-play/vg-overlay-play.js',
+                'lib/videogular-poster/vg-poster.js',
+                'lib/videogular-buffering/vg-buffering.js'
             ]
         },
         css: [
