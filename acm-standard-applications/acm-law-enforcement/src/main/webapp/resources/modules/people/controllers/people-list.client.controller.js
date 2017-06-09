@@ -7,20 +7,6 @@ angular.module('people').controller('PeopleListController', ['$scope', '$state',
         , Util, ObjectService, PeopleListService, PeopleInfoService, HelperObjectBrowserService
         , ServCommService, MessageService) {
 
-        // maybe optional listener for "close-complaint"?
-        var eventName = "object.inserted";
-        $scope.$bus.subscribe(eventName, function (data) {
-            if (data.objectType === ObjectService.ObjectTypes.PERSON) {
-
-                var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
-                var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
-                    objectTypeString: objectTypeString,
-                    objectId: data.objectId
-                });
-
-                MessageService.info(objectWasCreatedMessage);
-            }
-        });
 
         //"treeConfig", "treeData", "onLoad", and "onSelect" will be set by Tree Helper
         new HelperObjectBrowserService.Tree({

@@ -100,26 +100,6 @@ public interface PersonService
     EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 
     /**
-     * Creates new Person and persists in database
-     *
-     * @param person Person data
-     * @param auth   Authentication
-     * @return Person created Person
-     */
-    @Transactional
-    Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException;
-
-    /**
-     * Creates new Person and persists in database, and then uploads pictures
-     *
-     * @param person         Person data
-     * @param pictures       Person pictures
-     * @param authentication Authentication
-     * @return Person created Person
-     */
-    Person createPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
-
-    /**
      * save person data
      *
      * @param person         person data
@@ -127,7 +107,7 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, Authentication authentication);
+    Person savePerson(Person person, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
 
     /**
      * save person data
@@ -138,5 +118,5 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException;
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 }

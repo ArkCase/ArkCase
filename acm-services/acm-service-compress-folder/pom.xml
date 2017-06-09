@@ -47,6 +47,12 @@
             <artifactId>spring-test</artifactId>
         </dependency>
 
+        <!-- servlet -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
