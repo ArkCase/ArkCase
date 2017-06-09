@@ -1,24 +1,15 @@
 {
-  "id": "document-repository",
-  "title": "Documents",
+  "id": "my-documents",
+  "title": "My Documents",
   "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
   "menus": [
     {
       "menuId": "leftnav",
-      "menuItemURL": "document-repository.main",
-      "menuItemTitle": "document-repository.menus.leftnav.item",
-      "moduleId": "document-repository",
-      "iconClass": "fa fa-folder",
-      "position": 60
-    },
-    {
-      "menuId": "topbar",
-      "menuItemURL": "new-document-repository",
-      "menuItemTitle": "document-repository.menus.topbar.item",
-      "moduleId": "document-repository",
-      "permissionAction": "createDocumentRepository",
+      "menuItemURL": "my-documents.main",
+      "menuItemTitle": "my-documents.menus.leftnav.item",
+      "moduleId": "my-documents",
       "iconClass": "fa fa-folder",
       "position": 60
     }
@@ -27,21 +18,10 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All I've Created",
-        "name": "my-created-document-repositories",
-        "value": "fq=author_s:${user} AND repository_type_s:GENERAL"
-      },
-      {
-        "desc": "All I'm Following",
-        "name": "my-following-document-repositories",
-        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
-      },
-      {
         "desc": "(No Filter)",
-        "name": "default-filter",
-        "value": "fq=repository_type_s:GENERAL",
+        "name": "my-personal-document-repositories",
+        "value": "fq=assignee_s:${user} AND repository_type_s:PERSONAL",
         "default": true
-
       }
     ],
     "sorters": [
