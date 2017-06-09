@@ -136,7 +136,9 @@
           "lastName": "fr_Enter last name",
           "email": "fr_Enter email",
           "password": "fr_Enter password",
-          "passwordRuleText": "fr_Enter password containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "fr_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "fr_Edit Ldap Member",
