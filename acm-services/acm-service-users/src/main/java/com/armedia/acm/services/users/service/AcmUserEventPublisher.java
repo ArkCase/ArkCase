@@ -15,7 +15,7 @@ public class AcmUserEventPublisher implements ApplicationEventPublisherAware
 
     public void publishLdapUserDeletedEvent(AcmUser source)
     {
-        log.debug("Publishing LDAP user: {} deleted event.", source.getUserId());
+        log.debug("Publishing LDAP User:{} deleted event.", source.getUserId());
         LdapUserDeletedEvent event = new LdapUserDeletedEvent(source, source.getUserId());
         event.setSucceeded(true);
         applicationEventPublisher.publishEvent(event);

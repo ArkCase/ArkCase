@@ -31,6 +31,7 @@
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="personEventPublisher" ref="personEventPublisher"/>
         <property name="peopleRootFolder" value="${person.folder.root}"/>
         <property name="personOwnFolder" value="${person.folder.own.spel}"/>
         <property name="picturesFolder" value="${person.folder.pictures}"/>
@@ -129,5 +130,5 @@
         <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
         <property name="organizationAssociationEventPublisher" ref="organizationAssociationEventPublisher"/>
     </bean>
-    
+
 </beans>

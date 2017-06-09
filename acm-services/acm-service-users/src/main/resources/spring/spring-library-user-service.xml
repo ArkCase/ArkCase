@@ -185,5 +185,6 @@
 
     <bean id="acmUserEventPublisher" class="com.armedia.acm.services.users.service.AcmUserEventPublisher"/>
 
+    <bean id="acmGroupEventPublisher" class="com.armedia.acm.services.users.service.AcmGroupEventPublisher"/>
 
 </beans>

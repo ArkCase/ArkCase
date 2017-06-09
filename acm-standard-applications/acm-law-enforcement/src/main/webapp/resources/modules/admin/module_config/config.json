@@ -8,7 +8,7 @@
       "menuItemTitle": "admin.menus.leftnav.item",
       "moduleId": "admin",
       "iconClass": "fa fa-wrench",
-      "position": 180
+      "position": 200
     }
   ],
   "components": [
