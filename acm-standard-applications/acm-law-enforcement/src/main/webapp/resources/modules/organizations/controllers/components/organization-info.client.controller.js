@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate'
+angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
     , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService'
-    , function ($scope, $stateParams, $translate
+    , function ($scope, $stateParams, $translate, $modal
         , OrganizationInfoService, HelperObjectBrowserService, Util) {
 
         new HelperObjectBrowserService.Component({
@@ -20,6 +20,38 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
+        };
+
+        $scope.addParent = function () {
+
+            var params = {};
+            //params.types = vm.organizationTypes;
+
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                if (data.isNew) {
+                    $scope.objectInfo.parentOrganization = data.organization;
+                    $scope.saveOrganization();
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        $scope.objectInfo.parentOrganization = organization;
+                        $scope.saveOrganization();
+                    })
+                }
+            });
         };
 
         $scope.saveOrganization = function () {
