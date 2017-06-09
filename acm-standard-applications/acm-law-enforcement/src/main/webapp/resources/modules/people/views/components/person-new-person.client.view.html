@@ -65,13 +65,13 @@
                                         people.comp.editPerson.identification.identificationNumber</label>
                                     <span class="required-asterisk">*</span>
                                     <input type="text" ng-model="person.defaultIdentification.identificationNumber"
-                                           class="input-md form-control" required="required"
+                                           class="input-md form-control"
                                            placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>people.comp.editPerson.identification.identificationType</label>
                                     <span class="required-asterisk">*</span>
-                                    <select class="form-control" required="required"
+                                    <select class="form-control"
                                             ng-model="person.defaultIdentification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -102,7 +102,7 @@
                                                show-button-bar="true"
                                                on-open-focus="false"
                                                close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}"/>
-                                          <span class="input-group-btn">
+                                        <span class="input-group-btn">
                                                  <button type="button" class="btn btn-default"
                                                          ng-click="defaultOpened = !defaultOpened">
                                                          <i class="fa fa-calendar"></i>
@@ -169,7 +169,7 @@
                                                        show-button-bar="true"
                                                        on-open-focus="false"
                                                        close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}"/>
-                                          <span class="input-group-btn">
+                                                <span class="input-group-btn">
                                                  <button type="button" class="btn btn-default"
                                                          ng-click="identification.opened = !identification.opened">
                                                          <i class="fa fa-calendar"></i>
@@ -252,11 +252,11 @@
                 </div>
                 <div id="collapseOrganizations" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <div ng-repeat="organization in person.associationsFromObjects | filter: {parentType:'ORGANIZATION'}">
+                        <div ng-repeat="organizationAssociation in person.organizationAssociations">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                     <label>&nbsp;</label>
-                                    <input type="text" ng-model="organization.parentTitle"
+                                    <input type="text" ng-model="organizationAssociation.organization.organizationValue"
                                            ng-click="searchOrganization($index)"
                                            class="input-md form-control"
                                            placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
@@ -264,19 +264,15 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.organizations.organizationType</label>
-                                    <select class="form-control" ng-disabled="!organization.parentId"
-                                            ng-model="organization.personType">
-                                        <option ng-repeat="relation in personOrganizationRelationTypes"
-                                                value="{{relation.type}}">
-                                            {{relation.name}}
-                                        </option>
-                                    </select>
+                                    <input class="form-control" ng-disabled="true"
+                                           ng-model="organizationAssociation.personToOrganizationAssociationType">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
-                                                ng-click="removeOrganization(organization)" ng-show="!$first">
+                                                ng-click="removeOrganization(organizationAssociation)"
+                                                ng-show="!$first">
                                             <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
                                         </button>
                                     </div>

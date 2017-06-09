@@ -9,6 +9,8 @@
  * {@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/doc-tree/doc-tree-ext.media.client.service.js directives/doc-tree/doc-tree-ext.media.client.service.js}
  *
  * DocTree extensions for media functions.
+ * 
+ * NOTE: AT THIS MOMENT SERVICE IS NOT USED. LEAVED FOR FUTURE IMPLEMENTATION OF PLAY LIST
  */
 angular.module('services').factory('DocTreeExt.Media', ['$q', '$modal', '$translate', '$browser', 'UtilService', 'LookupService'
     , function ($q, $modal, $translate, $browser, Util, LookupService) {
@@ -96,7 +98,10 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
             });
             $scope.config = {
                 sources: [
-                    {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId), type: $scope.nodes[0].data.mimeType}
+                    {
+                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId),
+                        type: $scope.nodes[0].data.mimeType
+                    }
                 ],
                 theme: "lib/videogular-themes-default/videogular.css",
                 plugins: {

@@ -83,7 +83,8 @@
     <bean id="organizationPersonRelationTypes" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/organizationPersonRelationTypes.json"/>
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/organizationPersonRelationTypes.json"/>
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
@@ -381,6 +382,12 @@
                     <property name="configName" value="activiti"/>
                     <property name="configDescription" value="Activiti BPMN properties"/>
                     <property name="properties" ref="activitiProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-analytics-config"/>
+                    <property name="configDescription" value="Acm ELK/SILK Analytics Server config"/>
+                    <property name="properties" ref="analyticsServerConfigurationProperties"/>
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
