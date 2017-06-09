@@ -3,13 +3,16 @@ package com.armedia.acm.services.users.model.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.List;
+import com.armedia.acm.services.users.model.ldap.PasswordValidation;
 
 /**
  * Ldap User POST JSON request
  */
+@PasswordValidation(message = "Password pattern rule violation")
 public class LdapUser
 {
     private AcmUser acmUser;
+
     private String password;
     private List<String> groupNames;
 

@@ -136,7 +136,9 @@
           "lastName": "zh-tw_Enter last name",
           "email": "zh-tw_Enter email",
           "password": "zh-tw_Enter password",
-          "passwordRuleText": "zh-tw_Enter password containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "zh-tw_Edit Ldap Member",
