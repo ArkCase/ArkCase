@@ -29,10 +29,15 @@ import java.util.stream.Collectors;
 public class LdapUserService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
     private SpringLdapDao ldapDao;
+
     private UserDao userDao;
+
     private AcmGroupDao groupDao;
+
     private SpringContextHolder acmContextHolder;
+
     private LdapEntryTransformer userTransformer;
 
     @Transactional(rollbackFor = Exception.class)
@@ -41,8 +46,10 @@ public class LdapUserService
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
+
         Map<String, String> roleToGroup = ldapSyncConfig.getRoleToGroupMap();
         Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroup);
+
         String userFullName = String.format("%s %s", user.getFirstName(), user.getLastName());
         String dn = buildDnForUser(userFullName, user.getUserId(), ldapSyncConfig);
         user.setFullName(userFullName);
@@ -264,7 +271,7 @@ public class LdapUserService
         return ldapUsers;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AcmUser removeLdapUser(String userId, String directory) throws AcmLdapActionFailedException
     {
         AcmUser existingUser = getUserDao().findByUserId(userId);
@@ -275,6 +282,7 @@ public class LdapUserService
             for (AcmGroup group : lookupGroups)
             {
                 group.removeMember(existingUser);
+                getGroupDao().save(group);
             }
         }
 

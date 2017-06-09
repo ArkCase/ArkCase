@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
+@RequestMapping({"/api/v1/plugin/person", "/api/latest/plugin/person"})
 public class SavePersonAPIController
 {
 
