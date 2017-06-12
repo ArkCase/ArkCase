@@ -14,7 +14,9 @@
     "email.label": "Email",
     "status.label": "Status",
     "identification.label": "ID",
-    "primary.label": "Primary Contact"
+    "primary.label": "Primary Contact",
+    "parent.label": "Parent Organization",
+    "parent.placeholder": "Enter Parent Organization"
   },
   "organizations.comp.actions": {
     "export.button": "Export",

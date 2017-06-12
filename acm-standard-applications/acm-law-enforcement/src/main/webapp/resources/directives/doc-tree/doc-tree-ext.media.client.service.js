@@ -98,7 +98,10 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
             });
             $scope.config = {
                 sources: [
-                    {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId), type: $scope.nodes[0].data.mimeType}
+                    {
+                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId),
+                        type: $scope.nodes[0].data.mimeType
+                    }
                 ],
                 theme: "lib/videogular-themes-default/videogular.css",
                 plugins: {
