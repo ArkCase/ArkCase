@@ -124,13 +124,13 @@
             <label class="form-check-label">
                 <input type="checkbox" class="form-check-input" ng-model="dir.enableEditingLdapUsers"
                        placeholder="{{ 'admin.security.ldapConfig.data.placeholders.enableEditingLdapUsers' | translate }}"
-                       required>
+                       ng-init="dir.enableEditingLdapUsers=false">
                 {{ 'admin.security.ldapConfig.data.enableEditingLdapUsers' | translate }}
             </label>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-secondary" ng-click="cancel()">
+        <button class="btn btn-secondary" type="button" ng-click="cancel()">
             <span translate>admin.security.ldapConfig.dialog.cancel</span>
         </button>
         <button class="btn btn-primary" type="submit" ng-disabled="ldapConfigForm.$invalid">
