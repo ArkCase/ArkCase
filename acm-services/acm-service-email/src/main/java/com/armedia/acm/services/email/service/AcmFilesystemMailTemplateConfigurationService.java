@@ -310,7 +310,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      */
     private File getTemplateFolder()
     {
-        return new File(System.getProperty("user.home") + File.separator + templateFolderPath);
+        return new File(System.getProperty("user.home") + File.separator + ".arkcase" + File.separator + "acm" + File.separator
+                + templateFolderPath);
     }
 
     /**

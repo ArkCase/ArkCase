@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -33,8 +34,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 6, 2017
@@ -74,6 +78,21 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void setUp() throws Exception
     {
         service.setTemplateFolderPath(TEMPLATES_FOLDER_NAME);
+    }
+
+    @After
+    public void cleanUp() throws Exception
+    {
+        File templatesFolder = new File(getTemplatesFolderPath());
+        if (templatesFolder.exists() & templatesFolder.isDirectory())
+        {
+            List<Path> testFiles = Files.list(templatesFolder.toPath())
+                    .filter(f -> f.getFileName().toFile().getName().startsWith(TEMPLATE_NAME)).collect(Collectors.toList());
+            for (Path testFile : testFiles)
+            {
+                Files.delete(testFile);
+            }
+        }
     }
 
     /**
@@ -177,8 +196,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         verify(template).transferTo(templateFileCaptor.capture());
 
         File templateFileCaptured = templateFileCaptor.getValue();
-        assertThat(templateFileCaptured.getPath(), is(System.getProperty("user.home") + File.separator + TEMPLATES_FOLDER_NAME
-                + File.separator + configuration.getTemplateName()));
+        assertThat(templateFileCaptured.getPath(), is(getTemplatesFolderPath() + File.separator + configuration.getTemplateName()));
 
     }
 
@@ -224,8 +242,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         verify(template).transferTo(templateFileCaptor.capture());
 
         File templateFileCaptured = templateFileCaptor.getValue();
-        assertThat(templateFileCaptured.getPath(), is(System.getProperty("user.home") + File.separator + TEMPLATES_FOLDER_NAME
-                + File.separator + configuration.getTemplateName()));
+        assertThat(templateFileCaptured.getPath(), is(getTemplatesFolderPath() + File.separator + configuration.getTemplateName()));
 
     }
 
@@ -275,8 +292,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         verify(template).transferTo(templateFileCaptor.capture());
 
         File templateFileCaptured = templateFileCaptor.getValue();
-        assertThat(templateFileCaptured.getPath(), is(System.getProperty("user.home") + File.separator + TEMPLATES_FOLDER_NAME
-                + File.separator + configuration.getTemplateName()));
+        assertThat(templateFileCaptured.getPath(), is(getTemplatesFolderPath() + File.separator + configuration.getTemplateName()));
 
     }
 
@@ -464,6 +480,12 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         configuration.setTemplateName(templateName);
         configuration.setActions(actions);
         return configuration;
+    }
+
+    private String getTemplatesFolderPath()
+    {
+        return System.getProperty("user.home") + File.separator + ".arkcase" + File.separator + "acm" + File.separator
+                + TEMPLATES_FOLDER_NAME;
     }
 
 }
