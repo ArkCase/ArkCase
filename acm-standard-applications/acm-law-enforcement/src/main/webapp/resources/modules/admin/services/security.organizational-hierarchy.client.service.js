@@ -54,6 +54,11 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             },
 
             _editLdapUser: {
+                method: 'PUT',
+                url: 'api/latest/ldap/:directoryName/users/:userId'
+            },
+
+            _cloneLdapUser: {
                 method: 'POST',
                 url: 'api/latest/ldap/:directoryName/users/:userId'
             },
