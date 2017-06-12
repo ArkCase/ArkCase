@@ -193,6 +193,16 @@ public class LdapUserService
     }
 
     @Transactional(rollbackFor = Exception.class)
+    public AcmUser cloneLdapUser(String userId, AcmUser acmUser, String password, String directory)
+            throws AcmUserActionFailedException, AcmLdapActionFailedException
+    {
+        log.debug("Cloning User:{} in database", acmUser.getUserId());
+        AcmUser existingUser = getUserDao().findByUserId(userId);
+
+        return createLdapUser(acmUser, new ArrayList<>(existingUser.getLdapGroups()), password, directory);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
