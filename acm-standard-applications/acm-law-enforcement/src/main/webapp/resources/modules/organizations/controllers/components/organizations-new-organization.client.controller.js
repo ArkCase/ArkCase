@@ -24,9 +24,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             contactMethods: [],
             identifications: [],
             addresses: [],
-            associationsFromObjects: [{
-                parentType: 'PERSON'
-            }],
+            personAssociations: [{}],
             defaultEmail: {
                 type: 'email'
             },
@@ -40,6 +38,12 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 type: 'fax'
             }
         };
+
+        ObjectLookupService.getOrganizationPersonRelationTypes().then(
+            function (types) {
+                $scope.personAssociationTypes = types;
+                return types;
+            });
 
         $scope.searchOrganization = function () {
             var params = {};
@@ -86,28 +90,36 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         $scope.removePerson = function (person) {
             $timeout(function () {
-                _.remove($scope.organization.associationsFromObjects, function (object) {
+                _.remove($scope.organization.personAssociations, function (object) {
                     return object === person;
                 });
             }, 0);
         };
 
         $scope.searchPerson = function (index) {
-            var params = {};
-            params.header = $translate.instant("common.dialogPersonPicker.header");
-            params.filter = '"Object Type": PERSON';
-            params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
+            var association = index > -1 ? $scope.organization.personAssociations[index] : {};
+            var params = {
+                showSetPrimary: true,
+                isDefault: false,
+                types: $scope.personAssociationTypes
+            };
+
+            //set this params for editing
+            if (association.person) {
+                angular.extend(params, {
+                    personId: association.person.id,
+                    personName: association.person.givenName + ' ' + association.person.familyName,
+                    type: association.organizationToPersonAssociationType,
+                    isDefault: association === $scope.organization.primaryContact
+                });
+            }
 
             var modalInstance = $modal.open({
-                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
-                    $scope.modalInstance = $modalInstance;
-                    $scope.header = params.header;
-                    $scope.filter = params.filter;
-                    $scope.config = params.config;
-                }],
+                scope: $scope,
                 animation: true,
-                size: 'lg',
+                templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                controller: 'Common.AddPersonModalController',
+                size: 'md',
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -116,25 +128,57 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 }
             });
 
-            modalInstance.result.then(function (selected) {
-                if (!Util.isEmpty(selected)) {
-                    $timeout(function () {
-                        var organizationAssocation = {
-                            organization: $scope.organization,
-                            parentId: selected.object_id_s,
-                            parentType: selected.object_type_s,
-                            parentTitle: selected.full_name_lcs
-                        };
-                        if (index > -1) {
-                            $scope.organization.associationsFromObjects[index] = organizationAssocation;
-
-                        } else {
-                            $scope.organization.associationsFromObjects.push(organizationAssocation);
-                        }
-                    }, 0);
+            modalInstance.result.then(function (data) {
+                if (data.person) {
+                    if (!data.person.id) {
+                        PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                            data['person'] = response.data;
+                            setPersonAssociation(association, data);
+                        });
+                    } else {
+                        setPersonAssociation({}, data);
+                    }
+                } else {
+                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                        delete person['$promise'];
+                        delete person['$resolved'];
+                        data['person'] = person;
+                        setPersonAssociation(association, data);
+                    });
                 }
             });
         };
+
+        function setPersonAssociation(association, data) {
+            association.person = data.person;
+            association.organization = $scope.organization;
+            association.organizationToPersonAssociationType = data.type;
+            association.personToOrganizationAssociationType = data.inverseType;
+
+            //those are temporary values for displaying in the input
+            association.personFullName = association.person.givenName + ' ' + association.person.familyName;
+            association.personToOrganizationAssociationTypeName = _.find($scope.personAssociationTypes, function (type) {
+                return type.type == data.type;
+            });
+
+            if (data.isDefault) {
+                $scope.organization.primaryContact = association;
+            } else {
+                if ($scope.organization.primaryContact === association) {
+                    //remove this association from primary contact, if was previously set
+                    $scope.organization.primaryContact = null;
+                }
+            }
+
+            //if is new created, add it to the organization associations list
+            if (!$scope.organization.personAssociations) {
+                $scope.organization.personAssociations = [];
+            }
+
+            if (!_.includes($scope.organization.personAssociations, association)) {
+                $scope.organization.personAssociations.push(association);
+            }
+        }
 
         //contact methods subtypes types
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
@@ -287,18 +331,25 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             }
 
             //addresses
-            if (organization.defaultAddress && !organization.defaultAddress.streetAddress) {
-                organization.defaultAddress = null;
-            } else {
-                organization.addresses.push(organization.defaultAddress);
+            if (organization.defaultAddress) {
+                if (!organization.defaultAddress.streetAddress) {
+                    organization.defaultAddress = null;
+                }
+                else {
+                    organization.addresses.push(organization.defaultAddress);
+                }
             }
 
             //remove empty organizations before save
-            _.remove(organization.associationsFromObjects, function (person) {
-                if (!person.parentId) {
+            _.remove(organization.personAssociations, function (association) {
+                if (!association.personFullName) {
                     return true;
+                } else {
+                    //remove temporary values
+                    delete association['personFullName'];
+                    delete association['personToOrganizationAssociationTypeName'];
+                    return false;
                 }
-                return false;
             });
 
             return organization;
