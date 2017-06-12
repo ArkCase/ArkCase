@@ -15,30 +15,11 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,6 +32,10 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_document_repository")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = DocumentRepository.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.documentrepository.model.DocumentRepository")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class DocumentRepository implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmChildObjectEntity
@@ -100,9 +85,8 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = DocumentRepositoryConstants.OBJECT_TYPE;
 
-    @Column(name = "cm_doc_repo_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private DocumentRepositoryType repositoryType;
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"),
@@ -130,16 +114,12 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isBlank(status))
+        if (StringUtils.isBlank(getStatus()))
         {
-            status = "DRAFT";
+            setStatus("DRAFT");
         }
-        nameUpperCase = name.toUpperCase();
+        setNameUpperCase(getName().toUpperCase());
         setupChildPointers();
-        if(repositoryType == null)
-        {
-            repositoryType = DocumentRepositoryType.GENERAL;
-        }
     }
 
     private void setupChildPointers()
@@ -223,6 +203,11 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         this.restricted = restricted;
     }
 
+    public String getClassName() {return className;
+    }
+
+    public void setClassName(String className) {this.className = className;}
+
     @Override
     public Date getCreated()
     {
@@ -281,16 +266,6 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     public void setObjectType(String objectType)
     {
         this.objectType = objectType;
-    }
-
-    public DocumentRepositoryType getRepositoryType()
-    {
-        return repositoryType;
-    }
-
-    public void setRepositoryType(DocumentRepositoryType repositoryType)
-    {
-        this.repositoryType = repositoryType;
     }
 
     @Override
