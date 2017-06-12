@@ -155,6 +155,12 @@
     "edtPlaceholder": "Type in to search",
     "noData.text": "No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Show More Values",
+    "showLess.button.text": "Show Less Values",
+    "results.text": "Results",
+    "noResults.text": "No Results"
+  },
   "common.directive.coreNotes": {
     "title": "Notes",
     "modal.addNote": "Add Note",
