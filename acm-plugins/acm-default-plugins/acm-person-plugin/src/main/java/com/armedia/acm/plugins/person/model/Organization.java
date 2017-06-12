@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.eclipse.persistence.annotations.OrderCorrection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -188,7 +189,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     private OrganizationDBA defaultDBA;
 
     /**
-     * OrganizationAssociation which is primary contact with parentType == PERSON
+     * PersonOrganizationAssociation which is primary contact
      */
     @OneToOne
     @JoinColumn(name = "cm_primary_contact")
@@ -248,6 +249,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         for (PersonOrganizationAssociation poa : getPersonAssociations())
         {
             poa.setOrganization(this);
+        }
+        if (getPrimaryContact() != null)
+        {
+            getPrimaryContact().setOrganization(this);
         }
     }
 
@@ -478,7 +483,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     {
         return organizationId;
     }
-    
+
     public String getObjectType()
     {
         return objectType;
