@@ -13,7 +13,9 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,60 +36,61 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
 
     public void queryAlfrescoAuditApplications()
     {
-        for (Map.Entry<String, EcmAuditResponseReader> auditApplication : getAuditApplications().entrySet())
+        if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
         {
-
-            if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
-            {
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-            }
-
-            String lastAuditIdFetched = null;
-            String applicationName = auditApplication.getKey();
-            EcmAuditResponseReader reader = auditApplication.getValue();
-
-            log.info("Starting Alfresco sync for audit application {}", applicationName);
-
-            try
-            {
-                String lastAuditIdKey = applicationName + ".lastAuditId";
-
-                lastAuditIdFetched = getPropertyFileManager().load(getAuditApplicationLastAuditIdsFilename(),
-                        lastAuditIdKey, "0");
-                // start from the *next* audit Id
-                long lastAuditId = Long.valueOf(lastAuditIdFetched);
-                long startingAuditId = lastAuditId + 1;
-                JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, startingAuditId);
-                updatePropertiesWithLastAuditId(lastAuditIdKey, auditEntries);
-
-                List<EcmEvent> events = reader.read(auditEntries);
-
-                if (events != null && !events.isEmpty())
-                {
-                    log.info("Fetched {} audit records for audit application {}", events.size(), applicationName);
-
-
-                    for (EcmEvent e : events)
-                    {
-                        applicationEventPublisher.publishEvent(e);
-                    }
-                }
-
-
-            } catch (AcmEncryptionException e)
-            {
-                log.error("Could not decrypt property {}.lastAuditId", applicationName, e);
-            } catch (NumberFormatException e)
-            {
-                log.error("The last audit id {} should be a number, but it is not!", lastAuditIdFetched);
-            } catch (Exception e)
-            {
-                log.error("Could not query Alfresco audit records for application {}", applicationName, e);
-            }
-
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
         }
 
+        List<EcmEvent> allEvents = new ArrayList<>();
+
+        for (Map.Entry<String, EcmAuditResponseReader> auditApplication : getAuditApplications().entrySet())
+        {
+            List<EcmEvent> eventsForAuditApp = collectAuditEvents(auditApplication.getKey(), auditApplication.getValue());
+            if (eventsForAuditApp != null && !eventsForAuditApp.isEmpty())
+            {
+                log.info("Fetched {} audit records for audit application {}", eventsForAuditApp.size(), auditApplication.getKey());
+                allEvents.addAll(eventsForAuditApp);
+            }
+        }
+
+        allEvents.stream().sorted(Comparator.comparing(EcmEvent::getAuditId)).forEach(e -> applicationEventPublisher.publishEvent(e));
+
+    }
+
+    protected List<EcmEvent> collectAuditEvents(String applicationName, EcmAuditResponseReader reader)
+    {
+        String lastAuditIdFetched = null;
+
+        log.info("Starting Alfresco sync for audit application {}", applicationName);
+
+        try
+        {
+            String lastAuditIdKey = applicationName + ".lastAuditId";
+
+            lastAuditIdFetched = getPropertyFileManager().load(getAuditApplicationLastAuditIdsFilename(),
+                    lastAuditIdKey, "0");
+            // start from the *next* audit Id
+            long lastAuditId = Long.valueOf(lastAuditIdFetched);
+            long startingAuditId = lastAuditId + 1;
+            JSONObject auditEntries = getAuditApplicationRestClient().service(applicationName, startingAuditId);
+            updatePropertiesWithLastAuditId(lastAuditIdKey, auditEntries);
+
+            List<EcmEvent> events = reader.read(auditEntries);
+
+            return events;
+        } catch (AcmEncryptionException e)
+        {
+            log.error("Could not decrypt property {}.lastAuditId", applicationName, e);
+        } catch (NumberFormatException e)
+        {
+            log.error("The last audit id {} should be a number, but it is not!", lastAuditIdFetched);
+        } catch (Exception e)
+        {
+            log.error("Could not query Alfresco audit records for application {}", applicationName, e);
+        }
+
+        return null;
     }
 
     protected void updatePropertiesWithLastAuditId(String lastAuditIdKey, JSONObject fullAuditResponse)
