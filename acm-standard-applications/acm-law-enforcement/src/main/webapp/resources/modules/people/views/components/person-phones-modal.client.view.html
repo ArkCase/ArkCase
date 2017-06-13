@@ -31,7 +31,7 @@
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.phones.modal.yes</translate>
                 </label>
-                <label>
+                <label ng-hide="hideNoField">
                     <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>people.comp.phones.modal.no</translate>
                 </label>

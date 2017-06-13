@@ -76,10 +76,10 @@
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.addresses.modal.yes</translate>
                 </label>
-
-                <input type="radio" ng-model="isDefault" ng-value="false">
-                <translate>people.comp.addresses.modal.no</translate>
-
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>people.comp.addresses.modal.no</translate>
+                </label>
             </div>
         </div>
     </form>
