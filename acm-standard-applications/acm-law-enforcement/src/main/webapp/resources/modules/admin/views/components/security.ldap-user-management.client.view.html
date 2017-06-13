@@ -1,0 +1,13 @@
+<div ng-controller="Admin.LdapUserManagementController">
+    <panel-view header="{{'admin.security.ldap.user.management.title' | translate}}" collapsible="false">
+        <div class="row">
+            <object-authorization-roles data="appUsers" object-display-name="name" on-object-selected="onObjSelect"
+                                        role-display-name="name"
+                                        on-auth-role-change="onAuthRoleSelected"
+                                        object-title="{{'admin.security.modules.module' | translate}}"/>
+        </div>
+        <button class="btn btn-sm btn-success" ng-click="cloneUser({}, selectedUser)">
+            <span translate>admin.security.ldap.user.management.cloneButton</span>
+        </button>
+    </panel-view>
+</div>
