@@ -474,15 +474,10 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
-        <comment>Removed not null constraint on cm_user_deleted_at on MySQL</comment>
+    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski">
+        <comment>Removed not null constraint on cm_user_deleted_at</comment>
         <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"
                                columnDataType="${timestampType}"/>
-    </changeSet>
-
-    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski" dbms="mssql,oracle,postgresql">
-        <comment>Removed not null constraint on cm_user_deleted_at on all DB types</comment>
-        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"/>
     </changeSet>
 
 </databaseChangeLog>
