@@ -5,6 +5,7 @@ import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapDirectoryConfig;
 import com.armedia.acm.plugins.admin.model.LdapTemplateConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -62,6 +63,8 @@ public class LdapConfigurationService implements InitializingBean
 
     private Pattern ldapPropertiesFilePattern;
 
+    private SpringContextHolder contextHolder;
+
 
     /**
      * Create LDAP Directory config files
@@ -116,6 +119,16 @@ public class LdapConfigurationService implements InitializingBean
         }
 
         writePropertiesFile(dirId, props);
+        String ldapFileName = getLdapFileName(dirId);
+        contextHolder.removeContext(ldapFileName);
+        File ldapFile = new File(ldapFileName);
+        try
+        {
+            contextHolder.addContextFromFile(ldapFile);
+        } catch (IOException e)
+        {
+            log.error("Could not add context from file: {}. ", ldapFile.getName(), e);
+        }
     }
 
     /**
@@ -582,5 +595,10 @@ public class LdapConfigurationService implements InitializingBean
         this.ldapGroupFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupFileRegex());
         this.ldapGroupPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupPropertiesFileRegex());
         this.ldapPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }

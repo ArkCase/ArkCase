@@ -61,7 +61,8 @@ public class LdapGroupService
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -107,7 +108,8 @@ public class LdapGroupService
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -124,14 +126,16 @@ public class LdapGroupService
                     .retryResult(() -> ldapTemplate.lookupContext(parentGroupDnStrippedBase));
             parentGroupContext.addAttributeValue("member", acmGroup.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(parentGroupContext));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Updating parent-group DN:{} failed! Rollback saved sub-group DN:{} ",
                     parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
             try
             {
                 new RetryExecutor().retry(() -> ldapTemplate.unbind(parentGroupDnStrippedBase));
-            } catch (Exception ee)
+            }
+            catch (Exception ee)
             {
                 log.warn("Rollback failed", ee);
             }
@@ -140,6 +144,32 @@ public class LdapGroupService
             throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
         }
         return acmGroup;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
+    {
+        AcmGroup existingGroup = getGroupDao().findByName(group);
+        log.debug("Removing LDAP group:{} from database", existingGroup.getName());
+        getGroupDao().markGroupDelete(group);
+
+
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
+                get(String.format("%s_sync", directoryName));
+        LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
+
+        try
+        {
+            log.debug("Deleting group:{} with DN:{} in LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
+            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingGroup.getDistinguishedName(),
+                    ldapSyncConfig.getBaseDC())));
+            log.debug("Group:{} with DN:{} was successfully deleted in DB and LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
+        }
+        catch (Exception e)
+        {
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
+        return existingGroup;
     }
 
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)

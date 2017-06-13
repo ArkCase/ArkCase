@@ -90,6 +90,10 @@
         "email": "Email"
       }
     },
+    "mediaDialog": {
+      "title": "ArkCase Media Player",
+      "btnCancel.text": "Cancel"
+    },
     "comment": {
       "title": "Checkin New Document",
       "addComent": "Detailed Note",
@@ -150,6 +154,12 @@
     "btnCancel.text": "Cancel",
     "edtPlaceholder": "Type in to search",
     "noData.text": "No Results"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Show More Values",
+    "showLess.button.text": "Show Less Values",
+    "results.text": "Results",
+    "noResults.text": "No Results"
   },
   "common.directive.coreNotes": {
     "title": "Notes",
@@ -506,7 +516,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   },
   "common.addPerson": {
@@ -616,7 +627,8 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
     }
   },
   "common.labels": {

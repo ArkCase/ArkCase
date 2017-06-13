@@ -33,7 +33,8 @@
                 <label><input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>organizations.comp.urls.modal.yes</translate>
                 </label>
-                <label><input type="radio" ng-model="isDefault" ng-value="false">
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
                     <translate>organizations.comp.urls.modal.no</translate>
                 </label>
             </div>
