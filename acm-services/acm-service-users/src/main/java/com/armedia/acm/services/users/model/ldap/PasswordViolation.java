@@ -6,18 +6,38 @@ package com.armedia.acm.services.users.model.ldap;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 
-public class PasswordViolation implements
-            ConstraintValidator<PasswordValidation, Object> {
-    private static final String RULE_PATTERN = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$/";
+public class PasswordViolation implements ConstraintValidator<IPasswordValidation, Object> {
+    private List<IPasswordValidationRule> passwordRules;
 
-    @Override
-    public void initialize(PasswordValidation arg0) {
+    public PasswordViolation(List<IPasswordValidationRule> passwordRules){
+        this.passwordRules = passwordRules;
     }
 
     @Override
-    public boolean isValid(Object candidate, ConstraintValidatorContext arg1) {
+    public void initialize(IPasswordValidation passwordValidation) {
+
+    }
+
+    @Override
+    public boolean isValid(Object candidate, ConstraintValidatorContext context) {
         LdapUser user = (LdapUser) candidate;
-        return user.getPassword().contains(user.getAcmUser().getUserId()) || user.getPassword().matches(RULE_PATTERN);
+        if(user==null) return false;
+        if(user.getAcmUser()==null)  return false;
+        String user_Id = user.getAcmUser().getUserId();
+        String user_password = user.getPassword();
+        if (user_Id == null || user_password == null) return false;
+        for (IPasswordValidationRule pattern : passwordRules) {
+            String message = pattern.RunValidationAndGetMessage(user_Id, user_password);
+            context.disableDefaultConstraintViolation();
+            if (message != null) {
+                context
+                        .buildConstraintViolationWithTemplate(message)
+                        .addConstraintViolation();
+                return false;
+            }
+        }
+        return true;
     }
 }

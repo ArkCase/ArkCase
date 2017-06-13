@@ -167,6 +167,54 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 
+    <bean id="PasswordPatternValidation"
+          class="com.armedia.acm.services.users.model.ldap.PasswordViolation">
+        <constructor-arg>
+            <list>
+                <ref bean="PasswordShouldNotContainUserId" />
+                <ref bean="PasswordShouldMatchLowerCasePattern" />
+                <ref bean="PasswordShouldMatchUpperCasePattern" />
+                <ref bean="PasswordShouldMatchDigitPattern" />
+                <ref bean="PasswordShouldMatchSpecialCharPattern" />
+                <ref bean="PasswordShouldbeOfMinimumLength"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="PasswordShouldNotContainUserId"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId">
+    </bean>
+
+    <bean id="PasswordShouldMatchLowerCasePattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[a-z].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one lowercase character"></constructor-arg>
+    </bean>
+
+    <bean id="PasswordShouldMatchUpperCasePattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[A-Z].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one uppercase character"></constructor-arg>
+    </bean>
+
+    <bean id="PasswordShouldMatchDigitPattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[0-9].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one digit (0-9)"></constructor-arg>
+    </bean>
+
+    <bean id="PasswordShouldMatchSpecialCharPattern"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[!@#%^+=].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="message" value="Password must contain at least one special character"></constructor-arg>
+    </bean>
+
+    <bean id="PasswordShouldbeOfMinimumLength"
+          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
+        <constructor-arg type="java.lang.String" name="pattern" value="/^.{7,}$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="message" value="Password must be of minimum length of 7."></constructor-arg>
+    </bean>
+
     <bean id="ldapProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.arkcase/acm/spring/spring-config-armedia-ldap.properties"/>
