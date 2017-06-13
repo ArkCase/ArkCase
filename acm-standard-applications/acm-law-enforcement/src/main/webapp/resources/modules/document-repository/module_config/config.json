@@ -29,7 +29,7 @@
       {
         "desc": "All I've Created",
         "name": "my-created-document-repositories",
-        "value": "fq=author_s:${user}"
+        "value": "fq=author_s:${user} AND repository_type_s:GENERAL"
       },
       {
         "desc": "All I'm Following",
@@ -38,8 +38,10 @@
       },
       {
         "desc": "(No Filter)",
-        "name": "",
-        "value": ""
+        "name": "default-filter",
+        "value": "fq=repository_type_s:GENERAL",
+        "default": true
+
       }
     ],
     "sorters": [

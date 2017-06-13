@@ -21,19 +21,32 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-sm-6 form-group">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" ng-model="docRepo.repositoryType"
+                                       ng-change="changeType(docRepo.repositoryType)"
+                                       ng-true-value="'PERSONAL'" ng-false-value="'GENERAL'">
+                                {{ 'document-repository.newRepository.personalRepository' | translate }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-sm-3 form-group">
                         <label for="assignee" translate>document-repository.newRepository.assigneeLabel</label>
                         <span class="required-asterisk">*</span>
                         <input type="text" id="assignee" class="input-md form-control"
                                placeholder="{{ 'document-repository.newRepository.assignee.placeholder' | translate}}"
                                style="background-color: white;" ng-model="assignee.name" ng-click="searchAssignee()"
-                               required>
+                               ng-disabled="isPersonalDocRepo()" required>
                     </div>
                     <div class="col-sm-3 form-group">
                         <label for="owningGroup" translate>document-repository.newRepository.owningGroupLabel</label>
-                        <span class="required-asterisk">*</span>
+                        <span ng-show="!isPersonalDocRepo()" class="required-asterisk">*</span>
                         <select class="form-control" id="owningGroup" ng-model="owningGroup.participantLdapId"
-                                ng-options="group for group in userGroups" required></select>
+                                ng-options="group for group in userGroups"
+                                ng-disabled="isPersonalDocRepo()" ng-required="!isPersonalDocRepo()"></select>
                     </div>
                 </div>
                 <div class="row">
