@@ -90,7 +90,7 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                 if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
                     $scope.config = {
                             sources: [
-                                {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.ecmFile.fileId), type: $scope.ecmFile.fileActiveVersionMimeType}
+                                {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId), type: $scope.ecmFile.fileActiveVersionMimeType}
                             ],
                             theme: "lib/videogular-themes-default/videogular.css",
                             plugins: {
