@@ -19,7 +19,32 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,6 +109,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
 
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = DocumentRepositoryConstants.OBJECT_TYPE;
+
+    @Column(name = "cm_doc_repo_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DocumentRepositoryType repositoryType;
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -267,6 +296,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     {
         this.objectType = objectType;
     }
+
+    public DocumentRepositoryType getRepositoryType() {return repositoryType;}
+
+    public void setRepositoryType(DocumentRepositoryType repositoryType) {this.repositoryType = repositoryType;}
 
     @Override
     public List<AcmParticipant> getParticipants()
