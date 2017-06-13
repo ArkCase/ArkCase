@@ -235,8 +235,15 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             association.organizationToPersonAssociationType = data.inverseType;
 
             if (data.isDefault) {
-                $scope.person.defaultOrganization = association;
+                //find and change previously default organization
+                var defaultAssociation = _.find($scope.person.organizationAssociations, function (object) {
+                    return object.defaultOrganization;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.defaultOrganization = false;
+                }
             }
+            association.defaultOrganization = data.isDefault;
 
             //if is new created, add it to the organization associations list
             if (!$scope.person.organizationAssociations) {

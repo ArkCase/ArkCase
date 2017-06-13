@@ -154,20 +154,22 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             association.organizationToPersonAssociationType = data.type;
             association.personToOrganizationAssociationType = data.inverseType;
 
+            if (data.isDefault) {
+                //find and change previously primary contact
+                var defaultAssociation = _.find($scope.organization.personAssociations, function (object) {
+                    return object.primaryContact;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.primaryContact = false;
+                }
+            }
+            association.primaryContact = data.isDefault;
+
             //those are temporary values for displaying in the input
             association.personFullName = association.person.givenName + ' ' + association.person.familyName;
             association.personToOrganizationAssociationTypeName = _.find($scope.personAssociationTypes, function (type) {
                 return type.type == data.type;
             });
-
-            if (data.isDefault) {
-                $scope.organization.primaryContact = association;
-            } else {
-                if ($scope.organization.primaryContact === association) {
-                    //remove this association from primary contact, if was previously set
-                    $scope.organization.primaryContact = null;
-                }
-            }
 
             //if is new created, add it to the organization associations list
             if (!$scope.organization.personAssociations) {

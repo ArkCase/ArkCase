@@ -4,11 +4,4 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <!-- we need to drop foreign keys for mysql because mysql doesn't support deferring for transaction
-    and is not possible to insert a record through JPA as complex object-->
-    <changeSet id="01-drop-person-organization-foreign-keys-for-mysql" author="nebojsha.davidovikj" dbms="mysql"
-               failOnError="false">
-        <dropForeignKeyConstraint baseTableName="acm_person_org_assoc" constraintName="fk_person_org_assoc_person_id"/>
-        <dropForeignKeyConstraint baseTableName="acm_person_org_assoc" constraintName="fk_person_org_assoc_org_id"/>
-    </changeSet>
 </databaseChangeLog>

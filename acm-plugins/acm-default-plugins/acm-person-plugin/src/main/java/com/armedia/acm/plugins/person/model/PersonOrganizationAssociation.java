@@ -19,7 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -52,11 +52,11 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     @Column(name = "cm_id")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_person_id", nullable = false)
     private Person person;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_organization_id", nullable = false)
     private Organization organization;
 
@@ -68,6 +68,12 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
 
     @Column(name = "cm_org_to_person_assoc_type")
     private String organizationToPersonAssociationType;
+
+    @Column(name = "cm_primary_contact")
+    private boolean primaryContact;
+
+    @Column(name = "cm_default_organization")
+    private boolean defaultOrganization;
 
     @Column(name = "cm_created", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -210,5 +216,25 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     public String getObjectType()
     {
         return objectType;
+    }
+
+    public boolean isPrimaryContact()
+    {
+        return primaryContact;
+    }
+
+    public void setPrimaryContact(boolean primaryContact)
+    {
+        this.primaryContact = primaryContact;
+    }
+
+    public boolean isDefaultOrganization()
+    {
+        return defaultOrganization;
+    }
+
+    public void setDefaultOrganization(boolean defaultOrganization)
+    {
+        this.defaultOrganization = defaultOrganization;
     }
 }
