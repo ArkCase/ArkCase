@@ -175,7 +175,8 @@
     "name.placeholder": "Enter Name",
     "descriptionLabel": "Description",
     "description.placeholder": "Enter Description",
-    "searchUser": "Search User"
+    "searchUser": "Search User",
+    "personalRepository": "My Documents"
   },
   "document-repository.dialogUserPicker":{
    "table.columns.name": "Name",

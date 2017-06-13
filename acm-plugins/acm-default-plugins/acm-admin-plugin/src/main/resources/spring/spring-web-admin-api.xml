@@ -102,6 +102,7 @@
                 <entry key="activedirectory" value-ref="adTemplateConfig"/>
             </map>
         </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="ldapConfigurationRetrieveDirectories"

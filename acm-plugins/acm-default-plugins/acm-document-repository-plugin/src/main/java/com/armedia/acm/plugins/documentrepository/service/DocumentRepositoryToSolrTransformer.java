@@ -83,6 +83,8 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
 
         solr.setAdditionalProperty("document_repository_name_s", in.getName());
 
+        solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
+
         return solr;
     }
 
@@ -112,6 +114,8 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
 
         // needed a _lcs property for sorting
         solr.setTitle_parseable_lcs(in.getName());
+
+        solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
         return solr;
     }
 

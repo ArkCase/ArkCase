@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
@@ -56,14 +55,14 @@ public class SpringLdapPagedDao implements SpringLdapDao
     @Override
     public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
     {
-        return findUsersPaged(template, syncConfig, AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+        return findUsersPaged(template, syncConfig, syncConfig.getUserSyncAttributes());
     }
 
     public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        if (attributes != null)
+        if (ArrayUtils.isNotEmpty(attributes))
         {
             String[] allAttributes = ArrayUtils.addAll(attributes,
                     syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
