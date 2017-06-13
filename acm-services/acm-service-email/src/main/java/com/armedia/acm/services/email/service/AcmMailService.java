@@ -3,6 +3,9 @@ package com.armedia.acm.services.email.service;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 27, 2017
@@ -42,20 +45,39 @@ public interface AcmMailService
             throws AcmSMTPConfigurationValidationException;
 
     /**
-     * @param user
-     * @param auth
+     * @return
+     */
+    List<EmailTemplateConfiguration> getTemplateConfigurations();
+
+    /**
+     * @param templateData
      * @param template
      */
-    void updateEmailTemplate(AcmUser user, Authentication auth, EmailBodyTemplate template);
+    void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template);
 
     /**
      *
      * @param email
      * @param objectType
      * @param source
+     * @param actions
+     *            TODO
      * @return
      */
-    EmailBodyTemplate getTemplate(String email, String objectType, EmailSource source);
+    List<EmailTemplateConfiguration> getTemplateCandidates(String email, String objectType, EmailSource source, List<String> actions);
+
+    /**
+     *
+     * @param templateName
+     * @return
+     */
+    String getTemplate(String templateName);
+
+    /**
+     *
+     * @param templateName
+     */
+    void deleteTemplate(String templateName);
 
     /**
      * @param ce
