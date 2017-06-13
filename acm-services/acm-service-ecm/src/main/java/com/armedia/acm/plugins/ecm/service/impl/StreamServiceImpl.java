@@ -7,9 +7,11 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.model.Range;
-import com.armedia.acm.plugins.ecm.service.StreamVideoService;
+import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.StreamService;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.collections.map.HashedMap;
 import org.mule.api.MuleException;
@@ -27,7 +29,7 @@ import java.util.Map;
 /**
  * Created by riste.tutureski on 6/6/2017.
  */
-public class StreamVideoServiceImpl implements StreamVideoService
+public class StreamServiceImpl implements StreamService
 {
     private final long DEFAULT_EXPIRE_TIME = 604800000L;
     private final int DEFAULT_BUFFER_SIZE = 10240;
@@ -36,49 +38,52 @@ public class StreamVideoServiceImpl implements StreamVideoService
     private CmisConfigUtils cmisConfigUtils;
     private MuleContextManager muleContextManager;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private EcmFileService ecmFileService;
 
     @Override
-    public void stream(String cmisId, HttpServletRequest request, HttpServletResponse response, EcmFile ecmFile, String version) throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
+    public void stream(Long id, String version, HttpServletRequest request, HttpServletResponse response) throws AcmUserActionFailedException, MuleException, AcmObjectNotFoundException, IOException
     {
-        Map<String, Object> messageProps = new HashedMap();
-        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, getCmisConfigUtils().getCmisConfiguration(ecmFile.getCmisRepositoryId()));
-        MuleMessage downloadedFile = getMuleContextManager().send("vm://downloadFileFlow.in", cmisId, messageProps);
+        EcmFile file = getEcmFileService().findById(id);
 
-        if (downloadedFile == null || downloadedFile.getPayload() == null || !(downloadedFile.getPayload() instanceof ContentStream))
+        if (file == null)
         {
             throw new AcmObjectNotFoundException(null, null, "File not found", null);
         }
 
-        ContentStream payload = (ContentStream) downloadedFile.getPayload();
+        String cmisFileId = getFolderAndFilesUtils().getVersionCmisId(file, version);
+        Map<String, Object> messageProps = new HashedMap();
+        messageProps.put(EcmFileConstants.CONFIGURATION_REFERENCE, getCmisConfigUtils().getCmisConfiguration(file.getCmisRepositoryId()));
+        MuleMessage downloadedFile = getMuleContextManager().send("vm://getObjectById.in", cmisFileId, messageProps);
 
-        stream(request, response, payload, ecmFile, version);
+        if (downloadedFile == null || downloadedFile.getPayload() == null || !(downloadedFile.getPayload() instanceof Document))
+        {
+            throw new AcmObjectNotFoundException(null, null, "File not found", null);
+        }
+
+        Document payload = (Document) downloadedFile.getPayload();
+
+        stream(payload, file, version, request, response);
     }
 
     @Override
-    public void stream(HttpServletRequest request, HttpServletResponse response, ContentStream payload, EcmFile ecmFile, String version) throws IOException
+    public void stream(Document payload, EcmFile file, String version, HttpServletRequest request, HttpServletResponse response) throws IOException
     {
 
-        if (payload == null)
+        if (payload == null || payload.getContentStream() == null)
         {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 
-        InputStream input = null;
         OutputStream output = null;
-        ByteArrayOutputStream baos = null;
-        try (InputStream inputStream = payload.getStream())
+        try (InputStream input = payload.getContentStream().getStream())
         {
-            baos = copy(inputStream);
-            input = new ByteArrayInputStream(baos.toByteArray());
-            long totalSize = baos.size();
-
+            long total = payload.getContentStreamLength();
 
             // Prepare some variables. The ETag is an unique identifier of the file.
-            String fileName = payload.getFileName();
-            long length = totalSize;
-            long lastModified = ecmFile.getModified().getTime();
-            String eTag = fileName + "_" + length + "_" + lastModified;
+            String fileName = payload.getContentStreamFileName();
+            long lastModified = payload.getLastModificationDate().getTime().getTime();
+            String eTag = fileName + "_" + total + "_" + lastModified;
             long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
 
 
@@ -122,7 +127,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
 
             // Prepare some variables. The full Range represents the complete file.
-            Range full = new Range(0, length - 1, length);
+            Range full = new Range(0, total - 1, total);
             List<Range> ranges = new ArrayList<>();
 
             // Validate and process Range and If-Range headers.
@@ -132,7 +137,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
                 if (!rangeHeaderValue.matches("^bytes=\\d*-\\d*(,\\d*-\\d*)*$"))
                 {
-                    response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
+                    response.setHeader("Content-Range", "bytes */" + total); // Required in 416.
                     response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                     return;
                 }
@@ -168,31 +173,31 @@ public class StreamVideoServiceImpl implements StreamVideoService
 
                         if (start == -1)
                         {
-                            start = length - end;
-                            end = length - 1;
+                            start = total - end;
+                            end = total - 1;
                         }
-                        else if (end == -1 || end > length - 1)
+                        else if (end == -1 || end > total - 1)
                         {
-                            end = length - 1;
+                            end = total - 1;
                         }
 
                         // Check if Range is syntactically valid. If not, then return 416.
                         if (start > end)
                         {
-                            response.setHeader("Content-Range", "bytes */" + length); // Required in 416.
+                            response.setHeader("Content-Range", "bytes */" + total); // Required in 416.
                             response.sendError(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE);
                             return;
                         }
 
                         // Add range.
-                        ranges.add(new Range(start, end, length));
+                        ranges.add(new Range(start, end, total));
                     }
                 }
             }
 
 
-            // Get content type by file name and set default GZIP support and content disposition.
-            String contentType = getMimeType(payload, ecmFile, version);
+            // Get content type
+            String contentType = getMimeType(payload.getContentStream(), file, version);
 
             // If content type is unknown, then set the default value.
             // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
@@ -225,7 +230,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 response.setHeader("Content-Length", String.valueOf(range.getLength()));
 
                 // Copy full range.
-                copy(input, output, totalSize, range.getStart(), range.getLength());
+                copy(input, output, total, range.getStart(), range.getLength());
 
             }
             else if (ranges.size() == 1)
@@ -237,7 +242,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 response.setHeader("Content-Length", String.valueOf(range.getLength()));
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
-                copy(input, output, totalSize, range.getStart(), range.getLength());
+                copy(input, output, total, range.getStart(), range.getLength());
             }
             else
             {
@@ -258,7 +263,7 @@ public class StreamVideoServiceImpl implements StreamVideoService
                     sos.println("Content-Range: bytes " + range.getStart() + "-" + range.getEnd() + "/" + range.getTotal());
 
                     // Copy single part range of multi part range.
-                    copy(input, output, totalSize, range.getStart(), range.getLength());
+                    copy(input, output, total, range.getStart(), range.getLength());
                 }
 
                 // End with multipart boundary.
@@ -266,12 +271,9 @@ public class StreamVideoServiceImpl implements StreamVideoService
                 sos.println("--" + MULTIPART_BOUNDARY + "--");
             }
 
-            output.flush();
         }
         finally
         {
-            close(input);
-            close(baos);
             close(output);
         }
     }
@@ -421,31 +423,6 @@ public class StreamVideoServiceImpl implements StreamVideoService
         return mimeType;
     }
 
-    private ByteArrayOutputStream copy(InputStream inputStream)
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-        try
-        {
-            if (inputStream != null)
-            {
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buffer)) > -1)
-                {
-                    baos.write(buffer, 0, len);
-                }
-                baos.flush();
-            }
-        }
-        catch (Exception e)
-        {
-            // Do nothing. Silent exception
-        }
-
-        return baos;
-    }
-
     public CmisConfigUtils getCmisConfigUtils()
     {
         return cmisConfigUtils;
@@ -474,5 +451,15 @@ public class StreamVideoServiceImpl implements StreamVideoService
     public void setFolderAndFilesUtils(FolderAndFilesUtils folderAndFilesUtils)
     {
         this.folderAndFilesUtils = folderAndFilesUtils;
+    }
+
+    public EcmFileService getEcmFileService()
+    {
+        return ecmFileService;
+    }
+
+    public void setEcmFileService(EcmFileService ecmFileService)
+    {
+        this.ecmFileService = ecmFileService;
     }
 }
