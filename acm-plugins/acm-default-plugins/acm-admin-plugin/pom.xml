@@ -3,15 +3,14 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.1.11-SNAPSHOT</version>
+        <version>3.1.16-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-admin-plugin</artifactId>
     <name>ACM Default Plugin: admin</name>
-    <description>This plugin enables the admin feature.
-    </description>
+    <description>This plugin enables the admin feature.</description>
 
     <dependencies>
         <!-- need the person plugin since the admin is originated by a person -->
@@ -48,6 +47,11 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-login</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <dependency>
@@ -109,6 +113,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-correspondence</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email</artifactId>
             <version>${acm.version}</version>
         </dependency>
 
@@ -217,6 +227,4 @@
         </dependency>
 
     </dependencies>
-
-
 </project>

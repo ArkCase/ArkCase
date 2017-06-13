@@ -3,43 +3,68 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
+import com.armedia.acm.plugins.admin.model.LdapDirectoryConfig;
+import com.armedia.acm.plugins.admin.model.LdapTemplateConfig;
+import com.armedia.acm.spring.SpringContextHolder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
  */
-public class LdapConfigurationService
+public class LdapConfigurationService implements InitializingBean
 {
     private Logger log = LoggerFactory.getLogger(LdapConfigurationService.class);
 
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
-    private String ldapConfigurationLocation;
-    private String ldapFile;
-    private String ldapPropertiesFile;
+    private LdapDirectoryConfig ldapDirectoryConfig;
 
-    private String ldapConfigurationTemplatesLocation;
-    private String ldapTemplateFile;
-    private String ldapTemplatePropertiesFile;
+    private Map<String, LdapTemplateConfig> templatesConfigMap;
 
-    private String ldapPropertiesFileRegex;
+    private Pattern ldapConfigurationLocationPattern;
+
+    private Pattern ldapDirectoryNamePattern;
+
+    private Pattern ldapUserFilePattern;
+
+    private Pattern ldapUserPropertiesFilePattern;
+
+    private Pattern ldapGroupFilePattern;
+
+    private Pattern ldapGroupPropertiesFilePattern;
+
+    private Pattern ldapPropertiesFilePattern;
+
+    private SpringContextHolder contextHolder;
+
 
     /**
      * Create LDAP Directory config files
@@ -51,8 +76,7 @@ public class LdapConfigurationService
     public void createLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
     {
 
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9.]+$");
-        Matcher matcher = pattern.matcher(dirId);
+        Matcher matcher = ldapDirectoryNamePattern.matcher(dirId);
         if (!matcher.find())
         {
             throw new AcmLdapConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
@@ -95,31 +119,33 @@ public class LdapConfigurationService
         }
 
         writePropertiesFile(dirId, props);
+        String ldapFileName = getLdapFileName(dirId);
+        contextHolder.removeContext(ldapFileName);
+        File ldapFile = new File(ldapFileName);
+        try
+        {
+            contextHolder.addContextFromFile(ldapFile);
+        } catch (IOException e)
+        {
+            log.error("Could not add context from file: {}. ", ldapFile.getName(), e);
+        }
     }
 
     /**
-     * Delete LDAP Direcory
+     * Delete LDAP Directory
      *
      * @param dirId Directory identifier
      * @throws AcmLdapConfigurationException
      */
     public void deleteLdapDirectory(String dirId) throws AcmLdapConfigurationException
     {
-
         String[] extensions = new String[]{"properties"};
-        List<File> propertiesFiles = (List<File>) FileUtils.listFiles(new File(ldapConfigurationLocation), extensions, false);
+        List<File> propertiesFiles = (List<File>) FileUtils.listFiles(
+                new File(ldapDirectoryConfig.getLdapConfigurationLocation()), extensions, false);
 
-        Pattern pattern = Pattern.compile(ldapPropertiesFileRegex);
-        int matchedFiles = 0;
-        for (File fileIter : propertiesFiles)
-        {
-            String fileName = fileIter.getName();
-            Matcher matcher = pattern.matcher(fileName);
-            if (matcher.find())
-            {
-                matchedFiles++;
-            }
-        }
+        long matchedFiles = propertiesFiles.stream()
+                .filter(file -> ldapPropertiesFilePattern.matcher(file.getName()).find())
+                .count();
 
         if (matchedFiles == 0)
         {
@@ -135,6 +161,95 @@ public class LdapConfigurationService
 
         forceDeleteFileQuietly(getPropertiesFileName(dirId));
         forceDeleteFileQuietly(getLdapFileName(dirId));
+    }
+
+    public Map<String, Object> createLdapAddUserTemplateFiles(String templateId, String
+            templateType, Map<String, String> props)
+            throws AcmLdapConfigurationException
+    {
+        LdapTemplateConfig templateConfig = templatesConfigMap.get(templateType.toLowerCase());
+
+        if (templateConfig != null)
+        {
+            String propertiesFileName = ldapDirectoryConfig.getLdapConfigurationLocation()
+                    + String.format(templateConfig.getUserPropertiesTemplateName(), templateId);
+            String fileName = ldapDirectoryConfig.getLdapConfigurationLocation()
+                    + String.format(templateConfig.getUserFileTemplateName(), templateId);
+            return saveTemplateFiles(propertiesFileName, templateConfig.getUserPropertiesTemplate(), fileName,
+                    templateConfig.getUserFileTemplate(), props, templateId, ldapDirectoryConfig.getLdapUserPropertiesFile());
+        }
+        log.warn("Can't create LDAP user template for {}-directory with id:{}", templateType, templateId);
+        throw new AcmLdapConfigurationException(String.format("Can't create LDAP user template for %s-directory with id:'%s'",
+                templateType, templateId), null);
+    }
+
+
+    public Map<String, Object> createLdapAddGroupTemplate(String templateId, String templateType,
+                                                          Map<String, String> props) throws AcmLdapConfigurationException
+    {
+        LdapTemplateConfig templateConfig = templatesConfigMap.get(templateType.toLowerCase());
+
+        if (templateConfig != null)
+        {
+            String propertiesFileName = ldapDirectoryConfig.getLdapConfigurationLocation()
+                    + String.format(templateConfig.getGroupPropertiesTemplateName(), templateId);
+            String fileName = ldapDirectoryConfig.getLdapConfigurationLocation()
+                    + String.format(templateConfig.getGroupFileTemplateName(), templateId);
+            return saveTemplateFiles(propertiesFileName, templateConfig.getGroupPropertiesTemplate(), fileName,
+                    templateConfig.getGroupFileTemplate(), props, templateId, ldapDirectoryConfig.getLdapGroupPropertiesFile());
+        }
+        log.debug("Can't create LDAP group template for {}-directory with id:{}", templateType, templateId);
+        throw new AcmLdapConfigurationException(String.format("Can't create LDAP group template for %s-directory with id:'%s'",
+                templateType, templateId), null);
+    }
+
+    public Map<String, Object> saveTemplateFiles(String propertiesFileName, String propertiesTemplateName,
+                                                 String fileName, String fileTemplateName, Map<String, String> props,
+                                                 String templateId, Properties attributesTemplate)
+            throws AcmLdapConfigurationException
+    {
+        Map<String, Object> ldapAddUserMapAttributes = createLdapTemplatesMapAttributes(props, templateId, attributesTemplate);
+        File exportPropertiesFile = new File(propertiesFileName);
+        boolean updatePropertiesFile = exportPropertiesFile.exists();
+        try
+        {
+            if (updatePropertiesFile)
+            {
+                updateTemplateFile(propertiesTemplateName, propertiesFileName, ldapAddUserMapAttributes);
+            } else
+            {
+                writeTemplateFile(propertiesTemplateName, propertiesFileName, ldapAddUserMapAttributes);
+                writeTemplateFile(fileTemplateName, fileName, ldapAddUserMapAttributes);
+
+            }
+            return ldapAddUserMapAttributes;
+        } catch (Exception e)
+        {
+            // Delete created files quietly
+            // If the files exist, do not delete on failed update
+            if (!updatePropertiesFile)
+            {
+                FileUtils.deleteQuietly(new File(propertiesFileName));
+                FileUtils.deleteQuietly(new File(fileName));
+            }
+            log.error("Can't create LDAP properties template with name:{} and xml file with name:{} ",
+                    propertiesFileName, fileName, e);
+            throw new AcmLdapConfigurationException(String.format("Can't create LDAP configuration files:'%s', '%s'",
+                    propertiesFileName, fileName), e);
+        }
+    }
+
+    public Map<String, Object> createLdapTemplatesMapAttributes(Map<String, String> userDefinedProperties, String id,
+                                                                Properties attributesTemplate)
+    {
+        // set any attribute which the user has defined
+        Map<String, Object> ldapAttributes = userDefinedProperties.entrySet().stream()
+                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
+                .filter(entry -> attributesTemplate.containsKey(entry.getKey()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        ldapAttributes.put("id", id);
+        return ldapAttributes;
     }
 
     /**
@@ -170,28 +285,58 @@ public class LdapConfigurationService
         try
         {
             // Create Properties file
-            Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
-            cfg.setDirectoryForTemplateLoading(new File(ldapConfigurationTemplatesLocation));
-
-            Template tmplProperties = cfg.getTemplate(ldapTemplatePropertiesFile);
-
-            Writer writerProp = null;
-            try
-            {
-                writerProp = new FileWriter(new File(propertiesFileName));
-                tmplProperties.process(props, writerProp);
-            } finally
-            {
-                if (writerProp != null)
-                {
-                    writerProp.close();
-                }
-            }
-
+            writeTemplateFile(ldapDirectoryConfig.getLdapTemplatePropertiesFile(), propertiesFileName, props);
         } catch (Exception e)
         {
-            log.error("Can't write LDAP properties file with ID '{}' ", dirId, e);
+            log.error("Can't write LDAP properties with ID '{}' ", dirId, e);
             throw new AcmLdapConfigurationException("Can't write LDAP properties file ", e);
+        }
+    }
+
+    private void updateTemplateFile(String templateName, String fileName, Map<String, Object> props)
+            throws AcmLdapConfigurationException
+    {
+        long timestamp = System.currentTimeMillis();
+        String tempFileName = fileName + timestamp;
+
+        try
+        {
+            writeTemplateFile(templateName, tempFileName, props);
+        } catch (IOException | TemplateException e)
+        {
+            throw new AcmLdapConfigurationException("Can't write LDAP template file", e);
+        }
+
+        // delete old file only after successfully created new file
+        FileUtils.deleteQuietly(new File(fileName));
+        try
+        {
+            FileUtils.moveFile(new File(tempFileName), new File(fileName));
+        } catch (IOException e)
+        {
+            log.warn("Renaming file from:{} to:{} failed ", tempFileName, fileName);
+        }
+    }
+
+    private void writeTemplateFile(String templateName, String fileName, Map<String, Object> props)
+            throws IOException, TemplateException
+    {
+        Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
+        cfg.setDirectoryForTemplateLoading(new File(ldapDirectoryConfig.getLdapConfigurationTemplatesLocation()));
+
+        // LDAP file
+        Template tmplSig = cfg.getTemplate(templateName);
+        Writer writerSig = null;
+        try
+        {
+            writerSig = new FileWriter(new File(fileName));
+            tmplSig.process(props, writerSig);
+        } finally
+        {
+            if (writerSig != null)
+            {
+                writerSig.close();
+            }
         }
     }
 
@@ -211,25 +356,9 @@ public class LdapConfigurationService
             throw new AcmLdapConfigurationException(String.format("LDAP file '%s' is present in the system.", ldapFileName));
         }
 
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
-        cfg.setDirectoryForTemplateLoading(new File(ldapConfigurationTemplatesLocation));
-
         try
         {
-            // LDAP file
-            Template tmplSig = cfg.getTemplate(ldapTemplateFile);
-            Writer writerSig = null;
-            try
-            {
-                writerSig = new FileWriter(new File(ldapFileName));
-                tmplSig.process(props, writerSig);
-            } finally
-            {
-                if (writerSig != null)
-                {
-                    writerSig.close();
-                }
-            }
+            writeTemplateFile(ldapDirectoryConfig.getLdapTemplateFile(), ldapFileName, props);
         } catch (Exception e)
         {
             log.error("Can't create LDAP file with ID '{}' ", dirId, e);
@@ -266,6 +395,7 @@ public class LdapConfigurationService
         props.put("groupsSortingAttribute", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUPS_SORT_ATTRIBUTE));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
         props.put("enableEditingLdapUsers", jsonObj.getBoolean(LdapConfigurationProperties.LDAP_PROP_ENABLE_EDITING_LDAP_USERS));
+        props.put("directoryType", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_DIRECTORY_TYPE).toLowerCase());
         props.put("syncPageSize", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_SYNC_PAGE_SIZE));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
         props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
@@ -275,31 +405,35 @@ public class LdapConfigurationService
 
     public List<File> getPropertiesFiles()
     {
+        List<File> files = getAllLdapConfigFiles(ldapDirectoryConfig.getLdapConfigurationLocation(), "properties");
+
+        return files.stream()
+                .filter(file -> ldapConfigurationLocationPattern.matcher(file.getName()).find())
+                .collect(Collectors.toList());
+    }
+
+    private List<File> getAllLdapConfigFiles(String path, String... extensions)
+    {
         // Get All properties files
-        String[] extensions = new String[]{"properties"};
-        List<File> files = (List<File>) FileUtils.listFiles(new File(ldapConfigurationLocation), extensions, false);
-        List<File> propertiesFiles = new ArrayList<>();
+        return (List<File>) FileUtils.listFiles(new File(path),
+                extensions, false);
+    }
 
-        // Get all properties files that match to ldapPropertiesFileRegex
-        Pattern pattern = Pattern.compile(ldapPropertiesFileRegex);
-
-        for (File fileIter : files)
-        {
-            String fileName = fileIter.getName();
-            Matcher matcher = pattern.matcher(fileName);
-            if (matcher.find())
-            {
-                propertiesFiles.add(fileIter);
-            }
-        }
-
-        return propertiesFiles;
+    public Optional<File> getDirectoryConfigurationFiles(String directory, String configurationLocation, Pattern pattern)
+    {
+        List<File> files = getAllLdapConfigFiles(configurationLocation, "properties", "xml");
+        Predicate<File> filterUserTemplatesPredicate = file ->
+                pattern.matcher(file.getName()).find() && file.getName().contains(directory);
+        return files.stream()
+                .filter(filterUserTemplatesPredicate)
+                .findFirst();
     }
 
     private void forceDeleteFileQuietly(String fileName)
     {
         try
         {
+            log.debug("Deleting file:{}", fileName);
             FileUtils.forceDelete(new File(fileName));
         } catch (IOException e)
         {
@@ -319,12 +453,12 @@ public class LdapConfigurationService
 
     public String getPropertiesFileName(String dirId)
     {
-        return ldapConfigurationLocation + String.format(ldapPropertiesFile, dirId);
+        return ldapDirectoryConfig.getLdapConfigurationLocation() + String.format(ldapDirectoryConfig.getLdapPropertiesFile(), dirId);
     }
 
     public String getLdapFileName(String dirId)
     {
-        return ldapConfigurationLocation + String.format(ldapFile, dirId);
+        return ldapDirectoryConfig.getLdapConfigurationLocation() + String.format(ldapDirectoryConfig.getLdapFile(), dirId);
     }
 
     public boolean propertiesFileExist(String dirId)
@@ -339,39 +473,86 @@ public class LdapConfigurationService
         return new File(fileName).exists();
     }
 
-    public void setLdapConfigurationLocation(String ldapConfigurationLocation)
+    public void createLdapDirectoryConfigurations(String id, String directoryType, HashMap<String, Object> props)
+            throws AcmLdapConfigurationException
     {
-        this.ldapConfigurationLocation = ldapConfigurationLocation;
+        createLdapDirectory(id, props);
+        createLdapAddUserTemplateFiles(id, directoryType, new HashMap<>());
+        createLdapAddGroupTemplate(id, directoryType, new HashMap<>());
     }
 
-    public void setLdapFile(String ldapFile)
+    public void deleteLdapDirectoryConfigurationFiles(String directoryId) throws AcmLdapConfigurationException
     {
-        this.ldapFile = ldapFile;
+        deleteLdapDirectory(directoryId);
+        File deletedFile = new File(ldapDirectoryConfig.getLdapConfigurationLocation() +
+                String.format(ldapDirectoryConfig.getLdapFile(), directoryId));
+        if (!deletedFile.exists())
+        {
+            String configurationLocation = ldapDirectoryConfig.getLdapConfigurationLocation();
+            Consumer<File> deleteFile = file -> forceDeleteFileQuietly(configurationLocation + file.getName());
+            List<Pattern> deletePatterns = Arrays.asList(ldapGroupPropertiesFilePattern,
+                    ldapGroupFilePattern, ldapUserPropertiesFilePattern, ldapUserFilePattern);
+
+            deletePatterns.forEach(pattern ->
+                    getDirectoryConfigurationFiles(directoryId, configurationLocation, pattern)
+                            .ifPresent(deleteFile));
+        }
     }
 
-    public void setLdapPropertiesFile(String ldapPropertiesFile)
+    public String retrieveDirectoriesConfiguration() throws IOException
     {
-        this.ldapPropertiesFile = ldapPropertiesFile;
+        String configurationLocation = ldapDirectoryConfig.getLdapConfigurationLocation();
+        List<File> propertiesFiles = getPropertiesFiles();
+
+        Function<File, JSONObject> jsonTemplate = (File file) ->
+        {
+            Properties properties = new Properties();
+            try
+            {
+                properties.load(FileUtils.openInputStream(file));
+            } catch (IOException e)
+            {
+                log.warn("Can not load template from file: {}", file, e);
+            }
+            return propertiesToJSONObject(properties);
+        };
+
+        JSONArray dirsJsonArr = new JSONArray();
+        for (File propertyFile : propertiesFiles)
+        {
+            Properties prop = new Properties();
+            prop.load(FileUtils.openInputStream(propertyFile));
+
+            // Put all properties into JSON Object
+            JSONObject dirJsonObj = propertiesToJSONObject(prop);
+
+            String directory = prop.getProperty(LdapConfigurationProperties.LDAP_PROP_ID);
+
+
+            getDirectoryConfigurationFiles(directory, configurationLocation,
+                    ldapUserPropertiesFilePattern)
+                    .map(jsonTemplate)
+                    .ifPresent(jsonObject ->
+                            dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE, jsonObject));
+
+            getDirectoryConfigurationFiles(directory, configurationLocation,
+                    ldapGroupPropertiesFilePattern)
+                    .map(jsonTemplate)
+                    .ifPresent(jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE, jsonObject));
+
+            dirsJsonArr.put(dirJsonObj);
+        }
+        return dirsJsonArr.toString();
     }
 
-    public void setLdapConfigurationTemplatesLocation(String ldapConfigurationTemplatesLocation)
+    public JSONObject propertiesToJSONObject(Properties properties)
     {
-        this.ldapConfigurationTemplatesLocation = ldapConfigurationTemplatesLocation;
-    }
-
-    public void setLdapTemplateFile(String ldapTemplateFile)
-    {
-        this.ldapTemplateFile = ldapTemplateFile;
-    }
-
-    public void setLdapTemplatePropertiesFile(String ldapTemplatePropertiesFile)
-    {
-        this.ldapTemplatePropertiesFile = ldapTemplatePropertiesFile;
-    }
-
-    public void setLdapPropertiesFileRegex(String ldapPropertiesFileRegex)
-    {
-        this.ldapPropertiesFileRegex = ldapPropertiesFileRegex;
+        JSONObject jsonProperties = new JSONObject();
+        Set<String> propertyNames = properties.stringPropertyNames();
+        propertyNames.forEach(property ->
+                jsonProperties.put(property, properties.getProperty(property))
+        );
+        return jsonProperties;
     }
 
     public AcmEncryptablePropertyUtils getEncryptablePropertyUtils()
@@ -382,5 +563,42 @@ public class LdapConfigurationService
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {
         this.encryptablePropertyUtils = encryptablePropertyUtils;
+    }
+
+    public LdapDirectoryConfig getLdapDirectoryConfig()
+    {
+        return ldapDirectoryConfig;
+    }
+
+    public void setLdapDirectoryConfig(LdapDirectoryConfig ldapDirectoryConfig)
+    {
+        this.ldapDirectoryConfig = ldapDirectoryConfig;
+    }
+
+    public Map<String, LdapTemplateConfig> getTemplatesConfigMap()
+    {
+        return templatesConfigMap;
+    }
+
+    public void setTemplatesConfigMap(Map<String, LdapTemplateConfig> templatesConfigMap)
+    {
+        this.templatesConfigMap = templatesConfigMap;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        this.ldapConfigurationLocationPattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
+        this.ldapDirectoryNamePattern = Pattern.compile("^[a-zA-Z0-9.]+$");
+        this.ldapUserFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserFileRegex());
+        this.ldapUserPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapUserPropertiesFileRegex());
+        this.ldapGroupFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupFileRegex());
+        this.ldapGroupPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapGroupPropertiesFileRegex());
+        this.ldapPropertiesFilePattern = Pattern.compile(ldapDirectoryConfig.getLdapPropertiesFileRegex());
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }

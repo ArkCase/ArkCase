@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,12 +45,28 @@ public class AcmBpmnDao
         return query.getResultList();
     }
 
+    @Transactional
     public List<AcmProcessDefinition> listPage(int start, int length, String orderBy, boolean isAsc)
     {
-        String queryText =
-                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MIN(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
-        TypedQuery<AcmProcessDefinition> query = getEm().createQuery(queryText, AcmProcessDefinition.class).setFirstResult(start).setMaxResults(length);
-        return query.getResultList();
+        String queryMaxText =
+                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT MAX(apdid.id) FROM AcmProcessDefinition apdid GROUP BY apdid.key)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
+        TypedQuery<AcmProcessDefinition> queryMax = getEm().createQuery(queryMaxText, AcmProcessDefinition.class).setFirstResult(start).setMaxResults(length);        
+        List<AcmProcessDefinition> maxList = queryMax.getResultList();
+        
+        String queryActiveText =
+                "SELECT apd FROM AcmProcessDefinition apd WHERE apd.id in (SELECT apdid.id FROM AcmProcessDefinition apdid WHERE apd.key = apdid.key AND apdid.active = 1)   ORDER BY apd." + orderBy + (isAsc ? " ASC" : " DESC");
+        TypedQuery<AcmProcessDefinition> queryActive = getEm().createQuery(queryActiveText, AcmProcessDefinition.class).setFirstResult(start).setMaxResults(length);        
+        List<AcmProcessDefinition> activeList = queryActive.getResultList();           
+        
+        List<AcmProcessDefinition> acmProcessDefinitions = new ArrayList<AcmProcessDefinition>();        
+        maxList.forEach(mE -> {
+            acmProcessDefinitions.add(activeList.stream()
+                       .filter(aE -> aE.getKey().equals(mE.getKey()))
+                       .findFirst()
+                       .orElse(mE)
+                       );
+        });
+        return acmProcessDefinitions;
     }
 
     public List<AcmProcessDefinition> listAllVersions(AcmProcessDefinition processDefinition)

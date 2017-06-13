@@ -11,16 +11,16 @@
       "menuItemTitle": "document-repository.menus.leftnav.item",
       "moduleId": "document-repository",
       "iconClass": "fa fa-folder",
-      "position": 50
+      "position": 60
     },
     {
       "menuId": "topbar",
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
-      "moduleId": "none",
+      "moduleId": "document-repository",
       "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
-      "position": 20
+      "position": 60
     }
   ],
   "tree": {
@@ -29,7 +29,7 @@
       {
         "desc": "All I've Created",
         "name": "my-created-document-repositories",
-        "value": "fq=author_s:${user}"
+        "value": "fq=author_s:${user} AND repository_type_s:GENERAL"
       },
       {
         "desc": "All I'm Following",
@@ -38,8 +38,10 @@
       },
       {
         "desc": "(No Filter)",
-        "name": "",
-        "value": ""
+        "name": "default-filter",
+        "value": "fq=repository_type_s:GENERAL",
+        "default": true
+
       }
     ],
     "sorters": [
@@ -435,7 +437,7 @@
           "width": 150
         },
         {
-          "name": "creator",
+          "name": "author",
           "displayName": "document-repository.comp.notes.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,

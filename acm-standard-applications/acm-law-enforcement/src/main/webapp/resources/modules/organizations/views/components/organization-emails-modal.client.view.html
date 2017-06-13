@@ -1,0 +1,61 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.emails.modal.addEmail</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.emails.modal.editEmail</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="emailForm">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="emails"
+                       translate>organizations.comp.emails.modal.value.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="emails" class="input-md form-control" type="text" ng-model="email.value"
+                       class="input-md form-control" required="required"
+                       placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="emailTypes"
+                       translate>organizations.comp.emails.modal.type.label</label><span
+                    class="required-asterisk">*</span>
+                <select id="emailTypes" class="input-md form-control" required="required"
+                        ng-model="email.subType"
+                        ng-options="item.type as item.name for item in emailTypes"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>organizations.comp.emails.modal.setPrimary</label><span
+                    class="required-asterisk">*</span><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>organizations.comp.emails.modal.yes</translate>
+                </label>
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>organizations.comp.emails.modal.no</translate>
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="emailDescription" translate>organizations.comp.emails.modal.description</label>
+                <textarea class="input-md form-control" id="emailDescription" ng-model="email.description"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.emails.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="emailForm.$invalid">
+        <span translate>organizations.comp.emails.modal.btnOk.text</span>
+    </button>
+</div>

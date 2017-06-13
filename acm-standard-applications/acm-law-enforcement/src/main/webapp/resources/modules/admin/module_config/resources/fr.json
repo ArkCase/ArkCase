@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "fr_LDAP Url",
     "security.ldapConfig.table.directoryName": "fr_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "fr_Ldap User Attributes Template",
+      "groupAttributesTemplate": "fr_Ldap Group Attributes Template",
       "addNewDirectory": "fr_Add New Directory",
       "editRecord": "fr_Edit Record",
       "id": "fr_ID",
+      "directoryType": "fr_Select directory server",
       "ldapUrl": "fr_LDAP Url",
       "base": "fr_Base",
       "directoryName": "fr_Directory Name",
@@ -127,7 +130,12 @@
           "btn": {
             "cancel": "fr_Cancel",
             "ok": "fr_Add Ldap User"
-          }
+          },
+          "username": "fr_Enter username",
+          "firstName": "fr_Enter first name",
+          "lastName": "fr_Enter last name",
+          "email": "fr_Enter email",
+          "password": "fr_Enter password"
         },
         "editLdapMember": {
           "title": "fr_Edit Ldap Member",
@@ -136,7 +144,7 @@
             "ok": "fr_Edit Ldap User"
           }
         },
-        "username": "fr_Username",
+        "username": "fr_UserName",
         "firstName": "fr_FirstName",
         "lastName": "fr_LastName",
         "email": "fr_Email",
@@ -234,16 +242,25 @@
     },
     "workflows.config.btn": {
       "createNew": "fr_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "fr_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "fr_Download",
       "replaceFile": "fr_Replace File",
-      "versionHistory": "fr_Version History"
+      "versionHistory": "fr_Version History",
+      "diagram": "fr_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "fr_Successfully uploaded new process definition",
       "error": "fr_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "fr_Process Diagram",
+      "error.loading": "fr_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "fr_Close"
+      }
     },
     "formWorkflows.title": "fr_Form/Workflow Link",
     "formWorkflows.link": "fr_Link Forms/Workflows",

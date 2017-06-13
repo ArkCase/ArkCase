@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "de_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "de_Process Diagram",
     "eSignature.button": "de_Sign",
     "subscribe.button": "de_Subscribe",
     "unsubscribe.button": "de_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "de_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "de_Error",
-      "btnOk.text": "de_OK"
+      "btnOk.text": "de_OK",
+      "btnClose.text": "de_Close"
     }
   },
   "tasks.comp.details": {
@@ -82,10 +84,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "de_Parent Documents",
-    "noParentDataMessage": "de_No parent documents for standalone task"
+    "noParentDataMessage": "de_No parent documents for standalone task",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
   },
   "tasks.comp.attachments": {
-    "title": "de_Attachments"
+    "title": "de_Attachments",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
   },
   "tasks.comp.notes": {
     "title": "de_Notes",
@@ -122,6 +130,10 @@
       "startDateTime": "de_Start",
       "endDateTime": "de_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "de_Process Diagram",
+    "error.loading": "de_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "de_eSignatures",

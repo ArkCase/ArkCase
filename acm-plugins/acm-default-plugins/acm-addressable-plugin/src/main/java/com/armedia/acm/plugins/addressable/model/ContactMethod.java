@@ -1,20 +1,41 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
-
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "acm_contact_method")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className", defaultImpl = ContactMethod.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.addressable.model.ContactMethod")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ContactMethod implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = 1827685289454605556L;
@@ -51,28 +72,37 @@ public class ContactMethod implements Serializable, AcmEntity
 
     @Column(name = "cm_contact_type")
     private String type;
-    
+
+    @Column(name = "cm_contact_sub_type")
+    private String subType;
+
     @Transient
     private List<String> types;
 
     @Column(name = "cm_contact_value")
     private String value;
 
+    @Column(name = "cm_description")
+    private String description;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
+
     @PrePersist
     protected void beforeInsert()
     {
-    	setData();
+        setData();
     }
-    
+
     @PreUpdate
     protected void beforeUpdate()
     {
-    	setData();
+        setData();
     }
-    
+
     private void setData()
     {
-    	if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("ACTIVE");
         }
@@ -164,16 +194,29 @@ public class ContactMethod implements Serializable, AcmEntity
     }
 
     @XmlTransient
-	public List<String> getTypes() {
-		return types;
-	}
-	
-	public void setTypes(List<String> types) {
-		this.types = types;
-	}
+    public String getSubType()
+    {
+        return subType;
+    }
+
+    public void setSubType(String subType)
+    {
+        this.subType = subType;
+    }
 
     @XmlTransient
-	public String getValue()
+    public List<String> getTypes()
+    {
+        return types;
+    }
+
+    public void setTypes(List<String> types)
+    {
+        this.types = types;
+    }
+
+    @XmlTransient
+    public String getValue()
     {
         return value;
     }
@@ -182,10 +225,30 @@ public class ContactMethod implements Serializable, AcmEntity
     {
         this.value = value;
     }
-    
-    public ContactMethod returnBase() 
+
+    public ContactMethod returnBase()
     {
-    	return this;
+        return this;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
 }

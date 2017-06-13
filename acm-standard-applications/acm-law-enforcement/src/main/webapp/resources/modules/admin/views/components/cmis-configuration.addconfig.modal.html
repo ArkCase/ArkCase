@@ -1,0 +1,116 @@
+<form name="cmisConfigForm" novalidate ng-submit="ok()">
+    <div class="modal-header">
+        <h3 ng-hide="isEdit">
+            <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.header.new</span>
+        </h3>
+
+        <h3 ng-show="isEdit">
+            <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.header.edit</span>
+        </h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.id.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.id"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.id.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.baseUrl.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.baseUrl"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.baseUrl.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.username.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.username"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.username.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.password.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.password"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.password.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.label' | translate
+                }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.useAlfrescoExtension"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.endpoint.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.endpoint"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.endpoint.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.maxIdle"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxActive.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.maxActive"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxActive.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxWait.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.maxWait"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxWait.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.minEvictionMillis"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.minEvictionMillis.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label' | translate
+                }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.evictionCheckIntervalMillis"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectCount.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.reconnectCount"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.reconnectCount.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.reconnectFrequency"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.reconnectFrequency.placeholder' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.versioningState.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.versioningState"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.versioningState.placeholder' | translate }}"
+                   required>
+        </div>
+
+        <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.guidelineMessage.repositoryId</span>
+        <div class="form-group">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.label' | translate }}</label>
+            <input class="form-control" type="text" ng-model="cmisConfig.repositoryId"
+                   placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.repositoryId.placeholder' | translate }}"
+            >
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="cancel()">
+            <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.dialog.cancel</span>
+        </button>
+        <button class="btn btn-primary" type="submit" ng-disabled="cmisConfigForm.$invalid">
+            <span translate>admin.documentManagement.cmisConfiguration.addNewConfig.modal.dialog.ok</span>
+        </button>
+    </div>
+</form>

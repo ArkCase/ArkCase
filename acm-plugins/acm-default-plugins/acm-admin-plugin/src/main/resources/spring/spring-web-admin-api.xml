@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
@@ -8,22 +8,25 @@
 
     <bean id="downloadCorrespondenceTemplate"
           class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
-          <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
+        <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
     <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
     </bean>
 
-    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
+    <bean id="correspondenceQueryController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
-    <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
+    <bean id="correspondenceTemplateController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
-    <bean id="correspondenceMergeFieldController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
+    <bean id="correspondenceMergeFieldController"
+          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
@@ -92,15 +95,14 @@
     <!-- LDAP configuration API -->
     <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
         <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        <property name="ldapConfigurationTemplatesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
-        <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
-        <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
-
-        <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
-        <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
-        <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
-        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9]+[-d]ldap.properties$"/>
+        <property name="ldapDirectoryConfig" ref="ldapDirectoryConfig"/>
+        <property name="templatesConfigMap">
+            <map>
+                <entry key="openldap" value-ref="openLdapTemplateConfig"/>
+                <entry key="activedirectory" value-ref="adTemplateConfig"/>
+            </map>
+        </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="ldapConfigurationRetrieveDirectories"
@@ -197,6 +199,10 @@
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
+    <bean id="workflowConfigurationDiagramAPIController" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+    </bean>
+
     <!-- Link forms Workflows -->
     <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsService">
         <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
@@ -277,6 +283,26 @@
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
     </bean>
 
+    <!-- CMIS configuration API -->
+    <bean id="cmisConfigurationRetrieveDirectories"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
+        <property name="cmisConfigurationPropertiesService" ref="cmisConfigurationPropertiesService"/>
+    </bean>
+
+    <bean id="cmisConfigurationCreateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationCreateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationDeleteDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationDeleteConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
+
+    <bean id="cmisConfigurationUpdateDirectory"
+          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
     <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
         <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
     </bean>
@@ -285,8 +311,17 @@
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
     </bean>
 
-    <bean id="googleAnalyticsConfigAPIController" class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
+    <bean id="googleAnalyticsConfigAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
         <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
+    </bean>
+
+    <bean id="exchangeConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
+        <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
+    </bean>
+
+    <bean id="emailSenderConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
+        <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
     </bean>
 
 </beans>

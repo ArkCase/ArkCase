@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc controller
  * @name dashboard.my-cases.controller:Dashboard.MyCasesController
@@ -13,11 +12,11 @@
 angular.module('dashboard.my-cases')
     .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
         function ($scope, $translate, Authentication, DashboardService, ConfigService) {
-
             var vm = this;
-
             vm.config = null;
             var userInfo = null;
+            //var userGroups = null;
+            var userGroupList = null;
             ConfigService.getComponentConfig("dashboard", "myCases").then(function (config) {
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;
@@ -28,10 +27,17 @@ angular.module('dashboard.my-cases')
 
                 Authentication.queryUserInfo().then(function (responseUserInfo) {
                     userInfo = responseUserInfo;
+                    var userGroups = _.filter(responseUserInfo.authorities, function (userGroup) {
+                        return _.startsWith(userGroup, 'ROLE') == false;
+                    });
+                    userGroupList = userGroups.join(" OR ");
+                    userGroupList = "(" + userGroupList + ")";
+
                     getPage();
                     return userInfo;
                 });
             });
+
 
             var paginationOptions = {
                 pageNumber: 1,
@@ -39,7 +45,6 @@ angular.module('dashboard.my-cases')
                 sortBy: 'id',
                 sortDir: 'desc'
             };
-
             /**
              * @ngdoc method
              * @name openViewer
@@ -55,7 +60,6 @@ angular.module('dashboard.my-cases')
                     window.open(window.location.href.split('!')[0] + '!/cases/' + rowData.entity.object_id_s + '/main', '_self');
                 }
             };
-
             vm.gridOptions = {
                 enableColumnResizing: true,
                 enableRowSelection: true,
@@ -68,7 +72,6 @@ angular.module('dashboard.my-cases')
                 columnDefs: [],
                 onRegisterApi: function (gridApi) {
                     vm.gridApi = gridApi;
-
                     gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                         if (sortColumns.length == 0) {
                             paginationOptions.sort = null;
@@ -90,6 +93,7 @@ angular.module('dashboard.my-cases')
             function getPage() {
                 DashboardService.queryMyCases({
                         userId: userInfo.userId,
+                        userGroupList: userGroupList,
                         sortBy: paginationOptions.sortBy,
                         sortDir: paginationOptions.sortDir,
                         startWith: (paginationOptions.pageNumber - 1) * paginationOptions.pageSize,

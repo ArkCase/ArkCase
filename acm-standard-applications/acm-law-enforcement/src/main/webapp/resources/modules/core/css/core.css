@@ -137,6 +137,10 @@ body {
     padding: 10px 0 10px 5px;
 }
 
+.leftnav-menu .user-info .fullname {
+    font-size: 12px;
+}
+
 .leftnav-menu .user-info .user-pic img {
     border: 1px solid #adb2bb;
     border-radius: 300px;
@@ -170,7 +174,7 @@ body {
 }
 
 .leftnav-menu a.dropdown-toggle .glyphicon {
-    margin-left: 4px;
+    margin-left: 2px;
 }
 
 .leftnav-menu ul.dropdown-menu {

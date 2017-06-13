@@ -13,12 +13,16 @@
 angular.module('services').factory('DocumentRepository.InfoService', ['$resource', '$translate', 'Acm.StoreService'
     , 'UtilService', 'Object.InfoService', 'Object.ModelService'
     , function ($resource, $translate, Store, Util, ObjectInfoService, ObjectModelService) {
-        var Service = $resource('api/latest/plugin', {}, {
+        var Service = $resource('api/latest/plugin/documentrepository', {}, {
 
             _getDocumentRepository: {
                 method: 'GET',
                 url: 'api/latest/plugin/documentrepository/:id',
                 cache: false
+            }
+            , _deleteDocumentRepository: {
+                method: 'DELETE',
+                url: 'api/latest/plugin/documentrepository/:id'
             }
         });
 
@@ -125,6 +129,27 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
 
         /**
          * @ngdoc method
+         * @name deleteDocumentRepository
+         * @methodOf services:DocumentRepository.InfoService
+         *
+         * @description
+         * Delete document repository data
+         *
+         * @param {Object} repository  DocumentRepository data to be deleted
+         *
+         * @returns {Object} Promise
+         */
+        Service.deleteDocumentRepository = function (id) {
+            return Util.serviceCall({
+                service: Service._deleteDocumentRepository
+                , param: {
+                    id: id
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name validateDocumentRepositoryInfo
          * @methodOf services:DocumentRepository.InfoService
          *
@@ -146,9 +171,6 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
                 return false;
             }
             if (!ObjectModelService.getParticipantByType(data, "assignee")) {
-                return false;
-            }
-            if (!ObjectModelService.getParticipantByType(data, "owning group")) {
                 return false;
             }
             return true;

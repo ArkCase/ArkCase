@@ -17,51 +17,65 @@
  *
  * @param {Object} object-data Arkcase object data
  * @param {Boolean} is-parent If true builds href for parent arkcase object. Default value is false
+ * @param {Boolean} is-viewer-link If true builds href to the external or integrated viewer, for example snowbound. Default value is false
  * @param {String} url If url exists in object-data, it can be used as such and will not be built. For example notification object already has url as attribute.
  *
  * @example
  <example>
  <file name="index.html">
- <a arkcase-href object-data='row.entity' is-parent='false' url='row.entity.notification_link_s'>{{row.entity.name}}</a>
+ <a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' url='row.entity.notification_link_s'>{{row.entity.name}}</a>
  </file>
  </example>
  */
 angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectService', 'Object.LookupService'
-    , function(Util, ObjectService, ObjectLookupService) {
+    , function (Util, ObjectService, ObjectLookupService) {
         var defaults = {
-            isParent: false
+            isParent: false,
+            isViewerLink: false
         };
         return {
             restrict: 'A',
             scope: {
                 objectData: '=',
                 isParent: '=',
+                isViewerLink: '=',
                 url: '='
             },
             link: function(scope, element, attrs) {
                 scope.$watch('objectData', function(newValue, oldValue) {
                     buildUrl(newValue);
                 });
-                
+
                 function buildUrl(objectData) {
                     if (scope.url == undefined) {
-                        var objectType = Util.goodMapValue(objectData, "object_type_s");
-                        var objectId = Util.goodMapValue(objectData, "object_id_s");
-                        if (scope.isParent) {
-                            var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
-                            objectType  = parentReference.substring(parentReference.indexOf('-') + 1);
-                            objectId = parentReference.substring(0, parentReference.indexOf('-'));
-                        }
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
+                        var objectType = scope.isParent ? parentReference.substring(parentReference.indexOf('-') + 1) : Util.goodMapValue(objectData, "object_type_s");
+                        var objectId = scope.isParent ? parentReference.substring(0, parentReference.indexOf('-')) : Util.goodMapValue(objectData, "object_id_s");
+                        var objectUrlKey = 'url';
+                        var pathVariables = {":id": objectId};
+                        
                         if (objectType == ObjectService.ObjectTypes.TASK) {
                             objectType = (Util.goodMapValue(objectData, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK : ObjectService.ObjectTypes.TASK;
+                        }
+                        if (objectType == ObjectService.ObjectTypes.FILE) {
+                            if (scope.isViewerLink) {
+                                var containerType = parentReference.substring(parentReference.indexOf('-') + 1);
+                                var containerId = parentReference.substring(0, parentReference.indexOf('-'));
+                                var name = Util.goodMapValue(objectData, "title_parseable");
+                                objectUrlKey = "viewerUrl";
+                                pathVariables[":containerId"] = containerId;
+                                pathVariables[":containerType"] = containerType;
+                                pathVariables[":name"] = name;
+                                pathVariables[":selectedIds"] = objectId;
+                            }
                         }
                         ObjectLookupService.getObjectTypes().then(
                             function (objectTypes) {
                                 var objectUrl = '';
                                 var foundObjectType = _.find(objectTypes, {key: objectType});
-                                if (Util.goodMapValue(foundObjectType, "url", false)) {
-                                    objectUrl = foundObjectType.url;
-                                    objectUrl = objectUrl.replace(":id", objectId);
+                                if (Util.goodMapValue(foundObjectType, objectUrlKey, false)) {
+                                    objectUrl = foundObjectType[objectUrlKey];
+                                    objectUrl = replacePathVariables(pathVariables, objectUrl);
                                 }
                                 element.attr('href', objectUrl);
                             }
@@ -69,8 +83,15 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                     } else {
                         element.attr('href', scope.url);
                     }
-                };
-                
+                }
+
+                function replacePathVariables(pathVars, url) {
+                    _.forEach(pathVars, function (value, key) {
+                        url = url.replace(key, value);
+                    });
+                    return url;
+                }
+
             }
         }
 }]);

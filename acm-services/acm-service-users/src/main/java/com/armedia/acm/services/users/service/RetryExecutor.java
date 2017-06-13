@@ -57,6 +57,24 @@ public class RetryExecutor<T>
         }
     }
 
+    public void retryChecked(CheckedRunnable action) throws Exception
+    {
+        try
+        {
+            retryAttempts--;
+            action.execute();
+        }
+        catch (Exception e)
+        {
+            if (retryAttempts > 0)
+            {
+                sleep(timeout);
+                retryChecked(action);
+            }
+            throw e;
+        }
+    }
+
     public void retrySilent(Runnable action)
     {
         try
@@ -83,5 +101,10 @@ public class RetryExecutor<T>
         }
     }
 
+    @FunctionalInterface
+    public interface CheckedRunnable
+    {
+        void execute() throws Exception;
+    }
 
 }

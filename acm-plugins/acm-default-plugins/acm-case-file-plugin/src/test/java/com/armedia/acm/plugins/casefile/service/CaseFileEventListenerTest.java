@@ -204,6 +204,56 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         assertEquals(jsonCaseFile.getId(), caseCapture.getValue().getId());
     }
 
+    // test when participant is changed
+    @Test
+    public void testParticipantIsChanged()
+    {
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        CaseFile jsonCaseFile = getCase();
+        AcmParticipant participant = new AcmParticipant();
+        participant.setObjectType(ParticipantConstants.OBJECT_TYPE);
+        participant.setParticipantType("reader");
+        participant.setId(12345L);
+        participant.setParticipantLdapId("nana-acm");
+        jsonCaseFile.getParticipants().add(participant);
+        String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
+
+        AcmObjectHistory previousHistory = new AcmObjectHistory();
+        previousHistory.setObjectType(CaseFileConstants.OBJECT_TYPE);
+        previousHistory.setObjectString(currentJsonObject);
+
+        AcmObjectHistory currentHistory = new AcmObjectHistory();
+        currentHistory.setObjectType(CaseFileConstants.OBJECT_TYPE);
+        // change participant
+        AcmParticipant participantChanged = jsonCaseFile.getParticipants().get(1);
+        participantChanged.setParticipantType("follower");
+        currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
+        currentHistory.setObjectString(currentJsonObject);
+
+        AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
+        event.setIpAddress(IP_ADDRESS);
+        event.setUserId(USER_ID);
+
+        expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, CaseFileConstants.OBJECT_TYPE)).andReturn(previousHistory);
+
+        Capture<CaseFile> caseCapture = Capture.newInstance();
+        Capture<String> ipAddressCapture = Capture.newInstance();
+        Capture<String> eventsStatusCapture = Capture.newInstance();
+
+        mockCaseFileEventUtility.raiseParticipantsModifiedInCaseFile(eq(participant), capture(caseCapture),
+                capture(ipAddressCapture), capture(eventsStatusCapture));
+        expectLastCall().anyTimes();
+
+        replayAll();
+        caseFileEventListener.onApplicationEvent(event);
+
+        verifyAll();
+        assertEquals("changed", eventsStatusCapture.getValue());
+        assertEquals(IP_ADDRESS, ipAddressCapture.getValue());
+        assertNotNull(caseCapture.getValue());
+        assertEquals(jsonCaseFile.getId(), caseCapture.getValue().getId());
+    }
+
     @Test
     public void testParticipantIsAdded()
     {

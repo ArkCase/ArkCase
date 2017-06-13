@@ -6,12 +6,25 @@
     "security.functionalAccessControl.applicationRole": "Application Role",
     "security.ldapConfig": "LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "Add New Directory",
+    "security.ldapConfig.addNewMember": "Add New Member",
+    "security.ldapConfig.addMembers": "Add Members",
+    "security.ldapConfig.addSubgroup": "Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "Delete LDAP group",
+    "security.ldapConfig.removeGroup": "Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "Edit Member",
+    "security.ldapConfig.removeMember": "Remove Member",
     "security.ldapConfig.table.ldapUrl": "LDAP Url",
     "security.ldapConfig.table.directoryName": "Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "Ldap User Attributes Template",
+      "groupAttributesTemplate": "Ldap Group Attributes Template",
       "addNewDirectory": "Add New Directory",
       "editRecord": "Edit Record",
       "id": "ID",
+      "directoryType": "Select directory server",
       "ldapUrl": "LDAP Url",
       "base": "Base",
       "directoryName": "Directory Name",
@@ -65,7 +78,9 @@
       "insert.success": "Successfully inserted new row.",
       "insert.error": "Error inserting new row.",
       "update.success": "Successfully updated row.",
-      "update.error": "Error updating row."
+      "update.error": "Error updating row.",
+      "insert.template.success": "Successfully created template",
+      "insert.template.error": "Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "Cancel",
@@ -127,7 +142,12 @@
           "btn": {
             "cancel": "Cancel",
             "ok": "Add Ldap User"
-          }
+          },
+          "username": "Enter username",
+          "firstName": "Enter first name",
+          "lastName": "Enter last name",
+          "email": "Enter email",
+          "password": "Enter password"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -136,7 +156,14 @@
             "ok": "Edit Ldap User"
           }
         },
-        "username": "Username",
+        "deleteLdapMember": {
+          "title": "Delete Ldap Member",
+          "btn": {
+            "cancel": "Cancel",
+            "ok": "Delete Ldap User"
+          }
+        },
+        "username": "UserName",
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",
@@ -206,6 +233,111 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.calendarConfiguration": {
+      "title": "Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "Enter System Email Address",
+        "password.placeholder": "Enter System Password",
+        "purge.placeholder": "Choose Purge Option",
+        "purgeDays.placeholder": "Enter Days",
+        "save.button": "Save",
+        "validate.button": "Validate",
+        "purge.label": "Purge",
+        "email.label": "System Email Address",
+        "password.label": "System Password",
+        "purgeDays.label": "Days",
+        "emailValid": "System Email Address is valid",
+        "emailNotValid": "System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "Retain Indefinitely",
+          "objectClosed": "Object = 'Closed'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "Cases",
+          "complaints.label": "Complaints",
+          "tasks.label": "Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "Save",
+        "deliveryMethods.label": "Delivery Methods",
+        "enableDocumentEmail.checkbox": "Documents can be emailed",
+        "enableDocumentAttach.checkbox": "Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
+        "serverSettings.label": "Server Settings",
+        "serverType.label": "Server Type",
+        "serverType.placeholder": "Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "For details refer to Microsoft Exchange Configuration",
+        "server.label": "Server Address",
+        "server.placeholder": "Enter Server Address",
+        "port.label": "Port",
+        "port.placeholder": "Enter Port",
+        "encryption.label": "Encryption",
+        "encryption.placeholder": "Choose Encryption",
+        "encryptionOptions": {
+          "off": "OFF",
+          "ssl-tls": "SSL/TLS",
+          "starttls": "STARTTLS"
+        },
+        "username.label": "Username",
+        "username.placeholder": "Enter Username",
+        "password.label": "Password",
+        "password.placeholder": "Enter Password",
+        "userFrom.label": "From",
+        "userFrom.placeholder": "Enter Email From field",
+        "validate.label": "SMTP Validation",
+        "validate.button": "Validate",
+        "smtpValid": "SMTP settings are valid",
+        "smtpNotValid": "SMTP settings are not valid"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "Save",
+        "enableExchangeIntegration.checkbox": "Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "Exchange Server Version",
+        "exchangeServerVersion.placeholder": "Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "Enable Autodiscovery",
+        "clientAccessServer.label": "Client Access Server",
+        "clientAccessServer.description": "Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "Enter Client Access Server",
+        "exchangeDefaultAccess.label": "Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "None",
+          "Owner": "Owner",
+          "PublishingEditor": "PublishingEditor",
+          "Editor": "Editor",
+          "PublishingAuthor": "PublishingAuthor",
+          "Author": "Author",
+          "NoneditingAuthor": "NoneditingAuthor",
+          "Reviewer": "Reviewer",
+          "Contributor": "Contributor",
+          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "Custom"
+        }
+      }
+    },
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -215,6 +347,14 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.bpmn.upload": "Upload",
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
+    "workflows.config.bpmn.modal": {        
+        "label.description": "Description",
+        "label.noFileSelected": "No File Selected",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
       "success": "Process succesfully activated."
@@ -234,16 +374,25 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "Download",
       "replaceFile": "Replace File",
-      "versionHistory": "Version History"
+      "versionHistory": "Version History",
+      "diagram": "Process Diagram"
     },
     "workflows.config.upload": {
       "success": "Successfully uploaded new process definition",
       "error": "Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "Process Diagram",
+      "error.loading": "Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "Close"
+      }
     },
     "formWorkflows.title": "Form/Workflow Link",
     "formWorkflows.link": "Link Forms/Workflows",
@@ -339,7 +488,7 @@
         "activated": "Status",
         "objectType": "Object Type",
         "version": "Version",
-        "templateVersionActive" : "Active"
+        "templateVersionActive": "Active"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -366,9 +515,9 @@
       "mergefields.saveMergeFields": "Save",
       "mergefields.versionMergeFields": "Versions",
       "mergefields.grid": {
-      "fieldId": "ID",
-      "fieldValue": "Value",
-      "fieldDescription": "Description"
+        "fieldId": "ID",
+        "fieldValue": "Value",
+        "fieldDescription": "Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "Version",
@@ -390,6 +539,100 @@
       "target": "Target"
     },
     "forms.message.delete.success": "Successfully deleted row.",
-    "forms.message.delete.error": "Error deleting row."
+    "forms.message.delete.error": "Error deleting row.",
+    "documentManagement": {
+      "title": "Document Management",
+      "cmisConfiguration": "CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "New CMIS Configuration",
+          "edit": "Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "Cancel",
+          "ok": "OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "CMIS ID",
+          "placeholder": "CMIS ID"
+        },
+        "baseUrl": {
+          "label": "Base URL",
+          "placeholder": "Base URL"
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "Use Alfresco Extension",
+          "placeholder": "Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "Endpoint",
+          "placeholder": "Endpoint"
+        },
+        "maxIdle": {
+          "label": "Maximum Idle",
+          "placeholder": "Maximum Idle"
+        },
+        "maxActive": {
+          "label": "Maximum Active",
+          "placeholder": "Maximum Active"
+        },
+        "maxWait": {
+          "label": "Maximum Wait",
+          "placeholder": "Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "Minimum Eviction Milliseconds",
+          "placeholder": "Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "Eviction Check Interval Milliseconds",
+          "placeholder": "Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "Reconnect Count",
+          "placeholder": "Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "Reconnect Frequency",
+          "placeholder": "Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "Repository Id",
+          "placeholder": "Repository Id"
+        },
+        "versioningState": {
+          "label": "Versioning State",
+          "placeholder": "Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "Cancel",
+        "deleteBtn": "Cofirm Delete",
+        "headerText": "You are about to delete CMIS Configuration:",
+        "bodyText": "Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "Successfully deleted configuration.",
+        "delete.error": "Error deleting configuration.",
+        "insert.success": "Successfully created new configuration row.",
+        "insert.error": "Error creating new configuration row.",
+        "update.success": "Successfully updated configuration row.",
+        "update.error": "Error updating configuration row."
+      }
+    }
   }
 }

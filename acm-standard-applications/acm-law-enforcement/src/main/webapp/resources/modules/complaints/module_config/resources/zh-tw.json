@@ -39,7 +39,10 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "zh-tw_Documents"
+    "title": "zh-tw_Documents",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
   },
   "complaints.comp.people": {
     "title": "zh-tw_People",

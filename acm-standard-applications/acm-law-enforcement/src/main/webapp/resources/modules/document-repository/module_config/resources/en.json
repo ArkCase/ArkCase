@@ -14,12 +14,15 @@
     "docRepoName": "Document Repository Name:",
     "modified.label": "Modified Date",
     "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group"
+    "owningGroup.label": "Owning Group",
+    "description.label": "Description"
   },
   "document-repository.comp.actions": {
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
-    "unsubscribe.button": "Unsubscribe"
+    "unsubscribe.button": "Unsubscribe",
+    "delete.button": "Delete Repository",
+    "confirm.delete.documentRepository.msg": "This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
     "title": "Details",
@@ -31,7 +34,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
   },
   "document-repository.comp.participants": {
     "title": "Participants",
@@ -163,12 +169,14 @@
     "assigneeLabel": "Assignee",
     "owningGroupLabel": "Owning Group",
     "assignee.placeholder": "Search Assignee",
-    "saveButton": "Save",
+    "saveButton": "Create Repository",
+    "cancelButton": "Cancel",
     "nameLabel": "Name",
     "name.placeholder": "Enter Name",
     "descriptionLabel": "Description",
     "description.placeholder": "Enter Description",
-    "searchUser": "Search User"
+    "searchUser": "Search User",
+    "personalRepository": "My Documents"
   },
   "document-repository.dialogUserPicker":{
    "table.columns.name": "Name",

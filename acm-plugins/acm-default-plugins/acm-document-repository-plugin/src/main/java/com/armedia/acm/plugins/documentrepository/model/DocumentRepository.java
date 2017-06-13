@@ -13,13 +13,17 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstant
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,6 +51,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_document_repository")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class DocumentRepository implements Serializable, AcmAssignedObject, AcmEntity,
         AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmChildObjectEntity
 {
@@ -67,6 +72,9 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @Lob
     @Column(name = "cm_doc_repo_details")
     private String details;
+
+    @Column(name = "cm_doc_repo_description")
+    private String description;
 
     @Column(name = "cm_doc_repo_status", nullable = false)
     private String status;
@@ -91,6 +99,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
 
     @Column(name = "cm_object_type", updatable = false)
     private String objectType = DocumentRepositoryConstants.OBJECT_TYPE;
+
+    @Column(name = "cm_doc_repo_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private DocumentRepositoryType repositoryType;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_object_id"),
@@ -118,12 +130,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isBlank(getStatus()))
+        if (StringUtils.isBlank(status))
         {
-            setStatus("DRAFT");
+            status = "DRAFT";
         }
-        setNameUpperCase(getName().toUpperCase());
+        nameUpperCase = name.toUpperCase();
         setupChildPointers();
+        if(repositoryType == null)
+        {
+            repositoryType = DocumentRepositoryType.GENERAL;
+        }
     }
 
     private void setupChildPointers()
@@ -267,6 +283,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         this.objectType = objectType;
     }
 
+    public DocumentRepositoryType getRepositoryType()
+    {
+        return repositoryType;
+    }
+
+    public void setRepositoryType(DocumentRepositoryType repositoryType)
+    {
+        this.repositoryType = repositoryType;
+    }
+
     @Override
     public List<AcmParticipant> getParticipants()
     {
@@ -276,6 +302,16 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     public void setParticipants(List<AcmParticipant> participants)
     {
         this.participants = participants;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 
     @Override
@@ -346,9 +382,7 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     {
         return getChildObjects()
                 .stream()
-                .filter(
-                        child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType())
-                )
+                .filter(child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
                 .collect(Collectors.toList());
     }
 }

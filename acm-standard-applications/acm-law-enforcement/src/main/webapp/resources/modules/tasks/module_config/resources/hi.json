@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "hi_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "hi_Process Diagram",
     "eSignature.button": "hi_Sign",
     "subscribe.button": "hi_Subscribe",
     "unsubscribe.button": "hi_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "hi_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "hi_Error",
-      "btnOk.text": "hi_OK"
+      "btnOk.text": "hi_OK",
+      "btnClose.text": "hi_Close"
     }
   },
   "tasks.comp.details": {
@@ -82,10 +84,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "hi_Parent Documents",
-    "noParentDataMessage": "hi_No parent documents for standalone task"
+    "noParentDataMessage": "hi_No parent documents for standalone task",
+    "sendEmail": "hi_Send Email",
+    "filterInputPlaceholder": "hi_Filter",
+    "searchInputPlaceholder": "hi_Search"
   },
   "tasks.comp.attachments": {
-    "title": "hi_Attachments"
+    "title": "hi_Attachments",
+    "sendEmail": "hi_Send Email",
+    "filterInputPlaceholder": "hi_Filter",
+    "searchInputPlaceholder": "hi_Search"
   },
   "tasks.comp.notes": {
     "title": "hi_Notes",
@@ -122,6 +130,10 @@
       "startDateTime": "hi_Start",
       "endDateTime": "hi_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "hi_Process Diagram",
+    "error.loading": "hi_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "hi_eSignatures",

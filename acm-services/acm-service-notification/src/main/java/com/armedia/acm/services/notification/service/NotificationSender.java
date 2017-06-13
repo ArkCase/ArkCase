@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.services.notification.service;
 
@@ -7,6 +7,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.service.outlook.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
@@ -26,7 +27,6 @@ import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
- *
  */
 public abstract class NotificationSender
 {
@@ -34,6 +34,7 @@ public abstract class NotificationSender
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     protected PropertyFileManager propertyFileManager;
     protected String notificationPropertyFileLocation;
+    protected String emailSenderPropertyFileLocation;
     protected MuleContextManager muleContextManager;
     protected AuthenticationTokenService authenticationTokenService;
     protected AuthenticationTokenDao authenticationTokenDao;
@@ -44,9 +45,8 @@ public abstract class NotificationSender
     /**
      * Sends the notification to user's email. If successful, sets the notification state to
      * {@link NotificationConstants#STATE_SENT}, otherwise it sets it to {@link NotificationConstants#STATE_NOT_SENT}
-     * 
-     * @param notification
-     *            the notification to send
+     *
+     * @param notification the notification to send
      * @return the notification with state set
      */
     public abstract Notification send(Notification notification);
@@ -54,10 +54,14 @@ public abstract class NotificationSender
     public abstract <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception;
 
+    public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, String userId) throws Exception;
+
     public abstract void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception;
 
+    public abstract void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user) throws Exception;
+
     public abstract List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in,
-            Authentication authentication, AcmUser user) throws Exception;
+                                                                                     Authentication authentication, AcmUser user) throws Exception;
 
     public NotificationUtils getNotificationUtils()
     {
@@ -97,6 +101,22 @@ public abstract class NotificationSender
     public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
     {
         this.notificationPropertyFileLocation = notificationPropertyFileLocation;
+    }
+
+    /**
+     * @return the emailSenderPropertyFileLocation
+     */
+    public String getEmailSenderPropertyFileLocation()
+    {
+        return emailSenderPropertyFileLocation;
+    }
+
+    /**
+     * @param emailSenderPropertyFileLocation the emailSenderPropertyFileLocation to set
+     */
+    public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
+    {
+        this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
     }
 
     public MuleContextManager getMuleContextManager()

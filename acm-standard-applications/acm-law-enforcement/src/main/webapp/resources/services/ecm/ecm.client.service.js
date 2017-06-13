@@ -20,6 +20,12 @@ angular.module('services').factory('EcmService', ['$resource'
                 cache: false,
                 isArray: false
             }
+            , retrieveFlatSearchResultList: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId/search?fq=:filter&start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                cache: false,
+                isArray: false
+            }
             , createFolder: {
                 method: 'PUT',
                 url: 'api/latest/service/ecm/folder/:parentId/:folderName'
@@ -27,6 +33,10 @@ angular.module('services').factory('EcmService', ['$resource'
             , deleteFolder: {
                 method: 'DELETE',
                 url: 'api/latest/service/ecm/folder/:folderId'
+            }
+            , getDeleteFolderInfo: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:folderId/count'
             }
             , uploadFiles: {
                 method: 'POST',

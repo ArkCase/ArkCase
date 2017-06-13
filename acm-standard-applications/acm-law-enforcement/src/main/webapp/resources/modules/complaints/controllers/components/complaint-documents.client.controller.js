@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
+    , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $modal, $q, $timeout
-        , Util, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
+        , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail) {
 
 
         Authentication.queryUserInfo().then(
@@ -41,15 +41,17 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
+        var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;
 
-            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms]).then(
+            $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
+                    $scope.treeConfig.fileLanguages = data[3];
                     $scope.treeControl.refreshTree();
                 });
         };
@@ -76,5 +78,22 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.treeControl.refreshTree();
         };
 
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
+        };
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

@@ -13,13 +13,14 @@
  * Action name consists of 2 parts: module name and actionName, for example: 'cases.createCase'
  *
  * @param {string} permission Acion name that includes module name, for example: 'cases.createCase'
+ * @param {String} permission-object-type Object type to be passed to permission service
  * @param {string} permission-properties Data object that shhould be passed to permissions service
  * @param {string} [permission-action=disable] Defines action that should be applied to disabled UI control ('disable', 'hide')
  *
  * @example
  <example>
  <file name="index.html">
- <button permission="createCase"  permission-properties="orderInfo" permission-action="disable" ng-click="createCase()">Create Case</button>
+ <button permission="createCase"  permission-object-type="CASE_FILE" permission-properties="orderInfo" permission-action="disable" ng-click="createCase()">Create Case</button>
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
@@ -40,6 +41,7 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
                 pre: function (scope, element, attrs) {
                     element.on('click', {
                             actionName: attrs.permission,
+                            objectType: attrs.permissionObjectType,
                             element: element
                         },
                         onElementClick
@@ -51,23 +53,24 @@ angular.module('directives').directive('permission', ['$q', '$log', 'Permissions
                     // We use access to attributes value instead of isolated scope
                     // to avoid "isolated scopes conflicts" when few directives with isolated scopes are applied to element
                     var actionName = attrs.permission;
+                    var objectType = attrs.permissionObjectType;
                     var permissionAction = attrs.permissionAction;
                     var permissionProperties = null;
 
                     scope.$watch(attrs.permissionProperties, function(value){
                         permissionProperties = value;
-                        setPermission(element, actionName, permissionProperties, permissionAction);
+                        setPermission(element, actionName, objectType, permissionProperties, permissionAction);
                     });
 
                     attrs.$observe('disabled', function () {
-                        setPermission(element, actionName, permissionProperties, permissionAction);
+                        setPermission(element, actionName, objectType, permissionProperties, permissionAction);
                     });
                 }
             }
         };
 
-        function setPermission(element, actionName, permissionProperties, permissionAction) {
-            PermissionsService.getActionPermission(actionName, permissionProperties)
+        function setPermission(element, actionName, objectType, permissionProperties, permissionAction) {
+            PermissionsService.getActionPermission(actionName, permissionProperties, {objectType: objectType})
                 .then(
                     function success(enabled) {
 

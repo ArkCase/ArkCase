@@ -1,13 +1,17 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -24,10 +28,14 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -41,7 +49,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by armdev on 4/7/14.
@@ -53,8 +60,8 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Person")
-@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID", scope = Person.class)
-public class Person implements Serializable, AcmEntity
+@JsonIdentityInfo(generator = JSOGGenerator.class)
+public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerEntity
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
@@ -140,8 +147,17 @@ public class Person implements Serializable, AcmEntity
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
     private List<PersonAlias> personAliases = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "person")
-    private List<PersonAssociation> personAssociations = new ArrayList<>();
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "person")
+    private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
+
+
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
+    @JoinColumns({
+            @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<PersonAssociation> associationsToObjects = new ArrayList<>();
+
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
@@ -149,7 +165,7 @@ public class Person implements Serializable, AcmEntity
             @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
     private List<Identification> identifications = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE})
     @JoinTable(name = "acm_person_organization", joinColumns = {
             @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
             @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
@@ -157,6 +173,79 @@ public class Person implements Serializable, AcmEntity
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
+
+    /**
+     * Container folder where the case file's attachments/content files are stored.
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_container_id")
+    private AcmContainer container;
+
+    /**
+     * id for EcmFile which picture is default
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_picture_id")
+    private EcmFile defaultPicture;
+
+    @Column(name = "cm_object_type", updatable = false)
+    private String objectType = PersonOrganizationConstants.PERSON_OBJECT_TYPE;
+
+    /**
+     * ContactMethod which is default as phone
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_phone")
+    private ContactMethod defaultPhone;
+
+    /**
+     * ContactMethod which is default as email
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_email")
+    private ContactMethod defaultEmail;
+
+    /**
+     * PostalAddress which is default
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_address")
+    private PostalAddress defaultAddress;
+
+    /**
+     * ContactMethod which is default as url
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_url")
+    private ContactMethod defaultUrl;
+
+    /**
+     * PersonAlias which is default from personAliases
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_alias")
+    private PersonAlias defaultAlias;
+
+    /**
+     * Identification which is default from identifications
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_identification")
+    private Identification defaultIdentification;
+
+    /**
+     * Organization which is default from organizations
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_organization")
+    private PersonOrganizationAssociation defaultOrganization;
+
+    @Lob
+    @Column(name = "cm_details")
+    private String details;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", orphanRemoval = true)
+    List<PersonOrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -170,6 +259,19 @@ public class Person implements Serializable, AcmEntity
         {
             pa.setPerson(this);
         }
+
+        for (PersonAssociation pa : getAssociationsFromObjects())
+        {
+            pa.setPerson(this);
+        }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
+        }
     }
 
     @PreUpdate
@@ -178,6 +280,47 @@ public class Person implements Serializable, AcmEntity
         for (PersonAlias pa : getPersonAliases())
         {
             pa.setPerson(this);
+        }
+
+        for (PersonAssociation pa : getAssociationsFromObjects())
+        {
+            pa.setPerson(this);
+        }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
+        }
+    }
+
+    @PostLoad
+    protected void postLoad()
+    {
+        /*FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
+           same person which is parent to them.
+            Because of deadline didn't have time to find better solution for this like: get object from cache or explore new possibilities
+            So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code should be removed
+            linked with technical dept: AFDP-3487
+            */
+        for (PersonAlias pa : getPersonAliases())
+        {
+            pa.setPerson(this);
+        }
+
+        for (PersonAssociation pa : getAssociationsFromObjects())
+        {
+            pa.setPerson(this);
+        }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
         }
     }
 
@@ -305,6 +448,12 @@ public class Person implements Serializable, AcmEntity
         this.modifier = modifier;
     }
 
+    @Override
+    public String getObjectType()
+    {
+        return objectType;
+    }
+
     @XmlTransient
     public Long getId()
     {
@@ -388,16 +537,16 @@ public class Person implements Serializable, AcmEntity
 
     // use @XmlTransient to prevent recursive XML when serializing containers that refer to this person
     @XmlTransient
-    public List<PersonAssociation> getPersonAssociations()
+    public List<PersonAssociation> getAssociationsFromObjects()
     {
-        return personAssociations;
+        return associationsFromObjects;
     }
 
-    public void setPersonAssociations(List<PersonAssociation> personAssociations)
+    public void setAssociationsFromObjects(List<PersonAssociation> associationsFromObjects)
     {
-        this.personAssociations = personAssociations;
+        this.associationsFromObjects = associationsFromObjects;
 
-        for (PersonAssociation personAssoc : personAssociations)
+        for (PersonAssociation personAssoc : associationsFromObjects)
         {
             personAssoc.setPerson(this);
         }
@@ -516,4 +665,123 @@ public class Person implements Serializable, AcmEntity
         this.className = className;
     }
 
+    public void setContainer(AcmContainer container)
+    {
+        this.container = container;
+    }
+
+    public void setDefaultPicture(EcmFile defaultPictureId)
+    {
+        this.defaultPicture = defaultPictureId;
+    }
+
+    public AcmContainer getContainer()
+    {
+        return container;
+    }
+
+    public EcmFile getDefaultPicture()
+    {
+        return defaultPicture;
+    }
+
+    public ContactMethod getDefaultPhone()
+    {
+        return defaultPhone;
+    }
+
+    public void setDefaultPhone(ContactMethod defaultPhone)
+    {
+        this.defaultPhone = defaultPhone;
+    }
+
+    public ContactMethod getDefaultEmail()
+    {
+        return defaultEmail;
+    }
+
+    public void setDefaultEmail(ContactMethod defaultEmail)
+    {
+        this.defaultEmail = defaultEmail;
+    }
+
+    public PostalAddress getDefaultAddress()
+    {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(PostalAddress defaultAddress)
+    {
+        this.defaultAddress = defaultAddress;
+    }
+
+    public ContactMethod getDefaultUrl()
+    {
+        return defaultUrl;
+    }
+
+    public void setDefaultUrl(ContactMethod defaultUrl)
+    {
+        this.defaultUrl = defaultUrl;
+    }
+
+    public PersonAlias getDefaultAlias()
+    {
+        return defaultAlias;
+    }
+
+    public void setDefaultAlias(PersonAlias defaultAlias)
+    {
+        this.defaultAlias = defaultAlias;
+    }
+
+    public Identification getDefaultIdentification()
+    {
+        return defaultIdentification;
+    }
+
+    public void setDefaultIdentification(Identification defaultIdentification)
+    {
+        this.defaultIdentification = defaultIdentification;
+    }
+
+    public PersonOrganizationAssociation getDefaultOrganization()
+    {
+        return defaultOrganization;
+    }
+
+    public void setDefaultOrganization(PersonOrganizationAssociation defaultOrganization)
+    {
+        this.defaultOrganization = defaultOrganization;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public void setDetails(String details)
+    {
+        this.details = details;
+    }
+
+    public List<PersonAssociation> getAssociationsToObjects()
+    {
+        return associationsToObjects;
+    }
+
+    public void setAssociationsToObjects(List<PersonAssociation> associationsToObjects)
+    {
+        this.associationsToObjects = associationsToObjects;
+    }
+
+    public List<PersonOrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<PersonOrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
+    }
 }

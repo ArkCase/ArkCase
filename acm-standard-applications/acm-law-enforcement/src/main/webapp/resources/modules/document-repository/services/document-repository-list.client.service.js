@@ -30,7 +30,7 @@ angular.module('services').factory('DocumentRepository.ListService', ['$resource
          *
          * @returns None
          */
-        Service.resetCasesTreeData = function () {
+        Service.resetDocumentRepositoryTreeData = function () {
             var cacheDocumentRepositoryList = new Store.CacheFifo(Service.CacheNames.DOC_REPO_LIST);
             cacheDocumentRepositoryList.reset();
         };

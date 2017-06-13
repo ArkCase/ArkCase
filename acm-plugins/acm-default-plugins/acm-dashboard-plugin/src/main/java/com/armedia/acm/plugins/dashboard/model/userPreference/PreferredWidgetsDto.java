@@ -1,10 +1,14 @@
 package com.armedia.acm.plugins.dashboard.model.userPreference;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 14.01.2016.
  */
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PreferredWidgetsDto
 {
     private String moduleName;
