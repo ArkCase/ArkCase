@@ -229,6 +229,14 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
         };
 
         function clearNotFilledElements(organization) {
+
+            //remove opened property added for the datePickers
+            if (organization.identifications && organization.identifications.length) {
+                organization.identifications = _.map(organization.identifications, function (obj) {
+                    return _.omit(obj, 'opened');
+                });
+            }
+
             //phones
             if (!organization.defaultPhone.value) {
                 organization.defaultPhone = null;

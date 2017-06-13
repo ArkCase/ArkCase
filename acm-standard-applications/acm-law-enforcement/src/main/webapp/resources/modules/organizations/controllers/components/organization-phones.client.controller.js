@@ -54,6 +54,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             var phone = {};
             phone.created = Util.dateToIsoString(new Date());
             phone.creator = $scope.userId;
+            phone.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.phone = phone;
@@ -157,6 +158,10 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             var id = 0;
             if ($scope.objectInfo.defaultPhone) {
                 id = $scope.objectInfo.defaultPhone.id
+            }
+            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
+            if (phones && phones.length == 0) {
+                return true;
             }
             return data.id == id;
         };

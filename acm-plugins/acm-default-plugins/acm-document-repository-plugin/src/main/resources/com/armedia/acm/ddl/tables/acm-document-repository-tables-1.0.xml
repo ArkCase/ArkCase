@@ -57,4 +57,11 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="03-add-repo-type-column" author="ncuculova">
+        <addColumn tableName="acm_document_repository">
+            <column name="cm_doc_repo_type" type="VARCHAR(100)" defaultValue="GENERAL">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

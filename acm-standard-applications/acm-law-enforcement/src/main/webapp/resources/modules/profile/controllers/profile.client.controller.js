@@ -29,9 +29,8 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
         };
         $scope.openChangeLdapPasswordDialog = function () {
             $modal.open({
-                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changePassword.client.view.html',
+                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-changeLdapPassword.client.view.html',
                 controller: 'ChangeLdapPasswordModalController',
-                backdrop: false,
                 size: 'sm'
             });
         }
@@ -92,54 +91,49 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
 ]);
 
 angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance'
-    , '$modal', 'Profile.ChangePasswordService', 'Authentication',
-    function ($scope, $modalInstance, $modal, ChangePasswordService, Authentication) {
-        $scope.close = function () {
-            $modalInstance.dismiss('cancel');
-        };
-        $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
-            $scope.newPassword = '';
-            $scope.newPasswordAgain = '';
-        };
+    , '$modal', '$translate', 'Profile.ChangePasswordService', 'Authentication', 'MessageService'
+    , function ($scope, $modalInstance, $modal, $translate, ChangePasswordService, Authentication, MessageService) {
 
         Authentication.queryUserInfo().then(function (userInfo) {
             $scope.userInfo = userInfo;
         });
 
-
-        function openModal(params) {
-            $modal.open({
-                templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
-                controller: ['$scope', 'params', function ($scope, params) {
-                    $scope.message = params.message;
-                }],
-                resolve: {
-                    params: params
-                },
-                backdrop: false,
-                size: 'sm'
-            });
-        }
+        $scope.isPasswordError = false;
+        $scope.authError = null;
+        $scope.loading = false;
 
         $scope.changePassword = function () {
-            if (!this.newPassword) {
-                openModal({"message": "profile.modal.emptyPassword"});
-            }
-            else if (!this.newPasswordAgain) {
-                openModal({"message": "profile.modal.comfirmation"});
-            }
-            else if (this.newPassword !== this.newPasswordAgain) {
-                openModal({"message": "profile.modal.differentPasswords"});
-                this.newPassword = '';
-                this.newPasswordAgain = '';
+            if ($scope.newPassword !== $scope.confirmNewPassword) {
+                $scope.confirmNewPassword = '';
+                $scope.isPasswordError = true;
             }
             else {
-                var data = {"password": this.newPassword, "userInfo": $scope.userInfo};
-                ChangePasswordService.changeLdapPassword(data);
-                $modalInstance.close('done');
-                this.newPassword = '';
-                this.newPasswordAgain = '';
+                var data = {
+                    currentPassword: $scope.currentPassword,
+                    newPassword: $scope.newPassword,
+                    userInfo: $scope.userInfo
+                };
+                $scope.loading = true;
+                ChangePasswordService.changeLdapPassword(data).then(function () {
+                    $modalInstance.close('done');
+                    $scope.loading = false;
+                    MessageService.info($translate.instant("profile.modal.success"));
+                }, function (errorData) {
+                    $scope.loading = false;
+                    var message = errorData.data.authError;
+                    if (message) {
+                        $scope.authError = message;
+                        $scope.currentPassword = '';
+                    }
+                    else {
+                        $modalInstance.close('done');
+                        if (errorData.data.message) {
+                            MessageService.error(errorData.data.message);
+                        } else {
+                            MessageService.errorAction();
+                        }
+                    }
+                });
             }
         };
     }

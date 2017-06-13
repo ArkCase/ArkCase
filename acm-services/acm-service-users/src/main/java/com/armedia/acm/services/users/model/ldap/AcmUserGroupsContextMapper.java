@@ -14,7 +14,6 @@ public class AcmUserGroupsContextMapper implements ContextMapper
     public static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmLdapSyncConfig acmLdapSyncConfig;
-    public static String[] USER_LDAP_ATTRIBUTES;
 
     public AcmUserGroupsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {
@@ -88,10 +87,5 @@ public class AcmUserGroupsContextMapper implements ContextMapper
             log.warn("user account control value [{}] is not a number!", uac);
             return false;
         }
-    }
-
-    public static void setUserLdapAttributes(String userLdapAttributes)
-    {
-        AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES = userLdapAttributes.trim().split(",");
     }
 }

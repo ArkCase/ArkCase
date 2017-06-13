@@ -173,9 +173,6 @@ angular.module('services').factory('DocumentRepository.InfoService', ['$resource
             if (!ObjectModelService.getParticipantByType(data, "assignee")) {
                 return false;
             }
-            if (!ObjectModelService.getParticipantByType(data, "owning group")) {
-                return false;
-            }
             return true;
         };
 

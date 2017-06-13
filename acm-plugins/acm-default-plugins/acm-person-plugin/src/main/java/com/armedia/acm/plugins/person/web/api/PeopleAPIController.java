@@ -36,24 +36,17 @@ public class PeopleAPIController
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
-    private PersonEventPublisher personEventPublisher;
+
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person upsertPerson(@RequestBody Person in, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
-
         log.debug("Persist a Person: [{}];", in);
-
-        boolean isNew = in.getId() == null;
-
-        Person person = isNew ? personService.createPerson(in, auth) : personService.savePerson(in, auth);
-        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
-        return person;
+        return personService.savePerson(in, auth);
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -62,14 +55,8 @@ public class PeopleAPIController
                                         @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
-
         log.debug("Persist a Person: [{}];", in);
-
-        boolean isNew = in.getId() == null;
-        Person person = isNew ? personService.createPerson(in, auth) : personService.savePerson(in, pictures, auth);
-        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
-        return person;
-
+        return personService.savePerson(in, pictures, auth);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,14 +84,12 @@ public class PeopleAPIController
         try
         {
             Person person = personService.get(personId);
-            getPersonEventPublisher().publishPersonViewedEvent(person, true);
             return person;
         } catch (Exception e)
         {
             log.error("Error while retrieving Person with id: [{}]", personId, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve person.", e);
         }
-
     }
 
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -126,7 +111,6 @@ public class PeopleAPIController
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
         }
-
     }
 
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -139,7 +123,6 @@ public class PeopleAPIController
         log.debug("Insert Image for a Person: [{}];", personId);
 
         personService.insertImageForPerson(personId, image, data.isDefault(), data.getDescription(), auth);
-        getPersonEventPublisher().publishPersonImageEvent(personService.get(personId), true);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -153,7 +136,6 @@ public class PeopleAPIController
         log.debug("Save Image for a Person: [{}];", personId);
 
         personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
-        getPersonEventPublisher().publishPersonImageEvent(personService.get(personId), true);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -198,21 +180,5 @@ public class PeopleAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
-    }
-
-    /**
-     * @return the personEventPublisher
-     */
-    public PersonEventPublisher getPersonEventPublisher()
-    {
-        return personEventPublisher;
-    }
-
-    /**
-     * @param personEventPublisher the personEventPublisher to set
-     */
-    public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
-    {
-        this.personEventPublisher = personEventPublisher;
     }
 }
