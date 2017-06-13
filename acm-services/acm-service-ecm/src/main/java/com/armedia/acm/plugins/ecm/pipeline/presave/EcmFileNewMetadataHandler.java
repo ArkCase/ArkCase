@@ -9,7 +9,6 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,6 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
 
             entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
-            entity.setFileName(pipelineContext.getOriginalFileName());
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();

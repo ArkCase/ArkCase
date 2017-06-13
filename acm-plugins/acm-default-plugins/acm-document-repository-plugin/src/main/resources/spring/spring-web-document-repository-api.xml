@@ -5,6 +5,7 @@
 
    <bean id="documentRepositoryAPIController" class="com.armedia.acm.plugins.documentrepository.web.DocumentRepositoryAPIController">
        <property name="documentRepositoryService" ref="documentRepositoryServiceImpl"/>
+       <property name="documentRepositoryEventPublisher" ref="documentRepositoryEventPublisher"/>
    </bean>
 
 </beans>

@@ -70,7 +70,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         });
 
         $scope.search = function () {
-            $state.go('quick-search', {
+            $state.go('search', {
                 query: $scope.data.inputQuery
             });
         };
@@ -78,7 +78,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
                 $scope.isSelected = isSelected;
-                $state.go('quick-search', {
+                $state.go('search', {
                     query: $scope.data.inputQuery,
                     isSelected: $scope.isSelected
                 });

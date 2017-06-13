@@ -1,14 +1,17 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.NewDocumentRepositoryController', ['$scope'
-    , '$modal', '$translate', 'ConfigService', 'UtilService', 'Authentication'
+    , '$modal', '$translate', '$window', 'ConfigService', 'UtilService', 'Authentication'
     , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService'
-    , function ($scope, $modal, $translate, ConfigService, Util, Authentication
+    , function ($scope, $modal, $translate, $window, ConfigService, Util, Authentication
         , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
 
         $scope.docRepo = {};
+        $scope.loading = false;
+        var user = {};
         Authentication.queryUserInfo().then(
             function (userInfo) {
+                user = userInfo;
                 $scope.assignee = {};
                 $scope.assignee.name = userInfo.fullName;
                 $scope.assignee.object_id_s = userInfo.userId;
@@ -55,17 +58,33 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
             });
         };
 
+        $scope.changeType = function () {
+            if ($scope.isPersonalDocRepo()) {
+                $scope.owningGroup.participantLdapId = '';
+                $scope.assignee.name = user.fullName;
+                $scope.assignee.object_id_s = user.userId;
+            }
+        };
+
         $scope.saveNewDocumentRepository = function () {
             setParticipants();
-            DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo).then(function (data) {
-                ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
-            }, function (error) {
-                if (error.data && error.data.message){
-                    $scope.error = error.data.message;
-                }else{
-                    MessageService.error(error);
-                }
-            });
+            $scope.loading = true;
+            DocumentRepositoryInfoService.saveDocumentRepository($scope.docRepo)
+                .then(function (data) {
+                    if ($scope.isPersonalDocRepo()) {
+                        ObjectService.showObject(ObjectService.ObjectTypes.MY_DOC_REPO, data.id);
+                    } else {
+                        ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
+                    }
+                    $scope.loading = false;
+                }, function (error) {
+                    $scope.loading = false;
+                    if (error.data && error.data.message) {
+                        $scope.error = error.data.message;
+                    } else {
+                        MessageService.error(error);
+                    }
+                });
         };
 
         function setParticipants() {
@@ -74,10 +93,20 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
             assignee.participantLdapId = $scope.assignee.object_id_s;
             assignee.participantType = "assignee";
             $scope.docRepo.participants.push(assignee);
-            var owningGroup = {};
-            owningGroup.participantType = "owning group";
-            owningGroup.participantLdapId = $scope.owningGroup.participantLdapId;
-            $scope.docRepo.participants.push(owningGroup);
+            if (!$scope.isPersonalDocRepo()) {
+                var owningGroup = {};
+                owningGroup.participantType = "owning group";
+                owningGroup.participantLdapId = $scope.owningGroup.participantLdapId;
+                $scope.docRepo.participants.push(owningGroup);
+            }
         }
+
+        $scope.onCancel = function () {
+            $window.history.back();
+        };
+
+        $scope.isPersonalDocRepo = function () {
+            return $scope.docRepo.repositoryType === 'PERSONAL';
+        };
     }
 ]);

@@ -98,6 +98,13 @@ span.fancytree-title {
     margin: 0px;
 }
 
+.form-group.required label:after {
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 8px;
+}
+
 .img-circle.img-responsive {
     width: 100px;
     height: 100px;
@@ -560,6 +567,11 @@ span.fancytree-title {
     white-space: normal;
     padding: 2px;
 }
+
+.ui-grid-top-panel {
+    width: 100%
+}
+
 /* End of ui-grid fix. */
 
 .ui-grid-header-cell-row .ui-grid-cell-contents {
@@ -646,6 +658,7 @@ span.fancytree-title {
 .ui-grid-canvas {
 	height: auto !important;
 }
+
 
 .ui-grid-canvas .panel.panel-success {
 	margin: 0px !important;
@@ -775,9 +788,11 @@ thead {
     min-height: 270px;
 }
 
-/* Inlined Editing */
+/* Overriding of .form-inline class for the needs of the x-editable popup form. */
+/* This will only affect the element with class .form-inline which is immediately after element with class .editable. */
+/* In this way we localize this override only for x-editable.*/
 
-.form-inline {
+.editable + .form-inline {
     position: fixed;
     margin-top: 30px;
     background-color: #ebeceb;
@@ -790,7 +805,7 @@ thead {
     z-index: 2000;
 }
 
-.form-inline:before {
+.editable + .form-inline:before {
     content: "";
     width: 0;
     height: 0;
@@ -802,7 +817,7 @@ thead {
     left: 40%;
 }
 
-.form-inline:after {
+.editable + .form-inline:after {
     content: "";
     width: 0;
     height: 0;
@@ -1224,6 +1239,16 @@ tags-input .tags {
     margin: 0px;
 }
 
+.module-header .col-xs-12.col-md-4 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
+.module-header .col-xs-12.col-md-5 .h4.font-bold {
+    font-size: 15px;
+    margin: 0px;
+}
+
 .right-sidebar.well-sm.documentDetails {
 	top: 172px;
 }
@@ -1299,8 +1324,8 @@ a.no-outline:hover, a.no-outline:focus {
     font-size: 15px;
 }
 
-/* In the results table from a Seearch all NOTE and TAG rows returned show have
-   Links disbled under the Name column
+/* In the results table from a Search all NOTE and TAG rows returned show have
+   Links disabled under the Name column
 */
 .no-link {
     text-decoration: none;
@@ -1314,4 +1339,49 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     text-decoration: none;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+/*Custom style for user picker read only input*/
+.user-picker-input {
+    background-color: white !important;
+    cursor: pointer;
+}
+.input-xs {
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Loader */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #555;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    margin-left: 45%
+}
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.modal-width-80 > .modal-dialog{
+    width: 80%;
+}
+
+.modal-width-80  .img-responsive {
+    margin: 0 auto;
 }

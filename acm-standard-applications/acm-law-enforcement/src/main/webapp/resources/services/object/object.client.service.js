@@ -24,6 +24,10 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , DOCUMENT: "DOCUMENT"
                 , FILE: "FILE"
                 , DOC_REPO: "DOC_REPO"
+                , MY_DOC_REPO: "MY_DOC_REPO"
+                , PERSON: "PERSON"
+                , ORGANIZATION: "ORGANIZATION"
+
             }
 
             , LockTypes: {
@@ -61,7 +65,6 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     function (objectTypes) {
                         var found = _.find(objectTypes, {key: objTypeKey});
                         var objType = Util.goodMapValue(found, "type");
-
                         if (Util.goodMapValue(found, "state", false)) {
                             var params = {id: objId, type: objType};
                             $state.transitionTo(found.state, params, {reload: true, notify: true});
@@ -83,7 +86,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     }
                 );
             }
-            
+
             /**
              * @ngdoc method
              * @name openObject
@@ -101,10 +104,10 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
             , openObject: function (targetId, parentId, parentType, fileName) {
                 var baseUrl = window.location.href.split('!')[0];
                 var urlArgs = targetId + "/" + parentId + "/" + parentType + "/" + fileName + "/" + targetId;
- 
+
                 window.open(baseUrl + '!/viewer/' + urlArgs);
             }
-            
+
         };
     }
 ]);

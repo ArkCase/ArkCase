@@ -9,9 +9,12 @@
     "security.ldapConfig.table.ldapUrl": "ru_LDAP Url",
     "security.ldapConfig.table.directoryName": "ru_Directory Name",
     "security.ldapConfig.data": {
+      "userAttributesTemplate": "ru_Ldap User Attributes Template",
+      "groupAttributesTemplate": "ru_Ldap Group Attributes Template",
       "addNewDirectory": "ru_Add New Directory",
       "editRecord": "ru_Edit Record",
       "id": "ru_ID",
+      "directoryType": "ru_Select directory server",
       "ldapUrl": "ru_LDAP Url",
       "base": "ru_Base",
       "directoryName": "ru_Directory Name",
@@ -127,7 +130,12 @@
           "btn": {
             "cancel": "ru_Cancel",
             "ok": "ru_Add Ldap User"
-          }
+          },
+          "username": "ru_Enter username",
+          "firstName": "ru_Enter first name",
+          "lastName": "ru_Enter last name",
+          "email": "ru_Enter email",
+          "password": "ru_Enter password"
         },
         "editLdapMember": {
           "title": "ru_Edit Ldap Member",
@@ -136,7 +144,7 @@
             "ok": "ru_Edit Ldap User"
           }
         },
-        "username": "ru_Username",
+        "username": "ru_UserName",
         "firstName": "ru_FirstName",
         "lastName": "ru_LastName",
         "email": "ru_Email",
@@ -234,16 +242,25 @@
     },
     "workflows.config.btn": {
       "createNew": "ru_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "ru_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "ru_Download",
       "replaceFile": "ru_Replace File",
-      "versionHistory": "ru_Version History"
+      "versionHistory": "ru_Version History",
+      "diagram": "ru_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "ru_Successfully uploaded new process definition",
       "error": "ru_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "ru_Process Diagram",
+      "error.loading": "ru_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "ru_Close"
+      }
     },
     "formWorkflows.title": "ru_Form/Workflow Link",
     "formWorkflows.link": "ru_Link Forms/Workflows",

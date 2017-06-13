@@ -1,7 +1,11 @@
 package com.armedia.acm.service.outlook.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import java.util.List;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
 {
 
@@ -18,6 +22,8 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
     private List<Long> fileIds;
 
     private String baseUrl;
+
+    private String body;
 
     public String buildMessageBodyFromTemplate(String body)
     {
@@ -94,4 +100,13 @@ public class EmailWithEmbeddedLinksDTO extends MessageBodyFactory
         this.baseUrl = baseUrl;
     }
 
+    public String getBody()
+    {
+        return body;
+    }
+
+    public void setBody(String body)
+    {
+        this.body = body;
+    }
 }

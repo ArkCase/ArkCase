@@ -2,7 +2,9 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -21,6 +25,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "acm_container")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmContainer implements AcmEntity, Serializable, AcmObject
 {
 
@@ -53,10 +58,10 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_container_modifier")
     private String modifier;
 
-    @Column(name = "cm_object_type", insertable = true, updatable = false)
+    @Column(name = "cm_object_type", insertable = true, updatable = false, nullable = false)
     private String containerObjectType;
 
-    @Column(name = "cm_object_id", insertable = true, updatable = false)
+    @Column(name = "cm_object_id", insertable = true, updatable = false, nullable = false)
     private Long containerObjectId;
 
     @Column(name = "cm_object_title")
@@ -72,6 +77,29 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_outlook_folder_id", nullable = true)
     private String calendarFolderId;
+
+    @Column(name = "cm_cmis_repository_id", nullable = false)
+    private String cmisRepositoryId;
+
+    @PrePersist
+    protected void beforeInsert()
+    {
+        setDefaultCmisRepositoryId();
+    }
+
+    @PreUpdate
+    protected void beforeUpdate()
+    {
+        setDefaultCmisRepositoryId();
+    }
+
+    protected void setDefaultCmisRepositoryId()
+    {
+        if (getCmisRepositoryId() == null)
+        {
+            setCmisRepositoryId(EcmFileConstants.DEFAULT_CMIS_REPOSITORY_ID);
+        }
+    }
 
     @Override
     public Date getCreated()
@@ -199,6 +227,16 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.calendarFolderId = calendarFolderId;
     }
 
+    public String getCmisRepositoryId()
+    {
+        return cmisRepositoryId;
+    }
+
+    public void setCmisRepositoryId(String cmisRepositoryId)
+    {
+        this.cmisRepositoryId = cmisRepositoryId;
+    }
+
     @Override
     public String toString()
     {
@@ -214,6 +252,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
                 ", folder=" + folder +
                 ", attachmentFolder=" + attachmentFolder +
                 ", calendarFolderId='" + calendarFolderId + '\'' +
+                ", cmisRepositoryId='" + cmisRepositoryId + '\'' +
                 '}';
     }
 }

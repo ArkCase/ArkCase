@@ -22,6 +22,14 @@ angular
 
                 $httpProvider.interceptors.push(noCacheInterceptor);
 
+                $httpProvider.defaults.transformResponse.splice(0, 0, function (data, headersGetter) {
+                    var contentType = headersGetter()['content-type'] || '';
+                    if (data && contentType.indexOf('application/json') > -1) {
+                        return JSOG.parse(data);
+                    }
+                    return data;
+                });
+
                 function noCacheInterceptor() {
                     return {
                         request: function (config) {
@@ -172,12 +180,12 @@ angular
                 }
             }
         ]).run(['$translate', '$translatePartialLoader',
-            function ($translate, $translatePartialLoader) {
-                $translatePartialLoader.addPart('core');
-                $translatePartialLoader.addPart('welcome');
-                $translate.refresh();
-            }
-        ]);
+    function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('core');
+        $translatePartialLoader.addPart('welcome');
+        $translate.refresh();
+    }
+]);
 
 
 angular

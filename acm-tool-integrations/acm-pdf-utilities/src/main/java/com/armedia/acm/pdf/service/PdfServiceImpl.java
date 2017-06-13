@@ -3,7 +3,6 @@ package com.armedia.acm.pdf.service;
 import com.armedia.acm.pdf.PdfServiceException;
 import com.github.jaiimageio.impl.plugins.tiff.TIFFImageWriterSpi;
 import com.github.jaiimageio.plugins.tiff.TIFFImageWriteParam;
-
 import org.apache.fop.apps.FOPException;
 import org.apache.fop.apps.FOUserAgent;
 import org.apache.fop.apps.Fop;
@@ -31,9 +30,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
-
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
@@ -346,5 +347,45 @@ public class PdfServiceImpl implements PdfService
             throw new PdfServiceException(e);
         }
         log.debug("Multiple PDF documents successfully merged to [{}]", filename);
+    }
+
+    /**
+     * Create new document out of extracted pages from another document.
+     *
+     * @param is          input stream of the source document
+     * @param filename    source document filename
+     * @param pageNumbers list of page numbers (1-based) to be extracted from source
+     * @return new document stream
+     * @throws PdfServiceException on error creating extracted document
+     */
+    @Override
+    public InputStream extractPages(InputStream is, String filename, List<Integer> pageNumbers) throws PdfServiceException
+    {
+        try
+        {
+            PDDocument extractedDocument = new PDDocument();
+            PDDocument sourceDocument = PDDocument.load(is);
+            extractedDocument.setDocumentInformation(sourceDocument.getDocumentInformation());
+            extractedDocument.getDocumentCatalog().setViewerPreferences(sourceDocument.getDocumentCatalog().getViewerPreferences());
+
+            for (Integer pageNumber : pageNumbers)
+            {
+                PDPage page = sourceDocument.getPage(pageNumber - 1);
+                PDPage imported = extractedDocument.importPage(page);
+                imported.setCropBox(page.getCropBox());
+                imported.setMediaBox(page.getMediaBox());
+                imported.setResources(page.getResources());
+                imported.setRotation(page.getRotation());
+            }
+            log.debug("Successfully extracted pages from [{}]", filename);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            extractedDocument.save(baos);
+            // return input stream of newly generated document
+            return new ByteArrayInputStream(baos.toByteArray());
+        } catch (IOException | IndexOutOfBoundsException e)
+        {
+            log.error("Unable to extract pages from [{}]", filename, e);
+            throw new PdfServiceException(e);
+        }
     }
 }

@@ -46,6 +46,7 @@
     "_xxx_courtRoomName": "en-in_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "diagram.button": "en-in_Process Diagram",
     "eSignature.button": "en-in_Sign",
     "subscribe.button": "en-in_Subscribe",
     "unsubscribe.button": "en-in_Unsubscribe",
@@ -59,7 +60,8 @@
     "error.outcomeFieldMissing": "en-in_Cannot complete task because of missing required value",
     "modal": {
       "errorHeaderText": "en-in_Error",
-      "btnOk.text": "en-in_OK"
+      "btnOk.text": "en-in_OK",
+      "btnClose.text": "en-in_Close"
     }
   },
   "tasks.comp.details": {
@@ -82,10 +84,16 @@
   },
   "tasks.comp.parentdocs": {
     "title": "en-in_Parent Documents",
-    "noParentDataMessage": "en-in_No parent documents for standalone task"
+    "noParentDataMessage": "en-in_No parent documents for standalone task",
+    "sendEmail": "en-in_Send Email",
+    "filterInputPlaceholder": "en-in_Filter",
+    "searchInputPlaceholder": "en-in_Search"
   },
   "tasks.comp.attachments": {
-    "title": "en-in_Attachments"
+    "title": "en-in_Attachments",
+    "sendEmail": "en-in_Send Email",
+    "filterInputPlaceholder": "en-in_Filter",
+    "searchInputPlaceholder": "en-in_Search"
   },
   "tasks.comp.notes": {
     "title": "en-in_Notes",
@@ -122,6 +130,10 @@
       "startDateTime": "en-in_Start",
       "endDateTime": "en-in_End"
     }
+  },
+  "tasks.comp.diagram": {
+    "title": "en-in_Process Diagram",
+    "error.loading": "en-in_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
     "title": "en-in_eSignatures",

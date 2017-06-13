@@ -19,7 +19,10 @@ atlassian-ide-plugin.xml
 # Package Files #
 nbactions.xml
 partition-descriptor
-rebel.xml
 activemq-data
 logs
 ${user.home}
+
+# jrebel
+rebel.xml
+**/rebel.xml

@@ -1,0 +1,26 @@
+<div ng-controller="People.OrganizationsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>people.comp.organizations.title</span>
+                <div class="pull-right">
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs"
+                                ng-click="addOrganization()">
+                            <i class="fa fa-lg fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 adjust-table-height="gridOptions.data.length"
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 ui-grid-selection
+                 class="grid">
+            </div>
+        </div>
+    </div>
+</div>

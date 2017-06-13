@@ -106,7 +106,7 @@ angular.module('services').factory('DocTreeExt.WebDAV', ['$q', '$browser', '$loc
                         } else {
                             var df = $q.defer();
                             //check permission for lock
-                            PermissionsService.getActionPermission('lock', fileObject)
+                            PermissionsService.getActionPermission('lock', fileObject, {objectType: ObjectService.ObjectTypes.FILE})
                                 .then(function success(hasPermission) {
                                         if (hasPermission)
                                             df.resolve("");

@@ -26,6 +26,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
 
+            // For adhock tasks we don't have business process who can be shown with graphic,
+            // so don't show the button
+            $scope.showBtnDiagram = !$scope.objectInfo.adhocTask && $scope.objectInfo.businessProcessId != null;
             $scope.showBtnSignature = false;
             $scope.showBtnDelete = false;
             $scope.showBtnComplete = false;
@@ -39,7 +42,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                 //we should wait for userId before we compare it with assignee
                 if (!Util.isEmpty($scope.objectInfo.assignee)) {
                     if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
-                        if ($scope.objectInfo.adhocTask) {
+                        if ($scope.objectInfo.adhocTask || Util.isArrayEmpty($scope.objectInfo.availableOutcomes)) {
                             if (!Util.goodValue($scope.objectInfo.completed, false)) {
                                 $scope.showBtnSignature = true;
                                 $scope.showBtnDelete = true;
@@ -80,6 +83,29 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
         //];
 
+        $scope.diagram = function () {
+            var modalInstance = $modal.open({
+                templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
+                controller: 'Tasks.DiagramModalController',
+                windowClass: 'modal-width-80',
+                resolve:{
+                    taskId: function(){
+                        return $scope.objectInfo.taskId;
+                    },
+                    showLoader: function() {
+                        return true;
+                    },
+                    showError: function() {
+                        return false;
+                    }
+                }
+            });
+            modalInstance.result.then(function (result) {
+                if (result) {
+                    // Do nothing
+                }
+            });
+        };
 
         $scope.sign = function () {
             var modalInstance = $modal.open({

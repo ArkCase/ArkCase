@@ -47,14 +47,22 @@
                     <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
-                <bean id="emailWithAttachmentsUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="emailWithAttachmentsUrlPost"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/email/withattachments"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
-                <bean id="emailWithEmbeddedLinksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="emailWithEmbeddedLinksUrlPost"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/email/withembeddedlinks"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean id="emailWithAttachmentsAndLinksUrlPost"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/plugin/outlook/email/withattachmentsandlinks"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
             </list>

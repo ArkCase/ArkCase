@@ -8,7 +8,7 @@
       "menuItemTitle": "admin.menus.leftnav.item",
       "moduleId": "admin",
       "iconClass": "fa fa-wrench",
-      "position": 150
+      "position": 200
     }
   ],
   "components": [
@@ -18,6 +18,16 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "directoryTypes": [
+        {
+          "name": "OpenLDAP",
+          "value": "openldap"
+        },
+        {
+          "name": "Active Directory",
+          "value": "activedirectory"
+        }
+      ],
       "columnDefs": [
         {
           "name": "authUserDn",
@@ -72,6 +82,22 @@
           "displayName": "admin.security.ldapConfig.data.userSearchBase",
           "visible": false,
           "headerCellFilter": "translate"
+        }
+      ]
+    },{
+      "id": "securityCalendarConfig",
+      "configurableObjectTypes": [
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.cases.label",
+          "id": "CASE_FILE"
+        },
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
+          "id": "COMPLAINT"
+        },
+        {
+          "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.tasks.label",
+          "id": "TASK"
         }
       ]
     },
@@ -141,7 +167,9 @@
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingVersion",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {
@@ -265,7 +293,9 @@
           "displayName": "admin.correspondenceManagement.templates.grid.version",
           "visible": true,
           "headerCellFilter": "translate",
-          "sort" : {"direction": "desc"},
+          "sort": {
+            "direction": "desc"
+          },
           "width": 80
         },
         {
@@ -445,7 +475,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         },
         {
           "name": "modifier",
@@ -505,7 +536,8 @@
           "name": "creator",
           "displayName": "admin.workflows.config.grid.creator",
           "visible": true,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
@@ -565,6 +597,105 @@
         "LDAP_GROUP",
         "ADHOC_GROUP"
       ]
+    },
+    {
+      "id": "cmisConfiguration",
+      "title": "CMIS Configuration Grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.id.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "baseUrl",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.baseUrl.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "username",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.username.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "password",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.password.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "useAlfrescoExtension",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.useAlfrescoExtension.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "endpoint",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.endpoint.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxIdle",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxIdle.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxActive",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxActive.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "maxWait",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.maxWait.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "minEvictionMillis",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.minEvictionMillis.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "evictionCheckIntervalMillis",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.evictionCheckIntervalMillis.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "reconnectCount",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectCount.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "reconnectFrequency",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.reconnectFrequency.label",
+          "visible": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "repositoryId",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.repositoryId.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "versioningState",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.versioningState.label",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [
@@ -592,6 +723,18 @@
         {
           "title": "admin.security.modules",
           "templateName": "security.modules"
+        },
+        {
+          "title": "admin.security.calendarConfiguration.title",
+          "templateName": "security-calendar-configuration"
+		},
+		{
+          "title": "admin.security.emailConfiguration.title",
+          "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.exchangeConfiguration.title",
+          "templateName": "security-exchange-configuration"
         }
       ]
     },
@@ -704,6 +847,17 @@
         {
           "title": "admin.correspondenceManagement.templates",
           "templateName": "correspondence-management-templates"
+        }
+      ]
+    },
+    {
+      "title": "admin.documentManagement.title",
+      "folder": "true",
+      "expanded": "true",
+      "children": [
+        {
+          "title": "admin.documentManagement.cmisConfiguration",
+          "templateName": "cmis-configuration"
         }
       ]
     }
