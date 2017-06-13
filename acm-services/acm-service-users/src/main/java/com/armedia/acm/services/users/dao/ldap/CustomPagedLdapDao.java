@@ -25,14 +25,14 @@ public class CustomPagedLdapDao implements SpringLdapDao
     @Override
     public List<AcmUser> findUsersPaged(LdapTemplate template, AcmLdapSyncConfig syncConfig)
     {
-        return findUsers(template, syncConfig, AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+        return findUsers(template, syncConfig, syncConfig.getUserSyncAttributes());
     }
 
     public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        if (attributes != null)
+        if (ArrayUtils.isNotEmpty(attributes))
         {
             String[] allAttributes = ArrayUtils.addAll(attributes, syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
             searchControls.setReturningAttributes(allAttributes);
@@ -62,7 +62,6 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 {
                     acmUsers.addAll(found);
                 }
-
 
                 String usersFound = found.stream().map(u -> u.getDistinguishedName()).collect(Collectors.joining("\n"));
 
@@ -114,9 +113,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[]{
-                "cn",
-                "memberOf"});
+        searchControls.setReturningAttributes(new String[] { "cn", "memberOf" });
 
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(config, config.getGroupsSortingAttribute());
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(config);
