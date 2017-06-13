@@ -67,7 +67,7 @@
 
     <changeSet id="04-add-discriminator-column-extensibility" author="alex.mo">
         <addColumn tableName="acm_document_repository">
-            <column name="cm_class_name" type="VARCHAR(1024)">
+            <column name="cm_class_name" type="VARCHAR(1024)" defaultValue="com.armedia.acm.plugins.documentrepository.model.DocumentRepository">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

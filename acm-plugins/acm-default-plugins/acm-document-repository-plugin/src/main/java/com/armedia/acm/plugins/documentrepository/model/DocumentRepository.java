@@ -149,6 +149,10 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         }
         setNameUpperCase(getName().toUpperCase());
         setupChildPointers();
+         if(repositoryType == null)
+         {
+            repositoryType = DocumentRepositoryType.GENERAL;
+        }
     }
 
     private void setupChildPointers()
