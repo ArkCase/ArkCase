@@ -15,6 +15,9 @@
         "selectAudit": "ALL",
         "inputId": "#"
       },
+      "checkBox": {
+        "xmlReport": "Show as XML"
+      },
       "button": {
         "generateAuditReport.btn": "Generate Audit Report"
       }
