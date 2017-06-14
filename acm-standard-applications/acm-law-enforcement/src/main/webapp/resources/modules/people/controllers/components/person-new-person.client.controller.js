@@ -218,10 +218,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     setOrganizationAssociation(association, data);
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        //FIXME not sure why angular doesn't remove ($promise, $resolved) when sending so I need to remove them manually
-                        delete organization['$promise'];
-                        delete organization['$resolved'];
-                        data['organization'] = organization;
+                        data.organization = organization;
                         setOrganizationAssociation(association, data);
                     });
                 }

@@ -60,7 +60,8 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             get: {
                 method: 'GET',
                 url: 'api/latest/plugin/organizations/:id',
-                cache: false
+                cache: false,
+                isArray: false
             }
         });
 

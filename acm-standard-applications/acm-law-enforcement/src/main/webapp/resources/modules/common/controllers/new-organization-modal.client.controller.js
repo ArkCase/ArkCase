@@ -71,9 +71,6 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
                     OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (response) {
-                        //FIXME ugly hack - saving organization fails because those properties are not removed when angular converts to JSON
-                        delete response.$promise;
-                        delete response.$resolved;
                         $scope.organization.parentOrganization = response;
                     });
                 }
@@ -139,9 +136,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
                     }
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        delete person['$promise'];
-                        delete person['$resolved'];
-                        data['person'] = person;
+                        data.person = person;
                         setPersonAssociation(association, data);
                     });
                 }
