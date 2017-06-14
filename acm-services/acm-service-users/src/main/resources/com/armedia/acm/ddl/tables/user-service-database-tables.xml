@@ -474,4 +474,10 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski">
+        <comment>Removed not null constraint on cm_user_deleted_at</comment>
+        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"
+                               columnDataType="${timestampType}"/>
+    </changeSet>
+
 </databaseChangeLog>

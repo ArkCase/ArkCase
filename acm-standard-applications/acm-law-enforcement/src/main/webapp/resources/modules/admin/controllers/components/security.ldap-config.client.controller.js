@@ -105,6 +105,9 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             var modalScope = $scope.$new();
             modalScope.dir = dir || {};
             modalScope.isEdit = isEdit || false;
+            if (!modalScope.isEdit) {
+                modalScope.dir.enableEditingLdapUsers = false;
+            }
             modalScope.directoryTypes = $scope.directoryTypes;
 
             var modalInstance = $modal.open({
