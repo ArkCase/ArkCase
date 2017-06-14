@@ -59,7 +59,8 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             get: {
                 method: 'GET',
                 url: 'api/latest/plugin/people/:id',
-                cache: false
+                cache: false,
+                isArray: false
             }
 
         });
