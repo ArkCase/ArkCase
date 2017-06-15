@@ -13,6 +13,15 @@
                     <div ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
                     <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
 
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="showXmlReport">
+                            <span translate>
+                                reports.checkBox.xmlReport
+                            </span>
+                        </label>
+                    </div>
+
                     <div>
                         <button class="btn btn-sm btn-primary" ng-click="generateReport()"
                                 ng-disabled="!data.reportSelected">
@@ -24,11 +33,15 @@
         </div>
 
         <div class="content-body">
-            <iframe name="reports-iframe"
-                    class="reports-iframe"
-                    frameborder="0"
-                    ng-src="{{reportUrl}}">
-            </iframe>
+            <div ng-switch on="showXmlReport">
+                <div ng-switch-when="false">
+                    <iframe name="reports-iframe"
+                         class="reports-iframe"
+                         frameborder="0"
+                         ng-src="{{reportUrl}}">
+                    </iframe>
+                </div>
+            </div>
         </div>
     </div>
 </div>
