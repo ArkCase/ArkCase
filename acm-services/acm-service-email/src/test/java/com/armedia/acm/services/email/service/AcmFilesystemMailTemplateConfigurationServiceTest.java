@@ -54,8 +54,6 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
      */
     private static final String ABSOLUTE_PATH_TO_RESOURCE = "absolute_path_to_resource";
 
-    private static final String TEMPLATES_FOLDER_NAME = "templates";
-
     private static final String EMAIL_PATTERN = ".*";
 
     private static final String CASE_FILE = "CASE_FILE";
@@ -83,7 +81,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     @Before
     public void setUp() throws Exception
     {
-        service.setTemplateFolderPath(TEMPLATES_FOLDER_NAME);
+        service.setTemplateFolderPath(getTemplatesFolderPath());
     }
 
     @After
@@ -492,8 +490,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
     private String getTemplatesFolderPath()
     {
-        return System.getProperty("user.home") + File.separator + ".arkcase" + File.separator + "acm" + File.separator
-                + TEMPLATES_FOLDER_NAME;
+        return System.getProperty("user.dir");
     }
 
 }
