@@ -25,7 +25,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
-@PrepareForTest(AcmFilesystemMailTemplateConfigurationService.class)
 public class AcmFilesystemMailTemplateConfigurationServiceTest
 {
 
