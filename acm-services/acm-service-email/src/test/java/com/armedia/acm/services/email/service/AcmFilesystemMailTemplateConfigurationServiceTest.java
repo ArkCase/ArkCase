@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -24,7 +25,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.core.io.FileSystemResource;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -45,8 +47,14 @@ import java.util.stream.Collectors;
  *
  */
 @RunWith(MockitoJUnitRunner.class)
+@PrepareForTest(AcmFilesystemMailTemplateConfigurationService.class)
 public class AcmFilesystemMailTemplateConfigurationServiceTest
 {
+
+    /**
+     *
+     */
+    private static final String ABSOLUTE_PATH_TO_RESOURCE = "absolute_path_to_resource";
 
     private static final String TEMPLATES_FOLDER_NAME = "templates";
 
@@ -63,7 +71,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     private static final String SEND_AS_LINKS = "sendAsLinks";
 
     @Mock
-    private FileSystemResource templateConfigurations;
+    private Resource templateConfigurations;
 
     @Mock
     private File mockedConfigurationsFile;
@@ -142,7 +150,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         // given
         IOException ioException = new IOException();
         when(templateConfigurations.getInputStream()).thenThrow(ioException);
-        when(templateConfigurations.getDescription()).thenReturn("absolute_path_to_resource");
+        when(templateConfigurations.getDescription()).thenReturn(ABSOLUTE_PATH_TO_RESOURCE);
         exception.expect(AcmEmailConfigurationException.class);
         exception.expectMessage(is(
                 String.format("Error while reading email templates configuration from %s file.", templateConfigurations.getDescription())));
@@ -163,17 +171,18 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void testUpdateEmailTemplate_EmptyConfiguration() throws Exception
     {
         // given
+        AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         when(templateConfigurations.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {}));
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
         when(mockedConfigurationsFile.length()).thenReturn(0l);
-        when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN, Arrays.asList(CASE_FILE, COMPLAINT),
                 EmailSource.MANUAL, TEMPLATE_NAME, Arrays.asList(SEND_AS_ATTACHMENTS, SEND_AS_LINKS));
         MockMultipartFile template = spy(new MockMultipartFile("file", "", MediaType.TEXT_PLAIN_VALUE, "template".getBytes("UTF-8")));
 
         // when
-        service.updateEmailTemplate(configuration, template);
+        serviceSpy.updateEmailTemplate(configuration, template);
 
         // then
         ObjectMapper objectMapper = new ObjectMapper();
@@ -210,18 +219,20 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void testUpdateEmailTemplate_UpdateExisting() throws Exception
     {
         // given
+        AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
         when(mockedConfigurationsFile.length()).thenReturn(0l);
-        when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
+        // when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN + EMAIL_PATTERN, Arrays.asList(CASE_FILE),
                 EmailSource.AUTOMATED, TEMPLATE_NAME, Arrays.asList(SEND_AS_LINKS));
         MockMultipartFile template = spy(new MockMultipartFile("file", "", MediaType.TEXT_PLAIN_VALUE, "template".getBytes("UTF-8")));
 
         // when
-        service.updateEmailTemplate(configuration, template);
+        serviceSpy.updateEmailTemplate(configuration, template);
 
         // then
         ObjectMapper objectMapper = new ObjectMapper();
@@ -256,18 +267,19 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void testUpdateEmailTemplate_AddNew() throws Exception
     {
         // given
+        AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
         when(mockedConfigurationsFile.length()).thenReturn(0l);
-        when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN + EMAIL_PATTERN, Arrays.asList(CASE_FILE),
                 EmailSource.AUTOMATED, TEMPLATE_NAME + "_2", Arrays.asList(SEND_AS_LINKS));
         MockMultipartFile template = spy(new MockMultipartFile("file", "", MediaType.TEXT_PLAIN_VALUE, "template".getBytes("UTF-8")));
 
         // when
-        service.updateEmailTemplate(configuration, template);
+        serviceSpy.updateEmailTemplate(configuration, template);
 
         // then
         ObjectMapper objectMapper = new ObjectMapper();
@@ -308,9 +320,8 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         // given
         IOException ioException = new IOException();
         when(templateConfigurations.getInputStream()).thenThrow(ioException);
-        when(templateConfigurations.getDescription()).thenReturn("absolute_path_to_resource");
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(10l);
+        when(templateConfigurations.getDescription()).thenReturn(ABSOLUTE_PATH_TO_RESOURCE);
+        when(templateConfigurations.contentLength()).thenReturn(10l);
         exception.expect(AcmEmailConfigurationIOException.class);
         exception.expectMessage(is(
                 String.format("Error while reading email templates configuration from %s file.", templateConfigurations.getDescription())));
@@ -337,11 +348,10 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
         IOException ioException = new IOException();
-        when(templateConfigurations.getOutputStream()).thenThrow(ioException);
-        when(templateConfigurations.getDescription()).thenReturn("absolute_path_to_resource");
+        when(templateConfigurations.getFile()).thenThrow(ioException);
+        when(templateConfigurations.getDescription()).thenReturn(ABSOLUTE_PATH_TO_RESOURCE);
         exception.expect(AcmEmailConfigurationException.class);
-        exception.expectMessage(is(String.format(
-                "Error while updating email template configuration for configuration with %s value for templateName.", TEMPLATE_NAME)));
+        exception.expectMessage(is(String.format("Error while opening configuration %s file.", ABSOLUTE_PATH_TO_RESOURCE)));
         exception.expectCause(is(ioException));
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN, Arrays.asList(CASE_FILE, COMPLAINT),
                 EmailSource.MANUAL, TEMPLATE_NAME, Arrays.asList(SEND_AS_ATTACHMENTS, SEND_AS_LINKS));

@@ -10,7 +10,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +90,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private FileSystemResource templateConfigurations;
+    private Resource templateConfigurations;
 
     private String templateFolderPath;
 
@@ -145,13 +146,13 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             configurations = getTemplateConfigurations();
         } catch (AcmEmailConfigurationException e)
         {
-            if (templateConfigurations.getFile().length() == 0)
+            if (isTemplateConfigurationFileEmpty())
             {
                 configurations = new ArrayList<>();
             } else
             {
-                // just re-throw here, if the error was during reading of the configuration it is already logged in the
-                // 'getTemplateConfigurations()' method.
+                // just re-throw here, if the error was during reading of the configuration it is already logged in
+                // the 'getTemplateConfigurations()' method.
                 throw e;
             }
         }
@@ -181,11 +182,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
         Lock writeLock = lock.writeLock();
         writeLock.lock();
-        try (OutputStream os = templateConfigurations.getOutputStream())
+        try (OutputStream os = getTemplateResourceOutputStream())
         {
             mapper.writeValue(os, configurations);
-            File templateFile = new File(templateFolder, templateData.getTemplateName());
-            template.transferTo(templateFile);
+            if (template != null)
+            {
+                File templateFile = new File(templateFolder, templateData.getTemplateName());
+                template.transferTo(templateFile);
+            }
         } catch (JsonParseException | JsonMappingException e)
         {
             log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(), e);
@@ -204,6 +208,23 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             writeLock.unlock();
         }
 
+    }
+
+    /**
+     * @return
+     * @throws IOException
+     */
+    private boolean isTemplateConfigurationFileEmpty() throws AcmEmailConfigurationException
+    {
+        try
+        {
+            return templateConfigurations.contentLength() == 0;
+        } catch (IOException e)
+        {
+            log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
+            throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
+                    templateConfigurations.getDescription()), e);
+        }
     }
 
     /*
@@ -271,7 +292,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             ObjectMapper mapper = new ObjectMapper();
             Lock writeLock = lock.writeLock();
             writeLock.lock();
-            try (OutputStream os = templateConfigurations.getOutputStream())
+            try (OutputStream os = getTemplateResourceOutputStream())
             {
                 mapper.writeValue(os, configurations);
                 Files.deleteIfExists(templateFile.toPath());
@@ -314,11 +335,27 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                 + templateFolderPath);
     }
 
+    // TODO: TECHNICAL DEBT, this method should be private. Was made package access since inclusion of powermock for
+    // testing was problematic. The access restriction was relaxed to enable stubbing with mockito without using the
+    // powermock functionality.
+    OutputStream getTemplateResourceOutputStream() throws AcmEmailConfigurationIOException
+    {
+        try
+        {
+            return Files.newOutputStream(templateConfigurations.getFile().toPath(), StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException e)
+        {
+            log.warn("Error while opening configuration {} file.", templateConfigurations.getDescription(), e);
+            throw new AcmEmailConfigurationIOException(
+                    String.format("Error while opening configuration %s file.", templateConfigurations.getDescription()), e);
+        }
+    }
+
     /**
      * @param templateConfigurations
      *            the templateConfigurations to set
      */
-    public void setTemplateConfigurations(FileSystemResource templateConfigurations)
+    public void setTemplateConfigurations(Resource templateConfigurations)
     {
         this.templateConfigurations = templateConfigurations;
     }
