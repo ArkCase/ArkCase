@@ -43,7 +43,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 8, 2017
      *
      */
-    public class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
+    private class FilesystemMailTemplateConfigurationExceptionMapper<ME extends AcmEmailServiceException>
             implements AcmEmailServiceExceptionMapper<ME>
     {
 
@@ -140,6 +140,48 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     {
         File templateFolder = getTemplateFolder();
 
+        List<EmailTemplateConfiguration> configurations = getTemplateConfigurations(templateData);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Lock writeLock = lock.writeLock();
+        writeLock.lock();
+        try (OutputStream os = getTemplateResourceOutputStream())
+        {
+            mapper.writeValue(os, configurations);
+            if (template != null)
+            {
+                File templateFile = new File(templateFolder, templateData.getTemplateName());
+                template.transferTo(templateFile);
+            }
+        } catch (JsonParseException | JsonMappingException e)
+        {
+            log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(), e);
+            throw new AcmEmailConfigurationJsonException(String.format("Error while serializing email templates configuration to %s file.",
+                    templateConfigurations.getDescription()), e);
+        } catch (IOException e)
+        {
+            log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
+                    templateData.getTemplateName(), e);
+            throw new AcmEmailConfigurationIOException(
+                    String.format("Error while updating email template configuration for configuration with %s value for templateName.",
+                            templateData.getTemplateName()),
+                    e);
+        } finally
+        {
+            writeLock.unlock();
+        }
+
+    }
+
+    /**
+     * @param templateData
+     * @return
+     * @throws AcmEmailConfigurationException
+     */
+    private List<EmailTemplateConfiguration> getTemplateConfigurations(EmailTemplateConfiguration templateData)
+            throws AcmEmailConfigurationException
+    {
         List<EmailTemplateConfiguration> configurations;
         try
         {
@@ -177,37 +219,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         {
             configurations.add(templateData);
         }
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        Lock writeLock = lock.writeLock();
-        writeLock.lock();
-        try (OutputStream os = getTemplateResourceOutputStream())
-        {
-            mapper.writeValue(os, configurations);
-            if (template != null)
-            {
-                File templateFile = new File(templateFolder, templateData.getTemplateName());
-                template.transferTo(templateFile);
-            }
-        } catch (JsonParseException | JsonMappingException e)
-        {
-            log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(), e);
-            throw new AcmEmailConfigurationJsonException(String.format("Error while serializing email templates configuration to %s file.",
-                    templateConfigurations.getDescription()), e);
-        } catch (IOException e)
-        {
-            log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
-                    templateData.getTemplateName(), e);
-            throw new AcmEmailConfigurationIOException(
-                    String.format("Error while updating email template configuration for configuration with %s value for templateName.",
-                            templateData.getTemplateName()),
-                    e);
-        } finally
-        {
-            writeLock.unlock();
-        }
-
+        return configurations;
     }
 
     /**
