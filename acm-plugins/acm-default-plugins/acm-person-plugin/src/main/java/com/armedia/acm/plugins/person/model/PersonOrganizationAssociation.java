@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -70,9 +72,11 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     private String organizationToPersonAssociationType;
 
     @Column(name = "cm_primary_contact")
+    @Convert(converter = BooleanToStringConverter.class)
     private boolean primaryContact;
 
     @Column(name = "cm_default_organization")
+    @Convert(converter = BooleanToStringConverter.class)
     private boolean defaultOrganization;
 
     @Column(name = "cm_created", nullable = false, updatable = false)
