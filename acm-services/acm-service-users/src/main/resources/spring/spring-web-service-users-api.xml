@@ -21,10 +21,6 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
-    <bean id="ldapUserManagementAPIController" class="com.armedia.acm.services.users.web.api.LdapUserManagementAPIController">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-    </bean>
-
     <bean id="getGroupSupervisorAPIController"
           class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
         <property name="groupDao" ref="groupDao"/>
