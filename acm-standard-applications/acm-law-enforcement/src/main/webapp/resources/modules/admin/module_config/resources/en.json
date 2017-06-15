@@ -235,7 +235,8 @@
     "security.modules.module": "Module",
     "security.ldap.user.management":{
       "title": "LDAP User Management",
-      "cloneButton": "Clone User"
+      "cloneButton": "Clone User",
+      "user": "User"
     },
     "security.calendarConfiguration": {
       "title": "Calendar Configuration",
