@@ -2,9 +2,6 @@
 
 angular.module('dashboard.my-tasks', ['adf.provider'])
     .config(function (ArkCaseDashboardProvider) {
-
-    	console.log("=============================in dashboard.my-tasks.config=============================");
-
         ArkCaseDashboardProvider
             .widget('myTasks', {
                     title: 'dashboard.widgets.myTasks.title',

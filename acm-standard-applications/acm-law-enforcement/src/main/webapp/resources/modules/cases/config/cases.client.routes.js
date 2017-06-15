@@ -3,9 +3,6 @@
 //Setting up route
 angular.module('cases').config(['$stateProvider',
     function ($stateProvider) {
-
-    console.log("=============================in cases.config=============================");
-
         // Project state routing
         $stateProvider
             .state('cases', {
