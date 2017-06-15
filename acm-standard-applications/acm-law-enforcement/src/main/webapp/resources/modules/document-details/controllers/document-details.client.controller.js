@@ -20,6 +20,7 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
             name: $stateParams['name'],
             selectedIds: $stateParams['selectedIds']
         };
+        $scope.showVideoPlayer = false;
         
         /**
          * Builds the snowbound url based on the parameters passed into the controller state and opens the
@@ -84,8 +85,26 @@ angular.module('document-details').controller('DocumentDetailsController', ['$sc
                     $scope.fileType = $scope.ecmFile.fileType;
                 }
 
-                // Opens the selected document in the snowbound viewer
+                $scope.mediaType = $scope.ecmFile.fileActiveVersionMimeType.indexOf("video") === 0 ? "video" : ($scope.ecmFile.fileActiveVersionMimeType.indexOf("audio") === 0 ? "audio" : "other"); 
+                
+                if ($scope.mediaType === "video" || $scope.mediaType === "audio") {
+                    $scope.config = {
+                            sources: [
+                                {src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.ecmFile.fileId), type: $scope.ecmFile.fileActiveVersionMimeType}
+                            ],
+                            theme: "lib/videogular-themes-default/videogular.css",
+                            plugins: {
+                                poster: "branding/loginlogo.png"
+                            },
+                            autoPlay: false
+                        };
+                    $scope.showVideoPlayer = true;
+                } else {
+                    // Opens the selected document in the snowbound viewer
                     $scope.openSnowboundViewer();
+                }
+                
+                
                 }
             );
     }

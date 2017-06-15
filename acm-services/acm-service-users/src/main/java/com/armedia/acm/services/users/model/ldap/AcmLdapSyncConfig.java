@@ -2,7 +2,6 @@ package com.armedia.acm.services.users.model.ldap;
 
 import java.util.Map;
 
-
 public class AcmLdapSyncConfig extends AcmLdapConfig
 {
     private String groupSearchBase;
@@ -19,6 +18,7 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String allUsersPageFilter;
     private String groupSearchPageFilter;
     private String groupsSortingAttribute;
+    private String[] userSyncAttributes;
 
     public Map<String, String> getRoleToGroupMap()
     {
@@ -158,5 +158,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupsSortingAttribute(String groupsSortingAttribute)
     {
         this.groupsSortingAttribute = groupsSortingAttribute;
+    }
+
+    public String[] getUserSyncAttributes()
+    {
+        return userSyncAttributes;
+    }
+
+    public void setUserSyncAttributes(String[] userSyncAttributes)
+    {
+        this.userSyncAttributes = userSyncAttributes;
     }
 }
