@@ -4,6 +4,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import org.apache.commons.io.FileUtils;
+import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -34,11 +36,13 @@ public class AlfrescoSyncServiceTest
 
     private ApplicationEventPublisher applicationEventPublisher = EasyMock.createMock(ApplicationEventPublisher.class);
 
-    private EcmAuditResponseReader ecmAuditResponseReader = new AlfrescoNodeServiceCreateNodeAuditResponseReader();
+    private EcmAuditResponseReader firstEcmAuditResponseReader = new AlfrescoNodeServiceCreateNodeAuditResponseReader();
+    private EcmAuditResponseReader secondEcmAuditResponseReader = new AlfrescoFileFolderServiceCreateAuditResponseReader();
 
     private String auditApplicationLastAuditIdProperties = "/home/arkuser/path/to/lastAuditId.properties";
 
-    private JSONObject auditResponse;
+    private JSONObject firstAuditResponse;
+    private JSONObject secondAuditResponse;
 
     private JSONObject emptyAuditResponse;
 
@@ -53,13 +57,17 @@ public class AlfrescoSyncServiceTest
         unit.setApplicationEventPublisher(applicationEventPublisher);
 
         Map<String, EcmAuditResponseReader> applications = new HashMap<>();
-        applications.put("applicationOne", ecmAuditResponseReader);
-        applications.put("applicationTwo", ecmAuditResponseReader);
+        applications.put("applicationOne", firstEcmAuditResponseReader);
+        applications.put("applicationTwo", secondEcmAuditResponseReader);
         unit.setAuditApplications(applications);
 
-        final Resource auditResponseResource = new ClassPathResource("json/SampleAlfrescoNodeServiceCreateNodeAuditResponse.json");
-        String auditResponseString = FileUtils.readFileToString(auditResponseResource.getFile());
-        auditResponse = new JSONObject(auditResponseString);
+        final Resource firstAuditResponseResource = new ClassPathResource("json/SampleAlfrescoNodeServiceCreateNodeAuditResponse.json");
+        String firstAuditResponseString = FileUtils.readFileToString(firstAuditResponseResource.getFile());
+        firstAuditResponse = new JSONObject(firstAuditResponseString);
+
+        final Resource secondAuditResponseResource = new ClassPathResource("json/SampleAlfrescoFileFolderServiceCreateAuditResponse.json");
+        String secondAuditResponseString = FileUtils.readFileToString(secondAuditResponseResource.getFile());
+        secondAuditResponse = new JSONObject(secondAuditResponseString);
 
         final Resource emptyAuditResponseResource = new ClassPathResource("json/SampleAlfrescoEmptyAuditResponse.json");
         String emptyAuditResponseString = FileUtils.readFileToString(emptyAuditResponseResource.getFile());
@@ -70,27 +78,44 @@ public class AlfrescoSyncServiceTest
     public void queryAlfrescoAuditApplications() throws Exception
     {
 
-        for (Map.Entry<String, EcmAuditResponseReader> app : unit.getAuditApplications().entrySet())
-        {
-            // generate random audit id from 10 to 10,000
-            Long randomAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
 
-            expect(propertyFileManager.load(auditApplicationLastAuditIdProperties, app.getKey() + ".lastAuditId", "0"))
-                    .andReturn(String.valueOf(randomAuditId));
+        // generate random audit id from 10 to 10,000
+        Long firstAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
+        Long secondAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
 
-            // we want to start from the next audit record... so we don't retrieve the last one we got before
-            expect(auditApplicationRestClient.service(app.getKey(), randomAuditId + 1)).andReturn(auditResponse);
+        expect(propertyFileManager.load(auditApplicationLastAuditIdProperties, "applicationOne.lastAuditId", "0"))
+                .andReturn(String.valueOf(firstAppAuditId));
+        expect(propertyFileManager.load(auditApplicationLastAuditIdProperties, "applicationTwo.lastAuditId", "0"))
+                .andReturn(String.valueOf(secondAppAuditId));
 
-            // the last audit ID in our sample audit response is 61
-            propertyFileManager.storeMultiple(
-                    Collections.singletonMap(app.getKey() + ".lastAuditId", "61"),
-                    auditApplicationLastAuditIdProperties,
-                    false);
+        // we want to start from the next audit record... so we don't retrieve the last one we got before
+        expect(auditApplicationRestClient.service("applicationOne", firstAppAuditId + 1)).andReturn(firstAuditResponse);
+        expect(auditApplicationRestClient.service("applicationTwo", secondAppAuditId + 1)).andReturn(secondAuditResponse);
 
-            // our sample response has 3 events
-            applicationEventPublisher.publishEvent(anyObject(EcmEvent.class));
-            expectLastCall().times(3);
-        }
+        // the last audit ID in the first audit response is 61
+        propertyFileManager.storeMultiple(
+                Collections.singletonMap("applicationOne.lastAuditId", "61"),
+                auditApplicationLastAuditIdProperties,
+                false);
+        // the last audit ID in the second audit response is 91
+        propertyFileManager.storeMultiple(
+                Collections.singletonMap("applicationTwo.lastAuditId", "91"),
+                auditApplicationLastAuditIdProperties,
+                false);
+
+        // 3 events from the first audit app, and 2 events from the second.  The events should be published
+        // by order of the audit id in each event: 42, 52, 55, 57, 91
+        Capture<EcmEvent> first = Capture.newInstance();
+        Capture<EcmEvent> second = Capture.newInstance();
+        Capture<EcmEvent> third = Capture.newInstance();
+        Capture<EcmEvent> fourth = Capture.newInstance();
+        Capture<EcmEvent> fifth = Capture.newInstance();
+        applicationEventPublisher.publishEvent(capture(first));
+        applicationEventPublisher.publishEvent(capture(second));
+        applicationEventPublisher.publishEvent(capture(third));
+        applicationEventPublisher.publishEvent(capture(fourth));
+        applicationEventPublisher.publishEvent(capture(fifth));
+
 
         replay(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
 
@@ -98,6 +123,11 @@ public class AlfrescoSyncServiceTest
 
         verify(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
 
+        assertEquals(42, first.getValue().getAuditId());
+        assertEquals(52, second.getValue().getAuditId());
+        assertEquals(55, third.getValue().getAuditId());
+        assertEquals(57, fourth.getValue().getAuditId());
+        assertEquals(91, fifth.getValue().getAuditId());
 
     }
 

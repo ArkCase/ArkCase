@@ -99,7 +99,7 @@ angular.module('directives').controller('directives.DocTreeMediaDialogController
             $scope.config = {
                 sources: [
                     {
-                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/video/' + $scope.nodes[0].data.objectId),
+                        src: $sce.trustAsResourceUrl('api/latest/plugin/ecm/stream/' + $scope.nodes[0].data.objectId),
                         type: $scope.nodes[0].data.mimeType
                     }
                 ],
