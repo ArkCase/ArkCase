@@ -121,8 +121,7 @@ public class SpringLdapDaoIT
 
         String userName = "ann-acm";
         long start = System.currentTimeMillis();
-        AcmUser acmUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
-                AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+        AcmUser acmUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig, acmSyncLdapConfig.getUserSyncAttributes());
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("User found: {}", acmUser.getDistinguishedName());

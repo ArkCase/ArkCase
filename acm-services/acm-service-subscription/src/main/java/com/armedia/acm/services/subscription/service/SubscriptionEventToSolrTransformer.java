@@ -1,6 +1,7 @@
 package com.armedia.acm.services.subscription.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+import com.armedia.acm.services.notification.service.NotificationFormatter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -21,6 +22,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     private SubscriptionEventDao subscriptionEventDao;
     private AcmPlugin subscriptionEventPlugin;
     private UserDao userDao;
+    private NotificationFormatter notificationFormater;
 
     @Override
     public List<AcmSubscriptionEvent> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -54,7 +56,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         {
             title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
         }
-        solr.setTitle_parseable(title);
+        solr.setTitle_parseable(notificationFormater.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
 
         if (in.getEventObjectId() != null)
         {
@@ -168,6 +170,16 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
+    }
+
+    public NotificationFormatter getNotificationFormater()
+    {
+        return notificationFormater;
+    }
+
+    public void setNotificationFormater(NotificationFormatter notificationFormater)
+    {
+        this.notificationFormater = notificationFormater;
     }
 
     @Override

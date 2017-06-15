@@ -24,7 +24,12 @@
             <artifactId>acm-service-history</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-history</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>

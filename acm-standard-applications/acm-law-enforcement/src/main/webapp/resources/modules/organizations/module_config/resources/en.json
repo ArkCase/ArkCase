@@ -14,7 +14,9 @@
     "email.label": "Email",
     "status.label": "Status",
     "identification.label": "ID",
-    "primary.label": "Primary Contact"
+    "primary.label": "Primary Contact",
+    "parent.label": "Parent Organization",
+    "parent.placeholder": "Enter Parent Organization"
   },
   "organizations.comp.actions": {
     "export.button": "Export",
@@ -147,7 +149,7 @@
     "title": "Email Addresses",
     "table.columns": {
       "type": "Email Address Type",
-      "value": "Emails Address",
+      "value": "Email Address",
       "description": "Description",
       "created": "Date Added",
       "creator": "Added By",
@@ -274,6 +276,7 @@
       "issuer.placeholder": "Enter Issuer",
       "yearIssued.label": "Year Issued",
       "yearIssued.placeholder": "Enter Year Issued",
+      "yearIssued.close.button": "Close",
       "btnCancel.text": "Cancel",
       "btnOk.text": "Save ID"
     }
@@ -406,8 +409,10 @@
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
       "identificationYearIssued": "Identification Issued",
-      "identificationYearIssued.placeholder": "Select Identification Issued"
-    }
+      "identificationYearIssued.placeholder": "Select Identification Issued",
+      "identificationYearIssued.close.button": "Close"
+    },
+    "informCreated": "{{objectType}} {{organizationValue}} was created."
   },
   "organizations.menus.topbar.item": "New Organization"
 }

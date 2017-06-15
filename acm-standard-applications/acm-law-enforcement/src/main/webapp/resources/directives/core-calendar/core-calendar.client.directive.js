@@ -132,7 +132,9 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         },
                         eventRender: scope.eventRender,
                         eventClick: scope.eventClick,
-                        timeFormat: 'h:mm A'
+                        timeFormat: 'h:mm A',
+                        timezone: "local",
+                        ignoreTimezone: false
                     }
                 };
 
