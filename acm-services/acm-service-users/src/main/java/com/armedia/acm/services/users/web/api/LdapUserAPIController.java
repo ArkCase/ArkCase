@@ -99,6 +99,38 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups/add", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser addGroupsToUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+                return ldapUserService.addUserMembersInLdapGroup(userId, groupNames, directory);
+        } catch (Exception e)
+        {
+            log.error("Adding groups to the user failed!", e);
+            throw new AcmUserActionFailedException("Adding groups to the user", null, null, "Adding groups to the user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups/remove", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser removeGroupsFromUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            return ldapUserService.removeUserMembersInLdapGroup(userId, groupNames, directory);
+        } catch (Exception e)
+        {
+            log.error("Adding groups to the user failed!", e);
+            throw new AcmUserActionFailedException("Adding groups to the user", null, null, "Adding groups to the user failed!", e);
+        }
+    }
+
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeLdapUser(@PathVariable String userId,
                                             @PathVariable String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
