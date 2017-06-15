@@ -93,7 +93,7 @@ angular.module('cost-tracking').controller('CostTracking.TagsController', ['$sco
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.objectParentTitle = $scope.objectInfo.parentNumber;
+            $scope.objectParentTitle = $scope.objectInfo.title;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
