@@ -126,8 +126,8 @@ public class LdapUserAPIController extends SecureLdapController
             return ldapUserService.removeUserMembersInLdapGroup(userId, groupNames, directory);
         } catch (Exception e)
         {
-            log.error("Adding groups to the user failed!", e);
-            throw new AcmUserActionFailedException("Adding groups to the user", null, null, "Adding groups to the user failed!", e);
+            log.error("Removing groups to the user failed!", e);
+            throw new AcmUserActionFailedException("Removing groups to the user", null, null, "Removing groups to the user failed!", e);
         }
     }
 

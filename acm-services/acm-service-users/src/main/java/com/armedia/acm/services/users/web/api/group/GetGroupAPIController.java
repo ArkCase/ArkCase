@@ -86,10 +86,8 @@ public class GetGroupAPIController
                                            Authentication auth,
                                            HttpSession httpSession) throws MuleException, Exception
     {
-        if (LOG.isInfoEnabled())
-        {
-            LOG.info("Taking groups by directory from Solr.");
-        }
+
+        LOG.info("Taking groups by directory from Solr.");
 
         StringBuilder solrQuery = new StringBuilder();
         solrQuery.append("object_type_s:GROUP");
@@ -98,10 +96,9 @@ public class GetGroupAPIController
             solrQuery.append(" AND directory_name_s:").append(directory).append(" AND status_lcs:ACTIVE");
         }
 
-        if (LOG.isDebugEnabled())
-        {
-            LOG.debug("User '" + auth.getName() + "' is searching for '" + solrQuery.toString() + "'");
-        }
+
+        LOG.debug("User [{}] is searching for {}", auth.getName(), solrQuery.toString());
+
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery.toString());
@@ -112,7 +109,7 @@ public class GetGroupAPIController
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
 
-        LOG.debug("Response type: " + response.getPayload().getClass());
+        LOG.debug("Response type: {}", response.getPayload().getClass());
 
         if (response.getPayload() instanceof String)
         {

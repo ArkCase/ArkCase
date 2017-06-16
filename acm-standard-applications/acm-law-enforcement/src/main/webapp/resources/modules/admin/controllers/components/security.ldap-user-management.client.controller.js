@@ -74,7 +74,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                         if (toBeAdded.length > 0) {
                             $scope.currentAuthGroups = $scope.currentAuthGroups.concat(toBeAdded);
 
-                            ldapUserManagementService.addGroupsToUser(selectedObject.key, $scope.currentAuthGroups, selectedObject.directory).then(function (data) {
+                            ldapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(function (data) {
                                 messageService.succsessAction();
                             }, function () {
                                 //error adding group
