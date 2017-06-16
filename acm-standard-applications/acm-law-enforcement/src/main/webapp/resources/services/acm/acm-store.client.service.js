@@ -347,6 +347,24 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                 }
             }
 
+            , SessionGroupData: function (arg) {
+                if ("string" == typeof arg) {
+                    arg = {name: arg};
+                    arg.noOwner = false;
+                    arg.noRegistry = false;
+                }
+
+                this.noOwner = Util.goodValue(arg.noOwner, false);
+                this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
+                this.noRegistry = Util.goodValue(arg.noRegistry, false);
+                if (!this.noRegistry) {
+                    var registry = Store.Registry.getSessionInstance();
+                    var data = Util.goodValue(registry.get(), {});
+                    data[this.name] = 1;
+                    registry.set(data);
+                }
+            }
+
 
             /**
              * @ngdoc service
