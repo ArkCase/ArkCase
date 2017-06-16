@@ -2,10 +2,10 @@
 
 angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
     , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
-    , 'Config.LocaleService'
+    , 'Config.LocaleService', 'ConfigService'
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
-        , LocaleService, LabelsConfigService) {
+        , LocaleService, ConfigService) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -19,6 +19,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $scope.inputQuery = '';
         $scope.data = {};
         $scope.data.inputQuery = '';
+
         $scope.$on('component-config', applyConfig);
         function applyConfig(e, componentId, config) {
             if (componentId == 'header') {
@@ -28,6 +29,13 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                 $scope.typeAheadColumn = config.typeAheadColumn;
             }
         }
+
+        // ConfigService.getComponentConfig("core", "header").then(function (config) {
+        //     $scope.config = config;
+        //     $scope.start = config.searchParams.start;
+        //     $scope.count = config.searchParams.n;
+        //     $scope.typeAheadColumn = config.typeAheadColumn;
+        // });
 
         ServCommService.handleRequest();
 
@@ -82,33 +90,33 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
         var lastLocale = cacheLocale.get();
         if (Util.isEmpty(lastLocale)) {
-            var defaultSettings = LocaleService.DEFAULT_SETTINGS;
             lastLocale = {};
-            lastLocale.locales = defaultSettings.locales;
-            lastLocale.selected = defaultSettings.defaultLocale;
+            lastLocale.locales = LocaleService.DEFAULT_LOCALES;
+            lastLocale.code = LocaleService.DEFAULT_CODE;
+            lastLocale.iso = LocaleService.DEFAULT_ISO;
             cacheLocale.set(lastLocale);
         }
-        var locales = Util.goodMapValue(lastLocale, "locales", []);
-        var localeCode = Util.goodMapValue(lastLocale, "selected", LocaleService.DEFAULT_SETTINGS.defaultLocale);
+        var locales = Util.goodMapValue(lastLocale, "locales", LocaleService.DEFAULT_LOCALES);
+        var localeCode = Util.goodMapValue(lastLocale, "code", LocaleService.DEFAULT_CODE);
         $scope.localeDropdownOptions = locales;
-        $scope.localeSelected = _.find(locales, {locale: localeCode});
+        $scope.localeSelected = _.find(locales, {code: localeCode});
 
-        $translate.use($scope.localeSelected.locale);
+        $translate.use($scope.localeSelected.code);
 
         $scope.changeLocale = function ($event, localeNew) {
             $event.preventDefault();
             $scope.localeSelected = localeNew;
             var lastLocale = cacheLocale.get();
-            lastLocale.selected = localeNew.locale;
+            lastLocale.code = localeNew.code;
+            lastLocale.iso = localeNew.iso;
             cacheLocale.set(lastLocale);
-            $translate.use(localeNew.locale);
+            $translate.use(localeNew.code);
         };
 
         $scope.updateLocales = function($event) {
             $event.preventDefault();
             LocaleService.getSettings().then(function(data){
-                $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", []);
-
+                $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
                 lastLocale = cacheLocale.get();
                 lastLocale.locales = $scope.localeDropdownOptions;
                 cacheLocale.set(lastLocale);
