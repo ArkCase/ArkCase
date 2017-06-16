@@ -72,13 +72,13 @@
                                     <span class="required-asterisk">*</span>
                                     <input id="identificationNumber" type="text"
                                            ng-model="organization.defaultIdentification.identificationNumber"
-                                           class="input-md form-control" required="required"
+                                           class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label for="identificationType" translate>organizations.comp.newOrganization.identification.identificationType</label>
                                     <span class="required-asterisk">*</span>
-                                    <select id="identificationType" required="required" class="form-control"
+                                    <select id="identificationType" ng-required="organization.defaultIdentification.identificationNumber" class="form-control"
                                             ng-model="organization.defaultIdentification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -219,31 +219,26 @@
                 </div>
                 <div id="collapseOrganizations" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <div ng-repeat="person in organization.associationsFromObjects | filter: {parentType:'PERSON'}">
+                        <div ng-repeat="personAssociation in organization.personAssociations">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                     <label for="searchExisting">&nbsp;</label>
-                                    <input id="searchExisting" type="text" ng-model="person.parentTitle"
+                                    <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
                                            ng-click="searchPerson($index)"
                                            class="input-md form-control"
+                                           readonly
                                            placeholder="{{ 'organizations.comp.newOrganization.people.searchExisting.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label for="personType" translate>
-                                        organizations.comp.newOrganization.people.personType</label>
-                                    <select id="personType" class="form-control" ng-disabled="!person.parentId"
-                                            ng-model="person.associationType">
-                                        <option ng-repeat="relation in personOrganizationRelationTypes"
-                                                value="{{relation.type}}">
-                                            {{relation.name}}
-                                        </option>
-                                    </select>
+                                    <label translate>organizations.comp.newOrganization.people.personType</label>
+                                    <input class="form-control" readonly
+                                           ng-model="personAssociation.personToOrganizationAssociationTypeName.name">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">
                                         <label for="" class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
-                                                ng-click="removePerson(person)" ng-show="!$first">
+                                                ng-click="removePerson(personAssociation)" ng-show="!$first">
                                             <i class="fa fa-minus text-danger"></i><span translate>organizations.comp.newOrganization.remove</span>
                                         </button>
                                     </div>
