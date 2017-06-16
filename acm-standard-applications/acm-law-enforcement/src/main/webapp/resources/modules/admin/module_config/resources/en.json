@@ -233,6 +233,11 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.ldap.user.management":{
+      "title": "LDAP User Management",
+      "cloneButton": "Clone User",
+      "user": "User"
+    },
     "security.calendarConfiguration": {
       "title": "Calendar Configuration",
       "calendarConfigForm": {

@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LdapUserAPIControllerTest extends EasyMockSupport
@@ -94,6 +96,61 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         verifyAll();
 
     }
+
+    @Test
+    public void groupOperationsToUserTest() throws Exception
+    {
+        String directory = "armedia";
+        AcmUser user1 = new AcmUser();
+
+        user1.setUserId("add-user");
+        user1.setUserState("TEST");
+        user1.setFirstName("First");
+        user1.setLastName("Last");
+
+        AcmUser user2 = new AcmUser();
+
+        user2.setUserId("delete-user");
+        user2.setUserState("TEST");
+        user2.setFirstName("First");
+        user2.setLastName("Last");
+
+
+        AcmGroup acmGroup = new AcmGroup();
+        acmGroup.setName("test-group");
+        List<AcmGroup> groups = new ArrayList<>();
+        groups.add(acmGroup);
+
+        List<String> groupsToBeAdded = new ArrayList<>();
+        groupsToBeAdded.add(groups.get(0).getName());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(groupsToBeAdded);
+
+        mockBehaviour(user1, groups);
+        mockBehaviour(user2, groups);
+
+        MvcResult resultAdding = mockMvc.perform(
+                put("/api/v1/ldap/" + directory + "/manage/" + user1.getUserId() + "/groups")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
+
+        MvcResult resultDeleting = mockMvc.perform(
+                delete("/api/v1/ldap/" + directory + "/manage/" + user2.getUserId() + "/groups")
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
+
+        LOG.info("Results: " + resultAdding.getResponse().getContentAsString());
+        assertEquals(HttpStatus.OK.value(), resultAdding.getResponse().getStatus());
+
+        LOG.info("Results: " + resultDeleting.getResponse().getContentAsString());
+        assertEquals(HttpStatus.OK.value(), resultDeleting.getResponse().getStatus());
+
+        verify(mockLdapUserService, times(1)).addUserMembersInLdapGroup(user1.getUserId(), groupsToBeAdded, directory);
+        verify(mockLdapUserService, times(1)).removeUserMembersInLdapGroup(user2.getUserId(), groupsToBeAdded, directory);
+        verifyAll();
+    }
+
 
     private void mockBehaviour(AcmUser user, List<AcmGroup> groups) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
     {

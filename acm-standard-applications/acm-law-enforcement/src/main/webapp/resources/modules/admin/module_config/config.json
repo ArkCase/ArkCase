@@ -717,6 +717,10 @@
           "templateName": "security.organizational-hierarchy"
         },
         {
+          "title": "admin.security.ldap.user.management.title",
+          "templateName": "security.ldap-user-management"
+        },
+        {
           "title": "admin.security.selectPrivileges",
           "templateName": "security.select-privileges"
         },

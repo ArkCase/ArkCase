@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -83,7 +84,7 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser editLdapUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
@@ -96,6 +97,38 @@ public class LdapUserAPIController extends SecureLdapController
         {
             log.error("Editing LDAP user failed!", e);
             throw new AcmUserActionFailedException("edit LDAP user", null, null, "Editing LDAP user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser addGroupsToUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+                return ldapUserService.addUserMembersInLdapGroup(userId, groupNames, directory);
+        } catch (Exception e)
+        {
+            log.error("Adding groups to the user failed!", e);
+            throw new AcmUserActionFailedException("Adding groups to the user", null, null, "Adding groups to the user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser removeGroupsFromUser(@RequestParam List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            return ldapUserService.removeUserMembersInLdapGroup(userId, groupNames, directory);
+        } catch (Exception e)
+        {
+            log.error("Removing groups to the user failed!", e);
+            throw new AcmUserActionFailedException("Removing groups to the user", null, null, "Removing groups to the user failed!", e);
         }
     }
 
@@ -116,6 +149,22 @@ public class LdapUserAPIController extends SecureLdapController
         {
             log.error("Deleting LDAP user failed!", e);
             throw new AcmUserActionFailedException("Delete LDAP user", null, null, "Removing LDAP user failed!", e);
+        }
+    }
+
+    @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public AcmUser cloneLdapUser(@RequestBody LdapUser ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest.getAcmUser(), ldapUserCloneRequest.getPassword(), directory);
+        } catch (Exception e)
+        {
+            log.error("Cloning LDAP user failed!", e);
+            throw new AcmUserActionFailedException("edit LDAP user", null, null, "Cloning LDAP user failed!", e);
         }
     }
 
