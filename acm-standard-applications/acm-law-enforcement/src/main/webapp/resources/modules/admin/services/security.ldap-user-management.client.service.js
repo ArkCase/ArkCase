@@ -10,25 +10,9 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
         });
 
         function queryGroupsByDirectory(directory) {
-            var cacheGroups = new Store.SessionData('groups' + direct);
-            var groups = cacheGroups.get();
             return $http({
                 method: 'GET',
                 url: 'api/latest/users/directory/groups?directory=' + directory
-            }).success(function (data) {
-
-                if(!groups){
-                    cacheGroups.set(data);
-                    return data;
-                }else {
-                    if(groups.response.docs[0].directory !== data.response.docs[0].directory){
-                        cacheGroups.clearCache('string', groups);
-                        cacheGroups.set(data);
-                        return data;
-                    }else {
-                        return groups;
-                    }
-                }
             });
         };
 
