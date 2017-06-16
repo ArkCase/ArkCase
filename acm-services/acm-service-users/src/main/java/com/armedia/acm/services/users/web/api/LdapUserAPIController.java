@@ -99,7 +99,7 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups/add", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addGroupsToUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
@@ -115,7 +115,7 @@ public class LdapUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups/remove", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser removeGroupsFromUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg

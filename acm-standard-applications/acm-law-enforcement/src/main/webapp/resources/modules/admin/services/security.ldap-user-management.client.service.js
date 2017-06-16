@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource', '$http', '$q',
-    function ($resource, $http, $q) {
+angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource', '$http', '$q', 'Acm.StoreService',
+    function ($resource, $http, $q, Store) {
         return ({
             queryGroupsByDirectory: queryGroupsByDirectory,
             addGroupsToUser: addGroupsToUser,
@@ -10,14 +10,30 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
         });
 
         function queryGroupsByDirectory(directory) {
+            var cacheGroups = new Store.SessionData('groups' + direct);
+            var groups = cacheGroups.get();
             return $http({
                 method: 'GET',
-                url: 'api/latest/users/directory/groups/get?directory=' + directory
+                url: 'api/latest/users/directory/groups?directory=' + directory
+            }).success(function (data) {
+
+                if(!groups){
+                    cacheGroups.set(data);
+                    return data;
+                }else {
+                    if(groups.response.docs[0].directory !== data.response.docs[0].directory){
+                        cacheGroups.clearCache('string', groups);
+                        cacheGroups.set(data);
+                        return data;
+                    }else {
+                        return groups;
+                    }
+                }
             });
         };
 
         function addGroupsToUser(user, groups, directory) {
-            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups/add';
+            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups';
             return $http({
                 method: 'PUT',
                 url: url,
@@ -26,9 +42,9 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
         };
 
         function removeGroupsFromUser(user, groups, directory) {
-            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups/remove';
+            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups';
             return $http({
-                method: 'PUT',
+                method: 'DELETE',
                 url: url,
                 data: groups
             });
