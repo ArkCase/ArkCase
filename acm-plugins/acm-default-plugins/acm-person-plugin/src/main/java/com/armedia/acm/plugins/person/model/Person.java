@@ -233,13 +233,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @JoinColumn(name = "cm_default_identification")
     private Identification defaultIdentification;
 
-    /**
-     * Organization which is default from organizations
-     */
-    @OneToOne
-    @JoinColumn(name = "cm_default_organization")
-    private PersonOrganizationAssociation defaultOrganization;
-
     @Lob
     @Column(name = "cm_details")
     private String details;
@@ -747,12 +740,12 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     public PersonOrganizationAssociation getDefaultOrganization()
     {
-        return defaultOrganization;
+        return organizationAssociations.stream().filter(association -> association.isDefaultOrganization()).findFirst().orElse(null);
     }
 
-    public void setDefaultOrganization(PersonOrganizationAssociation defaultOrganization)
+    public void setDefaultOrganization(PersonOrganizationAssociation personOrganizationAssociation)
     {
-        this.defaultOrganization = defaultOrganization;
+
     }
 
     public String getDetails()
