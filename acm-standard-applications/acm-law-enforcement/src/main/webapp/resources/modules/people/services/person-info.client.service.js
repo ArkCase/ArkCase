@@ -34,7 +34,8 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                     var contentType = headersGetter()['content-type'] || '';
                     if (data && contentType.indexOf('application/json') > -1) {
                         //we need angular.copy just to remove angular specific fields
-                        return angular.toJson(JSOG.encode(data));
+                        var encodedPerson = JSOG.encode(data);
+                        return angular.toJson(Util.omitNg(encodedPerson));
                     }
                     return data;
                 },
