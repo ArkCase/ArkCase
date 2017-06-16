@@ -85,4 +85,10 @@
         </insert>
     </changeSet>
 
+    <changeSet id="03-acm_person_organization-association-add-columns" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_person_org_assoc">
+            <column name="cm_primary_contact" type="VARCHAR(10)"></column>
+            <column name="cm_default_organization" type="VARCHAR(10)"></column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
