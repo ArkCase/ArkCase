@@ -1,9 +1,9 @@
 'use strict'
 
-angular.module("dashboard.news", ["adf.provider"]).config(["dashboardProvider", function (dashboardProvider) {
-    dashboardProvider.widget("news", {
-        title: 'News',
-        description: 'Displays a RSS/Atom feed',
+angular.module("dashboard.news", ["adf.provider"]).config(["dashboardProvider", function (ArkCaseDashboardProvider) {
+    ArkCaseDashboardProvider.widget("news", {
+        title: 'dashboard.widgets.news.title',
+        description: 'dashboard.widgets.news.description',
         templateUrl: "modules/dashboard/views/components/news.client.view.html",
         reload: true,
         controller: "Dashboard.NewsController",
@@ -17,4 +17,4 @@ angular.module("dashboard.news", ["adf.provider"]).config(["dashboardProvider", 
             templateUrl: "modules/dashboard/views/components/news-edit.client.view.html"
         }
     })
-}])
+}]);
