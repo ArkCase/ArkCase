@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
  *
  */
-public interface MailServiceExceptionMapper<ME extends AcmEmailServiceException>
+public interface AcmEmailServiceExceptionMapper<ME extends AcmEmailServiceException>
 {
 
     /**
