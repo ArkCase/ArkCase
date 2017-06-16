@@ -7,7 +7,7 @@
         <property name="pluginName" value="Calendar Config Service"/>
         <property name="privileges">
             <list>
-                <ref bean="acmEmailConfigureTemplatePrivilege"/>
+                <ref bean="acmEmailConfigurePrivilege"/>
             </list>
         </property>
         <property name="urlPrivileges">
@@ -17,17 +17,17 @@
                 <bean id="emailConfigureTemplateUrlGet" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/email/configure/template"/>
-                    <property name="requiredPrivilege" ref="acmEmailConfigureTemplatePrivilege"/>
+                    <property name="requiredPrivilege" ref="acmEmailConfigurePrivilege"/>
                 </bean>
                 <bean id="emailConfigureTemplateUrlPut" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="PUT"/>
                     <property name="url" value="/api/{version}/service/email/configure/template"/>
-                    <property name="requiredPrivilege" ref="acmEmailConfigureTemplatePrivilege"/>
+                    <property name="requiredPrivilege" ref="acmEmailConfigurePrivilege"/>
                 </bean>
                 <bean id="emailConfigureTemplateUrlDelete" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="DELETE"/>
                     <property name="url" value="/api/{version}/service/email/configure/template/{templateName}"/>
-                    <property name="requiredPrivilege" ref="acmEmailConfigureTemplatePrivilege"/>
+                    <property name="requiredPrivilege" ref="acmEmailConfigurePrivilege"/>
                 </bean>
 
             </list>
