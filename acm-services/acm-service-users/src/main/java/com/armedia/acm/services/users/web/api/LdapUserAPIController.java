@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -117,7 +118,7 @@ public class LdapUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser removeGroupsFromUser(@RequestBody List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser removeGroupsFromUser(@RequestParam List<String> groupNames, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);

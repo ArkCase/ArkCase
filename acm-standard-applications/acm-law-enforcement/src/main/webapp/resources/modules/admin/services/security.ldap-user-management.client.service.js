@@ -26,11 +26,13 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
         };
 
         function removeGroupsFromUser(user, groups, directory) {
+            var groupNames = {};
+            groupNames['groupNames'] = groups;
             var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups';
             return $http({
                 method: 'DELETE',
                 url: url,
-                data: groups
+                params: groupNames
             });
         };
 
