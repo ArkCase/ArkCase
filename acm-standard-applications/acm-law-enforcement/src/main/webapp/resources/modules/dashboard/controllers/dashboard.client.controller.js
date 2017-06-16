@@ -171,7 +171,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
         $translate.use(localeCode);
         setLocale(localeIso);
 
-        $rootScope.$on('$translateChangeSuccess', function(event, data) {
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
             var locale = _.find(locales, {code: data.language});
             if (locale) {
                 var iso = Util.goodMapValue(locale, "iso", LocaleService.DEFAULT_ISO);
