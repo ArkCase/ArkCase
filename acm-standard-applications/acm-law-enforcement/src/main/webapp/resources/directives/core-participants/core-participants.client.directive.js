@@ -197,7 +197,18 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 };
 
                 scope.deleteRow = function (rowEntity) {
-                    gridHelper.deleteRow(rowEntity);
+                    var typeOwningGroup = "owning group";
+                    var typeAssignee = "assignee";
+
+                    if(rowEntity.participantType == typeOwningGroup) {
+                        MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupDelete"));
+                    }
+                    else if(rowEntity.participantType == typeAssignee) {
+                        MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeDelete"));
+                    }
+                    else {
+                        gridHelper.deleteRow(rowEntity);
+                    }
                     var id = Util.goodMapValue(rowEntity, "id", 0);
                     if (0 < id) {    //do not need to call service when deleting a new row
                         saveObjectInfoAndRefresh();
