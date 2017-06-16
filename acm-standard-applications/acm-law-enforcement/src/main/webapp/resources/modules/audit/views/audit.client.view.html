@@ -14,6 +14,15 @@
 
                     <div ng-include="'modules/audit/views/components/audit-datepickers.client.view.html'"></div>
 
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="showXmlReport">
+                            <span translate>
+                                audit.navigation.checkBox.xmlReport
+                            </span>
+                        </label>
+                    </div>
+
                     <div>
                         <button class="btn btn-sm btn-primary" type="button" ng-click="showIframe()">
                             <span translate>audit.navigation.button.generateAuditReport.btn</span>
@@ -23,7 +32,11 @@
             </div>
         </div>
         <div class="content-body">
-            <iframe name="audit-iframe" class="audit-iframe" iframeborder="0" ng-src="{{auditReportUrl}}"></iframe>
+            <div ng-switch on="showXmlReport">
+                <div ng-switch-when="false">
+                    <iframe name="audit-iframe" class="audit-iframe" iframeborder="0" ng-src="{{auditReportUrl}}"></iframe>
+                </div>
+            </div>
         </div>
     </div>
 
