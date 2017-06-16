@@ -136,9 +136,9 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
                         .contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
 
         MvcResult resultDeleting = mockMvc.perform(
-                delete("/api/v1/ldap/" + directory + "/manage/" + user2.getUserId() + "/groups")
+                delete("/api/v1/ldap/" + directory + "/manage/" + user2.getUserId() + "/groups?groupNames=" + acmGroup.getName())
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .contentType(MediaType.APPLICATION_JSON).content(content)).andReturn();
+                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         LOG.info("Results: " + resultAdding.getResponse().getContentAsString());
         assertEquals(HttpStatus.OK.value(), resultAdding.getResponse().getStatus());
