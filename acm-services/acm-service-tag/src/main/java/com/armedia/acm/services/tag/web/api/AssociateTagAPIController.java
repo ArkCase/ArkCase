@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
@@ -44,9 +46,11 @@ public class AssociateTagAPIController
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
                                          @PathVariable("objectTitle") String objectTitle, @PathVariable("tagId") Long tagId, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, UnsupportedEncodingException
     {
 
+        objectTitle = URLDecoder.decode(objectTitle, "UTF-8");
+        
         log.info("Creating new tag association on object type [{}], title [{}], id [{}], and tagId: {}", objectType, objectTitle, objectId, tagId);
 
         AcmTag tagForAssociating = getTagService().findTag(tagId);
