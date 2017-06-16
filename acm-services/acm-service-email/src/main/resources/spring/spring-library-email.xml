@@ -15,5 +15,10 @@
     <bean id="emailSenderPropertyFileLocation" class="java.lang.String">
         <constructor-arg value="${user.home}/.arkcase/acm/acmEmailSender.properties"/>
     </bean>
+    
+    <bean id="filesystemTemplateConfigurationService" class="com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService">
+        <property name="templateConfigurations" value="file:${user.home}/.arkcase/acm/mailTemplatesConfiguration.json"/>
+        <property name="templateFolderPath" value="${user.home}/.arkcase/acm/templates"/>
+    </bean>
 
 </beans>

@@ -34,13 +34,24 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
              * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
-            getUrl: function (params) {
-
+            getUrl: function (params, xmlReport) {
+                
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
                     + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
                     + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
                     + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
                     + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                
+                if (xmlReport) {
+                    var xmlReportUri = params.reports[params.reportSelected];
+                    xmlReportUri = xmlReportUri.substring(0, xmlReportUri.indexOf('viewer')) + 'report';
+                    reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + xmlReportUri
+                    + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
+                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                }
+                
                 if (params.stateSelected) {
                     reportUrl += "&status=" + params.stateSelected;
                 }
@@ -48,6 +59,9 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
                 var baseHref = $browser.baseHref();
                 var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
                 reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
+                if (xmlReport) {
+                    reportUrl += "&output-target=" + encodeURIComponent("table/xml");
+                }
                 return $sce.trustAsResourceUrl(reportUrl);
             },
 

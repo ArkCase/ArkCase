@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.services.email.service.AcmMailService;
+import com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService;
 import com.armedia.acm.services.email.service.EmailSource;
 import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
@@ -47,8 +48,10 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = { "classpath:/spring/spring-email-service-api-test.xml" })
-public class AcmMailConfigurationServiceAPIControllerTest
+public class AcmMailTemplateConfigurationServiceAPIControllerTest
 {
+
+    private static final String CONTROLLER_PATH = "/api/v1/service/email/configure/template";
 
     private static final String EMAIL_PATTERN = "*";
 
@@ -65,24 +68,22 @@ public class AcmMailConfigurationServiceAPIControllerTest
     private MockMvc mockMvc;
 
     @Mock
-    private AcmMailService mailService;
+    private AcmMailTemplateConfigurationService mailService;
 
-    private AcmMailConfigurationServiceAPIController controller;
+    @InjectMocks
+    private AcmMailTemplateConfigurationServiceAPIController controller;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
     {
-        controller = new AcmMailConfigurationServiceAPIController();
-        controller.setMailService(mailService);
-
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.email.config.web.api.AcmMailConfigurationServiceAPIController#getTemplateConfigurations()}.
+     * {@link com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController#getTemplateConfigurations()}.
      *
      * @throws Exception
      */
@@ -98,8 +99,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
         when(mailService.getTemplateConfigurations()).thenReturn(configurationList);
 
         // when
-        MvcResult result = mockMvc
-                .perform(get("/api/v1/service/email/configure/template").accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+        MvcResult result = mockMvc.perform(get(CONTROLLER_PATH).accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andReturn();
 
         // then
@@ -133,7 +133,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.email.config.web.api.AcmMailConfigurationServiceAPIController#updateEmailTemplate(com.armedia.acm.services.email.service.EmailTemplateConfiguration, org.springframework.web.multipart.MultipartFile)}.
+     * {@link com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController#updateEmailTemplate(com.armedia.acm.services.email.service.EmailTemplateConfiguration, org.springframework.web.multipart.MultipartFile)}.
      *
      * @throws Exception
      */
@@ -150,7 +150,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
         MockMultipartFile template = new MockMultipartFile("file", "", MediaType.TEXT_PLAIN_VALUE, "template".getBytes("UTF-8"));
 
         // when
-        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload("/api/v1/service/email/configure");
+        MockMultipartHttpServletRequestBuilder builder = MockMvcRequestBuilders.fileUpload(CONTROLLER_PATH);
         builder.with(new RequestPostProcessor()
         {
             @Override
@@ -190,7 +190,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.email.config.web.api.AcmMailConfigurationServiceAPIController#deleteEmailTemplate(String)}.
+     * {@link com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController#deleteEmailTemplate(String)}.
      *
      * @throws Exception
      */
@@ -198,7 +198,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
     public void testDeleteEmailTemplate() throws Exception
     {
         // when
-        MvcResult result = mockMvc.perform(delete("/api/v1/service/email/configure/template_name")).andReturn();
+        MvcResult result = mockMvc.perform(delete(CONTROLLER_PATH + "/template_name")).andReturn();
 
         // then
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -209,15 +209,10 @@ public class AcmMailConfigurationServiceAPIControllerTest
 
     /**
      * @param emailPattern
-     *            TODO
      * @param objectTypes
-     *            TODO
      * @param source
-     *            TODO
      * @param templateName
-     *            TODO
      * @param actions
-     *            TODO
      * @return
      */
     private EmailTemplateConfiguration setupConfiguration(String emailPattern, List<String> objectTypes, EmailSource source,
@@ -226,7 +221,7 @@ public class AcmMailConfigurationServiceAPIControllerTest
         EmailTemplateConfiguration configuration = new EmailTemplateConfiguration();
         configuration.setEmailPattern(emailPattern);
         configuration.setObjectTypes(objectTypes);
-        configuration.setSource(EmailSource.MANUAL);
+        configuration.setSource(source);
         configuration.setTemplateName(templateName);
         configuration.setActions(actions);
         return configuration;
