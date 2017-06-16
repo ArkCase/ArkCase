@@ -417,7 +417,9 @@
       "error.groupType": "The owning group cannot be a person.",
       "error.userType": " User type cannot be a group.",
       "error.assigneeUnique": "Only one assignee is allowed.",
+      "error.assigneeDelete": "Deleting assignee is not allowed.",
       "error.owninggroupUnique": "Only one owning group is allowed.",
+      "error.owninggroupDelete": "Deleting owning group is not allowed.",
       "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
       "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
       "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
