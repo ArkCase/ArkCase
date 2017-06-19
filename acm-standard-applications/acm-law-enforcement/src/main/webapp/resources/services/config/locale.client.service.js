@@ -15,7 +15,9 @@ angular.module('services').factory('Config.LocaleService', ['$resource', 'Acm.St
         var Service = $resource('api/latest/plugin', {}, {
         });
 
-        Service.DEFAULT_SETTINGS = {"locales":[{"locale": "en", "desc": "English"}], "defaultLocale":"en"};
+        Service.DEFAULT_LOCALES = [{"code": "en", "iso": "en", "desc": "English", "native": "English"}];
+        Service.DEFAULT_CODE = "en";
+        Service.DEFAULT_ISO = "en";
 
         /**
          * @ngdoc method
