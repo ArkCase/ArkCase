@@ -45,7 +45,7 @@ angular.module('cost-tracking').controller('CostTracking.TagsController', ['$sco
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COSTSHEET, tag.object_id_s).then(
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COSTSHEET, $scope.objectParentTitle, tag.object_id_s).then(
                                     function (returnedTag) {
                                         var tagToAdd = angular.copy(returnedTag);
                                         tagToAdd.tagName = tag.tags_s;
@@ -64,7 +64,7 @@ angular.module('cost-tracking').controller('CostTracking.TagsController', ['$sco
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COSTSHEET, tag.id).then(
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.COSTSHEET, $scope.objectParentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
@@ -93,6 +93,7 @@ angular.module('cost-tracking').controller('CostTracking.TagsController', ['$sco
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = $scope.objectInfo.title;
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
