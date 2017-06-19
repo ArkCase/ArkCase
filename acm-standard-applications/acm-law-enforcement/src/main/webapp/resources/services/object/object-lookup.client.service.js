@@ -615,6 +615,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return LookupService.getLookup("personOrganizationRelationTypes");
         };
 
+        /**
+         * @ngdoc method
+         * @name getOrganizationPersonRelationTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of organization-person relation types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getOrganizationPersonRelationTypes = function () {
+            return LookupService.getLookup("organizationPersonRelationTypes");
+        };
+
         return Service;
     }
 ]);

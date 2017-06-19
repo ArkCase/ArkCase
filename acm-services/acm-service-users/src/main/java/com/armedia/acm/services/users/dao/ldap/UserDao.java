@@ -6,11 +6,11 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
 import com.armedia.acm.services.users.model.RoleType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,7 +20,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.util.Date;
 import java.util.List;
 
@@ -64,8 +63,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            }
-            else
+            } else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -75,8 +73,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 }
             }
 
-        }
-        catch (PersistenceException pe)
+        } catch (PersistenceException pe)
         {
             log.error("Could not find user record: " + pe.getMessage(), pe);
         }
@@ -160,8 +157,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         query.select(user);
 
-        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String> get("userState"), "VALID")));
+        query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
+                builder.equal(user.<String>get("userState"), "VALID")));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -221,6 +218,22 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         getEntityManager().persist(existing);
 
         return existing;
+    }
+
+    @Transactional
+    public AcmUser markUserAsDeleted(String name)
+    {
+        String jpql = "SELECT user " + "FROM AcmUser user " + "WHERE user.userId = :userId";
+        TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
+
+        query.setParameter("userId", name);
+
+        AcmUser markedUser = query.getSingleResult();
+        markedUser.setUserState("INVALID");
+        markedUser.setDeletedAt(new Date());
+        getEntityManager().persist(markedUser);
+
+        return markedUser;
     }
 
     public EntityManager getEntityManager()
