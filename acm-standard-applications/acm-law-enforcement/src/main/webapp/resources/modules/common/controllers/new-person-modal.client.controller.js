@@ -195,10 +195,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
                     setOrganizationAssociation(association, data);
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        //FIXME not sure why angular doesn't remove ($promise, $resolved) when sending so I need to remove them manually
-                        delete organization['$promise'];
-                        delete organization['$resolved'];
-                        data['organization'] = organization;
+                        data.organization = organization;
                         setOrganizationAssociation(association, data);
                     });
                 }
@@ -212,8 +209,15 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             association.organizationToPersonAssociationType = data.inverseType;
 
             if (data.isDefault) {
-                $scope.person.defaultOrganization = association;
+                //find and change previously default organization
+                var defaultAssociation = _.find($scope.person.organizationAssociations, function (object) {
+                    return object.defaultOrganization;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.defaultOrganization = false;
+                }
             }
+            association.defaultOrganization = data.isDefault;
 
             //if is new created, add it to the organization associations list
             if (!$scope.person.organizationAssociations) {

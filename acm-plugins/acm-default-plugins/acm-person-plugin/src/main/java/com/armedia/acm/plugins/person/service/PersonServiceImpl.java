@@ -284,7 +284,7 @@ public class PersonServiceImpl implements PersonService
 
         person.setContainer(container);
 
-        person = savePerson(person, auth);
+        person = personDao.save(person);
 
         //create Pictures folder
         acmFolderService.addNewFolder(person.getContainer().getFolder(), picturesFolder);
@@ -304,10 +304,6 @@ public class PersonServiceImpl implements PersonService
     {
         boolean isNew = in.getId() == null;
         Person person = personDao.save(in);
-        if (isNew)
-        {
-            person = createContainerAndPictureFolder(person, authentication);
-        }
         getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
         return person;
     }
@@ -329,37 +325,27 @@ public class PersonServiceImpl implements PersonService
 
     private Person uploadPicturesForPerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmCreateObjectFailedException, AcmUserActionFailedException
     {
-        //find pictures folder
-        AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         if (pictures != null)
         {
+            boolean hasDefaultPicture = person.getDefaultPicture() != null;
             for (MultipartFile picture : pictures)
             {
+                //TODO we need to send description from front end
+                String description = "";
                 try
                 {
-                    EcmFile uploaded = ecmFileService.upload(picture.getOriginalFilename(),
-                            PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
-                            PersonOrganizationConstants.PERSON_PICTURE_CATEGORY,
-                            picture.getInputStream(),
-                            picture.getContentType(),
-                            picture.getOriginalFilename(),
-                            authentication,
-                            picturesFolderObj.getCmisFolderId(),
-                            PersonOrganizationConstants.PERSON_OBJECT_TYPE,
-                            person.getId());
-                    if (person.getDefaultPicture() == null)
-                    {
-                        //use first picture from the list to be default one
-                        person.setDefaultPicture(uploaded);
-                        person = personDao.save(person);
-                    }
+                    insertImageForPerson(person.getId(), picture, !hasDefaultPicture, description, authentication);
                 } catch (IOException e)
+                {
+                    log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
+                } catch (AcmObjectNotFoundException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
                 }
             }
         }
-        return person;
+        //because there are updates to the person we need to get fresh instance from database.
+        return personDao.find(person.getId());
     }
 
     public PersonDao getPersonDao()

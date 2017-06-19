@@ -144,14 +144,21 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         };
 
         function savePersonAssociation(association, data) {
-            association['organization'] = $scope.objectInfo;
-            association['person'] = data.person;
-            association['organizationToPersonAssociationType'] = data.type;
-            association['personToOrganizationAssociationType'] = data.inverseType;
+            association.organization = $scope.objectInfo;
+            association.person = data.person;
+            association.organizationToPersonAssociationType = data.type;
+            association.personToOrganizationAssociationType = data.inverseType;
 
             if (data.isDefault) {
-                $scope.objectInfo.primaryContact = association;
+                //find and change previously primary contact
+                var defaultAssociation = _.find($scope.objectInfo.personAssociations, function (object) {
+                    return object.primaryContact;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.primaryContact = false;
+                }
             }
+            association.primaryContact = data.isDefault;
 
             //if is new created, add it to the organization associations list
             if (!association.id) {

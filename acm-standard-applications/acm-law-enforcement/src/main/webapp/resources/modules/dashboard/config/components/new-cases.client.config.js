@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dashboard.new-cases', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('newCases', {
-                title: 'New Cases',
-                description: 'Displays new cases',
+                title: 'dashboard.widgets.newCases.title',
+                description: 'dashboard.widgets.newCases.description',
                 controller: 'Dashboard.NewCasesController',
                 controllerAs: 'newCases',
                 reload: true,
@@ -14,4 +14,4 @@ angular.module('dashboard.new-cases', ['adf.provider'])
                     templateUrl: 'modules/dashboard/views/components/new-cases-edit.client.view.html'
                 }
             });
-    })
+    });

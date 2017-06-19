@@ -16,7 +16,7 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
         var data = {
             'getNews': getNews,
             'getWeather': getWeather
-        }
+        };
 
         /**
          * @ngdoc method
@@ -59,7 +59,7 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
                     format: "json",
                     q: query
                 }
-            }
+            };
             return makeRequest(url, configObj).then(function (response) {
                 return ( response && response.data && response.data.query.results ) ?
                     response.data.query.results.rss.channel : null;
@@ -92,7 +92,7 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
                     q: location,
                     APPID: appid
                 }
-            }
+            };
 
             return makeRequest(url, configObj).then(function (response) {
                 var weather = {location: {}, temp: {}, clouds: null};

@@ -4,6 +4,8 @@
 package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -35,6 +37,7 @@ public class GetGroupAPIController
 
     private AcmGroupDao groupDao;
     private MuleContextManager muleContextManager;
+    private ExecuteSolrQuery executeSolrQuery;
 
     @RequestMapping(value = "/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -75,6 +78,30 @@ public class GetGroupAPIController
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+
+    }
+
+    @RequestMapping(value = "/directory/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getGroupsByDirectory(@RequestParam(value = "directory") String directory,@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                                           @RequestParam(value = "n", required = false, defaultValue = "200") int maxRows,
+                                           @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                           Authentication auth,
+                                           HttpSession httpSession) throws MuleException, Exception
+    {
+
+        LOG.info("Taking groups by directory from Solr.");
+
+        StringBuilder solrQuery = new StringBuilder();
+        solrQuery.append("object_type_s:GROUP");
+
+        if(directory.length() > 0){
+            solrQuery.append(" AND directory_name_s:").append(directory).append(" AND status_lcs:ACTIVE");
+        }
+
+        LOG.debug("User [{}] is searching for {}", auth.getName(), solrQuery.toString());
+
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery.toString(), startRow, maxRows, sort);
 
     }
 
@@ -235,5 +262,14 @@ public class GetGroupAPIController
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
         this.muleContextManager = muleContextManager;
+    }
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
     }
 }
