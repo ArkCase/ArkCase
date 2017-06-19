@@ -10,6 +10,7 @@ angular.module('goodbye').controller('GoodbyeController', ['$window'
             AcmLoginService.setLogin(false);
             sessionStorage.removeItem('redirectURL');
             sessionStorage.removeItem('redirectState');
+            sessionStorage.removeItem('passwordWarningAccepted');
             Store.Registry.clearSessionCache();
             Store.Registry.clearLocalCache();
 
