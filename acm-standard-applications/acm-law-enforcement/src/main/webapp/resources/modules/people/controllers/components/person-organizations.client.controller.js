@@ -133,14 +133,21 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         };
 
         function savePersonAssociation(association, data) {
-            association['person'] = {id: $scope.objectInfo.id};
-            association['organization'] = data.organization;
-            association['personToOrganizationAssociationType'] = data.type;
-            association['organizationToPersonAssociationType'] = data.inverseType;
+            association.person = {id: $scope.objectInfo.id};
+            association.organization = data.organization;
+            association.personToOrganizationAssociationType = data.type;
+            association.organizationToPersonAssociationType = data.inverseType;
 
             if (data.isDefault) {
-                $scope.objectInfo.defaultOrganization = association;
+                //find and change previously default organization
+                var defaultAssociation = _.find($scope.objectInfo.organizationAssociations, function (object) {
+                    return object.defaultOrganization;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.defaultOrganization = false;
+                }
             }
+            association.defaultOrganization = data.isDefault;
 
             //if is new created, add it to the organization associations list
             if (!association.id) {

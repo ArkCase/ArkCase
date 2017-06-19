@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -19,7 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -52,11 +54,11 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     @Column(name = "cm_id")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_person_id", nullable = false)
     private Person person;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
     @JoinColumn(name = "cm_organization_id", nullable = false)
     private Organization organization;
 
@@ -68,6 +70,14 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
 
     @Column(name = "cm_org_to_person_assoc_type")
     private String organizationToPersonAssociationType;
+
+    @Column(name = "cm_primary_contact")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean primaryContact;
+
+    @Column(name = "cm_default_organization")
+    @Convert(converter = BooleanToStringConverter.class)
+    private boolean defaultOrganization;
 
     @Column(name = "cm_created", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -210,5 +220,25 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     public String getObjectType()
     {
         return objectType;
+    }
+
+    public boolean isPrimaryContact()
+    {
+        return primaryContact;
+    }
+
+    public void setPrimaryContact(boolean primaryContact)
+    {
+        this.primaryContact = primaryContact;
+    }
+
+    public boolean isDefaultOrganization()
+    {
+        return defaultOrganization;
+    }
+
+    public void setDefaultOrganization(boolean defaultOrganization)
+    {
+        this.defaultOrganization = defaultOrganization;
     }
 }
