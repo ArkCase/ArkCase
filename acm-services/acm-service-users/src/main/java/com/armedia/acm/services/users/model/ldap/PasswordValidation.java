@@ -16,8 +16,8 @@ import javax.validation.Payload;
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = PasswordViolation.class)
-public @interface IPasswordValidation {
+@Constraint(validatedBy = PasswordValidator.class)
+public @interface PasswordValidation {
     String message();
     Class<?>[] groups() default {};
 
