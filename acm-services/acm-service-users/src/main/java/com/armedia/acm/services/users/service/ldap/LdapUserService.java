@@ -10,6 +10,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -64,18 +65,24 @@ public class LdapUserService
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
         {
-            DirContextAdapter context = userTransformer.createContextForNewUserEntry(directoryName, user, password,
-                    ldapSyncConfig.getBaseDC());
+            DirContextAdapter context = userTransformer
+                    .createContextForNewUserEntry(directoryName, user, password, ldapSyncConfig.getBaseDC());
             log.debug("Ldap User Context: {}", context.getAttributes());
             log.debug("Save User:{} with DN:{} in LDAP", ldapUser.getUserId(), ldapUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
         try
         {
+            // sync any additional fields from ldap after user entry is there
+            AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(ldapSyncConfig);
+            AcmUser userContext = (AcmUser) ldapTemplate.lookup(MapperUtils.stripBaseFromDn(dn, ldapSyncConfig.getBaseDC()),
+                    ldapSyncConfig.getUserSyncAttributes(), userGroupsContextMapper);
+            getUserDao().save(userContext);
+            getUserDao().getEntityManager().flush();
+
             setUserAsMemberToLdapGroups(ldapUser, new ArrayList<>(ldapUser.getGroups()), ldapTemplate, ldapSyncConfig.getBaseDC());
         }
         catch (Exception e)
@@ -83,10 +90,9 @@ public class LdapUserService
             log.error("Adding User:{} as member to groups in LDAP failed! Rollback changes.", user.getUserId(), e);
             try
             {
-                new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(user.getDistinguishedName(),
-                        ldapSyncConfig.getBaseDC())));
-            }
-            catch (Exception ee)
+                new RetryExecutor().retry(() -> ldapTemplate
+                        .unbind(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), ldapSyncConfig.getBaseDC())));
+            } catch (Exception ee)
             {
                 log.warn("Rollback failed", e);
             }
@@ -303,7 +309,8 @@ public class LdapUserService
         AcmUser existingUser = getUserDao().findByUserId(userId);
         List<AcmGroup> groups = new ArrayList<>(existingUser.getGroups());
         List<String> newGroups = new ArrayList<>(groups.size());
-        for (AcmGroup group : groups) {
+        for (AcmGroup group : groups)
+        {
             newGroups.add(group.getName());
         }
 
@@ -327,8 +334,7 @@ public class LdapUserService
             log.debug("Saving edited User:{}", user.getUserId());
             AcmUser savedUser = getUserDao().save(existingUser);
             getUserDao().getEntityManager().flush();
-            String strippedBaseDCGroupDn = MapperUtils.stripBaseFromDn(ldapGroup.getDistinguishedName(),
-                    ldapSyncConfig.getBaseDC());
+            String strippedBaseDCGroupDn = MapperUtils.stripBaseFromDn(ldapGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
             DirContextOperations groupContext;
             try
             {
