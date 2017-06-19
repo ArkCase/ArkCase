@@ -3,7 +3,7 @@ package com.armedia.acm.services.email.config.web.api;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmMailService;
 import com.armedia.acm.services.email.service.AcmSMTPConfigurationValidationException;
-import com.armedia.acm.services.email.service.EmailBodyTemplate;
+import com.armedia.acm.services.email.service.EmailTemplateConfiguration;
 import com.armedia.acm.services.email.service.MailServiceExceptionMapper;
 import com.armedia.acm.services.email.service.SMTPConfiguration;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -14,12 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -48,12 +53,26 @@ public class AcmMailConfigurationServiceAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> updateEmailTemplate(HttpSession session, Authentication auth, @RequestBody EmailBodyTemplate template)
-            throws AcmSMTPConfigurationValidationException
+    @RequestMapping(path = "/template", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
+    @ResponseBody
+    public List<EmailTemplateConfiguration> getTemplateConfigurations()
     {
-        AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        mailService.updateEmailTemplate(user, auth, template);
+        return mailService.getTemplateConfigurations();
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<?> updateEmailTemplate(@RequestPart("data") EmailTemplateConfiguration templateConfiguration,
+            @RequestPart(value = "file", required = false) MultipartFile template)
+    {
+        mailService.updateEmailTemplate(templateConfiguration, template);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
+    {
+        mailService.deleteTemplate(templateName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

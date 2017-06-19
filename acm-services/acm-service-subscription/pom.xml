@@ -36,6 +36,12 @@
             <artifactId>acm-service-search</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-notification</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

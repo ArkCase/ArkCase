@@ -127,8 +127,7 @@ public class LdapSyncService
 
         log.info("Starting sync user '{}' from ldap '{}'", username, getLdapSyncConfig().getLdapUrl());
 
-        AcmUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(),
-                AcmUserGroupsContextMapper.USER_LDAP_ATTRIBUTES);
+        AcmUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(), getLdapSyncConfig().getUserSyncAttributes());
         List<AcmUser> acmUsers = Arrays.asList(user);
         List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
 

@@ -5,9 +5,13 @@
         </div>
         <div class="scroll-body">
             <ul class="list-unstyled">
-                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != filterName"><strong>{{facet.name}}</strong>
-                    <ul class="list-unstyled">
-                        <li ng-repeat="field in facet.fields">
+                <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != filterName">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapseFacet-{{$index}}"
+                        ><strong>{{facet.name}}</strong></a>
+                    </h4>
+                    <ul id="collapseFacet-{{$index}}" class="panel-collapse collapse in list-unstyled">
+                        <li ng-repeat="field in facet.fields | limitTo : facet.limit">
                             <div class="checkbox" ng-if="field.count > 0">
                                 <label><input type="checkbox"
                                               ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
@@ -16,6 +20,22 @@
                                     <span class="pull-right label label-info">{{field.count}}</span></label>
                             </div>
                         </li>
+                        <div ng-show="facet.limit < facet.fields.length">
+                            <button id="showMoreButton-{{$index}}" class="btn btn-default btn-xs"
+                                    ng-click="increaseFacetLimit(facet)">
+                                <i class="fa fa-lg fa-plus"></i>
+                            </button>
+                            <label for="showMoreButton-{{$index}}"
+                                   translate>common.directive.search.showMore.button.text</label>
+                        </div>
+                        <div ng-show="facet.fields.length >= facet.limit && facet.limit > facetLimit">
+                            <button id="showLessButton-{{$index}}" class="btn btn-default btn-xs"
+                                    ng-click="decreaseFacetLimit(facet)">
+                                <i class="fa fa-lg fa-minus"></i>
+                            </button>
+                            <label for="showLessButton-{{$index}}"
+                                   translate>common.directive.search.showLess.button.text</label>
+                        </div>
                     </ul>
                 </li>
             </ul>
