@@ -10,7 +10,7 @@
       "menuItemURL": "my-documents.main",
       "menuItemTitle": "my-documents.menus.leftnav.item",
       "moduleId": "my-documents",
-      "iconClass": "fa fa-folder",
+      "iconClass": "fa fa-file",
       "position": 60
     }
   ],

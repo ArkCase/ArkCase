@@ -1,0 +1,416 @@
+{
+  "people": {
+    "title": "Gens",
+    "progressNoComplaint": "fr_[ No people data ]",
+    "progressLoading": "fr_Loading people ",
+    "progressError": "fr_Failed to load people "
+  },
+  "people.menus": {
+    "leftnav.item": "Gens",
+    "topbar.item": "La Personne"
+  },
+  "people.comp.info": {
+    "phone.label": "fr_Phone",
+    "email.label": "fr_Email",
+    "status.label": "fr_Status",
+    "organization.label": "fr_Organization",
+    "identification.label": "fr_ID"
+  },
+  "people.comp.actions": {
+    "export.button": "fr_Export",
+    "import.button": "fr_Import",
+    "delete.button": "fr_Delete",
+    "activate.button": "fr_Activate",
+    "deactivate.button": "fr_Deactivate",
+    "merge.button": "fr_Merge"
+  },
+  "people.comp.details": {
+    "title": "fr_Details",
+    "informSaved": "fr_Person details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "fr_History",
+    "table.columns": {
+      "eventType": "fr_Event Name",
+      "eventDate": "fr_Date",
+      "userId": "fr_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "fr_Pictures",
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "upload": "fr_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "fr_Thumbnail",
+      "title": "fr_Filename",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "dialog": {
+      "title": "fr_Upload Picture",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "cancel": "fr_Cancel",
+      "upload": "fr_Upload Picture",
+      "noPictureSelected": "fr_No Files Selected.",
+      "browse": "fr_Browse",
+      "description": "fr_Description"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "fr_Locations",
+    "table.columns": {
+      "type": "fr_Type",
+      "streetAddress": "fr_Address 1",
+      "streetAddress2": "fr_Address 2",
+      "city": "fr_City",
+      "state": "fr_State",
+      "zip": "fr_Zip",
+      "country": "fr_Country",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "addNew": "fr_Add New",
+      "map": "fr_Map"
+    },
+    "modal": {
+      "addAddress": "fr_Add Location",
+      "editAddress": "fr_Edit Record",
+      "type.label": "fr_Address Type",
+      "type.placeholder": "fr_Enter Address Type",
+      "streetAddress.label": "fr_Address 1",
+      "streetAddress.placeholder": "fr_Enter Address 1",
+      "streetAddress2.label": "fr_Address 2",
+      "streetAddress2.placeholder": "fr_Enter Address 2",
+      "city.label": "fr_City",
+      "city.placeholder": "fr_Enter City",
+      "zip.label": "fr_Zip",
+      "zip.placeholder": "fr_Enter Zip",
+      "state.label": "fr_State",
+      "state.placeholder": "fr_Enter State",
+      "country.label": "fr_Country",
+      "country.placeholder": "fr_Enter Country",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Location",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "fr_Phone Numbers",
+    "table.columns": {
+      "type": "fr_Type",
+      "value": "fr_Phone Number",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "addPhone": "fr_Add New Phone Number",
+      "editPhone": "fr_Edit Phone Number",
+      "title": "fr_Add New Phone Number",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Phone Number",
+      "type.label": "fr_Phone Type",
+      "type.placeholder": "fr_Enter Phone Type",
+      "value.label": "fr_Phone Number",
+      "value.placeholder": "fr_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "fr_Email Addresses",
+    "table.columns": {
+      "type": "fr_Type",
+      "value": "fr_Email Address",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "title": "fr_Add New Email Address",
+      "addEmail": "fr_Add New Email Address",
+      "editEmail": "fr_Edit Email Address",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Email Address",
+      "type.label": "fr_Email Type",
+      "type.placeholder": "fr_Enter Email Type",
+      "value.label": "fr_Email Address",
+      "value.placeholder": "fr_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "fr_URLs",
+    "table.columns": {
+      "value": "fr_URL",
+      "type": "fr_Type",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "title": "fr_Add New URL",
+      "addUrl": "fr_Add New URL",
+      "editUrl": "fr_Edit URL",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save URL",
+      "type.label": "fr_Type",
+      "type.placeholder": "fr_Enter Type",
+      "value.label": "fr_URL",
+      "value.placeholder": "fr_Enter URL"
+    }
+  },
+  "people.comp.aliases": {
+    "title": "fr_Aliases",
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "upload": "fr_New Alias"
+    },
+    "table.columns": {
+      "type": "fr_Type",
+      "aliasValue": "fr_Alias",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "modal": {
+      "aliasValue": "fr_Alias Value",
+      "type": "fr_Type",
+      "addAlias": "fr_Add New Alias",
+      "editAlias": "fr_Edit Alias",
+      "title": "fr_Insert New Alias",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Alias",
+      "value.label": "fr_Alias",
+      "value.placeholder": "fr_Enter Alias",
+      "description": "fr_Description",
+      "aliasType.label": "fr_Alias Type",
+      "aliasType.placeholder": "fr_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "fr_IDs",
+    "table.columns": {
+      "type": "fr_Type",
+      "id": "fr_ID",
+      "number": "fr_Number",
+      "issuer": "fr_Issuer",
+      "yearIssued": "fr_Year Issued",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "addID": "fr_Add New Identification",
+      "editID": "fr_Edit Identification",
+      "title": "fr_Add New Identification",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "type.label": "fr_Type",
+      "type.placeholder": "fr_Enter Type",
+      "id.label": "fr_ID",
+      "id.placeholder": "fr_Enter ID",
+      "number.label": "fr_Number",
+      "number.placeholder": "fr_Enter Number",
+      "issuer.label": "fr_Issuer",
+      "issuer.placeholder": "fr_Enter Issuer",
+      "yearIssued.label": "fr_Year Issued",
+      "yearIssued.placeholder": "fr_Enter Year Issued",
+      "yearIssued.close.button": "fr_Close",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "fr_Organizations",
+    "table.columns": {
+      "type": "fr_Type",
+      "id": "fr_ID",
+      "value": "fr_Organization",
+      "identification": "fr_ID",
+      "contact": "fr_Primary Contact",
+      "phone": "fr_Phone",
+      "location": "fr_Location",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New",
+      "addExisting": "fr_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "fr_Cases",
+    "table.columns": {
+      "priority": "fr_Priority",
+      "id": "fr_ID",
+      "title": "fr_Title",
+      "status": "fr_Status",
+      "assignee": "fr_Assignee",
+      "modified": "fr_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "fr_Complaints",
+    "table.columns": {
+      "priority": "fr_Priority",
+      "id": "fr_ID",
+      "title": "fr_Title",
+      "status": "fr_Status",
+      "assignee": "fr_Assignee",
+      "modified": "fr_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "fr_Related People",
+    "table.columns": {
+      "firstName": "fr_First Name",
+      "lastName": "fr_Last Name",
+      "type": "fr_Relationship",
+      "description": "fr_Description",
+      "organization": "fr_Organization",
+      "phone": "fr_Phone",
+      "location": "fr_Location"
+    },
+    "modal": {
+      "title": "fr_Add Related Person",
+      "type.label": "fr_Relationship",
+      "type.placeholder": "fr_Enter Relationship",
+      "person.label": "fr_Person",
+      "person.placeholder": "fr_Search People",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "fr_Person",
+    "addAnother": "fr_Add Another",
+    "remove": "fr_Remove",
+    "familyName": "fr_Last Name",
+    "familyName.placeholder": "fr_Enter Last Name",
+    "givenName": "fr_First Name",
+    "givenName.placeholder": "fr_Enter First Name",
+    "middleName": "fr_Middle Name",
+    "middleName.placeholder": "fr_Enter Middle Name",
+    "saveButton": "fr_Save Person",
+    "informCreated": "fr_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "fr_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "fr_Communication Accounts",
+      "phone": "fr_Phone",
+      "phone.placeholder": "fr_Enter Phone",
+      "phoneType": "fr_Phone Type",
+      "email": "fr_Email",
+      "email.placeholder": "fr_Enter Email",
+      "emailType": "fr_Email Type",
+      "url": "fr_URL",
+      "url.placeholder": "fr_Enter URL",
+      "removeContactMethod": "fr_Remove",
+      "urlType": "fr_URL Type"
+    },
+    "organizations": {
+      "title": "fr_Organizations",
+      "searchExisting.placeholder": "fr_Search Existing Organizations",
+      "organizationType": "fr_Relation Type"
+    },
+    "picture": {
+      "title": "fr_Picture"
+    },
+    "locations": {
+      "title": "fr_Locations",
+      "country": "fr_Country",
+      "country.placeholder": "fr_Select Country",
+      "state": "fr_State",
+      "state.placeholder": "fr_Enter State",
+      "zip": "fr_Zip",
+      "zip.placeholder": "fr_Enter Zip",
+      "city": "fr_City",
+      "city.placeholder": "fr_Enter City",
+      "type": "fr_Address Type",
+      "type.placeholder": "fr_Select Address Type",
+      "streetAddress": "fr_Street Address",
+      "streetAddress.placeholder": "fr_Enter Street Address",
+      "streetAddress2": "fr_Street Address2",
+      "streetAddress2.placeholder": "fr_Enter Street Address2"
+    },
+    "identification": {
+      "title": "fr_Identifications",
+      "identificationID": "fr_Identification ID",
+      "identificationID.placeholder": "fr_Enter Identification ID",
+      "identificationType": "fr_Identification Type",
+      "identificationType.placeholder": "fr_Select Identification Type",
+      "identificationNumber": "fr_Identification Number",
+      "identificationNumber.placeholder": "fr_Enter Identification Number",
+      "identificationIssuer": "fr_Identification Issuer",
+      "identificationIssuer.placeholder": "fr_Enter Identification Issuer",
+      "identificationYearIssued": "fr_Identification Issued",
+      "identificationYearIssued.placeholder": "fr_Select Identification Issued",
+      "identificationYearIssued.close.button": "fr_Close"
+    }
+  }
+}
