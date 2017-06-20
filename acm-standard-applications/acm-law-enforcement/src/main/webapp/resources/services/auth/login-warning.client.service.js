@@ -22,8 +22,58 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
         Service.SessionCacheNames = {
             LoginWarning: "AcmLoginWarning"
             , WarningAccepted: "warningAccepted"
+            , PasswordWarningAccepted: "passwordWarningAccepted"
         };
 
+
+        /**
+         * @ngdoc method
+         * @name getPasswordWarningAcceptedInstance
+         * @methodOf services.service:LoginWarning
+         *
+         * @description
+         * Get an instance to PasswordWarningAccepted cache.
+         *
+         * @returns {Object} LocalData instance
+         */
+        Service.getPasswordWarningAcceptedInstance = function () {
+            return new Store.SessionData(
+                {
+                    name: Service.SessionCacheNames.PasswordWarningAccepted,
+                    noOwner: true,
+                    noRegistry: true
+                }
+            );
+        };
+
+        /**
+         * @ngdoc method
+         * @name getPasswordWarningAccepted
+         * @methodOf services.service:LoginWarning
+         *
+         * @description
+         * Get password warning accepted status
+         *
+         * @returns {boolean} Return password warning accepted status
+         */
+        Service.getPasswordWarningAccepted = function () {
+            return Service.getPasswordWarningAcceptedInstance().get();
+        };
+
+        /**
+         * @ngdoc method
+         * @name setPasswordWarningAccepted
+         * @methodOf services.service:LoginWarning
+         *
+         * @param {boolean} passwordWarningAccepted  Warning accepted status
+         *
+         * @description
+         * Set password warning accepted status
+         */
+        Service.setPasswordWarningAccepted = function (passwordWarningAccepted) {
+            var cachePasswordWarningAccepted = Service.getPasswordWarningAcceptedInstance();
+            return cachePasswordWarningAccepted.set(passwordWarningAccepted);
+        };
 
         /**
          * @ngdoc method
@@ -35,12 +85,12 @@ angular.module('services').factory('LoginWarningService', ['$resource', 'Acm.Sto
          *
          * @returns {Object} LocalData instance
          */
-        Service.getWarningAcceptedInstance = function() {
-            var instance = new Store.SessionData({name: Service.SessionCacheNames.WarningAccepted
+        Service.getWarningAcceptedInstance = function () {
+            return new Store.SessionData({
+                name: Service.SessionCacheNames.WarningAccepted
                 , noOwner: true
                 , noRegistry: true
             });
-            return instance;
         };
 
         /**
