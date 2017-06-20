@@ -1,0 +1,418 @@
+{
+  "organizations": {
+    "title": "組織",
+    "progressNoComplaint": "ja_[ No organizations data ]",
+    "progressLoading": "ja_Loading organization ",
+    "progressError": "ja_Failed to load organization "
+  },
+  "organizations.menus": {
+    "leftnav.item": "組織",
+    "topbar.item": "組織"
+  },
+  "organizations.comp.info": {
+    "phone.label": "ja_Phone",
+    "email.label": "ja_Email",
+    "status.label": "ja_Status",
+    "identification.label": "ja_ID",
+    "primary.label": "ja_Primary Contact",
+    "parent.label": "ja_Parent Organization",
+    "parent.placeholder": "ja_Enter Parent Organization"
+  },
+  "organizations.comp.actions": {
+    "export.button": "ja_Export",
+    "import.button": "ja_Import",
+    "delete.button": "ja_Delete",
+    "activate.button": "ja_Activate",
+    "deactivate.button": "ja_Deactivate",
+    "merge.button": "ja_Merge"
+  },
+  "organizations.comp.details": {
+    "title": "ja_Details",
+    "informSaved": "ja_Organization details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "organizations.comp.addresses": {
+    "title": "ja_Locations",
+    "table.columns": {
+      "type": "ja_Type",
+      "streetAddress": "ja_Address 1",
+      "streetAddress2": "ja_Address 2",
+      "city": "ja_City",
+      "state": "ja_State",
+      "zip": "ja_Zip",
+      "country": "ja_Country",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No"
+    },
+    "actions": {
+      "addNew": "ja_Add New",
+      "map": "ja_Map"
+    },
+    "modal": {
+      "addAddress": "ja_Add Location",
+      "editAddress": "ja_Edit Record",
+      "type.label": "ja_Address Type",
+      "type.placeholder": "ja_Enter Address Type",
+      "streetAddress.label": "ja_Address 1",
+      "streetAddress.placeholder": "ja_Enter Address 1",
+      "streetAddress2.label": "ja_Address 2",
+      "streetAddress2.placeholder": "ja_Enter Address 2",
+      "city.label": "ja_City",
+      "city.placeholder": "ja_Enter City",
+      "zip.label": "ja_Zip",
+      "zip.placeholder": "ja_Enter Zip",
+      "state.label": "ja_State",
+      "state.placeholder": "ja_Enter State",
+      "country.label": "ja_Country",
+      "country.placeholder": "ja_Enter Country",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Location",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No"
+    }
+  },
+  "organizations.comp.phones": {
+    "title": "ja_Phone Numbers",
+    "table.columns": {
+      "type": "ja_Phone Type",
+      "value": "ja_Phone Number",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "addPhone": "ja_Add New Phone Number",
+      "editPhone": "ja_Edit Phone Number",
+      "title": "ja_Add New Phone Number",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Phone Number",
+      "type.label": "ja_Phone Type",
+      "type.placeholder": "ja_Enter Phone Type",
+      "value.label": "ja_Phone Number",
+      "value.placeholder": "ja_Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "ja_Fax Numbers",
+    "table.columns": {
+      "type": "ja_Fax Type",
+      "value": "ja_Fax Number",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "addFax": "ja_Add New Fax Number",
+      "editFax": "ja_Edit Fax Number",
+      "title": "ja_Add New Fax Number",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Fax Number",
+      "type.label": "ja_Fax Type",
+      "type.placeholder": "ja_Enter Fax Type",
+      "value.label": "ja_Fax Number",
+      "value.placeholder": "ja_Enter Fax Number"
+    }
+  },
+  "organizations.comp.emails": {
+    "title": "ja_Email Addresses",
+    "table.columns": {
+      "type": "ja_Email Address Type",
+      "value": "ja_Email Address",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "title": "ja_Add New Email Address",
+      "addEmail": "ja_Add New Email Address",
+      "editEmail": "ja_Edit Email Address",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Email Address",
+      "type.label": "ja_Email Type",
+      "type.placeholder": "ja_Enter Email Type",
+      "value.label": "ja_Email Address",
+      "value.placeholder": "ja_Enter Email Address"
+    }
+  },
+  "organizations.comp.urls": {
+    "title": "ja_URLs",
+    "table.columns": {
+      "type": "ja_Type",
+      "value": "ja_Url",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "title": "ja_Add New URL",
+      "addUrl": "ja_Add New URL",
+      "editUrl": "ja_Edit URL",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save URL",
+      "type.label": "ja_Type",
+      "type.placeholder": "ja_Enter Type",
+      "value.label": "ja_URL",
+      "value.placeholder": "ja_Enter URL"
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "ja_DBAs",
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "upload": "ja_New DBA"
+    },
+    "table.columns": {
+      "value": "ja_DBA",
+      "type": "ja_Type",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "modal": {
+      "addDBA": "ja_Add New DBA",
+      "editDBA": "ja_Edit DBA",
+      "title": "ja_Insert New DBA",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save DBA",
+      "value.label": "ja_DBA",
+      "value.placeholder": "ja_Enter DBA",
+      "description": "ja_Description",
+      "aliasType.label": "ja_DBA Type",
+      "aliasType.placeholder": "ja_Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "ja_IDs",
+    "table.columns": {
+      "type": "ja_Type",
+      "id": "ja_ID",
+      "number": "ja_Number",
+      "issuer": "ja_Issuer",
+      "yearIssued": "ja_Year Issued",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "addID": "ja_Add New Identification",
+      "editID": "ja_Edit Identification",
+      "title": "ja_Add New Identification",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "type.label": "ja_Type",
+      "type.placeholder": "ja_Enter Type",
+      "id.label": "ja_ID",
+      "id.placeholder": "ja_Enter ID",
+      "number.label": "ja_Number",
+      "number.placeholder": "ja_Enter Number",
+      "issuer.label": "ja_Issuer",
+      "issuer.placeholder": "ja_Enter Issuer",
+      "yearIssued.label": "ja_Year Issued",
+      "yearIssued.placeholder": "ja_Enter Year Issued",
+      "yearIssued.close.button": "ja_Close",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "ja_People",
+    "table.columns": {
+      "type": "ja_Role",
+      "firstName": "ja_FirstName",
+      "lastName": "ja_LastName",
+      "organization": "ja_Organization",
+      "phone": "ja_Phone",
+      "location": "ja_Location"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New",
+      "addExisting": "ja_Add Existing"
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "ja_Cases",
+    "table.columns": {
+      "priority": "ja_Priority",
+      "id": "ja_ID",
+      "title": "ja_Title",
+      "status": "ja_Status",
+      "assignee": "ja_Assignee",
+      "modified": "ja_Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "ja_Complaints",
+    "table.columns": {
+      "priority": "ja_Priority",
+      "id": "ja_ID",
+      "title": "ja_Title",
+      "status": "ja_Status",
+      "assignee": "ja_Assignee",
+      "modified": "ja_Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "ja_Related Organizations",
+    "table.columns": {
+      "associationType": "ja_Relationship",
+      "type": "ja_Type",
+      "identification": "ja_ID",
+      "value": "ja_Organization",
+      "contact": "ja_Primary Contact",
+      "phone": "ja_Phone",
+      "location": "ja_Location"
+    },
+    "modal": {
+      "title": "ja_Add Related Organization",
+      "type.label": "ja_Relationship",
+      "type.placeholder": "ja_Enter Relationship",
+      "organization.label": "ja_Organization",
+      "organization.placeholder": "ja_Search Organizations",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Related Organization"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "ja_History",
+    "table.columns": {
+      "eventType": "ja_Event Name",
+      "eventDate": "ja_Date",
+      "userId": "ja_User"
+    }
+  },
+  "organizations.comp.newOrganization": {
+    "title": "ja_Organization",
+    "addAnother": "ja_Add Another",
+    "remove": "ja_Remove",
+    "name": "ja_Organization Name",
+    "name.placeholder": "ja_Enter Organization Name",
+    "type": "ja_Organization Type",
+    "type.placeholder": "ja_Select Organization Type",
+    "saveButton": "ja_Save Organization",
+    "parentOrganization": "ja_Parent organization",
+    "searchParentOrganization.placeholder": "ja_Search Parent Organization",
+    "communicationAccounts": {
+      "title": "ja_Communication Accounts",
+      "phone": "ja_Phone",
+      "phone.placeholder": "ja_Enter Phone",
+      "phoneType": "ja_Phone Type",
+      "email": "ja_Email",
+      "email.placeholder": "ja_Enter Email",
+      "emailType": "ja_Email Type",
+      "fax": "ja_Fax",
+      "fax.placeholder": "ja_Enter Fax",
+      "faxType": "ja_Fax Type",
+      "url": "ja_URL",
+      "url.placeholder": "ja_Enter URL",
+      "removeContactMethod": "ja_Remove",
+      "urlType": "ja_URL Type"
+    },
+    "people": {
+      "title": "ja_People",
+      "searchExisting.placeholder": "ja_Search Existing Person",
+      "personType": "ja_Person Type"
+    },
+    "locations": {
+      "title": "ja_Locations",
+      "country": "ja_Country",
+      "country.placeholder": "ja_Select Country",
+      "state": "ja_State",
+      "state.placeholder": "ja_Enter State",
+      "zip": "ja_Zip",
+      "zip.placeholder": "ja_Enter Zip",
+      "city": "ja_City",
+      "city.placeholder": "ja_Enter City",
+      "type": "ja_Address Type",
+      "type.placeholder": "ja_Select Address Type",
+      "streetAddress": "ja_Street Address",
+      "streetAddress.placeholder": "ja_Enter Street Address",
+      "streetAddress2": "ja_Street Address2",
+      "streetAddress2.placeholder": "ja_Enter Street Address2"
+    },
+    "identification": {
+      "title": "ja_Identifications",
+      "identificationID": "ja_Identification ID",
+      "identificationID.placeholder": "ja_Enter Identification ID",
+      "identificationType": "ja_Identification Type",
+      "identificationType.placeholder": "ja_Select Identification Type",
+      "identificationNumber": "ja_Identification Number",
+      "identificationNumber.placeholder": "ja_Enter Identification Number",
+      "identificationIssuer": "ja_Identification Issuer",
+      "identificationIssuer.placeholder": "ja_Enter Identification Issuer",
+      "identificationYearIssued": "ja_Identification Issued",
+      "identificationYearIssued.placeholder": "ja_Select Identification Issued",
+      "identificationYearIssued.close.button": "ja_Close"
+    },
+    "informCreated": "ja_{{objectType}} {{organizationValue}} was created."
+  },
+  "organizations.menus.topbar.item": "ja_New Organization"
+}

@@ -1,0 +1,416 @@
+{
+  "people": {
+    "title": "成員",
+    "progressNoComplaint": "zh-tw_[ No people data ]",
+    "progressLoading": "zh-tw_Loading people ",
+    "progressError": "zh-tw_Failed to load people "
+  },
+  "people.menus": {
+    "leftnav.item": "成員",
+    "topbar.item": "成員"
+  },
+  "people.comp.info": {
+    "phone.label": "zh-tw_Phone",
+    "email.label": "zh-tw_Email",
+    "status.label": "zh-tw_Status",
+    "organization.label": "zh-tw_Organization",
+    "identification.label": "zh-tw_ID"
+  },
+  "people.comp.actions": {
+    "export.button": "zh-tw_Export",
+    "import.button": "zh-tw_Import",
+    "delete.button": "zh-tw_Delete",
+    "activate.button": "zh-tw_Activate",
+    "deactivate.button": "zh-tw_Deactivate",
+    "merge.button": "zh-tw_Merge"
+  },
+  "people.comp.details": {
+    "title": "zh-tw_Details",
+    "informSaved": "zh-tw_Person details saved",
+    "table.columns": {
+      "title": "zh-tw_Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "zh-tw_History",
+    "table.columns": {
+      "eventType": "zh-tw_Event Name",
+      "eventDate": "zh-tw_Date",
+      "userId": "zh-tw_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "zh-tw_Pictures",
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "upload": "zh-tw_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "zh-tw_Thumbnail",
+      "title": "zh-tw_Filename",
+      "description": "zh-tw_Description",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "dialog": {
+      "title": "zh-tw_Upload Picture",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "cancel": "zh-tw_Cancel",
+      "upload": "zh-tw_Upload Picture",
+      "noPictureSelected": "zh-tw_No Files Selected.",
+      "browse": "zh-tw_Browse",
+      "description": "zh-tw_Description"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "zh-tw_Locations",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "streetAddress": "zh-tw_Address 1",
+      "streetAddress2": "zh-tw_Address 2",
+      "city": "zh-tw_City",
+      "state": "zh-tw_State",
+      "zip": "zh-tw_Zip",
+      "country": "zh-tw_Country",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "addNew": "zh-tw_Add New",
+      "map": "zh-tw_Map"
+    },
+    "modal": {
+      "addAddress": "zh-tw_Add Location",
+      "editAddress": "zh-tw_Edit Record",
+      "type.label": "zh-tw_Address Type",
+      "type.placeholder": "zh-tw_Enter Address Type",
+      "streetAddress.label": "zh-tw_Address 1",
+      "streetAddress.placeholder": "zh-tw_Enter Address 1",
+      "streetAddress2.label": "zh-tw_Address 2",
+      "streetAddress2.placeholder": "zh-tw_Enter Address 2",
+      "city.label": "zh-tw_City",
+      "city.placeholder": "zh-tw_Enter City",
+      "zip.label": "zh-tw_Zip",
+      "zip.placeholder": "zh-tw_Enter Zip",
+      "state.label": "zh-tw_State",
+      "state.placeholder": "zh-tw_Enter State",
+      "country.label": "zh-tw_Country",
+      "country.placeholder": "zh-tw_Enter Country",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save Location",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "zh-tw_Phone Numbers",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "value": "zh-tw_Phone Number",
+      "description": "zh-tw_Description",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "addNew": "zh-tw_Add New"
+    },
+    "modal": {
+      "addPhone": "zh-tw_Add New Phone Number",
+      "editPhone": "zh-tw_Edit Phone Number",
+      "title": "zh-tw_Add New Phone Number",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "description": "zh-tw_Description",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save Phone Number",
+      "type.label": "zh-tw_Phone Type",
+      "type.placeholder": "zh-tw_Enter Phone Type",
+      "value.label": "zh-tw_Phone Number",
+      "value.placeholder": "zh-tw_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "zh-tw_Email Addresses",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "value": "zh-tw_Email Address",
+      "description": "zh-tw_Description",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "addNew": "zh-tw_Add New"
+    },
+    "modal": {
+      "title": "zh-tw_Add New Email Address",
+      "addEmail": "zh-tw_Add New Email Address",
+      "editEmail": "zh-tw_Edit Email Address",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "description": "zh-tw_Description",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save Email Address",
+      "type.label": "zh-tw_Email Type",
+      "type.placeholder": "zh-tw_Enter Email Type",
+      "value.label": "zh-tw_Email Address",
+      "value.placeholder": "zh-tw_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "zh-tw_URLs",
+    "table.columns": {
+      "value": "zh-tw_URL",
+      "type": "zh-tw_Type",
+      "description": "zh-tw_Description",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "addNew": "zh-tw_Add New"
+    },
+    "modal": {
+      "title": "zh-tw_Add New URL",
+      "addUrl": "zh-tw_Add New URL",
+      "editUrl": "zh-tw_Edit URL",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "description": "zh-tw_Description",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save URL",
+      "type.label": "zh-tw_Type",
+      "type.placeholder": "zh-tw_Enter Type",
+      "value.label": "zh-tw_URL",
+      "value.placeholder": "zh-tw_Enter URL"
+    }
+  },
+  "people.comp.aliases": {
+    "title": "zh-tw_Aliases",
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "upload": "zh-tw_New Alias"
+    },
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "aliasValue": "zh-tw_Alias",
+      "description": "zh-tw_Description",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "modal": {
+      "aliasValue": "zh-tw_Alias Value",
+      "type": "zh-tw_Type",
+      "addAlias": "zh-tw_Add New Alias",
+      "editAlias": "zh-tw_Edit Alias",
+      "title": "zh-tw_Insert New Alias",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save Alias",
+      "value.label": "zh-tw_Alias",
+      "value.placeholder": "zh-tw_Enter Alias",
+      "description": "zh-tw_Description",
+      "aliasType.label": "zh-tw_Alias Type",
+      "aliasType.placeholder": "zh-tw_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "zh-tw_IDs",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "id": "zh-tw_ID",
+      "number": "zh-tw_Number",
+      "issuer": "zh-tw_Issuer",
+      "yearIssued": "zh-tw_Year Issued",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "addNew": "zh-tw_Add New"
+    },
+    "modal": {
+      "addID": "zh-tw_Add New Identification",
+      "editID": "zh-tw_Edit Identification",
+      "title": "zh-tw_Add New Identification",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "no": "zh-tw_No",
+      "type.label": "zh-tw_Type",
+      "type.placeholder": "zh-tw_Enter Type",
+      "id.label": "zh-tw_ID",
+      "id.placeholder": "zh-tw_Enter ID",
+      "number.label": "zh-tw_Number",
+      "number.placeholder": "zh-tw_Enter Number",
+      "issuer.label": "zh-tw_Issuer",
+      "issuer.placeholder": "zh-tw_Enter Issuer",
+      "yearIssued.label": "zh-tw_Year Issued",
+      "yearIssued.placeholder": "zh-tw_Enter Year Issued",
+      "yearIssued.close.button": "zh-tw_Close",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "zh-tw_Organizations",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "id": "zh-tw_ID",
+      "value": "zh-tw_Organization",
+      "identification": "zh-tw_ID",
+      "contact": "zh-tw_Primary Contact",
+      "phone": "zh-tw_Phone",
+      "location": "zh-tw_Location",
+      "created": "zh-tw_Date Added",
+      "creator": "zh-tw_Added By",
+      "modified": "zh-tw_Last Modified",
+      "modifier": "zh-tw_Modified By"
+    },
+    "actions": {
+      "delete": "zh-tw_Delete",
+      "setPrimary": "zh-tw_Set as Primary",
+      "addNew": "zh-tw_Add New",
+      "addExisting": "zh-tw_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "zh-tw_Cases",
+    "table.columns": {
+      "priority": "zh-tw_Priority",
+      "id": "zh-tw_ID",
+      "title": "zh-tw_Title",
+      "status": "zh-tw_Status",
+      "assignee": "zh-tw_Assignee",
+      "modified": "zh-tw_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "zh-tw_Complaints",
+    "table.columns": {
+      "priority": "zh-tw_Priority",
+      "id": "zh-tw_ID",
+      "title": "zh-tw_Title",
+      "status": "zh-tw_Status",
+      "assignee": "zh-tw_Assignee",
+      "modified": "zh-tw_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "zh-tw_Related People",
+    "table.columns": {
+      "firstName": "zh-tw_First Name",
+      "lastName": "zh-tw_Last Name",
+      "type": "zh-tw_Relationship",
+      "description": "zh-tw_Description",
+      "organization": "zh-tw_Organization",
+      "phone": "zh-tw_Phone",
+      "location": "zh-tw_Location"
+    },
+    "modal": {
+      "title": "zh-tw_Add Related Person",
+      "type.label": "zh-tw_Relationship",
+      "type.placeholder": "zh-tw_Enter Relationship",
+      "person.label": "zh-tw_Person",
+      "person.placeholder": "zh-tw_Search People",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "zh-tw_Person",
+    "addAnother": "zh-tw_Add Another",
+    "remove": "zh-tw_Remove",
+    "familyName": "zh-tw_Last Name",
+    "familyName.placeholder": "zh-tw_Enter Last Name",
+    "givenName": "zh-tw_First Name",
+    "givenName.placeholder": "zh-tw_Enter First Name",
+    "middleName": "zh-tw_Middle Name",
+    "middleName.placeholder": "zh-tw_Enter Middle Name",
+    "saveButton": "zh-tw_Save Person",
+    "informCreated": "zh-tw_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "zh-tw_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "zh-tw_Communication Accounts",
+      "phone": "zh-tw_Phone",
+      "phone.placeholder": "zh-tw_Enter Phone",
+      "phoneType": "zh-tw_Phone Type",
+      "email": "zh-tw_Email",
+      "email.placeholder": "zh-tw_Enter Email",
+      "emailType": "zh-tw_Email Type",
+      "url": "zh-tw_URL",
+      "url.placeholder": "zh-tw_Enter URL",
+      "removeContactMethod": "zh-tw_Remove",
+      "urlType": "zh-tw_URL Type"
+    },
+    "organizations": {
+      "title": "zh-tw_Organizations",
+      "searchExisting.placeholder": "zh-tw_Search Existing Organizations",
+      "organizationType": "zh-tw_Relation Type"
+    },
+    "picture": {
+      "title": "zh-tw_Picture"
+    },
+    "locations": {
+      "title": "zh-tw_Locations",
+      "country": "zh-tw_Country",
+      "country.placeholder": "zh-tw_Select Country",
+      "state": "zh-tw_State",
+      "state.placeholder": "zh-tw_Enter State",
+      "zip": "zh-tw_Zip",
+      "zip.placeholder": "zh-tw_Enter Zip",
+      "city": "zh-tw_City",
+      "city.placeholder": "zh-tw_Enter City",
+      "type": "zh-tw_Address Type",
+      "type.placeholder": "zh-tw_Select Address Type",
+      "streetAddress": "zh-tw_Street Address",
+      "streetAddress.placeholder": "zh-tw_Enter Street Address",
+      "streetAddress2": "zh-tw_Street Address2",
+      "streetAddress2.placeholder": "zh-tw_Enter Street Address2"
+    },
+    "identification": {
+      "title": "zh-tw_Identifications",
+      "identificationID": "zh-tw_Identification ID",
+      "identificationID.placeholder": "zh-tw_Enter Identification ID",
+      "identificationType": "zh-tw_Identification Type",
+      "identificationType.placeholder": "zh-tw_Select Identification Type",
+      "identificationNumber": "zh-tw_Identification Number",
+      "identificationNumber.placeholder": "zh-tw_Enter Identification Number",
+      "identificationIssuer": "zh-tw_Identification Issuer",
+      "identificationIssuer.placeholder": "zh-tw_Enter Identification Issuer",
+      "identificationYearIssued": "zh-tw_Identification Issued",
+      "identificationYearIssued.placeholder": "zh-tw_Select Identification Issued",
+      "identificationYearIssued.close.button": "zh-tw_Close"
+    }
+  }
+}
