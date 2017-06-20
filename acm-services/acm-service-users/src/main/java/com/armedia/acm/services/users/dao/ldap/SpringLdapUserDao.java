@@ -51,15 +51,43 @@ public class SpringLdapUserDao
             // Return the first entity that will be found. The above search can return multiple results under one domain if
             // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
             AcmUser acmUser = results.get(0);
-
-            // append user domain name if set. Used in Single Sign-On scenario.
-            String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
-            log.debug("Adding user domain suffix to the username: {}", userDomainSuffix);
-            acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
+            acmUser = appendDomainNameIfSet(acmUser, config);
             return acmUser;
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
+    }
+
+    private AcmUser appendDomainNameIfSet(AcmUser acmUser, AcmLdapSyncConfig config)
+    {
+        // append user domain name if set. Used in Single Sign-On scenario.
+        String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
+        log.debug("Adding user domain suffix to the username: {}", userDomainSuffix);
+        acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
+        return acmUser;
+    }
+
+    public AcmUser findUserByLookup(String dn, LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        AcmUser user = lookupUser(dn, template, config);
+        user = appendDomainNameIfSet(user, config);
+        return user;
+    }
+
+    public AcmUser lookupUser(String dn, LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(config);
+
+        String userDnStrippedBase = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
+
+        String[] userSyncAttributes = config.getUserSyncAttributes();
+        if (ArrayUtils.isNotEmpty(userSyncAttributes))
+        {
+            return (AcmUser) template.lookup(userDnStrippedBase, userSyncAttributes, userGroupsContextMapper);
+        } else
+        {
+            return (AcmUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);
+        }
     }
 
     public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)

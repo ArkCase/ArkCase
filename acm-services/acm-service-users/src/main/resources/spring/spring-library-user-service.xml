@@ -81,6 +81,7 @@
         <property name="ldapDao" ref="springLdapPagedDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
+        <property name="ldapUserDao" ref="springLdapUserDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="userTransformer" ref="ldapEntryTransformer"/>
     </bean>

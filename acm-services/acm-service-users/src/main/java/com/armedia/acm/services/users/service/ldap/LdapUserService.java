@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
@@ -10,7 +11,6 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -33,6 +33,7 @@ public class LdapUserService
     private SpringLdapDao ldapDao;
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private SpringLdapUserDao ldapUserDao;
     private SpringContextHolder acmContextHolder;
     private LdapEntryTransformer userTransformer;
 
@@ -77,10 +78,8 @@ public class LdapUserService
         try
         {
             // sync any additional fields from ldap after user entry is there
-            AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(ldapSyncConfig);
-            AcmUser userContext = (AcmUser) ldapTemplate.lookup(MapperUtils.stripBaseFromDn(dn, ldapSyncConfig.getBaseDC()),
-                    ldapSyncConfig.getUserSyncAttributes(), userGroupsContextMapper);
-            getUserDao().save(userContext);
+            AcmUser userEntry = getLdapUserDao().findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
+            getUserDao().save(userEntry);
             getUserDao().getEntityManager().flush();
 
             setUserAsMemberToLdapGroups(ldapUser, new ArrayList<>(ldapUser.getGroups()), ldapTemplate, ldapSyncConfig.getBaseDC());
@@ -480,5 +479,15 @@ public class LdapUserService
     public void setUserTransformer(LdapEntryTransformer userTransformer)
     {
         this.userTransformer = userTransformer;
+    }
+
+    public SpringLdapUserDao getLdapUserDao()
+    {
+        return ldapUserDao;
+    }
+
+    public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
+    {
+        this.ldapUserDao = ldapUserDao;
     }
 }
