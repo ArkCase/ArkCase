@@ -54,7 +54,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
         });
 
         function reloadGrid() {
-            if ($scope.selectedNamespace && $scope.selectedLocale.locale) {
+            if ($scope.selectedNamespace && $scope.selectedLocale.code) {
                 $scope.disabledInputs = true;
                 LabelsConfigService.retrieveResource({
                         lang: $scope.selectedLocale.code,
