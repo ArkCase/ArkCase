@@ -147,7 +147,10 @@
           "firstName": "Enter first name",
           "lastName": "Enter last name",
           "email": "Enter email",
-          "password": "Enter password"
+          "password": "Enter password",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",

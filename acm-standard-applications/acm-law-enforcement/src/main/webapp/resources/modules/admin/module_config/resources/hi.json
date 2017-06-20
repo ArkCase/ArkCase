@@ -135,7 +135,10 @@
           "firstName": "hi_Enter first name",
           "lastName": "hi_Enter last name",
           "email": "hi_Enter email",
-          "password": "hi_Enter password"
+          "password": "hi_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "hi_Edit Ldap Member",
