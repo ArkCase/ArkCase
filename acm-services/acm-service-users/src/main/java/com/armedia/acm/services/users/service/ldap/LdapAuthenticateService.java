@@ -61,11 +61,8 @@ public class LdapAuthenticateService
             AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                     get(String.format("%s_sync", acmUser.getUserDirectoryName()));
 
-            AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(ldapSyncConfig);
-
-            String userDn = MapperUtils.stripBaseFromDn(acmUser.getDistinguishedName(), ldapSyncConfig.getBaseDC());
-            AcmUser userContext = (AcmUser) ldapTemplate.lookup(userDn, ldapSyncConfig.getUserSyncAttributes(), userGroupsContextMapper);
-            getUserDao().save(userContext);
+            AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
+            getUserDao().save(userEntry);
         } catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
