@@ -83,7 +83,8 @@ public class SpringLdapUserDao
         String[] userSyncAttributes = config.getUserSyncAttributes();
         if (ArrayUtils.isNotEmpty(userSyncAttributes))
         {
-            return (AcmUser) template.lookup(userDnStrippedBase, userSyncAttributes, userGroupsContextMapper);
+            String[] allAttributes = ArrayUtils.addAll(userSyncAttributes, config.getUserIdAttributeName(), config.getMailAttributeName());
+            return (AcmUser) template.lookup(userDnStrippedBase, allAttributes, userGroupsContextMapper);
         } else
         {
             return (AcmUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);

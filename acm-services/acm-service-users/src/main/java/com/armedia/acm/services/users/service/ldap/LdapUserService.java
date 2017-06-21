@@ -53,6 +53,7 @@ public class LdapUserService
         user.setUserDirectoryName(directoryName);
         user.setUserState("VALID");
         user.setUid(user.getUserId());
+        user.setsAMAccountName(user.getUserId());
         groupNames.forEach(groupName ->
         {
             AcmGroup group = getGroupDao().findByName(groupName);
@@ -77,9 +78,10 @@ public class LdapUserService
         }
         try
         {
-            // sync any additional fields from ldap after user entry is there
+            // passwordExpirationDate is set by ldap after the entry is there
             AcmUser userEntry = getLdapUserDao().findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
-            getUserDao().save(userEntry);
+            ldapUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+            getUserDao().save(ldapUser);
             getUserDao().getEntityManager().flush();
 
             setUserAsMemberToLdapGroups(ldapUser, new ArrayList<>(ldapUser.getGroups()), ldapTemplate, ldapSyncConfig.getBaseDC());
@@ -304,7 +306,7 @@ public class LdapUserService
     public AcmUser cloneLdapUser(String userId, AcmUser acmUser, String password, String directory)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        log.debug("Cloning User:{} in database", acmUser.getUserId());
+        log.debug("Creating new user [{}] as a clone of [{}]", userId, acmUser.getUserId());
         AcmUser existingUser = getUserDao().findByUserId(userId);
         List<AcmGroup> groups = new ArrayList<>(existingUser.getGroups());
         List<String> newGroups = new ArrayList<>(groups.size());

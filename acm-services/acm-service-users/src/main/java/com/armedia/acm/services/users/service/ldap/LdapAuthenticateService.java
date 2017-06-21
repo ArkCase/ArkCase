@@ -57,12 +57,13 @@ public class LdapAuthenticateService
                     getLdapAuthenticateConfig());
             log.debug("Password changed successfully for User: {}", userName);
 
-            // sync any additional fields from ldap after user entry is there
+            // passwordExpirationDate is set by ldap after the entry is there
             AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                     get(String.format("%s_sync", acmUser.getUserDirectoryName()));
 
             AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
-            getUserDao().save(userEntry);
+            acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+            getUserDao().save(acmUser);
         } catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
