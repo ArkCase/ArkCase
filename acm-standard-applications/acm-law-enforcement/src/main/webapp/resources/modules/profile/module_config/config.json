@@ -1,6 +1,7 @@
 {
   "id": "profile",
   "title": "Profile",
+  "configurable": true,
   "menus": [
     {
       "menuId": "usermenu",

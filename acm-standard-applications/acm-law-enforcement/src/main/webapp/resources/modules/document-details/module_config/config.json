@@ -1,6 +1,7 @@
 {
   "id": "document-details",
   "title": "Document details",
+  "configurable": false,
   "menus": [
   ],
   "components": [

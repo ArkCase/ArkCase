@@ -3,14 +3,10 @@
 angular.module('admin').controller('Admin.ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService',
     function ($scope, $state, $stateParams, ConfigService) {
         var modules = [];
-        //If we want to prevent a module to be displayed on Module Configuration page, we should explicitly place it in the blacklist array
-        var blacklist = ['Common settings', 'Core', 'Document details', 'Frevvo', 'Goodbye', 'Welcome'];
 
         ConfigService.queryModules().$promise.then(function (data){
-            _.forEach(data, function (module){
-                modules.push(module.title);
-            });
-            $scope.modules = _.difference(modules, blacklist);
+            modules = _.filter(data, {configurable: true});
+            $scope.modules = modules;
         });
 
         $scope.selectModule = selectModule;
