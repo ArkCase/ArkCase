@@ -1,8 +1,8 @@
 {
   "my-documents": {
-    "title": "zh-tw_My Documents"
+    "title": "我的文件"
   },
   "my-documents.menus": {
-    "leftnav.item": "zh-tw_My Documents"
+    "leftnav.item": "我的文件"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "analytics": {
+    "title": "Analyse des données",
+    "menus": {
+      "leftnav.item": "Analyse des données"
+    }
+  }
+}

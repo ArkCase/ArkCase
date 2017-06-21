@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "ru_Documents"
+    "title": "Документы"
   },
   "document-repository.menus": {
-    "leftnav.item": "ru_Documents",
-    "topbar.item": "ru_Document Repository"
+    "leftnav.item": "Документы",
+    "topbar.item": "Репозиторий Документов"
   },
   "document-repository.error": {
     "invalidData": ""
