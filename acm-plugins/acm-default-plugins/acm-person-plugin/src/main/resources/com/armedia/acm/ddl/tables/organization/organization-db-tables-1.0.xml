@@ -354,9 +354,19 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="54-acm_organization_delete-column" author="nebojsha.davidovikj">
+    <changeSet id="54-acm_organization_delete-fk-constraint-primary-contact" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="acm_organization"
+                                        foreignKeyName="fk_org_primary_contact_id"/>
+        </preConditions>
         <dropForeignKeyConstraint baseTableName="acm_organization" constraintName="fk_org_primary_contact_id"/>
+    </changeSet>
+    <changeSet id="54-acm_organization_delete-column-primary-contact" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="acm_organization" columnName="cm_primary_contact"/>
+        </preConditions>
         <dropColumn tableName="acm_organization" columnName="cm_primary_contact"/>
     </changeSet>
+
 
 </databaseChangeLog>
