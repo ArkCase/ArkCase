@@ -233,7 +233,7 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
-    "security.ldap.user.management":{
+    "security.ldap.user.management": {
       "title": "LDAP User Management",
       "cloneButton": "Clone User",
       "user": "User"
@@ -305,6 +305,29 @@
         "smtpNotValid": "SMTP settings are not valid"
       }
     },
+    "security.emailTemplates": {
+      "title": "Email Templates",
+      "table.columns": {
+        "templateName": "Template Name",
+        "emailPattern": "Email Pattern",
+        "source": "Source",
+        "objectTypes": "Object Types",
+        "actions": "Actions",
+        "modified": "Modified Date",
+        "modifier": "Modified By"
+      },
+      "modal": {
+        "title": "Email Template",
+        "templateName": "Template Name",
+        "emailPattern": "Email Pattern",
+        "source": "Source",
+        "objectTypes": "Object Types",
+        "actions": "Actions",
+        "browse": "Browse",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
+    },
     "security.exchangeConfiguration": {
       "title": "Microsoft Exchange Configuration",
       "exchangeConfigForm": {
@@ -353,12 +376,12 @@
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
     "workflows.config.bpmn.upload": "Upload",
-    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
-    "workflows.config.bpmn.modal": {        
-        "label.description": "Description",
-        "label.noFileSelected": "No File Selected",
-        "btnCancel.text": "Cancel",
-        "btnOk.text": "Upload Workflow"
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "Description",
+      "label.noFileSelected": "No File Selected",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Upload Workflow"
     },
     "workflows.config.activate": {
       "error": "Cant make this process active!",

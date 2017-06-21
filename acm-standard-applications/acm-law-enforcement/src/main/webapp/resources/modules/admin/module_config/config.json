@@ -84,7 +84,8 @@
           "headerCellFilter": "translate"
         }
       ]
-    },{
+    },
+    {
       "id": "securityCalendarConfig",
       "configurableObjectTypes": [
         {
@@ -696,6 +697,99 @@
           "headerCellFilter": "translate"
         }
       ]
+    },
+    {
+      "id": "emailTemplates",
+      "title": "Email templates",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "templateName",
+          "displayName": "admin.security.emailTemplates.table.columns.templateName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "emailPattern",
+          "displayName": "admin.security.emailTemplates.table.columns.emailPattern",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "source",
+          "displayName": "admin.security.emailTemplates.table.columns.source",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "objectTypes",
+          "displayName": "admin.security.emailTemplates.table.columns.objectTypes",
+          "headerCellFilter": "translate",
+          "cellFilter": "arrayToString"
+        },
+        {
+          "name": "actions",
+          "displayName": "admin.security.emailTemplates.table.columns.actions",
+          "headerCellFilter": "translate",
+          "cellFilter": "arrayToString"
+        },
+        {
+          "width": 150,
+          "name": "modified",
+          "visible": false,
+          "displayName": "admin.security.emailTemplates.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        },
+        {
+          "width": 150,
+          "name": "modifier",
+          "visible": false,
+          "displayName": "admin.security.emailTemplates.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 20,
+      "objectTypes": [
+        {
+          "name": "Case File",
+          "id": "CASE_FILE"
+        },
+        {
+          "name": "Complaint",
+          "id": "COMPLAINT"
+        },
+        {
+          "name": "Task",
+          "id": "TASK"
+        }
+      ],
+      "actions": [
+        {
+          "name": "Send as Attachments",
+          "id": "sendAsAttachments"
+        },
+        {
+          "name": "Send as links",
+          "id": "sendAsLinks"
+        }
+      ],
+      "sources": [
+        {
+          "name": "Manual",
+          "id": "MANUAL"
+        },
+        {
+          "name": "Automated",
+          "id": "AUTOMATED"
+        }
+      ]
     }
   ],
   "adminTree": [
@@ -731,10 +825,14 @@
         {
           "title": "admin.security.calendarConfiguration.title",
           "templateName": "security-calendar-configuration"
-		},
-		{
+        },
+        {
           "title": "admin.security.emailConfiguration.title",
           "templateName": "security-email-sender-configuration"
+        },
+        {
+          "title": "admin.security.emailTemplates.title",
+          "templateName": "security-email-templates"
         },
         {
           "title": "admin.security.exchangeConfiguration.title",
