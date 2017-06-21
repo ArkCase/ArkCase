@@ -1,0 +1,416 @@
+{
+  "people": {
+    "title": "люди",
+    "progressNoComplaint": "ru_[ No people data ]",
+    "progressLoading": "ru_Loading people ",
+    "progressError": "ru_Failed to load people "
+  },
+  "people.menus": {
+    "leftnav.item": "люди",
+    "topbar.item": "Лицо"
+  },
+  "people.comp.info": {
+    "phone.label": "ru_Phone",
+    "email.label": "ru_Email",
+    "status.label": "ru_Status",
+    "organization.label": "ru_Organization",
+    "identification.label": "ru_ID"
+  },
+  "people.comp.actions": {
+    "export.button": "ru_Export",
+    "import.button": "ru_Import",
+    "delete.button": "ru_Delete",
+    "activate.button": "ru_Activate",
+    "deactivate.button": "ru_Deactivate",
+    "merge.button": "ru_Merge"
+  },
+  "people.comp.details": {
+    "title": "ru_Details",
+    "informSaved": "ru_Person details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "ru_History",
+    "table.columns": {
+      "eventType": "ru_Event Name",
+      "eventDate": "ru_Date",
+      "userId": "ru_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "ru_Pictures",
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "upload": "ru_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "ru_Thumbnail",
+      "title": "ru_Filename",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "dialog": {
+      "title": "ru_Upload Picture",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "cancel": "ru_Cancel",
+      "upload": "ru_Upload Picture",
+      "noPictureSelected": "ru_No Files Selected.",
+      "browse": "ru_Browse",
+      "description": "ru_Description"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "ru_Locations",
+    "table.columns": {
+      "type": "ru_Type",
+      "streetAddress": "ru_Address 1",
+      "streetAddress2": "ru_Address 2",
+      "city": "ru_City",
+      "state": "ru_State",
+      "zip": "ru_Zip",
+      "country": "ru_Country",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "addNew": "ru_Add New",
+      "map": "ru_Map"
+    },
+    "modal": {
+      "addAddress": "ru_Add Location",
+      "editAddress": "ru_Edit Record",
+      "type.label": "ru_Address Type",
+      "type.placeholder": "ru_Enter Address Type",
+      "streetAddress.label": "ru_Address 1",
+      "streetAddress.placeholder": "ru_Enter Address 1",
+      "streetAddress2.label": "ru_Address 2",
+      "streetAddress2.placeholder": "ru_Enter Address 2",
+      "city.label": "ru_City",
+      "city.placeholder": "ru_Enter City",
+      "zip.label": "ru_Zip",
+      "zip.placeholder": "ru_Enter Zip",
+      "state.label": "ru_State",
+      "state.placeholder": "ru_Enter State",
+      "country.label": "ru_Country",
+      "country.placeholder": "ru_Enter Country",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Location",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "ru_Phone Numbers",
+    "table.columns": {
+      "type": "ru_Type",
+      "value": "ru_Phone Number",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "addPhone": "ru_Add New Phone Number",
+      "editPhone": "ru_Edit Phone Number",
+      "title": "ru_Add New Phone Number",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Phone Number",
+      "type.label": "ru_Phone Type",
+      "type.placeholder": "ru_Enter Phone Type",
+      "value.label": "ru_Phone Number",
+      "value.placeholder": "ru_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "ru_Email Addresses",
+    "table.columns": {
+      "type": "ru_Type",
+      "value": "ru_Email Address",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "title": "ru_Add New Email Address",
+      "addEmail": "ru_Add New Email Address",
+      "editEmail": "ru_Edit Email Address",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Email Address",
+      "type.label": "ru_Email Type",
+      "type.placeholder": "ru_Enter Email Type",
+      "value.label": "ru_Email Address",
+      "value.placeholder": "ru_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "ru_URLs",
+    "table.columns": {
+      "value": "ru_URL",
+      "type": "ru_Type",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "title": "ru_Add New URL",
+      "addUrl": "ru_Add New URL",
+      "editUrl": "ru_Edit URL",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save URL",
+      "type.label": "ru_Type",
+      "type.placeholder": "ru_Enter Type",
+      "value.label": "ru_URL",
+      "value.placeholder": "ru_Enter URL"
+    }
+  },
+  "people.comp.aliases": {
+    "title": "ru_Aliases",
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "upload": "ru_New Alias"
+    },
+    "table.columns": {
+      "type": "ru_Type",
+      "aliasValue": "ru_Alias",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "modal": {
+      "aliasValue": "ru_Alias Value",
+      "type": "ru_Type",
+      "addAlias": "ru_Add New Alias",
+      "editAlias": "ru_Edit Alias",
+      "title": "ru_Insert New Alias",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Alias",
+      "value.label": "ru_Alias",
+      "value.placeholder": "ru_Enter Alias",
+      "description": "ru_Description",
+      "aliasType.label": "ru_Alias Type",
+      "aliasType.placeholder": "ru_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "ru_IDs",
+    "table.columns": {
+      "type": "ru_Type",
+      "id": "ru_ID",
+      "number": "ru_Number",
+      "issuer": "ru_Issuer",
+      "yearIssued": "ru_Year Issued",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "addID": "ru_Add New Identification",
+      "editID": "ru_Edit Identification",
+      "title": "ru_Add New Identification",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "type.label": "ru_Type",
+      "type.placeholder": "ru_Enter Type",
+      "id.label": "ru_ID",
+      "id.placeholder": "ru_Enter ID",
+      "number.label": "ru_Number",
+      "number.placeholder": "ru_Enter Number",
+      "issuer.label": "ru_Issuer",
+      "issuer.placeholder": "ru_Enter Issuer",
+      "yearIssued.label": "ru_Year Issued",
+      "yearIssued.placeholder": "ru_Enter Year Issued",
+      "yearIssued.close.button": "ru_Close",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "ru_Organizations",
+    "table.columns": {
+      "type": "ru_Type",
+      "id": "ru_ID",
+      "value": "ru_Organization",
+      "identification": "ru_ID",
+      "contact": "ru_Primary Contact",
+      "phone": "ru_Phone",
+      "location": "ru_Location",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New",
+      "addExisting": "ru_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "ru_Cases",
+    "table.columns": {
+      "priority": "ru_Priority",
+      "id": "ru_ID",
+      "title": "ru_Title",
+      "status": "ru_Status",
+      "assignee": "ru_Assignee",
+      "modified": "ru_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "ru_Complaints",
+    "table.columns": {
+      "priority": "ru_Priority",
+      "id": "ru_ID",
+      "title": "ru_Title",
+      "status": "ru_Status",
+      "assignee": "ru_Assignee",
+      "modified": "ru_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "ru_Related People",
+    "table.columns": {
+      "firstName": "ru_First Name",
+      "lastName": "ru_Last Name",
+      "type": "ru_Relationship",
+      "description": "ru_Description",
+      "organization": "ru_Organization",
+      "phone": "ru_Phone",
+      "location": "ru_Location"
+    },
+    "modal": {
+      "title": "ru_Add Related Person",
+      "type.label": "ru_Relationship",
+      "type.placeholder": "ru_Enter Relationship",
+      "person.label": "ru_Person",
+      "person.placeholder": "ru_Search People",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "ru_Person",
+    "addAnother": "ru_Add Another",
+    "remove": "ru_Remove",
+    "familyName": "ru_Last Name",
+    "familyName.placeholder": "ru_Enter Last Name",
+    "givenName": "ru_First Name",
+    "givenName.placeholder": "ru_Enter First Name",
+    "middleName": "ru_Middle Name",
+    "middleName.placeholder": "ru_Enter Middle Name",
+    "saveButton": "ru_Save Person",
+    "informCreated": "ru_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "ru_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "ru_Communication Accounts",
+      "phone": "ru_Phone",
+      "phone.placeholder": "ru_Enter Phone",
+      "phoneType": "ru_Phone Type",
+      "email": "ru_Email",
+      "email.placeholder": "ru_Enter Email",
+      "emailType": "ru_Email Type",
+      "url": "ru_URL",
+      "url.placeholder": "ru_Enter URL",
+      "removeContactMethod": "ru_Remove",
+      "urlType": "ru_URL Type"
+    },
+    "organizations": {
+      "title": "ru_Organizations",
+      "searchExisting.placeholder": "ru_Search Existing Organizations",
+      "organizationType": "ru_Relation Type"
+    },
+    "picture": {
+      "title": "ru_Picture"
+    },
+    "locations": {
+      "title": "ru_Locations",
+      "country": "ru_Country",
+      "country.placeholder": "ru_Select Country",
+      "state": "ru_State",
+      "state.placeholder": "ru_Enter State",
+      "zip": "ru_Zip",
+      "zip.placeholder": "ru_Enter Zip",
+      "city": "ru_City",
+      "city.placeholder": "ru_Enter City",
+      "type": "ru_Address Type",
+      "type.placeholder": "ru_Select Address Type",
+      "streetAddress": "ru_Street Address",
+      "streetAddress.placeholder": "ru_Enter Street Address",
+      "streetAddress2": "ru_Street Address2",
+      "streetAddress2.placeholder": "ru_Enter Street Address2"
+    },
+    "identification": {
+      "title": "ru_Identifications",
+      "identificationID": "ru_Identification ID",
+      "identificationID.placeholder": "ru_Enter Identification ID",
+      "identificationType": "ru_Identification Type",
+      "identificationType.placeholder": "ru_Select Identification Type",
+      "identificationNumber": "ru_Identification Number",
+      "identificationNumber.placeholder": "ru_Enter Identification Number",
+      "identificationIssuer": "ru_Identification Issuer",
+      "identificationIssuer.placeholder": "ru_Enter Identification Issuer",
+      "identificationYearIssued": "ru_Identification Issued",
+      "identificationYearIssued.placeholder": "ru_Select Identification Issued",
+      "identificationYearIssued.close.button": "ru_Close"
+    }
+  }
+}

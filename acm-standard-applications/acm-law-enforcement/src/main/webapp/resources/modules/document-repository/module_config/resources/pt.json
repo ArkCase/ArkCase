@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "pt_Documents"
+    "title": "Documentos"
   },
   "document-repository.menus": {
-    "leftnav.item": "pt_Documents",
-    "topbar.item": "pt_Document Repository"
+    "leftnav.item": "Documentos",
+    "topbar.item": "Repositório de Documentos"
   },
   "document-repository.error": {
     "invalidData": ""
