@@ -31,7 +31,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
@@ -72,7 +71,8 @@ public class SearchObjectByTypeAPIController {
             }
 
             if (activeOnly) {
-                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE";
+                query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE" +
+                        " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
             }
             if (log.isDebugEnabled()) {
                 log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
@@ -140,7 +140,8 @@ public class SearchObjectByTypeAPIController {
 
         if ( activeOnly )
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+                    " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
         if ( log.isDebugEnabled() )
@@ -177,7 +178,8 @@ public class SearchObjectByTypeAPIController {
 
         if ( activeOnly )
         {
-            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
+            query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
+                    " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
         if ( log.isDebugEnabled() )
