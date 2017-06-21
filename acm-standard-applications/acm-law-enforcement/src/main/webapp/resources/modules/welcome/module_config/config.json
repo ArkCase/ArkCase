@@ -1,6 +1,7 @@
 {
   "id": "welcome",
   "title": "Welcome",
+  "configurable": false,
   "menus": [],
   "components": []
 }

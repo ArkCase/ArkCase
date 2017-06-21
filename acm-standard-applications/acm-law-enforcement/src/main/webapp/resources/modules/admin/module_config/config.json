@@ -1,6 +1,7 @@
 {
   "id": "admin",
   "title": "Admin",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",

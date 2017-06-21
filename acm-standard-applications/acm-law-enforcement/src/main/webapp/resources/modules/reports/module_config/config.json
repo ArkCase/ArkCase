@@ -1,6 +1,7 @@
 {
   "id": "reports",
   "title": "Reports",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
