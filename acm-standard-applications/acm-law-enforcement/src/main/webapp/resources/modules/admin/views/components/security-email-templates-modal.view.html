@@ -1,0 +1,77 @@
+<div class="modal-header">
+    <h3><span translate>admin.security.emailTemplates.modal.title</span></h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label translate>admin.security.emailTemplates.modal.title</label><span
+                class="required-asterisk">*</span><br/>
+            <button ngf-select ng-model="templateFile" id="file"
+                    class="btn btn-sm btn-default">
+                <span translate>admin.security.emailTemplates.modal.browse</span></button>
+            {{templateFile.name}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="emailPattern" translate>admin.security.emailTemplates.modal.emailPattern</label>
+            <textarea id="emailPattern" class="input-md form-control" ng-model="template.emailPattern"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label for="templateName" translate>admin.security.emailTemplates.modal.templateName</label>
+            <textarea id="templateName" class="input-md form-control" ng-model="template.templateName"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label translate>admin.security.emailTemplates.modal.objectTypes</label><br/>
+            <label ng-repeat="objectType in objectTypeList">
+                <input
+                        type="checkbox"
+                        name="objectTypes[]"
+                        value="{{objectType.id}}"
+                        ng-checked="template.objectTypes.indexOf(objectType.id) > -1"
+                        ng-click="toggleObjectTypes(objectType.id)"
+                > {{objectType.name}}
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label translate>admin.security.emailTemplates.modal.actions</label><br/>
+            <label ng-repeat="action in actionList">
+                <input
+                        type="checkbox"
+                        name="actions[]"
+                        value="{{action.id}}"
+                        ng-checked="template.actions.indexOf(action.id) > -1"
+                        ng-click="toggleActions(action.id)"
+                > {{action.name}}
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 form-group">
+            <label translate>admin.security.emailTemplates.modal.source</label><span
+                class="required-asterisk">*</span><br/>
+            <label>
+                <input type="radio" ng-model="template.source" value="MANUAL">
+                <span>Manual</span>
+            </label>
+            <label>
+                <input type="radio" ng-model="template.source" value="AUTOMATED">
+                <span>Automated</span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.security.emailTemplates.modal.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )><span translate>admin.security.emailTemplates.modal.save</span>
+    </button>
+</div>
+
