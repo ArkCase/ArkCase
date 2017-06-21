@@ -55,6 +55,7 @@
   "cases.comp.people": {
     "title": "People",
     "table.columns": {
+      "entity": "Entity",
       "type": "Role",
       "firstName": "FirstName",
       "lastName": "LastName",
