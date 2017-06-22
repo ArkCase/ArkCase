@@ -4,14 +4,13 @@ angular.module('dashboard.person', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('person', {
-                    title: 'Person',
-                    description: 'Displays person',
-                    controller: 'Dashboard.PersonController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/person.client.view.html',
-                    commonName: 'person'
-                }
-            );
+                title: 'dashboard.widgets.person.title',
+                description: 'dashboard.widgets.person.description',
+                controller: 'Dashboard.PersonController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/person.client.view.html',
+                commonName: 'person'
+            });
     })
     .controller('Dashboard.PersonController', ['$scope', '$stateParams', 'CostTracking.InfoService'
         , 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'

@@ -4,14 +4,13 @@ angular.module('dashboard.details', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('details', {
-                    title: 'Details',
-                    description: 'Displays details',
-                    controller: 'Dashboard.DetailsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html',
-                    commonName: 'details'
-                }
-            );
+                title: 'dashboard.widgets.details.title',
+                description: 'dashboard.widgets.details.title.description',
+                controller: 'Dashboard.DetailsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html',
+                commonName: 'details'
+            });
     })
     .controller('Dashboard.DetailsController', ['$scope', '$stateParams', 'UtilService', 'Case.InfoService'
         , 'Complaint.InfoService', 'Task.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService'

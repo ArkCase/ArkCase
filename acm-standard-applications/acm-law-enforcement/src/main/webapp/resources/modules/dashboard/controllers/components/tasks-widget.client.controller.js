@@ -4,14 +4,13 @@ angular.module('dashboard.tasks', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('tasks', {
-                    title: 'Tasks',
-                    description: 'Displays Tasks',
-                    controller: 'Dashboard.TasksController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/tasks-widget.client.view.html',
-                    commonName: 'tasks'
-                }
-            );
+                title: 'dashboard.widgets.tasks.title',
+                description: 'dashboard.widgets.tasks.description',
+                controller: 'Dashboard.TasksController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/tasks-widget.client.view.html',
+                commonName: 'tasks'
+            });
     })
     .controller('Dashboard.TasksController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Case.InfoService'
         , 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TaskService'
