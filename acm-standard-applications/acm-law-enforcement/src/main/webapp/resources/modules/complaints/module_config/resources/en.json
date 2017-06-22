@@ -58,6 +58,7 @@
   "complaints.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
+      "name": "Name",
       "associationType": "Role",
       "type": "Type",
       "identification": "ID",
