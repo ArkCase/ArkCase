@@ -33,8 +33,9 @@ import java.util.Collection;
 import java.util.List;
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class SearchObjectByTypeAPIController {
+@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+public class SearchObjectByTypeAPIController
+{
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,7 +43,7 @@ public class SearchObjectByTypeAPIController {
     private SearchEventPublisher searchEventPublisher;
     private AcmPluginManager acmPluginManager;
 
-    @RequestMapping(value = "/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchObjectByType(
             @PathVariable("objectType") String objectType,
@@ -56,56 +57,66 @@ public class SearchObjectByTypeAPIController {
             @RequestParam(value = "searchQuery", required = false, defaultValue = "") String searchQuery,
             Authentication authentication,
             HttpSession httpSession
-    ) throws MuleException {
+    ) throws MuleException
+    {
         String[] f = null;
         String sortParams = null;
         String params = "";
         String query = "object_type_s:" + objectType;
         String user = authentication.getName();
-        if(!objectSubTypes.isEmpty()){
+        if (!objectSubTypes.isEmpty())
+        {
             query += " AND object_sub_type_s:(" + String.join(" OR ", objectSubTypes) + ")";
         }
-        if (StringUtils.isBlank(filters)) {
-            if (!StringUtils.isBlank(assignee)) {
+        if (StringUtils.isBlank(filters))
+        {
+            if (!StringUtils.isBlank(assignee))
+            {
                 query += " AND assignee_s:" + assignee;
             }
 
-            if (activeOnly) {
+            if (activeOnly)
+            {
                 query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND -status_s:CLOSE" +
                         " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
             }
-            if (log.isDebugEnabled()) {
-                log.debug("User '" + authentication.getName() + "' is searching for '" + query + "'");
-            }
-        } else {
-                f = filters.split(",");
-                List<String> testFilters;
-                if (f != null) {
-                    testFilters = findFilters(objectType, f);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    int i =0;
-                    for( String filter:testFilters ) {
-                        if(filter.contains(SearchConstants.USER))
-                            filter=filter.replace(SearchConstants.USER,user);
-                        if( i>0 ) {
-                            stringBuilder.append(SearchConstants.AND_SPLITTER);
-                            stringBuilder.append(filter);
-                        } else {
-                            stringBuilder.append(filter);
-                        }
-                        i++;
+            log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
+        } else
+        {
+            f = filters.split(",");
+            List<String> testFilters;
+            if (f != null)
+            {
+                testFilters = findFilters(objectType, f);
+                StringBuilder stringBuilder = new StringBuilder();
+                int i = 0;
+                for (String filter : testFilters)
+                {
+                    if (filter.contains(SearchConstants.USER))
+                        filter = filter.replace(SearchConstants.USER, user);
+                    if (i > 0)
+                    {
+                        stringBuilder.append(SearchConstants.AND_SPLITTER);
+                        stringBuilder.append(filter);
+                    } else
+                    {
+                        stringBuilder.append(filter);
                     }
-                    params=stringBuilder.toString();
+                    i++;
                 }
+                params = stringBuilder.toString();
             }
-
-        if (!StringUtils.isBlank(sort)){
-          sortParams = findSortValuesAndCreateSotrString(objectType, sort);
         }
 
-        if (!StringUtils.isBlank(searchQuery)) {
-        	String[] searchQueryProperties = findSearchQueryProperties(objectType);
-        	params = addSearchQueryPropertiesToParams(searchQuery, searchQueryProperties, params);
+        if (!StringUtils.isBlank(sort))
+        {
+            sortParams = findSortValuesAndCreateSotrString(objectType, sort);
+        }
+
+        if (!StringUtils.isBlank(searchQuery))
+        {
+            String[] searchQueryProperties = findSearchQueryProperties(objectType);
+            params = addSearchQueryPropertiesToParams(searchQuery, searchQueryProperties, params);
         }
 
         // try what the user sent, if no sort properties were found
@@ -119,10 +130,10 @@ public class SearchObjectByTypeAPIController {
         return results;
     }
 
-    @RequestMapping(value = "/advanced/{objectType}", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/advanced/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String searchAdvancedObjectByType(
-    		@PathVariable("objectType") String objectType,
+            @PathVariable("objectType") String objectType,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
@@ -134,20 +145,18 @@ public class SearchObjectByTypeAPIController {
     {
         String query = "object_type_s:" + objectType;
 
-        if (!StringUtils.isBlank(assignee)) {
+        if (!StringUtils.isBlank(assignee))
+        {
             query += " AND assignee_s:" + assignee;
         }
 
-        if ( activeOnly )
+        if (activeOnly)
         {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
+        log.debug("Advanced Search: User [{}] is searching for [{}]", authentication.getName(), query);
 
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort);
@@ -157,7 +166,7 @@ public class SearchObjectByTypeAPIController {
         return results;
     }
 
-    @RequestMapping(value = "/advanced/{objectType}/all", method  = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/advanced/{objectType}/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> searchAllAdvancedObjectByType(
             @PathVariable("objectType") String objectType,
@@ -172,64 +181,69 @@ public class SearchObjectByTypeAPIController {
     {
         String query = "object_type_s:" + objectType;
 
-        if (!StringUtils.isBlank(assignee)) {
+        if (!StringUtils.isBlank(assignee))
+        {
             query += " AND assignee_s:" + assignee;
         }
 
-        if ( activeOnly )
+        if (activeOnly)
         {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED" +
                     " AND -status_lcs:INVALID AND -status_lcs:DELETE AND -status_lcs:INACTIVE";
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Advanced Search: User '" + authentication.getName() + "' is searching for '" + query + "'");
-        }
+        log.debug("Advanced Search: User [{}] is searching for [{}]", authentication.getName(), query);
 
         String results;
         SearchResults searchResults = new SearchResults();
         JSONArray docs;
         List<String> foundObjects = new ArrayList();
-        do {
+        do
+        {
             results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                     query, startRow, maxRows, sort);
             docs = searchResults.getDocuments(results);
-            if(docs != null && docs.length() > 0){
+            if (docs != null && docs.length() > 0)
+            {
                 for (int i = 0; i < docs.length(); i++)
                 {
                     JSONObject doc = docs.getJSONObject(i);
                     if (doc != null && doc.has(SearchConstants.PROPERTY_OBJECT_TYPE))
                     {
-                        if(objectType.equals(doc.getString(SearchConstants.PROPERTY_OBJECT_TYPE))){
+                        if (objectType.equals(doc.getString(SearchConstants.PROPERTY_OBJECT_TYPE)))
+                        {
                             foundObjects.add(doc.toString());
                         }
                     }
                 }
             }
             startRow += maxRows;
-        } while(docs != null && docs.length() > 0);
+        } while (docs != null && docs.length() > 0);
 
         publishSearchEvent(authentication, httpSession, true, results);
         return foundObjects;
     }
 
     protected void publishSearchEvent(Authentication authentication,
-            HttpSession httpSession,
-            boolean succeeded, String jsonPayload)
+                                      HttpSession httpSession,
+                                      boolean succeeded, String jsonPayload)
     {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         SolrResponse solrResponse = gson.fromJson(jsonPayload, SolrResponse.class);
 
-        if ( solrResponse.getResponse() != null ) {
+        if (solrResponse.getResponse() != null)
+        {
             List<SolrDocument> solrDocs = solrResponse.getResponse().getDocs();
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
             Long objectId = null;
-            for ( SolrDocument doc : solrDocs ) {
+            for (SolrDocument doc : solrDocs)
+            {
                 // in case when objectID is not Long like in USER case
-                try {
+                try
+                {
                     objectId = Long.parseLong(doc.getObject_id_s());
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException e)
+                {
                     objectId = new Long(-1);
                 }
                 ApplicationSearchEvent event = new ApplicationSearchEvent(objectId, doc.getObject_type_s(),
@@ -239,30 +253,41 @@ public class SearchObjectByTypeAPIController {
         }
     }
 
-    private String findSortValuesAndCreateSotrString(String objectType,String sort){
+    private String findSortValuesAndCreateSotrString(String objectType, String sort)
+    {
         String[] srt = sort.split(",");
         Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
         List<String> suportedObjectTypes = null;
         StringBuilder stringBuilder = new StringBuilder();
         boolean isFirstSortArgument = true;
-        for( AcmPlugin plugin: plugins ) {
-            if( plugin.getSuportedObjectTypesNames()!=null ) {
+        for (AcmPlugin plugin : plugins)
+        {
+            if (plugin.getSuportedObjectTypesNames() != null)
+            {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else {
+            } else
+            {
                 continue;
             }
-            for ( String objectTypeName:suportedObjectTypes) {
-                if ( objectType.equals(objectTypeName) ) {
-                    for( String s:srt ){
+            for (String objectTypeName : suportedObjectTypes)
+            {
+                if (objectType.equals(objectTypeName))
+                {
+                    for (String s : srt)
+                    {
                         String jsonString = (String) plugin.getPluginProperties().get("search.tree.sort");
                         JSONArray jsonArray = new JSONArray(jsonString);
-                        for( int i=0;i< jsonArray.length(); i++) {
+                        for (int i = 0; i < jsonArray.length(); i++)
+                        {
                             JSONObject jObj = jsonArray.getJSONObject(i);
-                            if(jObj.getString("name").equals(s)){
-                                if(isFirstSortArgument) {
+                            if (jObj.getString("name").equals(s))
+                            {
+                                if (isFirstSortArgument)
+                                {
                                     stringBuilder.append(jObj.getString("value").trim());
                                     isFirstSortArgument = false;
-                                } else {
+                                } else
+                                {
                                     stringBuilder.append(", ");
                                     stringBuilder.append(jObj.getString("value").trim());
                                 }
@@ -275,27 +300,36 @@ public class SearchObjectByTypeAPIController {
         return stringBuilder.toString();
     }
 
-    private List<String> findFilters(String objectType, String[] filterNames) {
+    private List<String> findFilters(String objectType, String[] filterNames)
+    {
         Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
         List<String> suportedObjectTypes = null;
         List<String> filters = new ArrayList<>();
-        for( AcmPlugin plugin: plugins ) {
-            if( plugin.getSuportedObjectTypesNames()!=null ) {
+        for (AcmPlugin plugin : plugins)
+        {
+            if (plugin.getSuportedObjectTypesNames() != null)
+            {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else {
+            } else
+            {
                 continue;
             }
-            for ( String objectTypeName:suportedObjectTypes ) {
-                if ( objectType.equals(objectTypeName) ) {
-                    for ( String filterName: filterNames) {
-                          String jsonString = (String) plugin.getPluginProperties().get("search.tree.filter");
-                          JSONArray jsonArray = new JSONArray(jsonString);
-                         for( int i=0;i< jsonArray.length(); i++ ) {
-                              JSONObject jObj = jsonArray.getJSONObject(i);
-                              if(jObj.getString("name").equals(filterName)){
+            for (String objectTypeName : suportedObjectTypes)
+            {
+                if (objectType.equals(objectTypeName))
+                {
+                    for (String filterName : filterNames)
+                    {
+                        String jsonString = (String) plugin.getPluginProperties().get("search.tree.filter");
+                        JSONArray jsonArray = new JSONArray(jsonString);
+                        for (int i = 0; i < jsonArray.length(); i++)
+                        {
+                            JSONObject jObj = jsonArray.getJSONObject(i);
+                            if (jObj.getString("name").equals(filterName))
+                            {
                                 filters.add(jObj.getString("value").trim());
-                              }
-                         }
+                            }
+                        }
                     }
                 }
             }
@@ -303,22 +337,29 @@ public class SearchObjectByTypeAPIController {
         return filters;
     }
 
-    private String[] findSearchQueryProperties(String objectType) {
+    private String[] findSearchQueryProperties(String objectType)
+    {
         Collection<AcmPlugin> plugins = getAcmPluginManager().getAcmPlugins();
         List<String> suportedObjectTypes = null;
-        for( AcmPlugin plugin: plugins ) {
-            if( plugin.getSuportedObjectTypesNames()!=null ) {
+        for (AcmPlugin plugin : plugins)
+        {
+            if (plugin.getSuportedObjectTypesNames() != null)
+            {
                 suportedObjectTypes = plugin.getSuportedObjectTypesNames();
-            } else {
+            } else
+            {
                 continue;
             }
-            for ( String objectTypeName : suportedObjectTypes ) {
-                if ( objectType.equals(objectTypeName) ) {
-                	String searchQueryPropertiesAsString = (String) plugin.getPluginProperties().get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
+            for (String objectTypeName : suportedObjectTypes)
+            {
+                if (objectType.equals(objectTypeName))
+                {
+                    String searchQueryPropertiesAsString = (String) plugin.getPluginProperties().get(SearchConstants.SEARCH_QUERY_PROPERTIES_KEY);
 
-                	if (StringUtils.isNotEmpty(searchQueryPropertiesAsString)) {
-                		return searchQueryPropertiesAsString.split(",");
-                	}
+                    if (StringUtils.isNotEmpty(searchQueryPropertiesAsString))
+                    {
+                        return searchQueryPropertiesAsString.split(",");
+                    }
                 }
             }
         }
@@ -327,43 +368,47 @@ public class SearchObjectByTypeAPIController {
 
     private String addSearchQueryPropertiesToParams(String searchQuery, String[] searchQueryProperties, String params)
     {
-    	if (searchQueryProperties != null && searchQueryProperties.length > 0 && StringUtils.isNotEmpty(searchQuery)) {
-    		String searchQueryBuilded = "fq=";
-    		int index = 0;
-    		for (String searchQueryProperty : searchQueryProperties) {
-    			String separator = "";
-    			if (index > 0)
-    			{
-    				separator = " " + SearchConstants.OPERATOR_OR + " ";
-    			}
+        if (searchQueryProperties != null && searchQueryProperties.length > 0 && StringUtils.isNotEmpty(searchQuery))
+        {
+            String searchQueryBuilded = "fq=";
+            int index = 0;
+            for (String searchQueryProperty : searchQueryProperties)
+            {
+                String separator = "";
+                if (index > 0)
+                {
+                    separator = " " + SearchConstants.OPERATOR_OR + " ";
+                }
 
-    			// If the search keywords contains empty space, search for that particular phrase, otherwise find any objects that
-    			// contains the characters in the searched properties
-    			String value = searchQuery;
-    			if (searchQuery.contains(" ") || searchQuery.contains("_"))
-    			{
-    				value = "\"" + value + "\"";
-    			}
-    			searchQueryBuilded += separator + searchQueryProperty.trim() + ":" + value;
-    			index++;
-    		}
+                // If the search keywords contains empty space, search for that particular phrase, otherwise find any objects that
+                // contains the characters in the searched properties
+                String value = searchQuery;
+                if (searchQuery.contains(" ") || searchQuery.contains("_"))
+                {
+                    value = "\"" + value + "\"";
+                }
+                searchQueryBuilded += separator + searchQueryProperty.trim() + ":" + value;
+                index++;
+            }
 
-    		String splitter = "";
-    		if (StringUtils.isNotEmpty(params))
-			{
-				splitter = SearchConstants.AND_SPLITTER;
-			}
-    		params += splitter + searchQueryBuilded;
-    	}
+            String splitter = "";
+            if (StringUtils.isNotEmpty(params))
+            {
+                splitter = SearchConstants.AND_SPLITTER;
+            }
+            params += splitter + searchQueryBuilded;
+        }
 
-    	return params;
+        return params;
     }
 
-    public AcmPluginManager getAcmPluginManager() {
+    public AcmPluginManager getAcmPluginManager()
+    {
         return acmPluginManager;
     }
 
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
+    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
+    {
         this.acmPluginManager = acmPluginManager;
     }
 
@@ -377,11 +422,13 @@ public class SearchObjectByTypeAPIController {
         this.executeSolrQuery = executeSolrQuery;
     }
 
-    public SearchEventPublisher getSearchEventPublisher() {
+    public SearchEventPublisher getSearchEventPublisher()
+    {
         return searchEventPublisher;
     }
 
-    public void setSearchEventPublisher(SearchEventPublisher searchEventPublisher) {
+    public void setSearchEventPublisher(SearchEventPublisher searchEventPublisher)
+    {
         this.searchEventPublisher = searchEventPublisher;
     }
 
