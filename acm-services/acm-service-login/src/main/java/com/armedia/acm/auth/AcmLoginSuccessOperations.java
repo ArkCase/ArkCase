@@ -16,10 +16,13 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Created by armdev on 6/3/14.
@@ -32,6 +35,7 @@ public class AcmLoginSuccessOperations
     private AcmApplication acmApplication;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -48,6 +52,27 @@ public class AcmLoginSuccessOperations
         addAcmApplicationToSession(request);
 
         recordAuditPropertyUser(internalUserId);
+
+        setPasswordExpirationSessionAttribute(request);
+    }
+
+    protected void setPasswordExpirationSessionAttribute(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(false);
+        AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
+
+        LocalDate passwordExpirationDate = acmUser.getPasswordExpirationDate();
+        LocalDate today = LocalDate.now();
+        if (passwordExpirationDate != null)
+        {
+            long daysBetween = DAYS.between(today, passwordExpirationDate);
+            if (daysBetween <= DAYS_TO_PASSWORD_EXPIRATION)
+            {
+                String daysToExpiration = daysBetween == 0 ? "today" : String.format("in %d day(s)", daysBetween);
+                session.setAttribute("acm_user_message",
+                        "Your password expires " + daysToExpiration + ", please change it before expiration date.");
+            }
+        }
     }
 
     private void recordAuditPropertyUser(String userId)
@@ -60,10 +85,7 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Session 'acm_username' set to '" + userId + "'");
-        }
+        log.debug("Session 'acm_username' set to '{}'", userId);
 
         // after successful login set the MDC variable (needed for API calls)
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
@@ -86,17 +108,17 @@ public class AcmLoginSuccessOperations
     {
         switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
-            case "samaccountname":
-                return acmUser.getsAMAccountName();
-            case "userprincipalname":
-                return acmUser.getUserPrincipalName();
-            case "uid":
-                return acmUser.getUid();
-            case "dn":
-            case "distinguishedname":
-                return acmUser.getDistinguishedName();
-            default:
-                return acmUser.getsAMAccountName();
+        case "samaccountname":
+            return acmUser.getsAMAccountName();
+        case "userprincipalname":
+            return acmUser.getUserPrincipalName();
+        case "uid":
+            return acmUser.getUid();
+        case "dn":
+        case "distinguishedname":
+            return acmUser.getDistinguishedName();
+        default:
+            return acmUser.getsAMAccountName();
         }
     }
 
@@ -106,26 +128,23 @@ public class AcmLoginSuccessOperations
 
         HttpSession session = request.getSession(true);
 
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails )
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
         session.setAttribute("acm_ip_address", ipAddress);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Session 'acm_ip_address' set to '" + ipAddress + "'");
-        }
+        log.debug("Session 'acm_ip_address' set to '{}'", ipAddress);
     }
 
     protected void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
     {
         List<String> allPrivileges = new ArrayList<>();
 
-        if ( authentication.getAuthorities() != null )
+        if (authentication.getAuthorities() != null)
         {
-            for ( GrantedAuthority authority : authentication.getAuthorities() )
+            for (GrantedAuthority authority : authentication.getAuthorities())
             {
                 List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
                 allPrivileges.addAll(privileges);
@@ -135,7 +154,7 @@ public class AcmLoginSuccessOperations
         // we have to put a map in the session because of how JSTL works. It's easier to check for
         // a map entry than to see if an element exists in a list.
         Map<String, Boolean> privilegeMap = new HashMap<>();
-        for ( String privilege : allPrivileges )
+        for (String privilege : allPrivileges)
         {
             privilegeMap.put(privilege, Boolean.TRUE);
         }
@@ -144,10 +163,7 @@ public class AcmLoginSuccessOperations
 
         session.setAttribute("acm_privileges", privilegeMap);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Added " + privilegeMap.size() + " privileges to user session.");
-        }
+        log.debug("Added {} privileges to user session.", privilegeMap.size());
 
     }
 
@@ -170,10 +186,7 @@ public class AcmLoginSuccessOperations
             session.setAttribute("acm_object_types", "[]");
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
-        }
+        log.debug("Added ACM application named '{}' to user session.", getAcmApplication().getApplicationName());
 
     }
 

@@ -1,8 +1,8 @@
 {
   "my-documents": {
-    "title": "pt_My Documents"
+    "title": "Meus documentos"
   },
   "my-documents.menus": {
-    "leftnav.item": "pt_My Documents"
+    "leftnav.item": "Meus Documentos"
   }
 }

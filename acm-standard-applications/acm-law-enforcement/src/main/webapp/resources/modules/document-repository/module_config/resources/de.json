@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "de_Documents"
+    "title": "Unterlagen"
   },
   "document-repository.menus": {
-    "leftnav.item": "de_Documents",
-    "topbar.item": "de_Document Repository"
+    "leftnav.item": "Unterlagen",
+    "topbar.item": "Dokumenten-Repository"
   },
   "document-repository.error": {
     "invalidData": ""

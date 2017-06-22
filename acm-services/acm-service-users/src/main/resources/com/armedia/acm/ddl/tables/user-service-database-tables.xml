@@ -480,4 +480,10 @@
                                columnDataType="${timestampType}"/>
     </changeSet>
 
+    <changeSet id="26-add-password-expiration-date-column" author="ncuculova">
+        <addColumn tableName="acm_user">
+            <column name="cm_pwd_ex_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
