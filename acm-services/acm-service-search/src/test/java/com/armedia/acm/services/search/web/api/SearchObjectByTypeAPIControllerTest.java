@@ -131,7 +131,7 @@ public class SearchObjectByTypeAPIControllerTest extends EasyMockSupport
 
         String jsonString = result.getResponse().getContentAsString();
 
-        log.debug("Got JSON: " + jsonString);
+        log.debug("Got JSON [{}]", jsonString);
 
         assertEquals(solrResponse, jsonString);
 
