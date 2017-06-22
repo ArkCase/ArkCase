@@ -1,4 +1,4 @@
-angular.module('people').controller('Admin.EmailTemplatesModalController', ['$scope', '$modalInstance', 'params',
+angular.module('admin').controller('Admin.EmailTemplatesModalController', ['$scope', '$modalInstance', 'params',
     function ($scope, $modalInstance, params) {
 
         $scope.templateFile = null;
