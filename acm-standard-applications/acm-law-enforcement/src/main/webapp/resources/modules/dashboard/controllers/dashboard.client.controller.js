@@ -42,8 +42,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
         };
 
         //make old code compatible. remove fixOldCode_removeLater() after enough time for all users run the new code
-        var fixOldCode_removeLater = function() {
-            var m = $scope.dashboard.model;
+        var fixOldCode_removeLater = function(m) {
             if ("modules/dashboard/views/dashboard-title.client.view.html" == m.titleTemplateUrl) {
                 m.titleTemplateUrl = "";
                 if ("Dashboard" == m.title) {
@@ -129,7 +128,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
 
         DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-            fixOldCode_removeLater();
+            fixOldCode_removeLater($scope.dashboard.model);
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
             $scope.dashboard.model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
             $scope.dashboard.model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';

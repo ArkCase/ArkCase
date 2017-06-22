@@ -4,14 +4,13 @@ angular.module('dashboard.docReview', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('docReview', {
-                    title: 'Documents Under Review',
-                    description: 'Displays documents under review',
-                    controller: 'Dashboard.DocReviewController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/doc-review-widget.client.view.html',
-                    commonName: 'docReview'
-                }
-            );
+                title: 'dashboard.widgets.docReview.title',
+                description: 'dashboard.widgets.docReview.title.description',
+                controller: 'Dashboard.DocReviewController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/doc-review-widget.client.view.html',
+                commonName: 'docReview'
+            });
     })
     .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
         , function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {

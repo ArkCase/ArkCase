@@ -4,14 +4,13 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('reworkDetails', {
-                    title: 'Rework Details',
-                    description: 'Displays location',
-                    controller: 'Dashboard.LocationController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/rework-details-widget.client.view.html',
-                    commonName: 'reworkDetails'
-                }
-            );
+                title: 'dashboard.widgets.reworkDetails.title',
+                description: 'dashboard.widgets.reworkDetails.description',
+                controller: 'Dashboard.LocationController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/rework-details-widget.client.view.html',
+                commonName: 'reworkDetails'
+            });
     })
     .controller('Dashboard.LocationController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
         ,function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {
