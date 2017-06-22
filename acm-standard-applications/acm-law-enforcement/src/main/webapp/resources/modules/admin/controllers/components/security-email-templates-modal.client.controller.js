@@ -13,7 +13,6 @@ angular.module('admin').controller('Admin.EmailTemplatesModalController', ['$sco
         };
 
         $scope.onClickOk = function () {
-
             $modalInstance.close(
                 {
                     file: $scope.templateFile,
@@ -26,12 +25,9 @@ angular.module('admin').controller('Admin.EmailTemplatesModalController', ['$sco
         $scope.toggleObjectTypes = function (objectType) {
             var idx = $scope.template.objectTypes.indexOf(objectType);
 
-            // Is currently selected
             if (idx > -1) {
                 $scope.template.objectTypes.splice(idx, 1);
             }
-
-            // Is newly selected
             else {
                 $scope.template.objectTypes.push(objectType);
             }
@@ -39,31 +35,12 @@ angular.module('admin').controller('Admin.EmailTemplatesModalController', ['$sco
 
         $scope.toggleActions = function (action) {
             var idx = $scope.template.actions.indexOf(action);
-
-            // Is currently selected
             if (idx > -1) {
                 $scope.template.actions.splice(idx, 1);
             }
-
-            // Is newly selected
             else {
                 $scope.template.actions.push(action);
             }
         };
-
-        /*        $scope.toggleSources = function (source) {
-         var idx = $scope.template.sources.indexOf(source);
-
-         // Is currently selected
-         if (idx > -1) {
-         $scope.template.sources.splice(idx, 1);
-         }
-
-         // Is newly selected
-         else {
-         $scope.template.sources.push(source);
-         }
-         };*/
-
     }
 ]);
