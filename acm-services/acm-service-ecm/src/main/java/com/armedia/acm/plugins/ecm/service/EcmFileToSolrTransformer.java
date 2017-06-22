@@ -88,6 +88,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         doc.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
 
         doc.setTitle_parseable(in.getFileName());
+        doc.setTitle_parseable_lcs(in.getFileName());
         doc.setTitle_t(in.getFileName());
 
         doc.setParent_folder_id_i(in.getFolder().getId());
@@ -137,6 +138,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setContent_type(in.getFileActiveVersionMimeType());
         solr.setStatus_lcs(in.getStatus());
         solr.setTitle_parseable(in.getFileName());
+        solr.setTitle_parseable_lcs(in.getFileName());
 
         solr.setParent_id_s(Long.toString(in.getContainer().getId()));
         solr.setParent_type_s(in.getContainer().getObjectType());

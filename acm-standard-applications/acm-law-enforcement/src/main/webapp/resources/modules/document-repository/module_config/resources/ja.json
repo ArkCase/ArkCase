@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "ja_Documents"
+    "title": "文書"
   },
   "document-repository.menus": {
-    "leftnav.item": "ja_Documents",
-    "topbar.item": "ja_Document Repository"
+    "leftnav.item": "文書",
+    "topbar.item": "文書保存"
   },
   "document-repository.error": {
     "invalidData": ""

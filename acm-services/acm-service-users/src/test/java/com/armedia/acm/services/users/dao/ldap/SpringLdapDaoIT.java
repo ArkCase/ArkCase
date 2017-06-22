@@ -126,5 +126,18 @@ public class SpringLdapDaoIT
         log.debug("Time: {}ms", time);
         log.debug("User found: {}", acmUser.getDistinguishedName());
     }
+
+    @Test
+    public void findUserByLookup()
+    {
+        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+
+        String dn = "uid=ann-acm,cn=Users,dc=armedia,dc=com";
+        long start = System.currentTimeMillis();
+        AcmUser acmUser = springLdapUserDao.findUserByLookup(dn, ldapTemplate, acmSyncLdapConfig);
+        long time = System.currentTimeMillis() - start;
+        log.debug("Time: {}ms", time);
+        log.debug("User found: {}", acmUser.getDistinguishedName());
+    }
 }
 

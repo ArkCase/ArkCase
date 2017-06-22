@@ -38,9 +38,17 @@
         <div class="form-group required" ng-if="addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
-            <input type="password" class="form-control" id="password"
+            <div class="help-tip">
+                <p>{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.passwordRuleText' | translate}}</p>
+            </div>
+            <input type="password" class="form-control" id="password" name="password"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
-                   ng-model="data.password" required>
+                   ng-model="data.password" minlength="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.minLengthForPassword' | translate}}"
+                   ng-pattern="{{'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.rulePattern' | translate}}"
+                   pw-check="username"
+                   required>
+            <span ng-show='userForm.password.$error.pattern'>Please follow password rules.</span>
+            <span ng-show='userForm.password.$error.pwContains'>Password cannot contain username.</span>
         </div>
     </div>
     <div class=" modal-footer">

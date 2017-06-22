@@ -1,8 +1,8 @@
 {
   "my-documents": {
-    "title": "hi_My Documents"
+    "title": "मेरे दस्तावेज"
   },
   "my-documents.menus": {
-    "leftnav.item": "hi_My Documents"
+    "leftnav.item": "मेरे दस्तावेज"
   }
 }

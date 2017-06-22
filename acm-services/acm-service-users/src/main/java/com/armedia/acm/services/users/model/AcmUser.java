@@ -1,11 +1,13 @@
 package com.armedia.acm.services.users.model;
 
+import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -16,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -93,6 +96,10 @@ public class AcmUser implements Serializable, AcmLdapUser
 
     @Column(name = "cm_title")
     private String title;
+
+    @Column(name = "cm_pwd_ex_date")
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate passwordExpirationDate;
 
     @Transient
     private String sortableValue;
@@ -386,7 +393,6 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.sortableValue = sortableValue;
     }
 
-
     public String getCountry()
     {
         return country;
@@ -396,7 +402,6 @@ public class AcmUser implements Serializable, AcmLdapUser
     {
         this.country = country;
     }
-
 
     public String getCountryAbbreviation()
     {
@@ -428,7 +433,6 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.department = department;
     }
 
-
     public String getTitle()
     {
         return title;
@@ -437,5 +441,15 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public LocalDate getPasswordExpirationDate()
+    {
+        return passwordExpirationDate;
+    }
+
+    public void setPasswordExpirationDate(LocalDate passwordExpirationDate)
+    {
+        this.passwordExpirationDate = passwordExpirationDate;
     }
 }

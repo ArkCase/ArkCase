@@ -136,6 +136,27 @@ public class LdapSyncService
         return user;
     }
 
+    /**
+     * Try to sync user from LDAP by given dn
+     *
+     * @param dn - distinguished name of the user
+     */
+    public AcmUser syncUserByDn(String dn)
+    {
+        getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
+        LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
+
+        log.info("Starting sync user with DN: {} from ldap '{}'", dn, getLdapSyncConfig().getLdapUrl());
+
+        AcmUser user = getSpringLdapUserDao().findUserByLookup(dn, template, getLdapSyncConfig());
+        List<AcmUser> acmUsers = Arrays.asList(user);
+        List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig());
+
+        processRecordsAndUpdateDatabase(acmUsers, acmGroups, true);
+
+        return user;
+    }
+
     public void processRecordsAndUpdateDatabase(List<AcmUser> acmUsers, List<LdapGroup> acmGroups, boolean singleUser)
     {
         acmUsers = filterUsersForKnownGroups(acmUsers, acmGroups);

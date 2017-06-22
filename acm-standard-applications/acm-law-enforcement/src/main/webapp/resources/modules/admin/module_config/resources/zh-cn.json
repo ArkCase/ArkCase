@@ -148,7 +148,10 @@
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
-        "password": "zh-cn_Password"
+        "password": "zh-cn_Password",
+        "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+        "minLengthForPassword": "7",
+        "passwordRuleText": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
       },
       "addMembersGridColumns": {
         "name": "zh-cn_Name",
