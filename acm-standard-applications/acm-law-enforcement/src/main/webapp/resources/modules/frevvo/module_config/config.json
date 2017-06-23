@@ -1,6 +1,7 @@
 {
   "id": "frevvo",
   "title": "Frevvo",
+  "configurable": false,
   "menus": [],
   "components": [],
   "forms": [
