@@ -33,5 +33,8 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.expenses',
     'dashboard.hoursSummary',
     'dashboard.new-cases',
-    'dashboard.workflow-report'
+    'dashboard.workflow-report',
+    'dashboard.organizations',
+    'dashboard.tags',
+    'dashboard.approvalRouting'
 ]);
