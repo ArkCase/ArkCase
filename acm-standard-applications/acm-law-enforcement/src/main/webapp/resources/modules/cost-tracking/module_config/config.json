@@ -1,6 +1,7 @@
 {
   "id": "cost-tracking",
   "title": "Cost Tracking",
+  "configurable": true,
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
