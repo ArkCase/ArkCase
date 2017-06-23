@@ -116,6 +116,12 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
                                            widget.title = "dashboard.widgets.hoursSummary.title";
                                        } else if ("Expenses" == widget.title) {
                                            widget.title = "dashboard.widgets.expenses.title";
+                                       } else if ("Organizations" == widget.title) {
+                                           widget.title = "dashboard.widgets.organizations.title";
+                                       } else if ("Tags" == widget.title) {
+                                       widget.title = "dashboard.widgets.tags.title";
+                                       } else if ("Approval routing" == widget.title) {
+                                           widget.title = "dashboard.widgets.approvalRouting.title";
                                        }
                                    });
                                }
