@@ -1,0 +1,80 @@
+{
+  "count": 5,
+  "entries": [
+    {
+      "id": 42,
+      "application": "AuditArkCaseExtractors",
+      "user": "admin",
+      "time": "2017-05-12T20:50:04.023Z",
+      "values": {
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-name": "documentLibrary",
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/b": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7",
+        "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7|workspace:\/\/SpacesStore\/faf7562e-0731-4dfc-8b94-36a2f5df0f0d|{http:\/\/www.alfresco.org\/model\/content\/1.0}contains|{http:\/\/www.alfresco.org\/model\/content\/1.0}Grateful Dead|true|-1",
+        "\/auditarkcaseextractors\/create\/in\/d": "{http:\/\/www.alfresco.org\/model\/content\/1.0}Grateful Dead",
+        "\/auditarkcaseextractors\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}contains"
+      }
+    },
+    {
+      "id": 52,
+      "application": "AuditArkCaseExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:00:16.413Z",
+      "values": {
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-name": "documentLibrary",
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/b": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7",
+        "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7|workspace:\/\/SpacesStore\/b021e743-3d85-4ff9-8c0b-cc318376ee70|{http:\/\/www.alfresco.org\/model\/content\/1.0}contains|{http:\/\/www.alfresco.org\/model\/content\/1.0}Jerry Garcia|true|-1",
+        "\/auditarkcaseextractors\/create\/in\/d": "{http:\/\/www.alfresco.org\/model\/content\/1.0}Jerry Garcia",
+        "\/auditarkcaseextractors\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}contains"
+      }
+    },
+    {
+      "id": 57,
+      "application": "AuditArkCaseExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:11:55.306Z",
+      "values": {
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-name": "documentLibrary",
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/b": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcaseextractors\/create\/in\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7",
+        "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/2e535fb5-078d-4b84-99d5-fe23ce8e88a7|workspace:\/\/SpacesStore\/4d1b5ed8-7544-4cf6-acc0-384756138f95|{http:\/\/www.alfresco.org\/model\/content\/1.0}contains|{http:\/\/www.alfresco.org\/model\/content\/1.0}Documents|true|-1",
+        "\/auditarkcaseextractors\/create\/in\/d": "{http:\/\/www.alfresco.org\/model\/content\/1.0}Documents",
+        "\/auditarkcaseextractors\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}contains"
+      }
+    },
+    {
+      "id": 59,
+      "application": "AuditArkCaseExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:12:23.598Z",
+      "values": {
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-name": "ArkCase - Infrastructure Team - Scrum - Template.docx",
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content",
+        "\/auditarkcaseextractors\/create\/in\/b": "{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail",
+        "\/auditarkcaseextractors\/create\/in\/a": "workspace:\/\/SpacesStore\/b2f2bde5-2499-48ac-8bab-907e6d031e58",
+        "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/b2f2bde5-2499-48ac-8bab-907e6d031e58|workspace:\/\/SpacesStore\/9c3569c3-3100-42bd-964e-6bda9d5d1227|{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail|{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib|true|-1",
+        "\/auditarkcaseextractors\/create\/in\/d": "{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib",
+        "\/auditarkcaseextractors\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail"
+      }
+    },
+    {
+      "id": 61,
+      "application": "AuditArkCaseExtractors",
+      "user": "admin",
+      "time": "2017-05-12T21:12:32.438Z",
+      "values": {
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-name": "ArkCase - Bug Team - Scrum - Template.docx",
+        "\/auditarkcaseextractors\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content",
+        "\/auditarkcaseextractors\/create\/in\/b": "{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail",
+        "\/auditarkcaseextractors\/create\/in\/a": "workspace:\/\/SpacesStore\/0d5add60-10ef-4369-bc87-f1f9b80fc448",
+        "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/0d5add60-10ef-4369-bc87-f1f9b80fc448|workspace:\/\/SpacesStore\/682cd7df-3987-49da-b5c8-b54887406f08|{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail|{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib|true|-1",
+        "\/auditarkcaseextractors\/create\/in\/d": "{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib",
+        "\/auditarkcaseextractors\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail"
+      }
+    }
+  ]
+}

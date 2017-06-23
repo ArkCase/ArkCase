@@ -1,41 +1,35 @@
 'use strict';
 
 angular.module('dashboard.cases-by-queue')
-    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService',
-        function ($scope, config, $state, $translate, DashboardService) {
+    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService', 'ConfigService',
+        function ($scope, config, $state, $translate, DashboardService, ConfigService) {
 
             var vm = this;
 
             vm.chartClick = chartClick;
             var config = null;
 
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'casesByQueue');
+            ConfigService.getComponentConfig("dashboard", "casesByQueue").then(function (cfg) {
+                config = cfg;
+                // Load Cases info and render chart
+                DashboardService.queryCasesByQueue(function (cases) {
 
+                    var data = [];
+                    var labels = [];
 
-            function applyConfig(e, componentId, cfg) {
-                if (componentId == 'casesByQueue') {
-                    config = cfg;
-                    // Load Cases info and render chart
-                    DashboardService.queryCasesByQueue(function (cases) {
-
-                        var data = [];
-                        var labels = [];
-
-                        angular.forEach(cases, function (value, key) {
-                            if (key.length > 0 && key[0] != '$') {
-                                data.push(value);
-                                labels.push(key);
-                            }
-                        });
-
-                        vm.showChart = data.length > 0 ? true : false;
-                        vm.data = [data];
-                        vm.labels = labels;
-                        vm.series = [cfg.title];
+                    angular.forEach(cases, function (value, key) {
+                        if (key.length > 0 && key[0] != '$') {
+                            data.push(value);
+                            labels.push(key);
+                        }
                     });
-                }
-            }
+
+                    vm.showChart = data.length > 0 ? true : false;
+                    vm.data = [data];
+                    vm.labels = labels;
+                    vm.series = [cfg.title];
+                });
+            });
 
 
             /**

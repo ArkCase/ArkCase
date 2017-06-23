@@ -98,6 +98,13 @@ span.fancytree-title {
     margin: 0px;
 }
 
+.form-group.required label:after {
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 8px;
+}
+
 .img-circle.img-responsive {
     width: 100px;
     height: 100px;
@@ -652,6 +659,7 @@ span.fancytree-title {
 	height: auto !important;
 }
 
+
 .ui-grid-canvas .panel.panel-success {
 	margin: 0px !important;
 }
@@ -698,7 +706,7 @@ thead {
 	top: -1px;
 }
 
-.ui-grid .ui-grid-cell div["ui-grid-cell"] {
+.ui-grid .ui-grid-cell div {
 	padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -710,22 +718,6 @@ thead {
 	overflow: hidden;
 	position: relative;
 }
-
-.ui-grid-cell .ui-grid-selection-row-header-buttons.ui-grid-icon-ok {
-    padding: 4px !important;
-    white-space: nowrap;
-}
-
-.ui-grid-selection-row-header-buttons.ui-grid-icon-ok:hover {
-    white-space: nowrap !important;
-}
-
-.ui-grid-header-cell .ui-grid-selection-row-header-buttons.ui-grid-icon-ok {
-    padding: 0px !important;
-    white-space: nowrap;
-}
-
-
 
 .ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
@@ -796,9 +788,11 @@ thead {
     min-height: 270px;
 }
 
-/* Inlined Editing */
+/* Overriding of .form-inline class for the needs of the x-editable popup form. */
+/* This will only affect the element with class .form-inline which is immediately after element with class .editable. */
+/* In this way we localize this override only for x-editable.*/
 
-.form-inline {
+.editable + .form-inline {
     position: fixed;
     margin-top: 30px;
     background-color: #ebeceb;
@@ -811,7 +805,7 @@ thead {
     z-index: 2000;
 }
 
-.form-inline:before {
+.editable + .form-inline:before {
     content: "";
     width: 0;
     height: 0;
@@ -823,7 +817,7 @@ thead {
     left: 40%;
 }
 
-.form-inline:after {
+.editable + .form-inline:after {
     content: "";
     width: 0;
     height: 0;
@@ -1330,8 +1324,8 @@ a.no-outline:hover, a.no-outline:focus {
     font-size: 15px;
 }
 
-/* In the results table from a Seearch all NOTE and TAG rows returned show have
-   Links disbled under the Name column
+/* In the results table from a Search all NOTE and TAG rows returned show have
+   Links disabled under the Name column
 */
 .no-link {
     text-decoration: none;
@@ -1346,8 +1340,21 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     cursor: not-allowed;
     pointer-events: none;
 }
+
+/*Custom style for user picker read only input*/
 .user-picker-input {
     background-color: white !important;
+    cursor: pointer;
+}
+.input-xs {
+    height: 22px;
+    padding: 2px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+.cursor-pointer {
     cursor: pointer;
 }
 
@@ -1369,4 +1376,94 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.modal-width-80 > .modal-dialog{
+    width: 80%;
+}
+
+.modal-width-80  .img-responsive {
+    margin: 0 auto;
+}
+
+/* Tooltip - For displaying password rule text with question bubble */
+
+.help-tip {
+    float: right;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    background-color: #177bbb;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+}
+
+.help-tip:before{
+    content:'?';
+    font-weight: bold;
+    color:#fff;
+}
+
+.help-tip:hover p{
+    display:block;
+    transform-origin: 100% 0%;
+    left: 50px;
+
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+
+}
+
+.help-tip p{	/* The tooltip */
+    display: none;
+    text-align: left;
+    background-color: #1E2021;
+    padding: 20px;
+    width: 300px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #FFF;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.help-tip p:before{ /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#1E2021;
+}
+
+.help-tip p:after{ /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:40px;
+    content:'';
+    position: absolute;
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity:0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
 }

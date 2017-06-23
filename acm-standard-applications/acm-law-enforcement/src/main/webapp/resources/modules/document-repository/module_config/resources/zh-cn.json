@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "zh-cn_Documents"
+    "title": "文件"
   },
   "document-repository.menus": {
-    "leftnav.item": "zh-cn_Documents",
-    "topbar.item": "zh-cn_Document Repository"
+    "leftnav.item": "文件",
+    "topbar.item": "文件"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "zh-cn_Documents"
+    "title": "zh-cn_Documents",
+    "sendEmail": "zh-cn_Send Email",
+    "filterInputPlaceholder": "zh-cn_Filter",
+    "searchInputPlaceholder": "zh-cn_Search"
   },
   "document-repository.comp.participants": {
     "title": "zh-cn_Participants",

@@ -7,6 +7,7 @@ angular.module('organizations').controller('Organizations.DBAsModalController', 
             $scope.dba = params.dba;
             $scope.isEdit = params.isEdit;
             $scope.isDefault = params.isDefault;
+            $scope.hideNoField = params.isDefault;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
@@ -15,7 +16,8 @@ angular.module('organizations').controller('Organizations.DBAsModalController', 
                 $modalInstance.close(
                     {
                         dba: $scope.dba,
-                        isDefault: $scope.isDefault
+                        isDefault: $scope.isDefault,
+                        isEdit: $scope.isEdit
                     }
                 );
             };

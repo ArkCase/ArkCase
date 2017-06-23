@@ -5,42 +5,50 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div class="form-group" ng-class="{ 'has-error' : error }" ng-if="addUser">
+        <div class="form-group required" ng-class="{ 'has-error' : error }" ng-if="addUser">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |
                 translate}}</label>
             <input type="text" class="form-control" id="username"
-                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.username | translate}}"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
                    ng-model="user.userId" required>
             <p class="help-block" ng-show="error">
                 {{ error }}
             </p>
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             <label for="firstName">{{"admin.security.organizationalHierarchy.createUserDialog.firstName" |
                 translate}}</label>
             <input type="text" class="form-control" id="firstName"
-                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.firstName | translate}}"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.firstName' | translate}}"
                    ng-model="user.firstName" required>
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             <label for="lastName">{{"admin.security.organizationalHierarchy.createUserDialog.lastName" |
                 translate}}</label>
             <input type="text" class="form-control" id="lastName" name="lastName"
-                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.lastName | translate}}"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.lastName' | translate}}"
                    ng-model="user.lastName" required>
         </div>
-        <div class="form-group">
+        <div class="form-group required">
             <label for="email">{{"admin.security.organizationalHierarchy.createUserDialog.email" | translate}}</label>
             <input type="email" class="form-control" id="email"
-                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.email | translate}}"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                    ng-model="user.mail" required>
         </div>
-        <div class="form-group" ng-if="addUser">
+        <div class="form-group required" ng-if="addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
-            <input type="password" class="form-control" id="password"
-                   placeholder="{{admin.security.organizationalHierarchy.addLdapMember.password | translate}}"
-                   ng-model="data.password" required>
+            <div class="help-tip">
+                <p>{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.passwordRuleText' | translate}}</p>
+            </div>
+            <input type="password" class="form-control" id="password" name="password"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
+                   ng-model="data.password" minlength="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.minLengthForPassword' | translate}}"
+                   ng-pattern="{{'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.rulePattern' | translate}}"
+                   pw-check="username"
+                   required>
+            <span ng-show='userForm.password.$error.pattern'>Please follow password rules.</span>
+            <span ng-show='userForm.password.$error.pwContains'>Password cannot contain username.</span>
         </div>
     </div>
     <div class=" modal-footer">

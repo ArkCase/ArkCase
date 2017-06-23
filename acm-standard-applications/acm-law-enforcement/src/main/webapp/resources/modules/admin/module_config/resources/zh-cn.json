@@ -130,7 +130,12 @@
           "btn": {
             "cancel": "zh-cn_Cancel",
             "ok": "zh-cn_Add Ldap User"
-          }
+          },
+          "username": "zh-cn_Enter username",
+          "firstName": "zh-cn_Enter first name",
+          "lastName": "zh-cn_Enter last name",
+          "email": "zh-cn_Enter email",
+          "password": "zh-cn_Enter password"
         },
         "editLdapMember": {
           "title": "zh-cn_Edit Ldap Member",
@@ -139,11 +144,14 @@
             "ok": "zh-cn_Edit Ldap User"
           }
         },
-        "username": "zh-cn_Username",
+        "username": "zh-cn_UserName",
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
-        "password": "zh-cn_Password"
+        "password": "zh-cn_Password",
+        "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+        "minLengthForPassword": "7",
+        "passwordRuleText": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
       },
       "addMembersGridColumns": {
         "name": "zh-cn_Name",
@@ -237,16 +245,25 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-cn_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "zh-cn_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "zh-cn_Download",
       "replaceFile": "zh-cn_Replace File",
-      "versionHistory": "zh-cn_Version History"
+      "versionHistory": "zh-cn_Version History",
+      "diagram": "zh-cn_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "zh-cn_Successfully uploaded new process definition",
       "error": "zh-cn_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "zh-cn_Process Diagram",
+      "error.loading": "zh-cn_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "zh-cn_Close"
+      }
     },
     "formWorkflows.title": "zh-cn_Form/Workflow Link",
     "formWorkflows.link": "zh-cn_Link Forms/Workflows",

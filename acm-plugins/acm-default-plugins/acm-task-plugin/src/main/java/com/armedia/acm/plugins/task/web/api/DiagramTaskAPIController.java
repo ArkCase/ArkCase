@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.DiagramResponse;
+import com.armedia.acm.core.model.DiagramResponse;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;

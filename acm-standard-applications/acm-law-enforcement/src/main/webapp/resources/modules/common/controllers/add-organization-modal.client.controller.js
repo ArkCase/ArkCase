@@ -11,40 +11,47 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
+        $scope.showSetPrimary = params.showSetPrimary;
 
-            $scope.radioChanged = function () {
-                if ($scope.selectExisting != 0) {
-                    $scope.isNew = false;
-                    $scope.organizationId = '';
-                    $scope.organizationName = '';
-                    $scope.organization = '';
-                    $scope.pickOrganization();
-                }
-                else {
-                    $scope.isNew = true;
-                    $scope.organizationId = '';
-                    $scope.organizationName = '';
-                    $scope.organization = '';
-                    $scope.addNewOrganization();
-                }
-            };
-
+        $scope.organizationId = params.organizationId;
+        $scope.organizationValue = params.organizationValue;
+        $scope.isDefault = params.isDefault;
+        $scope.description = params.description;
+        $scope.type = _.find($scope.types, function (type) {
+            return type.type == params.type;
+        });
+        $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function () {
-                $modalInstance.close({
+                var retValue = {
                     organizationId: $scope.organizationId,
-                    description: $scope.description,
-                    type: $scope.type,
+                    organizationValue: $scope.organizationValue,
                     organization: $scope.organization,
                     isNew: $scope.isNew
-                });
+                };
+                if ($scope.types && $scope.type) {
+                    retValue.type = $scope.type.type;
+                    retValue.inverseType = $scope.type.inverseType;
+                }
+                if ($scope.showSetPrimary) {
+                    retValue.isDefault = $scope.isDefault;
+                }
+                if ($scope.showDescription) {
+                    retValue.description = $scope.description;
+                }
+                $modalInstance.close(retValue);
             };
 
             $scope.pickOrganization = function () {
+                $scope.isNew = false;
+                $scope.organizationId = '';
+                $scope.organizationValue = '';
+                $scope.organization = '';
+
                 var params = {};
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION';
@@ -76,7 +83,10 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             };
 
             $scope.addNewOrganization = function () {
-
+                $scope.isNew = true;
+                $scope.organizationId = '';
+                $scope.organizationValue = '';
+                $scope.organization = '';
                 var modalInstance = $modal.open({
                     scope: $scope,
                     animation: true,

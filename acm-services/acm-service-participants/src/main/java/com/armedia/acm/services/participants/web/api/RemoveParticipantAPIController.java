@@ -44,7 +44,7 @@ public class RemoveParticipantAPIController {
         }
         AcmParticipant participant = getAcmParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(userId,participantType,objectType,objectId);
         try {
-            if (participant != null) {
+            if (participant != null && (!participant.getParticipantType().equals("owning group") && !participant.getParticipantType().equals("assignee"))) {
                 getAcmParticipantService().removeParticipant(participant.getId());
                 if (log.isDebugEnabled())
                     log.debug("Participant" + userId + "  successfully removed from object['" + objectType + "]:[" + objectId + "]");

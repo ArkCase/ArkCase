@@ -76,24 +76,28 @@ public interface PersonService
     /**
      * insert image for a person. If is the only image than is set as default image for the person
      *
+     * @param personId    Long personId
+     * @param image       MultipartFile image
+     * @param isDefault   boolean should this picture be set as default
+     * @param description description for the image
+     * @param auth        Authentication authentication
+     * @return boolean true if successfully inserted
+     */
+    @Transactional
+    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+
+    /**
+     * save image for a person with new file and metadata
+     *
      * @param personId  Long personId
      * @param image     MultipartFile image
      * @param isDefault boolean should this picture be set as default
+     * @param metadata  EcmFile metadata
      * @param auth      Authentication authentication
      * @return boolean true if successfully inserted
      */
     @Transactional
-    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException;
-
-    /**
-     * Creates new Person and persists in database
-     *
-     * @param person Person data
-     * @param auth   Authentication
-     * @return Person created Person
-     */
-    @Transactional
-    Person createPerson(Person person, Authentication auth) throws AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmUserActionFailedException;
+    EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 
     /**
      * save person data
@@ -103,5 +107,16 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, Authentication authentication);
+    Person savePerson(Person person, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+
+    /**
+     * save person data
+     *
+     * @param person         person data
+     * @param pictures       person pictures
+     * @param authentication authentication
+     * @return Person saved person
+     */
+    @Transactional
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 }

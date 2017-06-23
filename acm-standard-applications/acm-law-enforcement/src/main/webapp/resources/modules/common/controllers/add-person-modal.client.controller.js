@@ -1,7 +1,7 @@
 angular.module('common').controller('Common.AddPersonModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-            , ObjectLookupService, Util, ConfigService, params) {
+        , ObjectLookupService, Util, ConfigService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
@@ -12,39 +12,46 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
 
-            $scope.radioChanged = function () {
-                if ($scope.selectExisting != 0) {
-                    $scope.isNew = false;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.pickPerson();
-                }
-                else {
-                    $scope.isNew = true;
-                    $scope.personId = '';
-                    $scope.personName = '';
-                    $scope.person = '';
-                    $scope.addNewPerson();
-                }
-            };
+        $scope.showSetPrimary = params.showSetPrimary;
 
+        $scope.personId = params.personId;
+        $scope.person = params.person;
+        $scope.personName = params.personName;
+        $scope.isDefault = params.isDefault;
+        $scope.description = params.description;
+        $scope.type = _.find($scope.types, function (type) {
+            return type.type == params.type;
+        });
+        $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');
             };
 
             $scope.onClickOk = function () {
-                $modalInstance.close({
+                var retValue = {
                     personId: $scope.personId,
-                    description: $scope.description,
-                    type: $scope.type,
+                    type: $scope.type.type,
+                    inverseType: $scope.type.inverseType,
                     person: $scope.person,
+                    personImages: $scope.personImages,
                     isNew: $scope.isNew
-                });
+                };
+                if ($scope.showSetPrimary) {
+                    retValue['isDefault'] = $scope.isDefault;
+                }
+                if ($scope.showDescription) {
+                    retValue['description'] = $scope.description;
+                }
+                $modalInstance.close(retValue);
             };
 
             $scope.pickPerson = function () {
+                $scope.isNew = false;
+                $scope.personId = '';
+                $scope.personName = '';
+                $scope.person = '';
+
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
                 params.filter = '"Object Type": PERSON';
@@ -76,6 +83,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             };
 
             $scope.addNewPerson = function () {
+                $scope.isNew = true;
+                $scope.personId = '';
+                $scope.personName = '';
+                $scope.person = '';
 
                 var modalInstance = $modal.open({
                     scope: $scope,
@@ -89,6 +100,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                     $scope.personId = '';
                     $scope.personName = data.person.givenName + ' ' + data.person.familyName;
                     $scope.person = data.person;
+                    $scope.personImages = data.images;
                 });
             };
         }

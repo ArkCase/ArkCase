@@ -9,6 +9,8 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
+import javax.naming.Name;
+
 /**
  * Created by riste.tutureski on 4/11/2016.
  */
@@ -32,11 +34,13 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
     {
         DirContextOperations dirContextOperations = super.doAuthentication(authentication);
 
+        Name dn = dirContextOperations.getDn();
+
         AcmUser user = getUserDao().findByUserId(authentication.getName());
 
         if (user == null || !"VALID".equalsIgnoreCase(user.getUserState()))
         {
-            getLdapSyncService().ldapUserSync(authentication.getName());
+            getLdapSyncService().syncUserByDn(dn.toString());
         }
 
         return dirContextOperations;

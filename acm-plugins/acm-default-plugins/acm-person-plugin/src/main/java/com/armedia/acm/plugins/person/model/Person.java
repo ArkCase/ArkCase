@@ -233,17 +233,12 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @JoinColumn(name = "cm_default_identification")
     private Identification defaultIdentification;
 
-    /**
-     * Organization which is default from organizations
-     */
-    @OneToOne
-    @JoinColumn(name = "cm_default_organization")
-    private PersonAssociation defaultOrganization;
-
     @Lob
     @Column(name = "cm_details")
     private String details;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person", orphanRemoval = true)
+    List<PersonOrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     @PrePersist
     protected void beforeInsert()
@@ -262,6 +257,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             pa.setPerson(this);
         }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
+        }
     }
 
     @PreUpdate
@@ -275,6 +278,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         for (PersonAssociation pa : getAssociationsFromObjects())
         {
             pa.setPerson(this);
+        }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
         }
     }
 
@@ -295,6 +306,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         for (PersonAssociation pa : getAssociationsFromObjects())
         {
             pa.setPerson(this);
+        }
+        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
+        {
+            poa.setPerson(this);
+        }
+        if (getDefaultOrganization() != null)
+        {
+            getDefaultOrganization().setPerson(this);
         }
     }
 
@@ -719,14 +738,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.defaultIdentification = defaultIdentification;
     }
 
-    public PersonAssociation getDefaultOrganization()
+    public PersonOrganizationAssociation getDefaultOrganization()
     {
-        return defaultOrganization;
+        return organizationAssociations.stream().filter(association -> association.isDefaultOrganization()).findFirst().orElse(null);
     }
 
-    public void setDefaultOrganization(PersonAssociation defaultOrganization)
+    public void setDefaultOrganization(PersonOrganizationAssociation personOrganizationAssociation)
     {
-        this.defaultOrganization = defaultOrganization;
+
     }
 
     public String getDetails()
@@ -747,5 +766,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setAssociationsToObjects(List<PersonAssociation> associationsToObjects)
     {
         this.associationsToObjects = associationsToObjects;
+    }
+
+    public List<PersonOrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<PersonOrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }

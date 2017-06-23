@@ -27,6 +27,8 @@
     <property name="cmRoleNameLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmRoleNameLength" value="255" dbms="mysql,mssql"/>
 
+    <property name="currentTime" value="now()" dbms="postgresql,oracle, mssql"/>
+
 
     <changeSet id="01-user-service-tables" author="dmiller">
         <createTable tableName="acm_user">
@@ -431,6 +433,7 @@
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
 
+
     <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mssql,oracle,postgresql">
         <addColumn tableName="acm_user">
             <column name="cm_country" type="VARCHAR(255)"/>
@@ -449,6 +452,37 @@
             <column name="cm_country_abbreviation" type="TEXT"/>
             <column name="cm_company" type="TEXT"/>
             <column name="cm_title" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="24-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="24-added-deleted-at-column" author="jovan.ivanovski" dbms="mssql,oracle,postgresql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="TIMESTAMP" defaultValueComputed="${currentTime}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski">
+        <comment>Removed not null constraint on cm_user_deleted_at</comment>
+        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"
+                               columnDataType="${timestampType}"/>
+    </changeSet>
+
+    <changeSet id="26-add-password-expiration-date-column" author="ncuculova">
+        <addColumn tableName="acm_user">
+            <column name="cm_pwd_ex_date" type="DATE"/>
         </addColumn>
     </changeSet>
 

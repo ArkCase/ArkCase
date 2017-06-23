@@ -73,7 +73,18 @@
     <bean id="personOrganizationRelationTypes" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/personOrganizationRelationTypes.json"/>
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/personOrganizationRelationTypes.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="organizationPersonRelationTypes" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/organizationPersonRelationTypes.json"/>
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
@@ -168,13 +179,21 @@
     <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/localeSettings.json"/>
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
     </bean>
 
+    <bean id="statesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File"
+                                 value="${user.home}/.arkcase/acm/lookups/states.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
 
     <bean id="configList" class="java.util.ArrayList">
         <constructor-arg>
@@ -364,6 +383,12 @@
                     <property name="properties" ref="activitiProperties"/>
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
+                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
+                    <property name="configName" value="acm-analytics-config"/>
+                    <property name="configDescription" value="Acm ELK/SILK Analytics Server config"/>
+                    <property name="properties" ref="analyticsServerConfigurationProperties"/>
+                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+                </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="addressTypes"/>
                     <property name="configDescription" value="Address Types"/>
@@ -453,6 +478,16 @@
                     <property name="configName" value="personOrganizationRelationTypes"/>
                     <property name="configDescription" value="Person Organization Relation Types"/>
                     <property name="json" ref="personOrganizationRelationTypes"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="states"/>
+                    <property name="configDescription" value="States"/>
+                    <property name="json" ref="statesJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="organizationPersonRelationTypes"/>
+                    <property name="configDescription" value="Organization Person Relation Types"/>
+                    <property name="json" ref="organizationPersonRelationTypes"/>
                 </bean>
             </list>
         </constructor-arg>

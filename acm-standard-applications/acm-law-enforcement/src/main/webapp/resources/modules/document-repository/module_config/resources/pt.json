@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "pt_Documents"
+    "title": "Documentos"
   },
   "document-repository.menus": {
-    "leftnav.item": "pt_Documents",
-    "topbar.item": "pt_Document Repository"
+    "leftnav.item": "Documentos",
+    "topbar.item": "Repositório de Documentos"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "pt_Documents"
+    "title": "pt_Documents",
+    "sendEmail": "pt_Send Email",
+    "filterInputPlaceholder": "pt_Filter",
+    "searchInputPlaceholder": "pt_Search"
   },
   "document-repository.comp.participants": {
     "title": "pt_Participants",

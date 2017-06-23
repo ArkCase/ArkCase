@@ -1,6 +1,7 @@
 {
   "id": "people",
   "title": "People",
+  "configurable": true,
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
@@ -25,25 +26,9 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All Open people",
-        "name": "all-open-people",
-        "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
-        "default": true
-      },
-      {
         "desc": "All I've Created",
-        "name": "my-people-created",
+        "name": "my-created",
         "value": "fq=author_s:${user}"
-      },
-      {
-        "desc": "All I'm Assigned",
-        "name": "my-people-assigned",
-        "value": "fq=assignee_s:${user}"
-      },
-      {
-        "desc": "All I'm Following",
-        "name": "my-people-following",
-        "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
       },
       {
         "desc": "(No Filter)",
@@ -54,24 +39,24 @@
     "sorters": [
       {
         "desc": "Sort Date Created Ascending",
-        "name": "create_tdt ASC",
-        "default": true
+        "name": "sort-date-asc"
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "create_tdt DESC"
+        "name": "sort-date-desc",
+        "default": true
       },
       {
         "desc": "Sort People ID Ascending",
-        "name": "id ASC"
+        "name": "sort-by-id-asc"
       },
       {
         "desc": "Sort People ID Descending",
-        "name": "id DESC"
+        "name": "sort-by-id-desc"
       },
       {
         "desc": "Sort By People Name",
-        "name": "name DESC"
+        "name": "sort-by-name-desc"
       }
     ],
     "nodeTypes": [
@@ -120,7 +105,7 @@
       },
       {
         "type": "p/PERSON/add",
-        "label": "Addresses",
+        "label": "Locations",
         "icon": "fa fa-map-marker",
         "components": [
           "addresses"
@@ -290,18 +275,18 @@
           "displayName": "people.comp.pictures.table.columns.thumbnail",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<center><img src='api/latest/plugin/ecm/download?ecmFileId={{row.entity.object_id_s}}' height='50px'></img></center>",
+          "cellTemplate": "<center><img ng-src='{{row.entity.object_id_s | personPictureSrc}}' height='50px'></img></center>",
           "width": 100
         },
         {
-          "name": "title",
+          "name": "title_parseable",
           "displayName": "people.comp.pictures.table.columns.title",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.title_parseable}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
-          "name": "description",
+          "name": "description_s",
           "displayName": "people.comp.pictures.table.columns.description",
           "enableCellEdit": false,
           "headerCellFilter": "translate"
@@ -326,7 +311,7 @@
     },
     {
       "id": "addresses",
-      "title": "Addresses",
+      "title": "Locations",
       "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
@@ -343,13 +328,13 @@
           "name": "type",
           "displayName": "people.comp.addresses.table.columns.type",
           "headerCellFilter": "translate",
-          "lookup": "addressTypes"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.type}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+          "width": "*"
         },
         {
           "name": "streetAddress",
           "displayName": "people.comp.addresses.table.columns.streetAddress",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.streetAddress}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "headerCellFilter": "translate"
         },
         {
           "name": "streetAddress2",
@@ -599,35 +584,39 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "name",
+          "name": "organization.organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "default_identification_s",
+          "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "people.comp.organizations.table.columns.identification",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
         },
         {
-          "name": "type_lcs",
+          "name": "organization.organizationType",
           "displayName": "people.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {
-          "name": "primary_contact_s",
+          "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.contact",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultContact ? row.entity.organization.defaultContact.value + '[' + row.entity.organization.defaultContact.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_phone_s",
+          "name": "phone",
           "displayName": "people.comp.organizations.table.columns.phone",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.type + ']' : ''}}</span>"
         },
         {
-          "name": "default_location_s",
+          "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
         }
       ]
     },

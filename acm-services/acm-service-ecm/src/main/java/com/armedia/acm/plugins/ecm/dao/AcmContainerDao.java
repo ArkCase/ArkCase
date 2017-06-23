@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
@@ -121,6 +122,12 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         {
             throw new AcmObjectNotFoundException(null, folderId, e.getMessage(), e);
         }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public AcmContainer findByFolderIdTransactionIndependent(Long folderId) throws AcmObjectNotFoundException
+    {
+        return findByFolderId(folderId);
     }
 
     @Override

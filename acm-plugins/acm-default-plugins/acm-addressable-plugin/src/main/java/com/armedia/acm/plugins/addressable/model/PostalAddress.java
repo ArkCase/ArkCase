@@ -2,16 +2,22 @@ package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -28,6 +34,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_postal_address")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className", defaultImpl = PostalAddress.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.addressable.model.PostalAddress")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PostalAddress implements Serializable, AcmEntity
 {
@@ -95,6 +105,9 @@ public class PostalAddress implements Serializable, AcmEntity
             @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     @OrderBy(value = "id")
     private List<ContactMethod> contactMethods;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @XmlTransient
     public Long getId()
@@ -273,7 +286,18 @@ public class PostalAddress implements Serializable, AcmEntity
         this.contactMethods = contactMethods;
     }
 
-    @Override public boolean equals(Object o)
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
+
+    @Override
+    public boolean equals(Object o)
     {
         if (this == o)
             return true;
@@ -312,7 +336,8 @@ public class PostalAddress implements Serializable, AcmEntity
 
     }
 
-    @Override public int hashCode()
+    @Override
+    public int hashCode()
     {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (created != null ? created.hashCode() : 0);

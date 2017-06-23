@@ -58,18 +58,16 @@
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
-    <changeSet id="11-organization-foreign-key" author="nebojsha.davidovikj">
+    <changeSet id="11-organization-foreign-key-default_dba" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_org_default_dba_id" foreignKeyTableName="acm_organization"/>
+            </not>
+        </preConditions>
         <addForeignKeyConstraint baseTableName="acm_organization"
                                  baseColumnNames="cm_default_dba"
                                  constraintName="fk_org_default_dba_id"
                                  referencedTableName="acm_organization_dba"
-                                 referencedColumnNames="cm_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_organization"
-                                 baseColumnNames="cm_primary_contact"
-                                 constraintName="fk_org_primary_contact_id"
-                                 referencedTableName="acm_organization_assoc"
                                  referencedColumnNames="cm_id"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
@@ -82,5 +80,12 @@
                                  referencedColumnNames="cm_organization_id"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="13-person-organization-drop-foreign-keys" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyName="fk_org_primary_contact_id"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_organization" constraintName="fk_org_primary_contact_id"/>
     </changeSet>
 </databaseChangeLog>

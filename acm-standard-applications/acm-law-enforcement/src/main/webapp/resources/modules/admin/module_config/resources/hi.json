@@ -130,7 +130,15 @@
           "btn": {
             "cancel": "hi_Cancel",
             "ok": "hi_Add Ldap User"
-          }
+          },
+          "username": "hi_Enter username",
+          "firstName": "hi_Enter first name",
+          "lastName": "hi_Enter last name",
+          "email": "hi_Enter email",
+          "password": "hi_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "hi_Edit Ldap Member",
@@ -139,7 +147,7 @@
             "ok": "hi_Edit Ldap User"
           }
         },
-        "username": "hi_Username",
+        "username": "hi_UserName",
         "firstName": "hi_FirstName",
         "lastName": "hi_LastName",
         "email": "hi_Email",
@@ -237,16 +245,25 @@
     },
     "workflows.config.btn": {
       "createNew": "hi_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "hi_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "hi_Download",
       "replaceFile": "hi_Replace File",
-      "versionHistory": "hi_Version History"
+      "versionHistory": "hi_Version History",
+      "diagram": "hi_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "hi_Successfully uploaded new process definition",
       "error": "hi_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "hi_Process Diagram",
+      "error.loading": "hi_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "hi_Close"
+      }
     },
     "formWorkflows.title": "hi_Form/Workflow Link",
     "formWorkflows.link": "hi_Link Forms/Workflows",

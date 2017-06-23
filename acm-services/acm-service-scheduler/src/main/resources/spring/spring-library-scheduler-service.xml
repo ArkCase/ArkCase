@@ -7,11 +7,15 @@
 
     <task:scheduler id="taskScheduler" pool-size="1"/>
     <task:executor id="taskExecutor" pool-size="20"/>
-    
+
     <bean id="acmScheduler" class="com.armedia.acm.scheduler.AcmScheduler">
         <constructor-arg ref="taskScheduler"/>
         <constructor-arg ref="taskExecutor"/>
         <constructor-arg ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="acmSchedulerContextEventHandler" class="com.armedia.acm.scheduler.AcmSchedulerContextEventHandler">
+        <property name="scheduler" ref="acmScheduler"/>
     </bean>
 
 </beans>

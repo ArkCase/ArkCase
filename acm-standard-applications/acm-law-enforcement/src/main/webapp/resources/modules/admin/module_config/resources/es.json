@@ -130,7 +130,15 @@
           "btn": {
             "cancel": "es_Cancel",
             "ok": "es_Add Ldap User"
-          }
+          },
+          "username": "es_Enter username",
+          "firstName": "es_Enter first name",
+          "lastName": "es_Enter last name",
+          "email": "es_Enter email",
+          "password": "es_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "es_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "es_Edit Ldap Member",
@@ -139,7 +147,7 @@
             "ok": "es_Edit Ldap User"
           }
         },
-        "username": "es_Username",
+        "username": "es_UserName",
         "firstName": "es_FirstName",
         "lastName": "es_LastName",
         "email": "es_Email",
@@ -237,16 +245,25 @@
     },
     "workflows.config.btn": {
       "createNew": "es_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "es_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "es_Download",
       "replaceFile": "es_Replace File",
-      "versionHistory": "es_Version History"
+      "versionHistory": "es_Version History",
+      "diagram": "es_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "es_Successfully uploaded new process definition",
       "error": "es_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "es_Process Diagram",
+      "error.loading": "es_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "es_Close"
+      }
     },
     "formWorkflows.title": "es_Form/Workflow Link",
     "formWorkflows.link": "es_Link Forms/Workflows",

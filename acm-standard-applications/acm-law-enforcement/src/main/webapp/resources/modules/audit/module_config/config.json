@@ -1,6 +1,7 @@
 {
   "id": "audit",
   "title": "Audit",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
@@ -36,6 +37,18 @@
         {
           "id": "FILE",
           "name": "Files"
+        },
+        {
+          "id": "DOC_REPO",
+          "name": "Documents"
+        },
+        {
+          "id": "PERSON",
+          "name": "People"
+        },
+        {
+          "id": "ORGANIZATION",
+          "name": "Organizations"
         }
       ]
     },

@@ -1,6 +1,7 @@
 {
   "id": "document-repository",
   "title": "Documents",
+  "configurable": true,
   "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
@@ -10,7 +11,7 @@
       "menuItemURL": "document-repository.main",
       "menuItemTitle": "document-repository.menus.leftnav.item",
       "moduleId": "document-repository",
-      "iconClass": "fa fa-folder",
+      "iconClass": "fa fa-file",
       "position": 60
     },
     {
@@ -29,7 +30,7 @@
       {
         "desc": "All I've Created",
         "name": "my-created-document-repositories",
-        "value": "fq=author_s:${user}"
+        "value": "fq=author_s:${user} AND repository_type_s:GENERAL"
       },
       {
         "desc": "All I'm Following",
@@ -38,8 +39,10 @@
       },
       {
         "desc": "(No Filter)",
-        "name": "",
-        "value": ""
+        "name": "default-filter",
+        "value": "fq=repository_type_s:GENERAL",
+        "default": true
+
       }
     ],
     "sorters": [

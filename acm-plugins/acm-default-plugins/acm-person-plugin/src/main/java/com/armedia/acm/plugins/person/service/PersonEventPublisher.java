@@ -2,15 +2,15 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAddEvent;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
-import com.armedia.acm.plugins.person.model.PersonUpdatedEvent;
+import com.armedia.acm.plugins.person.model.PersonUpdatedImageEvent;
+import com.armedia.acm.plugins.person.model.PersonViewedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
 
 public class PersonEventPublisher implements ApplicationEventPublisherAware
 {
@@ -23,16 +23,21 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishPersonEvent(Person source, String ipAddress, boolean newPerson, boolean succeeded)
+    public void publishEvent(Person source)
     {
-        log.debug("Publishing a person event.");
-        PersonPersistenceEvent personPersistenceEvent =
-                newPerson ? new PersonAddEvent(source) : new PersonUpdatedEvent(source, ipAddress);
-        personPersistenceEvent.setSucceeded(succeeded);
-        eventPublisher.publishEvent(personPersistenceEvent);
+        eventPublisher.publishEvent(source);
     }
 
-    public void publishPersonEvent(Person source, boolean newPerson, boolean succeeded)
+    public void publishPersonViewedEvent(Person source, boolean succeeded)
+    {
+        log.debug("Publishing a Person viewed event.");
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
+        PersonPersistenceEvent event = new PersonViewedEvent(source, ipAddress);
+        event.setSucceeded(succeeded);
+        eventPublisher.publishEvent(event);
+    }
+
+    public void publishPersonUpsertEvent(Person source, boolean newPerson, boolean succeeded)
     {
         log.debug("Publishing a person event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -46,6 +51,15 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         }
         personPersistenceEvent.setSucceeded(succeeded);
         eventPublisher.publishEvent(personPersistenceEvent);
+    }
+
+    public void publishPersonImageEvent(Person source, boolean succeeded)
+    {
+        log.debug("Publishing a Person image upload event.");
+        String ipAddress = AuthenticationUtils.getUserIpAddress();
+        PersonPersistenceEvent event = new PersonUpdatedImageEvent(source, ipAddress);
+        event.setSucceeded(succeeded);
+        eventPublisher.publishEvent(event);
     }
 
 }

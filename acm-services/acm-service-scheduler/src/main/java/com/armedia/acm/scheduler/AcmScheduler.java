@@ -1,19 +1,9 @@
 package com.armedia.acm.scheduler;
 
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.BEAN_NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.HOW_OFTEN_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.NAME_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULED_TASKS_CONFIGUTATION_FILENAME;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_ENABLED_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.SCHEDULE_INTERVAL_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASKS_KEY;
-import static com.armedia.acm.scheduler.AcmSchedulerConstants.TASK_LAST_RUN_KEY;
-
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,28 +30,29 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.armedia.acm.scheduler.AcmSchedulerConstants.*;
+
 /**
  * A generic configurable scheduler capable of executing beans defined in spring context that implement the
  * <code>AcmSchedulableBean</code> interface. The scheduler listens for changes in the <code>scheduledTasks.json</code>
  * file that contains the scheduler and scheduled tasks configuration. A sample JSON configuration file: <code>
    {
     "scheduleEnabled": "true",
-    "scheduleIntervalInMinutes": "1",
+    "scheduleIntervalInSeconds": "60",
     "tasks": [{
-        "howOftenInMinutes": "5",
+        "howOftenInSeconds": "300",
         "name": "billingQueuePurger",
         "beanName": "scheduledBillingQueuePurger"
     },{
-        "howOftenInMinutes": "10",
+        "howOftenInSeconds": "600",
         "name": "queueLogger",
         "beanName": "scheduledQueueLogger"
     }]
    }
  * </code>
  *
- * @see AcmSchedulableBean#executeTask()
- *
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 24, 2016
+ * @see AcmSchedulableBean#executeTask()
  */
 public class AcmScheduler implements ApplicationListener<AbstractConfigurationFileEvent>
 {
@@ -130,22 +121,21 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
     /**
      * Constructs a new instance of the scheduler.
      *
-     * @param taskScheduler has one thread that is run periodically in order to submit tasks to the
-     *            <code>taskExecutor</code>. The frequency at which the scheduler is run is defined in the JSON
-     *            configuration file.
-     * @param taskExecutor executes individual tasks submitted by the task scheduling thread. Individual tasks are
-     *            defined in the JSON configuration file in a JSON array containing JSON object defining individual
-     *            tasks.
+     * @param taskScheduler       has one thread that is run periodically in order to submit tasks to the
+     *                            <code>taskExecutor</code>. The frequency at which the scheduler is run is defined in the JSON
+     *                            configuration file.
+     * @param taskExecutor        executes individual tasks submitted by the task scheduling thread. Individual tasks are
+     *                            defined in the JSON configuration file in a JSON array containing JSON object defining individual
+     *                            tasks.
      * @param springContextHolder needed for obtaining instances of Spring beans by name. Beans defined in the tasks
-     *            section of the JSON configuration file must implement the <code>AcmSchedulableBean</code> interface.
-     *
+     *                            section of the JSON configuration file must implement the <code>AcmSchedulableBean</code> interface.
      * @see AcmSchedulerConstants#SCHEDULE_INTERVAL_KEY for the key value in the JSON configuration representing the
-     *      frequency at which the scheduler is run.
+     * frequency at which the scheduler is run.
      * @see AcmSchedulerConstants#TASKS_KEY for the key value in the JSON configuration refering to the JSON array
-     *      containing the configuration of individual tasks.
+     * containing the configuration of individual tasks.
      * @see AcmSchedulerConstants#BEAN_NAME_KEY for the key name in the JSON configuration file under the tasks section
-     *      that defines the bean name implementing the <code>AcmSchedulableBean</code> interface that should be
-     *      executed by the task.
+     * that defines the bean name implementing the <code>AcmSchedulableBean</code> interface that should be
+     * executed by the task.
      */
     public AcmScheduler(TaskScheduler taskScheduler, TaskExecutor taskExecutor, SpringContextHolder springContextHolder)
     {
@@ -153,6 +143,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         this.taskExecutor = taskExecutor;
         this.springContextHolder = springContextHolder;
     }
+
 
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent event)
@@ -186,6 +177,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
     }
 
+
     /**
      * Checks if the event was triggered by a change of the scheduler configuration file.
      *
@@ -204,7 +196,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      *
      * @param configFile a reference to the configuration file.
      * @return a reference to an instance of <code>FileTime</code> associated with the scheduler configuration time
-     *         referring to its last modification time.
+     * referring to its last modification time.
      * @throws IOException if there is a problem while reading configuration file attributes.
      */
     private FileTime getConfigLastModifiedTime(File configFile) throws IOException
@@ -255,7 +247,6 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      * configuration are removed from the <code>tasks</code> map.
      *
      * @param configuration JSON object that was created by parsing the contents of the configuration file.
-     *
      * @see AcmSchedulerConstants#TASKS_KEY
      * @see #tasks
      * @see AcmSchedulerConstants#NAME_KEY
@@ -277,18 +268,19 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
             JSONObject taskConfiguration = tasksConfigurations.getJSONObject(i);
             String taskName = taskConfiguration.getString(NAME_KEY);
             keys.add(taskName);
-            // how often in the configuration is given in minutes, needs to be converted in milliseconds.
-            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 60 * 1000;
+            // how often in the configuration is given in seconds, needs to be converted in milliseconds.
+            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 1000;
             if (tasks.containsKey(taskName))
             {
                 AcmSchedulerTask task = tasks.get(taskName);
                 task.setHowOften(howOften);
-            } else
+            }
+            else
             {
                 String beanName = taskConfiguration.getString(BEAN_NAME_KEY);
                 try
                 {
-                    AcmSchedulableBean schedulableBean = springContextHolder.getBeanByName(beanName, AcmSchedulableBean.class);
+                    AcmSchedulableBean schedulableBean = springContextHolder.getBeanByNameIncludingChildContexts(beanName, AcmSchedulableBean.class);
                     AcmSchedulerTask task = new AcmSchedulerTask(howOften,
                             taskConfiguration.has(TASK_LAST_RUN_KEY) ? taskConfiguration.getLong(TASK_LAST_RUN_KEY) : 0, schedulableBean);
                     tasks.put(taskName, task);
@@ -315,8 +307,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private void setupScheduler(JSONObject configuration)
     {
-        // the interval in the configuration is given in minutes, needs to be converted in milliseconds.
-        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 60 * 1000;
+        // the interval in the configuration is given in seconds, needs to be converted in milliseconds.
+        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 1000;
 
         if (scheduleInterval != this.scheduleInterval)
         {
@@ -410,6 +402,26 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         } catch (IOException | JSONException e)
         {
             log.error("Could not write scheduler configuration to file {}, error was: {}.", configurationPath, e);
+        }
+    }
+
+    public void updateConfiguration()
+    {
+        log.debug("Updating scheduler configuraton for Spring context update");
+
+        if (configurationPath == null)
+        {
+            log.warn("Configuration has not been loaded yet, so we can't update the configuration");
+            return;
+        }
+
+        File configFile = new File(configurationPath);
+        try
+        {
+            processSchedulerConfiguration(configFile);
+        } catch (IOException e)
+        {
+            log.error("Could not update scheduler configuration: {}", e.getMessage(), e);
         }
     }
 

@@ -81,6 +81,7 @@ angular.module('services').factory('Organization.ListService', ['$resource', '$t
             param.sort = Util.goodValue(sort);
             param.filters = Util.goodValue(filters);
             param.query = Util.goodValue(query);
+            param.activeOnly = false;
 
             var cacheOrganizationList = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_LIST);
             var cacheKey = param.start + "." + param.n + "." + param.sort + "." + param.filters + "." + param.query;

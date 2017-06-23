@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.armedia.acm.plugins.person.service.SavePersonTransaction;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,7 @@ public class SavePersonAPIController
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Person addPerson(
-            @RequestBody Person in,
-            Authentication auth
-    ) throws AcmCreateObjectFailedException
+    public Person addPerson(@RequestBody Person in, Authentication auth) throws AcmCreateObjectFailedException
     {
 
         log.trace("Got a Person: {}; person ID: '{}'", in, in.getId());
@@ -43,14 +41,14 @@ public class SavePersonAPIController
         {
             Person saved = getPersonTransaction().savePerson(in, auth);
 
-            getEventPublisher().publishPersonEvent(saved, isInsert, true);
+            getEventPublisher().publishPersonUpsertEvent(saved, isInsert, true);
 
             return saved;
 
         } catch (MuleException | TransactionException e)
         {
 
-            getEventPublisher().publishPersonEvent(in, isInsert, false);
+            getEventPublisher().publishPersonUpsertEvent(in, isInsert, false);
 
             throw new AcmCreateObjectFailedException("person", e.getMessage(), e);
         }
@@ -76,6 +74,5 @@ public class SavePersonAPIController
     {
         this.eventPublisher = eventPublisher;
     }
-
 
 }

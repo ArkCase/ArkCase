@@ -12,13 +12,15 @@
 // * The Audit module main controller
 // */
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
-    'AuditController.BuildUrl', 'UtilService', 'Util.DateService'
-    , function ($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService) {
+    'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window'
+    , function ($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window) {
         var promiseModuleConfig = ConfigService.getModuleConfig("audit").then(function (config) {
             $scope.config = config;
             return config;
         });
 
+        $scope.showXmlReport = false;
+        
         $scope.$on('req-component-config', function (e, componentId) {
             promiseModuleConfig.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
@@ -108,9 +110,17 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          *
          */
         $scope.showIframe = function () {
-            $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat,
-                true, $scope.pentahoUser, $scope.pentahoPassword);
+            var reportUri = $scope.auditReportUri;
+            if ($scope.showXmlReport) {
+                reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
+                $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat,
+                    true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport));
+            } else {
+                $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, UtilDateService.defaultDateFormat,
+                    true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
+            }
         }
     }
 ]);
