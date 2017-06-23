@@ -87,6 +87,7 @@ public class LdapUserService
             // passwordExpirationDate is set by ldap after the entry is there
             AcmUser userEntry = getLdapUserDao().findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
             ldapUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+            ldapUser.setUserPrincipalName(userEntry.getUserPrincipalName());
             getUserDao().save(ldapUser);
             getUserDao().getEntityManager().flush();
 
