@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -190,6 +191,12 @@ public class LdapUserService
         List<AcmGroup> updatedGroups = new ArrayList<>();
         for (AcmGroup group : groups)
         {
+            if (!AcmGroupType.LDAP_GROUP.equals(group.getType()))
+            {
+                log.debug("Skip adding user [{}] with DN [{}] as member to a non-LDAP group [{}] in LDAP", ldapUser.getUserId(),
+                        ldapUser.getDistinguishedName(), group.getName());
+                continue;
+            }
             String groupDnStrippedBase = MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC);
             log.debug("Add User:{} with DN:{} as member in Group:{} with DN:{} in LDAP", ldapUser.getUserId(),
                     ldapUser.getDistinguishedName(), group.getName(), group.getDistinguishedName());
@@ -236,6 +243,12 @@ public class LdapUserService
         List<AcmGroup> updatedGroups = new ArrayList<>();
         for (AcmGroup group : groups)
         {
+            if (!AcmGroupType.LDAP_GROUP.equals(group.getType()))
+            {
+                log.debug("Skip removing user [{}] with DN [{}] as member from a non-LDAP group [{}] in LDAP", ldapUser.getUserId(),
+                        ldapUser.getDistinguishedName(), group.getName());
+                continue;
+            }
             String groupDnStrippedBase = MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC);
             log.debug("Remove User:{} with DN:{} as member in Group:{} with DN:{} in LDAP", ldapUser.getUserId(),
                     ldapUser.getDistinguishedName(), group.getName(), group.getDistinguishedName());
