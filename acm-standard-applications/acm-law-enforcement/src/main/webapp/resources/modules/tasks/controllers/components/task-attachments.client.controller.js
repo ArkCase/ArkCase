@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
     , function ($scope, $stateParams, $q, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
+        , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
         Authentication.queryUserInfo().then(
@@ -31,14 +31,16 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             $scope.treeConfig = config.docTree;
 
-            $q.all([promiseFormTypes, promiseFileTypes]).then(
+            $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.fileLanguages = data[2];
                 });
         };
 
@@ -92,5 +94,17 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         };
 
         $scope.correspondenceForms = {};
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

@@ -102,6 +102,7 @@
                 <entry key="activedirectory" value-ref="adTemplateConfig"/>
             </map>
         </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="ldapConfigurationRetrieveDirectories"
@@ -196,6 +197,10 @@
     <bean id="workflowConfigurationMakeActive"
           class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationMakeActive">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
+    </bean>
+
+    <bean id="workflowConfigurationDiagramAPIController" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <!-- Link forms Workflows -->

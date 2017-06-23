@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <h3 translate>common.directive.coreCalendar.updateEventDialog.title</h3>
+</div>
+
+<div class="modal-body">
+    <div class="row well-sm">
+        <div class="col-sm-12 text-center form-group" translate>
+            common.directive.coreCalendar.updateEventDialog.updateWarning.text
+        </div>
+        <div class="col-sm-12 text-center form-group" ng-if="eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE'">
+            <label class="radio-inline">
+                <input type="radio" ng-model="updateModel.updateMaster" ng-value="false">
+                <span translate>
+                    common.directive.coreCalendar.updateEventDialog.thisOne.radio
+                </span>
+            </label>
+            <label class="radio-inline">
+                <input type="radio" ng-model="updateModel.updateMaster" ng-value="true">
+                <span translate>
+                    common.directive.coreCalendar.updateEventDialog.entireSeries.radio
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="cancel()" translate>
+        common.directive.coreCalendar.updateEventDialog.cancel.button
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="updateEvent()" translate>
+        common.directive.coreCalendar.updateEventDialog.updateEvent.button
+    </button>
+</div>

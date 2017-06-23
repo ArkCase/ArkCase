@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.1.15</version>
+        <version>3.1.18</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -24,7 +24,12 @@
             <artifactId>acm-service-history</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-object-history</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>

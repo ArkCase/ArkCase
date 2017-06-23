@@ -14,10 +14,12 @@ angular.module('document-repository').controller('DocumentRepositoryListControll
         var objectDeletedEvent = "object.deleted";
         $scope.$bus.subscribe(objectDeletedEvent, function (data) {
             MessageService.info(data.objectType + " with ID " + data.objectId + " was deleted.");
-            // wait solr to index the change, and update the tree i.e. remove Document Repository from tree
-            setTimeout(function () {
-                $scope.$emit("report-tree-updated");
-            }, 4000);
+            if (data.objectType === ObjectService.ObjectTypes.DOC_REPO) {
+                // wait solr to index the change, and update the tree i.e. remove Document Repository from tree
+                setTimeout(function () {
+                    $scope.$emit("report-tree-updated");
+                }, 4000);
+            }
         });
 
         new HelperObjectBrowserService.Tree({

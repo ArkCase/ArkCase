@@ -130,7 +130,15 @@
           "btn": {
             "cancel": "Cancel",
             "ok": "Add Ldap User"
-          }
+          },
+          "username": "Enter username",
+          "firstName": "Enter first name",
+          "lastName": "Enter last name",
+          "email": "Enter email",
+          "password": "Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -139,7 +147,7 @@
             "ok": "Edit Ldap User"
           }
         },
-        "username": "Username",
+        "username": "UserName",
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",
@@ -218,6 +226,14 @@
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
+    "workflows.config.bpmn.upload": "Upload",
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
+    "workflows.config.bpmn.modal": {        
+        "label.description": "Description",
+        "label.noFileSelected": "No File Selected",
+        "btnCancel.text": "Cancel",
+        "btnOk.text": "Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
       "success": "Process succesfully activated."
@@ -237,16 +253,25 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "Download",
       "replaceFile": "Replace File",
-      "versionHistory": "Version History"
+      "versionHistory": "Version History",
+      "diagram": "en-in_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "Successfully uploaded new process definition",
       "error": "Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "en-in_Process Diagram",
+      "error.loading": "en-in_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "en-in_Close"
+      }
     },
     "formWorkflows.title": "Form/Workflow Link",
     "formWorkflows.link": "Link Forms/Workflows",

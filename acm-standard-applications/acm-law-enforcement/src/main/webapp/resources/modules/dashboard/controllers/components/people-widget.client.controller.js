@@ -16,7 +16,6 @@ angular.module('dashboard.people', ['adf.provider'])
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', 'Case.InfoService'
         , 'Complaint.InfoService', 'Helper.ObjectBrowserService'
         , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService) {
-
             var modules = [
                 {
                     name: "CASE_FILE",

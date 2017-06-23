@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "hi_Documents"
+    "title": "दस्तावेज़"
   },
   "document-repository.menus": {
-    "leftnav.item": "hi_Documents",
-    "topbar.item": "hi_Document Repository"
+    "leftnav.item": "दस्तावेज़",
+    "topbar.item": "दस्तावेज़ रिपॉजिटरी"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "hi_Documents"
+    "title": "hi_Documents",
+    "sendEmail": "hi_Send Email",
+    "filterInputPlaceholder": "hi_Filter",
+    "searchInputPlaceholder": "hi_Search"
   },
   "document-repository.comp.participants": {
     "title": "hi_Participants",

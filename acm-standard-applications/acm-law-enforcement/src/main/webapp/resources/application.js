@@ -30,15 +30,6 @@ angular
                     return data;
                 });
 
-                $httpProvider.defaults.transformRequest.splice(0, 0, function (data, headersGetter) {
-                    var contentType = headersGetter()['content-type'] || '';
-                    if (data && contentType.indexOf('application/json') > -1) {
-                        return JSOG.stringify(angular.copy(data));
-                    }
-                    return data;
-                });
-
-
                 function noCacheInterceptor() {
                     return {
                         request: function (config) {
@@ -74,7 +65,13 @@ angular
                             localStorage.AcmLocale = null;
                         } else if (0 >= lastLocale.locales.length) {
                             localStorage.AcmLocale = null;
-                        } else if (!lastLocale.locales[0].locale) {
+                        } else if (lastLocale.locales[0].locale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].native) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.code) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.iso) {
                             localStorage.AcmLocale = null;
                         }
                     }

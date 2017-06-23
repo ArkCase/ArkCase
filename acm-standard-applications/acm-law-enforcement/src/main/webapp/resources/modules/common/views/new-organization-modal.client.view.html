@@ -40,12 +40,12 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <label class="control-label">{{ 'common.comp.newOrganization.parentOrganization'|translate}}</label>
+                <label class="control-label">{{ 'common.newOrganization.parentOrganization' | translate}}</label>
                 <input type="text" ng-model="organization.parentOrganization.organizationValue"
                        readonly
                        ng-click="searchOrganization()"
                        class="input-md form-control"
-                       placeholder="{{ 'organizations.comp.newOrganization.searchParentOrganization.placeholder' | translate }}"
+                       placeholder="{{'common.newOrganization.searchParentOrganization.placeholder' | translate}}"
                        style="background-color: white;">
             </div>
         </div>
@@ -97,10 +97,25 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newOrganization.identification.identificationYearIssued</label>
-                                <input type="text"
-                                       ng-model="organization.defaultIdentification.identificationYearIssued"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'common.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
+                                <p class="input-group">
+                                    <input type="text"
+                                           class="input-md form-control"
+                                           placeholder="{{'common.newOrganization.identification.identificationYearIssued.placeholder' | translate}}"
+                                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                           datepicker-append-to-body="false"
+                                           ng-model="organization.defaultIdentification.identificationYearIssued"
+                                           is-open="defaultOpened"
+                                           close-on-date-selection="true"
+                                           show-button-bar="true"
+                                           on-open-focus="false"
+                                           close-text="{{'common.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
+                                    <span class="input-group-btn">
+                                                 <button type="button" class="btn btn-default"
+                                                         ng-click="defaultOpened = !defaultOpened">
+                                                         <i class="fa fa-calendar"></i>
+                                                 </button>
+                                          </span>
+                                </p>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
@@ -154,10 +169,25 @@
                                     <div>
                                         <label translate>
                                             common.newOrganization.identification.identificationYearIssued</label>
-                                        <input type="text"
-                                               ng-model="identification.identificationYearIssued"
-                                               class="input-md form-control"
-                                               placeholder="{{ 'common.newOrganization.identification.identificationYearIssued.placeholder' | translate }}">
+                                        <p class="input-group">
+                                            <input type="text"
+                                                   class="input-md form-control"
+                                                   placeholder="{{'common.newOrganization.identification.identificationYearIssued.placeholder' | translate}}"
+                                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                                   datepicker-append-to-body="false"
+                                                   ng-model="identification.identificationYearIssued"
+                                                   is-open="identification.opened"
+                                                   close-on-date-selection="true"
+                                                   show-button-bar="true"
+                                                   on-open-focus="false"
+                                                   close-text="{{'common.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
+                                            <span class="input-group-btn">
+                                                 <button type="button" class="btn btn-default"
+                                                         ng-click="identification.opened = !identification.opened">
+                                                         <i class="fa fa-calendar"></i>
+                                                 </button>
+                                          </span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 form-group">
@@ -193,25 +223,27 @@
             </div>
             <div id="collapseOrganizations" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <div ng-repeat="person in organization.people">
+                    <div ng-repeat="personAssociation in organization.personAssociations">
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label>&nbsp;</label>
-                                <input type="text"
-                                       ng-value="person.givenName + (person.id ? ' ' : '') + person.familyName"
-                                       readonly
+                                <label for="searchExisting">&nbsp;</label>
+                                <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
                                        ng-click="searchPerson($index)"
                                        class="input-md form-control"
-                                       placeholder="{{ 'common.comp.newOrganization.people.searchExisting.placeholder' | translate }}">
+                                       readonly
+                                       placeholder="{{ 'common.newOrganization.people.searchExisting.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
+                                <label translate>common.newOrganization.people.personType</label>
+                                <input class="form-control" readonly
+                                       ng-model="personAssociation.personToOrganizationAssociationTypeName.name">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="removePerson(person)" ng-show="!$first">
-                                        <i class="fa fa-minus text-danger"></i><span translate>common.comp.newOrganization.remove</span>
+                                            ng-click="removePerson(personAssociation)" ng-show="!$first">
+                                        <i class="fa fa-minus text-danger"></i><span translate>common.newOrganization.remove</span>
                                     </button>
                                 </div>
                                 <div class="pull-left">
@@ -219,7 +251,7 @@
                                     <button type="button" class="btn btn-link form-control"
                                             ng-click="addNewPerson();">
                                         <i class="fa fa-plus text-success"></i><span
-                                            translate>common.comp.newOrganization.addAnother</span>
+                                            translate>common.newOrganization.addAnother</span>
                                     </button>
                                 </div>
                             </div>

@@ -21,6 +21,7 @@ public class AcmUserInfoDTO
     private String department;
     private String company;
     private String title;
+    private String notificationMessage;
 
     public String getUserId()
     {
@@ -150,5 +151,15 @@ public class AcmUserInfoDTO
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public String getNotificationMessage()
+    {
+        return notificationMessage;
+    }
+
+    public void setNotificationMessage(String notificationMessage)
+    {
+        this.notificationMessage = notificationMessage;
     }
 }

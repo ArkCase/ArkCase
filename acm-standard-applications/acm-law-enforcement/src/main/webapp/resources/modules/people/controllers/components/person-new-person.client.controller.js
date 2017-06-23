@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('people').controller('People.NewPersonController', ['$scope', '$stateParams', '$translate'
-    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService'
-    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService) {
+    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService'
+    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService) {
+
+        $scope.loading = false;
+
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -15,15 +18,16 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             return moduleConfig;
         });
 
+        $scope.pictures = [{}];
+        $scope.userPicture = null;
+
         //new person with predefined values
         $scope.person = {
             className: 'com.armedia.acm.plugins.person.model.Person',
             contactMethods: [],
             identifications: [],
             addresses: [],
-            associationsFromObjects: [{
-                parentType: 'ORGANIZATION'
-            }],
+            organizationAssociations: [{}],
             defaultEmail: {
                 type: 'email'
             },
@@ -58,9 +62,12 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             $scope.addressTypes = addressTypes;
         });
 
-        ObjectLookupService.getPersonOrganizationRelationTypes().then(function (personOrganizationRelationTypes) {
-            $scope.personOrganizationRelationTypes = personOrganizationRelationTypes;
-        });
+        ObjectLookupService.getPersonOrganizationRelationTypes().then(
+            function (organizationTypes) {
+                $scope.organizationTypes = organizationTypes;
+                return organizationTypes;
+            });
+
 
         $scope.addContactMethod = function (contactType) {
             $timeout(function () {
@@ -114,19 +121,48 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
-        $scope.save = function () {
+        $scope.addEmptyPerson = function () {
+            $scope.pictures.push({});
+            $timeout(function () {
+                //add empty object
+            }, 0);
+        };
 
-            var promiseSavePerson = PersonInfoService.savePersonInfo(clearNotFilledElements(_.cloneDeep($scope.person)));
+        $scope.removePerson = function (toBeRemoved) {
+            $timeout(function () {
+                _.remove($scope.pictures, function (object) {
+                    return object === toBeRemoved;
+                });
+                if ($scope.pictures.length < 1) {
+                    $scope.pictures.push({});
+                }
+            }, 0);
+        };
+
+
+        $scope.save = function () {
+            $scope.loading = true;
+            var clearedPersonInfo = clearNotFilledElements(_.cloneDeep($scope.person));
+            var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.pictures);
             promiseSavePerson.then(
                 function (objectInfo) {
-                    $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("people.comp.newPerson.informSaved"));
-                    $state.go('people');
-                    return objectInfo;
-                }
-                , function (error) {
-                    $scope.$emit("report-object-update-failed", error);
-                    return error;
+                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.PERSON);
+                    var personWasCreatedMessage = $translate.instant('people.comp.editPerson.informCreated', {
+                        personType: objectTypeString,
+                        firstName: objectInfo.data.givenName,
+                        lastName: objectInfo.data.familyName
+                    });
+                    MessageService.info(personWasCreatedMessage);
+                    ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
+                    $scope.loading = false;
+                },
+                function (error) {
+                    $scope.loading = false;
+                    if (error.data && error.data.message) {
+                        $scope.error = error.data.message;
+                    } else {
+                        MessageService.error(error);
+                    }
                 }
             );
         };
@@ -137,30 +173,38 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
-        $scope.removeOrganization = function (organization) {
+        $scope.removeOrganization = function (association) {
             $timeout(function () {
-                _.remove($scope.person.associationsFromObjects, function (object) {
-                    return object === organization;
+                _.remove($scope.person.organizationAssociations, function (object) {
+                    return object === association;
                 });
             }, 0);
         };
 
+
         $scope.searchOrganization = function (index) {
-            var params = {};
-            params.header = $translate.instant("common.dialogOrganizationPicker.header");
-            params.filter = '"Object Type": ORGANIZATION';
-            params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+            var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
+            var params = {
+                showSetPrimary: true,
+                isDefault: false,
+                types: $scope.organizationTypes
+            };
+            //set this params for editing
+            if (association.organization) {
+                angular.extend(params, {
+                    organizationId: association.organization.organizationId,
+                    organizationValue: association.organization.organizationValue,
+                    type: association.personToOrganizationAssociationType,
+                    isDefault: association === $scope.person.defaultOrganization
+                });
+            }
 
             var modalInstance = $modal.open({
-                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
-                    $scope.modalInstance = $modalInstance;
-                    $scope.header = params.header;
-                    $scope.filter = params.filter;
-                    $scope.config = params.config;
-                }],
+                scope: $scope,
                 animation: true,
-                size: 'lg',
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -169,27 +213,63 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 }
             });
 
-            modalInstance.result.then(function (selected) {
-                if (!Util.isEmpty(selected)) {
-                    // override values of existing organization which is displayed
-                    $timeout(function () {
-                        var personAssocation = {
-                            person: $scope.person,
-                            parentId: selected.object_id_s,
-                            parentType: selected.object_type_s,
-                            parentTitle: selected.value_parseable
-                        };
-                        if (index > -1) {
-                            $scope.person.associationsFromObjects[index] = personAssocation;
-                        } else {
-                            $scope.person.associationsFromObjects.push(personAssocation);
-                        }
-                    }, 0);
+            modalInstance.result.then(function (data) {
+                if (data.organization) {
+                    setOrganizationAssociation(association, data);
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        data.organization = organization;
+                        setOrganizationAssociation(association, data);
+                    });
                 }
             });
         };
 
+        function setOrganizationAssociation(association, data) {
+            association.person = {id: $scope.person.id};
+            association.organization = data.organization;
+            association.personToOrganizationAssociationType = data.type;
+            association.organizationToPersonAssociationType = data.inverseType;
+
+            if (data.isDefault) {
+                //find and change previously default organization
+                var defaultAssociation = _.find($scope.person.organizationAssociations, function (object) {
+                    return object.defaultOrganization;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.defaultOrganization = false;
+                }
+            }
+            association.defaultOrganization = data.isDefault;
+
+            //if is new created, add it to the organization associations list
+            if (!$scope.person.organizationAssociations) {
+                $scope.person.organizationAssociations = [];
+            }
+
+            if (!_.includes($scope.person.organizationAssociations, association)) {
+                $scope.person.organizationAssociations.push(association);
+            }
+        }
+
+        $scope.selectPicture = function () {
+            $timeout(function () {
+                if ($scope.userPicture) {
+                    $scope.pictures.push($scope.userPicture);
+                    $scope.userPicture = null;
+                }
+            }, 0);
+        };
+
         function clearNotFilledElements(person) {
+
+            //remove opened property added for the datePickers
+            if (person.identifications && person.identifications.length) {
+                person.identifications = _.map(person.identifications, function (obj) {
+                    return _.omit(obj, 'opened');
+                });
+            }
+
             //phones
             if (!person.defaultPhone.value) {
                 person.defaultPhone = null;
@@ -210,20 +290,18 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }
             //identifications
             if (person.defaultIdentification) {
-                if (!person.defaultIdentification.identificationID) {
-                    person.defaultIdentification = null;
-                } else {
-                    person.identifications.push(person.defaultIdentification);
-                }
+                person.identifications.push(person.defaultIdentification);
             }
 
             //remove empty organizations before save
-            _.remove(person.associationsFromObjects, function (organization) {
-                if (!organization.parentId) {
+            _.remove(person.organizationAssociations, function (association) {
+                if (!association.organization) {
                     return true;
+                } else {
+                    return false;
                 }
-                return false;
             });
+
             //addresses
             if (person.defaultAddress && !person.defaultAddress.streetAddress) {
                 person.defaultAddress = null;
@@ -239,6 +317,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     person.personAliases.push(person.defaultAlias);
                 }
             }
+
             return person;
         }
 

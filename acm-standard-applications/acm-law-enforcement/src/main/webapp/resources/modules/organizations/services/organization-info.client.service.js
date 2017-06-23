@@ -31,6 +31,15 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             save: {
                 method: 'POST',
                 url: 'api/latest/plugin/organizations',
+                transformRequest: function (data, headersGetter) {
+                    var contentType = headersGetter()['content-type'] || '';
+                    if (data && contentType.indexOf('application/json') > -1) {
+                        //we need angular.copy just to remove angular specific fields
+                        var encodedOrganization = JSOG.encode(data);
+                        return angular.toJson(Util.omitNg(encodedOrganization));
+                    }
+                    return data;
+                },
                 cache: false
             },
 
@@ -52,7 +61,8 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             get: {
                 method: 'GET',
                 url: 'api/latest/plugin/organizations/:id',
-                cache: false
+                cache: false,
+                isArray: false
             }
         });
 

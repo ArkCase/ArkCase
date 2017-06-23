@@ -9,8 +9,10 @@
                 <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i><strong translate>{{item.title}}</strong>
             </a>
         </li>
+        <!-- Scrollbar having issues in IE and Firefox, so these breaks push all the menu items up a few lines-->
+        <br><br><br><br><br>
     </ul>
-
+    <br>
     <footer class="hidden-xs">
         <button class="btn btn-icon" ng-hide="isLeftMenuCollapsed" ng-click="isLeftMenuCollapsed = true">
             <i class="fa fa-chevron-circle-left"></i>

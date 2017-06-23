@@ -44,10 +44,16 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
                 isArray: false,
                 data: ''
             },
+            queryWorkflowReport: {
+                method: 'GET',
+                url: 'api/v1/plugin/task/businessProcessTasks?start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                isArray: false,
+                data: ''
+            },
             queryMyComplaints: {
                 method: 'GET',
-                url: 'api/v1/plugin/search/advancedSearch?q=assignee_id_lcs\\::userId+' +
-                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:userGroupList))+' +
+                url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' +
                 'AND+object_type_s\\:COMPLAINT+' +
                 'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
@@ -56,9 +62,9 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             queryMyCases: {
                 method: 'GET',
                 url: 'api/v1/plugin/search/advancedSearch?q=(assignee_id_lcs\\::userId+' +
-                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\:userGroupList))+' +
+                'OR+(assignee_id_lcs\\:""+AND+assignee_group_id_lcs\\::userGroupList))+' +
                 'AND+object_type_s\\:CASE_FILE+' +
-                'start=:startWith&n=:pageSize&s=:sortBy :sortDir',
+                'AND+NOT+status_lcs\\:CLOSED&start=:startWith&n=:pageSize&s=:sortBy :sortDir',
                 isArray: false,
                 data: ''
             },

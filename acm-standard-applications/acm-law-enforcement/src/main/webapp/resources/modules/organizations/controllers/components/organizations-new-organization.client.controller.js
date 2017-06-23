@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.NewOrganizationController', ['$scope', '$stateParams', '$translate'
-    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService'
-    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService) {
+    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService'
+    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService) {
+
+        $scope.loading = false;
+
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
             'url': 0,
@@ -21,9 +24,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             contactMethods: [],
             identifications: [],
             addresses: [],
-            associationsFromObjects: [{
-                parentType: 'PERSON'
-            }],
+            personAssociations: [{}],
             defaultEmail: {
                 type: 'email'
             },
@@ -37,6 +38,12 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 type: 'fax'
             }
         };
+
+        ObjectLookupService.getOrganizationPersonRelationTypes().then(
+            function (types) {
+                $scope.personAssociationTypes = types;
+                return types;
+            });
 
         $scope.searchOrganization = function () {
             var params = {};
@@ -65,9 +72,6 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
                     OrganizationInfoService.getOrganizationInfo(selected.object_id_s).then(function (response) {
-                        //FIXME ugly hack - saving organization fails because those properties are not removed when angular converts to JSON
-                        delete response.$promise;
-                        delete response.$resolved;
                         $scope.organization.parentOrganization = response;
                     });
                 }
@@ -83,28 +87,36 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         $scope.removePerson = function (person) {
             $timeout(function () {
-                _.remove($scope.organization.associationsFromObjects, function (object) {
+                _.remove($scope.organization.personAssociations, function (object) {
                     return object === person;
                 });
             }, 0);
         };
 
         $scope.searchPerson = function (index) {
-            var params = {};
-            params.header = $translate.instant("common.dialogPersonPicker.header");
-            params.filter = '"Object Type": PERSON';
-            params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
+            var association = index > -1 ? $scope.organization.personAssociations[index] : {};
+            var params = {
+                showSetPrimary: true,
+                isDefault: false,
+                types: $scope.personAssociationTypes
+            };
+
+            //set this params for editing
+            if (association.person) {
+                angular.extend(params, {
+                    personId: association.person.id,
+                    personName: association.person.givenName + ' ' + association.person.familyName,
+                    type: association.organizationToPersonAssociationType,
+                    isDefault: association === $scope.organization.primaryContact
+                });
+            }
 
             var modalInstance = $modal.open({
-                templateUrl: "modules/common/views/object-picker-modal.client.view.html",
-                controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
-                    $scope.modalInstance = $modalInstance;
-                    $scope.header = params.header;
-                    $scope.filter = params.filter;
-                    $scope.config = params.config;
-                }],
+                scope: $scope,
                 animation: true,
-                size: 'lg',
+                templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                controller: 'Common.AddPersonModalController',
+                size: 'md',
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -113,25 +125,58 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 }
             });
 
-            modalInstance.result.then(function (selected) {
-                if (!Util.isEmpty(selected)) {
-                    $timeout(function () {
-                        var organizationAssocation = {
-                            organization: $scope.organization,
-                            parentId: selected.object_id_s,
-                            parentType: selected.object_type_s,
-                            parentTitle: selected.full_name_lcs
-                        };
-                        if (index > -1) {
-                            $scope.organization.associationsFromObjects[index] = organizationAssocation;
-
-                        } else {
-                            $scope.organization.associationsFromObjects.push(organizationAssocation);
-                        }
-                    }, 0);
+            modalInstance.result.then(function (data) {
+                if (data.person) {
+                    if (!data.person.id) {
+                        PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                            data.person = response.data;
+                            setPersonAssociation(association, data);
+                        });
+                    } else {
+                        setPersonAssociation({}, data);
+                    }
+                } else {
+                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                        data.person = person;
+                        setPersonAssociation(association, data);
+                    });
                 }
             });
         };
+
+        function setPersonAssociation(association, data) {
+            association.person = data.person;
+            association.organization = $scope.organization;
+            association.organizationToPersonAssociationType = data.type;
+            association.personToOrganizationAssociationType = data.inverseType;
+
+            if (data.isDefault) {
+                //find and change previously primary contact
+                var defaultAssociation = _.find($scope.organization.personAssociations, function (object) {
+                    return object.primaryContact;
+                });
+                if (defaultAssociation) {
+                    defaultAssociation.primaryContact = false;
+                }
+            }
+            association.primaryContact = data.isDefault;
+
+
+            //those are temporary values for displaying in the input
+            association.personFullName = association.person.givenName + ' ' + association.person.familyName;
+            association.personToOrganizationAssociationTypeName = _.find($scope.personAssociationTypes, function (type) {
+                return type.type == data.type;
+            });
+
+            //if is new created, add it to the organization associations list
+            if (!$scope.organization.personAssociations) {
+                $scope.organization.personAssociations = [];
+            }
+
+            if (!_.includes($scope.organization.personAssociations, association)) {
+                $scope.organization.personAssociations.push(association);
+            }
+        }
 
         //contact methods subtypes types
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
@@ -217,23 +262,39 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
         };
 
         $scope.save = function () {
-
+            $scope.loading = true;
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
-                    $scope.$emit("report-object-updated", objectInfo);
-                    MessageService.info($translate.instant("organization.comp.newOrganization.informSaved"));
-                    $state.go('organizations');
-                    return objectInfo;
+                    var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.ORGANIZATION);
+                    var organizationCreatedMessage = $translate.instant('organizations.comp.newOrganization.informCreated', {
+                        objectType: objectTypeString,
+                        organizationValue: objectInfo.organizationValue
+                    });
+                    MessageService.info(organizationCreatedMessage);
+                    ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
+                    $scope.loading = false;
                 }
                 , function (error) {
-                    $scope.$emit("report-object-update-failed", error);
-                    return error;
+                    $scope.loading = false;
+                    if (error.data && error.data.message) {
+                        $scope.error = error.data.message;
+                    } else {
+                        MessageService.error(error);
+                    }
                 }
             );
         };
 
         function clearNotFilledElements(organization) {
+
+            //remove opened property added for the datePickers
+            if (organization.identifications && organization.identifications.length) {
+                organization.identifications = _.map(organization.identifications, function (obj) {
+                    return _.omit(obj, 'opened');
+                });
+            }
+
             //phones
             if (!organization.defaultPhone.value) {
                 organization.defaultPhone = null;
@@ -264,26 +325,29 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
             //identifications
             if (organization.defaultIdentification) {
-                if (!organization.defaultIdentification.identificationID) {
-                    organization.defaultIdentification = null;
-                } else {
-                    organization.identifications.push(organization.defaultIdentification);
-                }
+                organization.identifications.push(organization.defaultIdentification);
             }
 
             //addresses
-            if (organization.defaultAddress && !organization.defaultAddress.streetAddress) {
-                organization.defaultAddress = null;
-            } else {
-                organization.addresses.push(organization.defaultAddress);
+            if (organization.defaultAddress) {
+                if (!organization.defaultAddress.streetAddress) {
+                    organization.defaultAddress = null;
+                }
+                else {
+                    organization.addresses.push(organization.defaultAddress);
+                }
             }
 
             //remove empty organizations before save
-            _.remove(organization.associationsFromObjects, function (person) {
-                if (!person.parentId) {
+            _.remove(organization.personAssociations, function (association) {
+                if (!association.personFullName) {
                     return true;
+                } else {
+                    //remove temporary values
+                    delete association['personFullName'];
+                    delete association['personToOrganizationAssociationTypeName'];
+                    return false;
                 }
-                return false;
             });
 
             return organization;

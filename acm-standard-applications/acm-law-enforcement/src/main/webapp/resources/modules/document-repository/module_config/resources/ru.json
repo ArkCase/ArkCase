@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "ru_Documents"
+    "title": "Документы"
   },
   "document-repository.menus": {
-    "leftnav.item": "ru_Documents",
-    "topbar.item": "ru_Document Repository"
+    "leftnav.item": "Документы",
+    "topbar.item": "Репозиторий Документов"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ru_Documents"
+    "title": "ru_Documents",
+    "sendEmail": "ru_Send Email",
+    "filterInputPlaceholder": "ru_Filter",
+    "searchInputPlaceholder": "ru_Search"
   },
   "document-repository.comp.participants": {
     "title": "ru_Participants",

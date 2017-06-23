@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('dashboard.my-tasks', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('myTasks', {
-                    title: 'My Tasks',
-                    description: 'Displays my tasks',
+                    title: 'dashboard.widgets.myTasks.title',
+                    description: 'dashboard.widgets.myTasks.description',
                     controller: 'Dashboard.MyTasksController',
                     controllerAs: 'myTasks',
                     reload: true,
@@ -16,3 +16,4 @@ angular.module('dashboard.my-tasks', ['adf.provider'])
                 }
             );
     });
+

@@ -1,17 +1,15 @@
 'use strict';
 
 angular.module('dashboard.my-tasks')
-    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService',
-        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, TaskAlertsService, Util, UtilDateService) {
-
+    .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService'
+        , 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService'
+        , function ($scope, $translate, Authentication, DashboardService
+            , ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService
+        ) {
             var vm = this;
-
-            $scope.$on('component-config', applyConfig);
-            $scope.$emit('req-component-config', 'myTasks');
-
             vm.config = null;
             var userInfo = null;
-            var userGroups = null;
+            //var userGroups = null;
             var userGroupList = null;
 
             var paginationOptions = {
@@ -51,28 +49,34 @@ angular.module('dashboard.my-tasks')
                 }
             };
 
-            function applyConfig(e, componentId, config) {
-                if (componentId == 'myTasks') {
-                    vm.config = config;
-                    vm.gridOptions.columnDefs = config.columnDefs;
-                    vm.gridOptions.enableFiltering = config.enableFiltering;
-                    vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
-                    vm.gridOptions.paginationPageSize = config.paginationPageSize;
-                    paginationOptions.pageSize = config.paginationPageSize;
+            ConfigService.getComponentConfig("dashboard", "myTasks").then(function (config) {
+                vm.config = config;
+                vm.gridOptions.columnDefs = config.columnDefs;
+                vm.gridOptions.enableFiltering = config.enableFiltering;
+                vm.gridOptions.paginationPageSizes = config.paginationPageSizes;
+                vm.gridOptions.paginationPageSize = config.paginationPageSize;
+                paginationOptions.pageSize = config.paginationPageSize;
 
-                    Authentication.queryUserInfo().then(function (responseUserInfo) {
-                        userInfo = responseUserInfo;
-                        var userGroups = _.filter(responseUserInfo.authorities, function (userGroup) {
-                            return _.startsWith(userGroup, 'ROLE') == false;
-                        });
+                Authentication.queryUserInfo().then(function (responseUserInfo) {
+                    userInfo = responseUserInfo;
+                    // userGroups = responseUserInfo.authorities;
+                    // userGroupList = responseUserInfo.authorities[0];
+                    // _.forEach(userGroups, function (group) {
+                    // 	userGroupList = userGroupList + " OR " + group;
+                    // });
+                    // userGroupList = "(" + userGroupList + ")";
 
-                        userGroupList = userGroups.join(" OR ");
-                        userGroupList = "(" + userGroupList + ")";
-                        getPage();
-                        return userInfo;
+                    var userGroups = _.filter(responseUserInfo.authorities, function (userGroup) {
+                        return _.startsWith(userGroup, 'ROLE') == false;
                     });
-                }
-            }
+
+                    userGroupList = userGroups.join(" OR ");
+                    userGroupList = "(" + userGroupList + ")";
+                    getPage();
+                    return userInfo;
+                });
+                return config;
+            });
 
             function getPage() {
                 DashboardService.queryMyTasks({

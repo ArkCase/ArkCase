@@ -32,7 +32,7 @@ public class WorkflowConfigurationRetrieveWorkflows {
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "length", required = false, defaultValue = "10") int length,
             @RequestParam(value = "orderBy", required = false, defaultValue = WorkflowConfigurationService.PROP_CREATED) String orderBy,
-            @RequestParam(value = "isAsc", required = false, defaultValue = "true") boolean isAsc) throws IOException, AcmWorkflowConfigurationException {
+            @RequestParam(value = "isAsc", required = false, defaultValue = "false") boolean isAsc) throws IOException, AcmWorkflowConfigurationException {
 
         try {
             List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(start, length, orderBy, isAsc);

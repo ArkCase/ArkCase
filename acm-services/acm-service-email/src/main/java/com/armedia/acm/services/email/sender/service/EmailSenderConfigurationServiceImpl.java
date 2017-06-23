@@ -159,6 +159,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
 
             if (configuration.getEncryption().equals("starttls"))
             {
+                authenticatingSmtpClient.ehlo("");
                 authenticatingSmtpClient.execTLS();
                 if (!isPositiveReply(authenticatingSmtpClient))
                 {
@@ -171,7 +172,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
             if (configuration.getEncryption().equals("starttls") || configuration.getEncryption().equals("ssl-tls"))
             {
                 authenticatingSmtpClient.ehlo("");
-                authenticatingSmtpClient.auth(AuthenticatingSMTPClient.AUTH_METHOD.PLAIN, configuration.getUsername(),
+                authenticatingSmtpClient.auth(AuthenticatingSMTPClient.AUTH_METHOD.LOGIN, configuration.getUsername(),
                         configuration.getPassword());
                 if (!isPositiveReply(authenticatingSmtpClient))
                 {

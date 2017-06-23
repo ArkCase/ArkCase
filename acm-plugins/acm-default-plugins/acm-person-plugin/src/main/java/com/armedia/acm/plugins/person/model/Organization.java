@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.eclipse.persistence.annotations.OrderCorrection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,7 +54,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class Organization implements Serializable, AcmEntity
+public class Organization implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
@@ -186,18 +189,14 @@ public class Organization implements Serializable, AcmEntity
     private OrganizationDBA defaultDBA;
 
     /**
-     * OrganizationAssociation which is primary contact with parentType == PERSON
-     */
-    @OneToOne
-    @JoinColumn(name = "cm_primary_contact")
-    private OrganizationAssociation primaryContact;
-
-    /**
      * Parent Organization
      */
     @OneToOne
     @JoinColumn(name = "cm_parent_organization")
     private Organization parentOrganization;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
+    List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
 
     @PostLoad
     protected void postLoad()
@@ -239,6 +238,14 @@ public class Organization implements Serializable, AcmEntity
         for (OrganizationDBA dba : getOrganizationDBAs())
         {
             dba.setOrganization(this);
+        }
+        for (PersonOrganizationAssociation poa : getPersonAssociations())
+        {
+            poa.setOrganization(this);
+        }
+        if (getPrimaryContact() != null)
+        {
+            getPrimaryContact().setOrganization(this);
         }
     }
 
@@ -463,6 +470,13 @@ public class Organization implements Serializable, AcmEntity
         this.associationsToObjects = associationsToObjects;
     }
 
+    @Override
+    @JsonIgnore
+    public Long getId()
+    {
+        return organizationId;
+    }
+
     public String getObjectType()
     {
         return objectType;
@@ -503,14 +517,13 @@ public class Organization implements Serializable, AcmEntity
         this.defaultDBA = defaultDBA;
     }
 
-    public OrganizationAssociation getPrimaryContact()
+    public PersonOrganizationAssociation getPrimaryContact()
     {
-        return primaryContact;
+        return personAssociations.stream().filter(association -> association.isPrimaryContact()).findFirst().orElse(null);
     }
 
-    public void setPrimaryContact(OrganizationAssociation primaryContact)
-    {
-        this.primaryContact = primaryContact;
+    public void setPrimaryContact(PersonOrganizationAssociation personOrganizationAssociation){
+
     }
 
     public Organization getParentOrganization()
@@ -521,5 +534,15 @@ public class Organization implements Serializable, AcmEntity
     public void setParentOrganization(Organization parentOrganization)
     {
         this.parentOrganization = parentOrganization;
+    }
+
+    public List<PersonOrganizationAssociation> getPersonAssociations()
+    {
+        return personAssociations;
+    }
+
+    public void setPersonAssociations(List<PersonOrganizationAssociation> personAssociations)
+    {
+        this.personAssociations = personAssociations;
     }
 }

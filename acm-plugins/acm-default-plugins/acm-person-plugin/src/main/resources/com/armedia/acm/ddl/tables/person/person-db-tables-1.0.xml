@@ -781,4 +781,17 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="46-acm_person_delete-fk-constraint-default_organization" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <foreignKeyConstraintExists foreignKeyTableName="acm_person"
+                                        foreignKeyName="fk_default_organization_assoc"/>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization_assoc"/>
+    </changeSet>
+    <changeSet id="46-acm_person_delete-column-default_organization" author="nebojsha.davidovikj">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="acm_person" columnName="cm_default_organization"/>
+        </preConditions>
+        <dropColumn tableName="acm_person" columnName="cm_default_organization"/>
+    </changeSet>
 </databaseChangeLog>

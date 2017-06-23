@@ -47,11 +47,15 @@
   },
   "cases.comp.documents": {
     "title": "Documents",
-    "sendEmail": "Send Email"
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
+
   },
   "cases.comp.people": {
     "title": "People",
     "table.columns": {
+      "entity": "Entity",
       "type": "Role",
       "firstName": "FirstName",
       "lastName": "LastName",

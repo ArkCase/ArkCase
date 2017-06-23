@@ -19,7 +19,8 @@ angular.module('admin').service('Admin.WorkflowsConfigService', ['$http', 'Uploa
             retrieveWorkflows: retrieveWorkflows,
             retrieveHistory: retrieveHistory,
             activate: activate,
-            uploadDefinition: uploadDefinition
+            uploadDefinition: uploadDefinition,
+            diagram: diagram
         });
         /**
          * @ngdoc method
@@ -88,6 +89,34 @@ angular.module('admin').service('Admin.WorkflowsConfigService', ['$http', 'Uploa
 
         /**
          * @ngdoc method
+         * @name diagram
+         * @methodOf admin.service:Admin.WorkflowsConfigService
+         *
+         * @description
+         * Retrieve diagram
+         *
+         *
+         * @param {string} deployment id of workflow
+         *
+         * @param {string} key workflow key
+         *
+         * @param {string} version workflow version
+         *
+         * @returns {HttpPromise} Workflow diagram
+         */
+        function diagram(deploymentId, key, version) {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/plugin/admin/workflowconfiguration/diagram/' + deploymentId + '/' + key + '/' + version,
+                data: {},
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
          * @name uploadDefinition
          * @methodOf admin.service:Admin.WorkflowsConfigService
          *
@@ -95,15 +124,17 @@ angular.module('admin').service('Admin.WorkflowsConfigService', ['$http', 'Uploa
          * Performs upload the BPMN file
          *
          * @param {object} file file to be uploaded
+         * @param {string} description description of the file
          *
          *
          * @returns {HttpPromise} Future info about file upload progress
          */
-        function uploadDefinition(file) {
+        function uploadDefinition(file, description) {
             return Upload.upload({
                 url: 'api/latest/plugin/admin/workflowconfiguration/files',
                 method: 'POST',
-                file: file
+                params: {description: description},
+                file: file,
             });
         };
     }]);

@@ -130,7 +130,15 @@
           "btn": {
             "cancel": "zh-tw_Cancel",
             "ok": "zh-tw_Add Ldap User"
-          }
+          },
+          "username": "zh-tw_Enter username",
+          "firstName": "zh-tw_Enter first name",
+          "lastName": "zh-tw_Enter last name",
+          "email": "zh-tw_Enter email",
+          "password": "zh-tw_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "zh-tw_Edit Ldap Member",
@@ -139,7 +147,7 @@
             "ok": "zh-tw_Edit Ldap User"
           }
         },
-        "username": "zh-tw_Username",
+        "username": "zh-tw_UserName",
         "firstName": "zh-tw_FirstName",
         "lastName": "zh-tw_LastName",
         "email": "zh-tw_Email",
@@ -237,16 +245,25 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-tw_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "zh-tw_Upload New BPMN"
     },
     "workflows.config.links": {
       "download": "zh-tw_Download",
       "replaceFile": "zh-tw_Replace File",
-      "versionHistory": "zh-tw_Version History"
+      "versionHistory": "zh-tw_Version History",
+      "diagram": "zh-tw_Process Diagram"
     },
     "workflows.config.upload": {
       "success": "zh-tw_Successfully uploaded new process definition",
       "error": "zh-tw_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "zh-tw_Process Diagram",
+      "error.loading": "zh-tw_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "zh-tw_Close"
+      }
     },
     "formWorkflows.title": "zh-tw_Form/Workflow Link",
     "formWorkflows.link": "zh-tw_Link Forms/Workflows",

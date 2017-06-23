@@ -13,11 +13,25 @@
 
     <bean id="organizationService" class="com.armedia.acm.plugins.person.service.OrganizationServiceImpl">
         <property name="organizationDao" ref="acmOrganizationDao"/>
+        <property name="organizationPipelineManager" ref="organizationPipelineManager"/>
     </bean>
+    <bean id="organizationPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
+        <property name="preSaveHandlers">
+            <list>
+            </list>
+        </property>
+        <property name="postSaveHandlers">
+            <list>
+            </list>
+        </property>
+    </bean>
+
     <bean id="personService" class="com.armedia.acm.plugins.person.service.PersonServiceImpl">
         <property name="personDao" ref="acmPersonDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="personEventPublisher" ref="personEventPublisher"/>
         <property name="peopleRootFolder" value="${person.folder.root}"/>
         <property name="personOwnFolder" value="${person.folder.own.spel}"/>
         <property name="picturesFolder" value="${person.folder.pictures}"/>
@@ -76,6 +90,13 @@
 
     <bean id="personPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Person Plugin"/>
+        <property name="pluginProperties" ref="personPluginProperties"/>
+        <property name="suportedObjectTypesNames">
+            <list>
+                <value>PERSON</value>
+                <value>ORGANIZATION</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="personAssociationPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
@@ -104,8 +125,18 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
     </bean>
-    <bean id="organizationAssociationService" class="com.armedia.acm.plugins.person.service.OrganizationAssociationServiceImpl">
+    <bean id="organizationAssociationService"
+          class="com.armedia.acm.plugins.person.service.OrganizationAssociationServiceImpl">
         <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
         <property name="organizationAssociationEventPublisher" ref="organizationAssociationEventPublisher"/>
+    </bean>
+
+    <bean id="organizationHistoryListener"
+          class="com.armedia.acm.plugins.person.service.OrganizationHistoryListener">
+        <property name="acmObjectHistoryService" ref="acmObjectHistoryService"/>
+        <property name="nonHistoryGeneratingEvents">
+            <list>
+            </list>
+        </property>
     </bean>
 </beans>

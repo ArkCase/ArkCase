@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "ja_Documents"
+    "title": "文書"
   },
   "document-repository.menus": {
-    "leftnav.item": "ja_Documents",
-    "topbar.item": "ja_Document Repository"
+    "leftnav.item": "文書",
+    "topbar.item": "文書保存"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -33,7 +33,10 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ja_Documents"
+    "title": "ja_Documents",
+    "sendEmail": "ja_Send Email",
+    "filterInputPlaceholder": "ja_Filter",
+    "searchInputPlaceholder": "ja_Search"
   },
   "document-repository.comp.participants": {
     "title": "ja_Participants",

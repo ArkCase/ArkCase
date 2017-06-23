@@ -1,6 +1,7 @@
 {
   "id": "cases",
   "title": "Cases",
+  "configurable": true,
   "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "caseInfoFilter": "\"Object Type\": CASE_FILE",
@@ -801,7 +802,7 @@
           "name": "parentName",
           "displayName": "cases.comp.references.table.columns.parentName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.parentName}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parentName}}>{{row.entity.parentName}}</a>"
         },
         {
           "name": "modified",
