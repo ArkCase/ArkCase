@@ -86,18 +86,18 @@ angular.module('services').factory('DocTreeExt.Email', ['$q', '$modal', '$transl
                     var emailData = {};
                     if (res.action === 'SEND_ATTACHMENTS') {
                         emailData = Email._makeEmailDataForEmailWithAttachments(DocTree, res);
-                        EcmEmailService.sendEmailWithAttachments(emailData);
+                        EcmEmailService.sendEmailWithAttachments(emailData, DocTree.getObjType());
                     }
                     else if (res.action === 'SEND_HYPERLINKS') {
                         emailData = Email._makeEmailDataForEmailWithLinks(DocTree, res);
-                        EcmEmailService.sendEmail(emailData);
+                        EcmEmailService.sendEmail(emailData, DocTree.getObjType());
                     } else if (res.action === 'SEND_ATTACHMENTS_AND_HYPERLINKS') {
                         emailData = Email._makeEmailDataForEmailWithAttachmentsAndLinks(DocTree, res);
-                        EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData);
+                        EcmEmailService.sendEmailWithAttachmentsAndLinks(emailData, DocTree.getObjType());
                     }
                     else {
                         emailData = Email._makeEmailDataForPlainEmail(DocTree, res);
-                        EcmEmailService.sendEmail(emailData);
+                        EcmEmailService.sendEmail(emailData, DocTree.getObjType());
                     }
                 });
             }
