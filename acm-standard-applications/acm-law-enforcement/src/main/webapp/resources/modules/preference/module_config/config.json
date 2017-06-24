@@ -35,6 +35,7 @@
         "details",
         "locations",
         "people",
+        "organizations",
         "documents",
         "participants",
         "notes",
@@ -43,9 +44,8 @@
         "history",
         "time",
         "cost",
-        "calendar",
-        "organizations",
         "tags",
+        "calendar",
         "approvalRouting"
       ]
     },
