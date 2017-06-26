@@ -22,13 +22,13 @@ angular.module('document-repository').controller('DocumentRepository.MainControl
             collapsible: false,
             maximizable: false,
             docRepoModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: ObjectService.ObjectTypes.DOC_REPO}, function (data) {
             $scope.dashboard.docRepoModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.docRepoModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.docRepoModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }
