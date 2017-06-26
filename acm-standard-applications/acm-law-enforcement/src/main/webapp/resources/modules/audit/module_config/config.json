@@ -1,6 +1,7 @@
 {
   "id": "audit",
   "title": "Audit",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",

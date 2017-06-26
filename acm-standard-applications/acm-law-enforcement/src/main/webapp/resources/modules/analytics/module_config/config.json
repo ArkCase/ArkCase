@@ -1,6 +1,7 @@
 {
   "id": "analytics",
   "title": "Analytics",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
