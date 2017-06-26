@@ -1,6 +1,7 @@
 {
   "id": "core",
   "title": "Core",
+  "configurable": false,
   "components": [
     {
       "id": "header",

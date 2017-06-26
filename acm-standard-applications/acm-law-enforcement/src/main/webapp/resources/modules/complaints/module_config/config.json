@@ -1,6 +1,7 @@
 {
   "id": "complaints",
   "title": "Complaints",
+  "configurable": true,
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [
