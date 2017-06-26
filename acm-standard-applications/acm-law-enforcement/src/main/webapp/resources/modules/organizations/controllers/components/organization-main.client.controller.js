@@ -24,13 +24,13 @@ angular.module('organizations').controller('Organizations.MainController', ['$sc
             collapsible: false,
             maximizable: false,
             organizationModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "ORGANIZATION"}, function (data) {
             $scope.dashboard.organizationModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.organizationModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.organizationModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }
