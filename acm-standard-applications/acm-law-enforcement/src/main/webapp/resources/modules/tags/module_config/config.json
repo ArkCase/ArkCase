@@ -1,6 +1,7 @@
 {
   "id": "tags",
   "title": "Tags",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",

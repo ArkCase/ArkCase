@@ -1,6 +1,7 @@
 {
   "id": "organizations",
   "title": "Organizations",
+  "configurable": true,
   "initialLinksShown": true,
   "hasOverviewWidgets": true,
   "menus": [

@@ -37,7 +37,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-activiti-configuration.xml"
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-object-history.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT

@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -52,7 +53,14 @@ public class LdapUserService
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState("VALID");
-        user.setUid(user.getUserId());
+        if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
+        {
+            user.setUid(user.getUserId());
+        } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
+        {
+            user.setsAMAccountName(user.getUserId());
+        }
+
         groupNames.forEach(groupName ->
         {
             AcmGroup group = getGroupDao().findByName(groupName);
@@ -77,9 +85,11 @@ public class LdapUserService
         }
         try
         {
-            // sync any additional fields from ldap after user entry is there
+            // passwordExpirationDate is set by ldap after the entry is there
             AcmUser userEntry = getLdapUserDao().findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
-            getUserDao().save(userEntry);
+            ldapUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+            ldapUser.setUserPrincipalName(userEntry.getUserPrincipalName());
+            getUserDao().save(ldapUser);
             getUserDao().getEntityManager().flush();
 
             setUserAsMemberToLdapGroups(ldapUser, new ArrayList<>(ldapUser.getGroups()), ldapTemplate, ldapSyncConfig.getBaseDC());
@@ -182,6 +192,12 @@ public class LdapUserService
         List<AcmGroup> updatedGroups = new ArrayList<>();
         for (AcmGroup group : groups)
         {
+            if (!AcmGroupType.LDAP_GROUP.equals(group.getType()))
+            {
+                log.debug("Skip adding user [{}] with DN [{}] as member to a non-LDAP group [{}] in LDAP", ldapUser.getUserId(),
+                        ldapUser.getDistinguishedName(), group.getName());
+                continue;
+            }
             String groupDnStrippedBase = MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC);
             log.debug("Add User:{} with DN:{} as member in Group:{} with DN:{} in LDAP", ldapUser.getUserId(),
                     ldapUser.getDistinguishedName(), group.getName(), group.getDistinguishedName());
@@ -228,6 +244,12 @@ public class LdapUserService
         List<AcmGroup> updatedGroups = new ArrayList<>();
         for (AcmGroup group : groups)
         {
+            if (!AcmGroupType.LDAP_GROUP.equals(group.getType()))
+            {
+                log.debug("Skip removing user [{}] with DN [{}] as member from a non-LDAP group [{}] in LDAP", ldapUser.getUserId(),
+                        ldapUser.getDistinguishedName(), group.getName());
+                continue;
+            }
             String groupDnStrippedBase = MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC);
             log.debug("Remove User:{} with DN:{} as member in Group:{} with DN:{} in LDAP", ldapUser.getUserId(),
                     ldapUser.getDistinguishedName(), group.getName(), group.getDistinguishedName());
@@ -304,7 +326,7 @@ public class LdapUserService
     public AcmUser cloneLdapUser(String userId, AcmUser acmUser, String password, String directory)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        log.debug("Cloning User:{} in database", acmUser.getUserId());
+        log.debug("Creating new user [{}] as a clone of [{}]", userId, acmUser.getUserId());
         AcmUser existingUser = getUserDao().findByUserId(userId);
         List<AcmGroup> groups = new ArrayList<>(existingUser.getGroups());
         List<String> newGroups = new ArrayList<>(groups.size());
