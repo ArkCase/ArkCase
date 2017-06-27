@@ -16,6 +16,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.details',
     'dashboard.locations',
     'dashboard.people',
+    'dashboard.organizations',
     'dashboard.documents',
     'dashboard.participants',
     'dashboard.reworkDetails',
@@ -27,14 +28,13 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.history',
     'dashboard.time',
     'dashboard.cost',
+    'dashboard.tags',
     'dashboard.calendar',
+    'dashboard.approvalRouting',
     'dashboard.signature',
     'dashboard.person',
     'dashboard.expenses',
     'dashboard.hoursSummary',
     'dashboard.new-cases',
-    'dashboard.workflow-report',
-    'dashboard.organizations',
-    'dashboard.tags',
-    'dashboard.approvalRouting'
+    'dashboard.workflow-report'
 ]);
