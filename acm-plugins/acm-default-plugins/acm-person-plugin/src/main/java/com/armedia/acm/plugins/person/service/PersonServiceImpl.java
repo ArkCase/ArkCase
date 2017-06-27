@@ -64,7 +64,10 @@ public class PersonServiceImpl implements PersonService
     public Person get(Long id)
     {
         Person person = getPersonDao().find(id);
-        getPersonEventPublisher().publishPersonViewedEvent(person, true);
+        if (person != null)
+        {
+            getPersonEventPublisher().publishPersonViewedEvent(person, true);
+        }
         return person;
     }
 
@@ -248,7 +251,8 @@ public class PersonServiceImpl implements PersonService
             metadata.setFileName(fileName);
             uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId, picturesFolderObj.getCmisFolderId(),
                     uniqueFileName, image.getInputStream(), metadata);
-        } else
+        }
+        else
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
