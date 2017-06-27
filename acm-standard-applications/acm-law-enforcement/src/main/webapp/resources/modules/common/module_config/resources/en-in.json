@@ -99,7 +99,7 @@
       "btn.cancel.delete.folder": "No"
     },
     "fileTypesDialog": {
-      "header": "Please select type and language of the Document",
+      "header": "Please select type of the Document",
       "type": "Document Type",
       "language": "Document Language",
       "btnOK": "OK",
