@@ -77,7 +77,7 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
 
     @Column(name = "cm_default_organization")
     @Convert(converter = BooleanToStringConverter.class)
-    private boolean defaultOrganization;
+    private boolean defaultOrganization = Boolean.FALSE;
 
     @Column(name = "cm_created", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
