@@ -2,7 +2,12 @@
     <h4 translate>common.directive.docTree.fileTypesDialog.header</h4>
 </div>
 <div class="modal-body">
-    <div>
+    <select class="form-control" ng-model="fileType.selected">
+        <option ng-repeat="type in fileTypes" value="{{type.cmd}}">{{type.title}}</option>
+    </select>
+        
+    <!-- Modal Language support for MVA demo -->
+    <!-- <div>
     	<label>
     		<span translate>common.directive.docTree.fileTypesDialog.type</span>
     		<span class="required-asterisk">*</span>
@@ -19,7 +24,7 @@
     	 <select class="form-control" ng-model="fileLanguage.selected" required>
 	        <option ng-repeat="language in fileLanguages" value="{{language.locale}}">{{language.desc}}</option>
 	    </select>
-    </div>
+    </div>  -->
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate>
