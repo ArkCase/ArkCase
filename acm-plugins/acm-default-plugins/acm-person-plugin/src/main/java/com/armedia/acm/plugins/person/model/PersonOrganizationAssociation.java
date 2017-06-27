@@ -73,7 +73,7 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
 
     @Column(name = "cm_primary_contact")
     @Convert(converter = BooleanToStringConverter.class)
-    private boolean primaryContact;
+    private boolean primaryContact = Boolean.FALSE;
 
     @Column(name = "cm_default_organization")
     @Convert(converter = BooleanToStringConverter.class)
