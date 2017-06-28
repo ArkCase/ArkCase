@@ -17,5 +17,4 @@ angular.module('dashboard.tags', ['adf.provider'])
         , function ($scope, $stateParams) {
 
         }
-
     ]);
