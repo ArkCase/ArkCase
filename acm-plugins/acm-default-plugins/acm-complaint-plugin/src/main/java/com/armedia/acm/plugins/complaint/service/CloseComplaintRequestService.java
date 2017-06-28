@@ -243,7 +243,7 @@ public class CloseComplaintRequestService
         caseFile.setDetails(details);
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
-
+        caseFile.setIncidentDate(updatedComplaint.getIncidentDate());
         ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
                 updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         originalComplaint.setStatus("CLOSED");
@@ -257,7 +257,7 @@ public class CloseComplaintRequestService
         // here we need a full Authentication object
         Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
         CaseFile fullInvestigation = getSaveCaseService().saveCase(caseFile, auth, null);
-        fullInvestigation.setIncidentDate(updatedComplaint.getIncidentDate());
+
         addChildObjectsToCaseFile(updatedComplaint, fullInvestigation, auth);
 
         getCaseFileEventUtility().raiseCustomEvent(fullInvestigation, "createdFromComplaint", "Case Created from Complaint "
