@@ -3,7 +3,6 @@
   "title": "People",
   "configurable": true,
   "initialLinksShown": true,
-  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
