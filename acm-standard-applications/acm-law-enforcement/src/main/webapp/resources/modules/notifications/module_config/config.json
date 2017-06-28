@@ -1,6 +1,7 @@
 {
   "id": "notifications",
   "title": "Notifications",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",

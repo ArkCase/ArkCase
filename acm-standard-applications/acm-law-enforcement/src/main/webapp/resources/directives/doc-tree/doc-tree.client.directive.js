@@ -210,11 +210,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             if (parent) {
                                 var name = data.input.val();
 
-                                if (DocTree.findSiblingNodeByName(data.node, name)) {
-                                    data.node.remove();
-                                    return false;
-                                }
-
                                 var isNew = data.isNew;
                                 if (isNew) {
                                     //User renames folder right after create one, data.isNew should be false, but is still true
@@ -712,10 +707,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node.setStatus("ok");
                 }
             }
-            , markNodeError: function (node) {
+            , markNodeError: function (node, errMsg) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
-                    node.title = $translate.instant("common.directive.docTree.error.nodeTitle");
+                    node.title = errMsg ? errMsg : $translate.instant("common.directive.docTree.error.nodeTitle");
                     node.renderTitle();
                     //node.setStatus("error");
                     node.setStatus("ok");
@@ -755,7 +750,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     if (!Util.isArrayEmpty(parentNode.children)) {
                         for (var i = 0; i < parentNode.children.length; i++) {
                             if (parentNode.children[i].title == name) {
-                                if (node.key != parentNode.children[i]) {   //cannot be self
+                                if (node.key != parentNode.children[i].key) {   //cannot be self
                                     found = parentNode.children[i];
                                     break;
                                 }
@@ -867,7 +862,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
                 }
                 if (data.targetType !== "expander") {
-                    if(!setting.search.enabled) {
+                    if (!setting.search.enabled) {
                         if (DocTree.isFolderNode(data.node)) {
                             DocTree.Op.addFolderActionBtns();
                         }
@@ -1287,7 +1282,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
 
                     var files = args.files;
-                    var fileLang = args.fileLang; 
+                    var fileLang = args.fileLang;
                     var promiseUploadFile = DocTree.doSubmitFormUploadFile(files, fileLang);
                     $q.when(promiseUploadFile).then(function (data) {
                         args.data = data;
@@ -1912,7 +1907,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
                             item.invisible = true;
                         }
-                        
+
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {
                             if ("invisible" == allowResult) {
@@ -1982,15 +1977,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.cmd = "file/" + subTypes[i].type;
                                         item.data = {};
                                         item.data.uploadFile = true;
-                                        
+
                                         if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
-                                        	var languages = [];                                        
+                                        	var languages = [];
                                             for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
                                             	languages.push({
                                             		title: DocTree.fileLanguages[lang].desc,
                                             		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
                                             	});
-                                            }                                        
+                                            }
                                             item.children = languages;
                                         }
                                     }
@@ -2288,10 +2283,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.markNodeOk(newNode);
                                 newNode.renderTitle();
                                 dfd.resolve(newNode);
-
                             }
                             , function (errorData) {
-                                DocTree.markNodeError(newNode);
+                                var errMsg = $translate.instant("common.directive.docTree.error.folderNodeTitle");
+                                DocTree.markNodeError(newNode, errMsg);
                                 dfd.reject();
                             }
                         );
@@ -2427,7 +2422,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
-                                DocTree.markNodeError(fileNode);
+                                var errMsg = $translate.instant("common.directive.docTree.error.fileNodeTitle");
+                                DocTree.markNodeError(fileNode, errMsg);
                                 dfd.reject(errorData);
                             }
                         );
@@ -3814,7 +3810,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 } else if (!Util.isEmpty(fileData.name)) {
                     solrData.name = fileData.name;
                 }
-                
+
                 if (!Util.isEmpty(fileData.fileActiveVersionNameExtension)) {
                     solrData.ext = fileData.fileActiveVersionNameExtension;
                 } else if (!Util.isEmpty(fileData.ext)) {
@@ -3826,7 +3822,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 } else if (!Util.isEmpty(fileData.mimeType)) {
                     solrData.mimeType = fileData.mimeType;
                 }
-                
+
                 if (!Util.isEmpty(fileData.fileType)) {
                     solrData.type = fileData.fileType;
                 } else if (!Util.isEmpty(fileData.type)) {

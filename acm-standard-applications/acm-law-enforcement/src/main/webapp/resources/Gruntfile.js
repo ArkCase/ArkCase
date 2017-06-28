@@ -224,7 +224,8 @@ module.exports = function (grunt) {
                     });
                     modules.push({
                         'id': moduleId,
-                        'title': moduleObj.title
+                        'title': moduleObj.title,
+                        'configurable': moduleObj.configurable
                     });
                     newModules.push(moduleObj);
                 }

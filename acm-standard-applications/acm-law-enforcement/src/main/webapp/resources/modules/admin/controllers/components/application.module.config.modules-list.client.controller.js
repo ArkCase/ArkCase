@@ -2,7 +2,13 @@
 
 angular.module('admin').controller('Admin.ModulesListController', ['$scope', '$state', '$stateParams', 'ConfigService',
     function ($scope, $state, $stateParams, ConfigService) {
-        $scope.modules = ConfigService.queryModules();
+        var modules = [];
+
+        ConfigService.queryModules().$promise.then(function (data){
+            modules = _.filter(data, {configurable: true});
+            $scope.modules = modules;
+        });
+
         $scope.selectModule = selectModule;
 
         function selectModule(newActive){
