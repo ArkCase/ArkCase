@@ -4,8 +4,8 @@ angular.module('dashboard.history', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('history', {
-                title: 'History',
-                description: 'Displays a pie chart showing the number of each history event type',
+                title: 'dashboard.widgets.history.title',
+                description: 'dashboard.widgets.history.title.description',
                 controller: 'Dashboard.HistoryController',
                 controllerAs: 'history',
                 reload: true,

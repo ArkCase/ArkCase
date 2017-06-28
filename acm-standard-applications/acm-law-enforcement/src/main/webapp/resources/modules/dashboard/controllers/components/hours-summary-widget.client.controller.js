@@ -4,8 +4,8 @@ angular.module('dashboard.hoursSummary', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('hoursSummary', {
-                title: 'Hours Summary',
-                description: 'Displays a summary of hours',
+                title: 'dashboard.widgets.hoursSummary.title',
+                description: 'dashboard.widgets.hoursSummary.title.description',
                 controller: 'Dashboard.HoursSummaryController',
                 controllerAs: 'hoursSummary',
                 reload: true,
