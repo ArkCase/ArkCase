@@ -24,13 +24,13 @@ angular.module('people').controller('People.MainController', ['$scope', '$stateP
             collapsible: false,
             maximizable: false,
             personModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "PERSON"}, function (data) {
             $scope.dashboard.personModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.personModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.personModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }
