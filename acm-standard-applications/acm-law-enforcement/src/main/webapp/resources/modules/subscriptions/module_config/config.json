@@ -1,6 +1,7 @@
 {
   "id": "subscriptions",
   "title": "Subscriptions",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
