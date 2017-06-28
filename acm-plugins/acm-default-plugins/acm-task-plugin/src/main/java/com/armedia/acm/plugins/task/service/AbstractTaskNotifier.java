@@ -1,13 +1,13 @@
 package com.armedia.acm.plugins.task.service;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.services.notification.service.EmailBodyBuilder;
-import com.armedia.acm.services.notification.service.EmailBuilder;
+import com.armedia.acm.services.email.model.EmailBodyBuilder;
+import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.notification.service.SmtpNotificationSender;
+
 import org.activiti.engine.TaskService;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
@@ -120,8 +120,8 @@ public abstract class AbstractTaskNotifier
         Stream<Task> taskList = tasksDueBetween(
                 activitiTaskService.createTaskQuery().includeProcessVariables().includeTaskLocalVariables().active()).list().stream();
 
-        Stream<AcmTask> tasks = taskList.map(activitiTaskDao::acmTaskFromActivitiTask)
-                .filter(task -> task instanceof AcmTask).map(AcmTask.class::cast);
+        Stream<AcmTask> tasks = taskList.map(activitiTaskDao::acmTaskFromActivitiTask).filter(task -> task instanceof AcmTask)
+                .map(AcmTask.class::cast);
 
         return tasks;
     }
@@ -133,7 +133,7 @@ public abstract class AbstractTaskNotifier
         try
         {
             smtpNotificationSender.sendPlainEmail(tasks, this::buildEmail, this::buildEmailBody);
-        } catch (AcmEncryptionException e)
+        } catch (Exception e)
         {
             log.error("Error while trying to send task due notifications.", e);
         }
