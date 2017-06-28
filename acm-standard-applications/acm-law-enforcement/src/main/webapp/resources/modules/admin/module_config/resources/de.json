@@ -135,7 +135,10 @@
           "firstName": "de_Enter first name",
           "lastName": "de_Enter last name",
           "email": "de_Enter email",
-          "password": "de_Enter password"
+          "password": "de_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "de_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "de_Edit Ldap Member",

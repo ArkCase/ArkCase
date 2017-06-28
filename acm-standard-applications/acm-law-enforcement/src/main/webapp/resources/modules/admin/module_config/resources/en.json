@@ -147,7 +147,10 @@
           "firstName": "Enter first name",
           "lastName": "Enter last name",
           "email": "Enter email",
-          "password": "Enter password"
+          "password": "Enter password",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -233,7 +236,7 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
-    "security.ldap.user.management":{
+    "security.ldap.user.management": {
       "title": "LDAP User Management",
       "cloneButton": "Clone User",
       "user": "User"
@@ -305,6 +308,33 @@
         "smtpNotValid": "SMTP settings are not valid"
       }
     },
+    "security.emailTemplates": {
+      "title": "Email Templates",
+      "table.columns": {
+        "templateName": "Template Name",
+        "emailPattern": "Email Pattern",
+        "source": "Source",
+        "objectTypes": "Object Types",
+        "actions": "Actions",
+        "modified": "Modified Date",
+        "modifier": "Modified By"
+      },
+      "modal": {
+        "title": "Email Template",
+        "templateName.label": "Template Name",
+        "templateName.placeholder": "Enter Template Name",
+        "emailPattern.label": "Email Pattern",
+        "emailPattern.placeholder": "Enter Email Pattern",
+        "source.label": "Source",
+        "objectTypes.label": "Object Types",
+        "actions.label": "Actions",
+        "manual.label": "Manual",
+        "automated.label": "Automated",
+        "browse": "Browse",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
+    },
     "security.exchangeConfiguration": {
       "title": "Microsoft Exchange Configuration",
       "exchangeConfigForm": {
@@ -353,12 +383,12 @@
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
     "workflows.config.bpmn.upload": "Upload",
-    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
-    "workflows.config.bpmn.modal": {        
-        "label.description": "Description",
-        "label.noFileSelected": "No File Selected",
-        "btnCancel.text": "Cancel",
-        "btnOk.text": "Upload Workflow"
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "Description",
+      "label.noFileSelected": "No File Selected",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Upload Workflow"
     },
     "workflows.config.activate": {
       "error": "Cant make this process active!",

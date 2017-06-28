@@ -36,7 +36,7 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
                     if (data && contentType.indexOf('application/json') > -1) {
                         //we need angular.copy just to remove angular specific fields
                         var encodedOrganization = JSOG.encode(data);
-                        return JSOG.stringify(Util.omitNg(encodedOrganization));
+                        return angular.toJson(Util.omitNg(encodedOrganization));
                     }
                     return data;
                 },

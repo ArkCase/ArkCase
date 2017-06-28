@@ -1,0 +1,418 @@
+{
+  "organizations": {
+    "title": "Organisations",
+    "progressNoComplaint": "fr_[ No organizations data ]",
+    "progressLoading": "fr_Loading organization ",
+    "progressError": "fr_Failed to load organization "
+  },
+  "organizations.menus": {
+    "leftnav.item": "Organisations",
+    "topbar.item": "Organisation"
+  },
+  "organizations.comp.info": {
+    "phone.label": "fr_Phone",
+    "email.label": "fr_Email",
+    "status.label": "fr_Status",
+    "identification.label": "fr_ID",
+    "primary.label": "fr_Primary Contact",
+    "parent.label": "fr_Parent Organization",
+    "parent.placeholder": "fr_Enter Parent Organization"
+  },
+  "organizations.comp.actions": {
+    "export.button": "fr_Export",
+    "import.button": "fr_Import",
+    "delete.button": "fr_Delete",
+    "activate.button": "fr_Activate",
+    "deactivate.button": "fr_Deactivate",
+    "merge.button": "fr_Merge"
+  },
+  "organizations.comp.details": {
+    "title": "fr_Details",
+    "informSaved": "fr_Organization details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "organizations.comp.addresses": {
+    "title": "fr_Locations",
+    "table.columns": {
+      "type": "fr_Type",
+      "streetAddress": "fr_Address 1",
+      "streetAddress2": "fr_Address 2",
+      "city": "fr_City",
+      "state": "fr_State",
+      "zip": "fr_Zip",
+      "country": "fr_Country",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No"
+    },
+    "actions": {
+      "addNew": "fr_Add New",
+      "map": "fr_Map"
+    },
+    "modal": {
+      "addAddress": "fr_Add Location",
+      "editAddress": "fr_Edit Record",
+      "type.label": "fr_Address Type",
+      "type.placeholder": "fr_Enter Address Type",
+      "streetAddress.label": "fr_Address 1",
+      "streetAddress.placeholder": "fr_Enter Address 1",
+      "streetAddress2.label": "fr_Address 2",
+      "streetAddress2.placeholder": "fr_Enter Address 2",
+      "city.label": "fr_City",
+      "city.placeholder": "fr_Enter City",
+      "zip.label": "fr_Zip",
+      "zip.placeholder": "fr_Enter Zip",
+      "state.label": "fr_State",
+      "state.placeholder": "fr_Enter State",
+      "country.label": "fr_Country",
+      "country.placeholder": "fr_Enter Country",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Location",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No"
+    }
+  },
+  "organizations.comp.phones": {
+    "title": "fr_Phone Numbers",
+    "table.columns": {
+      "type": "fr_Phone Type",
+      "value": "fr_Phone Number",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "addPhone": "fr_Add New Phone Number",
+      "editPhone": "fr_Edit Phone Number",
+      "title": "fr_Add New Phone Number",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Phone Number",
+      "type.label": "fr_Phone Type",
+      "type.placeholder": "fr_Enter Phone Type",
+      "value.label": "fr_Phone Number",
+      "value.placeholder": "fr_Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "fr_Fax Numbers",
+    "table.columns": {
+      "type": "fr_Fax Type",
+      "value": "fr_Fax Number",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "addFax": "fr_Add New Fax Number",
+      "editFax": "fr_Edit Fax Number",
+      "title": "fr_Add New Fax Number",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Fax Number",
+      "type.label": "fr_Fax Type",
+      "type.placeholder": "fr_Enter Fax Type",
+      "value.label": "fr_Fax Number",
+      "value.placeholder": "fr_Enter Fax Number"
+    }
+  },
+  "organizations.comp.emails": {
+    "title": "fr_Email Addresses",
+    "table.columns": {
+      "type": "fr_Email Address Type",
+      "value": "fr_Email Address",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "title": "fr_Add New Email Address",
+      "addEmail": "fr_Add New Email Address",
+      "editEmail": "fr_Edit Email Address",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Email Address",
+      "type.label": "fr_Email Type",
+      "type.placeholder": "fr_Enter Email Type",
+      "value.label": "fr_Email Address",
+      "value.placeholder": "fr_Enter Email Address"
+    }
+  },
+  "organizations.comp.urls": {
+    "title": "fr_URLs",
+    "table.columns": {
+      "type": "fr_Type",
+      "value": "fr_Url",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "title": "fr_Add New URL",
+      "addUrl": "fr_Add New URL",
+      "editUrl": "fr_Edit URL",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "description": "fr_Description",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save URL",
+      "type.label": "fr_Type",
+      "type.placeholder": "fr_Enter Type",
+      "value.label": "fr_URL",
+      "value.placeholder": "fr_Enter URL"
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "fr_DBAs",
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "upload": "fr_New DBA"
+    },
+    "table.columns": {
+      "value": "fr_DBA",
+      "type": "fr_Type",
+      "description": "fr_Description",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "modal": {
+      "addDBA": "fr_Add New DBA",
+      "editDBA": "fr_Edit DBA",
+      "title": "fr_Insert New DBA",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save DBA",
+      "value.label": "fr_DBA",
+      "value.placeholder": "fr_Enter DBA",
+      "description": "fr_Description",
+      "aliasType.label": "fr_DBA Type",
+      "aliasType.placeholder": "fr_Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "fr_IDs",
+    "table.columns": {
+      "type": "fr_Type",
+      "id": "fr_ID",
+      "number": "fr_Number",
+      "issuer": "fr_Issuer",
+      "yearIssued": "fr_Year Issued",
+      "created": "fr_Date Added",
+      "creator": "fr_Added By",
+      "modified": "fr_Last Modified",
+      "modifier": "fr_Modified By"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New"
+    },
+    "modal": {
+      "addID": "fr_Add New Identification",
+      "editID": "fr_Edit Identification",
+      "title": "fr_Add New Identification",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "no": "fr_No",
+      "type.label": "fr_Type",
+      "type.placeholder": "fr_Enter Type",
+      "id.label": "fr_ID",
+      "id.placeholder": "fr_Enter ID",
+      "number.label": "fr_Number",
+      "number.placeholder": "fr_Enter Number",
+      "issuer.label": "fr_Issuer",
+      "issuer.placeholder": "fr_Enter Issuer",
+      "yearIssued.label": "fr_Year Issued",
+      "yearIssued.placeholder": "fr_Enter Year Issued",
+      "yearIssued.close.button": "fr_Close",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "fr_People",
+    "table.columns": {
+      "type": "fr_Role",
+      "firstName": "fr_FirstName",
+      "lastName": "fr_LastName",
+      "organization": "fr_Organization",
+      "phone": "fr_Phone",
+      "location": "fr_Location"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New",
+      "addExisting": "fr_Add Existing"
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "fr_Cases",
+    "table.columns": {
+      "priority": "fr_Priority",
+      "id": "fr_ID",
+      "title": "fr_Title",
+      "status": "fr_Status",
+      "assignee": "fr_Assignee",
+      "modified": "fr_Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "fr_Complaints",
+    "table.columns": {
+      "priority": "fr_Priority",
+      "id": "fr_ID",
+      "title": "fr_Title",
+      "status": "fr_Status",
+      "assignee": "fr_Assignee",
+      "modified": "fr_Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "fr_Related Organizations",
+    "table.columns": {
+      "associationType": "fr_Relationship",
+      "type": "fr_Type",
+      "identification": "fr_ID",
+      "value": "fr_Organization",
+      "contact": "fr_Primary Contact",
+      "phone": "fr_Phone",
+      "location": "fr_Location"
+    },
+    "modal": {
+      "title": "fr_Add Related Organization",
+      "type.label": "fr_Relationship",
+      "type.placeholder": "fr_Enter Relationship",
+      "organization.label": "fr_Organization",
+      "organization.placeholder": "fr_Search Organizations",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Save Related Organization"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "fr_History",
+    "table.columns": {
+      "eventType": "fr_Event Name",
+      "eventDate": "fr_Date",
+      "userId": "fr_User"
+    }
+  },
+  "organizations.comp.newOrganization": {
+    "title": "fr_Organization",
+    "addAnother": "fr_Add Another",
+    "remove": "fr_Remove",
+    "name": "fr_Organization Name",
+    "name.placeholder": "fr_Enter Organization Name",
+    "type": "fr_Organization Type",
+    "type.placeholder": "fr_Select Organization Type",
+    "saveButton": "fr_Save Organization",
+    "parentOrganization": "fr_Parent organization",
+    "searchParentOrganization.placeholder": "fr_Search Parent Organization",
+    "communicationAccounts": {
+      "title": "fr_Communication Accounts",
+      "phone": "fr_Phone",
+      "phone.placeholder": "fr_Enter Phone",
+      "phoneType": "fr_Phone Type",
+      "email": "fr_Email",
+      "email.placeholder": "fr_Enter Email",
+      "emailType": "fr_Email Type",
+      "fax": "fr_Fax",
+      "fax.placeholder": "fr_Enter Fax",
+      "faxType": "fr_Fax Type",
+      "url": "fr_URL",
+      "url.placeholder": "fr_Enter URL",
+      "removeContactMethod": "fr_Remove",
+      "urlType": "fr_URL Type"
+    },
+    "people": {
+      "title": "fr_People",
+      "searchExisting.placeholder": "fr_Search Existing Person",
+      "personType": "fr_Person Type"
+    },
+    "locations": {
+      "title": "fr_Locations",
+      "country": "fr_Country",
+      "country.placeholder": "fr_Select Country",
+      "state": "fr_State",
+      "state.placeholder": "fr_Enter State",
+      "zip": "fr_Zip",
+      "zip.placeholder": "fr_Enter Zip",
+      "city": "fr_City",
+      "city.placeholder": "fr_Enter City",
+      "type": "fr_Address Type",
+      "type.placeholder": "fr_Select Address Type",
+      "streetAddress": "fr_Street Address",
+      "streetAddress.placeholder": "fr_Enter Street Address",
+      "streetAddress2": "fr_Street Address2",
+      "streetAddress2.placeholder": "fr_Enter Street Address2"
+    },
+    "identification": {
+      "title": "fr_Identifications",
+      "identificationID": "fr_Identification ID",
+      "identificationID.placeholder": "fr_Enter Identification ID",
+      "identificationType": "fr_Identification Type",
+      "identificationType.placeholder": "fr_Select Identification Type",
+      "identificationNumber": "fr_Identification Number",
+      "identificationNumber.placeholder": "fr_Enter Identification Number",
+      "identificationIssuer": "fr_Identification Issuer",
+      "identificationIssuer.placeholder": "fr_Enter Identification Issuer",
+      "identificationYearIssued": "fr_Identification Issued",
+      "identificationYearIssued.placeholder": "fr_Select Identification Issued",
+      "identificationYearIssued.close.button": "fr_Close"
+    },
+    "informCreated": "fr_{{objectType}} {{organizationValue}} was created."
+  },
+  "organizations.menus.topbar.item": "fr_New Organization"
+}

@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h3><span translate>admin.security.emailTemplates.modal.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="templateForm">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.security.emailTemplates.modal.title</label><span
+                    class="required-asterisk" ng-if="!isEdit">*</span><br/>
+                <button ngf-select ng-model="templateFile" id="file" ng-required="!isEdit"
+                        class="btn btn-sm btn-default">
+                    <span translate>admin.security.emailTemplates.modal.browse</span></button>
+                {{templateFile.name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="emailPattern" translate>admin.security.emailTemplates.modal.emailPattern.label</label>
+                <input id="emailPattern" class="input-md form-control" ng-model="template.emailPattern"
+                       required="required"
+                       placeholder="{{ 'admin.security.emailTemplates.modal.emailPattern.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="templateName" translate>admin.security.emailTemplates.modal.templateName.label</label>
+                <input id="templateName" class="input-md form-control" ng-model="template.templateName"
+                       required="required"
+                       placeholder="{{ 'admin.security.emailTemplates.modal.templateName.placeholder' | translate }}"
+                       ng-readonly="isEdit">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.security.emailTemplates.modal.objectTypes.label</label><br/>
+                <label ng-repeat="objectType in objectTypeList">
+                    <input
+                            type="checkbox"
+                            name="objectTypes[]"
+                            value="{{objectType.id}}"
+                            ng-checked="template.objectTypes.indexOf(objectType.id) > -1"
+                            ng-click="toggleObjectTypes(objectType.id)"
+                    > {{objectType.name}}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.security.emailTemplates.modal.actions.label</label><br/>
+                <label ng-repeat="action in actionList">
+                    <input
+                            type="checkbox"
+                            name="actions[]"
+                            value="{{action.id}}"
+                            ng-checked="template.actions.indexOf(action.id) > -1"
+                            ng-click="toggleActions(action.id)"
+                    > {{action.name}}
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>admin.security.emailTemplates.modal.source.label</label><br/>
+                <label>
+                    <input type="radio" ng-model="template.source" value="MANUAL">
+                    <translate>admin.security.emailTemplates.modal.manual.label</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="template.source" value="AUTOMATED">
+                    <translate>admin.security.emailTemplates.modal.automated.label</translate>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+        admin.security.emailTemplates.modal.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="templateForm.$invalid">
+        <span translate>admin.security.emailTemplates.modal.save</span>
+    </button>
+</div>
+

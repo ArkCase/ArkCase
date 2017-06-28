@@ -45,7 +45,7 @@ angular.module('time-tracking').controller('TimeTracking.TagsController', ['$sco
                                 return tagAss.id == tag.object_id_s;
                             });
                             if (tagsFound.length == 0) {
-                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TIMESHEET, tag.object_id_s).then(
+                                ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TIMESHEET, $scope.objectParentTitle, tag.object_id_s).then(
                                     function (returnedTag) {
                                         var tagToAdd = angular.copy(returnedTag);
                                         tagToAdd.tagName = tag.tags_s;
@@ -64,7 +64,7 @@ angular.module('time-tracking').controller('TimeTracking.TagsController', ['$sco
                             }
                         }
                         else {
-                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TIMESHEET, tag.id).then(
+                            ObjectTagsService.associateTag(componentHelper.currentObjectId, ObjectService.ObjectTypes.TIMESHEET, $scope.objectParentTitle, tag.id).then(
                                 function () {
                                     $scope.tags.push(tag);
                                     $scope.gridOptions.data = $scope.tags;
@@ -93,6 +93,7 @@ angular.module('time-tracking').controller('TimeTracking.TagsController', ['$sco
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.objectParentTitle = encodeURIComponent($scope.objectInfo.title);
 
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {

@@ -1,6 +1,7 @@
 {
   "id": "my-documents",
   "title": "My Documents",
+  "configurable": true,
   "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
@@ -10,7 +11,7 @@
       "menuItemURL": "my-documents.main",
       "menuItemTitle": "my-documents.menus.leftnav.item",
       "moduleId": "my-documents",
-      "iconClass": "fa fa-folder",
+      "iconClass": "fa fa-file",
       "position": 60
     }
   ],
