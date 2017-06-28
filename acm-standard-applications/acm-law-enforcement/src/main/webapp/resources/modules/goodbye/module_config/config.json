@@ -1,6 +1,7 @@
 {
   "id": "goodbye",
   "title": "Goodbye",
+  "configurable": false,
   "menus": [],
   "components": []
 }

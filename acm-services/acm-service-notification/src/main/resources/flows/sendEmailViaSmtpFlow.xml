@@ -7,15 +7,15 @@
       xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
       version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      
+
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-	<smtp:connector name="smtpConnector" 
-	    validateConnections="true" contentType="text/html"/>
+    <smtp:connector name="smtpConnector"
+                    validateConnections="true" contentType="text/html"/>
     <smtp:gmail-connector name="smtpStartTLSConnector"
                           validateConnections="true" contentType="text/html"/>
 
@@ -26,7 +26,17 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 exchange-pattern="request-response"
                 doc:name="Send Email">
         </vm:inbound-endpoint>
+        <scripting:transformer name="urlEncodeTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    message.setInboundProperty("user", URLEncoder.encode(message.getInboundProperty("user"), "UTF-8"));
+                    message.setInboundProperty("password", URLEncoder.encode(message.getInboundProperty("password"), "UTF-8"));
 
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
         <choice>
             <when expression="#[message.inboundProperties['encryption'] == 'starttls']">
                 <smtp:outbound-endpoint

@@ -1,6 +1,7 @@
 {
   "id": "document-repository",
   "title": "Documents",
+  "configurable": true,
   "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
@@ -10,7 +11,7 @@
       "menuItemURL": "document-repository.main",
       "menuItemTitle": "document-repository.menus.leftnav.item",
       "moduleId": "document-repository",
-      "iconClass": "fa fa-folder",
+      "iconClass": "fa fa-file",
       "position": 60
     },
     {

@@ -135,7 +135,10 @@
           "firstName": "ru_Enter first name",
           "lastName": "ru_Enter last name",
           "email": "ru_Enter email",
-          "password": "ru_Enter password"
+          "password": "ru_Enter password",
+          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "minLengthForPassword": "7",
+          "passwordRuleText": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
           "title": "ru_Edit Ldap Member",

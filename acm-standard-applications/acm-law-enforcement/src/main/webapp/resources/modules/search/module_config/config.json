@@ -1,6 +1,7 @@
 {
   "id": "search",
   "title": "Search",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
