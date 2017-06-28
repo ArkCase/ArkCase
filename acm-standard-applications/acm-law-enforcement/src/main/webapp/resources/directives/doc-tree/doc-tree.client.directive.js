@@ -707,10 +707,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     node.setStatus("ok");
                 }
             }
-            , markNodeError: function (node) {
+            , markNodeError: function (node, errMsg) {
                 if (Validator.validateFancyTreeNode(node)) {
                     $(node.span).addClass("pending");
-                    node.title = $translate.instant("common.directive.docTree.error.nodeTitle");
+                    node.title = errMsg ? errMsg : $translate.instant("common.directive.docTree.error.nodeTitle");
                     node.renderTitle();
                     //node.setStatus("error");
                     node.setStatus("ok");
@@ -2285,10 +2285,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 DocTree.markNodeOk(newNode);
                                 newNode.renderTitle();
                                 dfd.resolve(newNode);
-
                             }
                             , function (errorData) {
-                                DocTree.markNodeError(newNode);
+                                var errMsg = $translate.instant("common.directive.docTree.error.folderNodeTitle");
+                                DocTree.markNodeError(newNode, errMsg);
                                 dfd.reject();
                             }
                         );
@@ -2424,7 +2424,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 dfd.resolve({files: [replacedFile], nodes: [fileNode]});
                             }
                             , function (errorData) {
-                                DocTree.markNodeError(fileNode);
+                                var errMsg = $translate.instant("common.directive.docTree.error.fileNodeTitle");
+                                DocTree.markNodeError(fileNode, errMsg);
                                 dfd.reject(errorData);
                             }
                         );

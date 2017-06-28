@@ -103,7 +103,9 @@
       "noFiles": "No Files Selected"
     },
     "error": {
-      "nodeTitle": "(Error)"
+      "nodeTitle": "(Error)",
+      "folderNodeTitle": "(Error) Folder was not created.",
+      "fileNodeTitle": "(Error) File was not uploaded."
     },
     "lockedTitle": "This document is locked by ",
     "delete.confirmation.dialog": {
