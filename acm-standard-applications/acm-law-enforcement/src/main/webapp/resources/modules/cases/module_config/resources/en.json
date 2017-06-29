@@ -67,9 +67,8 @@
   "cases.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
-      "name": "Organization Name",
       "associationType": "Role",
-      "type": "Organization Type",
+      "type": "Type",
       "identification": "ID",
       "value": "Organization",
       "contact": "Primary Contact",
