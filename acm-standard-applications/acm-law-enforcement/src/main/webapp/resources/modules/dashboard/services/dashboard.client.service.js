@@ -143,90 +143,112 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
 
 
         //make old code compatible. remove fixOldCode_removeLater() after enough time for all users run the new code
-        Service.fixOldCode_removeLater = function(model) {
-            if ("../src/templates/module-dashboard-title.html" == model.titleTemplateUrl
-                || "modules/dashboard/views/dashboard-title.client.view.html" == model.titleTemplateUrl) {
-                model.titleTemplateUrl = "";
-                if ("Dashboard" == model.title) {
-                    model.title = "dashboard.title";
-                }
-                if (model.rows) {
-                    model.rows.forEach(function(row){
-                        var columns = row.columns;
-                        if (columns) {
-                            columns.forEach(function(column){
-                                var widgets = column.widgets;
-                                if (widgets) {
-                                    widgets.forEach(function(widget){
-                                        widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
-                                        if ("My Tasks" == widget.title) {
-                                            widget.title = "dashboard.widgets.myTasks.title";
-                                        } else if ("My Complaints" == widget.title) {
-                                            widget.title = "dashboard.widgets.myComplaints.title";
-                                        } else if ("New Complaints" == widget.title) {
-                                            widget.title = "dashboard.widgets.newComplaints.title";
-                                        } else if ("Active Case Files by Queue" == widget.title) {
-                                            widget.title = "dashboard.widgets.casesByQueue.title";
-                                        } else if ("Cases By Status" == widget.title) {
-                                            widget.title = "dashboard.widgets.casesByStatus.title";
-                                        } else if ("My Cases" == widget.title) {
-                                            widget.title = "dashboard.widgets.myCases.title";
-                                        } else if ("New Cases" == widget.title) {
-                                            widget.title = "dashboard.widgets.newCases.title";
-                                        } else if ("Team Workload" == widget.title) {
-                                            widget.title = "dashboard.widgets.teamWorkload.title";
-                                        } else if ("Displays weather" == widget.title) {
-                                            widget.title = "dashboard.widgets.weather.title";
-                                        } else if ("News" == widget.title) {
-                                            widget.title = "dashboard.widgets.news.title";
-                                        } else if ("Details" == widget.title) {
-                                            widget.title = "dashboard.widgets.details.title";
-                                        } else if ("People" == widget.title) {
-                                            widget.title = "dashboard.widgets.people.title";
-                                        } else if ("Documents" == widget.title) {
-                                            widget.title = "dashboard.widgets.documents.title";
-                                        } else if ("Locations" == widget.title) {
-                                            widget.title = "dashboard.widgets.locations.title";
-                                        } else if ("Tasks" == widget.title) {
-                                            widget.title = "dashboard.widgets.tasks.title";
-                                        } else if ("Participants" == widget.title) {
-                                            widget.title = "dashboard.widgets.participants.title";
-                                        } else if ("References" == widget.title) {
-                                            widget.title = "dashboard.widgets.references.title";
-                                        } else if ("History" == widget.title) {
-                                            widget.title = "dashboard.widgets.history.title";
-                                        } else if ("Notes" == widget.title) {
-                                            widget.title = "dashboard.widgets.notes.title";
-                                        } else if ("Time" == widget.title) {
-                                            widget.title = "dashboard.widgets.time.title";
-                                        } else if ("Cost" == widget.title) {
-                                            widget.title = "dashboard.widgets.cost.title";
-                                        } else if ("Calendar" == widget.title) {
-                                            widget.title = "dashboard.widgets.calendar.title";
-                                        } else if ("Rework Details" == widget.title) {
-                                            widget.title = "dashboard.widgets.reworkDetails.title";
-                                        } else if ("Documents Under Review" == widget.title) {
-                                            widget.title = "dashboard.widgets.docReview.title";
-                                        } else if ("Workflow Overview" == widget.title) {
-                                            widget.title = "dashboard.widgets.workflow.title";
-                                        } else if ("eSignature" == widget.title) {
-                                            widget.title = "dashboard.widgets.signature.title";
-                                        } else if ("Person" == widget.title) {
-                                            widget.title = "dashboard.widgets.person.title";
-                                        } else if ("Hours Summary" == widget.title) {
-                                            widget.title = "dashboard.widgets.hoursSummary.title";
-                                        } else if ("Expenses" == widget.title) {
-                                            widget.title = "dashboard.widgets.expenses.title";
-                                        }
-                                    });
-                                }
-                            });
-                        }
+        Service.fixOldCode_removeLater = function(moduleName, model) {
+            var oldCode = "modules/dashboard/templates/dashboard-title.html" != model.titleTemplateUrl
+                && "modules/dashboard/templates/module-dashboard-title.html" != model.titleTemplateUrl;
+
+            if ("DASHBOARD" == moduleName) {
+                model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
+                model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
+                model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
+                model.title = "dashboard.title";
+            } else {
+                model.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
+            }
+
+            if ("Dashboard" == model.title) {
+                model.title = "dashboard.title";
+            }
+
+            if (model.rows) {
+                model.rows.forEach(function(row){
+                    var columns = row.columns;
+                    if (columns) {
+                        columns.forEach(function(column){
+                            var widgets = column.widgets;
+                            if (widgets) {
+                                widgets.forEach(function(widget){
+                                    if ("modules/dashboard/templates/widget-title.html" != widget.titleTemplateUrl) {
+                                        oldCode = true;
+                                    }
+                                    widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
+                                    if ("My Tasks" == widget.title) {
+                                        widget.title = "dashboard.widgets.myTasks.title";
+                                    } else if ("My Complaints" == widget.title) {
+                                        widget.title = "dashboard.widgets.myComplaints.title";
+                                    } else if ("New Complaints" == widget.title) {
+                                        widget.title = "dashboard.widgets.newComplaints.title";
+                                    } else if ("Active Case Files by Queue" == widget.title) {
+                                        widget.title = "dashboard.widgets.casesByQueue.title";
+                                    } else if ("Cases By Status" == widget.title) {
+                                        widget.title = "dashboard.widgets.casesByStatus.title";
+                                    } else if ("My Cases" == widget.title) {
+                                        widget.title = "dashboard.widgets.myCases.title";
+                                    } else if ("New Cases" == widget.title) {
+                                        widget.title = "dashboard.widgets.newCases.title";
+                                    } else if ("Team Workload" == widget.title) {
+                                        widget.title = "dashboard.widgets.teamWorkload.title";
+                                    } else if ("Displays weather" == widget.title) {
+                                        widget.title = "dashboard.widgets.weather.title";
+                                    } else if ("News" == widget.title) {
+                                        widget.title = "dashboard.widgets.news.title";
+                                    } else if ("Details" == widget.title) {
+                                        widget.title = "dashboard.widgets.details.title";
+                                    } else if ("People" == widget.title) {
+                                        widget.title = "dashboard.widgets.people.title";
+                                    } else if ("Documents" == widget.title) {
+                                        widget.title = "dashboard.widgets.documents.title";
+                                    } else if ("Locations" == widget.title) {
+                                        widget.title = "dashboard.widgets.locations.title";
+                                    } else if ("Tasks" == widget.title) {
+                                        widget.title = "dashboard.widgets.tasks.title";
+                                    } else if ("Participants" == widget.title) {
+                                        widget.title = "dashboard.widgets.participants.title";
+                                    } else if ("References" == widget.title) {
+                                        widget.title = "dashboard.widgets.references.title";
+                                    } else if ("History" == widget.title) {
+                                        widget.title = "dashboard.widgets.history.title";
+                                    } else if ("Notes" == widget.title) {
+                                        widget.title = "dashboard.widgets.notes.title";
+                                    } else if ("Time" == widget.title) {
+                                        widget.title = "dashboard.widgets.time.title";
+                                    } else if ("Cost" == widget.title) {
+                                        widget.title = "dashboard.widgets.cost.title";
+                                    } else if ("Calendar" == widget.title) {
+                                        widget.title = "dashboard.widgets.calendar.title";
+                                    } else if ("Rework Details" == widget.title) {
+                                        widget.title = "dashboard.widgets.reworkDetails.title";
+                                    } else if ("Documents Under Review" == widget.title) {
+                                        widget.title = "dashboard.widgets.docReview.title";
+                                    } else if ("Workflow Overview" == widget.title) {
+                                        widget.title = "dashboard.widgets.workflow.title";
+                                    } else if ("eSignature" == widget.title) {
+                                        widget.title = "dashboard.widgets.signature.title";
+                                    } else if ("Person" == widget.title) {
+                                        widget.title = "dashboard.widgets.person.title";
+                                    } else if ("Hours Summary" == widget.title) {
+                                        widget.title = "dashboard.widgets.hoursSummary.title";
+                                    } else if ("Expenses" == widget.title) {
+                                        widget.title = "dashboard.widgets.expenses.title";
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (oldCode) {
+                $timeout(function () {
+                    Service.saveConfig({
+                        dashboardConfig: angular.toJson(model),
+                        module: moduleName
                     });
-                }
+                }, 0);
+
             }
         };
-        //TODO: remove above fixOldCode_removeLater()
+        //TODO: remove fixOldCode_removeLater() and its usage in each module
 
         return Service;
     }
