@@ -3,7 +3,6 @@
   "title": "Organizations",
   "configurable": true,
   "initialLinksShown": true,
-  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
