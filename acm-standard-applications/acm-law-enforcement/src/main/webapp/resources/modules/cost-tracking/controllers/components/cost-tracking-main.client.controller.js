@@ -25,13 +25,13 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             collapsible: false,
             maximizable: false,
             costModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "COST"}, function (data) {
             $scope.dashboard.costModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }

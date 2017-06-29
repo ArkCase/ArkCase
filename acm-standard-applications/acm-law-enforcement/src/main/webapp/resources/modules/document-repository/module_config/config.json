@@ -2,7 +2,6 @@
   "id": "document-repository",
   "title": "Documents",
   "configurable": true,
-  "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "documentRepositoryInfoFilter": "\"Object Type\": DOC_REPO",
   "menus": [

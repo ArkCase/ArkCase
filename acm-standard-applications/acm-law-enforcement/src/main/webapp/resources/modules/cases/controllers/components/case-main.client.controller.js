@@ -24,13 +24,13 @@ angular.module('cases').controller('Cases.MainController', ['$scope', '$statePar
             collapsible: false,
             maximizable: false,
             caseModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "CASE"}, function (data) {
             $scope.dashboard.caseModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.caseModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }
