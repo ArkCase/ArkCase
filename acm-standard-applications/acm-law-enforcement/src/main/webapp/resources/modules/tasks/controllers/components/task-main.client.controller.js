@@ -24,13 +24,13 @@ angular.module('tasks').controller('Tasks.MainController', ['$scope', '$statePar
             collapsible: false,
             maximizable: false,
             taskModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TASK"}, function (data) {
             $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
 

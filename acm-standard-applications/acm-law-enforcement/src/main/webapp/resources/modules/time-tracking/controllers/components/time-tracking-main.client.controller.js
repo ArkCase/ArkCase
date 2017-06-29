@@ -27,13 +27,13 @@ angular.module('time-tracking').controller('TimeTracking.MainController', ['$sco
             collapsible: false,
             maximizable: false,
             timeModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TIME"}, function (data) {
             $scope.dashboard.timeModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.timeModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            $scope.dashboard.timeModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }

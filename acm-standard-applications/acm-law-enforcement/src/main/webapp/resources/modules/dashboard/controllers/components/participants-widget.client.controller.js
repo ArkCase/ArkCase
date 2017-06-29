@@ -4,14 +4,13 @@ angular.module('dashboard.participants', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('participants', {
-                    title: 'Participants',
-                    description: 'Displays Participants',
-                    controller: 'Dashboard.ParticipantsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
-                    commonName: 'participants'
-                }
-            );
+                title: 'dashboard.widgets.participants.title',
+                description: 'dashboard.widgets.participants.description',
+                controller: 'Dashboard.ParticipantsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
+                commonName: 'participants'
+            });
     })
     .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', 'Case.InfoService'
         , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService'

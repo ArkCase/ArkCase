@@ -262,21 +262,6 @@
         "title": "Expenses",
         "description": "Displays a cost-to-user graph",
         "noDataMessage": "Currently no expense data to display"
-      },
-      "organizations": {
-        "title": "Organizations",
-        "description": "Organizations widget",
-        "noDataMessage": "Currently there are no organizations to display"
-      },
-      "tags": {
-        "title": "Tags",
-        "description": "Tags widget",
-        "noDataMessage": "Currently there are no tags to display"
-      },
-      "approvalRouting": {
-        "title": "Approval Routing",
-        "description": "Approval Routing widget",
-        "noDataMessage": "Currently there are no Approval Routing to display"
       }
     }
   }

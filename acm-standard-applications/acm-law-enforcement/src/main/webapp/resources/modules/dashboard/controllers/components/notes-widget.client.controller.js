@@ -4,14 +4,13 @@ angular.module('dashboard.notes', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('notes', {
-                    title: 'Notes',
-                    description: 'Displays notes',
-                    controller: 'Dashboard.NotesController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
-                    commonName: 'notes'
-                }
-            );
+                title: 'dashboard.widgets.notes.title',
+                description: 'dashboard.widgets.notes.description',
+                controller: 'Dashboard.NotesController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+                commonName: 'notes'
+            });
     })
     .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
         , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'

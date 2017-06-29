@@ -15,22 +15,8 @@
   "timeFormat": "MM-DD-YYYY",
   "moduleWidgetPreferences": [
     {
-      "name": "CASE",
-      "allowedWidgets": [
-        "details",
-        "people",
-        "documents",
-        "participants",
-        "notes",
-        "tasks",
-        "references",
-        "history",
-        "time",
-        "cost",
-        "calendar"
-      ]
-    },
-    {
+      "id": "complaints",
+      "title": "Complaints",
       "name": "COMPLAINT",
       "allowedWidgets": [
         "details",
@@ -51,17 +37,26 @@
       ]
     },
     {
-      "name": "DOC_REPO",
+      "id": "cases",
+      "title": "Cases",
+      "name": "CASE",
       "allowedWidgets": [
         "details",
+        "people",
         "documents",
         "participants",
         "notes",
+        "tasks",
         "references",
-        "history"
+        "history",
+        "time",
+        "cost",
+        "calendar"
       ]
     },
     {
+      "id": "tasks",
+      "title": "Tasks",
       "name": "TASK",
       "allowedWidgets": [
         "details",
@@ -76,6 +71,52 @@
       ]
     },
     {
+      "id": "people",
+      "title": "People",
+      "name": "PERSON",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "id": "organizations",
+      "title": "Organizations",
+      "name": "ORGANIZATION",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "id": "document-repository",
+      "title": "Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
+      "id": "my-documents",
+      "title": "My Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
+      "id": "cost-tracking",
+      "title": "Cost Tracking",
       "name": "COST",
       "allowedWidgets": [
         "details",
@@ -84,25 +125,13 @@
       ]
     },
     {
+      "id": "time-tracking",
+      "title": "Time Tracking",
       "name": "TIME",
       "allowedWidgets": [
         "details",
         "person",
         "hoursSummary"
-      ]
-    },
-    {
-      "name": "PERSON",
-      "allowedWidgets": [
-        "details",
-        "history"
-      ]
-    },
-    {
-      "name": "ORGANIZATION",
-      "allowedWidgets": [
-        "details",
-        "history"
       ]
     }
   ]
