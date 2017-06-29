@@ -4,8 +4,8 @@ angular.module('dashboard.organizations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('organizations', {
-                    title: 'Organizations',
-                    description: 'Displays organizations',
+                    title: 'dashboard.widgets.organizations.title',
+                    description: 'dashboard.widgets.organizations.description',
                     controller: 'Dashboard.OrganizationsController',
                     reload: true,
                     templateUrl: 'modules/dashboard/views/components/organizations-widget.client.view.html',

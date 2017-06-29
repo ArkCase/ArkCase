@@ -30,7 +30,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.cost',
     'dashboard.tags',
     'dashboard.calendar',
-    'dashboard.approvalRouting',
+    'dashboard.approvalrouting',
     'dashboard.signature',
     'dashboard.person',
     'dashboard.expenses',
