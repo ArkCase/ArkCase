@@ -15,6 +15,30 @@
   "timeFormat": "MM-DD-YYYY",
   "moduleWidgetPreferences": [
     {
+      "id": "complaints",
+      "title": "Complaints",
+      "name": "COMPLAINT",
+      "allowedWidgets": [
+        "details",
+        "locations",
+        "people",
+        "organizations",
+        "documents",
+        "participants",
+        "notes",
+        "tasks",
+        "references",
+        "history",
+        "time",
+        "cost",
+        "tags",
+        "calendar",
+        "approvalRouting"
+      ]
+    },
+    {
+      "id": "cases",
+      "title": "Cases",
       "name": "CASE",
       "allowedWidgets": [
         "details",
@@ -31,34 +55,8 @@
       ]
     },
     {
-      "name": "COMPLAINT",
-      "allowedWidgets": [
-        "details",
-        "locations",
-        "people",
-        "documents",
-        "participants",
-        "notes",
-        "tasks",
-        "references",
-        "history",
-        "time",
-        "cost",
-        "calendar"
-      ]
-    },
-    {
-      "name": "DOC_REPO",
-      "allowedWidgets": [
-        "details",
-        "documents",
-        "participants",
-        "notes",
-        "references",
-        "history"
-      ]
-    },
-    {
+      "id": "tasks",
+      "title": "Tasks",
       "name": "TASK",
       "allowedWidgets": [
         "details",
@@ -73,6 +71,52 @@
       ]
     },
     {
+      "id": "people",
+      "title": "People",
+      "name": "PERSON",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "id": "organizations",
+      "title": "Organizations",
+      "name": "ORGANIZATION",
+      "allowedWidgets": [
+        "details",
+        "history"
+      ]
+    },
+    {
+      "id": "document-repository",
+      "title": "Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
+      "id": "my-documents",
+      "title": "My Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history"
+      ]
+    },
+    {
+      "id": "cost-tracking",
+      "title": "Cost Tracking",
       "name": "COST",
       "allowedWidgets": [
         "details",
@@ -81,25 +125,13 @@
       ]
     },
     {
+      "id": "time-tracking",
+      "title": "Time Tracking",
       "name": "TIME",
       "allowedWidgets": [
         "details",
         "person",
         "hoursSummary"
-      ]
-    },
-    {
-      "name": "PERSON",
-      "allowedWidgets": [
-        "details",
-        "history"
-      ]
-    },
-    {
-      "name": "ORGANIZATION",
-      "allowedWidgets": [
-        "details",
-        "history"
       ]
     }
   ]
