@@ -4,14 +4,13 @@ angular.module('dashboard.signature', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('signature', {
-                    title: 'Signature',
-                    description: 'Displays Signatures',
-                    controller: 'Dashboard.SignatureController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/signature.client.view.html',
-                    commonName: 'signature'
-                }
-            );
+                title: 'dashboard.widgets.signature.title',
+                description: 'dashboard.widgets.signature.description',
+                controller: 'Dashboard.SignatureController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/signature.client.view.html',
+                commonName: 'signature'
+            });
     })
     .controller('Dashboard.SignatureController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService', 'Task.InfoService'
         , 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService'
