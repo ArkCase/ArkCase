@@ -87,7 +87,9 @@
       "noFiles": "No Files Selected"
     },
     "error": {
-      "nodeTitle": "(Error)"
+      "nodeTitle": "(Error)",
+      "folderNodeTitle": "(Error) Folder was not created.",
+      "fileNodeTitle": "(Error) File was not uploaded."
     },
     "lockedTitle": "This document is locked by ",
     "delete.confirmation.dialog": {
@@ -99,7 +101,7 @@
       "btn.cancel.delete.folder": "No"
     },
     "fileTypesDialog": {
-      "header": "Please select type and language of the Document",
+      "header": "Please select type of the Document",
       "type": "Document Type",
       "language": "Document Language",
       "btnOK": "OK",
