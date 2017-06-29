@@ -287,6 +287,32 @@
           ]
         },
         {
+          "id": "locations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fullAddress",
+              "displayName": "complaints.comp.locations.table.columns.address",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "modified",
+              "displayName": "complaints.comp.locations.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "width": 150
+            },
+            {
+              "name": "modifier",
+              "displayName": "complaints.comp.locations.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
           "id": "people",
           "type": "component",
           "columnDefs": [
@@ -306,6 +332,27 @@
               "name": "lastName",
               "field": "person.familyName",
               "displayName": "complaints.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "organizations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "organization.organizationRole",
+              "displayName": "complaints.comp.organizations.table.columns.associationType",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationName",
+              "displayName": "complaints.comp.organizations.table.columns.name",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationType",
+              "displayName": "complaints.comp.organizations.table.columns.type",
               "headerCellFilter": "translate"
             }
           ]
@@ -443,35 +490,49 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "complaints.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "complaints.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "complaints.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "calendar",
           "type": "component"
         },
         {
-          "id": "locations",
+          "id": "approvalrouting",
           "type": "component",
           "columnDefs": [
             {
-              "name": "fullAddress",
-              "displayName": "complaints.comp.locations.table.columns.address",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "name": "title",
+              "displayName": "complaints.comp.approvalRouting.title",
+              "headerCellFilter": "translate"
             },
             {
-              "name": "modified",
-              "displayName": "complaints.comp.locations.table.columns.modified",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "width": 150
+              "name": "assignee",
+              "displayName": "complaints.comp.approvalRouting.assignee.label",
+              "headerCellFilter": "translate"
             },
             {
-              "name": "modifier",
-              "displayName": "complaints.comp.locations.table.columns.modifier",
-              "headerCellFilter": "translate",
-              "width": 150,
-              "lookup": "userFullNames"
+              "name": "due",
+              "displayName": "complaints.comp.approvalRouting.dueDate.label",
+              "headerCellFilter": "translate"
             }
           ]
         }
