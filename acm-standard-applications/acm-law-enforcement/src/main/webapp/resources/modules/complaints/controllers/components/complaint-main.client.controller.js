@@ -1,10 +1,7 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.MainController', ['$scope', '$stateParams'
-    , 'ConfigService', 'Complaint.InfoService', 'Dashboard.DashboardService'
-    , function ($scope, $stateParams
-        , ConfigService, ComplaintInfoService, DashboardService
-    ) {
+angular.module('complaints').controller('Complaints.MainController', ['$scope', 'ConfigService', 'Dashboard.DashboardService'
+    , function ($scope, ConfigService, DashboardService) {
         ConfigService.getModuleConfig("complaints").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
@@ -18,15 +15,16 @@ angular.module('complaints').controller('Complaints.MainController', ['$scope', 
             collapsible: false,
             maximizable: false,
             complaintModel: {
-                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
+                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "COMPLAINT"}, function (data) {
             $scope.dashboard.complaintModel = angular.fromJson(data.dashboardConfig);
-            DashboardService.fixOldCode_removeLater($scope.dashboard.complaintModel);
-            $scope.dashboard.complaintModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
+            DashboardService.fixOldCode_removeLater("COMPLAINT", $scope.dashboard.complaintModel);
+            $scope.dashboard.complaintModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
+
     }
 ]);

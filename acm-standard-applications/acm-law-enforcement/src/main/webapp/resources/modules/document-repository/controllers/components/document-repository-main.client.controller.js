@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('document-repository').controller('DocumentRepository.MainController', ['$scope', '$stateParams', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'dashboard', 'Dashboard.DashboardService', 'ObjectService'
-    , function ($scope, $stateParams, $translate, Store, Util, ConfigService, dashboard, DashboardService
-        , ObjectService) {
+angular.module('document-repository').controller('DocumentRepository.MainController', ['$scope'
+    , 'ConfigService', 'Dashboard.DashboardService', 'ObjectService'
+    , function ($scope
+        , ConfigService, DashboardService, ObjectService
+    ) {
 
         ConfigService.getModuleConfig("document-repository").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
@@ -11,24 +12,21 @@ angular.module('document-repository').controller('DocumentRepository.MainControl
             return moduleConfig;
         });
 
-
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
-        });
+        DashboardService.localeUseTypical($scope);
 
         $scope.dashboard = {
             structure: '12',
             collapsible: false,
             maximizable: false,
             docRepoModel: {
-                titleTemplateUrl: 'modules/dashboard/templates/widget-blank-title.html'
+                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: ObjectService.ObjectTypes.DOC_REPO}, function (data) {
             $scope.dashboard.docRepoModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.docRepoModel.titleTemplateUrl = 'modules/dashboard/templates/widget-blank-title.html';
+            DashboardService.fixOldCode_removeLater("DOC_REPO", $scope.dashboard.docRepoModel);
+            $scope.dashboard.docRepoModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }
