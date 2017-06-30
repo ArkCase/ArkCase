@@ -10,8 +10,11 @@
 
  * Helper.DashboardService provide basic coding for typical module dashboard in ArkCase
  */
-angular.module('services').factory('Helper.DashboardService', ['UtilService', 'ConfigService', 'ArkCaseDashboard', 'Dashboard.DashboardService'
-    , function (Util, ConfigService, ArkCaseDashboard, DashboardService) {
+angular.module('services').factory('Helper.DashboardService', ['$timeout', '$translate', 'UtilService'
+    , 'ConfigService', 'ArkCaseDashboard', 'Dashboard.DashboardService'
+    , function ($timeout, $translate, Util
+        , ConfigService, ArkCaseDashboard, DashboardService
+    ) {
 
         var Service = {
             /**
