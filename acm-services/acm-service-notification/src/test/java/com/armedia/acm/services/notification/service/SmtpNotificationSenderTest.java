@@ -113,7 +113,6 @@ public class SmtpNotificationSenderTest extends EasyMockSupport
         smtpNotificationSender.setEmailSenderService(mockSmtpService);
         smtpNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         smtpNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-        smtpNotificationSender.setMuleContextManager(mockMuleContextManager);
         smtpNotificationSender.setEmailSenderPropertyFileLocation("");
         smtpNotificationSender.setAuthenticationTokenService(mockAuthenticationTokenService);
         smtpNotificationSender.setAuthenticationTokenDao(mockAuthenticationTokenDao);

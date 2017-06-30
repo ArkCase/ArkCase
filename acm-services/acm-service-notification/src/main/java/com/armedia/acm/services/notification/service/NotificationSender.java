@@ -2,7 +2,6 @@ package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
@@ -43,9 +42,7 @@ public abstract class NotificationSender
 
     protected AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     protected PropertyFileManager propertyFileManager;
-    protected String notificationPropertyFileLocation;
     protected String emailSenderPropertyFileLocation;
-    protected MuleContextManager muleContextManager;
     protected AuthenticationTokenService authenticationTokenService;
     protected AuthenticationTokenDao authenticationTokenDao;
     protected EcmFileService ecmFileService;
@@ -81,7 +78,7 @@ public abstract class NotificationSender
             in.setFooter("");
             in.setTemplate(notificationTemplate);
 
-            String notificationLink = getNotificationUtils().buildNotificationLink(notification.getParentType(), notification.getParentId(),
+            String notificationLink = notificationUtils.buildNotificationLink(notification.getParentType(), notification.getParentId(),
                     notification.getRelatedObjectType(), notification.getRelatedObjectId());
 
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
@@ -94,8 +91,7 @@ public abstract class NotificationSender
             Authentication authentication = SecurityContextHolder.getContext() != null
                     ? SecurityContextHolder.getContext().getAuthentication() : null;
 
-            String userId = getPropertyFileManager().load(getEmailSenderPropertyFileLocation(), EmailSenderConfigurationConstants.USERNAME,
-                    null);
+            String userId = propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USERNAME, null);
 
             AcmUser acmUser = userDao.findByUserId(userId);
 
@@ -131,11 +127,6 @@ public abstract class NotificationSender
     public abstract List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in,
             Authentication authentication, AcmUser user) throws Exception;
 
-    public NotificationUtils getNotificationUtils()
-    {
-        return notificationUtils;
-    }
-
     public void setNotificationUtils(NotificationUtils notificationUtils)
     {
         this.notificationUtils = notificationUtils;
@@ -151,32 +142,9 @@ public abstract class NotificationSender
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
         this.propertyFileManager = propertyFileManager;
-    }
-
-    public String getNotificationPropertyFileLocation()
-    {
-        return notificationPropertyFileLocation;
-    }
-
-    public void setNotificationPropertyFileLocation(String notificationPropertyFileLocation)
-    {
-        this.notificationPropertyFileLocation = notificationPropertyFileLocation;
-    }
-
-    /**
-     * @return the emailSenderPropertyFileLocation
-     */
-    public String getEmailSenderPropertyFileLocation()
-    {
-        return emailSenderPropertyFileLocation;
     }
 
     /**
@@ -186,16 +154,6 @@ public abstract class NotificationSender
     public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
     {
         this.emailSenderPropertyFileLocation = emailSenderPropertyFileLocation;
-    }
-
-    public MuleContextManager getMuleContextManager()
-    {
-        return muleContextManager;
-    }
-
-    public void setMuleContextManager(MuleContextManager muleContextManager)
-    {
-        this.muleContextManager = muleContextManager;
     }
 
     public AuthenticationTokenService getAuthenticationTokenService()
@@ -226,11 +184,6 @@ public abstract class NotificationSender
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
-    }
-
-    public String getNotificationTemplate()
-    {
-        return notificationTemplate;
     }
 
     public void setNotificationTemplate(Resource notificationTemplate) throws IOException
