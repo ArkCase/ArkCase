@@ -1,33 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.MainController', ['$scope', 'Acm.StoreService', 'UtilService'
-    , 'ConfigService', 'Object.AuditService', 'Dashboard.DashboardService'
-    , function ($scope, Store, Util
-        , ConfigService, ObjectAuditService, DashboardService
-    ) {
+angular.module('tasks').controller('Tasks.MainController', ['$scope', 'Acm.StoreService', 'UtilService', 'Helper.DashboardService'
+    , function ($scope, Store, Util, DashboardHelper) {
 
-        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
-            $scope.components = moduleConfig.components;
-            $scope.config = _.find(moduleConfig.components, {id: "main"});
-            return moduleConfig;
-        });
-
-        DashboardService.localeUseTypical($scope);
-
-        $scope.dashboard = {
-            structure: '12',
-            collapsible: false,
-            maximizable: false,
-            taskModel: {
-                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
-            }
-        };
-
-        DashboardService.getConfig({moduleName: "TASK"}, function (data) {
-            $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-            DashboardService.fixOldCode_removeLater("TASK", $scope.dashboard.taskModel);
-            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
-            $scope.$emit("collapsed", data.collapsed);
+        new DashboardHelper.Dashboard({
+            scope: $scope
+            , moduleId: "tasks"
+            , dashboardName: "TASK"
         });
 
         $scope.shallInclude = function (component) {
