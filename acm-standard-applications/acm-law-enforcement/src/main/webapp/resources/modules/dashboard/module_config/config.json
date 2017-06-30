@@ -335,7 +335,8 @@
     "ids",
     "cases",
     "complaints",
-    "related"
+    "related",
+    "tags"
   ],
   "structures": [
     {
