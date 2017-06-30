@@ -49,4 +49,14 @@ angular.module('time-tracking').config(['$stateProvider',
             })
 
 	}
-]);
+]).run(['ArkCaseDashboard', 'ConfigService'
+    , function (ArkCaseDashboard, ConfigService) {
+        ConfigService.getModuleConfig("dashboard").then(function (moduleConfig) {
+            moduleConfig.locals.forEach(function(local){
+                ArkCaseDashboard.addLocale(local.iso, local.translations);
+            });
+            return moduleConfig;
+        });
+    }
+])
+;

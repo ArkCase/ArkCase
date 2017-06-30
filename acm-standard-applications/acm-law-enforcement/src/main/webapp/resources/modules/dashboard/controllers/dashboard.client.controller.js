@@ -39,7 +39,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
         var widgetsPerRoles;
         DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
             $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-            DashboardService.fixOldCode_removeLater($scope.dashboard.model);
+            DashboardService.fixOldCode_removeLater("DASHBOARD", $scope.dashboard.model);
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
             $scope.dashboard.model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
             $scope.dashboard.model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
