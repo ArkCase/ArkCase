@@ -58,9 +58,9 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private ApplicationEventPublisher eventPublisher;
 
-    protected AuthenticationTokenService authenticationTokenService;
+    private AuthenticationTokenService authenticationTokenService;
 
-    protected AuthenticationTokenDao authenticationTokenDao;
+    private AuthenticationTokenDao authenticationTokenDao;
 
     private String flow = "vm://sendEmailViaSmtp.in";
 
@@ -433,6 +433,24 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
         this.muleContextManager = muleContextManager;
+    }
+
+    /**
+     * @param authenticationTokenService
+     *            the authenticationTokenService to set
+     */
+    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    {
+        this.authenticationTokenService = authenticationTokenService;
+    }
+
+    /**
+     * @param authenticationTokenDao
+     *            the authenticationTokenDao to set
+     */
+    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    {
+        this.authenticationTokenDao = authenticationTokenDao;
     }
 
 }

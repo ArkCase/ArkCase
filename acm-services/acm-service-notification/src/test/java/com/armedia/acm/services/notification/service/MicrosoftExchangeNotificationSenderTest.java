@@ -65,7 +65,6 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-        microsoftExchangeNotificationSender.setNotificationPropertyFileLocation("");
         microsoftExchangeNotificationSender.setEmailSenderPropertyFileLocation("");
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
         microsoftExchangeNotificationSender.setEmailSenderService(mockOutlookService);
