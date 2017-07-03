@@ -324,5 +324,43 @@
       "title": "zh-cn_Title",
       "username": "zh-cn_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "zh-cn_Details",
+      "locations.label": "zh-cn_Locations",
+      "people.label": "zh-cn_People",
+      "organizations.label": "zh-cn_Organizations",
+      "documents.label": "zh-cn_Documents",
+      "participants.label": "zh-cn_Participants",
+      "notes.label": "zh-cn_Notes",
+      "tasks.label": "zh-cn_Tasks",
+      "references.label": "zh-cn_References",
+      "history.label": "zh-cn_History",
+      "time.label": "zh-cn_Time",
+      "cost.label": "zh-cn_Cost",
+      "tags.label": "zh-cn_Tags",
+      "calendar.label": "zh-cn_Calendar",
+      "approvalRouting.label": "zh-cn_Approval Routing"
+    },
+    "filters": {
+      "openComplaints": "zh-cn_All Open Complaints",
+      "iHaveCreated": "zh-cn_All I've Created",
+      "iAmAssigned": "zh-cn_All I'm Assigned",
+      "iAmFollowing": "zh-cn_All I'm Following",
+      "closedNoFurtherAction": "zh-cn_All Closed No Further Action",
+      "closedReferExternal": "zh-cn_All Closed Refer External",
+      "losedOpenInvestigation": "zh-cn_All Closed Open Investigation",
+      "noFilter": "zh-cn_(No Filter)"
+    },
+    "sorters": {
+      "incidentDateAsc": "zh-cn_Sort Incident Date Asc",
+      "incidentDateDesc": "zh-cn_Sort Incident Date Desc",
+      "createdDateAsc": "zh-cn_Sort Created Date Asc",
+      "createdDateDesc": "zh-cn_Sort Created Date Desc",
+      "byNameAsc": "zh-cn_Sort By Name Asc",
+      "noSort": "zh-cn_(No Sort)"
+    }
   }
+
 }

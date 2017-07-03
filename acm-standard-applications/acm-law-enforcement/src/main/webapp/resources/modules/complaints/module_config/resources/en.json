@@ -286,5 +286,43 @@
       "title": "Title",
       "username": "Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "locations.label": "Locations",
+      "people.label": "People",
+      "organizations.label": "Organizations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tasks",
+      "references.label": "References",
+      "history.label": "History",
+      "time.label": "Time",
+      "cost.label": "Cost",
+      "tags.label": "Tags",
+      "calendar.label": "Calendar",
+      "approvalRouting.label": "Approval Routing"
+    },
+    "filters": {
+      "openComplaints": "All Open Complaints",
+      "iHaveCreated": "All I've Created",
+      "iAmAssigned": "All I'm Assigned",
+      "iAmFollowing": "All I'm Following",
+      "closedNoFurtherAction": "All Closed No Further Action",
+      "closedReferExternal": "All Closed Refer External",
+      "losedOpenInvestigation": "All Closed Open Investigation",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Sort Incident Date Asc",
+      "incidentDateDesc": "Sort Incident Date Desc",
+      "createdDateAsc": "Sort Created Date Asc",
+      "createdDateDesc": "Sort Created Date Desc",
+      "byNameAsc": "Sort By Name Asc",
+      "noSort": "(No Sort)"
+    }
+
   }
 }
