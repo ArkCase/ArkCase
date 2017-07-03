@@ -5,7 +5,7 @@ angular.module('dashboard.details', ['adf.provider'])
         dashboardProvider
             .widget('details', {
                 title: 'dashboard.widgets.details.title',
-                description: 'dashboard.widgets.details.title.description',
+                description: 'dashboard.widgets.details.description',
                 controller: 'Dashboard.DetailsController',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/details-widget.client.view.html',

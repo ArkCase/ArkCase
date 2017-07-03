@@ -43,6 +43,7 @@
       "allowedWidgets": [
         "details",
         "people",
+        "organizations",
         "documents",
         "participants",
         "notes",
@@ -51,7 +52,9 @@
         "history",
         "time",
         "cost",
-        "calendar"
+        "tags",
+        "calendar",
+        "approvalrouting"
       ]
     },
     {
@@ -60,14 +63,16 @@
       "name": "TASK",
       "allowedWidgets": [
         "details",
+        "reworkDetails",
+        "docReview",
+        "parentDocs",
         "documents",
         "notes",
         "references",
-        "history",
-        "reworkDetails",
-        "docReview",
         "workflow",
-        "signature"
+        "history",
+        "signature",
+        "tags"
       ]
     },
     {

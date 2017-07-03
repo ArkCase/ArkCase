@@ -3,7 +3,7 @@
 angular.module('dashboard.approvalrouting', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('organizations', {
+            .widget('approvalRouting', {
                     title: 'dashboard.widgets.approvalRouting.title',
                     description: 'dashboard.widgets.approvalRouting.description',
                     controller: 'Dashboard.ApprovalRoutingController',
