@@ -5,7 +5,7 @@ angular.module('dashboard.history', ['adf.provider'])
         dashboardProvider
             .widget('history', {
                 title: 'dashboard.widgets.history.title',
-                description: 'dashboard.widgets.history.title.description',
+                description: 'dashboard.widgets.history.description',
                 controller: 'Dashboard.HistoryController',
                 controllerAs: 'history',
                 reload: true,

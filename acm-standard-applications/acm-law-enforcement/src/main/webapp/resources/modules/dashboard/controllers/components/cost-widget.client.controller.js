@@ -5,7 +5,7 @@ angular.module('dashboard.cost', ['adf.provider'])
         dashboardProvider
             .widget('cost', {
                 title: 'dashboard.widgets.cost.title',
-                description: 'dashboard.widgets.cost.title.description',
+                description: 'dashboard.widgets.cost.description',
                 controller: 'Dashboard.CostController',
                 controllerAs: 'cost',
                 reload: true,

@@ -307,6 +307,8 @@
     "cost",
     "details",
     "docReview",
+    "parentDocs",
+    "attachments",
     "documents",
     "expenses",
     "history",
