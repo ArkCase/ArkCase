@@ -18,7 +18,9 @@
     "comp.tags": {
       "title": "Tags",
       "table.columns": {
-        "tag": "Tag"
+        "tag": "Tag",
+        "created": "Created",
+        "createdBy": "Created By"
       },
       "modal": {
         "title": "Tag",
