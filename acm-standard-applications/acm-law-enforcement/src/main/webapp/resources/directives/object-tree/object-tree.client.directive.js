@@ -483,7 +483,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var nodeDataType = arr[1];
                     _.each(nodeTypes, function (nodeType) {
                         var type = Util.goodValue(nodeType.type);
-                        var label = Util.goodValue(nodeType.label);
+                        var label = $translate.instant(Util.goodValue(nodeType.label));
                         var components = Util.goodArray(nodeType.components);
                         var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
@@ -774,7 +774,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         treeInfo.filter = that.defaultFilter;
                     }
                     html += "<li value='" + Util.goodValue(filter.name)
-                        + "'><a href='#'>" + Util.goodValue(filter.desc) + "</a></li>";
+                        + "'><a href='#'>" + $translate.instant(Util.goodValue(filter.desc)) + "</a></li>";
                 });
 
                 if (!Util.isEmpty(html)) {
@@ -811,7 +811,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         treeInfo.sorter = that.defaultSort;
                     }
                     html += "<li value='" + Util.goodValue(sorter.name)
-                        + "'><a href='#'>" + Util.goodValue(sorter.desc) + "</a></li>";
+                        + "'><a href='#'>" + $translate.instant(Util.goodValue(sorter.desc)) + "</a></li>";
                 });
 
                 if (!Util.isEmpty(html)) {
