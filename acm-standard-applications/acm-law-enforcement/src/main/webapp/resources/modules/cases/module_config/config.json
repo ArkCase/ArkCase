@@ -298,7 +298,7 @@
           "columnDefs": [
             {
               "name": "organization.organizationRole",
-              "displayName": "cases.comp.people.table.columns.associationType",
+              "displayName": "cases.comp.organizations.table.columns.associationType",
               "headerCellFilter": "translate"
             },
             {
