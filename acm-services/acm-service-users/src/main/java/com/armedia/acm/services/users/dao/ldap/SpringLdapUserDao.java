@@ -38,13 +38,13 @@ public class SpringLdapUserDao
 
         if (attributes != null)
         {
-            String[] allAttributes = ArrayUtils.addAll(attributes,
-                    config.getUserIdAttributeName(), config.getMailAttributeName());
+            String[] allAttributes = ArrayUtils.addAll(attributes, config.getUserIdAttributeName(), config.getMailAttributeName());
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        List<AcmUser> results = template.search(config.getUserSearchBase(),
-                String.format(config.getUserSearchFilter(), username), searchControls, userGroupsContextMapper);
+        List<AcmUser> results = template
+                .search(config.getUserSearchBase(), String.format(config.getUserSearchFilter(), username), searchControls,
+                        userGroupsContextMapper);
 
         if (CollectionUtils.isNotEmpty(results))
         {
@@ -109,8 +109,7 @@ public class SpringLdapUserDao
                 passwordBytes = MapperUtils.encodeUTF16LE(newPassword);
                 passwordAttribute = "unicodePwd";
                 oldPassword = new BasicAttribute(passwordAttribute, MapperUtils.encodeUTF16LE(password));
-            }
-            else
+            } else
             {
                 passwordBytes = newPassword.getBytes();
                 passwordAttribute = "userPassword";
@@ -123,11 +122,40 @@ public class SpringLdapUserDao
             // Perform the update
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
-        }
-        catch (AuthenticationException e)
+        } catch (AuthenticationException e)
         {
             log.warn("User: {} failed to authenticate. ", dn);
             throw e;
+        } catch (Exception e)
+        {
+            log.warn("Changing the password for User: {} failed. ", dn, e);
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
+    }
+
+    public void changeUserPasswordWithAdministrator(String dn, String password, LdapTemplate ldapTemplate, AcmLdapConfig config)
+            throws AcmLdapActionFailedException
+    {
+        String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
+
+        try
+        {
+            String passwordAttribute;
+            byte[] passwordBytes;
+            if (AcmLdapConstants.LDAP_AD.equals(config.getDirectoryType()))
+            {
+                passwordBytes = MapperUtils.encodeUTF16LE(password);
+                passwordAttribute = "unicodePwd";
+            } else
+            {
+                passwordBytes = password.getBytes();
+                passwordAttribute = "userPassword";
+            }
+            // set new password attributes
+            ModificationItem[] mods = new ModificationItem[1];
+            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(passwordAttribute, passwordBytes));
+            // Perform the update
+            new RetryExecutor().retryChecked(() -> ldapTemplate.modifyAttributes(strippedBaseDn, mods));
         } catch (Exception e)
         {
             log.warn("Changing the password for User: {} failed. ", dn, e);

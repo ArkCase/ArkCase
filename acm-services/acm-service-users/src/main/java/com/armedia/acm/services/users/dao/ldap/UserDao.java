@@ -13,6 +13,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -20,6 +22,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -223,7 +226,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     @Transactional
     public AcmUser markUserAsDeleted(String name)
     {
-        String jpql = "SELECT user " + "FROM AcmUser user " + "WHERE user.userId = :userId";
+        String jpql = "SELECT user FROM AcmUser user WHERE user.userId = :userId";
         TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
 
         query.setParameter("userId", name);
@@ -234,6 +237,36 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         getEntityManager().persist(markedUser);
 
         return markedUser;
+    }
+
+    public boolean isUserPasswordExpired(String principal)
+    {
+        log.debug("Check password expiration for user: {}", principal);
+        try
+        {
+            AcmUser user = findByUserIdAnyCase(principal);
+            LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
+            return userPasswordExpirationDate.isBefore(LocalDate.now());
+        } catch (NoResultException | NonUniqueResultException e)
+        {
+            log.debug("User: {} not found!", principal);
+            return false;
+        }
+    }
+
+    public AcmUser findByPasswordResetToken(String token)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE user.passwordResetToken.token = :token";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("token", token);
+        try
+        {
+            return query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException e)
+        {
+            log.error("User with password reset token: {} not found!", token, e.getMessage());
+            return null;
+        }
     }
 
     public EntityManager getEntityManager()
