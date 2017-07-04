@@ -2,17 +2,21 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout) {
 
-
+        $scope.relationshipTypes = [];
         ObjectLookupService.getPersonRelationTypes().then(
             function (relationshipTypes) {
                 $scope.relationshipTypes = relationshipTypes;
                 return relationshipTypes;
             });
+
+        $scope.gridOptions = {
+            data: []
+        };
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -42,6 +46,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
+            gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
@@ -51,28 +56,41 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.gridOptions.data = $scope.objectInfo.associationsToObjects;
+            refreshGridData(objectInfo.id, objectInfo.objectType);
         };
 
-        var newPersonAssociation = function () {
-            return {
-                id: null
-                , personType: ""
-                , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.objectType
-                , parentTitle: ""
-                , personDescription: ""
-                , notes: ""
-                , person: null
-                , className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+        function refreshGridData(objectId, objectType) {
+            ObjectAssociationService.getObjectAssociations(objectId, objectType, 'PERSON').then(function (response) {
+                $scope.gridOptions.data = response.response.docs;
+            });
+        }
+
+        $scope.addPersonAssociation = function () {
+            personAssociationModal({});
+        };
+
+        $scope.editRow = function (rowEntity) {
+            ObjectAssociationService.getAssociationInfo(rowEntity.object_id_s).then(function (association) {
+                personAssociationModal(association, rowEntity);
+            });
+        };
+
+        function personAssociationModal(association, rowEntity) {
+            if (!association) {
+                association = {};
+            }
+            var params = {
+                showSetPrimary: false,
+                types: $scope.relationshipTypes
             };
-        };
+            if (rowEntity) {
+                angular.extend(params, {
+                    personId: rowEntity.target_object.object_id_s,
+                    personName: rowEntity.target_object.full_name_lcs,
+                    type: rowEntity.association_type_s
+                });
+            }
 
-        $scope.addPerson = function () {
-
-            var params = {};
-            params.types = $scope.relationshipTypes;
-            params.showDescription = true;
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -89,53 +107,55 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             });
 
             modalInstance.result.then(function (data) {
-                if (data.isNew) {
-                    var association = new newPersonAssociation();
-                    association.person = data.person;
-                    association.personType = data.type;
-                    association.personDescription = data.description;
-                    $scope.objectInfo.associationsToObjects.push(association);
-                    saveObjectInfoAndRefresh();
+                if (data.person) {
+                    if (!data.person.id) {
+                        PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                            data['person'] = response.data;
+                            updateAssociation(association, $scope.objectInfo, data.person, data, false);
+                        });
+                    } else {
+                        updateAssociation(association, $scope.objectInfo, data.person, data, false);
+                    }
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        var association = new newPersonAssociation();
-                        association.person = person;
-                        association.personType = data.type;
-                        association.personDescription = data.description;
-                        $scope.objectInfo.associationsToObjects.push(association);
-                        saveObjectInfoAndRefresh();
-                    })
+                        updateAssociation(association, $scope.objectInfo, person, data, false);
+                    });
                 }
             });
-        };
+        }
+
+        function updateAssociation(association, parent, target, associationData, isInverse) {
+            association.parentId = parent.id;
+            association.parentType = parent.objectType;
+            association.parentClassName = parent.className;
+
+            association.targetId = target.id;
+            association.targetType = target.objectType;
+            association.targetClassName = target.className;
+
+            association.associationType = isInverse ? associationData.inverseType : associationData.type;
+
+            if (!isInverse) {
+                if (!association.inverseAssociation) {
+                    association.inverseAssociation = {};
+                }
+                updateAssociation(association.inverseAssociation, target, parent, associationData, true);
+            }
+            association.description = associationData.description;
+            ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
+                //wait 2-3 sec and refresh because of solr indexing
+                $timeout(function () {
+                    refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                }, 2500);
+            });
+        }
 
         $scope.deleteRow = function (rowEntity) {
-            var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.associationsToObjects = _.remove($scope.objectInfo.associationsToObjects, function (item) {
-                    return item.id != id;
-                });
-                saveObjectInfoAndRefresh()
-            }
+            var id = Util.goodMapValue(rowEntity, "object_id_s", 0);
+            ObjectAssociationService.deleteAssociationInfo(id).then(function (data) {
+                //success
+                refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+            });
         };
-
-        function saveObjectInfoAndRefresh() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
-                var objectInfo = Util.omitNg($scope.objectInfo);
-                promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
-                promiseSaveInfo.then(
-                    function (objectInfo) {
-                        $scope.$emit("report-object-updated", objectInfo);
-                        return objectInfo;
-                    }
-                    , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
-                        return error;
-                    }
-                );
-            }
-            return promiseSaveInfo;
-        }
     }
 ]);
