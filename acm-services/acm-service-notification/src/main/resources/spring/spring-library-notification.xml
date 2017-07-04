@@ -122,18 +122,27 @@
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="notificationSenderMap">
             <map>
-                <entry key="smtp" value-ref="smtpNotificationSender"></entry>
-                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"></entry>
+                <entry key="smtp" value-ref="smtpNotificationSender"/>
+                <entry key="outlook" value-ref="microsoftExchangeNotificationSender"/>
             </map>
         </property>
     </bean>
 
     <bean id="notificationSender" factory-bean="notificationSenderFactory"
-          factory-method="getNotificationSender"></bean>
+          factory-method="getNotificationSender"/>
 
     <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
         <property name="acmAppConfiguration" ref="acmApplication"/>
         <property name="notificationProperties" ref="notificationProperties"/>
         <property name="acmDataService" ref="acmDataService"/>
+    </bean>
+
+    <bean id="onFailedLogin" class="com.armedia.acm.services.notification.service.OnPasswordExpired">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
+        <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
+        <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
     </bean>
 </beans>

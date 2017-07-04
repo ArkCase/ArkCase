@@ -9,8 +9,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent;
 import org.springframework.security.core.Authentication;
 
-public class AcmLoginFailureEventListener
-        implements ApplicationEventPublisherAware, ApplicationListener<AbstractAuthenticationFailureEvent>
+public class AcmLoginFailureEventListener implements ApplicationEventPublisherAware, ApplicationListener<AbstractAuthenticationFailureEvent>
 {
     private ApplicationEventPublisher applicationEventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -24,9 +23,8 @@ public class AcmLoginFailureEventListener
     @Override
     public void onApplicationEvent(AbstractAuthenticationFailureEvent authenticationFailureEvent)
     {
-        log.debug("got a failed login event");
         Authentication auth = authenticationFailureEvent.getAuthentication();
-
+        log.debug("got a failed login event for username: {}", auth.getName());
         AcmEvent loginEvent = new LoginEvent(auth);
         loginEvent.setSucceeded(false);
         getApplicationEventPublisher().publishEvent(loginEvent);
@@ -36,4 +34,5 @@ public class AcmLoginFailureEventListener
     {
         return applicationEventPublisher;
     }
+
 }
