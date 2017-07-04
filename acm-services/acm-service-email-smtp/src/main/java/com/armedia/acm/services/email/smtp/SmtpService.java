@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.services.email.smtp;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -17,7 +17,6 @@ import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
-import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.mule.api.MuleException;
@@ -62,7 +61,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private AuthenticationTokenDao authenticationTokenDao;
 
-    private String flow = "vm://sendEmailViaSmtp.in";
+    private String flow;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -451,6 +450,15 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
         this.authenticationTokenDao = authenticationTokenDao;
+    }
+
+    /**
+     * @param flow
+     *            the flow to set
+     */
+    public void setFlow(String flow)
+    {
+        this.flow = flow;
     }
 
 }
