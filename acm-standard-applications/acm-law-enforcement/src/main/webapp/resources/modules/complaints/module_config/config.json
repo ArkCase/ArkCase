@@ -677,38 +677,13 @@
         },
         {
           "name": "organization.organizationValue",
-          "displayName": "complaints.comp.organizations.table.columns.value",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
-        },
-        {
-          "name": "organization.defaultIdentification.identificationNumber",
-          "displayName": "complaints.comp.organizations.table.columns.identification",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
+          "displayName": "complaints.comp.organizations.table.columns.name",
+          "headerCellFilter": "translate"
         },
         {
           "name": "organization.organizationType",
           "displayName": "complaints.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
-        },
-        {
-          "name": "organization.defaultPerson.givenName",
-          "displayName": "complaints.comp.organizations.table.columns.contact",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
-        },
-        {
-          "name": "organization.defaultPhone.value",
-          "displayName": "complaints.comp.organizations.table.columns.phone",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
-        },
-        {
-          "name": "organization.defaultAddress.city",
-          "displayName": "complaints.comp.organizations.table.columns.location",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
         }
       ]
     },
