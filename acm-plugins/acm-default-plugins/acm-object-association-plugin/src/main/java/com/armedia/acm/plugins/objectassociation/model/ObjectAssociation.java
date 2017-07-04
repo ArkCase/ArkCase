@@ -43,6 +43,9 @@ public class ObjectAssociation implements AcmEntity, Serializable
     @Column(name = "cm_parent_id")
     private Long parentId;
 
+    @Column(name = "cm_parent_class_name")
+    private String parentClassName;
+
     @Column(name = "cm_target_name")
     private String targetName;
 
@@ -54,6 +57,9 @@ public class ObjectAssociation implements AcmEntity, Serializable
 
     @Column(name = "cm_target_id")
     private Long targetId;
+
+    @Column(name = "cm_target_class_name")
+    private String targetClassName;
 
     @Column(name = "cm_object_assn_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -74,14 +80,21 @@ public class ObjectAssociation implements AcmEntity, Serializable
 
     @Column(name = "cm_association_type")
     private String associationType = "OWNERSHIP";
-    
-    @Column(name ="cm_target_title")
+
+    @Column(name = "cm_target_title")
     private String targetTitle;
+
+    @Column(name = "cm_description")
+    private String description;
+
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name = "cm_inverse_association_id")
+    private ObjectAssociation inverseAssociation;
 
     @PrePersist
     protected void beforeInsert()
     {
-        if ( getStatus() == null || getStatus().trim().isEmpty() )
+        if (getStatus() == null || getStatus().trim().isEmpty())
         {
             setStatus("ACTIVE");
         }
@@ -250,17 +263,30 @@ public class ObjectAssociation implements AcmEntity, Serializable
     {
         this.modifier = modifier;
     }
-    
-    public String getTargetTitle() {
+
+    public String getTargetTitle()
+    {
         return targetTitle;
     }
 
-    public void setTargetTitle(String targetTitle) {
+    public void setTargetTitle(String targetTitle)
+    {
         this.targetTitle = targetTitle;
     }
 
+    public ObjectAssociation getInverseAssociation()
+    {
+        return inverseAssociation;
+    }
+
+    public void setInverseAssociation(ObjectAssociation inverseAssociation)
+    {
+        this.inverseAssociation = inverseAssociation;
+    }
+
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         Objects.requireNonNull(obj, "Comparable object must not be null");
         if (!(obj instanceof ObjectAssociation))
             return false;
@@ -271,10 +297,41 @@ public class ObjectAssociation implements AcmEntity, Serializable
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         if (getAssociationId() == null)
             return super.hashCode();
         else
             return getAssociationId().hashCode();
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public String getParentClassName()
+    {
+        return parentClassName;
+    }
+
+    public void setParentClassName(String parentClassName)
+    {
+        this.parentClassName = parentClassName;
+    }
+
+    public String getTargetClassName()
+    {
+        return targetClassName;
+    }
+
+    public void setTargetClassName(String targetClassName)
+    {
+        this.targetClassName = targetClassName;
     }
 }
