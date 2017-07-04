@@ -246,12 +246,13 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
      * String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)
      */
     @Override
-    public List<EmailTemplateConfiguration> getMatchingTemplates(String email, String objectType, EmailSource source, String action)
+    public List<EmailTemplateConfiguration> getMatchingTemplates(String email, String objectType, EmailSource source, List<String> actions)
             throws AcmEmailConfigurationException
     {
         List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
         Stream<EmailTemplateConfiguration> filteredConfigurations = configurations.stream()
-                .filter(c -> c.getObjectTypes().contains(objectType)).filter(c -> c.getActions().contains(action))
+                .filter(c -> c.getObjectTypes().contains(objectType))
+                .filter(c -> c.getActions().containsAll(actions) && actions.containsAll(c.getActions()))
                 .filter(c -> c.getSource().equals(source)).filter(c -> matches(c.getEmailPattern(), email));
 
         return filteredConfigurations.collect(Collectors.toList());

@@ -28,9 +28,10 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.smtp.SmtpEventSentEvent;
+import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.notification.model.SmtpEventSentEvent;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
