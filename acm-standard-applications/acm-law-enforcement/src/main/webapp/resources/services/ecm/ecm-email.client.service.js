@@ -26,7 +26,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
              */
             _sendEmail: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email/withembeddedlinks'
+                url: 'api/latest/service/email/send/withembeddedlinks/:objectType'
             }
 
             /**
@@ -41,7 +41,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
              */
             , _sendEmailWithAttachments: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email/withattachments'
+                url: 'api/latest/service/email/send/withattachments/:objectType'
             }
             /**
              * @ngdoc method
@@ -55,7 +55,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
              */
             , _sendEmailWithAttachmentsAndLinks: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email/withattachmentsandlinks'
+                url: 'api/latest/service/email/send/withattachmentsandlinks/:objectType'
             }
         });
 
@@ -68,14 +68,15 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
          * Send email
          *
          * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sendEmail = function (emailData) {
+        Service.sendEmail = function (emailData, objectType) {
             var failed = "";
             return Util.serviceCall({
                 service: Service._sendEmail
-                , param: {}
+                , param: {objectType: objectType}
                 , data: emailData
                 , onSuccess: function (data) {
                     if (Service.validateSentEmails(data)) {
@@ -104,14 +105,15 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
          * Send email with attachments
          *
          * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sendEmailWithAttachments = function (emailData) {
+        Service.sendEmailWithAttachments = function (emailData, objectType) {
             var failed = "";
             return Util.serviceCall({
                 service: Service._sendEmailWithAttachments
-                , param: {}
+                , param: {objectType: objectType}
                 , data: emailData
                 , onSuccess: function (data) {
                     MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
@@ -134,14 +136,15 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate
          * Send email with attachments
          *
          * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sendEmailWithAttachmentsAndLinks = function (emailData) {
+        Service.sendEmailWithAttachmentsAndLinks = function (emailData, objectType) {
             var failed = "";
             return Util.serviceCall({
                 service: Service._sendEmailWithAttachmentsAndLinks
-                , param: {}
+                , param: {objectType: objectType}
                 , data: emailData
                 , onSuccess: function (data) {
                     MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
