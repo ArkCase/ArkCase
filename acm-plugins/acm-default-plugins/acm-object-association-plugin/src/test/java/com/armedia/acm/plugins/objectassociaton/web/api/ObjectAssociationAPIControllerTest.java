@@ -71,7 +71,7 @@ public class ObjectAssociationAPIControllerTest implements HandlerExceptionResol
     {
         assertNotNull(objectAssociationAPIController.getObjectAssociationService());
 
-        String content = "{\"source\":{\"id\":12,\"objectType\":\"PERSON\",\"className\":\"model.DammyObject\"},\"target\":{\"id\":13,\"objectType\":\"PERSON\",\"className\":\"model.DammyObject\"},\"associationType\":\"ASSOCIATION\",\"inverseAssociationType\":\"INVERSE-ASSOCIATION\"}";
+        String content = "{\"@id\":\"1\",\"parentId\":105,\"parentType\":\"PERSON\",\"parentClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"targetId\":101,\"targetType\":\"PERSON\",\"targetClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"associationType\":\"Sibling\",\"inverseAssociation\":{\"@id\":\"2\",\"parentId\":101,\"parentType\":\"PERSON\",\"parentClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"targetId\":105,\"targetType\":\"PERSON\",\"targetClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"associationType\":\"Sibling\",\"inverseAssociation\":{\"@ref\":\"1\"}}}";
 
         when(objectAssociationDao.save(anyObject())).then(invocationOnMock ->
                 invocationOnMock.getArguments()[0]);
