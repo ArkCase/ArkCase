@@ -12,6 +12,7 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.service.EmailSenderConfigurationServiceImpl;
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
@@ -24,7 +25,8 @@ import java.util.stream.Stream;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 3, 2017
  *
  */
-public class AcmConfigurableEmailSenderService implements ApplicationListener<AbstractConfigurationFileEvent>, AcmEmailSenderService
+public class AcmConfigurableEmailSenderService
+        implements ApplicationListener<AbstractConfigurationFileEvent>, InitializingBean, AcmEmailSenderService
 {
 
     private Map<String, AcmEmailSenderService> emailSenderMap;
@@ -44,9 +46,28 @@ public class AcmConfigurableEmailSenderService implements ApplicationListener<Ab
     {
         if (event instanceof ConfigurationFileChangedEvent && event.getConfigFile().getName().equals("acmEmailSender.properties"))
         {
-            EmailSenderConfiguration senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
-            senderType = senderConfigurationUpdated.getType();
+            readSenderType();
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        readSenderType();
+    }
+
+    /**
+     *
+     */
+    private void readSenderType()
+    {
+        EmailSenderConfiguration senderConfigurationUpdated = emailSenderConfigurationService.readConfiguration();
+        senderType = senderConfigurationUpdated.getType();
     }
 
     /*
@@ -148,8 +169,7 @@ public class AcmConfigurableEmailSenderService implements ApplicationListener<Ab
     }
 
     /**
-     * @param emailSenderMap
-     *            the notificationSenderMap to set
+     * @param emailSenderMap the notificationSenderMap to set
      */
     public void setEmailSenderMap(Map<String, AcmEmailSenderService> emailSenderMap)
     {
@@ -157,8 +177,7 @@ public class AcmConfigurableEmailSenderService implements ApplicationListener<Ab
     }
 
     /**
-     * @param emailSenderConfigurationService
-     *            the emailSenderConfigurationService to set
+     * @param emailSenderConfigurationService the emailSenderConfigurationService to set
      */
     public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {

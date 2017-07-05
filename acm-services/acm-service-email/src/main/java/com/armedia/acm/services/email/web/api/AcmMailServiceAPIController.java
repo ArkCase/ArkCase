@@ -32,7 +32,7 @@ import java.util.List;
  *
  */
 @Controller
-@RequestMapping({ "/api/v1/service/email/send", "/api/latest/service/email/send" })
+@RequestMapping({"/api/v1/service/email/send", "/api/latest/service/email/send"})
 public class AcmMailServiceAPIController
 {
     private AcmMailTemplateConfigurationService templateService;
@@ -58,7 +58,7 @@ public class AcmMailServiceAPIController
             List<String> emailAddresses = in.getEmailAddresses();
             for (String emailAddress : emailAddresses)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("attachments"));
+                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments"));
                 for (String template : templates)
                 {
                     in.setTemplate(template);
@@ -96,7 +96,7 @@ public class AcmMailServiceAPIController
             List<String> emailAddresses = in.getEmailAddresses();
             for (String emailAddress : emailAddresses)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("links"));
+                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsLinks"));
                 for (String template : templates)
                 {
                     in.setTemplate(template);
@@ -132,7 +132,7 @@ public class AcmMailServiceAPIController
             List<String> emailAddresses = in.getEmailAddresses();
             for (String emailAddress : emailAddresses)
             {
-                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("attachments", "links"));
+                List<String> templates = loadTemplates(objectType, emailAddress, Arrays.asList("sendAsAttachments", "sendAsLinks"));
                 for (String template : templates)
                 {
                     in.setTemplate(template);
@@ -171,8 +171,7 @@ public class AcmMailServiceAPIController
     }
 
     /**
-     * @param templateService
-     *            the templateService to set
+     * @param templateService the templateService to set
      */
     public void setTemplateService(AcmMailTemplateConfigurationService templateService)
     {
@@ -180,8 +179,7 @@ public class AcmMailServiceAPIController
     }
 
     /**
-     * @param emailSenderService
-     *            the emailSenderService to set
+     * @param emailSenderService the emailSenderService to set
      */
     public void setEmailSenderService(AcmEmailSenderService emailSenderService)
     {
