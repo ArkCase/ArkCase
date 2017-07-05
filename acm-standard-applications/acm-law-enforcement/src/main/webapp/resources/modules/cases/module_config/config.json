@@ -2,7 +2,6 @@
   "id": "cases",
   "title": "Cases",
   "configurable": true,
-  "hasOverviewWidgets": true,
   "initialLinksShown": true,
   "caseInfoFilter": "\"Object Type\": CASE_FILE",
   "menus": [

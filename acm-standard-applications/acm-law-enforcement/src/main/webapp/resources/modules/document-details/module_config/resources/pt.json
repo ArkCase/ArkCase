@@ -18,7 +18,9 @@
     "comp.tags": {
       "title": "pt_Tags",
       "table.columns": {
-        "tag": "pt_Tag"
+        "tag": "pt_Tag",
+        "created": "pt_Created",
+        "createdBy": "pt_Created By"
       },
       "modal": {
         "title": "pt_Tag",

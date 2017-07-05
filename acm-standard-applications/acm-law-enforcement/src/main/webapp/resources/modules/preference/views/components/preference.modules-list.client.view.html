@@ -1,7 +1,7 @@
 <div ng-controller="Preference.ModulesListController" class="well-sm">
     <a ng-class="{active: module.active}" class="list-group-item" ng-repeat="module in modules"
-       ng-click="selectModule(module)">{{module.title}}</a>
+       ng-click="selectModule(module)"><span translate>{{module.title}}</span></a>
     <div ng-if="!modules || modules.length == 0">
-        No modules found in the system
+        <span translate>preference.modules.list.noModules</span>
     </div>
 </div>

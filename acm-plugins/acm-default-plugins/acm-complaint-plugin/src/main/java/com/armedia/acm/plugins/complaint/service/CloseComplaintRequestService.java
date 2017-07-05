@@ -243,7 +243,7 @@ public class CloseComplaintRequestService
         caseFile.setDetails(details);
         caseFile.setPriority(updatedComplaint.getPriority());
         caseFile.setTitle(updatedComplaint.getComplaintTitle());
-
+        caseFile.setIncidentDate(updatedComplaint.getIncidentDate());
         ObjectAssociation originalComplaint = makeObjectAssociation(updatedComplaint.getComplaintId(),
                 updatedComplaint.getComplaintNumber(), objectType, updatedComplaint.getComplaintTitle());
         originalComplaint.setStatus("CLOSED");

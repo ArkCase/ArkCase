@@ -4,8 +4,8 @@ angular.module('dashboard.time', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('time', {
-                title: 'Time',
-                description: 'Displays cases files by queue',
+                title: 'dashboard.widgets.time.title',
+                description: 'dashboard.widgets.time.description',
                 controller: 'Dashboard.TimeController',
                 controllerAs: 'time',
                 reload: true,
