@@ -312,7 +312,7 @@
       "iAmFollowing": "All I'm Following",
       "closedNoFurtherAction": "All Closed No Further Action",
       "closedReferExternal": "All Closed Refer External",
-      "losedOpenInvestigation": "All Closed Open Investigation",
+      "closedOpenInvestigation": "All Closed Open Investigation",
       "noFilter": "(No Filter)"
     },
     "sorters": {
