@@ -68,7 +68,7 @@
     ],
     "sorters": [
       {
-        "desc": "complaints.tree.sorters.incidentDateAsc/",
+        "desc": "complaints.tree.sorters.incidentDateAsc",
         "name": "sort-incident-date-asc",
         "value": "due_tdt ASC"
       },
@@ -89,7 +89,7 @@
         "default": true
       },
       {
-        "desc": "Xcomplaints.tree.sorters.byNameAsc",
+        "desc": "complaints.tree.sorters.byNameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },

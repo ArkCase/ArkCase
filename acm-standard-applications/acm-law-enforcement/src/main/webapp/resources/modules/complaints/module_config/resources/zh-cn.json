@@ -350,7 +350,7 @@
       "iAmFollowing": "zh-cn_All I'm Following",
       "closedNoFurtherAction": "zh-cn_All Closed No Further Action",
       "closedReferExternal": "zh-cn_All Closed Refer External",
-      "losedOpenInvestigation": "zh-cn_All Closed Open Investigation",
+      "closedOpenInvestigation": "zh-cn_All Closed Open Investigation",
       "noFilter": "zh-cn_(No Filter)"
     },
     "sorters": {
