@@ -4,14 +4,13 @@ angular.module('dashboard.references', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('references', {
-                    title: 'References',
-                    description: 'Displays references',
-                    controller: 'Dashboard.ReferencesController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html',
-                    commonName: 'references'
-                }
-            );
+                title: 'dashboard.widgets.references.title',
+                description: 'dashboard.widgets.references.description',
+                controller: 'Dashboard.ReferencesController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html',
+                commonName: 'references'
+            });
     })
     .controller('Dashboard.ReferencesController', ['$scope', '$stateParams', 'Case.InfoService'
         , 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService'

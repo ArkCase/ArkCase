@@ -1,8 +1,7 @@
 'use strict';
 
-angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', '$translate', 'dashboard', 'Dashboard.DashboardService',
-    'UtilService', 'CostTracking.InfoService', 'ConfigService', 'Acm.StoreService',
-    function ($scope, $translate, dashboard, DashboardService, Util, CostTrackingInfoService, ConfigService, Store) {
+angular.module('cost-tracking').controller('CostTracking.MainController', ['$scope', 'Dashboard.DashboardService', 'ConfigService',
+    function ($scope, DashboardService, ConfigService) {
 
         ConfigService.getComponentConfig("cost-tracking", "main").then(function (componentConfig) {
             $scope.config = componentConfig;
@@ -15,23 +14,21 @@ angular.module('cost-tracking').controller('CostTracking.MainController', ['$sco
             return moduleConfig;
         });
 
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
-        });
+        DashboardService.localeUseTypical($scope);
 
         $scope.dashboard = {
             structure: '12',
             collapsible: false,
             maximizable: false,
             costModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "COST"}, function (data) {
             $scope.dashboard.costModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            DashboardService.fixOldCode_removeLater("COST", $scope.dashboard.costModel);
+            $scope.dashboard.costModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }

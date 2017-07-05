@@ -1978,16 +1978,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.data = {};
                                         item.data.uploadFile = true;
 
-                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
-                                        	var languages = [];
-                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
-                                            	languages.push({
-                                            		title: DocTree.fileLanguages[lang].desc,
-                                            		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
-                                            	});
-                                            }
-                                            item.children = languages;
-                                        }
+// 											**DocTree language support for MVA demo**
+                                        
+//                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
+//                                        	var languages = [];
+//                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
+//                                            	languages.push({
+//                                            		title: DocTree.fileLanguages[lang].desc,
+//                                            		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
+//                                            	});
+//                                            }
+//                                            item.children = languages;
+//                                        }
                                     }
                                 }
                                 else if (!Util.isEmpty(subTypes[i].templateFilename)) {

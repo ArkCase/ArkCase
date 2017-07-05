@@ -56,7 +56,9 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                 scope.onAddFile = function () {
                     var fileTypes = folderActionsConfig['___children'];
                     openFileTypeDialog(fileTypes, fileLanguages, function (type, language) {
-                        context.command.trigger(type + "/" + language);
+                        //disabled Modal language support
+                    	//context.command.trigger(type + "/" + language);
+                    	context.command.trigger(type);
                     });
                 };
 
@@ -73,7 +75,9 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                             $scope.fileLanguages = fileLanguages;
                             $scope.fileType = {};
                             $scope.onClickOk = function () {
-                                onSelect($scope.fileType.selected, $scope.fileLanguage.selected);
+                            	//disabled Modal language support
+                                //onSelect($scope.fileType.selected, $scope.fileLanguage.selected);
+                            	onSelect($scope.fileType.selected);
                                 $modalInstance.close();
                             };
 

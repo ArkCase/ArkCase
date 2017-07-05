@@ -1,11 +1,7 @@
 'use strict';
 
-angular.module('people').controller('People.MainController', ['$scope', '$stateParams', '$translate', 'UtilService', 'ConfigService'
-    , 'Person.InfoService', 'ObjectService', 'Object.NoteService', 'Object.TaskService'
-    , 'Object.AuditService', 'Object.CostService', 'Object.TimeService', 'dashboard', 'Dashboard.DashboardService', 'Acm.StoreService'
-    , function ($scope, $stateParams, $translate, Util, ConfigService
-        , PersonInfoService, ObjectService, ObjectNoteService, ObjectTaskService
-        , ObjectAuditService, ObjectCostService, ObjectTimeService, dashboard, DashboardService, Store) {
+angular.module('people').controller('People.MainController', ['$scope', 'ConfigService', 'Dashboard.DashboardService'
+    , function ($scope, ConfigService, DashboardService) {
 
         var promiseConfig = ConfigService.getModuleConfig("people").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
@@ -14,23 +10,21 @@ angular.module('people').controller('People.MainController', ['$scope', '$stateP
         });
 
 
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
-        });
+        DashboardService.localeUseTypical($scope);
 
         $scope.dashboard = {
             structure: '12',
             collapsible: false,
             maximizable: false,
             personModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "PERSON"}, function (data) {
             $scope.dashboard.personModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.personModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            DashboardService.fixOldCode_removeLater("PERSON", $scope.dashboard.personModel);
+            $scope.dashboard.personModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
     }

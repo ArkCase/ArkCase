@@ -4,8 +4,8 @@ angular.module('dashboard.cost', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('cost', {
-                title: 'Cost',
-                description: 'Displays cases files by queue',
+                title: 'dashboard.widgets.cost.title',
+                description: 'dashboard.widgets.cost.title.description',
                 controller: 'Dashboard.CostController',
                 controllerAs: 'cost',
                 reload: true,

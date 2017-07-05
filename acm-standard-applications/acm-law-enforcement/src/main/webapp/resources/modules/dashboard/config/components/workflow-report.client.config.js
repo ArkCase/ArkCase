@@ -1,18 +1,17 @@
 'use strict';
 
 angular.module('dashboard.workflow-report', ['adf.provider'])
-    .config(function (dashboardProvider) {
-        dashboardProvider
+    .config(function (ArkCaseDashboardProvider) {
+        ArkCaseDashboardProvider
             .widget('workflowReport', {
-                    title: 'Workflow Report',
-                    description: 'Displays Workflow Report',
-                    controller: 'Dashboard.WorkflowReportController',
-                    controllerAs: 'workflowReport',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/workflow-report.client.view.html',
-                    edit: {
-                        templateUrl: 'modules/dashboard/views/components/workflow-report-edit.client.view.html'
-                    }
+                title: 'dashboard.widgets.workflowReport.title',
+                description: 'dashboard.widgets.workflowReport.title.description',
+                controller: 'Dashboard.WorkflowReportController',
+                controllerAs: 'workflowReport',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/workflow-report.client.view.html',
+                edit: {
+                    templateUrl: 'modules/dashboard/views/components/workflow-report-edit.client.view.html'
                 }
-            );
+            });
     });

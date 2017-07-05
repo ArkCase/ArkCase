@@ -1,36 +1,32 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.MainController', ['$scope', '$stateParams', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Object.AuditService'
-    , 'Object.SignatureService', 'Task.InfoService', 'Task.HistoryService', 'dashboard', 'Dashboard.DashboardService'
-    , function ($scope, $stateParams, $translate
-        , Store, Util, ConfigService, ObjectService, ObjectNoteService, ObjectAuditService
-        , ObjectSignatureService, TaskInfoService, TaskHistoryService, dashboard, DashboardService) {
+angular.module('tasks').controller('Tasks.MainController', ['$scope', 'Acm.StoreService', 'UtilService'
+    , 'ConfigService', 'Object.AuditService', 'Dashboard.DashboardService'
+    , function ($scope, Store, Util
+        , ConfigService, ObjectAuditService, DashboardService
+    ) {
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.components = moduleConfig.components;
             $scope.config = _.find(moduleConfig.components, {id: "main"});
-
             return moduleConfig;
         });
 
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
-        });
+        DashboardService.localeUseTypical($scope);
 
         $scope.dashboard = {
             structure: '12',
             collapsible: false,
             maximizable: false,
             taskModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
+                titleTemplateUrl: 'modules/dashboard/templates/module-dashboard-title.html'
             }
         };
 
         DashboardService.getConfig({moduleName: "TASK"}, function (data) {
             $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
+            DashboardService.fixOldCode_removeLater("TASK", $scope.dashboard.taskModel);
+            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
             $scope.$emit("collapsed", data.collapsed);
         });
 

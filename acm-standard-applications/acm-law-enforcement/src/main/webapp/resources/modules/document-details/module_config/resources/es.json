@@ -18,7 +18,9 @@
     "comp.tags": {
       "title": "es_Tags",
       "table.columns": {
-        "tag": "es_Tag"
+        "tag": "es_Tag",
+        "created": "es_Created",
+        "createdBy": "es_Created By"
       },
       "modal": {
         "title": "es_Tag",

@@ -4,14 +4,13 @@ angular.module('dashboard.workflow', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('workflow', {
-                    title: 'Workflow',
-                    description: 'Displays workflow',
-                    controller: 'Dashboard.WorkflowOverviewController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/workflow.client.view.html',
-                    commonName: 'workflow'
-                }
-            );
+                title: 'dashboard.widgets.workflow.title',
+                description: 'dashboard.widgets.workflow.description',
+                controller: 'Dashboard.WorkflowOverviewController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/workflow.client.view.html',
+                commonName: 'workflow'
+            });
     })
     .controller('Dashboard.WorkflowOverviewController', ['$scope', '$stateParams'
         , 'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService'

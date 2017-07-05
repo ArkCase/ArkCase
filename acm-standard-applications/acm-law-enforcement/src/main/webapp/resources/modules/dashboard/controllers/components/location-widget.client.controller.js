@@ -4,14 +4,13 @@ angular.module('dashboard.locations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('locations', {
-                    title: 'Locations',
-                    description: 'Displays locations',
-                    controller: 'Dashboard.LocationsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
-                    commonName: 'locations'
-                }
-            );
+                title: 'dashboard.widgets.locations.title',
+                description: 'dashboard.widgets.locations.description',
+                controller: 'Dashboard.LocationsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
+                commonName: 'locations'
+            });
     })
     .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
         , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
