@@ -1838,6 +1838,20 @@
 
             <dependency>
                 <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <!-- powermock pulls in an older version of cglib that breaks our unit tests -->
+                        <groupId>cglib</groupId>
+                        <artifactId>cglib-nodep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.powermock</groupId>
                 <artifactId>powermock-module-junit4</artifactId>
                 <version>${powermock.version}</version>
                 <exclusions>
