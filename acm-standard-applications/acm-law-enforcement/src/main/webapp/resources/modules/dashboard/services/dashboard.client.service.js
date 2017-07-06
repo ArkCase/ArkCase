@@ -91,7 +91,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',
-                isArray: true,
+                isArray: true
             },
             saveConfig: {
                 method: 'POST',
