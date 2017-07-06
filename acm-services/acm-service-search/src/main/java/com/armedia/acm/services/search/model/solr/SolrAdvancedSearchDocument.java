@@ -25,8 +25,10 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     private String mime_type_s;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date create_date_tdt;
+    private String creator_lcs;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SearchConstants.SOLR_DATE_FORMAT, timezone = SearchConstants.TIME_ZONE_UTC)
     private Date modified_date_tdt;
+    private String modifier_lcs;
 
     // access control fields
     private boolean public_doc_b;
@@ -55,14 +57,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
 
     /////////////////// for docs with a priority ////////////
     private String priority_lcs;
-
-    /////////////////// for docs with a creator ////////////
-    private String creator_lcs;
-    private String creator_full_name_lcs;
-
-    ////////////////// for docs with a modifier ///////////
-    private String modifier_lcs;
-    private String modifier_full_name_lcs;
 
     /////////////////// for docs with an assignee ////////////
     private String assignee_id_lcs;
@@ -609,22 +603,6 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setAssignee_full_name_lcs(String assignee_full_name_lcs)
     {
         this.assignee_full_name_lcs = assignee_full_name_lcs;
-    }
-
-    public String getCreator_full_name_lcs()
-    {return creator_full_name_lcs;}
-
-    public void setCreator_full_name_lcs(String creator_full_name_lcs)
-    {
-        this.creator_full_name_lcs = creator_full_name_lcs;
-    }
-
-    public String getModifier_full_name_lcs()
-    {return modifier_full_name_lcs;}
-
-    public void setModifier_full_name_lcs(String modifier_full_name_lcs)
-    {
-        this.modifier_full_name_lcs = modifier_full_name_lcs;
     }
 
     public String getFull_name_lcs()
