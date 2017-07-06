@@ -763,7 +763,34 @@
       "title": "Rework Details",
       "icon": "fa fa-repeat",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "title",
+          "displayName": "tasks.comp.reworkdetails.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "modifier",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modifier | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        }
+      ]
     },
     {
       "id": "docsreview",
@@ -780,12 +807,6 @@
       ],
       "paginationPageSize": 5,
       "columnDefs": [
-        {
-          "name": "fileId",
-          "displayName": "tasks.comp.docsreview.table.columns.fileId",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.container.containerObjectId}}</a>"
-        },
         {
           "name": "fileName",
           "displayName": "tasks.comp.docsreview.table.columns.fileName",

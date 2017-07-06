@@ -52,7 +52,7 @@ angular.module('services').factory('Object.TagsService', ['$resource', '$transla
              */
             _getAssociateTags: {
                 method: 'GET',
-                url: 'api/latest/service/tag/:objectId/:objectType',
+                url: 'api/latest/service/tag/:objectType/:objectId',
                 isArray: true
             },
 

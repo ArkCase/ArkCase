@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dashboard.approvalrouting', ['adf.provider'])
+angular.module('dashboard.approvalRouting', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('approvalRouting', {
@@ -9,7 +9,7 @@ angular.module('dashboard.approvalrouting', ['adf.provider'])
                     controller: 'Dashboard.ApprovalRoutingController',
                     reload: true,
                     templateUrl: 'modules/dashboard/views/components/approval-routing-widget.client.view.html',
-                    commonName: 'approvalrouting'
+                    commonName: 'approvalRouting'
                 }
             );
     })
