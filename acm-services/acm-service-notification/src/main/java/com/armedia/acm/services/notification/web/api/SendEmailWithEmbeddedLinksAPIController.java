@@ -1,8 +1,8 @@
 package com.armedia.acm.services.notification.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.model.AcmUser;

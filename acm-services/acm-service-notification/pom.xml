@@ -127,6 +127,12 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-email</artifactId>
             <version>${acm.version}</version>
         </dependency>
@@ -223,6 +229,16 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
 
         <dependency>
