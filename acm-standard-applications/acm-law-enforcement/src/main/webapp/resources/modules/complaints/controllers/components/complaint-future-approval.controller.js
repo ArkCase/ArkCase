@@ -20,7 +20,7 @@ angular.module('complaints').controller('Complaints.FutureApprovalRoutingControl
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }

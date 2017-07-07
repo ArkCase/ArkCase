@@ -394,7 +394,14 @@
         },
         {
           "id": "parentDocs",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "folderName",
+              "displayName": "tasks.comp.parentDocs.table.columns.folderName",
+              "headerCellFilter": "translate"
+            }
+          ]
         },
         {
           "id": "attachments",
@@ -1348,7 +1355,7 @@
       }
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",

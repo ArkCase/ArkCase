@@ -116,7 +116,7 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
@@ -228,7 +228,7 @@
         "label": "Approval Routing",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -298,7 +298,7 @@
           "columnDefs": [
             {
               "name": "organization.organizationRole",
-              "displayName": "cases.comp.people.table.columns.associationType",
+              "displayName": "cases.comp.organizations.table.columns.type",
               "headerCellFilter": "translate"
             },
             {
@@ -463,23 +463,32 @@
           "type": "component"
         },
         {
-          "id": "approvalrouting",
+          "id": "approvalRouting",
           "type": "component",
           "columnDefs": [
             {
               "name": "title",
+              "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
               "displayName": "cases.comp.approvalRouting.title",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
             },
             {
+              "width": 150,
               "name": "assignee",
+              "field": "assignee_s",
               "displayName": "cases.comp.approvalRouting.assignee.label",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
             },
             {
+              "width": 150,
               "name": "due",
+              "field": "due_tdt",
               "displayName": "cases.comp.approvalRouting.dueDate.label",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             }
           ]
         }
@@ -1172,7 +1181,7 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "cases.comp.approvalRouting.addNewTooltip",

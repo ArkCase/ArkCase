@@ -20,7 +20,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }

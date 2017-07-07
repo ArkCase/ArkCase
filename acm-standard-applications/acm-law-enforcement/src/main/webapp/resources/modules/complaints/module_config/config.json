@@ -126,7 +126,7 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
@@ -246,7 +246,7 @@
         "label": "Approval Routing",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -516,7 +516,7 @@
           "type": "component"
         },
         {
-          "id": "approvalrouting",
+          "id": "approvalRouting",
           "type": "component",
           "columnDefs": [
             {
@@ -1209,7 +1209,7 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
