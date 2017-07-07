@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "/api/v1/service/notification/email", "/api/latest/service/notification/email" })
+@RequestMapping({"/api/v1/service/notification/email", "/api/latest/service/notification/email"})
 public class SendEmailWithAttachmentsAPIController
 {
 

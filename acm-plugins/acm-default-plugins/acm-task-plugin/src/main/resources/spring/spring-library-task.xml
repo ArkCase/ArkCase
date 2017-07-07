@@ -176,7 +176,7 @@
     <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="messageSubject" value="${upcoming.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${upcoming.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>

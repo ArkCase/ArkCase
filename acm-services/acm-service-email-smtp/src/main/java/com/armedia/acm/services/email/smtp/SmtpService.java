@@ -1,6 +1,7 @@
 package com.armedia.acm.services.email.smtp;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -9,6 +10,7 @@ import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.email.model.AttachmentsProcessableDTO;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
@@ -31,6 +33,7 @@ import javax.activation.DataHandler;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,11 +93,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 exception = received.getInboundProperty("sendEmailException");
             } catch (Exception e)
             {
-                exception = e;
-            }
-
-            if (exception != null)
-            {
                 LOG.error("Email message not sent ...", exception);
             }
 
@@ -112,73 +110,32 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     @Override
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO in, Authentication authentication, AcmUser user) throws Exception
     {
-        String userId = user.getUserId();
         Exception exception = null;
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
 
-        boolean firstIteration = true;
+        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
+        Map<String, DataHandler> attachments = processAttachments(in, user, sentEvents);
         for (String emailAddress : in.getEmailAddresses())
         {
-            List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
             try
             {
                 messageProps.put("to", emailAddress);
-                Map<String, DataHandler> attachments = new HashMap<>();
-                if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
-                {
-                    for (Long attachmentId : in.getAttachmentIds())
-                    {
-                        InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
-                        EcmFile ecmFile = ecmFileService.findById(attachmentId);
-                        String fileName = ecmFile.getFileName();
-                        if (ecmFile.getFileActiveVersionNameExtension() != null)
-                        {
-                            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                        }
-                        attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
-
-                        if (firstIteration)
-                        {
-                            sentEvents.add(
-                                    new SmtpEventSentEvent(ecmFile, userId, ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, userId, ecmFile.getId(), ecmFile.getObjectType()));
-                        }
-                    }
-                }
-                // Adding non ecmFile(s) as attachments
-                if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
-                {
-                    for (String filePath : in.getFilePaths())
-                    {
-                        File file = new File(filePath);
-                        FileInputStream contents = new FileInputStream(file);
-                        attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
-                    }
-                }
                 MuleMessage received = muleContextManager.send(flow, in.getMessageBody(), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
             } catch (MuleException e)
             {
+                LOG.error("Email message not sent ...", exception);
                 exception = e;
             }
 
-            if (exception != null)
-            {
-                LOG.error("Email message not sent ...", exception);
-            }
-
-            if (firstIteration)
-            {
-                for (SmtpEventSentEvent event : sentEvents)
-                {
-                    boolean success = (exception == null);
-                    event.setSucceeded(success);
-                    eventPublisher.publishEvent(event);
-                }
-                firstIteration = false;
-            }
+        }
+        for (SmtpEventSentEvent event : sentEvents)
+        {
+            boolean success = (exception == null);
+            event.setSucceeded(success);
+            eventPublisher.publishEvent(event);
         }
 
     }
@@ -208,73 +165,79 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO in, Authentication authentication, AcmUser user)
             throws Exception
     {
-        Exception exception;
+        Exception exception = null;
 
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
         messageProps.put("subject", in.getSubject());
-        boolean firstIteration = true;
+        List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
+        Map<String, DataHandler> attachments = processAttachments(in, user, sentEvents);
         for (String emailAddress : in.getEmailAddresses())
         {
-            List<SmtpEventSentEvent> sentEvents = new ArrayList<>();
             try
             {
                 messageProps.put("to", emailAddress);
-                Map<String, DataHandler> attachments = new HashMap<>();
-                if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
-                {
-                    for (Long attachmentId : in.getAttachmentIds())
-                    {
-                        InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
-                        EcmFile ecmFile = ecmFileService.findById(attachmentId);
-                        String fileName = ecmFile.getFileName();
-                        if (ecmFile.getFileActiveVersionNameExtension() != null)
-                        {
-                            fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
-                        }
-                        attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
-
-                        if (firstIteration)
-                        {
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(),
-                                    ecmFile.getParentObjectType()));
-                            sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
-                        }
-                    }
-                }
-                // Adding non ecmFile(s) as attachments
-                if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
-                {
-                    for (String filePath : in.getFilePaths())
-                    {
-                        File file = new File(filePath);
-                        FileInputStream contents = new FileInputStream(file);
-                        attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
-                    }
-                }
                 MuleMessage received = muleContextManager.send(flow, makeNote(emailAddress, in, authentication), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
             } catch (MuleException e)
             {
+                LOG.error("Email message not sent ...", exception);
                 exception = e;
             }
 
-            if (exception != null)
-            {
-                LOG.error("Email message not sent ...", exception);
-            }
+        }
 
-            if (firstIteration)
+        for (SmtpEventSentEvent event : sentEvents)
+        {
+            boolean success = (exception == null);
+            event.setSucceeded(success);
+            eventPublisher.publishEvent(event);
+        }
+    }
+
+    /**
+     * @param in
+     * @param user
+     * @param firstIteration
+     * @param sentEvents
+     * @return
+     * @throws MuleException
+     * @throws AcmUserActionFailedException
+     * @throws FileNotFoundException
+     */
+    private Map<String, DataHandler> processAttachments(AttachmentsProcessableDTO in, AcmUser user, List<SmtpEventSentEvent> sentEvents)
+            throws MuleException, AcmUserActionFailedException, FileNotFoundException
+    {
+        Map<String, DataHandler> attachments = new HashMap<>();
+        if (in.getAttachmentIds() != null && !in.getAttachmentIds().isEmpty())
+        {
+            for (Long attachmentId : in.getAttachmentIds())
             {
-                for (SmtpEventSentEvent event : sentEvents)
+                InputStream contents = ecmFileService.downloadAsInputStream(attachmentId);
+                EcmFile ecmFile = ecmFileService.findById(attachmentId);
+                String fileName = ecmFile.getFileName();
+                if (ecmFile.getFileActiveVersionNameExtension() != null)
                 {
-                    boolean success = (exception == null);
-                    event.setSucceeded(success);
-                    eventPublisher.publishEvent(event);
+                    fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
                 }
-                firstIteration = false;
+                attachments.put(fileName, new DataHandler(new InputStreamDataSource(contents, fileName)));
+
+                sentEvents
+                        .add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getParentObjectId(), ecmFile.getParentObjectType()));
+                sentEvents.add(new SmtpEventSentEvent(ecmFile, user.getUserId(), ecmFile.getId(), ecmFile.getObjectType()));
             }
         }
+        // Adding non ecmFile(s) as attachments
+        if (in.getFilePaths() != null && !in.getFilePaths().isEmpty())
+        {
+            for (String filePath : in.getFilePaths())
+            {
+                File file = new File(filePath);
+                FileInputStream contents = new FileInputStream(file);
+                attachments.put(file.getName(), new DataHandler(new InputStreamDataSource(contents, file.getName())));
+            }
+        }
+        return attachments;
     }
 
     /*
@@ -340,18 +303,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     protected Map<String, Object> loadSmtpAndOriginatingProperties() throws AcmEncryptionException
     {
+        Map<String, Object> loadedProperties = propertyFileManager.loadMultiple(emailSenderPropertyFileLocation,
+                EmailSenderConfigurationConstants.HOST, EmailSenderConfigurationConstants.PORT, EmailSenderConfigurationConstants.USERNAME,
+                EmailSenderConfigurationConstants.PASSWORD, EmailSenderConfigurationConstants.USER_FROM,
+                EmailSenderConfigurationConstants.ENCRYPTION);
+
         Map<String, Object> messageProps = new HashMap<>();
 
-        messageProps.put("host", propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.HOST, null));
-        messageProps.put("port", propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.PORT, null));
-        messageProps.put("user",
-                propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USERNAME, null));
-        messageProps.put("password",
-                propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.PASSWORD, null));
-        messageProps.put("from",
-                propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USER_FROM, null));
-        messageProps.put("encryption",
-                propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.ENCRYPTION, null));
+        messageProps.put("host", loadedProperties.get(EmailSenderConfigurationConstants.HOST));
+        messageProps.put("port", loadedProperties.get(EmailSenderConfigurationConstants.PORT));
+        messageProps.put("user", loadedProperties.get(EmailSenderConfigurationConstants.USERNAME));
+        messageProps.put("password", loadedProperties.get(EmailSenderConfigurationConstants.PASSWORD));
+        messageProps.put("from", loadedProperties.get(EmailSenderConfigurationConstants.USER_FROM));
+        messageProps.put("encryption", loadedProperties.get(EmailSenderConfigurationConstants.ENCRYPTION));
 
         return messageProps;
     }
@@ -399,8 +363,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param propertyFileManager
-     *            the propertyFileManager to set
+     * @param propertyFileManager the propertyFileManager to set
      */
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
@@ -408,8 +371,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param emailSenderPropertyFileLocation
-     *            the emailSenderPropertyFileLocation to set
+     * @param emailSenderPropertyFileLocation the emailSenderPropertyFileLocation to set
      */
     public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
     {
@@ -417,8 +379,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param ecmFileService
-     *            the ecmFileService to set
+     * @param ecmFileService the ecmFileService to set
      */
     public void setEcmFileService(EcmFileService ecmFileService)
     {
@@ -426,8 +387,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param muleContextManager
-     *            the muleContextManager to set
+     * @param muleContextManager the muleContextManager to set
      */
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
@@ -435,8 +395,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param authenticationTokenService
-     *            the authenticationTokenService to set
+     * @param authenticationTokenService the authenticationTokenService to set
      */
     public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
     {
@@ -444,8 +403,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param authenticationTokenDao
-     *            the authenticationTokenDao to set
+     * @param authenticationTokenDao the authenticationTokenDao to set
      */
     public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
     {
@@ -453,8 +411,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param flow
-     *            the flow to set
+     * @param flow the flow to set
      */
     public void setFlow(String flow)
     {
