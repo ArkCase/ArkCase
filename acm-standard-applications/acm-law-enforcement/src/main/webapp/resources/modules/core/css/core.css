@@ -92,6 +92,11 @@ body {
     z-index: 3001 !important;
 }
 
+.navbar-arkcase .dropdown-menu li a {
+    word-wrap: break-word;
+    white-space: normal;
+}
+
 .navbar-arkcase .dropdown-menu .col-xs-4 {
     padding: 0px;
 }
