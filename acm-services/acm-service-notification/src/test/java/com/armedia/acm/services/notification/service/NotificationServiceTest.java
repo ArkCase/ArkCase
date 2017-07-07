@@ -151,7 +151,6 @@ public class NotificationServiceTest extends EasyMockSupport
 
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);
@@ -303,7 +302,6 @@ public class NotificationServiceTest extends EasyMockSupport
         SmtpNotificationSender smtpNotificationServer = new SmtpNotificationSender();
         smtpNotificationServer.setNotificationUtils(mockNotificationUtils);
         smtpNotificationServer.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
-        smtpNotificationServer.setMuleContextManager(mockMuleContextManager);
         smtpNotificationServer.setPropertyFileManager(mockPropertyFileManager);
 
         notificationSenderMap.put("smtp", smtpNotificationServer);

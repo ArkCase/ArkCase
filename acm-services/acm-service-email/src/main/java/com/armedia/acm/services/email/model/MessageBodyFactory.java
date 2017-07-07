@@ -1,4 +1,4 @@
-package com.armedia.acm.service.outlook.model;
+package com.armedia.acm.services.email.model;
 
 import java.util.HashMap;
 import java.util.Map;
