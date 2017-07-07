@@ -96,7 +96,7 @@ angular.module('cases').config(['$stateProvider',
                 templateUrl: 'modules/cases/views/components/case-tags.client.view.html'
             })
 
-            .state('cases.approvalrouting', {
+            .state('cases.approvalRouting', {
                 url: '/:type/:id/approvals',
                 templateUrl: 'modules/cases/views/components/case-approval-routing.client.view.html'
             })

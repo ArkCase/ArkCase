@@ -15,7 +15,7 @@ angular.module('complaints').controller('Complaints.ApprovalRoutingController', 
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "complaints"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onObjectInfoRetrieved: function (objectInfo) {

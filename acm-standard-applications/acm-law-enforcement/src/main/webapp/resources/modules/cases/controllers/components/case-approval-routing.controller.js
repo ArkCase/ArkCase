@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onObjectInfoRetrieved: function (objectInfo) {
