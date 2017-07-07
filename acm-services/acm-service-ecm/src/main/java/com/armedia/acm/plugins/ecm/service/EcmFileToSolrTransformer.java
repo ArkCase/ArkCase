@@ -164,7 +164,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         else
         {
             solr.setAssignee_full_name_lcs(in.getCreator());
-            solr.setCreator_full_name_lcs(in.getCreator());
+            solr.setAdditionalProperty("creator_full_name_lcs", in.getCreator());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
@@ -175,6 +175,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         else
         {
             solr.setModifier_full_name_lcs(in.getModifier());
+            solr.setAdditionalProperty("modifier_full_name_lcs", in.getModifier());
         }
 
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
