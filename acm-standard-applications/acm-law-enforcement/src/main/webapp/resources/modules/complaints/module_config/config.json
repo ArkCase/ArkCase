@@ -1,6 +1,6 @@
 {
   "id": "complaints",
-  "title": "TTTComplaints",
+  "title": "Complaints",
   "configurable": true,
   "initialLinksShown": true,
   "menus": [
@@ -254,7 +254,7 @@
   "components": [
     {
       "id": "main",
-      "title": "TTTOverview",
+      "title": "Overview",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -540,28 +540,28 @@
     },
     {
       "id": "info",
-      "title": "TTTInfo",
+      "title": "Info",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "TTTActions",
+      "title": "Actions",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "TTTDetails",
+      "title": "Details",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "locations",
-      "title": "TTTLocations",
+      "title": "Locations",
       "icon": "fa fa-location-arrow",
       "enabled": true,
       "type": "grid",
@@ -599,7 +599,7 @@
     },
     {
       "id": "people",
-      "title": "TTTPeople",
+      "title": "People",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
@@ -657,7 +657,7 @@
     },
     {
       "id": "organizations",
-      "title": "TTTOrganizations",
+      "title": "Organizations",
       "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
@@ -714,7 +714,7 @@
     },
     {
       "id": "documents",
-      "title": "TTTDocuments",
+      "title": "Documents",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -731,7 +731,7 @@
     },
     {
       "id": "participants",
-      "title": "TTTParticipants",
+      "title": "Participants",
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
@@ -816,7 +816,7 @@
     },
     {
       "id": "notes",
-      "title": "TTTNotes",
+      "title": "Notes",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -857,7 +857,7 @@
     },
     {
       "id": "tasks",
-      "title": "TTTTasks",
+      "title": "Tasks",
       "icon": "fa fa-check-circle",
       "enabled": true,
       "type": "grid",
@@ -923,7 +923,7 @@
     },
     {
       "id": "references",
-      "title": "TTTReferences",
+      "title": "References",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -974,7 +974,7 @@
     },
     {
       "id": "history",
-      "title": "TTTHistory",
+      "title": "History",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -1009,7 +1009,7 @@
     },
     {
       "id": "time",
-      "title": "TTTTime",
+      "title": "Time",
       "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
@@ -1055,7 +1055,7 @@
     },
     {
       "id": "cost",
-      "title": "TTTCost",
+      "title": "Cost",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
@@ -1103,7 +1103,7 @@
     },
     {
       "id": "tags",
-      "title": "TTTTags",
+      "title": "Tags",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
@@ -1141,14 +1141,14 @@
     },
     {
       "id": "calendar",
-      "title": "TTTCalendar",
+      "title": "Calendar",
       "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "referenceSearchGrid",
-      "title": "TTTReference Search",
+      "title": "Reference Search",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,
@@ -1210,7 +1210,7 @@
     },
     {
       "id": "approvalrouting",
-      "title": "TTTApproval Routing",
+      "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
       "enabled": true,
@@ -1255,7 +1255,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "TTTPast Approvals",
+      "title": "Past Approvals",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "userSearch",
-      "title": "TTTSelect users",
+      "title": "Select users",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
