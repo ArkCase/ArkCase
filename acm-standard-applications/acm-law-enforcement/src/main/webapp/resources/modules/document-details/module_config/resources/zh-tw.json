@@ -18,7 +18,9 @@
     "comp.tags": {
       "title": "zh-tw_Tags",
       "table.columns": {
-        "tag": "zh-tw_Tag"
+        "tag": "zh-tw_Tag",
+        "created": "zh-tw_Created",
+        "createdBy": "zh-tw_Created By"
       },
       "modal": {
         "title": "zh-tw_Tag",

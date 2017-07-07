@@ -1,4 +1,4 @@
-package com.armedia.acm.services.notification.model;
+package com.armedia.acm.services.email.smtp;
 
 
 import com.armedia.acm.core.model.AcmEvent;

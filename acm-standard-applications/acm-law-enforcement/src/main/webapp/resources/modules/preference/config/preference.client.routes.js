@@ -10,6 +10,7 @@ angular.module('preference').config(['$stateProvider',
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('preference');
+                    $translatePartialLoader.addPart('dashboard');
                     return $translate.refresh();
                 }]
             }

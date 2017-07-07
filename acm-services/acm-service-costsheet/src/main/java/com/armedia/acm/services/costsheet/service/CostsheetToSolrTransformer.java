@@ -30,9 +30,25 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmCostsheet in)
     {
-        // No need Advanced Search for now. We are not adding the Costsheet to the Advanced Search
-        // No implementation needed
-        return null;
+        SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();  
+
+        solr.setId(in.getId() + "-" + CostsheetConstants.OBJECT_TYPE);
+        solr.setObject_id_s(Long.toString(in.getId()));
+        solr.setObject_type_s(CostsheetConstants.OBJECT_TYPE);
+        solr.setTitle_parseable(in.getTitle());
+        solr.setDescription_no_html_tags_parseable(in.getDetails());
+        solr.setName(in.getTitle());        
+        
+        solr.setCreate_date_tdt(in.getCreated());
+        solr.setCreator_lcs(in.getCreator());
+        solr.setModified_date_tdt(in.getModified());
+        solr.setModifier_lcs(in.getModifier());        
+        
+        solr.setParent_id_s(Long.toString(in.getParentId()));
+        solr.setParent_type_s(in.getParentType());
+        solr.setParent_ref_s(in.getParentId() + "-" + in.getParentType());
+        
+        return solr;
     }
 
     @Override

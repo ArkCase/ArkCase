@@ -34,6 +34,7 @@
         <module>acm-service-message-broker</module>
         <module>acm-service-milestone</module>
         <module>acm-service-ms-outlook-integration</module>
+        <module>acm-service-email-smtp</module>
         <module>acm-service-note</module>
         <module>acm-service-notification</module>
         <module>acm-service-object-change-status</module>

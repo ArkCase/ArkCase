@@ -210,6 +210,7 @@
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
+      "autoSuggestObjectType": "TAG",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -223,6 +224,18 @@
           "name": "tagName",
           "displayName": "documentDetails.comp.tags.table.columns.tag",
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "created",
+          "displayName": "documentDetails.comp.tags.table.columns.created",
+          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "creator",
+          "displayName": "documentDetails.comp.tags.table.columns.createdBy",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ],
       "filters": "\"Object Type\": TAG",
