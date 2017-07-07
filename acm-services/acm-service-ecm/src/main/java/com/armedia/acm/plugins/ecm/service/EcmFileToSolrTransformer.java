@@ -174,7 +174,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         }
         else
         {
-            solr.setModifier_full_name_lcs(in.getModifier());
             solr.setAdditionalProperty("modifier_full_name_lcs", in.getModifier());
         }
 
