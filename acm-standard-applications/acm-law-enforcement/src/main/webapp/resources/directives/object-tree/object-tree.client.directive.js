@@ -224,8 +224,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.reset();
 
                 var treeInfo = Tree.Info.getTreeInfo();
-                treeInfo.sorter = Sorter.defaultSort;
-                treeInfo.filter = Filter.defaultFilter;
+                treeInfo.sorter = treeInfo.defaultSorter;
+                treeInfo.filter = treeInfo.defaultFilter;
+
                 Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
             }
 
@@ -483,7 +484,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var nodeDataType = arr[1];
                     _.each(nodeTypes, function (nodeType) {
                         var type = Util.goodValue(nodeType.type);
-                        var label = $translate.instant(Util.goodValue(nodeType.label));
+                        var label = Util.goodValue(nodeType.label);
+                        var title = $translate.instant(label);
                         var components = Util.goodArray(nodeType.components);
                         var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
@@ -492,7 +494,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                                 var subPart = type.substring(lastSep);
                                 builder.addLeaf({
                                     key: key + subPart
-                                    , title: label
+                                    , label: label
+                                    , title: title
                                     , components: components
                                     , leadComponent: leadComponent
                                     , nodeType: nodeDataType
@@ -760,105 +763,6 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
 
         }; //Tree
 
-        var Filter = {
-            defaultFilter: ""
-            , buildFilter: function (filters) {
-                var that = this;
-                var treeInfo = Tree.Info.getTreeInfo();
-                var oldFilter = treeInfo.filter;
-
-                var html = "";
-                _.each(filters, function (filter) {
-                    if (filter.default) {
-                        that.defaultFilter = Util.goodValue(filter.name);
-                        treeInfo.filter = that.defaultFilter;
-                    }
-                    html += "<li value='" + Util.goodValue(filter.name)
-                        + "'><a href='#'>" + $translate.instant(Util.goodValue(filter.desc)) + "</a></li>";
-                });
-
-                if (!Util.isEmpty(html)) {
-                    that.jqUlFilter.html(html);
-                    that.jqUlFilter.find("li").on("click", function (e) {
-                        e.preventDefault();
-                        var filter = $(this).attr("value");
-                        var treeInfo = Tree.Info.getTreeInfo();
-                        if (!Util.compare(treeInfo.filter, filter)) {
-                            Tree.setNodeId(0);
-                            Tree.setNodeType(null);
-                            treeInfo.start = 0;
-                            treeInfo.filter = filter;
-                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-                        }
-                    });
-                }
-
-                return oldFilter != treeInfo.filter;
-            }
-        }; //Filter
-
-        var Sorter = {
-            defaultSort: ""
-            , buildSorter: function (sorters) {
-                var that = this;
-                var treeInfo = Tree.Info.getTreeInfo();
-                var oldSorter = treeInfo.sorter;
-
-                var html = "";
-                _.each(sorters, function (sorter) {
-                    if (sorter.default) {
-                        that.defaultSort = Util.goodValue(sorter.name);
-                        treeInfo.sorter = that.defaultSort;
-                    }
-                    html += "<li value='" + Util.goodValue(sorter.name)
-                        + "'><a href='#'>" + $translate.instant(Util.goodValue(sorter.desc)) + "</a></li>";
-                });
-
-                if (!Util.isEmpty(html)) {
-                    that.jqUlSorter.html(html);
-                    that.jqUlSorter.find("li").on("click", function (e) {
-                        e.preventDefault();
-                        var sorter = $(this).attr("value");
-                        var treeInfo = Tree.Info.getTreeInfo();
-                        if (!Util.compare(treeInfo.sorter, sorter)) {
-                            Tree.setNodeId(0);
-                            Tree.setNodeType(null);
-                            treeInfo.start = 0;
-                            treeInfo.sorter = sorter;
-                            Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-                        }
-                    });
-                }
-
-                return oldSorter != treeInfo.sorter;
-            }
-        }; //Sorter
-
-        var Search = {
-            defaultSearch: ""
-            , initSearch: function (searchQuery) {
-                var that = this;
-
-                //keyup can be used for type ahead
-                //that.jqEdtQuery.on("keyup", function (e) {
-                //});
-
-                that.jqBtnQuery.on("click", function (e) {
-                    var searchQuery = that.jqEdtQuery.val();
-                    var treeInfo = Tree.Info.getTreeInfo();
-                    if (!Util.compare(treeInfo.searchQuery, searchQuery)) {
-                        Tree.setNodeId(0);
-                        Tree.setNodeType(null);
-                        treeInfo.start = 0;
-                        treeInfo.searchQuery = searchQuery;
-                        Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
-                    }
-
-                });
-
-            }
-        }; //Search
-
         return {
             restrict: 'E'
             , templateUrl: "directives/object-tree/object-tree.client.view.html"
@@ -872,12 +776,6 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
             }
 
             , link: function (scope, element, attrs) {
-
-                Filter.jqUlFilter = $(element).find(".treeFilter");
-                Sorter.jqUlSorter = $(element).find(".treeSorter");
-                Search.jqEdtQuery = $(element).find(".edtTreeQuery");
-                Search.jqBtnQuery = $(element).find("#btnTreeQuery");
-
                 Tree.reset();
                 Tree.scope = scope;
                 Tree.jqDivTree = $(element).find(".tree");
@@ -894,17 +792,6 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 };
 
                 Tree.create();
-
-                //jwu: public-subscription bypasses the angular $emit/$broadcast mechanism. It potentially leads to
-                //     tight coupling between arbitrary components. Better approach is to let host controller to call
-                //     treeControl.select()
-                //
-                //scope.$bus.subscribe('object-tree.select', function(param){
-				//	Tree.refresh();
-				//	setTimeout(function() {
-				//		Tree.select(param, true);
-				//	},100)
-				//});
 
                 var treeInfo = Tree.Info.getTreeInfo();
 
@@ -924,12 +811,39 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         var oldSearchQuery = treeInfo.searchQuery;
 
                         treeInfo.pageSize = Util.goodValue(treeConfig.pageSize, Tree.Info.DEFAULT_PAGE_SIZE);
-                        var filters = Util.goodArray(treeConfig.filters);
-                        var sorters = Util.goodArray(treeConfig.sorters);
+                        Tree.scope.filters = Util.goodArray(treeConfig.filters);
+                        treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {default: true}), "name");
+                        treeInfo.filter = treeInfo.defaultFilter;
+                        Tree.scope.onSelectFilter = function (filterName) {
+                            var treeInfo = Tree.Info.getTreeInfo();
+                            if (!Util.compare(treeInfo.filter, filterName)) {
+                                Tree.setNodeId(0);
+                                Tree.setNodeType(null);
+                                treeInfo.start = 0;
+                                treeInfo.filter = filterName;
+                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                            }
+                        };
+
+
+                        Tree.scope.sorters = Util.goodArray(treeConfig.sorters);
+                        treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {default: true}), "name");
+                        treeInfo.sorter = treeInfo.defaultSorter;
+                        Tree.scope.onSelectSort = function (sorterName) {
+                            var treeInfo = Tree.Info.getTreeInfo();
+                            if (!Util.compare(treeInfo.sorter, sorterName)) {
+                                Tree.setNodeId(0);
+                                Tree.setNodeType(null);
+                                treeInfo.start = 0;
+                                treeInfo.sorter = sorterName;
+                                Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                            }
+                        };
+
+
                         var searchQuery = Util.goodArray(treeConfig.searchQuery);
-                        Filter.buildFilter(filters);
-                        Sorter.buildSorter(sorters);
-                        Search.initSearch(searchQuery);
+                        treeInfo.searchQuery = searchQuery;
+                        Tree.scope.searchQuery = searchQuery;
 
                         if (oldPageSize != treeInfo.pageSize || !Util.compare(oldFilter, treeInfo.filter) || !Util.compare(oldSorter, treeInfo.sorter) || !Util.compare(oldSearchQuery, treeInfo.searchQuery)) {
                             Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
@@ -942,9 +856,31 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     }
                 });
 
+                scope.onClickSearch = function () {
+                    var searchQuery = Tree.scope.searchQuery;
+                    var treeInfo = Tree.Info.getTreeInfo();
+                    if (!Util.compare(treeInfo.searchQuery, searchQuery)) {
+                        Tree.setNodeId(0);
+                        Tree.setNodeType(null);
+                        treeInfo.start = 0;
+                        treeInfo.searchQuery = searchQuery;
+                        Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
+                    }
+                };
+
                 scope.onClickRefresh = function () {
                     Tree.refresh();
                 };
+
+                scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                    Tree.tree.visit(function(node){
+                        var label = node.data.label;
+                        if (label) {
+                            node.setTitle($translate.instant(label));
+                            Tree.fixNodeIcon(node);
+                        }
+                    });
+                });
             }
         };
     }

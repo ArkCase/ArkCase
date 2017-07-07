@@ -324,5 +324,42 @@
       "title": "de_Title",
       "username": "de_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "locations.label": "Standorte",
+      "people.label": "Menschen",
+      "organizations.label": "Organisationen",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "notes.label": "Notizen",
+      "tasks.label": "Aufgaben",
+      "references.label": "Referenzen",
+      "history.label": "Geschichte",
+      "time.label": "Zeit",
+      "cost.label": "Kosten",
+      "tags.label": "Etiketten",
+      "calendar.label": "Kalender",
+      "approvalRouting.label": "Genehmigungs Pfad"
+    },
+    "filters": {
+      "openComplaints": "Alle offenen Beschwerden",
+      "iHaveCreated": "Alle offenen Beschwerden",
+      "iAmAssigned": "Alles, was ich zugewiesen bin",
+      "iAmFollowing": "Alles, was ich folge",
+      "closedNoFurtherAction": "Alle geschlossenen Keine weitere Aktion",
+      "closedReferExternal": "Alle Geschlossenen Siehe extern",
+      "closedOpenInvestigation": "Alle Geschlossenen Offene Untersuchung",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Vorlaufdatum Auf",
+      "incidentDateDesc": "Vorlaufdatum sortieren Dec",
+      "createdDateAsc": "ufSortieren Erstellungsdatum Auf",
+      "createdDateDesc": "Nach Name sortieren Dec",
+      "byNameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
+    }
   }
 }
