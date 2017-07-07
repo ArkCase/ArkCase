@@ -121,6 +121,18 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ms-outlook-integration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-email</artifactId>
             <version>${acm.version}</version>
         </dependency>
