@@ -185,7 +185,7 @@
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="messageSubject" value="${overdue.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${overdue.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>
