@@ -52,7 +52,7 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -80,8 +80,7 @@ public class AcmConfigurableEmailSenderService
     public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
             throws Exception
     {
-        AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
-                .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
+        AcmEmailSenderService service = getSender();
         service.sendPlainEmail(emailsDataStream, emailBuilder, emailBodyBuilder);
 
     }
@@ -98,8 +97,7 @@ public class AcmConfigurableEmailSenderService
     public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmUser user)
             throws Exception
     {
-        AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
-                .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
+        AcmEmailSenderService service = getSender();
         service.sendEmailWithAttachments(emailWithAttachmentsDTO, authentication, user);
     }
 
@@ -113,8 +111,7 @@ public class AcmConfigurableEmailSenderService
     @Override
     public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmUser user) throws Exception
     {
-        AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
-                .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
+        AcmEmailSenderService service = getSender();
         service.sendEmail(emailWithAttachmentsDTO, authentication, user);
     }
 
@@ -130,8 +127,7 @@ public class AcmConfigurableEmailSenderService
     public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO,
             Authentication authentication, AcmUser user) throws Exception
     {
-        AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
-                .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
+        AcmEmailSenderService service = getSender();
         service.sendEmailWithAttachmentsAndLinks(emailWithAttachmentsAndLinksDTO, authentication, user);
     }
 
@@ -146,8 +142,7 @@ public class AcmConfigurableEmailSenderService
     public void sendEmail(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, Authentication authentication, AcmUser user)
             throws Exception
     {
-        AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
-                .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
+        AcmEmailSenderService service = getSender();
         service.sendEmail(emailWithAttachmentsAndLinksDTO, authentication, user);
     }
 
@@ -163,9 +158,19 @@ public class AcmConfigurableEmailSenderService
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO,
             Authentication authentication, AcmUser user) throws Exception
     {
+        AcmEmailSenderService service = getSender();
+        return service.sendEmailWithEmbeddedLinks(emailDTO, authentication, user);
+    }
+
+    /**
+     * @return
+     * @throws AcmEmailServiceException
+     */
+    private AcmEmailSenderService getSender() throws AcmEmailServiceException
+    {
         AcmEmailSenderService service = Optional.ofNullable(emailSenderMap.get(senderType))
                 .orElseThrow(() -> new AcmEmailServiceException(String.format("No email sender configured for %s type.", senderType)));
-        return service.sendEmailWithEmbeddedLinks(emailDTO, authentication, user);
+        return service;
     }
 
     /**
