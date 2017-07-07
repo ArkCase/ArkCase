@@ -6,5 +6,10 @@
     <bean id="mailConfigurationAPIController" class="com.armedia.acm.services.email.config.web.api.AcmMailTemplateConfigurationServiceAPIController">
         <property name="mailService" ref="filesystemTemplateConfigurationService"/>
     </bean>
+    
+    <bean id="mailServiceAPIController" class="com.armedia.acm.services.email.web.api.AcmMailServiceAPIController">
+        <property name="templateService" ref="filesystemTemplateConfigurationService"/>
+        <property name="emailSenderService" ref="configurableEmailSenderService"/>
+    </bean>
 
 </beans>

@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -46,8 +50,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-acm-encryption.xml",
@@ -82,7 +84,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-email.xml"})
+        "/spring/spring-library-email.xml",
+        "/spring/spring-library-email-smtp.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {

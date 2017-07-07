@@ -2,6 +2,7 @@ package com.armedia.acm.files.propertymanager;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -125,6 +127,29 @@ public class PropertyFileManager
             p.load(fis);
 
             retval = encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key, defaultValue));
+
+        } catch (IOException e)
+        {
+            log.warn("file [{}] not found, using default last update time.", filename);
+        }
+
+        return retval;
+    }
+
+    public Map<String, Object> loadMultiple(String filename, String... keys) throws AcmEncryptionException
+    {
+
+        Properties p = new Properties();
+        Map<String, Object> retval = new HashMap<>();
+
+        try (InputStream fis = new FileInputStream(filename))
+        {
+            p.load(fis);
+
+            for (String key : keys)
+            {
+                retval.put(key, encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key)));
+            }
 
         } catch (IOException e)
         {
