@@ -61,6 +61,10 @@ public class LdapUserService
             user.setsAMAccountName(user.getUserId());
         }
 
+        //set the domain defined in the config to the userId
+        if (ldapSyncConfig.getUserDomain() != null)
+            user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
+
         groupNames.forEach(groupName ->
         {
             AcmGroup group = getGroupDao().findByName(groupName);
@@ -74,8 +78,9 @@ public class LdapUserService
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
         {
+
             DirContextAdapter context = userTransformer
-                    .createContextForNewUserEntry(directoryName, user, password, ldapSyncConfig.getBaseDC());
+                    .createContextForNewUserEntry(directoryName, user, password, ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
             log.debug("Ldap User Context: {}", context.getAttributes());
             log.debug("Save User:{} with DN:{} in LDAP", ldapUser.getUserId(), ldapUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));

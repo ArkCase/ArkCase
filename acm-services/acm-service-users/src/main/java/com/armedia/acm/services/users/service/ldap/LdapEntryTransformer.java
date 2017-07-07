@@ -26,10 +26,17 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC, String userDomain)
             throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
+
+        String userID = user.getUserId();
+
+        if (userDomain != null && userID.indexOf(userDomain) >= 0)
+        {
+            userID = userID.substring(0, userID.indexOf(userDomain) - 1);
+        }
 
         AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class).
                 get(String.format("%s_userSync", directoryName));
@@ -49,7 +56,7 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
-                context.setAttributeValue(attr, user.getUserId());
+                context.setAttributeValue(attr, userID);
             } else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
             {
                 context.setAttributeValue(attr, user.getFirstName());
