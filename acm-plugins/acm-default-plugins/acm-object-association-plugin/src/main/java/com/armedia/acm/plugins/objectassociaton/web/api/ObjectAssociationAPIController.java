@@ -35,10 +35,11 @@ public class ObjectAssociationAPIController
             @RequestParam(value = "parent-id") Long parentId,
             @RequestParam(value = "parent-type", required = false) String parentType,
             @RequestParam(value = "target-type", required = false) String targetType,
+            @RequestParam(value = "order-by", required = false) String orderBy,
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
     {
-        return objectAssociationService.getAssociations(auth, parentId, parentType, targetType, start, n);
+        return objectAssociationService.getAssociations(auth, parentId, parentType, targetType, orderBy, start, n);
     }
 
     @RequestMapping(method = RequestMethod.DELETE,
@@ -64,7 +65,7 @@ public class ObjectAssociationAPIController
         return objectAssociationService.saveAssociation(objectAssociation, auth);
     }
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.GET,
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ObjectAssociation getAssociation(
             @PathVariable Long id,
