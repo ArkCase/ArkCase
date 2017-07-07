@@ -4,9 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -47,6 +45,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -144,8 +143,7 @@ public class SmtpServiceTest
 
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), matches(note), any(Map.class))).thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).thenReturn("off");
+        setSendExpectations(false);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
         when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).thenReturn(token);
@@ -201,9 +199,7 @@ public class SmtpServiceTest
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), matches(note), messagePropsCaptor.capture()))
                 .thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load(anyString(), eq(EmailSenderConfigurationConstants.ENCRYPTION), isNull(String.class)))
-                .thenReturn("starttls");
+        setSendExpectations(true);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
         when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).thenReturn(token);
@@ -264,8 +260,7 @@ public class SmtpServiceTest
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).thenReturn("off");
+        setSendExpectations(false);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -337,9 +332,7 @@ public class SmtpServiceTest
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load(anyString(), eq(EmailSenderConfigurationConstants.ENCRYPTION), isNull(String.class)))
-                .thenReturn("starttls");
+        setSendExpectations(true);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -418,8 +411,7 @@ public class SmtpServiceTest
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.ENCRYPTION, null)).thenReturn("off");
+        setSendExpectations(false);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -506,9 +498,7 @@ public class SmtpServiceTest
         when(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), capturedNote.capture(), capturedAttachments.capture(),
                 messagePropsCaptor.capture())).thenReturn(mockMuleMessage);
 
-        setSendExpectations();
-        when(mockPropertyFileManager.load(anyString(), eq(EmailSenderConfigurationConstants.ENCRYPTION), isNull(String.class)))
-                .thenReturn("starttls");
+        setSendExpectations(true);
 
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
@@ -561,13 +551,27 @@ public class SmtpServiceTest
      * @throws Exception
      *
      */
-    private void setSendExpectations() throws Exception
+    private void setSendExpectations(boolean withEncription) throws Exception
     {
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.HOST, null)).thenReturn("host_value");
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PORT, null)).thenReturn("port_value");
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USERNAME, null)).thenReturn("email_user_value");
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PASSWORD, null)).thenReturn("email_password_value");
-        when(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USER_FROM, null)).thenReturn("email_from_value");
+        Map<String, Object> returnedValues = new HashMap<>();
+        returnedValues.put(EmailSenderConfigurationConstants.HOST, "host_value");
+        returnedValues.put(EmailSenderConfigurationConstants.PORT, "port_value");
+        returnedValues.put(EmailSenderConfigurationConstants.USERNAME, "email_user_value");
+        returnedValues.put(EmailSenderConfigurationConstants.PASSWORD, "email_password_value");
+        returnedValues.put(EmailSenderConfigurationConstants.USER_FROM, "email_from_value");
+        if (withEncription)
+        {
+            returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "starttls");
+        } else
+        {
+            returnedValues.put(EmailSenderConfigurationConstants.ENCRYPTION, "off");
+        }
+
+        when(mockPropertyFileManager.loadMultiple("dummy_location", EmailSenderConfigurationConstants.HOST,
+                EmailSenderConfigurationConstants.PORT, EmailSenderConfigurationConstants.USERNAME,
+                EmailSenderConfigurationConstants.PASSWORD, EmailSenderConfigurationConstants.USER_FROM,
+                EmailSenderConfigurationConstants.ENCRYPTION)).thenReturn(returnedValues);
+
     }
 
 }
