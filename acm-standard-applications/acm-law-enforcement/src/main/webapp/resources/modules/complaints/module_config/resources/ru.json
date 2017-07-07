@@ -324,5 +324,42 @@
       "title": "ru_Title",
       "username": "ru_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "locations.label": "Местоположения",
+      "people.label": "Люди",
+      "organizations.label": "Организации",
+      "documents.label": "Документы",
+      "participants.label": "Участники",
+      "notes.label": "Заметки",
+      "tasks.label": "Задачи",
+      "references.label": "Ссылки",
+      "history.label": "История",
+      "time.label": "Время",
+      "cost.label": "Стоимость",
+      "tags.label": "Теги",
+      "calendar.label": "Календарь",
+      "approvalRouting.label": "Маршрутизация Одобрения"
+    },
+    "filters": {
+      "openComplaints": "Все открытые жалобы",
+      "iHaveCreated": "Все, что я создал",
+      "iAmAssigned": "Все назначено",
+      "iAmFollowing": "Все, за чем я слежу",
+      "closedNoFurtherAction": "Все закрыты без дальнейших действий",
+      "closedReferExternal": "All Closed Refer External",
+      "closedOpenInvestigation": "Все закрытые открытые расследования",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Сортировка даты инцидента Asc",
+      "incidentDateDesc": "Сортировка даты инцидента Desc",
+      "createdDateAsc": "Сортировка Дата создания Asc",
+      "createdDateDesc": "Сортировка Дата создания Desc",
+      "byNameAsc": "Сортировать по имени Asc",
+      "noSort": "(Нет фильтра)"
+    }
   }
 }

@@ -327,39 +327,39 @@
   },
   "complaints.tree": {
     "nodeTypes": {
-      "details.label": "zh-cn_Details",
-      "locations.label": "zh-cn_Locations",
-      "people.label": "zh-cn_People",
-      "organizations.label": "zh-cn_Organizations",
-      "documents.label": "zh-cn_Documents",
-      "participants.label": "zh-cn_Participants",
-      "notes.label": "zh-cn_Notes",
-      "tasks.label": "zh-cn_Tasks",
-      "references.label": "zh-cn_References",
-      "history.label": "zh-cn_History",
-      "time.label": "zh-cn_Time",
-      "cost.label": "zh-cn_Cost",
-      "tags.label": "zh-cn_Tags",
-      "calendar.label": "zh-cn_Calendar",
-      "approvalRouting.label": "zh-cn_Approval Routing"
+      "details.label": "详情",
+      "locations.label": "地点",
+      "people.label": "成员",
+      "organizations.label": "组织",
+      "documents.label": "文件",
+      "participants.label": "参与成员",
+      "notes.label": "评论",
+      "tasks.label": "任务",
+      "references.label": "参考",
+      "history.label": "历史",
+      "time.label": "时间",
+      "cost.label": "成本",
+      "tags.label": "标签",
+      "calendar.label": "日历",
+      "approvalRouting.label": "批准路径"
     },
     "filters": {
-      "openComplaints": "zh-cn_All Open Complaints",
-      "iHaveCreated": "zh-cn_All I've Created",
-      "iAmAssigned": "zh-cn_All I'm Assigned",
-      "iAmFollowing": "zh-cn_All I'm Following",
-      "closedNoFurtherAction": "zh-cn_All Closed No Further Action",
-      "closedReferExternal": "zh-cn_All Closed Refer External",
-      "closedOpenInvestigation": "zh-cn_All Closed Open Investigation",
-      "noFilter": "zh-cn_(No Filter)"
+      "openComplaints": "所有打开的",
+      "iHaveCreated": "我所创建的",
+      "iAmAssigned": "指定给我的",
+      "iAmFollowing": "我关注的",
+      "closedNoFurtherAction": "关闭并无进一步操作的",
+      "closedReferExternal": "外部参考被关闭的",
+      "closedOpenInvestigation": "调查被关闭的",
+      "noFilter": "(无限制的)"
     },
     "sorters": {
-      "incidentDateAsc": "zh-cn_Sort Incident Date Asc",
-      "incidentDateDesc": "zh-cn_Sort Incident Date Desc",
-      "createdDateAsc": "zh-cn_Sort Created Date Asc",
-      "createdDateDesc": "zh-cn_Sort Created Date Desc",
-      "byNameAsc": "zh-cn_Sort By Name Asc",
-      "noSort": "zh-cn_(No Sort)"
+      "incidentDateAsc": "按事件日期排序",
+      "incidentDateDesc": "按事件日期反排序",
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "byNameAsc": "按名称排序",
+      "noSort": "(不排序)"
     }
   }
 

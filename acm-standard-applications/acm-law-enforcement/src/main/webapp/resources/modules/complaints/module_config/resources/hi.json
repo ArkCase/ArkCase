@@ -324,5 +324,42 @@
       "title": "hi_Title",
       "username": "hi_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "locations.label": "स्थान",
+      "people.label": "लोग",
+      "organizations.label": "संगठन",
+      "documents.label": "दस्तावेज़",
+      "participants.label": "प्रतिभागियों को",
+      "notes.label": "टिप्पणियाँ",
+      "tasks.label": "कार्य",
+      "references.label": "सन्दर्भ",
+      "history.label": "इतिहास",
+      "time.label": "पहर",
+      "cost.label": "लागत",
+      "tags.label": "टैग",
+      "calendar.label": "कैलेंडर",
+      "approvalRouting.label": "अनुमोदन रूटिंग"
+    },
+    "filters": {
+      "openComplaints": "सभी ओपन शिकायतें",
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "iAmAssigned": "सभी को मैं नियुक्त किया गया",
+      "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
+      "closedNoFurtherAction": "सभी बंद कोई और कार्यवाही",
+      "closedReferExternal": "सभी बंद बाहरी देखें",
+      "closedOpenInvestigation": "सभी बंद खुली जांच",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "incidentDateAsc": "क्रमबद्ध घटना दिनांक एएससी",
+      "incidentDateDesc": "क्रमबद्ध घटना दिनांक दिनांक",
+      "createdDateAsc": "सॉर्ट की गई तारीख एएससी",
+      "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
+      "byNameAsc": "सॉर्ट इन एएनएससी एसी",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
   }
 }
