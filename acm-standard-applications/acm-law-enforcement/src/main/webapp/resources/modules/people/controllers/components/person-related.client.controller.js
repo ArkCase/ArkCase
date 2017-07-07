@@ -111,39 +111,44 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                     if (!data.person.id) {
                         PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                             data['person'] = response.data;
-                            updateAssociation(association, $scope.objectInfo, data.person, data, false);
+                            updateAssociation(association, $scope.objectInfo, data.person, data);
                         });
                     } else {
-                        updateAssociation(association, $scope.objectInfo, data.person, data, false);
+                        updateAssociation(association, $scope.objectInfo, data.person, data);
                     }
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        updateAssociation(association, $scope.objectInfo, person, data, false);
+                        updateAssociation(association, $scope.objectInfo, person, data);
                     });
                 }
             });
         }
 
-        function updateAssociation(association, parent, target, associationData, isInverse) {
+        function updateAssociation(association, parent, target, associationData) {
             association.parentId = parent.id;
             association.parentType = parent.objectType;
-            association.parentClassName = parent.className;
 
             association.targetId = target.id;
             association.targetType = target.objectType;
-            association.targetClassName = target.className;
 
-            association.associationType = isInverse ? associationData.inverseType : associationData.type;
+            association.associationType = associationData.type;
 
-            if (!isInverse) {
+            if (associationData.inverseType) {
                 if (!association.inverseAssociation) {
                     association.inverseAssociation = {};
                 }
-                updateAssociation(association.inverseAssociation, target, parent, associationData, true);
+                association.inverseAssociation.parentId = target.id;
+                association.inverseAssociation.parentType = target.objectType;
+
+                association.inverseAssociation.targetId = parent.id;
+                association.inverseAssociation.targetType = parent.objectType;
+
+                association.inverseAssociation.associationType = associationData.inverseType;
+                association.inverseAssociation.description = associationData.description;
             }
             association.description = associationData.description;
             ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
-                //wait 2-3 sec and refresh because of solr indexing
+                //wait 2.5 sec and refresh because of solr indexing
                 $timeout(function () {
                     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
                 }, 2500);

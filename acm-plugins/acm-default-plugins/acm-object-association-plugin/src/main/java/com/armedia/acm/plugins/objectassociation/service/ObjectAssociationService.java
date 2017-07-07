@@ -31,12 +31,13 @@ public interface ObjectAssociationService
      * @param auth       Authentication
      * @param parentId   id of the owner of associations
      * @param parentType type of the owner of associations
-     * @param targetType id of the target of associations
+     * @param targetType type of the target of associations
+     * @param orderBy    name of the field to order by
      * @param start      which row to start
      * @param limit      number of rows to retrieve
      * @return solr response
      */
-    String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, int start, int limit) throws AcmObjectNotFoundException;
+    String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, String orderBy, int start, int limit) throws AcmObjectNotFoundException;
 
     /**
      * saves object association

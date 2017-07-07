@@ -12,6 +12,7 @@ import com.armedia.acm.spring.SpringContextHolder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -97,20 +98,27 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     }
 
     @Override
-    public String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, int start, int limit) throws AcmObjectNotFoundException
+    public String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, String orderBy, int start, int limit) throws AcmObjectNotFoundException
     {
+        if (StringUtils.isEmpty(orderBy))
+        {
+            orderBy = "id asc";
+        }
         StringBuilder targetQuery = new StringBuilder();
         StringBuilder associationsQuery = new StringBuilder();
-        targetQuery.append("{!join from=target_ref_s to=id}");
 
-        targetQuery.append(String.format("object_type_s:REFERENCE AND parent_ref_s:%s AND target_type_s:%s", parentId + "-" + parentType, targetType));
-        associationsQuery.append(String.format("object_type_s:REFERENCE AND parent_ref_s:%s AND target_type_s:%s", parentId + "-" + parentType, targetType));
+        String associationsQueryString = String.format("object_type_s:REFERENCE AND parent_ref_s:%s AND target_type_s:%s", parentId + "-" + parentType, targetType);
+
+        targetQuery.append("{!join from=target_ref_s to=id}");
+        targetQuery.append(associationsQueryString);
+        associationsQuery.append(associationsQueryString);
 
         try
         {
             //Execute all request in parallel to minimize chances for wrong responses
-            CompletableFuture<String> targetResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, targetQuery.toString(), start, limit, "");
-            CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, associationsQuery.toString(), start, limit, "");
+            CompletableFuture<String> targetResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, targetQuery.toString(), start, limit, orderBy);
+            CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, associationsQuery.toString(), start, limit, orderBy);
+            //wait all completable features to finish
             CompletableFuture.allOf(targetResponse, associationsResponse);
 
             return combineResults(targetResponse.get(), associationsResponse.get());

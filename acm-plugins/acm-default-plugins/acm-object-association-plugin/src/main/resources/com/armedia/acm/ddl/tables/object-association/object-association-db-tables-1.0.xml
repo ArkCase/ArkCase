@@ -189,18 +189,9 @@
             <column name="cm_inverse_association_id" type="${fkIdType}">
                 <constraints foreignKeyName="fk_inverse_object_association_id"
                              referencedTableName="acm_object_association"
-                             referencedColumnNames="cm_association_id"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="11-acm-object-association-add-column" author="nebojsha.davidovikj">
-        <addColumn tableName="acm_object_association">
-            <column name="cm_parent_class_name" type="${classNameType}" defaultValue="NO_CLASS_NAME">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cm_target_class_name" type="${classNameType}" defaultValue="NO_CLASS_NAME">
-                <constraints nullable="false"/>
+                             referencedColumnNames="cm_association_id"
+                             deferrable="${deferrable}"
+                             initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
     </changeSet>

@@ -43,9 +43,6 @@ public class ObjectAssociation implements AcmEntity, Serializable
     @Column(name = "cm_parent_id")
     private Long parentId;
 
-    @Column(name = "cm_parent_class_name")
-    private String parentClassName;
-
     @Column(name = "cm_target_name")
     private String targetName;
 
@@ -57,9 +54,6 @@ public class ObjectAssociation implements AcmEntity, Serializable
 
     @Column(name = "cm_target_id")
     private Long targetId;
-
-    @Column(name = "cm_target_class_name")
-    private String targetClassName;
 
     @Column(name = "cm_object_assn_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -313,25 +307,5 @@ public class ObjectAssociation implements AcmEntity, Serializable
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-    public String getParentClassName()
-    {
-        return parentClassName;
-    }
-
-    public void setParentClassName(String parentClassName)
-    {
-        this.parentClassName = parentClassName;
-    }
-
-    public String getTargetClassName()
-    {
-        return targetClassName;
-    }
-
-    public void setTargetClassName(String targetClassName)
-    {
-        this.targetClassName = targetClassName;
     }
 }
