@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -33,7 +34,7 @@ public class LdapEntryTransformer
 
         String userID = user.getUserId();
 
-        if (userDomain != null && userID.indexOf(userDomain) >= 0)
+        if (!StringUtils.isEmpty(userDomain) && userID.indexOf(userDomain) >= 0)
         {
             userID = userID.substring(0, userID.indexOf(userDomain) - 1);
         }
