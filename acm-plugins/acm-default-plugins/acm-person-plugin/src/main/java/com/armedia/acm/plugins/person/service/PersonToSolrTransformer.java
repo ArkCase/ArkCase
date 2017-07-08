@@ -11,7 +11,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setName(person.getGivenName() + " " + person.getFamilyName());
 
         solrDoc.setTitle_parseable(person.getGivenName() + " " + person.getFamilyName());
+        solrDoc.setTitle_parseable_lcs(person.getGivenName() + " " + person.getFamilyName());
 
         addContactMethods(person, solrDoc);
 
@@ -196,7 +196,9 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setLast_modified_tdt(in.getModified());
         solrDoc.setModifier_s(in.getModifier());
 
-        solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
+        solrDoc.setTitle_parseable(in.getGivenName() + " " + in.getFamilyName());
+        solrDoc.setTitle_parseable_lcs(in.getGivenName() + " " + in.getFamilyName());
+
         return solrDoc;
     }
 
