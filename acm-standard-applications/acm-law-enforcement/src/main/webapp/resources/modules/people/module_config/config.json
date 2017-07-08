@@ -42,8 +42,7 @@
       },
       {
         "desc": "Sort Date Created Descending",
-        "name": "sort-date-desc",
-        "default": true
+        "name": "sort-date-desc"
       },
       {
         "desc": "Sort People ID Ascending",
@@ -54,7 +53,12 @@
         "name": "sort-by-id-desc"
       },
       {
-        "desc": "Sort By People Name",
+        "desc": "Sort By People Name A-Z",
+        "name": "sort-by-name-asc",
+        "default": true
+      },
+      {
+        "desc": "Sort By People Name Z-A",
         "name": "sort-by-name-desc"
       }
     ],

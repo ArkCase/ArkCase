@@ -30,8 +30,8 @@ angular.module('people').controller('PeopleListController', ['$scope', '$state',
                 return {
                     nodeId: Util.goodValue(personInfo.id, 0)
                     , nodeType: ObjectService.ObjectTypes.PERSON
-                    , nodeTitle: Util.goodValue(personInfo.personTitle)
-                    , nodeToolTip: Util.goodValue(personInfo.personTitle)
+                    , nodeTitle: Util.goodValue(personInfo.givenName + " " + personInfo.familyName)
+                    , nodeToolTip: Util.goodValue(personInfo.givenName + " " + personInfo.familyName)
                 };
             }
         });
