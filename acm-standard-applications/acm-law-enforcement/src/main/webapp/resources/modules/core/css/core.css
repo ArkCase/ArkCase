@@ -1,3 +1,5 @@
+/* @override https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
+
 html {
     height: 100%;
 }
@@ -88,6 +90,11 @@ body {
     text-align: left;
     width: 275px;
     z-index: 3001 !important;
+}
+
+.navbar-arkcase .dropdown-menu li a {
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .navbar-arkcase .dropdown-menu .col-xs-4 {
@@ -236,17 +243,12 @@ body {
     width: 198px;
     background-color: #2d343e;
     z-index: 2;
+    overflow: none;
 }
 
-.leftnav-menu footer::before {
-    content: "Powered by ArkCase.com";
-    color: #ccc;
-    font-size: 10px;
-    text-align: center;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 150px;
+.leftnav-menu footer small, .leftnav-menu footer small a {
+	font-size: 10px !important;
+	color: #efefef;
 }
 
 .leftnav-menu footer .btn-icon {
@@ -306,6 +308,10 @@ body {
 
 .page-wrapper.collapsed .leftnav-menu footer::before {
     display: none;
+}
+
+.page-wrapper.collapsed .leftnav-menu footer small {
+	display: none;
 }
 
 /* Page Content (Right Column) */

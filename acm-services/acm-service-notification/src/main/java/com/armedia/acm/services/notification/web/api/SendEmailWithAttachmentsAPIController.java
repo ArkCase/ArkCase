@@ -1,7 +1,7 @@
 package com.armedia.acm.services.notification.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "/api/v1/service/notification/email", "/api/latest/service/notification/email" })
+@RequestMapping({"/api/v1/service/notification/email", "/api/latest/service/notification/email"})
 public class SendEmailWithAttachmentsAPIController
 {
 

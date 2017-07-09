@@ -248,6 +248,15 @@
     "button.addFile": "de_Add File",
     "button.addFolder": "de_Add Folder"
   },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
   "common.comp.acmLogin": {
     "confirmLogout": "de_For your protection, application is about to logout. Click Cancel to stay logged in."
   },
