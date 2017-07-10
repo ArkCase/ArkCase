@@ -30,6 +30,10 @@ angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$
             save: {
                 method: 'POST',
                 url: 'api/latest/service/objectassociations',
+                transformRequest: function (data, headersGetter) {
+                    var encodedData = JSOG.encode(Util.omitNg(data));
+                    return angular.toJson(encodedData);
+                },
                 cache: false
             },
 
