@@ -324,5 +324,43 @@
       "title": "zh-cn_Title",
       "username": "zh-cn_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "locations.label": "地点",
+      "people.label": "成员",
+      "organizations.label": "组织",
+      "documents.label": "文件",
+      "participants.label": "参与成员",
+      "notes.label": "评论",
+      "tasks.label": "任务",
+      "references.label": "参考",
+      "history.label": "历史",
+      "time.label": "时间",
+      "cost.label": "成本",
+      "tags.label": "标签",
+      "calendar.label": "日历",
+      "approvalRouting.label": "批准路径"
+    },
+    "filters": {
+      "openComplaints": "所有打开的",
+      "iHaveCreated": "我所创建的",
+      "iAmAssigned": "指定给我的",
+      "iAmFollowing": "我关注的",
+      "closedNoFurtherAction": "关闭并无进一步操作的",
+      "closedReferExternal": "外部参考被关闭的",
+      "closedOpenInvestigation": "调查被关闭的",
+      "noFilter": "(无限制的)"
+    },
+    "sorters": {
+      "incidentDateAsc": "按事件日期排序",
+      "incidentDateDesc": "按事件日期反排序",
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "byNameAsc": "按名称排序",
+      "noSort": "(不排序)"
+    }
   }
+
 }
