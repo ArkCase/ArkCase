@@ -18,11 +18,11 @@ import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class SpringLdapUserDao
@@ -98,27 +98,13 @@ public class SpringLdapUserDao
 
         try
         {
-            String passwordAttribute;
-            byte[] passwordBytes;
-            Attribute oldPassword;
             ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
             DirContext context = contextSource.getContext(dn, password);
 
-            if (AcmLdapConstants.LDAP_AD.equals(config.getDirectoryType()))
-            {
-                passwordBytes = MapperUtils.encodeUTF16LE(newPassword);
-                passwordAttribute = "unicodePwd";
-                oldPassword = new BasicAttribute(passwordAttribute, MapperUtils.encodeUTF16LE(password));
-            } else
-            {
-                passwordBytes = newPassword.getBytes();
-                passwordAttribute = "userPassword";
-                oldPassword = new BasicAttribute(passwordAttribute, password.getBytes());
-            }
             // set old/new password attributes
             ModificationItem[] mods = new ModificationItem[2];
-            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, oldPassword);
-            mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(passwordAttribute, passwordBytes));
+            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, createPasswordAttribute(password, config.getDirectoryType()));
+            mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, createPasswordAttribute(newPassword, config.getDirectoryType()));
             // Perform the update
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
@@ -140,20 +126,10 @@ public class SpringLdapUserDao
 
         try
         {
-            String passwordAttribute;
-            byte[] passwordBytes;
-            if (AcmLdapConstants.LDAP_AD.equals(config.getDirectoryType()))
-            {
-                passwordBytes = MapperUtils.encodeUTF16LE(password);
-                passwordAttribute = "unicodePwd";
-            } else
-            {
-                passwordBytes = password.getBytes();
-                passwordAttribute = "userPassword";
-            }
+            BasicAttribute passwordAttribute = createPasswordAttribute(password, config.getDirectoryType());
             // set new password attributes
             ModificationItem[] mods = new ModificationItem[1];
-            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(passwordAttribute, passwordBytes));
+            mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, passwordAttribute);
             // Perform the update
             new RetryExecutor().retryChecked(() -> ldapTemplate.modifyAttributes(strippedBaseDn, mods));
         } catch (Exception e)
@@ -161,5 +137,21 @@ public class SpringLdapUserDao
             log.warn("Changing the password for User: {} failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
+    }
+
+    private BasicAttribute createPasswordAttribute(String password, String directoryType) throws UnsupportedEncodingException
+    {
+        String passwordAttribute;
+        byte[] passwordBytes;
+        if (AcmLdapConstants.LDAP_AD.equals(directoryType))
+        {
+            passwordBytes = MapperUtils.encodeUTF16LE(password);
+            passwordAttribute = "unicodePwd";
+        } else
+        {
+            passwordBytes = password.getBytes();
+            passwordAttribute = "userPassword";
+        }
+        return new BasicAttribute(passwordAttribute, passwordBytes);
     }
 }
