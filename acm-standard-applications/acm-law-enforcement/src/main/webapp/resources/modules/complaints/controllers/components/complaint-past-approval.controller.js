@@ -51,5 +51,8 @@ angular.module('complaints').controller('Complaints.PastApprovalRoutingControlle
                 $scope.noDataMessage = $translate.instant('complaints.comp.approvalRouting.noBuckslipMessage');
             }
         });
+
+        $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
+
     }
 ]);

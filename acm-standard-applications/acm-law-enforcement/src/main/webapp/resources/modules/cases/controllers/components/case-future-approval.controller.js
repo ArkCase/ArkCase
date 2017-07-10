@@ -69,6 +69,8 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
 
         });
 
+        $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
+
         $scope.userSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
