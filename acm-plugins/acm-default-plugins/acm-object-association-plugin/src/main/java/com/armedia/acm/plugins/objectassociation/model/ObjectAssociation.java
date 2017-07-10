@@ -81,7 +81,7 @@ public class ObjectAssociation implements AcmEntity, Serializable
     @Column(name = "cm_description")
     private String description;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "cm_inverse_association_id")
     private ObjectAssociation inverseAssociation;
 
