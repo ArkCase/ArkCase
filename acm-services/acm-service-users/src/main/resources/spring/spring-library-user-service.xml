@@ -173,13 +173,17 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 
+    <bean id="passwordValidationService" class="com.armedia.acm.services.users.service.ldap.PasswordValidationService">
+        <property name="passwordRules" ref="passwordValidation"/>
+    </bean>
+
     <util:list id="passwordValidation" value-type="com.armedia.acm.services.users.model.ldap.PasswordValidationRule">
         <ref bean="passwordShouldNotContainUserId"/>
         <ref bean="passwordShouldMatchLowerCasePattern"/>
         <ref bean="passwordShouldMatchUpperCasePattern"/>
         <ref bean="passwordShouldMatchDigitPattern"/>
         <ref bean="passwordShouldMatchSpecialCharPattern"/>
-        <ref bean="passwordShouldbeOfMinimumLength"/>
+        <ref bean="passwordShouldBeOfMinimumLength"/>
     </util:list>
 
     <bean id="passwordShouldNotContainUserId"
@@ -188,37 +192,39 @@
 
     <bean id="passwordShouldMatchLowerCasePattern"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[a-z].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="pattern" value="^.*?[a-z].*$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one lowercase character"></constructor-arg>
+                         value="Password must contain at least one lowercase character"/>
     </bean>
 
     <bean id="passwordShouldMatchUpperCasePattern"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[A-Z].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="pattern" value="^.*?[A-Z].*$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one uppercase character"></constructor-arg>
+                         value="Password must contain at least one uppercase character"/>
     </bean>
 
     <bean id="passwordShouldMatchDigitPattern"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[0-9].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="pattern" value="^.*?[0-9].*$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one digit (0-9)"></constructor-arg>
+                         value="Password must contain at least one digit (0-9)"/>
     </bean>
 
     <bean id="passwordShouldMatchSpecialCharPattern"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="/^.*?[!@#%^+=].*$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="pattern">
+            <value><![CDATA[^.*?[[~!@#$%^&*_+=`|\(){}:;"'<>,.?/-]].*$]]></value>
+        </constructor-arg>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must contain at least one special character"></constructor-arg>
+                         value="Password must contain at least one special character"/>
     </bean>
 
-    <bean id="passwordShouldbeOfMinimumLength"
+    <bean id="passwordShouldBeOfMinimumLength"
           class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="/^.{7,}$/"></constructor-arg>
+        <constructor-arg type="java.lang.String" name="pattern" value="^.{7,}$"/>
         <constructor-arg type="java.lang.String" name="message"
-                         value="Password must be of minimum length of 7."></constructor-arg>
+                         value="Password must be of minimum length of 7."/>
     </bean>
 
     <bean id="acmUserEventPublisher" class="com.armedia.acm.services.users.service.AcmUserEventPublisher"/>

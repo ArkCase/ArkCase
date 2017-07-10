@@ -6,6 +6,7 @@
     <bean id="resetPasswordUiController" class="com.armedia.acm.auth.web.ResetPasswordUIController">
         <property name="ldapUserService" ref="ldapUserService"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="passwordValidationService" ref="passwordValidationService"/>
     </bean>
 
 </beans>

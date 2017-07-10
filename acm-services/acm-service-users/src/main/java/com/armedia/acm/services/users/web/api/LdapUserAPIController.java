@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.ldap.AuthenticationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class LdapUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser addLdapUser(@RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser addLdapUser(@RequestBody @Valid LdapUser ldapUserCreateRequest, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
