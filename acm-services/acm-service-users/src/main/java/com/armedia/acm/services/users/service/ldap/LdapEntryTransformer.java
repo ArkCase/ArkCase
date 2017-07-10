@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -26,7 +27,7 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC, String userDomain)
             throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
@@ -49,7 +50,12 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
-                context.setAttributeValue(attr, user.getUserId());
+                String userID = user.getUserId();
+                if (StringUtils.isNotEmpty(userDomain) && userID.endsWith("@" + userDomain))
+                {
+                    userID = userID.substring(0, userID.indexOf(userDomain) - 1);
+                }
+                context.setAttributeValue(attr, userID);
             } else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
             {
                 context.setAttributeValue(attr, user.getFirstName());
