@@ -23,6 +23,8 @@ import java.util.Properties;
  */
 public class PropertyFileManager
 {
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Properties readFromFile(File propertiesFile) throws IOException
@@ -37,12 +39,10 @@ public class PropertyFileManager
             return p;
         } catch (IOException e)
         {
-            log.error("Could not reload properties from [" + propertiesFile.getName() + "]: " + e.getMessage(), e);
+            log.error("Could not reload properties from [{}] ", propertiesFile.getName(), e);
             throw e;
         }
     }
-
-    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
 
     public void store(String key, String value, String filename)
     {
@@ -54,7 +54,7 @@ public class PropertyFileManager
             p.store(fos, "last updated");
         } catch (IOException e)
         {
-            log.debug("could not create properties file: " + e.getMessage(), e);
+            log.debug("could not create properties file: [{}] ", e.getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class PropertyFileManager
 
             try (OutputStream out = new FileOutputStream(fileName))
             {
-                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
+                propertiesMap.forEach(p::setProperty);
                 p.store(out, null);
             } catch (IOException e)
             {
