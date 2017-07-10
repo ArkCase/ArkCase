@@ -80,7 +80,6 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                             	onSelect($scope.fileType.selected);
                                 $modalInstance.close();
                             };
-
                         }]
                         , animation: true
                         , size: 'sm'

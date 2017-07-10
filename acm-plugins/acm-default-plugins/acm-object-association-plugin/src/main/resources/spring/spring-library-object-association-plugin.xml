@@ -9,9 +9,15 @@
           class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl">
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="objectAssociationDao" ref="objectAssociationDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="objectAssociationEventPublisher"
           class="com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher"/>
+
+    <bean class="com.armedia.acm.plugins.objectassociation.tranformer.ObjectAssociationToSolrTransformer"
+          id="objectAssociationToSolrTransformer">
+        <property name="objectAssociationDao" ref="objectAssociationDao"/>
+    </bean>
 
 </beans>
