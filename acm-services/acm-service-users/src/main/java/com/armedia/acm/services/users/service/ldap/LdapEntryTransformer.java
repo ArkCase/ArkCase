@@ -32,8 +32,6 @@ public class LdapEntryTransformer
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
 
-        String userID = user.getUserId();
-
         AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class).
                 get(String.format("%s_userSync", directoryName));
 
@@ -52,6 +50,7 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
+                String userID = user.getUserId();
                 if (StringUtils.isNotEmpty(userDomain) && userID.endsWith("@" + userDomain))
                 {
                     userID = userID.substring(0, userID.indexOf(userDomain) - 1);
