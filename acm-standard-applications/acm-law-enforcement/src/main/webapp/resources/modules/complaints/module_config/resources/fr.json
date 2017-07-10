@@ -324,5 +324,42 @@
       "title": "fr_Title",
       "username": "fr_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "locations.label": "Emplacements",
+      "people.label": "Personnes",
+      "organizations.label": "Organisations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tâches",
+      "references.label": "Références",
+      "history.label": "Histoire",
+      "time.label": "Heure",
+      "cost.label": "Coût",
+      "tags.label": "étiquettes",
+      "calendar.label": "Calendrier",
+      "approvalRouting.label": "Routage d'approbation"
+    },
+    "filters": {
+      "openComplaints": "Toutes les plaintes ouvertes",
+      "iHaveCreated": "Tout ce que j'ai créé",
+      "iAmAssigned": "Tout ce que je suis assigné",
+      "iAmFollowing": "Tout ce que je suis",
+      "closedNoFurtherAction": "Tout fermé sans autre action",
+      "closedReferExternal": "ous les références externes fermées",
+      "closedOpenInvestigation": "Toutes les enquêtes ouvertes fermées",
+      "noFilter": "(Pas de filtre)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Sort Incident Date Asc",
+      "incidentDateDesc": "Sort Incident Date Déc",
+      "createdDateAsc": "Trier Date créée Asc",
+      "createdDateDesc": "Trier Date créée Déc",
+      "byNameAsc": "Trier par nom Asc",
+      "noSort": "(Non Trier)"
+    }
   }
 }

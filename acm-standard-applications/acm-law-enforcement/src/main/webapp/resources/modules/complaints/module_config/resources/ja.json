@@ -324,5 +324,42 @@
       "title": "ja_Title",
       "username": "ja_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "locations.label": "場所",
+      "people.label": "人員",
+      "organizations.label": "組織",
+      "documents.label": "ファイル",
+      "participants.label": "参加者",
+      "notes.label": "ノート",
+      "tasks.label": "タスク",
+      "references.label": "また",
+      "history.label": "歴史",
+      "time.label": "時間",
+      "cost.label": "支出",
+      "tags.label": "タグ",
+      "calendar.label": "カレンダー",
+      "approvalRouting.label": "承認ル"
+    },
+    "filters": {
+      "openComplaints": "開いているすべての",
+      "iHaveCreated": "私が作成しました",
+      "iAmAssigned": "自分に割り当てられました",
+      "iAmFollowing": "私は心配です",
+      "closedNoFurtherAction": "ノーさらに開閉動作",
+      "closedReferExternal": "外部参照が閉じています",
+      "closedOpenInvestigation": "調査は、閉じました",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "incidentDateAsc": "イベントの日付で並べ替え",
+      "incidentDateDesc": "アンチは、イベントの日付順",
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "アンチは作成日順にソート",
+      "byNameAsc": "名で並べ替え",
+      "noSort": "(注文しません)"
+    }
   }
 }

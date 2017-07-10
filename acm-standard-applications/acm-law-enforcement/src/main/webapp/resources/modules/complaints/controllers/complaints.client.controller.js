@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('ComplaintsController', ['$scope', '$state', '$stateParams', '$translate'
+angular.module('complaints').controller('ComplaintsController', ['$scope', '$state', '$stateParams'
     , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
-    , function ($scope, $state, $stateParams, $translate
+    , function ($scope, $state, $stateParams
         , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService) {
 
         new HelperObjectBrowserService.Content({
