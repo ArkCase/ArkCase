@@ -63,7 +63,7 @@ public class LdapUserService
         }
 
         //set the domain defined in the config to the userId
-        if (!StringUtils.isEmpty(ldapSyncConfig.getUserDomain()))
+        if (StringUtils.isNotEmpty(ldapSyncConfig.getUserDomain()))
             user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
 
         groupNames.forEach(groupName ->

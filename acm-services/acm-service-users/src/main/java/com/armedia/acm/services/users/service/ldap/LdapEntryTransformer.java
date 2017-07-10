@@ -34,11 +34,6 @@ public class LdapEntryTransformer
 
         String userID = user.getUserId();
 
-        if (!StringUtils.isEmpty(userDomain) && userID.indexOf(userDomain) >= 0)
-        {
-            userID = userID.substring(0, userID.indexOf(userDomain) - 1);
-        }
-
         AcmLdapUserSyncConfig config = acmContextHolder.getAllBeansOfType(AcmLdapUserSyncConfig.class).
                 get(String.format("%s_userSync", directoryName));
 
@@ -57,6 +52,10 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
+                if (StringUtils.isNotEmpty(userDomain) && userID.endsWith("@" + userDomain))
+                {
+                    userID = userID.substring(0, userID.indexOf(userDomain) - 1);
+                }
                 context.setAttributeValue(attr, userID);
             } else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
             {
