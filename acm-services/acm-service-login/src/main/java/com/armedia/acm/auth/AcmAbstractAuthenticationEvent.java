@@ -7,12 +7,9 @@ import java.util.Date;
 
 public abstract class AcmAbstractAuthenticationEvent extends AcmEvent
 {
-    private final Authentication authentication;
-
     public AcmAbstractAuthenticationEvent(Authentication authentication)
     {
         super(authentication);
-        this.authentication = authentication;
 
         setEventDate(new Date());
 
@@ -30,11 +27,5 @@ public abstract class AcmAbstractAuthenticationEvent extends AcmEvent
 
         AcmAuthenticationDetails details = (AcmAuthenticationDetails) authentication.getDetails();
         setIpAddress(details.getRemoteAddress());
-
-    }
-
-    public Authentication getAuthentication()
-    {
-        return authentication;
     }
 }

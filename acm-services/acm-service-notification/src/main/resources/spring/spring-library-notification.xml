@@ -134,12 +134,4 @@
         <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
-    <bean id="onFailedLogin" class="com.armedia.acm.services.notification.service.OnPasswordExpired">
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
-        <property name="acmAppConfiguration" ref="acmApplication"/>
-        <property name="passwordResetEmailBodyTemplate" value="${upcoming.password.notification.body.template}"/>
-        <property name="passwordResetEmailSubject" value="${upcoming.password.notification.subject}"/>
-        <property name="passwordResetLink" value="${upcoming.password.notification.resetPasswordLink}"/>
-    </bean>
 </beans>

@@ -488,7 +488,7 @@
 
     <changeSet id="27-add-reset-password-token-column" author="ncuculova">
         <addColumn tableName="acm_user">
-            <column name="cm_token_ex_date" type="${timestampType}" defaultValueComputed="${timestampFunction}"/>
+            <column name="cm_token_ex_date" type="${timestampType}"/>
             <column name="cm_token" type="VARCHAR(255)">
                 <constraints unique="true" uniqueConstraintName="uk_token"/>
             </column>

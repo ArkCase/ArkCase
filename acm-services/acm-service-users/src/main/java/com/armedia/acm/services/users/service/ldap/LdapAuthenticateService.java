@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
 
-import java.time.LocalDateTime;
 
 /**
  * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring
@@ -72,14 +70,15 @@ public class LdapAuthenticateService
             {
                 throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
             }
-            invalidateToken(user);
-            log.debug("Changing password for user:{}", user.getUserId());
+            log.debug("Changing password for user: [{}]", user.getUserId());
+
             LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
             ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
             savePasswordExpirationDate(user, ldapTemplate);
+            invalidateToken(user);
         } catch (AcmLdapActionFailedException e)
         {
-            throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", null);
+            throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
         }
     }
 
@@ -93,8 +92,7 @@ public class LdapAuthenticateService
 
     protected void invalidateToken(AcmUser acmUser)
     {
-        PasswordResetToken passwordResetToken = acmUser.getPasswordResetToken();
-        passwordResetToken.setExpiryDate(LocalDateTime.now().minusDays(1));
+        acmUser.setPasswordResetToken(null);
         userDao.save(acmUser);
     }
 
