@@ -1,7 +1,9 @@
-package com.armedia.acm.services.notification.service;
+package com.armedia.acm.services.email.service;
 
 import com.armedia.acm.auth.LoginEvent;
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.services.email.model.EmailBodyBuilder;
+import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
@@ -15,19 +17,19 @@ import java.util.stream.Stream;
 public class OnPasswordExpired implements ApplicationListener<LoginEvent>
 {
     private UserDao userDao;
-    private SmtpNotificationSender smtpNotificationSender;
+    private AcmConfigurableEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
      * string accepts the password reset link string twice.
-     * e.g: "You can change your password on the following link: <a href='%s'>%s<\\/a>"
+     * e.g: "You can change your password on the following link: <a href='%s'>%s</a>"
      */
     private String passwordResetEmailBodyTemplate;
     private String passwordResetEmailSubject;
     /**
      * Formatting string to be used for constructing the password reset link. The formatting
      * string accepts two parameters: base url and reset password token.
-     * e.g: "\\/reset-password?token=%s"
+     * e.g: "/reset-password?token=%s"
      */
     private String passwordResetLink;
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -54,7 +56,7 @@ public class OnPasswordExpired implements ApplicationListener<LoginEvent>
     {
         AcmUser user = userDao.findByUserId(userId);
         user.setPasswordResetToken(new PasswordResetToken());
-        log.info("Set password reset token to user");
+        log.info("Set password reset token to user: [{}]", userId);
         return userDao.save(user);
     }
 
@@ -63,10 +65,10 @@ public class OnPasswordExpired implements ApplicationListener<LoginEvent>
         try
         {
             log.debug("Sending password reset email...");
-            smtpNotificationSender.sendPlainEmail(Stream.of(user), emailBuilder, emailBodyBuilder);
+            emailSenderService.sendPlainEmail(Stream.of(user), emailBuilder, emailBodyBuilder);
         } catch (Exception e)
         {
-            log.error("Password reset email was not sent for user: {}", auth.getName());
+            log.error("Password reset email was not sent for user: [{}]", auth.getName());
         }
     }
 
@@ -81,20 +83,14 @@ public class OnPasswordExpired implements ApplicationListener<LoginEvent>
         String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
         return String.format(passwordResetEmailBodyTemplate, link, link);
     };
-
-    public UserDao getUserDao()
-    {
-        return userDao;
-    }
-
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
     }
 
-    public void setSmtpNotificationSender(SmtpNotificationSender smtpNotificationSender)
+    public void setEmailSenderService(AcmConfigurableEmailSenderService emailSenderService)
     {
-        this.smtpNotificationSender = smtpNotificationSender;
+        this.emailSenderService = emailSenderService;
     }
 
     public void setAcmAppConfiguration(AcmApplication acmAppConfiguration)
