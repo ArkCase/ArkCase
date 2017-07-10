@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
-import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -18,15 +17,11 @@ import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.ContextSource;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
-import javax.persistence.NonUniqueResultException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +42,8 @@ public class LdapUserService
     public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
         Map<String, String> roleToGroup = ldapSyncConfig.getRoleToGroupMap();
         Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroup);
         String userFullName = String.format("%s %s", user.getFirstName(), user.getLastName());
@@ -121,8 +116,8 @@ public class LdapUserService
 
         AcmUser existingUser = getUserDao().findByUserId(userId);
 
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directory));
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directory));
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
 
         List<AcmGroup> acmGroups = new ArrayList<>();
@@ -445,11 +440,6 @@ public class LdapUserService
     public AcmUser findByToken(String token)
     {
         return userDao.findByPasswordResetToken(token);
-    }
-
-    public boolean isTokenValid(PasswordResetToken token)
-    {
-        return token.getExpiryDate().isAfter(LocalDateTime.now());
     }
 
     public SpringLdapDao getLdapDao()
