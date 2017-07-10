@@ -2,10 +2,10 @@
     <header class="dk header">
         <div class="wrapper">
             <div class="input-group">
-                <input type="text" class="input-sm form-control edtTreeQuery"
+                <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
                        placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
             <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button">
+            <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button" ng-click="onClickSearch()">
                 {{'common.directive.objectTree.btnQuery.text' | translate}}
             </button>
             </span>
@@ -28,6 +28,11 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu text-left text-sm treeSorter">
+                <li value="{{sorter.name}}" ng-repeat="sorter in sorters">
+                    <a ng-click="onSelectSort(sorter.name)">
+                        <span translate>{{sorter.desc}}</span>
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -40,6 +45,11 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu text-left text-sm treeFilter">
+                <li value="{{filter.name}}" ng-repeat="filter in filters">
+                    <a ng-click="onSelectFilter(filter.name)">
+                        <span translate>{{filter.desc}}</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </header>

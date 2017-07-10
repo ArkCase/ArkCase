@@ -324,5 +324,42 @@
       "title": "es_Title",
       "username": "es_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "locations.label": "Ubicaciones",
+      "people.label": "Personas",
+      "organizations.label": "Organizaciones",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tareas",
+      "references.label": "Referencias",
+      "history.label": "Historia",
+      "time.label": "Tiempo",
+      "cost.label": "Costo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendario",
+      "approvalRouting.label": "Ruta de Aprobació"
+    },
+    "filters": {
+      "openComplaints": "Todas las quejas abiertas",
+      "iHaveCreated": "Todo lo que he creado",
+      "iAmAssigned": "Todo lo que estoy asignado",
+      "iAmFollowing": "Todo lo que estoy siguiendo",
+      "closedNoFurtherAction": "Todos cerrados No hay más acción",
+      "closedReferExternal": "All Closed Refer External",
+      "closedOpenInvestigation": "Toda Investigación Abierta Cerrada",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Ordenar la fecha del incidente Asc",
+      "incidentDateDesc": "Ordenar la fecha del incidente Dec",
+      "createdDateAsc": "Ordenar Creación de fecha creada Asc",
+      "createdDateDesc": "Ordenar Creación de fecha creada Dec",
+      "byNameAsc": "Ordenar por nombre Asc",
+      "noSort": "(Sin Clasificar)"
+    }
   }
 }
