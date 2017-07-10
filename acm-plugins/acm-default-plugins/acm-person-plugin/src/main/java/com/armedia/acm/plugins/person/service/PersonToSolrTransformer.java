@@ -53,8 +53,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         solrDoc.setName(person.getGivenName() + " " + person.getFamilyName());
 
-        solrDoc.setTitle_parseable(person.getGivenName() + " " + person.getFamilyName());
-        solrDoc.setTitle_parseable_lcs(person.getGivenName() + " " + person.getFamilyName());
+        solrDoc.setTitle_parseable(person.getFamilyName() + " " + person.getGivenName());
+        solrDoc.setTitle_parseable_lcs(person.getFamilyName() + " " + person.getGivenName());
 
         addContactMethods(person, solrDoc);
 
@@ -196,8 +196,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setLast_modified_tdt(in.getModified());
         solrDoc.setModifier_s(in.getModifier());
 
-        solrDoc.setTitle_parseable(in.getGivenName() + " " + in.getFamilyName());
-        solrDoc.setTitle_parseable_lcs(in.getGivenName() + " " + in.getFamilyName());
+        solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
+        solrDoc.setTitle_parseable_lcs(in.getFamilyName() + " " + in.getGivenName());
 
         return solrDoc;
     }
