@@ -15,6 +15,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -61,6 +62,12 @@ public class LdapUserService
             user.setsAMAccountName(user.getUserId());
         }
 
+        //set the domain defined in the config to the userId
+        if (StringUtils.isNotEmpty(ldapSyncConfig.getUserDomain()))
+        {
+            user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
+        }
+
         groupNames.forEach(groupName ->
         {
             AcmGroup group = getGroupDao().findByName(groupName);
@@ -74,8 +81,9 @@ public class LdapUserService
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
         {
+
             DirContextAdapter context = userTransformer
-                    .createContextForNewUserEntry(directoryName, user, password, ldapSyncConfig.getBaseDC());
+                    .createContextForNewUserEntry(directoryName, user, password, ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
             log.debug("Ldap User Context: {}", context.getAttributes());
             log.debug("Save User:{} with DN:{} in LDAP", ldapUser.getUserId(), ldapUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
