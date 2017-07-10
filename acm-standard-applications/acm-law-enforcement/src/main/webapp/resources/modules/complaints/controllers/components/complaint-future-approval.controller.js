@@ -181,6 +181,7 @@ angular.module('complaints').controller('Complaints.FutureApprovalRoutingControl
             return promiseSaveInfo;
         };
 
+        $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
 
         gridHelper.addCustomButton = function (config, name, icon, clickFn, readOnlyFn, colName, tooltip) {
             if (Util.isEmpty(icon) || Util.isEmpty(clickFn) || Util.isEmpty(readOnlyFn)) {
