@@ -1,6 +1,7 @@
 package com.armedia.acm.auth.web;
 
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -34,7 +36,7 @@ public class ResetPasswordUIController
         if (acmUser != null)
         {
             log.debug("Check token: [{}] validity for user: [{}]", token, acmUser.getUserId());
-            isTokenValid = ldapUserService.isTokenValid(acmUser.getPasswordResetToken());
+            isTokenValid = isTokenValid(acmUser.getPasswordResetToken());
             model.addObject("token", token);
             model.addObject("directory", acmUser.getUserDirectoryName());
             model.setViewName("reset-password");
@@ -106,6 +108,11 @@ public class ResetPasswordUIController
                 .stream()
                 .map(it -> String.format("<p>%s</p>", it))
                 .collect(Collectors.joining());
+    }
+
+    private boolean isTokenValid(PasswordResetToken token)
+    {
+        return token.getExpiryDate().isAfter(LocalDateTime.now());
     }
 
     public void setLdapUserService(LdapUserService ldapUserService)

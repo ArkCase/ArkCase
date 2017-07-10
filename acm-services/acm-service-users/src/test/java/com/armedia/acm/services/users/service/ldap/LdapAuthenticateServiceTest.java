@@ -25,6 +25,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(EasyMockRunner.class)
@@ -173,7 +174,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         verifyAll();
         assertEquals(userEntry.getPasswordExpirationDate(), mockUser.getPasswordExpirationDate());
-        assertFalse(mockUser.getPasswordResetToken().getExpiryDate().isAfter(LocalDateTime.now()));
+        assertNull(mockUser.getPasswordResetToken());
     }
 
     @Test(expected = AcmUserActionFailedException.class)
