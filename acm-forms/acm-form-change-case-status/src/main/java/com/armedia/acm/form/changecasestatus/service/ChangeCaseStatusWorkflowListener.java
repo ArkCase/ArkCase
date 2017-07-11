@@ -30,6 +30,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
 
     private RuntimeService activitiRuntimeService;
 
+    private String changeCaseStatusTaskName;
+
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -71,7 +73,14 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
 
-        String taskName = "Request to Change Case Status '" + event.getCaseNumber() + "'";
+        // Default one if "changeCaseStatusTaskName" is null or empty
+        String taskName = "Task " + event.getCaseNumber();
+
+        // Overwrite "taskName" with "changeCaseStatusTaskName" value
+        if (getChangeCaseStatusTaskName() != null && !getChangeCaseStatusTaskName().isEmpty())
+        {
+            taskName = String.format(getChangeCaseStatusTaskName(), event.getCaseNumber());
+        }
 
         Map<String, Object> pvars = new HashMap<>();
 
@@ -134,4 +143,13 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         this.activitiRuntimeService = activitiRuntimeService;
     }
 
+    public String getChangeCaseStatusTaskName()
+    {
+        return changeCaseStatusTaskName;
+    }
+
+    public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
+    {
+        this.changeCaseStatusTaskName = changeCaseStatusTaskName;
+    }
 }
