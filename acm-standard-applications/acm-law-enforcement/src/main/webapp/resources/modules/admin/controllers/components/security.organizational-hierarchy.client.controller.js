@@ -104,18 +104,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
-                    $scope.adHocGroup = {};
+                    $scope.group = {};
 
-                    //watch the input to enable/disable ok button
-                    $scope.$watch('adHocGroup.name', function (newValue) {
-                        if (newValue) {
-                            $scope.inputValid = false;
-                        } else {
-                            $scope.inputValid = true;
-                        }
-                    }, true);
                     $scope.ok = function () {
-                        $modalInstance.close($scope.adHocGroup);
+                        $modalInstance.close($scope.group);
                     };
                     $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
@@ -170,7 +162,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             };
             modalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
+                organizationalHierarchyService.removeGroup(group).then(function (payload) {
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
