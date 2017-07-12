@@ -13,20 +13,23 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.ApprovalRoutingController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$filter', 'ObjectService', 'Object.TaskService', 'UtilService', 'Case.InfoService'
+        , 'Complaint.InfoService', 'Task.InfoService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+        , function ($scope, $stateParams, $q, $translate, $filter, ObjectService, ObjectTaskService , Util, CaseInfoService, ComplaintInfoService, TaskInfoService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+
             var modules = [
                 {
                     name: "CASE_FILE",
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
+                    objectType: ObjectService.ObjectTypes.CASE_FILE,
                     validateInfo: CaseInfoService.validateCaseInfo
                 }
                 , {
                     name: "COMPLAINT",
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
+                    objectType: ObjectService.ObjectTypes.COMPLAINT,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
                 }
             ];
@@ -40,31 +43,54 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                 columnDefs: []
             };
 
-            new HelperObjectBrowserService.Component({
-                scope: $scope
-                , stateParams: $stateParams
-                , moduleId: module.configName
-                , componentId: "main"
-                , retrieveObjectInfo: module.getInfo
-                , validateObjectInfo: module.validateInfo
-                , onObjectInfoRetrieved: function (objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
-                }
-                , onConfigRetrieved: function (componentConfig) {
-                    onConfigRetrieved(componentConfig);
-                }
-            });
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
+                ObjectTaskService.queryChildTasks(module.name, currentObjectId, 0, 100, '', '').then(function (queryChildResult) {
+                    var tasks = queryChildResult.response.docs;
+                    var objectId = _.result(_.find(tasks, function (task) {
+                        return task.status_s === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
+                    }), 'object_id_s');
+                    TaskInfoService.getTaskInfo(objectId).then(function (taskInfo) {
+                        $scope.objectInfo = taskInfo;
+                        if ($scope.objectInfo.buckslipFutureApprovers && $scope.objectInfo.buckslipPastApprovers){
+                            var data = [];
 
-            var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo ? objectInfo : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-            };
+                            var currentApprover = {};
+                            currentApprover.status = "Current";
+                            currentApprover.name = $scope.objectInfo.assignee; // Name of the current assignee
+                            currentApprover.date = "Due: " + $filter('date')($scope.objectInfo.dueDate, "dd/MM/yyyy");
+                            data.push(currentApprover);
 
-            var onConfigRetrieved = function (componentConfig) {
-                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "approvalRouting";
-                });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
-            };
+                            if (!Util.isArrayEmpty($scope.objectInfo.buckslipFutureApprovers))
+                                for (var i = 0; i < $scope.objectInfo.buckslipFutureApprovers.length; i++) {
+                                    // start loop $scope.objectInfo.buckslipFutureApprovers
+                                    var futureApprover = {};
+                                    futureApprover.status = "Future";
+                                    futureApprover.name = $scope.objectInfo.buckslipFutureApprovers[i].fullName; // Name of the future approver
+                                    futureApprover.date = "";
+                                    data.push(futureApprover);
+                                }
+
+                            if (!Util.isArrayEmpty($scope.objectInfo.buckslipPastApprovers))
+                                for (var i = 0; i < $scope.objectInfo.buckslipPastApprovers.length; i++) {
+                                    var pastApprover = {};
+                                    pastApprover.status = "Past";
+                                    pastApprover.name = $scope.objectInfo.buckslipPastApprovers[i].name; // Name of the future approver
+                                    pastApprover.date = "Done: " + $filter('date')($scope.objectInfo.buckslipPastApprovers[i].date, "dd/MM/yyyy");
+                                    data.push(pastApprover);
+                                }
+
+                            $scope.gridOptions.data = data;
+                            $scope.gridOptions.noData = false;
+                            }
+                            else
+                            {
+                                $scope.gridOptions.data = [];
+                                $scope.gridOptions.noData = true;
+                                $scope.noDataMessage = $translate.instant('complaints.comp.approvalRouting.noBuckslipMessage');
+                            }
+                    });
+                })
+            }
         }
     ]);

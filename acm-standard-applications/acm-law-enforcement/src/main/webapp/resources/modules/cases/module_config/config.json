@@ -624,7 +624,7 @@
         },
         {
           "name": "organization.organizationType",
-          "displayName": "complaints.comp.organizations.table.columns.type",
+          "displayName": "cases.comp.organizations.table.columns.type",
           "headerCellFilter": "translate"
         },
         {

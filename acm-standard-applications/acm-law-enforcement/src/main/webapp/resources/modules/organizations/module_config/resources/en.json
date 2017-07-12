@@ -3,7 +3,8 @@
     "title": "Organizations",
     "progressNoComplaint": "[ No organizations data ]",
     "progressLoading": "Loading organization ",
-    "progressError": "Failed to load organization "
+    "progressError": "Failed to load organization ",
+    "noDataMessage": "No Data"
   },
   "organizations.menus": {
     "leftnav.item": "Organizations",
