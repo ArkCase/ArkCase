@@ -281,7 +281,7 @@
       "approvalRouting": {
         "title": "Approval Routing",
         "description": "Displays approval routings",
-        "noDataMessage": "Currently no approval routings to display"
+        "noDataMessage": "Currently no approvers to display"
       }
     }
   }

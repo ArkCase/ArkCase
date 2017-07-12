@@ -52,10 +52,18 @@ angular.module('dashboard.tags', ['adf.provider'])
                         gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
-
                         var tags = info;
-                        $scope.gridOptions.data = tags;
-                        $scope.gridOptions.totalItems = tags ? tags.length : 0;
+
+                        if (tags) {
+                            $scope.gridOptions.data = tags;
+                            $scope.gridOptions.totalItems = tags ? tags.length : 0;
+                            $scope.gridOptions.noData = false;
+                        }
+                        else
+                        {
+                            $scope.gridOptions.data = [];
+                            $scope.gridOptions.noData = true;
+                        }
                     },
                     function (err) {
 

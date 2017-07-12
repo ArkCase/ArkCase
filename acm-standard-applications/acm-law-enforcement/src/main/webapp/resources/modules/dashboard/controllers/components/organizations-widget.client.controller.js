@@ -55,8 +55,16 @@ angular.module('dashboard.organizations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.organizationAssociations ? objectInfo.organizationAssociations : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                if(objectInfo.organizationAssociations) {
+                    $scope.gridOptions.data = objectInfo.organizationAssociations ? objectInfo.organizationAssociations : [];
+                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                    $scope.gridOptions.noData = false;
+                }
+                else
+                {
+                    $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
