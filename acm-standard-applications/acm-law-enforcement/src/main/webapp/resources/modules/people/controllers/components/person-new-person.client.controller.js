@@ -36,7 +36,8 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             },
             defaultUrl: {
                 type: 'url'
-            }
+            },
+            details: ''
         };
 
         //contact methods subtypes types
@@ -138,7 +139,6 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 }
             }, 0);
         };
-
 
         $scope.save = function () {
             $scope.loading = true;
