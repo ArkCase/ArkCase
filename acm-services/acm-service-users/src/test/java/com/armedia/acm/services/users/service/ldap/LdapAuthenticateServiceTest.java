@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -18,10 +19,13 @@ import org.junit.runner.RunWith;
 import org.springframework.ldap.core.LdapTemplate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(EasyMockRunner.class)
@@ -98,8 +102,8 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
-        mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword,
-                mockTemplate, mockLdapAuthenticateConfig);
+        mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword, mockTemplate,
+                mockLdapAuthenticateConfig);
         expectLastCall().once();
 
         AcmUser userEntry = new AcmUser();
@@ -129,8 +133,8 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
 
         expect(mockUserDao.findByUserId("ann-acm")).andReturn(mockUser);
 
-        mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword,
-                mockTemplate, mockLdapAuthenticateConfig);
+        mockLdapUserDao.changeUserPassword(mockUser.getDistinguishedName(), currentPassword, newPassword, mockTemplate,
+                mockLdapAuthenticateConfig);
         expectLastCall().andThrow(new AcmLdapActionFailedException("error"));
 
         replayAll();
@@ -138,5 +142,81 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
         unit.changeUserPassword("ann-acm", currentPassword, newPassword);
 
         verifyAll();
+    }
+
+    @Test
+    public void resetUserPasswordSuccessfully() throws AcmLdapActionFailedException, AcmUserActionFailedException
+    {
+        String password = "password";
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        String token = passwordResetToken.getToken();
+        mockUser.setPasswordResetToken(passwordResetToken);
+
+        LdapTemplate mockTemplate = createMock(LdapTemplate.class);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+
+        expect(mockUserDao.findByPasswordResetToken(token)).andReturn(mockUser);
+
+        mockLdapUserDao.changeUserPasswordWithAdministrator(mockUser.getDistinguishedName(), password, mockTemplate,
+                mockLdapAuthenticateConfig);
+        expectLastCall().once();
+
+        AcmUser userEntry = new AcmUser();
+        userEntry.setDistinguishedName("cn=ann-acm,dc=arkcase,dc=com");
+        userEntry.setPasswordExpirationDate(LocalDate.of(2017, 1, 1));
+        expect(mockLdapUserDao.lookupUser(mockUser.getDistinguishedName(), mockTemplate, mockLdapSyncConfig)).andReturn(userEntry);
+
+        expect(mockUserDao.save(mockUser)).andReturn(mockUser).times(2);
+
+        replayAll();
+
+        unit.resetUserPassword(token, password);
+
+        verifyAll();
+        assertEquals(userEntry.getPasswordExpirationDate(), mockUser.getPasswordExpirationDate());
+        assertNull(mockUser.getPasswordResetToken());
+    }
+
+    @Test(expected = AcmUserActionFailedException.class)
+    public void resetUserPasswordNoSuchUser() throws AcmLdapActionFailedException, AcmUserActionFailedException
+    {
+        String password = "password";
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        String token = passwordResetToken.getToken();
+        mockUser.setPasswordResetToken(passwordResetToken);
+
+        expect(mockUserDao.findByPasswordResetToken(token)).andReturn(null);
+
+        replayAll();
+
+        unit.resetUserPassword(token, password);
+
+        verifyAll();
+    }
+
+    @Test(expected = AcmUserActionFailedException.class)
+    public void resetUserPasswordLdapOperationFailed() throws AcmLdapActionFailedException, AcmUserActionFailedException
+    {
+        String password = "password";
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        String token = passwordResetToken.getToken();
+        mockUser.setPasswordResetToken(passwordResetToken);
+
+        expect(mockUserDao.findByPasswordResetToken(token)).andReturn(mockUser);
+
+        expect(mockUserDao.save(mockUser)).andReturn(mockUser);
+
+        LdapTemplate mockTemplate = createMock(LdapTemplate.class);
+        expect(mockLdapDao.buildLdapTemplate(mockLdapAuthenticateConfig)).andReturn(mockTemplate);
+        mockLdapUserDao.changeUserPasswordWithAdministrator(mockUser.getDistinguishedName(), password, mockTemplate,
+                mockLdapAuthenticateConfig);
+        expectLastCall().andThrow(new AcmLdapActionFailedException("LDAP Action Failed Exception"));
+
+        replayAll();
+
+        unit.resetUserPassword(token, password);
+
+        verifyAll();
+        assertFalse(mockUser.getPasswordResetToken().getExpiryDate().isAfter(LocalDateTime.now()));
     }
 }

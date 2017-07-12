@@ -18,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -141,6 +142,13 @@ public class GroupServiceImpl implements GroupService
         // new set is created to avoid ConcurrentModificationException
         getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
         getGroupDao().markGroupDelete(acmGroup.getName());
+    }
+
+    @Override
+    @Transactional
+    public List<AcmGroup> findByUserMember(AcmUser user)
+    {
+        return getGroupDao().findByUserMember(user);
     }
 
     public UserDao getUserDao()

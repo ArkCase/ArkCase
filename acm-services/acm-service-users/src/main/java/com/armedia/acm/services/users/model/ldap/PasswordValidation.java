@@ -4,6 +4,8 @@ package com.armedia.acm.services.users.model.ldap;
  * Created by sharmilee.sivakumaran on 6/8/17.
  */
 
+import com.armedia.acm.services.users.service.ldap.PasswordValidator;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -17,8 +19,10 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = PasswordValidator.class)
-public @interface PasswordValidation {
+public @interface PasswordValidation
+{
     String message();
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
