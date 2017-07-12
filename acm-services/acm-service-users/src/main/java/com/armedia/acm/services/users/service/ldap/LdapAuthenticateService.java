@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
 
+
 /**
  * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring
  * beans, each with its own LdapAuthenticateService.
@@ -53,15 +54,46 @@ public class LdapAuthenticateService
             ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
                     ldapAuthenticateConfig);
             log.debug("Password changed successfully for User: {}", userName);
-
-            // passwordExpirationDate is set by ldap after the entry is there
-            AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
-            acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
-            getUserDao().save(acmUser);
+            savePasswordExpirationDate(acmUser, ldapTemplate);
         } catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
         }
+    }
+
+    public void resetUserPassword(String token, String password) throws AcmUserActionFailedException
+    {
+        try
+        {
+            AcmUser user = userDao.findByPasswordResetToken(token);
+            if (user == null)
+            {
+                throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
+            }
+            log.debug("Changing password for user: [{}]", user.getUserId());
+
+            LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
+            ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
+            savePasswordExpirationDate(user, ldapTemplate);
+            invalidateToken(user);
+        } catch (AcmLdapActionFailedException e)
+        {
+            throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
+        }
+    }
+
+    protected void savePasswordExpirationDate(AcmUser acmUser, LdapTemplate ldapTemplate)
+    {
+        // passwordExpirationDate is set by ldap after the entry is there
+        AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
+        acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+        userDao.save(acmUser);
+    }
+
+    protected void invalidateToken(AcmUser acmUser)
+    {
+        acmUser.setPasswordResetToken(null);
+        userDao.save(acmUser);
     }
 
     public SpringLdapDao getLdapDao()

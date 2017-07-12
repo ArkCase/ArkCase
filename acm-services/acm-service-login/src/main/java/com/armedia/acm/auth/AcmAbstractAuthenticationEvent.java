@@ -1,6 +1,5 @@
 package com.armedia.acm.auth;
 
-
 import com.armedia.acm.core.model.AcmEvent;
 import org.springframework.security.core.Authentication;
 
@@ -14,15 +13,14 @@ public abstract class AcmAbstractAuthenticationEvent extends AcmEvent
 
         setEventDate(new Date());
 
-        if ( authentication == null )
+        if (authentication == null)
         {
             return;
         }
 
         setUserId(authentication.getName());
 
-        if ( authentication.getDetails() == null ||
-                !AcmAuthenticationDetails.class.isAssignableFrom(authentication.getDetails().getClass()))
+        if (authentication.getDetails() == null || !AcmAuthenticationDetails.class.isAssignableFrom(authentication.getDetails().getClass()))
         {
             return;
         }

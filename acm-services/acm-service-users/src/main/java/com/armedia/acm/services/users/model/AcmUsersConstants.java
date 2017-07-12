@@ -16,4 +16,6 @@ public interface AcmUsersConstants {
      */
     String ISO_DATE_FORMAT = "yyyy-MM-dd";
 
+    int USER_ID_MIN_CHAR_LENGTH = 3;
+
 }

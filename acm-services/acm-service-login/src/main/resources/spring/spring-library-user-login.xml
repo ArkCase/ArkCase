@@ -36,7 +36,6 @@
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
         <property name="groupService" ref="groupService"/>
     </bean>
 
