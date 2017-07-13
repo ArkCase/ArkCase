@@ -9,7 +9,11 @@
     "leftnav.item": "Reclamaciones",
     "topbar.item": "Queja"
   },
+  "complaints.comp.main": {
+    "title": "Descripción general"
+  },
   "complaints.comp.info": {
+    "title": "Información",
     "complaintId": "es_Complaint id:",
     "complaintNumber": "es_Complaint ID:",
     "courtRoomName": "es_Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "Acciones",
     "restrict": "es_Restrict?",
     "new.button": "es_New Complaint",
     "close.button": "es_Close Complaint",
@@ -30,7 +35,7 @@
     "unclaim.button": "es_Unclaim"
   },
   "complaints.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Complaint details saved",
     "table.columns": {
       "title": "es_Details",
@@ -38,14 +43,14 @@
       "modifier": "es_User Last Modified"
     }
   },
-  "complaints.comp.documents": {
-    "title": "es_Documents",
+  "complaints.comp.Documentos": {
+    "title": "Documentos",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "complaints.comp.people": {
-    "title": "es_People",
+    "title": "Personas",
     "table.columns": {
       "entity": "es_Entity",
       "type": "es_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "es_Organizations",
+      "title": "Organizaciones",
       "table.columns": {
         "type": "es_Type",
         "value": "es_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "es_Locations",
+      "title": "Ubicaciones",
       "table.columns": {
         "type": "es_Type",
         "streetAddress": "es_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.Organizaciones": {
+    "title": "Organizaciones",
+    "table.columns": {
+      "name": "es_Organization Name",
+      "associationType": "es_Role",
+      "type": "es_Organization Type",
+      "identification": "es_ID",
+      "value": "es_Organization",
+      "contact": "es_Primary Contact",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New",
+      "addExisting": "es_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "es_Participants",
+    "title": "Participantes",
     "table.columns": {
       "type": "es_Type",
       "name": "es_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "es_Locations",
+    "title": "Ubicaciones",
     "table.columns": {
       "address": "es_Address",
       "type": "es_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "es_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "es_Note",
       "created": "es_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "es_Tasks",
+    "title": "Tareas",
     "table.columns": {
       "title": "es_Title",
       "assignee": "es_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "es_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "es_References",
+    "title": "Referencias",
     "table.columns": {
       "targetName": "es_Number",
       "targetTitle": "es_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "es_History",
+    "title": "Historia",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "es_Time",
+    "title": "Tiempo",
     "table.columns": {
       "name": "es_Form Name",
       "user": "es_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "es_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "es_Cost",
+    "title": "Costo",
     "table.columns": {
       "name": "es_Form Name",
       "user": "es_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "es_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -244,7 +268,7 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "es_Calendar"
+    "title": "Calendario"
   },
   "complaints.comp.addreference": {
     "title": "es_Add Reference",
@@ -281,7 +305,7 @@
     "searchGroupHeader": "es_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "es_Future Approvers",
+    "title": "Ruta de Aprobación",
     "addNewTooltip": "es_Add new approver",
     "noBuckslipMessage": "es_No Data",
     "button": {
@@ -298,7 +322,7 @@
     "state.label": "es_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "es_Past Approvers",
+    "title": "Aprobaciones anteriores",
     "noBuckslipMessage": "es_No Data",
     "table.columns": {
       "approvalDate": "es_Approval Date",
@@ -306,6 +330,10 @@
       "approverFullName": "es_Approver",
       "approverDecision": "es_Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "Seleccionar usuarios",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "es_userSearch",

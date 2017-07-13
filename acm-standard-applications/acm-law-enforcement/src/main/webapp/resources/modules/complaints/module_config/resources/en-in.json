@@ -9,7 +9,11 @@
     "leftnav.item": "Complaints",
     "topbar.item": "Complaint"
   },
+  "complaints.comp.main": {
+    "title": "Overview"
+  },
   "complaints.comp.info": {
+    "title": "Info",
     "complaintId": "Complaint id:",
     "complaintNumber": "Complaint ID:",
     "courtRoomName": "Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "new.button": "New Complaint",
     "close.button": "Close Complaint",
@@ -110,6 +115,25 @@
         "modified": "Last Modified",
         "modifier": "Modified By"
       }
+    }
+  },
+  "complaints.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "name": "Organization Name",
+      "associationType": "Role",
+      "type": "Organization Type",
+      "identification": "ID",
+      "value": "Organization",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
+    },
+    "actions": {
+      "delete": "Delete",
+      "setPrimary": "Set as Primary",
+      "addNew": "Add New",
+      "addExisting": "Add New"
     }
   },
   "complaints.comp.participants": {
@@ -306,6 +330,10 @@
       "approverFullName": "Approver",
       "approverDecision": "Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "Past Approvers",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "userSearch",
