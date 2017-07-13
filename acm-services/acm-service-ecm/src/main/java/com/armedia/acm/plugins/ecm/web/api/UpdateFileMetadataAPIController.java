@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
 
 /**
  * Created by manoj.dhungana 04/10/2017.
@@ -46,6 +49,9 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
             log.error("Invalid incoming file [{}]", file.toString());
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Invalid incoming file", null);
         }
+
+        file.setModifier(AuthenticationUtils.getUsername());
+        file.setModified(new Date());
 
         log.debug("Incoming file id to be updated [{}]", file.getId());
         file = getEcmFileService().updateFile(file);

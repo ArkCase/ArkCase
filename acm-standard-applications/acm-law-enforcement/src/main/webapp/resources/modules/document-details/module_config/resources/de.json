@@ -41,14 +41,19 @@
         "name": "de_Name",
         "type": "de_Type"
       },
-      "message.delete.success": "de_Successfully deleted row.",
-      "message.delete.error": "de_Error deleting row.",
-      "role": {
-        "title": "de_Change participant Role",
-        "dropdownLabel": "de_Available Roles",
-        "buttons": {
-          "cancel": "de_Cancel",
-          "ok": "de_Change Role"
+      "dialogUserPicker": {
+        "header": "de_Choose User",
+        "table.columns": {
+          "name": "de_Name",
+          "type": "de_Type",
+          "title": "de_Title",
+          "id": "de_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "de_Choose Group",
+        "table.columns": {
+          "name": "de_Name"
         }
       }
     },
@@ -68,27 +73,6 @@
         "created": "de_Created",
         "versionTag": "de_Version"
       }
-    },
-    "userSearch": {
-      "id": "de_userSearch",
-      "title": "de_Add New Participant",
-      "search": {
-        "btn": "de_Go!",
-        "placeholder": "de_Enter to search for a participant"
-      },
-      "cancelButton": "de_Cancel",
-      "confirmButton": "de_Select",
-      "enabled": true,
-      "userFacetFilter": "de_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "de_Name",
-        "type": "de_Type",
-        "title": "de_Title",
-        "parent": "de_Parent",
-        "assignee": "de_Assignee",
-        "modified": "de_Modified"
-      },
-      "dropdownLabel": "de_Participant Type"
     }
   }
 }

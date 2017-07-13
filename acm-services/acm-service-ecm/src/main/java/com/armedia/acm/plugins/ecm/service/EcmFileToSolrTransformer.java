@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -159,12 +160,19 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         if (creator != null)
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
-            solr.setAssignee_full_name_lcs(creator.getFullName());
         }
         else
         {
-            solr.setAssignee_full_name_lcs(in.getCreator());
             solr.setAdditionalProperty("creator_full_name_lcs", in.getCreator());
+        }
+
+        AcmUser assignee = getUserDao().quietFindByUserId(ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants()));
+        if (assignee != null)
+        {
+            solr.setAssignee_full_name_lcs(assignee.getFullName());
+        } else
+        {
+            solr.setAssignee_full_name_lcs(ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants()));
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
