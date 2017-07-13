@@ -107,6 +107,8 @@ public class AcmGroup implements Serializable, AcmEntity
         {
             setStatus(AcmGroupStatus.ACTIVE);
         }
+        setCreated(new Date());
+        setModified(new Date());
     }
 
     @PreUpdate
@@ -121,6 +123,7 @@ public class AcmGroup implements Serializable, AcmEntity
         {
             setStatus(AcmGroupStatus.ACTIVE);
         }
+        setModified(new Date());
     }
 
     public AcmGroup getParentGroup()
