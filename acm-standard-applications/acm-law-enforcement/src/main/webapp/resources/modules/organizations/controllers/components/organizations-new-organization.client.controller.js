@@ -36,7 +36,8 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             },
             defaultFax: {
                 type: 'fax'
-            }
+            },
+            details: ''
         };
 
         ObjectLookupService.getOrganizationPersonRelationTypes().then(
