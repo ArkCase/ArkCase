@@ -41,14 +41,19 @@
         "name": "hi_Name",
         "type": "hi_Type"
       },
-      "message.delete.success": "hi_Successfully deleted row.",
-      "message.delete.error": "hi_Error deleting row.",
-      "role": {
-        "title": "hi_Change participant Role",
-        "dropdownLabel": "hi_Available Roles",
-        "buttons": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_Change Role"
+      "dialogUserPicker": {
+        "header": "hi_Choose User",
+        "table.columns": {
+          "name": "hi_Name",
+          "type": "hi_Type",
+          "title": "hi_Title",
+          "id": "hi_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "hi_Choose Group",
+        "table.columns": {
+          "name": "hi_Name"
         }
       }
     },
@@ -68,27 +73,6 @@
         "created": "hi_Created",
         "versionTag": "hi_Version"
       }
-    },
-    "userSearch": {
-      "id": "hi_userSearch",
-      "title": "hi_Add New Participant",
-      "search": {
-        "btn": "hi_Go!",
-        "placeholder": "hi_Enter to search for a participant"
-      },
-      "cancelButton": "hi_Cancel",
-      "confirmButton": "hi_Select",
-      "enabled": true,
-      "userFacetFilter": "hi_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "parent": "hi_Parent",
-        "assignee": "hi_Assignee",
-        "modified": "hi_Modified"
-      },
-      "dropdownLabel": "hi_Participant Type"
     }
   }
 }
