@@ -93,7 +93,7 @@ public class LdapUserService
         Set<AcmGroup> groups = new HashSet<>();
         groupNames.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByMatchingName(groupName);
+            AcmGroup group = getGroupDao().findByName(groupName);
             // using user.addGroup() here throws "detached object" error if a user with the same id already
             // exists in the database (INVALID or DELETED)
             groups.add(group);
@@ -158,7 +158,11 @@ public class LdapUserService
 
         groups.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByMatchingName(groupName);
+            AcmGroup group = getGroupDao().findByName(groupName);
+            if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
+            {
+                group = getGroupDao().findByMatchingName(groupName);
+            }
             existingUser.addGroup(group);
             acmGroups.add(group);
             log.debug("Set User [{}] as member of Group [{}]", existingUser.getUserId(), group.getName());
@@ -186,7 +190,11 @@ public class LdapUserService
 
         groups.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByMatchingName(groupName);
+            AcmGroup group = getGroupDao().findByName(groupName);
+            if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
+            {
+                group = getGroupDao().findByMatchingName(groupName);
+            }
             existingUser.removeGroup(group);
             acmGroups.add(group);
             log.debug("Set Group:{} to be removed.", group);
@@ -369,7 +377,7 @@ public class LdapUserService
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        AcmGroup ldapGroup = getGroupDao().findByMatchingName(groupName);
+        AcmGroup ldapGroup = getGroupDao().findByName(groupName);
         List<AcmUser> ldapUsers = new ArrayList<>();
         for (AcmUser user : acmUsers)
         {
