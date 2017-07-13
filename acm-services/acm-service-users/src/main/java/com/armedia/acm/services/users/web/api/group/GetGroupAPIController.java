@@ -81,13 +81,33 @@ public class GetGroupAPIController
 
     }
 
-    @RequestMapping(value = "/directory/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/groups/adhoc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getGroupsByDirectory(@RequestParam(value = "directory") String directory,@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                           @RequestParam(value = "n", required = false, defaultValue = "200") int maxRows,
-                                           @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                           Authentication auth,
-                                           HttpSession httpSession) throws MuleException, Exception
+    public String getAdhocGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                                 @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                                 @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                 Authentication auth,
+                                 HttpSession httpSession) throws MuleException, Exception
+    {
+
+        LOG.info("Taking ad-hoc groups from Solr.");
+
+        String solrQuery = "object_type_s:GROUP AND object_sub_type_s:ADHOC_GROUP AND status_lcs:ACTIVE";
+
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
+
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows, sort);
+
+    }
+
+    @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getGroupsByDirectory(@PathVariable String directory,
+                                       @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                                       @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                                       @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+                                       Authentication auth,
+                                       HttpSession httpSession) throws MuleException, Exception
     {
 
         LOG.info("Taking groups by directory from Solr.");
@@ -95,7 +115,8 @@ public class GetGroupAPIController
         StringBuilder solrQuery = new StringBuilder();
         solrQuery.append("object_type_s:GROUP");
 
-        if(directory.length() > 0){
+        if (directory.length() > 0)
+        {
             solrQuery.append(" AND directory_name_s:").append(directory).append(" AND status_lcs:ACTIVE");
         }
 
