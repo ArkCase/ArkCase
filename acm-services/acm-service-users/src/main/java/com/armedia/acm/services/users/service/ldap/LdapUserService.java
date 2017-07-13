@@ -69,26 +69,7 @@ public class LdapUserService
             user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
         }
 
-        AcmUser existing = userDao.findByUserId(user.getUserId());
-        if (existing != null)
-        {
-            if ("VALID".equals(existing.getUserState()))
-            {
-                // FIXME: use some more appropriate exception here
-                throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", user.getUserId()));
-            } else
-            {
-                // INVALID or DELETED user, remove current group membership
-                // we have to do this, otherwise new user will be associated with new groups,
-                // but also existing ones (which we do not want)
-                // TODO: AcmUser.setGroups() should take care of that
-                existing.getGroups().forEach(group ->
-                {
-                    group.getMembers().remove(existing);
-                    getGroupDao().save(group);
-                });
-            }
-        }
+        checkExistingUser(user.getUserId());
 
         Set<AcmGroup> groups = new HashSet<>();
         groupNames.forEach(groupName ->
@@ -484,6 +465,38 @@ public class LdapUserService
     public AcmUser findByToken(String token)
     {
         return userDao.findByPasswordResetToken(token);
+    }
+
+    /**
+     * Check if user already exists with the same user identifier.
+     * If the user exists and its status is either "INVALID" or "DELETED",
+     * we need to remove that user's group membership
+     *
+     * @param userId user identifier
+     * @throws AcmLdapActionFailedException if a user exists and its status is "VALID"
+     */
+    private void checkExistingUser(String userId) throws AcmLdapActionFailedException
+    {
+        AcmUser existing = userDao.findByUserId(userId);
+        if (existing != null)
+        {
+            if ("VALID".equals(existing.getUserState()))
+            {
+                // FIXME: use some more appropriate exception here
+                throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", userId));
+            } else
+            {
+                // INVALID or DELETED user, remove current group membership
+                // we have to do this, otherwise new user will be associated with new groups,
+                // but also existing ones (which we do not want)
+                // TODO: AcmUser.setGroups() should take care of that
+                existing.getGroups().forEach(group ->
+                {
+                    group.getMembers().remove(existing);
+                    getGroupDao().save(group);
+                });
+            }
+        }
     }
 
     public SpringLdapDao getLdapDao()
