@@ -489,7 +489,7 @@
           "name": "value",
           "displayName": "organizations.comp.urls.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" href=\"{{row.entity.value}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -805,18 +805,21 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "associationType",
+          "name": "association_type_s",
           "displayName": "organizations.comp.related.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "organizationTypes"
         },
         {
-          "name": "organization.organizationValue",
+          "name": "organizationValue",
+          "field": "target_object.value_parseable",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "organization.organizationType",
+          "field": "target_object.type_lcs",
           "displayName": "organizations.comp.related.table.columns.type",
           "headerCellFilter": "translate"
         }
