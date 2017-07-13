@@ -9,7 +9,11 @@
     "leftnav.item": "Жалобы",
     "topbar.item": "Жалоба"
   },
+  "complaints.comp.main": {
+    "title": "Обзор"
+  },
   "complaints.comp.info": {
+    "title": "Информация",
     "complaintId": "ru_Complaint id:",
     "complaintNumber": "ru_Complaint ID:",
     "courtRoomName": "ru_Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "Действия",
     "restrict": "ru_Restrict?",
     "new.button": "ru_New Complaint",
     "close.button": "ru_Close Complaint",
@@ -30,7 +35,7 @@
     "unclaim.button": "ru_Unclaim"
   },
   "complaints.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Complaint details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "ru_Documents",
+    "title": "Документы",
     "sendEmail": "ru_Send Email",
     "filterInputPlaceholder": "ru_Filter",
     "searchInputPlaceholder": "ru_Search"
   },
   "complaints.comp.people": {
-    "title": "ru_People",
+    "title": "Люди",
     "table.columns": {
       "entity": "ru_Entity",
       "type": "ru_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "ru_Organizations",
+      "title": "Организации",
       "table.columns": {
         "type": "ru_Type",
         "value": "ru_Value",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "Организации",
+    "table.columns": {
+      "name": "ru_Organization Name",
+      "associationType": "ru_Role",
+      "type": "ru_Organization Type",
+      "identification": "ru_ID",
+      "value": "ru_Organization",
+      "contact": "ru_Primary Contact",
+      "phone": "ru_Phone",
+      "location": "ru_Location"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New",
+      "addExisting": "ru_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "ru_Participants",
+    "title": "Участники",
     "table.columns": {
       "type": "ru_Type",
       "name": "ru_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "ru_Locations",
+    "title": "Местоположения",
     "table.columns": {
       "address": "ru_Address",
       "type": "ru_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "ru_Notes",
+    "title": "Заметки",
     "table.columns": {
       "note": "ru_Note",
       "created": "ru_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "ru_Tasks",
+    "title": "Задачи",
     "table.columns": {
       "title": "ru_Title",
       "assignee": "ru_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "ru_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "ru_References",
+    "title": "Ссылки",
     "table.columns": {
       "targetName": "ru_Number",
       "targetTitle": "ru_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "ru_History",
+    "title": "История",
     "table.columns": {
       "eventType": "ru_Event Name",
       "eventDate": "ru_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "ru_Time",
+    "title": "Время",
     "table.columns": {
       "name": "ru_Form Name",
       "user": "ru_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "ru_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "ru_Cost",
+    "title": "Стоимость",
     "table.columns": {
       "name": "ru_Form Name",
       "user": "ru_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "ru_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -244,7 +268,7 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "ru_Calendar"
+    "title": "Календарь"
   },
   "complaints.comp.addreference": {
     "title": "ru_Add Reference",
@@ -281,7 +305,7 @@
     "searchGroupHeader": "ru_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "ru_Future Approvers",
+    "title": "Маршрутизация Одобрения",
     "addNewTooltip": "ru_Add new approver",
     "noBuckslipMessage": "ru_No Data",
     "button": {
@@ -298,7 +322,7 @@
     "state.label": "ru_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "ru_Past Approvers",
+    "title": "Прошедшие утверждения",
     "noBuckslipMessage": "ru_No Data",
     "table.columns": {
       "approvalDate": "ru_Approval Date",
@@ -306,6 +330,10 @@
       "approverFullName": "ru_Approver",
       "approverDecision": "ru_Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "Выбрать пользователей",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "ru_userSearch",
