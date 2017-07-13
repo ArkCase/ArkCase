@@ -805,18 +805,21 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "associationType",
+          "name": "association_type_s",
           "displayName": "organizations.comp.related.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "organizationTypes"
         },
         {
-          "name": "organization.organizationValue",
+          "name": "organizationValue",
+          "field": "target_object.value_parseable",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "organization.organizationType",
+          "field": "target_object.type_lcs",
           "displayName": "organizations.comp.related.table.columns.type",
           "headerCellFilter": "translate"
         }
