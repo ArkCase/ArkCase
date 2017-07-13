@@ -87,7 +87,8 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 angular.extend(params, {
                     personId: rowEntity.target_object.object_id_s,
                     personName: rowEntity.target_object.full_name_lcs,
-                    type: rowEntity.association_type_s
+                    type: rowEntity.association_type_s,
+                    description: rowEntity.description_s
                 });
             }
 
@@ -111,20 +112,20 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                     if (!data.person.id) {
                         PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                             data['person'] = response.data;
-                            updateAssociation(association, $scope.objectInfo, data.person, data);
+                            updateAssociation(association, $scope.objectInfo, data.person, data, rowEntity);
                         });
                     } else {
-                        updateAssociation(association, $scope.objectInfo, data.person, data);
+                        updateAssociation(association, $scope.objectInfo, data.person, data, rowEntity);
                     }
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        updateAssociation(association, $scope.objectInfo, person, data);
+                        updateAssociation(association, $scope.objectInfo, person, data, rowEntity);
                     });
                 }
             });
         }
 
-        function updateAssociation(association, parent, target, associationData) {
+        function updateAssociation(association, parent, target, associationData, rowEntity) {
             association.parentId = parent.id;
             association.parentType = parent.objectType;
 
@@ -137,6 +138,9 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 if (!association.inverseAssociation) {
                     association.inverseAssociation = {};
                 }
+                if (association.inverseAssociation.inverseAssociation != association) {
+                    association.inverseAssociation.inverseAssociation = association;
+                }
                 association.inverseAssociation.parentId = target.id;
                 association.inverseAssociation.parentType = target.objectType;
 
@@ -148,18 +152,76 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
             association.description = associationData.description;
             ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
-                //wait 2.5 sec and refresh because of solr indexing
-                $timeout(function () {
-                    refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
-                }, 2500);
+                //success
+                if (!rowEntity) {
+                    //append new entity as last item in the grid
+                    rowEntity = {
+                        target_object: {}
+                    };
+                    $scope.gridOptions.data.push(rowEntity);
+                }
+
+                //update row immediately
+                rowEntity.object_id_s = payload.associationId;
+                rowEntity.association_type_s = payload.associationType;
+                rowEntity.target_object.object_id_s = target.id;
+                rowEntity.description_s = payload.description;
+
+                rowEntity.target_object.first_name_lcs = target.givenName;
+                rowEntity.target_object.last_name_lcs = target.familyName;
+                rowEntity.target_object.default_organization_s = target.defaultOrganization ? target.defaultOrganization.organization.organizationValue : "";
+                rowEntity.target_object.default_phone_s = formatPhone(target.defaultPhone);
+                rowEntity.target_object.default_location_s = formatAddress(target.defaultAddress);
+                // wait 2.5 sec and refresh because of solr indexing
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                // }, 2500);
             });
+        }
+
+        function formatPhone(phone) {
+            if (!phone) {
+                return "";
+            }
+
+            var formattedPhone = phone.value;
+            if (phone.subType) {
+                formattedPhone += " [" + phone.subType + "]";
+            }
+            return formattedPhone;
+        }
+
+        function formatAddress(address) {
+            if (!address) {
+                return "";
+            }
+            var formattedAddress = "";
+            if (address.city) {
+                formattedAddress += address.city;
+            }
+            if (address.state) {
+                if (formattedAddress.length > 0) {
+                    formattedAddress += ", ";
+                }
+                formattedAddress += address.state;
+            }
+            return formattedAddress;
         }
 
         $scope.deleteRow = function (rowEntity) {
             var id = Util.goodMapValue(rowEntity, "object_id_s", 0);
             ObjectAssociationService.deleteAssociationInfo(id).then(function (data) {
                 //success
-                refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                //remove it from the grid immediately
+                _.remove($scope.gridOptions.data, function (row) {
+                    return row === rowEntity;
+                });
+                //refresh grid after 2.5 sec because of solr indexing
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                // }, 2500);
             });
         };
     }
