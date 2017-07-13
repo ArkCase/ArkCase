@@ -161,15 +161,17 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 }
 
                 //update row immediately
+                rowEntity.object_id_s = payload.associationId;
                 rowEntity.association_type_s = payload.associationType;
                 rowEntity.target_object.type_lcs = target.organizationType;
                 rowEntity.target_object.object_id_s = target.organizationId;
                 rowEntity.target_object.title_parseable = target.organizationValue;
                 rowEntity.target_object.value_parseable = target.organizationValue;
                 //wait 2.5 sec and refresh because of solr indexing
-                $timeout(function () {
-                    refreshGridData($scope.objectInfo.organizationId, $scope.objectInfo.objectType);
-                }, 2500);
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.organizationId, $scope.objectInfo.objectType);
+                // }, 2500);
             });
         }
 
@@ -182,9 +184,10 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                     return row === rowEntity;
                 });
                 //refresh grid after 2.5 sec because of solr indexing
-                $timeout(function () {
-                    refreshGridData($scope.objectInfo.organizationId, $scope.objectInfo.objectType);
-                }, 2500);
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.organizationId, $scope.objectInfo.objectType);
+                // }, 2500);
             });
         };
     }

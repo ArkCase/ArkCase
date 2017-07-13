@@ -162,6 +162,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 }
 
                 //update row immediately
+                rowEntity.object_id_s = payload.associationId;
                 rowEntity.association_type_s = payload.associationType;
                 rowEntity.target_object.object_id_s = target.id;
                 rowEntity.description_s = payload.description;
@@ -171,10 +172,11 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 rowEntity.target_object.default_organization_s = target.defaultOrganization ? target.defaultOrganization.organization.organizationValue : "";
                 rowEntity.target_object.default_phone_s = formatPhone(target.defaultPhone);
                 rowEntity.target_object.default_location_s = formatAddress(target.defaultAddress);
-                //wait 2.5 sec and refresh because of solr indexing
-                $timeout(function () {
-                    refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
-                }, 2500);
+                // wait 2.5 sec and refresh because of solr indexing
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                // }, 2500);
             });
         }
 
@@ -215,9 +217,11 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 _.remove($scope.gridOptions.data, function (row) {
                     return row === rowEntity;
                 });
-                $timeout(function () {
-                    refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
-                }, 2500);
+                //refresh grid after 2.5 sec because of solr indexing
+                //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
+                // $timeout(function () {
+                //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
+                // }, 2500);
             });
         };
     }
