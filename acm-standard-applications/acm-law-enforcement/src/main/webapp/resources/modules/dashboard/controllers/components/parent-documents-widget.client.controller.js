@@ -52,18 +52,10 @@ angular.module('dashboard.parentDocs', ['adf.provider'])
                 }
 
                 Ecm._getFolderDocumentCounts(params).then(function(data){
-                    console.log("data: " + Util.omitNg(data));
                     var result = Util.omitNg(data);
-                    var count = 0
-                    //proveri i dodadi count
-                    /*forEach(entry in result){
-                        count++;
-                    }
-                    return count;
-*/
+                    var count = result[Object.keys(result)[0]];
 
-                    vm.count = result;
-
+                    vm.count = count;
                 });
             }
         }
