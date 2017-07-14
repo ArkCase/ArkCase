@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
-import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -50,7 +49,7 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Invalid incoming file", null);
         }
 
-        file.setModifier(AuthenticationUtils.getUsername());
+        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed (e.g participants)
         file.setModified(new Date());
 
         log.debug("Incoming file id to be updated [{}]", file.getId());
