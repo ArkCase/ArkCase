@@ -76,7 +76,7 @@ public interface PersonService
     /**
      * insert image for a person. If is the only image than is set as default image for the person
      *
-     * @param personId    Long personId
+     * @param person    Person person
      * @param image       MultipartFile image
      * @param isDefault   boolean should this picture be set as default
      * @param description description for the image
@@ -84,7 +84,7 @@ public interface PersonService
      * @return boolean true if successfully inserted
      */
     @Transactional
-    EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+    EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
 
     /**
      * save image for a person with new file and metadata
