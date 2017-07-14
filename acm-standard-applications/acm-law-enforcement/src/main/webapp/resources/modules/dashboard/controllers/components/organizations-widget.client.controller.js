@@ -13,8 +13,8 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'UtilService'
+        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, Util) {
             var modules = [
                 {
                     name: "CASE_FILE",
@@ -55,7 +55,7 @@ angular.module('dashboard.organizations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(objectInfo.organizationAssociations) {
+                if(!Util.isArrayEmpty(objectInfo.organizationAssociations)) {
                     $scope.gridOptions.data = objectInfo.organizationAssociations ? objectInfo.organizationAssociations : [];
                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                     $scope.gridOptions.noData = false;

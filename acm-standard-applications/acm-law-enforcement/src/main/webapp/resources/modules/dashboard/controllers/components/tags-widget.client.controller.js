@@ -54,7 +54,7 @@ angular.module('dashboard.tags', ['adf.provider'])
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
                         var tags = info;
 
-                        if (tags) {
+                        if (!Util.isArrayEmpty(tags)) {
                             $scope.gridOptions.data = tags;
                             $scope.gridOptions.totalItems = tags ? tags.length : 0;
                             $scope.gridOptions.noData = false;
