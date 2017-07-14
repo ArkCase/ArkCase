@@ -126,7 +126,7 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
@@ -246,7 +246,7 @@
         "label": "complaints.tree.nodeTypes.approvalRouting.label",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -254,7 +254,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "complaints.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -516,7 +516,7 @@
           "type": "component"
         },
         {
-          "id": "approvalrouting",
+          "id": "approvalRouting",
           "type": "component",
           "columnDefs": [
             {
@@ -540,28 +540,28 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "complaints.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "complaints.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "complaints.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "locations",
-      "title": "Locations",
+      "title": "complaints.comp.locations.title",
       "icon": "fa fa-location-arrow",
       "enabled": true,
       "type": "grid",
@@ -599,7 +599,7 @@
     },
     {
       "id": "people",
-      "title": "People",
+      "title": "complaints.comp.people.title",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
@@ -657,7 +657,7 @@
     },
     {
       "id": "organizations",
-      "title": "Organizations",
+      "title": "complaints.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
@@ -714,7 +714,7 @@
     },
     {
       "id": "documents",
-      "title": "Documents",
+      "title": "complaints.comp.documents.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -731,7 +731,7 @@
     },
     {
       "id": "participants",
-      "title": "Participants",
+      "title": "complaints.comp.participants.title",
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
@@ -816,7 +816,7 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "complaints.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -857,7 +857,7 @@
     },
     {
       "id": "tasks",
-      "title": "Tasks",
+      "title": "complaints.comp.tasks.title",
       "icon": "fa fa-check-circle",
       "enabled": true,
       "type": "grid",
@@ -923,7 +923,7 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "complaints.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -974,7 +974,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "complaints.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -1009,7 +1009,7 @@
     },
     {
       "id": "time",
-      "title": "Time",
+      "title": "complaints.comp.time.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
@@ -1055,7 +1055,7 @@
     },
     {
       "id": "cost",
-      "title": "Cost",
+      "title": "complaints.comp.cost.title",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
@@ -1103,7 +1103,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "complaints.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
@@ -1141,14 +1141,14 @@
     },
     {
       "id": "calendar",
-      "title": "Calendar",
+      "title": "complaints.comp.calendar.title",
       "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "referenceSearchGrid",
-      "title": "Reference Search",
+      "title": "complaints.comp.referenceSearchGrid.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,
@@ -1209,8 +1209,8 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
-      "title": "Approval Routing",
+      "id": "approvalRouting",
+      "title": "complaints.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
       "enabled": true,
@@ -1255,7 +1255,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "complaints.comp.pastapprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "userSearch",
-      "title": "Select users",
+      "title": "complaints.comp.userSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,

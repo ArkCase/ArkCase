@@ -20,7 +20,7 @@ angular.module('tasks').controller('Tasks.FutureApprovalRoutingController', ['$s
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "tasks"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , retrieveObjectInfo: TaskInfoService.getTaskInfo
             , validateObjectInfo: TaskInfoService.validateTaskInfo
             , onConfigRetrieved: function (componentConfig) {

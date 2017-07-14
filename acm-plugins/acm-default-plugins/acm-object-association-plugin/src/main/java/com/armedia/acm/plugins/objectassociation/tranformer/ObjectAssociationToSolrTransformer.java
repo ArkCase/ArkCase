@@ -78,9 +78,11 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         if (objectAssociation.getInverseAssociation() != null)
         {
             additionalProperties.put("inverse_association_type_s", objectAssociation.getInverseAssociation().getAssociationType());
+            additionalProperties.put("inverse_association_id_s", objectAssociation.getInverseAssociation().getAssociationId() + "-" + ObjectAssociationConstants.OBJECT_TYPE);
         } else
         {
             additionalProperties.put("inverse_association_type_s", null);
+            additionalProperties.put("inverse_association_id_s", null);
         }
         additionalProperties.put("parent_id_s", objectAssociation.getParentId());
         additionalProperties.put("parent_type_s", objectAssociation.getParentType());
@@ -93,6 +95,8 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         additionalProperties.put("target_name_s", objectAssociation.getTargetName());
         additionalProperties.put("target_title_s", objectAssociation.getTargetTitle());
         additionalProperties.put("target_ref_s", objectAssociation.getTargetId() + "-" + objectAssociation.getTargetType());
+
+        additionalProperties.put("description_s", objectAssociation.getDescription());
     }
 
     @Override

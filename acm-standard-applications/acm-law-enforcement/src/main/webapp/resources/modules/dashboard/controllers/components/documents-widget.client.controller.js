@@ -5,7 +5,7 @@ angular.module('dashboard.documents', ['adf.provider'])
         dashboardProvider
             .widget('documents', {
                 title: 'dashboard.widgets.documents.title',
-                description: 'dashboard.widgets.documents.title.description',
+                description: 'dashboard.widgets.documents.description',
                 controller: 'Dashboard.DocumentsController',
                 controllerAs: 'documents',
                 reload: true,

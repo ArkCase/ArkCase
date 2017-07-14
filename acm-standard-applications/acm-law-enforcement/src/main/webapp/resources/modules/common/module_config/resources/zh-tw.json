@@ -137,7 +137,7 @@
     "noData.text": "zh-tw_No Results"
   },
   "common.directive.coreNotes": {
-    "title": "zh-tw_Notes",
+    "title": "註釋",
     "modal.addNote": "zh-tw_Add Note",
     "modal.editNote": "zh-tw_Edit Record",
     "modal.notes.label": "zh-tw_Note",

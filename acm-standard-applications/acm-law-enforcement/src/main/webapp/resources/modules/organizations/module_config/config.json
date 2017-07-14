@@ -489,7 +489,7 @@
           "name": "value",
           "displayName": "organizations.comp.urls.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" href=\"{{row.entity.value}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -805,20 +805,47 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "associationType",
+          "name": "association_type_s",
           "displayName": "organizations.comp.related.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "lookup": "organizationTypes"
         },
         {
-          "name": "organization.organizationValue",
+          "name": "organizationValue",
+          "field": "target_object.value_parseable",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "organization.defaultIdentification.identificationNumber",
+          "displayName": "organizations.comp.related.table.columns.identification",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
         },
         {
           "name": "organization.organizationType",
+          "field": "target_object.type_lcs",
           "displayName": "organizations.comp.related.table.columns.type",
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "organization.defaultPerson.givenName",
+          "displayName": "organizations.comp.related.table.columns.contact",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+        },
+        {
+          "name": "organization.defaultPhone.value",
+          "displayName": "organizations.comp.related.table.columns.phone",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
+        },
+        {
+          "name": "organization.defaultAddress.city",
+          "displayName": "organizations.comp.related.table.columns.location",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
         }
       ]
     },

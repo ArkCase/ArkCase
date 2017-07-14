@@ -116,7 +116,7 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
@@ -228,7 +228,7 @@
         "label": "Approval Routing",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -288,6 +288,27 @@
               "name": "lastName",
               "field": "person.familyName",
               "displayName": "cases.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "organizations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "organization.organizationRole",
+              "displayName": "cases.comp.organizations.table.columns.type",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationName",
+              "displayName": "cases.comp.organizations.table.columns.name",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationType",
+              "displayName": "cases.comp.organizations.table.columns.type",
               "headerCellFilter": "translate"
             }
           ]
@@ -416,11 +437,60 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "cases.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "cases.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "cases.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "calendar",
           "type": "component"
+        },
+        {
+          "id": "approvalRouting",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
+              "displayName": "cases.comp.approvalRouting.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "assignee",
+              "field": "assignee_s",
+              "displayName": "cases.comp.approvalRouting.assignee.label",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "width": 150,
+              "name": "due",
+              "field": "due_tdt",
+              "displayName": "cases.comp.approvalRouting.dueDate.label",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            }
+          ]
         }
       ]
     },
@@ -568,6 +638,7 @@
           "displayName": "cases.comp.organizations.table.columns.phone",
           "headerCellFilter": "translate",
           "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
+
         },
         {
           "name": "organization.defaultAddress.city",
@@ -1110,7 +1181,7 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "cases.comp.approvalRouting.addNewTooltip",
