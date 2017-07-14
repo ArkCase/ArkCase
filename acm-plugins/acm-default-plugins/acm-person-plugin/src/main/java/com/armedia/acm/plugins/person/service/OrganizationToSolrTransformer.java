@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -45,6 +44,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         orgDoc.setName(org.getOrganizationValue());
         orgDoc.setTitle_parseable(org.getOrganizationValue());
+        orgDoc.setTitle_parseable_lcs(org.getOrganizationValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(org.getCreator());
@@ -134,6 +134,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         orgDoc.setName(in.getOrganizationValue());
         orgDoc.setTitle_parseable(in.getOrganizationValue());
+        orgDoc.setTitle_parseable_lcs(in.getOrganizationValue());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

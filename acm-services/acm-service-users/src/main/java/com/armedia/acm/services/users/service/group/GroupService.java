@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -62,4 +63,6 @@ public interface GroupService
      * @param newName group new name
      */
     void renameGroup(AcmGroup acmGroup, String newName);
+
+    List<AcmGroup> findByUserMember (AcmUser user);
 }

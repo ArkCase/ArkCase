@@ -69,7 +69,7 @@ angular.module('directives').directive('treeTableView', ['$q', '$compile', 'Mess
                         } else {
                             if (!node.data.isMember && node.data.object_sub_type_s != "LDAP_GROUP") {
                                 $tdList.eq(3).html($compile("<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' tooltip=\"{{'admin.security.ldapConfig.addSubgroup' | translate}}\"><i class='fa fa-users'></i></button>" +
-                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' tooltip=\"{{'admin.security.ldapConfig.addMembers' | translate}\"><i class='fa fa-user'></i></button>" +
+                                    "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' tooltip=\"{{'admin.security.ldapConfig.addMembers' | translate}}\"><i class='fa fa-user'></i></button>" +
                                     "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' tooltip=\"{{'admin.security.ldapConfig.removeGroup' | translate}}\"><i class='fa fa-trash-o'></i></button>")(scope));
                                 if (scope.showSupervisor) {
                                     $tdList.eq(3).append($compile("<button class='btn btn-link btn-xs pull-left' type='button' ng-click='addSupervisor($event)' name='addSupervisor' tooltip=\"{{'admin.security.ldapConfig.addOrEditSupervisor' | translate}}\"><i class='fa fa-edit'></i></button>")(scope));

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -100,6 +101,9 @@ public class AcmUser implements Serializable, AcmLdapUser
     @Column(name = "cm_pwd_ex_date")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate passwordExpirationDate;
+
+    @Embedded
+    private PasswordResetToken passwordResetToken;
 
     @Transient
     private String sortableValue;
@@ -451,5 +455,15 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setPasswordExpirationDate(LocalDate passwordExpirationDate)
     {
         this.passwordExpirationDate = passwordExpirationDate;
+    }
+
+    public PasswordResetToken getPasswordResetToken()
+    {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(PasswordResetToken passwordResetToken)
+    {
+        this.passwordResetToken = passwordResetToken;
     }
 }

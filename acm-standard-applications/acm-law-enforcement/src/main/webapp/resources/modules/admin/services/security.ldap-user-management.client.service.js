@@ -4,6 +4,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
     function ($resource, $http, $q, Store) {
         return ({
             queryGroupsByDirectory: queryGroupsByDirectory,
+            queryAdhocGroups: queryAdhocGroups,
             addGroupsToUser: addGroupsToUser,
             removeGroupsFromUser: removeGroupsFromUser,
             cloneUser: cloneUser
@@ -12,7 +13,20 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
         function queryGroupsByDirectory(directory) {
             return $http({
                 method: 'GET',
-                url: 'api/latest/users/directory/groups?directory=' + directory
+                url: 'api/latest/users/' + directory + '/groups',
+                params: {
+                    n: 1000
+                }
+            });
+        };
+
+        function queryAdhocGroups() {
+            return $http({
+                method: 'GET',
+                url: 'api/latest/users/groups/adhoc',
+                params: {
+                    n: 1000
+                }
             });
         };
 
