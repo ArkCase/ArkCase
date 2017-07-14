@@ -15,7 +15,7 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
     })
     .controller('Dashboard.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$filter', 'ObjectService', 'Object.TaskService', 'UtilService', 'Case.InfoService'
         , 'Complaint.InfoService', 'Task.InfoService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
-        , function ($scope, $stateParams, $q, $translate, $filter, ObjectService, ObjectTaskService , Util, CaseInfoService, ComplaintInfoService, TaskInfoService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+        , function ($scope, $stateParams, $q, $translate, $filter, ObjectService, ObjectTaskService , Util, CaseInfoService, ComplaintInfoService, TaskInfoService, ConfigService, HelperObjectBrowserService) {
 
             var modules = [
                 {
@@ -57,7 +57,7 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
 
                             var currentApprover = {};
                             currentApprover.status = "Current";
-                            currentApprover.name = $scope.objectInfo.assignee; // Name of the current assignee
+                            currentApprover.name = $scope.objectInfo.assignee;
                             var dueDateFormated = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
                             currentApprover.date = "Due: " + dueDateFormated;
 
@@ -65,10 +65,9 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
 
                             if (!Util.isArrayEmpty($scope.objectInfo.buckslipFutureApprovers))
                                 for (var i = 0; i < $scope.objectInfo.buckslipFutureApprovers.length; i++) {
-                                    // start loop $scope.objectInfo.buckslipFutureApprovers
                                     var futureApprover = {};
                                     futureApprover.status = "Future";
-                                    futureApprover.name = $scope.objectInfo.buckslipFutureApprovers[i].fullName; // Name of the future approver
+                                    futureApprover.name = $scope.objectInfo.buckslipFutureApprovers[i].fullName;
                                     futureApprover.date = "";
                                     data.push(futureApprover);
                                 }
@@ -77,7 +76,7 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                                 for (var i = 0; i < $scope.objectInfo.buckslipPastApprovers.length; i++) {
                                     var pastApprover = {};
                                     pastApprover.status = "Past";
-                                    pastApprover.name = $scope.objectInfo.buckslipPastApprovers[i].name; // Name of the future approver
+                                    pastApprover.name = $scope.objectInfo.buckslipPastApprovers[i].name;
                                     var doneDateFormated = moment($scope.objectInfo.buckslipPastApprovers[i].date).format($translate.instant('common.defaultDateFormat'));
                                     pastApprover.date = "Done: " + doneDateFormated;
                                     data.push(pastApprover);
