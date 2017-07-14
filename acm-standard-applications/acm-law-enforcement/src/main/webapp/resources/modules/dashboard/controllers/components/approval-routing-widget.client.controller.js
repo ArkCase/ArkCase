@@ -58,7 +58,9 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                             var currentApprover = {};
                             currentApprover.status = "Current";
                             currentApprover.name = $scope.objectInfo.assignee; // Name of the current assignee
-                            currentApprover.date = "Due: " + $filter('date')($scope.objectInfo.dueDate, "dd/MM/yyyy");
+                            var dueDateFormated = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
+                            currentApprover.date = "Due: " + dueDateFormated;
+
                             data.push(currentApprover);
 
                             if (!Util.isArrayEmpty($scope.objectInfo.buckslipFutureApprovers))
@@ -76,7 +78,8 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                                     var pastApprover = {};
                                     pastApprover.status = "Past";
                                     pastApprover.name = $scope.objectInfo.buckslipPastApprovers[i].name; // Name of the future approver
-                                    pastApprover.date = "Done: " + $filter('date')($scope.objectInfo.buckslipPastApprovers[i].date, "dd/MM/yyyy");
+                                    var doneDateFormated = moment($scope.objectInfo.buckslipPastApprovers[i].date).format($translate.instant('common.defaultDateFormat'));
+                                    pastApprover.date = "Done: " + doneDateFormated;
                                     data.push(pastApprover);
                                 }
 
