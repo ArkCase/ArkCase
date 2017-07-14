@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!-- Set class name for existing Notes in database after adding 'cm_class_name' column to support extensibility  -->
+    <changeSet id="09-acm_note-update-class-name" author="riste.tutureski">
+        <sql>UPDATE acm_note SET cm_class_name='com.armedia.acm.services.note.model.Note'</sql>
+    </changeSet>
+
+</databaseChangeLog>

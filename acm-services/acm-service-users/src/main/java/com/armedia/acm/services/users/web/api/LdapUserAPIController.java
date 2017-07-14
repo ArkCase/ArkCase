@@ -11,8 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.ldap.AuthenticationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.stereotype.Controller;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -56,14 +57,14 @@ public class LdapUserAPIController extends SecureLdapController
             return ldapUserService.addExistingLdapUsersToGroup(members, directory, groupName);
         } catch (Exception e)
         {
-            log.error("Adding members to LDAP group:{} failed!", groupName, e);
+            log.error("Adding members to LDAP group [{}] failed!", groupName, e);
             throw new AcmUserActionFailedException("add LDAP user to group", null, null, "Adding members to LDAP group failed!", e);
         }
     }
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser addLdapUser(@RequestBody LdapUser ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser addLdapUser(@RequestBody @Valid LdapUser ldapUserCreateRequest, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -73,13 +74,13 @@ public class LdapUserAPIController extends SecureLdapController
                     ldapUserCreateRequest.getPassword(), directory);
         } catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate username: {}", ldapUserCreateRequest.getAcmUser().getUserId(), e);
+            log.error("Duplicate username [{}]", ldapUserCreateRequest.getAcmUser().getUserId(), e);
             AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER", "username", e);
             error.putExtra("user", ldapUserCreateRequest.getAcmUser());
             throw error;
         } catch (Exception e)
         {
-            log.error("Creating LDAP user failed!", e);
+            log.error("Creating LDAP user [{}] failed!", ldapUserCreateRequest.getAcmUser().getUserId(), e);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
     }
@@ -95,7 +96,7 @@ public class LdapUserAPIController extends SecureLdapController
             return ldapUserService.editLdapUser(acmUser, userId, directory);
         } catch (Exception e)
         {
-            log.error("Editing LDAP user failed!", e);
+            log.error("Editing LDAP user [{}] failed!", userId, e);
             throw new AcmUserActionFailedException("edit LDAP user", null, null, "Editing LDAP user failed!", e);
         }
     }
@@ -111,7 +112,7 @@ public class LdapUserAPIController extends SecureLdapController
                 return ldapUserService.addUserMembersInLdapGroup(userId, groupNames, directory);
         } catch (Exception e)
         {
-            log.error("Adding groups to the user failed!", e);
+            log.error("Adding groups to the user [{}] failed!", userId, e);
             throw new AcmUserActionFailedException("Adding groups to the user", null, null, "Adding groups to the user failed!", e);
         }
     }
@@ -127,8 +128,8 @@ public class LdapUserAPIController extends SecureLdapController
             return ldapUserService.removeUserMembersInLdapGroup(userId, groupNames, directory);
         } catch (Exception e)
         {
-            log.error("Removing groups to the user failed!", e);
-            throw new AcmUserActionFailedException("Removing groups to the user", null, null, "Removing groups to the user failed!", e);
+            log.error("Removing groups from the user failed!", userId, e);
+            throw new AcmUserActionFailedException("Removing groups from the user", null, null, "Removing groups from the user failed!", e);
         }
     }
 
@@ -147,7 +148,7 @@ public class LdapUserAPIController extends SecureLdapController
         }
         catch (Exception e)
         {
-            log.error("Deleting LDAP user failed!", e);
+            log.error("Deleting LDAP user [{}] failed!", userId, e);
             throw new AcmUserActionFailedException("Delete LDAP user", null, null, "Removing LDAP user failed!", e);
         }
     }
@@ -161,10 +162,16 @@ public class LdapUserAPIController extends SecureLdapController
         try
         {
             return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest.getAcmUser(), ldapUserCloneRequest.getPassword(), directory);
+        } catch (NameAlreadyBoundException e)
+        {
+            log.error("Duplicate username [{}]", ldapUserCloneRequest.getAcmUser().getUserId(), e);
+            AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER", "username", e);
+            error.putExtra("user", ldapUserCloneRequest.getAcmUser());
+            throw error;
         } catch (Exception e)
         {
-            log.error("Cloning LDAP user failed!", e);
-            throw new AcmUserActionFailedException("edit LDAP user", null, null, "Cloning LDAP user failed!", e);
+            log.error("Cloning LDAP user [{}] failed!", userId, e);
+            throw new AcmUserActionFailedException("Clone LDAP user", null, null, "Cloning LDAP user failed!", e);
         }
     }
 
@@ -179,26 +186,27 @@ public class LdapUserAPIController extends SecureLdapController
             LdapAuthenticateService ldapAuthenticateService = getAcmContextHolder().getAllBeansOfType(LdapAuthenticateService.class).
                     get(String.format("%s_ldapAuthenticateService", directory));
             ldapAuthenticateService.changeUserPassword(userId, credentials.get("currentPassword"), credentials.get("newPassword"));
+            log.debug("User [{}] successfully updated password", userId);
             return Collections.singletonMap("message", "Password successfully changed");
         } catch (InvalidAttributeValueException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            log.error("Changing password failed!", e);
+            log.error("Changing password for user [{}] failed!", userId, e);
             return Collections.singletonMap("message", e.getExplanation());
         } catch (AuthenticationException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            log.error("Changing password failed!", e);
+            log.error("Changing password for user [{}] failed!", userId, e);
             return Collections.singletonMap("authError", "Failed to authenticate! Wrong password.");
         } catch (AcmUserActionFailedException e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            log.error("Changing password failed!", e);
+            log.error("Changing password for user [{}] failed!", userId, e);
             return Collections.singletonMap("message", e.getMessage());
         } catch (Exception e)
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            log.error("Changing password failed!", e);
+            log.error("Changing password for user [{}] failed!", userId, e);
             return Collections.singletonMap("message", "Unknown error occurred");
         }
     }

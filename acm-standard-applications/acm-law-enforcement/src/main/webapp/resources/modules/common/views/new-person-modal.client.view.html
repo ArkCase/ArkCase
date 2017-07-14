@@ -8,7 +8,7 @@
                 <div class="well-sm">
                     <div class="pull-right">
                         <div class="btn-group">
-                            <button class="btn btn-secondary" ng-click="onClickCancel()">
+                            <button type="button" class="btn btn-secondary btn-sm" ng-click="onClickCancel()">
                                 <span translate>common.newPerson.cancelButton</span>
                             </button>
                             <button type="submit" ng-disabled="personForm.$invalid || saved"
@@ -26,7 +26,11 @@
         <div class="row well-sm">
             <div class="col-sm-4 form-group">
                 <label for="familyName" translate> common.newPerson.familyName </label>
-                <input type="text" id="familyName" ng-model="person.familyName"
+                <span class="required-asterisk">*</span>
+                <input type="text"
+                       id="familyName"
+                       ng-model="person.familyName"
+                       required="required"
                        class="input-md form-control"
                        placeholder="{{ 'common.newPerson.familyName.placeholder' | translate }}"
                        style="background-color: white;">
@@ -35,7 +39,9 @@
                 <label for="middleName" class="control-label">{{ 'common.newPerson.middleName'
                     |
                     translate}}</label>
-                <input type="text" id="middleName" ng-model="person.middleName"
+                <input type="text"
+                       id="middleName"
+                       ng-model="person.middleName"
                        class="input-md form-control"
                        placeholder="{{ 'common.newPerson.middleName.placeholder' | translate }}"
                        style="background-color: white;">
@@ -43,8 +49,12 @@
             <div class="col-sm-4">
                 <label for="givenName" class="control-label">{{ 'common.newPerson.givenName' |
                     translate}}</label>
-                <input type="text" id="givenName" ng-model="person.givenName"
+                <span class="required-asterisk">*</span>
+                <input type="text"
+                       id="givenName"
+                       ng-model="person.givenName"
                        class="input-md form-control"
+                       required="required"
                        placeholder="{{ 'common.newPerson.givenName.placeholder' | translate }}">
             </div>
         </div>
@@ -60,12 +70,6 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate> common.newPerson.identification.identificationID</label>
-                                <input type="text" ng-model="person.defaultIdentification.identificationID"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'common.newPerson.identification.identificationID.placeholder' | translate }}">
-                            </div>
-                            <div class="col-sm-4 form-group">
                                 <label translate>
                                     common.newPerson.identification.identificationNumber</label>
                                 <input type="text" ng-model="person.defaultIdentification.identificationNumber"
@@ -75,6 +79,8 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>common.newPerson.identification.identificationType</label>
                                 <select class="form-control"
+                                        ng-required="person.defaultIdentification.identificationNumber"
+                                        ng-disabled="!person.defaultIdentification.identificationNumber"
                                         ng-model="person.defaultIdentification.identificationType">
                                     <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                         {{option.name}}
@@ -129,23 +135,17 @@
                         <div ng-repeat="identification in person.identifications">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        common.newPerson.identification.identificationID</label>
-                                    <input type="text" ng-model="identification.identificationID"
-                                           class="input-md form-control"
-                                           placeholder="{{ 'common.newPerson.identification.identificationID.placeholder' | translate }}">
-                                </div>
-                                <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        common.newPerson.identification.identificationNumber</label>
+                                    <label translate>common.newPerson.identification.identificationNumber</label>
                                     <input type="text" ng-model="identification.identificationNumber"
                                            class="input-md form-control"
+                                           required="required"
                                            placeholder="{{ 'common.newPerson.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
-                                    <label translate>
-                                        common.newPerson.identification.identificationType</label>
+                                    <label translate>common.newPerson.identification.identificationType</label>
                                     <select class="form-control"
+                                            required="required"
+                                            ng-disabled="!identification.identificationNumber"
                                             ng-model="identification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.type}}">
                                             {{option.name}}
@@ -222,19 +222,18 @@
                     <div class="panel-body" data-ng-repeat="picture in pictures">
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label translate>common.newPerson.picture.title</label><span
-                                    class="required-asterisk">*</span><br/>
-                                <button ngf-select ng-model="pictures[$index]" ng-hide="pictures[$index].name"
+                                <label translate>common.newPerson.picture.title</label><br/>
+                                <button ngf-select ng-model="userPictures[$index]" ng-hide="userPictures[$index].name"
                                         ngf-pattern="'image/*'" ngf-accept="'image/*'"
                                         class="btn btn-sm btn-default"><span
                                         translate>common.newPerson.picture.browse</span></button>
-                                {{pictures[$index].name}}
+                                {{userPictures[$index].name}}
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left" ng-show="picture.name">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="removePerson(pictures[$index])">
+                                            ng-click="removePicture($index)">
                                         <i class="fa fa-minus text-danger"></i><span
                                             translate>common.newPerson.remove</span>
                                     </button>
@@ -242,8 +241,8 @@
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="addEmptyPerson();"
-                                            ng-show="$last && picture.name">
+                                            ng-click="addEmptyPicture();"
+                                            ng-show="$last && userPictures[$index].name">
                                         <i class="fa fa-plus text-success"></i><span
                                             translate>common.newPerson.addAnother</span>
                                     </button>
@@ -488,7 +487,10 @@
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'common.newPerson.communicationAccounts.'
                                     + caType + 'Type' | translate}}</label>
-                                <select id="defaultPhoneSubType" class="form-control"
+                                <select id="defaultPhoneSubType"
+                                        class="form-control"
+                                        ng-required="person['default'+capitalizeFirstLetter(caType)].value"
+                                        ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
                                     <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
                                         {{option.name}}
@@ -514,13 +516,17 @@
                                     {{'common.newPerson.communicationAccounts.' + caType |
                                     translate}} </label>
                                 <input type="text" ng-model="contactMethod.value"
+                                       required="required"
                                        class="input-md form-control"
                                        placeholder="{{ 'common.newPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'common.newPerson.communicationAccounts.' +
                                     caType + 'Type' | translate}}</label>
-                                <select ng-model="contactMethod.subType" class="form-control">
+                                <select ng-model="contactMethod.subType"
+                                        required="required"
+                                        ng-disabled="!contactMethod.value"
+                                        class="form-control">
                                     <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
                                         {{option.name}}
                                     </option>

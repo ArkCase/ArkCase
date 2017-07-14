@@ -25,76 +25,76 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All Open Complaints",
+        "desc": "complaints.tree.filters.openComplaints",
         "name": "all-open-complaints",
         "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
         "default": true
       },
       {
-        "desc": "All I've Created",
+        "desc": "complaints.tree.filters.iHaveCreated",
         "name": "my-complaints-created",
         "value": "fq=author_s:${user}"
       },
       {
-        "desc": "All I'm Assigned",
+        "desc": "complaints.tree.filters.iAmAssigned",
         "name": "my-complaints-assigned",
         "value": "fq=assignee_s:${user}"
       },
       {
-        "desc": "All I'm Following",
+        "desc": "complaints.tree.filters.iAmFollowing",
         "name": "my-complaints-following",
         "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
       },
       {
-        "desc": "All Closed No Further Action",
+        "desc": "complaints.tree.filters.closedNoFurtherAction",
         "name": "all-closed-no-action",
         "value": "fq={!join from=id to=disposition_id_s}disposition_type_s:no_action"
       },
       {
-        "desc": "All Closed Refer External",
+        "desc": "complaints.tree.filters.closedReferExternal",
         "name": "all-closed-external",
         "value": "fq={!join from=id to=disposition_id_s}disposition_type_s:refer_external"
       },
       {
-        "desc": "All Closed Open Investigation",
+        "desc": "complaints.tree.filters.closedOpenInvestigation",
         "name": "all-closed-investigation",
         "value": "fq={!join from=id to=disposition_id_s}disposition_type_s:open_investigation"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "complaints.tree.filters.noFilter",
         "name": "",
         "value": ""
       }
     ],
     "sorters": [
       {
-        "desc": "Sort Incident Date Asc",
+        "desc": "complaints.tree.sorters.incidentDateAsc",
         "name": "sort-incident-date-asc",
         "value": "due_tdt ASC"
       },
       {
-        "desc": "Sort Incident Date Desc",
+        "desc": "complaints.tree.sorters.incidentDateDesc",
         "name": "sort-incident-date-asc",
         "value": "due_tdt ASC"
       },
       {
-        "desc": "Sort Created Date Asc",
+        "desc": "complaints.tree.sorters.createdDateAsc",
         "name": "sort-created-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "Sort Created Date Desc",
+        "desc": "complaints.tree.sorters.createdDateDesc",
         "name": "sort-created-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort By Name",
+        "desc": "complaints.tree.sorters.byNameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "complaints.tree.sorters.noSort",
         "name": "",
         "value": ""
       }
@@ -131,7 +131,7 @@
       },
       {
         "type": "p/COMPLAINT/det",
-        "label": "Details",
+        "label": "complaints.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -139,7 +139,7 @@
       },
       {
         "type": "p/COMPLAINT/loc",
-        "label": "Locations",
+        "label": "complaints.tree.nodeTypes.locations.label",
         "icon": "fa fa-location-arrow",
         "components": [
           "locations"
@@ -147,7 +147,7 @@
       },
       {
         "type": "p/COMPLAINT/ppl",
-        "label": "People",
+        "label": "complaints.tree.nodeTypes.people.label",
         "icon": "fa fa-user",
         "components": [
           "people"
@@ -155,7 +155,7 @@
       },
       {
         "type": "p/COMPLAINT/org",
-        "label": "Organizations",
+        "label": "complaints.tree.nodeTypes.organizations.label",
         "icon": "fa fa-building",
         "components": [
           "organizations"
@@ -163,7 +163,7 @@
       },
       {
         "type": "p/COMPLAINT/doc",
-        "label": "Documents",
+        "label": "complaints.tree.nodeTypes.documents.label",
         "icon": "fa fa-file",
         "components": [
           "documents"
@@ -171,7 +171,7 @@
       },
       {
         "type": "p/COMPLAINT/par",
-        "label": "Participants",
+        "label": "complaints.tree.nodeTypes.participants.label",
         "icon": "fa fa-users",
         "components": [
           "participants"
@@ -179,7 +179,7 @@
       },
       {
         "type": "p/COMPLAINT/note",
-        "label": "Notes",
+        "label": "complaints.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -187,7 +187,7 @@
       },
       {
         "type": "p/COMPLAINT/task",
-        "label": "Tasks",
+        "label": "complaints.tree.nodeTypes.tasks.label",
         "icon": "fa fa-check-circle",
         "components": [
           "tasks"
@@ -195,7 +195,7 @@
       },
       {
         "type": "p/COMPLAINT/ref",
-        "label": "References",
+        "label": "complaints.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -203,7 +203,7 @@
       },
       {
         "type": "p/COMPLAINT/his",
-        "label": "History",
+        "label": "complaints.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -211,7 +211,7 @@
       },
       {
         "type": "p/COMPLAINT/time",
-        "label": "Time",
+        "label": "complaints.tree.nodeTypes.time.label",
         "icon": "fa fa-clock-o",
         "components": [
           "time"
@@ -219,7 +219,7 @@
       },
       {
         "type": "p/COMPLAINT/cost",
-        "label": "Cost",
+        "label": "complaints.tree.nodeTypes.cost.label",
         "icon": "fa fa-money",
         "components": [
           "cost"
@@ -227,7 +227,7 @@
       },
       {
         "type": "p/COMPLAINT/tags",
-        "label": "Tags",
+        "label": "complaints.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -235,7 +235,7 @@
       },
       {
         "type": "p/COMPLAINT/calendar",
-        "label": "Calendar",
+        "label": "complaints.tree.nodeTypes.calendar.label",
         "icon": "fa fa-calendar",
         "components": [
           "calendar"
@@ -243,7 +243,7 @@
       },
       {
         "type": "p/COMPLAINT/apr",
-        "label": "Approval Routing",
+        "label": "complaints.tree.nodeTypes.approvalRouting.label",
         "icon": "fa fa-sort-amount-desc",
         "components": [
           "approvalRouting"
@@ -254,7 +254,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "complaints.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -540,28 +540,28 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "complaints.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "complaints.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "complaints.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "locations",
-      "title": "Locations",
+      "title": "complaints.comp.locations.title",
       "icon": "fa fa-location-arrow",
       "enabled": true,
       "type": "grid",
@@ -599,7 +599,7 @@
     },
     {
       "id": "people",
-      "title": "People",
+      "title": "complaints.comp.people.title",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
@@ -657,7 +657,7 @@
     },
     {
       "id": "organizations",
-      "title": "Organizations",
+      "title": "complaints.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
@@ -714,7 +714,7 @@
     },
     {
       "id": "documents",
-      "title": "Documents",
+      "title": "complaints.comp.documents.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -731,7 +731,7 @@
     },
     {
       "id": "participants",
-      "title": "Participants",
+      "title": "complaints.comp.participants.title",
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
@@ -816,7 +816,7 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "complaints.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -857,7 +857,7 @@
     },
     {
       "id": "tasks",
-      "title": "Tasks",
+      "title": "complaints.comp.tasks.title",
       "icon": "fa fa-check-circle",
       "enabled": true,
       "type": "grid",
@@ -923,7 +923,7 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "complaints.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -974,7 +974,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "complaints.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -1009,7 +1009,7 @@
     },
     {
       "id": "time",
-      "title": "Time",
+      "title": "complaints.comp.time.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
@@ -1055,7 +1055,7 @@
     },
     {
       "id": "cost",
-      "title": "Cost",
+      "title": "complaints.comp.cost.title",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
@@ -1103,7 +1103,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "complaints.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
@@ -1141,14 +1141,14 @@
     },
     {
       "id": "calendar",
-      "title": "Calendar",
+      "title": "complaints.comp.calendar.title",
       "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "referenceSearchGrid",
-      "title": "Reference Search",
+      "title": "complaints.comp.referenceSearchGrid.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,
@@ -1210,7 +1210,7 @@
     },
     {
       "id": "approvalRouting",
-      "title": "Approval Routing",
+      "title": "complaints.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
       "enabled": true,
@@ -1255,7 +1255,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "complaints.comp.pastapprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "userSearch",
-      "title": "Select users",
+      "title": "complaints.comp.userSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,

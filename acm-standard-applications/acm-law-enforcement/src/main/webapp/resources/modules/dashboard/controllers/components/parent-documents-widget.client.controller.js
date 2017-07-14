@@ -12,9 +12,9 @@ angular.module('dashboard.parentDocs', ['adf.provider'])
                 commonName: 'parentDocs'
             });
     })
-    .controller('Dashboard.ParentDocumentsController', ['$scope', 'config', '$stateParams', '$translate',
+    .controller('Dashboard.ParentDocumentsController', ['$scope', '$q', 'config', '$stateParams', '$translate',
         'Helper.ObjectBrowserService', 'EcmService', 'ObjectService', 'Task.InfoService', 'UtilService',
-        function ($scope, config, $stateParams, $translate,
+        function ($scope, $q, config, $stateParams, $translate,
                   HelperObjectBrowserService, Ecm, ObjectService, TaskInfoService, Util) {
 
             var vm = this;
@@ -43,35 +43,28 @@ angular.module('dashboard.parentDocs', ['adf.provider'])
             if (Util.goodPositive(currentObjectId, false)) {
                 var params = {};
 
-                params.objId = $stateParams.id;
                 params.objType = module.objectType;
+                params.objId = $stateParams.id;
 
                 // to pass the access control check based on object type "TASK"
                 if (params.objType === "ADHOC") {
                     params.objType = "TASK";
                 }
 
-                Ecm.getFolderDocumentCounts(params,
-                    function (data) {
-                        var chartData = [];
-                        var labels = [];
-                        var folderData = Util.omitNg(data);
-                        _.forEach(folderData, function (value, label) {
-                            if(label == "base") {
-                                label = "Root (/)";
-                            }
-                            chartData.push(value);
-                            labels.push(label);
-                        });
-                        vm.showChart = chartData.length > 0;
-                        vm.data = [chartData];
-                        vm.labels = labels;
-                        vm.series = ["Number of Documents"];
-                    },
-                    function (error) {
-
+                Ecm._getFolderDocumentCounts(params).then(function(data){
+                    console.log("data: " + Util.omitNg(data));
+                    var result = Util.omitNg(data);
+                    var count = 0
+                    //proveri i dodadi count
+                    /*forEach(entry in result){
+                        count++;
                     }
-                );
+                    return count;
+*/
+
+                    vm.count = result;
+
+                });
             }
         }
     ]);

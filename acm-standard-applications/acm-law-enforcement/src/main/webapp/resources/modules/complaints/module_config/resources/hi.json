@@ -9,7 +9,11 @@
     "leftnav.item": "शिकायतें",
     "topbar.item": "शिकायत"
   },
+  "complaints.comp.main": {
+    "title": "अवलोकन"
+  },
   "complaints.comp.info": {
+    "title": "जानकारी",
     "complaintId": "hi_Complaint id:",
     "complaintNumber": "hi_Complaint ID:",
     "courtRoomName": "hi_Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "क्रियाएं",
     "restrict": "hi_Restrict?",
     "new.button": "hi_New Complaint",
     "close.button": "hi_Close Complaint",
@@ -30,7 +35,7 @@
     "unclaim.button": "hi_Unclaim"
   },
   "complaints.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Complaint details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "hi_Documents",
+    "title": "दस्तावेज़",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
     "searchInputPlaceholder": "hi_Search"
   },
   "complaints.comp.people": {
-    "title": "hi_People",
+    "title": "लोग",
     "table.columns": {
       "entity": "hi_Entity",
       "type": "hi_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "hi_Organizations",
+      "title": "संगठन",
       "table.columns": {
         "type": "hi_Type",
         "value": "hi_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "hi_Locations",
+      "title": "स्थान",
       "table.columns": {
         "type": "hi_Type",
         "streetAddress": "hi_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "संगठन",
+    "table.columns": {
+      "name": "hi_Organization Name",
+      "associationType": "hi_Role",
+      "type": "hi_Organization Type",
+      "identification": "hi_ID",
+      "value": "hi_Organization",
+      "contact": "hi_Primary Contact",
+      "phone": "hi_Phone",
+      "location": "hi_Location"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New",
+      "addExisting": "hi_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "hi_Participants",
+    "title": "प्रतिभागियों",
     "table.columns": {
       "type": "hi_Type",
       "name": "hi_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "hi_Locations",
+    "title": "स्थान",
     "table.columns": {
       "address": "hi_Address",
       "type": "hi_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "hi_Notes",
+    "title": "नोट्स",
     "table.columns": {
       "note": "hi_Note",
       "created": "hi_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "hi_Tasks",
+    "title": "कार्य",
     "table.columns": {
       "title": "hi_Title",
       "assignee": "hi_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "hi_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "hi_References",
+    "title": "संदर्भ",
     "table.columns": {
       "targetName": "hi_Number",
       "targetTitle": "hi_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "hi_Time",
+    "title": "पहर",
     "table.columns": {
       "name": "hi_Form Name",
       "user": "hi_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "hi_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "hi_Cost",
+    "title": "लागत",
     "table.columns": {
       "name": "hi_Form Name",
       "user": "hi_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "hi_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -244,7 +268,7 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "hi_Calendar"
+    "title": "कैलेंडर"
   },
   "complaints.comp.addreference": {
     "title": "hi_Add Reference",
@@ -281,7 +305,7 @@
     "searchGroupHeader": "hi_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "hi_Future Approvers",
+    "title": "अनुमोदन रूटिंग",
     "addNewTooltip": "hi_Add new approver",
     "noBuckslipMessage": "hi_No Data",
     "button": {
@@ -298,7 +322,7 @@
     "state.label": "hi_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "hi_Past Approvers",
+    "title": "पिछली अनुमोदन",
     "noBuckslipMessage": "hi_No Data",
     "table.columns": {
       "approvalDate": "hi_Approval Date",
@@ -306,6 +330,10 @@
       "approverFullName": "hi_Approver",
       "approverDecision": "hi_Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "उपयोगकर्ताओं को चुनें",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "hi_userSearch",
@@ -323,6 +351,43 @@
       "type": "hi_Type",
       "title": "hi_Title",
       "username": "hi_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "locations.label": "स्थान",
+      "people.label": "लोग",
+      "organizations.label": "संगठन",
+      "documents.label": "दस्तावेज़",
+      "participants.label": "प्रतिभागियों को",
+      "notes.label": "टिप्पणियाँ",
+      "tasks.label": "कार्य",
+      "references.label": "सन्दर्भ",
+      "history.label": "इतिहास",
+      "time.label": "पहर",
+      "cost.label": "लागत",
+      "tags.label": "टैग",
+      "calendar.label": "कैलेंडर",
+      "approvalRouting.label": "अनुमोदन रूटिंग"
+    },
+    "filters": {
+      "openComplaints": "सभी ओपन शिकायतें",
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "iAmAssigned": "सभी को मैं नियुक्त किया गया",
+      "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
+      "closedNoFurtherAction": "सभी बंद कोई और कार्यवाही",
+      "closedReferExternal": "सभी बंद बाहरी देखें",
+      "closedOpenInvestigation": "सभी बंद खुली जांच",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "incidentDateAsc": "क्रमबद्ध घटना दिनांक एएससी",
+      "incidentDateDesc": "क्रमबद्ध घटना दिनांक दिनांक",
+      "createdDateAsc": "सॉर्ट की गई तारीख एएससी",
+      "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
+      "byNameAsc": "सॉर्ट इन एएनएससी एसी",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }

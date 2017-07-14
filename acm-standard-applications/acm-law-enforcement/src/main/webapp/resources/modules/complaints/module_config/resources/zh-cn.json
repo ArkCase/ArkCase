@@ -9,7 +9,11 @@
     "leftnav.item": "投诉",
     "topbar.item": "投诉"
   },
+  "complaints.comp.main": {
+    "title": "概述"
+  },
   "complaints.comp.info": {
+    "title": "信息",
     "complaintId": "zh-cn_Complaint id:",
     "complaintNumber": "zh-cn_Complaint ID:",
     "courtRoomName": "zh-cn_Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "行动",
     "restrict": "zh-cn_Restrict?",
     "new.button": "zh-cn_New Complaint",
     "close.button": "zh-cn_Close Complaint",
@@ -30,7 +35,7 @@
     "unclaim.button": "zh-cn_Unclaim"
   },
   "complaints.comp.details": {
-    "title": "zh-cn_Details",
+    "title": "详情",
     "informSaved": "zh-cn_Complaint details saved",
     "table.columns": {
       "title": "zh-cn_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "zh-cn_Documents",
+    "title": "文件",
     "sendEmail": "zh-cn_Send Email",
     "filterInputPlaceholder": "zh-cn_Filter",
     "searchInputPlaceholder": "zh-cn_Search"
   },
   "complaints.comp.people": {
-    "title": "zh-cn_People",
+    "title": "成员",
     "table.columns": {
       "entity": "zh-cn_Entity",
       "type": "zh-cn_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "zh-cn_Organizations",
+      "title": "组织",
       "table.columns": {
         "type": "zh-cn_Type",
         "value": "zh-cn_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "zh-cn_Locations",
+      "title": "地点",
       "table.columns": {
         "type": "zh-cn_Type",
         "streetAddress": "zh-cn_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "组织",
+    "table.columns": {
+      "name": "zh-cn_Organization Name",
+      "associationType": "zh-cn_Role",
+      "type": "zh-cn_Organization Type",
+      "identification": "zh-cn_ID",
+      "value": "zh-cn_Organization",
+      "contact": "zh-cn_Primary Contact",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New",
+      "addExisting": "zh-cn_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "zh-cn_Participants",
+    "title": "参与成员",
     "table.columns": {
       "type": "zh-cn_Type",
       "name": "zh-cn_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "zh-cn_Locations",
+    "title": "地点",
     "table.columns": {
       "address": "zh-cn_Address",
       "type": "zh-cn_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "zh-cn_Notes",
+    "title": "注释",
     "table.columns": {
       "note": "zh-cn_Note",
       "created": "zh-cn_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "zh-cn_Tasks",
+    "title": "任务",
     "table.columns": {
       "title": "zh-cn_Title",
       "assignee": "zh-cn_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "zh-cn_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "zh-cn_References",
+    "title": "参考",
     "table.columns": {
       "targetName": "zh-cn_Number",
       "targetTitle": "zh-cn_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "zh-cn_History",
+    "title": "历史",
     "table.columns": {
       "eventType": "zh-cn_Event Name",
       "eventDate": "zh-cn_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "zh-cn_Time",
+    "title": "时间",
     "table.columns": {
       "name": "zh-cn_Form Name",
       "user": "zh-cn_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "zh-cn_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "zh-cn_Cost",
+    "title": "成本",
     "table.columns": {
       "name": "zh-cn_Form Name",
       "user": "zh-cn_User",
@@ -220,14 +244,14 @@
     "formNamePrefix": "zh-cn_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "zh-cn_Tags",
+    "title": "标签",
     "table.columns": {
       "tag": "zh-cn_Tag",
       "created": "zh-cn_Created",
       "createdBy": "zh-cn_Created By"
     },
     "modal": {
-      "title": "zh-cn_Tag",
+      "title": "标签",
       "search": "zh-cn_Search for Tag",
       "buttons": {
         "cancel": "zh-cn_Cancel",
@@ -244,7 +268,7 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "zh-cn_Calendar"
+    "title": "日历"
   },
   "complaints.comp.addreference": {
     "title": "zh-cn_Add Reference",
@@ -281,7 +305,7 @@
     "searchGroupHeader": "zh-cn_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "zh-cn_Future Approvers",
+    "title": "批准流程",
     "addNewTooltip": "zh-cn_Add new approver",
     "noBuckslipMessage": "zh-cn_No Data",
     "button": {
@@ -298,7 +322,7 @@
     "state.label": "zh-cn_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "zh-cn_Past Approvers",
+    "title": "过去批准",
     "noBuckslipMessage": "zh-cn_No Data",
     "table.columns": {
       "approvalDate": "zh-cn_Approval Date",
@@ -306,6 +330,10 @@
       "approverFullName": "zh-cn_Approver",
       "approverDecision": "zh-cn_Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "选择用户",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "zh-cn_userSearch",
@@ -324,5 +352,43 @@
       "title": "zh-cn_Title",
       "username": "zh-cn_Username"
     }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "locations.label": "地点",
+      "people.label": "成员",
+      "organizations.label": "组织",
+      "documents.label": "文件",
+      "participants.label": "参与成员",
+      "notes.label": "注释",
+      "tasks.label": "任务",
+      "references.label": "参考",
+      "history.label": "历史",
+      "time.label": "时间",
+      "cost.label": "成本",
+      "tags.label": "标签",
+      "calendar.label": "日历",
+      "approvalRouting.label": "批准流程"
+    },
+    "filters": {
+      "openComplaints": "所有打开的",
+      "iHaveCreated": "我所创建的",
+      "iAmAssigned": "指定给我的",
+      "iAmFollowing": "我关注的",
+      "closedNoFurtherAction": "关闭并无进一步操作的",
+      "closedReferExternal": "外部参考被关闭的",
+      "closedOpenInvestigation": "调查被关闭的",
+      "noFilter": "(无限制的)"
+    },
+    "sorters": {
+      "incidentDateAsc": "按事件日期排序",
+      "incidentDateDesc": "按事件日期反排序",
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "byNameAsc": "按名称排序",
+      "noSort": "(不排序)"
+    }
   }
+
 }
