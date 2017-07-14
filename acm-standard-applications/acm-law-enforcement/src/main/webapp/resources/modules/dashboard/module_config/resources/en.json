@@ -238,6 +238,11 @@
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
       },
+      "parentDocs": {
+        "title": "Parent Documents",
+        "description": "Shows parent documents",
+        "noDataMessage": "Currently there no are no parent documents to display"
+      },
       "workflow": {
         "title": "Workflow Overview",
         "description": "Overview of pending workflows",
@@ -276,7 +281,7 @@
       "approvalRouting": {
         "title": "Approval Routing",
         "description": "Displays approval routings",
-        "noDataMessage": "Currently no approval routings to display"
+        "noDataMessage": "Currently no approvers to display"
       }
     }
   }

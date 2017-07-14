@@ -32,23 +32,21 @@ public class ListAssociatedTagsByObjectTypeAndIdAPIController {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value="/{objectId}/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTag> listAssociatedTaqsBy(
-            @PathVariable("objectId") Long objectId,
             @PathVariable("objectType") String objectType,
+            @PathVariable("objectId") Long objectId,
             Authentication auth) throws AcmUserActionFailedException, AcmObjectNotFoundException {
-        if ( log.isInfoEnabled() ) {
-            log.info("Listing assigned tags for objectId: "+objectId+" and object type: "+objectType);
-        }
+
+        log.info("Listing assigned tags for objectType: {} and objectId: {}", objectType, objectId);
         List<AcmAssociatedTag> acmAssociatedTags;
         List<AcmTag> acmTags;
         try {
             acmAssociatedTags = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(objectId,objectType,auth);
             acmTags = retrieveTagList(acmAssociatedTags);
         } catch (AcmObjectNotFoundException e) {
-            if (log.isDebugEnabled())
-                log.debug("No Associated Tags are Found for objectId: "+ objectId+" and objectType: "+objectType);
+            log.debug("No Associated Tags are Found for objectId: {} and objectType: {}", objectId, objectType);
             return new ArrayList<>();
         }
         return acmTags;

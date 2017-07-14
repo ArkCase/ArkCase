@@ -393,6 +393,17 @@
           ]
         },
         {
+          "id": "parentDocs",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "folderName",
+              "displayName": "tasks.comp.parentDocs.table.columns.folderName",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
           "id": "attachments",
           "type": "component"
         },
@@ -516,7 +527,26 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "tasks.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ],
       "widgetsAdhoc": [
@@ -652,7 +682,26 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "tasks.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
@@ -721,7 +770,34 @@
       "title": "Rework Details",
       "icon": "fa fa-repeat",
       "enabled": true,
-      "type": "empty"
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "title",
+          "displayName": "tasks.comp.reworkdetails.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        },
+        {
+          "name": "modifier",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modifier | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+        }
+      ]
     },
     {
       "id": "docsreview",
@@ -738,12 +814,6 @@
       ],
       "paginationPageSize": 5,
       "columnDefs": [
-        {
-          "name": "fileId",
-          "displayName": "tasks.comp.docsreview.table.columns.fileId",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.container.containerObjectId}}</a>"
-        },
         {
           "name": "fileName",
           "displayName": "tasks.comp.docsreview.table.columns.fileName",
@@ -1285,7 +1355,7 @@
       }
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "Approval Routing",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
