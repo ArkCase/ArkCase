@@ -9,7 +9,11 @@
     "leftnav.item": "Plaintes",
     "topbar.item": "Plainte"
   },
+  "complaints.comp.main": {
+    "title": "Vue d'ensemble"
+  },
   "complaints.comp.info": {
+    "title": "Information",
     "complaintId": "fr_Complaint id:",
     "complaintNumber": "fr_Complaint ID:",
     "courtRoomName": "fr_Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "Actions",
     "restrict": "fr_Restrict?",
     "new.button": "fr_New Complaint",
     "close.button": "fr_Close Complaint",
@@ -30,7 +35,7 @@
     "unclaim.button": "fr_Unclaim"
   },
   "complaints.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Complaint details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "fr_Documents",
+    "title": "Documents",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
     "searchInputPlaceholder": "fr_Search"
   },
   "complaints.comp.people": {
-    "title": "fr_People",
+    "title": "Personnes",
     "table.columns": {
       "entity": "fr_Entity",
       "type": "fr_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "fr_Organizations",
+      "title": "Organisations",
       "table.columns": {
         "type": "fr_Type",
         "value": "fr_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "fr_Locations",
+      "title": "Emplacements",
       "table.columns": {
         "type": "fr_Type",
         "streetAddress": "fr_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "Organisations",
+    "table.columns": {
+      "name": "fr_Organization Name",
+      "associationType": "fr_Role",
+      "type": "fr_Organization Type",
+      "identification": "fr_ID",
+      "value": "fr_Organization",
+      "contact": "fr_Primary Contact",
+      "phone": "fr_Phone",
+      "location": "fr_Location"
+    },
+    "actions": {
+      "delete": "fr_Delete",
+      "setPrimary": "fr_Set as Primary",
+      "addNew": "fr_Add New",
+      "addExisting": "fr_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "fr_Participants",
+    "title": "Participants",
     "table.columns": {
       "type": "fr_Type",
       "name": "fr_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "fr_Locations",
+    "title": "Emplacements",
     "table.columns": {
       "address": "fr_Address",
       "type": "fr_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "fr_Notes",
+    "title": "Notes",
     "table.columns": {
       "note": "fr_Note",
       "created": "fr_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "fr_Tasks",
+    "title": "Tâches",
     "table.columns": {
       "title": "fr_Title",
       "assignee": "fr_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "fr_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "fr_References",
+    "title": "Références",
     "table.columns": {
       "targetName": "fr_Number",
       "targetTitle": "fr_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "fr_History",
+    "title": "Historique",
     "table.columns": {
       "eventType": "fr_Event Name",
       "eventDate": "fr_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "fr_Time",
+    "title": "Heure",
     "table.columns": {
       "name": "fr_Form Name",
       "user": "fr_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "fr_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "fr_Cost",
+    "title": "Coût",
     "table.columns": {
       "name": "fr_Form Name",
       "user": "fr_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "fr_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "fr_Tags",
+    "title": "étiquettes",
     "table.columns": {
       "tag": "fr_Tag",
       "created": "fr_Created",
@@ -244,7 +268,7 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "fr_Calendar"
+    "title": "Calendrier"
   },
   "complaints.comp.addreference": {
     "title": "fr_Add Reference",
@@ -281,7 +305,7 @@
     "searchGroupHeader": "fr_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "fr_Future Approvers",
+    "title": "Routage d'approbation",
     "addNewTooltip": "fr_Add new approver",
     "noBuckslipMessage": "fr_No Data",
     "button": {
@@ -298,7 +322,7 @@
     "state.label": "fr_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "fr_Past Approvers",
+    "title": "Approbations passées",
     "noBuckslipMessage": "fr_No Data",
     "table.columns": {
       "approvalDate": "fr_Approval Date",
@@ -306,6 +330,10 @@
       "approverFullName": "fr_Approver",
       "approverDecision": "fr_Approver Decision"
     }
+  },
+  "complaints.comp.userOrGroupSearch": {
+    "title": "Sélectionnez les utilisateurs",
+    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
   },
   "complaints.userOrGroupSearch": {
     "id": "fr_userSearch",

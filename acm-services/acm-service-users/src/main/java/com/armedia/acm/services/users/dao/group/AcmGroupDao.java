@@ -12,10 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -56,21 +54,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = dbQuery.getSingleResult();
+        } catch (NoResultException e)
+        {
+            LOG.warn("There is no group with name [{}]", name);
+        } catch (NonUniqueResultException e)
+        {
+            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
         }
         catch (Exception e)
         {
-            if (e instanceof NoResultException)
-            {
-                LOG.info("There is no any group with name = " + name);
-            }
-            else if (e instanceof NonUniqueResultException)
-            {
-                LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
-            }
-            else
-            {
-                LOG.error("Error while retrieving group by group name = " + name, e);
-            }
+            LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
 
         return retval;
@@ -247,6 +240,15 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return result.isEmpty() ? null : result.get(0);
     }
 
+    /**
+     * Find ad-hoc group by matching name.
+     * <p>
+     * We need this since UI names and internal names of ad-hoc groups differ
+     * (ArkCase is adding `-UUID-...` suffix internally)
+     *
+     * @param name group name
+     * @return ad-hoc group if found, null otherwise
+     */
     @Transactional
     public AcmGroup findByMatchingName(String name)
     {
@@ -254,7 +256,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         CriteriaQuery query = builder.createQuery(AcmGroup.class);
         Root group = query.from(AcmGroup.class);
         query.select(group);
-        query.where(builder.and(new Predicate[]{builder.like(group.get("name"), name)}));
+        query.where(builder.and(new Predicate[]{builder.like(group.<String>get("name"), name + "-UUID-%")}));
 
         TypedQuery dbQuery = this.getEm().createQuery(query);
         AcmGroup retval = null;
@@ -263,18 +265,15 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             retval = (AcmGroup) dbQuery.getSingleResult();
-        }
-        catch (NoResultException e)
+        } catch (NoResultException e)
         {
-            LOG.info("There is no any group with name = {}", name);
-        }
-        catch (NonUniqueResultException e)
+            LOG.warn("There is no group with name [{}]", name);
+        } catch (NonUniqueResultException e)
         {
-            LOG.info("There is no unique group found with name = {}. More than one group has this name.", name);
-        }
-        catch (Exception e)
+            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
+        } catch (Exception e)
         {
-            LOG.error("Error while retrieving group by group name = {}", name, e);
+            LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
         return retval;
     }

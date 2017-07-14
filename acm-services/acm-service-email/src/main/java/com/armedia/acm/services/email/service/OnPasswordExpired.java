@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class OnPasswordExpired implements ApplicationListener<LoginEvent>
 {
     private UserDao userDao;
-    private AcmConfigurableEmailSenderService emailSenderService;
+    private AcmEmailSenderService emailSenderService;
     private AcmApplication acmAppConfiguration;
     /**
      * Formatting string to be used for producing text to inserted as a body in the password reset email. The formatting
@@ -88,7 +88,7 @@ public class OnPasswordExpired implements ApplicationListener<LoginEvent>
         this.userDao = userDao;
     }
 
-    public void setEmailSenderService(AcmConfigurableEmailSenderService emailSenderService)
+    public void setEmailSenderService(AcmEmailSenderService emailSenderService)
     {
         this.emailSenderService = emailSenderService;
     }

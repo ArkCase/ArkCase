@@ -10,8 +10,8 @@
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', ['$resource'
-    , function ($resource) {
+angular.module('services').factory('EcmService', ['$resource', 'UtilService'
+    , function ($resource, Util) {
 
         var Service = $resource('api/latest/service', {}, {
             retrieveFolderList: {
@@ -118,6 +118,20 @@ angular.module('services').factory('EcmService', ['$resource'
                 url: 'api/latest/service/ecm/file/metadata/:fileId'
             }
         });
+
+        Service._getFolderDocumentCounts = function(params){
+            return Util.serviceCall({
+                service: Service.getFolderDocumentCounts
+                ,param: params
+                , onSuccess: function(data){
+                    return data;
+                }
+                , onError: function(errData){
+                    alert("Error.");
+                }
+            });
+        };
+
 
         return Service;
     }
