@@ -331,10 +331,6 @@
       "approverDecision": "hi_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "उपयोगकर्ताओं को चुनें",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "hi_userSearch",
     "title": "hi_User/Group Search",
@@ -372,7 +368,7 @@
       "approvalRouting.label": "अनुमोदन रूटिंग"
     },
     "filters": {
-      "openComplaints": "सभी ओपन शिकायतें",
+      "opened": "सभी ओपन शिकायतें",
       "iHaveCreated": "सभी मैंने बनाया है",
       "iAmAssigned": "सभी को मैं नियुक्त किया गया",
       "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",

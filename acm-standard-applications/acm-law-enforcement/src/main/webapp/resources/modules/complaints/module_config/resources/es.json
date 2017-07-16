@@ -331,10 +331,6 @@
       "approverDecision": "es_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "Seleccionar usuarios",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "es_userSearch",
     "title": "es_User/Group Search",
@@ -372,12 +368,12 @@
       "approvalRouting.label": "Ruta de Aprobació"
     },
     "filters": {
-      "openComplaints": "Todas las quejas abiertas",
+      "opened": "Todas las quejas abiertas",
       "iHaveCreated": "Todo lo que he creado",
       "iAmAssigned": "Todo lo que estoy asignado",
       "iAmFollowing": "Todo lo que estoy siguiendo",
       "closedNoFurtherAction": "Todos cerrados No hay más acción",
-      "closedReferExternal": "All Closed Refer External",
+      "closedReferExternal": "Todos cerrados Refer External",
       "closedOpenInvestigation": "Toda Investigación Abierta Cerrada",
       "noFilter": "(Sin filtro)"
     },
