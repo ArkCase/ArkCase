@@ -331,13 +331,9 @@
       "approverDecision": "zh-cn_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "选择用户",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "zh-cn_userSearch",
-    "title": "zh-cn_User/Group Search",
+    "title": "选择用户",
     "search": {
       "btn": "zh-cn_Search",
       "placeholder": "zh-cn_Search for the user or group."
@@ -372,7 +368,7 @@
       "approvalRouting.label": "批准流程"
     },
     "filters": {
-      "openComplaints": "所有打开的",
+      "opened": "所有打开的",
       "iHaveCreated": "我所创建的",
       "iAmAssigned": "指定给我的",
       "iAmFollowing": "我关注的",
