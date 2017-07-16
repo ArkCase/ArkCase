@@ -121,8 +121,8 @@ public class PeopleAPIController
     {
 
         log.debug("Insert Image for a Person: [{}];", personId);
-
-        personService.insertImageForPerson(personId, image, data.isDefault(), data.getDescription(), auth);
+        Person person = personService.get(personId);
+        personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
