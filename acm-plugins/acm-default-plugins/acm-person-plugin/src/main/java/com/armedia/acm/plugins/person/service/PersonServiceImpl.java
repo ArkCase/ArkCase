@@ -197,9 +197,8 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public EcmFile insertImageForPerson(Long personId, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
+    public EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
-        Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
         {
@@ -217,7 +216,7 @@ public class PersonServiceImpl implements PersonService
                 auth,
                 picturesFolderObj.getCmisFolderId(),
                 PersonOrganizationConstants.PERSON_OBJECT_TYPE,
-                personId);
+                person.getId());
 
         uploaded.setDescription(description);
         uploaded = ecmFileService.updateFile(uploaded);
@@ -251,8 +250,7 @@ public class PersonServiceImpl implements PersonService
             metadata.setFileName(fileName);
             uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId, picturesFolderObj.getCmisFolderId(),
                     uniqueFileName, image.getInputStream(), metadata);
-        }
-        else
+        } else
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
@@ -338,7 +336,11 @@ public class PersonServiceImpl implements PersonService
                 String description = "";
                 try
                 {
-                    insertImageForPerson(person.getId(), picture, !hasDefaultPicture, description, authentication);
+                    insertImageForPerson(person, picture, !hasDefaultPicture, description, authentication);
+                    if (!hasDefaultPicture)
+                    {
+                        hasDefaultPicture = true;
+                    }
                 } catch (IOException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
@@ -349,7 +351,7 @@ public class PersonServiceImpl implements PersonService
             }
         }
         //because there are updates to the person we need to get fresh instance from database.
-        return personDao.find(person.getId());
+        return person;
     }
 
     public PersonDao getPersonDao()
