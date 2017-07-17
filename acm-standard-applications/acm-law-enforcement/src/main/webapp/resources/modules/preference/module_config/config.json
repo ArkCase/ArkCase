@@ -90,6 +90,17 @@
       "name": "ORGANIZATION",
       "allowedWidgets": [
         "details",
+        "locations",
+        "phones",
+        "faxes",
+        "emails",
+        "urls",
+        "dbas",
+        "people",
+        "ids",
+        "complaints",
+        "cases",
+        "related",
         "history"
       ]
     },

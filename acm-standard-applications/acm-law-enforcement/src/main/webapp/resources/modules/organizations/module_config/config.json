@@ -232,7 +232,85 @@
           ]
         },
         {
-          "id": "history",
+          "id": "locations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fullAddress",
+              "displayName": "organizations.comp.locations.table.columns.address",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.locations.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "width": 150
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.locations.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            }
+          ]
+        },
+        { "id": "phones",
+          "type": "component"
+        },
+        { "id": "faxes",
+          "type": "component"
+        },
+        { "id": "emails",
+          "type": "component"
+        },
+        { "id": "urls",
+          "type": "component"
+        },
+        { "id": "dbas",
+          "type": "component"
+        },
+        {
+          "id": "people",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "personType",
+              "displayName": "organizations.comp.people.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "personTypes"
+            },
+            {
+              "name": "firstName",
+              "field": "person.givenName",
+              "displayName": "organizations.comp.people.table.columns.firstName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "lastName",
+              "field": "person.familyName",
+              "displayName": "organizations.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "ids",
+          "type": "component"
+        },
+        {
+          "id": "complaints",
+          "type": "component"
+        },
+        { "id": "cases",
+          "type": "component"
+        },
+        { "id": "related",
+          "type": "component"
+        },
+        { "id": "history",
           "type": "component"
         }
       ]
