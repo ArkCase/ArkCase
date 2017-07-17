@@ -274,13 +274,9 @@
       "approverDecision": "Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "Past Approvers",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "userSearch",
-    "title": "xxxxUser/Group Search",
+    "title": "User/Group Search",
     "search": {
       "btn": "Search",
       "placeholder": "Search for the user or group."
@@ -315,7 +311,7 @@
       "approvalRouting.label": "Approval Routing"
     },
     "filters": {
-      "openComplaints": "All Open Complaints",
+      "opened": "All Open Complaints",
       "iHaveCreated": "All I've Created",
       "iAmAssigned": "All I'm Assigned",
       "iAmFollowing": "All I'm Following",
