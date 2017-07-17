@@ -331,10 +331,6 @@
       "approverDecision": "de_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "Selecteer gebruikers",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "de_userSearch",
     "title": "de_User/Group Search",
@@ -372,7 +368,7 @@
       "approvalRouting.label": "Toekomstige Goedkeuringen"
     },
     "filters": {
-      "openComplaints": "Alle offenen Beschwerden",
+      "opened": "Alle offenen Beschwerden",
       "iHaveCreated": "Alle offenen Beschwerden",
       "iAmAssigned": "Alles, was ich zugewiesen bin",
       "iAmFollowing": "Alles, was ich folge",

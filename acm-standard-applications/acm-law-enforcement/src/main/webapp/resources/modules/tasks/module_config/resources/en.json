@@ -9,7 +9,11 @@
     "leftnav.item": "Tasks",
     "topbar.item": "Task"
   },
+  "tasks.comp.main": {
+    "title": "Overview"
+  },
   "tasks.comp.info": {
+    "title": "Info",
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
     "assignee.label": "Assignee",
@@ -46,6 +50,7 @@
     "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "Actions",
     "diagram.button": "Process Diagram",
     "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",

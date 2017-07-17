@@ -11,10 +11,15 @@
   },
   "timeTracking.tree": {
   },
+  "timeTracking.comp.main": {
+    "title": "Overview"
+  },
   "timeTracking.comp.info": {
+    "title": "Info",
     "lastModified.label": "Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "New Timesheet",
     "edit.button": "Edit Timesheet"
   },

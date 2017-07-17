@@ -331,10 +331,6 @@
       "approverDecision": "pt_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "pt_Past Approvers",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "pt_userSearch",
     "title": "pt_User/Group Search",
@@ -372,7 +368,7 @@
       "approvalRouting.label": "Roteamento de Aprovação"
     },
     "filters": {
-      "openComplaints": "Todas as queixas abertas",
+      "opened": "Todas as queixas abertas",
       "iHaveCreated": "Tudo o que eu criei",
       "iAmAssigned": "Tudo o que eu sou atribuído",
       "iAmFollowing": "Tudo o que estou seguindo",
@@ -383,9 +379,9 @@
     },
     "sorters": {
       "incidentDateAsc": "Ordenar Data do evento Asc",
-      "incidentDateDesc": "Ordenar Data do evento Dec",
+      "incidentDateDesc": "Ordenar Data do evento Desc",
       "createdDateAsc": "Ordenar Data de Criação Asc",
-      "createdDateDesc": "Ordenar Data de Criação Dec",
+      "createdDateDesc": "Ordenar Data de Criação Desc",
       "byNameAsc": "Classificar por nome Asc",
       "noSort": "(Não classificar)"
     }
