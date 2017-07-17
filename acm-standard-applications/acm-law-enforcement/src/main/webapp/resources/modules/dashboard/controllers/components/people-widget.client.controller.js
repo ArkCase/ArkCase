@@ -13,20 +13,26 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService) {
+        , 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService'
+        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService) {
             var modules = [
                 {
                     name: "CASE_FILE",
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
                     validateInfo: CaseInfoService.validateCaseInfo
-                }
-                , {
+                },
+                {
                     name: "COMPLAINT",
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 
