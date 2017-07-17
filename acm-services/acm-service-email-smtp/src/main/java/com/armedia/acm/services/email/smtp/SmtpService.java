@@ -6,10 +6,6 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.AttachmentsProcessableDTO;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
@@ -18,9 +14,9 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -30,7 +26,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,28 +38,25 @@ import java.util.stream.Stream;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 21, 2017
- *
  */
 public class SmtpService implements AcmEmailSenderService, ApplicationEventPublisherAware
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    private PropertyFileManager propertyFileManager;
+    protected PropertyFileManager propertyFileManager;
 
-    private String emailSenderPropertyFileLocation;
+    protected String emailSenderPropertyFileLocation;
 
-    private EcmFileService ecmFileService;
+    protected EcmFileService ecmFileService;
 
-    private MuleContextManager muleContextManager;
+    protected MuleContextManager muleContextManager;
 
     private ApplicationEventPublisher eventPublisher;
 
-    private AuthenticationTokenService authenticationTokenService;
+    protected String flow;
 
-    private AuthenticationTokenDao authenticationTokenDao;
-
-    private String flow;
+    protected AcmEmailContentGeneratorService acmEmailContentGeneratorService;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -84,7 +76,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
 
-        emailsDataStream.forEach(emailData -> {
+        emailsDataStream.forEach(emailData ->
+        {
             emailBuilder.buildEmail(emailData, messageProps);
             Exception exception = null;
             try
@@ -263,7 +256,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      */
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-            AcmUser user) throws Exception
+                                                                            AcmUser user) throws Exception
     {
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
@@ -323,35 +316,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     private String makeNote(String emailAddress, EmailWithEmbeddedLinksDTO emailWithEmbeddedLinksDTO, Authentication authentication)
             throws AcmEncryptionException
     {
-        StringBuilder body = new StringBuilder();
-        body.append(emailWithEmbeddedLinksDTO.getBody() != null ? emailWithEmbeddedLinksDTO.getBody() : "").append("<br/>");
-        if (emailWithEmbeddedLinksDTO.getFileIds() != null)
-        {
-            for (Long fileId : emailWithEmbeddedLinksDTO.getFileIds())
-            {
-                String token = generateAndSaveAuthenticationToken(fileId, emailAddress, authentication);
-                body.append(emailWithEmbeddedLinksDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token)
-                        .append("<br/>");
-            }
-        }
-        return emailWithEmbeddedLinksDTO.buildMessageBodyFromTemplate(body.toString());
-    }
-
-    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, Authentication authentication)
-    {
-        String token = authenticationTokenService.getUncachedTokenForAuthentication(authentication);
-        saveAuthenticationToken(emailAddress, fileId, token);
-        return token;
-    }
-
-    private void saveAuthenticationToken(String email, Long fileId, String token)
-    {
-        AuthenticationToken authenticationToken = new AuthenticationToken();
-        authenticationToken.setKey(token);
-        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
-        authenticationToken.setEmail(email);
-        authenticationToken.setFileId(fileId);
-        authenticationTokenDao.save(authenticationToken);
+        return getAcmEmailContentGeneratorService().generateEmailBody(emailWithEmbeddedLinksDTO, emailAddress, authentication);
     }
 
     /**
@@ -394,20 +359,14 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         this.muleContextManager = muleContextManager;
     }
 
-    /**
-     * @param authenticationTokenService the authenticationTokenService to set
-     */
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
+    public AcmEmailContentGeneratorService getAcmEmailContentGeneratorService()
     {
-        this.authenticationTokenService = authenticationTokenService;
+        return acmEmailContentGeneratorService;
     }
 
-    /**
-     * @param authenticationTokenDao the authenticationTokenDao to set
-     */
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
+    public void setAcmEmailContentGeneratorService(AcmEmailContentGeneratorService acmEmailContentGeneratorService)
     {
-        this.authenticationTokenDao = authenticationTokenDao;
+        this.acmEmailContentGeneratorService = acmEmailContentGeneratorService;
     }
 
     /**

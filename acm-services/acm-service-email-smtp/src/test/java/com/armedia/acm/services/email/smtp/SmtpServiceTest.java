@@ -1,15 +1,5 @@
 package com.armedia.acm.services.email.smtp;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.matches;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
@@ -25,8 +15,8 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,9 +40,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jul 5, 2017
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SmtpServiceTest
@@ -78,6 +75,9 @@ public class SmtpServiceTest
 
     @Mock
     private Authentication mockAuthentication;
+
+    @Mock
+    private AcmEmailContentGeneratorService mockAcmEmailContentGeneratorService;
 
     @Mock
     private AuthenticationTokenService mockAuthenticationTokenService;
@@ -146,14 +146,15 @@ public class SmtpServiceTest
         setSendExpectations(false);
         when(mockMuleMessage.getInboundProperty("sendEmailException")).thenReturn(null);
 
-        when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).thenReturn(token);
+        when(mockAcmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication)).thenReturn(note);
+        //when(mockAuthenticationTokenService.getUncachedTokenForAuthentication(mockAuthentication)).thenReturn(token);
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setKey(token);
         authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
         authenticationToken.setEmail(email);
         authenticationToken.setFileId(fileId);
 
-        when(mockAuthenticationTokenDao.save(any(AuthenticationToken.class))).thenReturn(authenticationToken);
+        //when(mockAuthenticationTokenDao.save(any(AuthenticationToken.class))).thenReturn(authenticationToken);
 
         when(mockAcmUser.getUserId()).thenReturn("ann-acm");
 
@@ -549,7 +550,6 @@ public class SmtpServiceTest
 
     /**
      * @throws Exception
-     *
      */
     private void setSendExpectations(boolean withEncription) throws Exception
     {

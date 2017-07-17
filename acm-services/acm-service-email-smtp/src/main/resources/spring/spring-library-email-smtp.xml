@@ -8,9 +8,8 @@
         <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         <property name="flow" value="vm://sendEmailViaSmtp.in"/>
+        <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
     </bean>
 
 </beans>
