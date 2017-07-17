@@ -9,7 +9,11 @@
     "leftnav.item": "People",
     "topbar.item": "Person"
   },
+  "people.comp.main": {
+    "title": "Overview"
+  },
   "people.comp.info": {
+    "title": "Info",
     "phone.label": "Phone",
     "email.label": "Email",
     "status.label": "Status",
@@ -17,6 +21,7 @@
     "identification.label": "ID"
   },
   "people.comp.actions": {
+    "title": "Actions",
     "export.button": "Export",
     "import.button": "Import",
     "delete.button": "Delete",

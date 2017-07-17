@@ -12,7 +12,11 @@
   "cases.error": {
     "invalidData": "de_"
   },
+  "cases.comp.main": {
+    "title": "Overzicht"
+  },
   "cases.comp.info": {
+    "title": "Informatie",
     "caseId": "de_Case id:",
     "caseNumber": "de_Case Number:",
     "courtRoomName": "de_Court Room Name:",
@@ -24,6 +28,7 @@
     "dueDate.label": "de_Due Date"
   },
   "cases.comp.actions": {
+    "title": "Acties",
     "restrict": "de_Restrict?",
     "new.button": "de_New",
     "edit.button": "de_Edit",
@@ -37,7 +42,7 @@
     "split.button": "de_Split"
   },
   "cases.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Case details saved",
     "table.columns": {
       "title": "de_Details",
@@ -46,13 +51,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "de_Documents",
+    "title": "Dokumente",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "cases.comp.people": {
-    "title": "de_People",
+    "title": "Menschen",
     "table.columns": {
       "entity": "de_Entity",
       "type": "de_Type",
@@ -71,7 +76,7 @@
       }
     },
     "organizations": {
-      "title": "de_Organizations",
+      "title": "Organisationen",
       "table.columns": {
         "type": "de_Type",
         "value": "de_Value",
@@ -119,8 +124,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organisationen",
+    "table.columns": {
+      "name": "de_Organization Name",
+      "associationType": "de_Role",
+      "type": "de_Organization Type",
+      "identification": "de_ID",
+      "value": "de_Organization",
+      "contact": "de_Primary Contact",
+      "phone": "de_Phone",
+      "location": "de_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "de_Participants",
+    "title": "Teilnehmer",
     "table.columns": {
       "type": "de_Type",
       "name": "de_Name"
@@ -142,7 +160,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "de_Notes",
+    "title": "Notizen",
     "table.columns": {
       "note": "de_Note",
       "created": "de_Created",
@@ -150,7 +168,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "de_Tasks",
+    "title": "Aufgaben",
     "table.columns": {
       "title": "de_Title",
       "assignee": "de_Assignee",
@@ -163,7 +181,7 @@
     "table.deadline.tooltip": "de_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "de_References",
+    "title": "Referenzen",
     "table.columns": {
       "targetName": "de_Number",
       "parentName": "de_Parent",
@@ -174,7 +192,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -182,7 +200,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "de_Time",
+    "title": "Zeit",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -193,7 +211,7 @@
     "formNamePrefix": "de_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "de_Cost",
+    "title": "Kosten",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -204,7 +222,7 @@
     "formNamePrefix": "de_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
@@ -228,7 +246,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "de_Calendar"
+    "title": "Kalender"
   },
   "cases.comp.merge": {
     "id": "de_merge",
@@ -287,7 +305,7 @@
     "searchGroupHeader": "de_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "de_Future Approvers",
+    "title": "Toekomstige Goedkeuringen",
     "addNewTooltip": "de_Add new approver",
     "noBuckslipMessage": "de_No Data",
     "button": {
@@ -304,7 +322,7 @@
     "state.label": "de_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "de_Past Approvers",
+    "title": "Vorige Goedkeuringen",
     "noBuckslipMessage": "de_No Data",
     "table.columns": {
       "approvalDate": "de_Approval Date",
@@ -329,6 +347,40 @@
       "type": "de_Type",
       "title": "de_Title",
       "username": "de_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "people.label": "Menschen",
+      "organizations.label": "Organisationen",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "notes.label": "Notizen",
+      "tasks.label": "Aufgaben",
+      "references.label": "Referenzen",
+      "history.label": "Geschichte",
+      "time.label": "Zeit",
+      "cost.label": "Kosten",
+      "tags.label": "Etiketten",
+      "calendar.label": "Kalender",
+      "approvalRouting.label": "Toekomstige Goedkeuringen"
+    },
+    "filters": {
+      "opened": "Alle offenen Beschwerden",
+      "iHaveCreated": "Alle offenen Beschwerden",
+      "iAmAssigned": "Alles, was ich zugewiesen bin",
+      "iAmFollowing": "Alles, was ich folge",
+      "closed": "Alle Geschlossenen",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "caseIdAsc": "Sortieren Fall-ID Auf",
+      "caseIdDesc": "Sortieren Fall-ID Dec",
+      "byNameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

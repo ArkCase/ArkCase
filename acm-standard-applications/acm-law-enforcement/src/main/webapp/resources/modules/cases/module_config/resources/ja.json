@@ -12,7 +12,11 @@
   "cases.error": {
     "invalidData": "ja_"
   },
+  "cases.comp.main": {
+    "title": "概観"
+  },
   "cases.comp.info": {
+    "title": "情報",
     "caseId": "ja_Case id:",
     "caseNumber": "ja_Case Number:",
     "courtRoomName": "ja_Court Room Name:",
@@ -24,6 +28,7 @@
     "dueDate.label": "ja_Due Date"
   },
   "cases.comp.actions": {
+    "title": "行动",
     "restrict": "ja_Restrict?",
     "new.button": "ja_New",
     "edit.button": "ja_Edit",
@@ -37,7 +42,7 @@
     "split.button": "ja_Split"
   },
   "cases.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Case details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -46,13 +51,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "ja_Documents",
+    "title": "ファイル",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
   },
   "cases.comp.people": {
-    "title": "ja_People",
+    "title": "人員",
     "table.columns": {
       "entity": "ja_Entity",
       "type": "ja_Type",
@@ -71,7 +76,7 @@
       }
     },
     "organizations": {
-      "title": "ja_Organizations",
+      "title": "組織",
       "table.columns": {
         "type": "ja_Type",
         "value": "ja_Value",
@@ -119,8 +124,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "組織",
+    "table.columns": {
+      "name": "ja_Organization Name",
+      "associationType": "ja_Role",
+      "type": "ja_Organization Type",
+      "identification": "ja_ID",
+      "value": "ja_Organization",
+      "contact": "ja_Primary Contact",
+      "phone": "ja_Phone",
+      "location": "ja_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "ja_Participants",
+    "title": "参加者",
     "table.columns": {
       "type": "ja_Type",
       "name": "ja_Name"
@@ -142,7 +160,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "ja_Notes",
+    "title": "ノート",
     "table.columns": {
       "note": "ja_Note",
       "created": "ja_Created",
@@ -150,7 +168,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "ja_Tasks",
+    "title": "タスク",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -163,7 +181,7 @@
     "table.deadline.tooltip": "ja_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "ja_References",
+    "title": "また",
     "table.columns": {
       "targetName": "ja_Number",
       "parentName": "ja_Parent",
@@ -174,7 +192,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "ja_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -182,7 +200,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "ja_Time",
+    "title": "時間",
     "table.columns": {
       "name": "ja_Form Name",
       "user": "ja_User",
@@ -193,7 +211,7 @@
     "formNamePrefix": "ja_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "ja_Cost",
+    "title": "支出",
     "table.columns": {
       "name": "ja_Form Name",
       "user": "ja_User",
@@ -211,7 +229,7 @@
       "createdBy": "ja_Created By"
     },
     "modal": {
-      "title": "ja_Tag",
+      "title": "タグ",
       "search": "ja_Search for Tag",
       "buttons": {
         "cancel": "ja_Cancel",
@@ -228,7 +246,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "ja_Calendar"
+    "title": "日報"
   },
   "cases.comp.merge": {
     "id": "ja_merge",
@@ -287,7 +305,7 @@
     "searchGroupHeader": "ja_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "ja_Future Approvers",
+    "title": "承認ル",
     "addNewTooltip": "ja_Add new approver",
     "noBuckslipMessage": "ja_No Data",
     "button": {
@@ -304,7 +322,7 @@
     "state.label": "ja_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "ja_Past Approvers",
+    "title": "過去の承認",
     "noBuckslipMessage": "ja_No Data",
     "table.columns": {
       "approvalDate": "ja_Approval Date",
@@ -329,6 +347,40 @@
       "type": "ja_Type",
       "title": "ja_Title",
       "username": "ja_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "people.label": "人員",
+      "organizations.label": "組織",
+      "documents.label": "ファイル",
+      "participants.label": "参加者",
+      "notes.label": "ノート",
+      "tasks.label": "タスク",
+      "references.label": "また",
+      "history.label": "歴史",
+      "time.label": "時間",
+      "cost.label": "支出",
+      "tags.label": "タグ",
+      "calendar.label": "日報",
+      "approvalRouting.label": "承認ル"
+    },
+    "filters": {
+      "opened": "開いているすべての",
+      "iHaveCreated": "私が作成しました",
+      "iAmAssigned": "自分に割り当てられました",
+      "iAmFollowing": "私は心配です",
+      "closed": "閉じています",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "アンチ日付順",
+      "caseIdAsc": "ケース番号で並べ替え",
+      "caseIdDesc": "ケース番号順にソート",
+      "byNameAsc": "名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }

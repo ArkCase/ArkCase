@@ -12,7 +12,11 @@
   "cases.error": {
     "invalidData": "hi_"
   },
+  "cases.comp.main": {
+    "title": "अवलोकन"
+  },
   "cases.comp.info": {
+    "title": "जानकारी",
     "caseId": "hi_Case id:",
     "caseNumber": "hi_Case Number:",
     "courtRoomName": "hi_Court Room Name:",
@@ -24,6 +28,7 @@
     "dueDate.label": "hi_Due Date"
   },
   "cases.comp.actions": {
+    "title": "क्रियाएं",
     "restrict": "hi_Restrict?",
     "new.button": "hi_New",
     "edit.button": "hi_Edit",
@@ -37,7 +42,7 @@
     "split.button": "hi_Split"
   },
   "cases.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Case details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -46,13 +51,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "hi_Documents",
+    "title": "दस्तावेज़",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
     "searchInputPlaceholder": "hi_Search"
   },
   "cases.comp.people": {
-    "title": "hi_People",
+    "title": "लोग",
     "table.columns": {
       "entity": "hi_Entity",
       "type": "hi_Type",
@@ -71,7 +76,7 @@
       }
     },
     "organizations": {
-      "title": "hi_Organizations",
+      "title": "संगठन",
       "table.columns": {
         "type": "hi_Type",
         "value": "hi_Value",
@@ -119,8 +124,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "संगठन",
+    "table.columns": {
+      "name": "hi_Organization Name",
+      "associationType": "hi_Role",
+      "type": "hi_Organization Type",
+      "identification": "hi_ID",
+      "value": "hi_Organization",
+      "contact": "hi_Primary Contact",
+      "phone": "hi_Phone",
+      "location": "hi_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "hi_Participants",
+    "title": "प्रतिभागियों",
     "table.columns": {
       "type": "hi_Type",
       "name": "hi_Name"
@@ -142,7 +160,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "hi_Notes",
+    "title": "नोट्स",
     "table.columns": {
       "note": "hi_Note",
       "created": "hi_Created",
@@ -150,7 +168,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "hi_Tasks",
+    "title": "कार्य",
     "table.columns": {
       "title": "hi_Title",
       "assignee": "hi_Assignee",
@@ -163,7 +181,7 @@
     "table.deadline.tooltip": "hi_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "hi_References",
+    "title": "संदर्भ",
     "table.columns": {
       "targetName": "hi_Number",
       "parentName": "hi_Parent",
@@ -174,7 +192,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -182,7 +200,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "hi_Time",
+    "title": "पहर",
     "table.columns": {
       "name": "hi_Form Name",
       "user": "hi_User",
@@ -193,7 +211,7 @@
     "formNamePrefix": "hi_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "hi_Cost",
+    "title": "लागत",
     "table.columns": {
       "name": "hi_Form Name",
       "user": "hi_User",
@@ -204,7 +222,7 @@
     "formNamePrefix": "hi_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -228,7 +246,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "hi_Calendar"
+    "title": "कैलेंडर"
   },
   "cases.comp.merge": {
     "id": "hi_merge",
@@ -287,7 +305,7 @@
     "searchGroupHeader": "hi_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "hi_Future Approvers",
+    "title": "अनुमोदन रूटिंग",
     "addNewTooltip": "hi_Add new approver",
     "noBuckslipMessage": "hi_No Data",
     "button": {
@@ -304,7 +322,7 @@
     "state.label": "hi_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "hi_Past Approvers",
+    "title": "पिछली अनुमोदन",
     "noBuckslipMessage": "hi_No Data",
     "table.columns": {
       "approvalDate": "hi_Approval Date",
@@ -329,6 +347,40 @@
       "type": "hi_Type",
       "title": "hi_Title",
       "username": "hi_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "people.label": "लोग",
+      "organizations.label": "संगठन",
+      "documents.label": "दस्तावेज़",
+      "participants.label": "प्रतिभागियों को",
+      "notes.label": "टिप्पणियाँ",
+      "tasks.label": "कार्य",
+      "references.label": "सन्दर्भ",
+      "history.label": "इतिहास",
+      "time.label": "पहर",
+      "cost.label": "लागत",
+      "tags.label": "टैग",
+      "calendar.label": "कैलेंडर",
+      "approvalRouting.label": "अनुमोदन रूटिंग"
+    },
+    "filters": {
+      "opened": "सभी ओपन शिकायतें",
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "iAmAssigned": "सभी को मैं नियुक्त किया गया",
+      "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
+      "closed": "सभी बंद",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
+      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
+      "caseIdAsc": "कपर क्रमबद्ध मामला ए एस सी",
+      "caseIdDesc": "क्रमबद्ध प्रकरण वर्णन आईडी",
+      "byNameAsc": "सॉर्ट इन एएनएससी एसी",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }

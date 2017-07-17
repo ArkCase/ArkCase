@@ -9,7 +9,11 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "Overview"
+  },
   "document-repository.comp.info": {
+    "title": "Info",
     "docRepoId": "Repository ID:",
     "docRepoName": "Document Repository Name:",
     "modified.label": "Modified Date",
@@ -18,6 +22,7 @@
     "description.label": "Description"
   },
   "document-repository.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
