@@ -168,6 +168,22 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                             return error;
                         }
                     );
+                    var orig_reference = {};
+                    orig_reference.referenceTitle = $scope.objectInfo.title_parseable;
+                    orig_reference.referenceType = ObjectService.ObjectTypes.CASE_FILE;
+                    orig_reference.referenceNumber = $scope.objectInfo.name;
+                    orig_reference.referenceStatus = $scope.objectInfo.status_lcs;
+                    orig_reference.parentId = chosenReference.object_id_s;
+                    orig_reference.parentType = chosenReference.object_type_s;
+                    referenceService.addReference(orig_reference).then(
+                        function (objectSaved) {
+                            $scope.refresh();
+                            return objectSaved;
+                        },
+                        function (error) {
+                            return error;
+                        }
+                    );
                     return;
                 }
             }, function () {
