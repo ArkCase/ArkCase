@@ -331,10 +331,6 @@
       "approverDecision": "ja_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "ユーザーを選択",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "ja_userSearch",
     "title": "ja_User/Group Search",
@@ -372,7 +368,7 @@
       "approvalRouting.label": "承認ル"
     },
     "filters": {
-      "openComplaints": "開いているすべての",
+      "opened": "開いているすべての",
       "iHaveCreated": "私が作成しました",
       "iAmAssigned": "自分に割り当てられました",
       "iAmFollowing": "私は心配です",

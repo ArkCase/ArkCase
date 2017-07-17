@@ -25,7 +25,7 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "complaints.tree.filters.openComplaints",
+        "desc": "complaints.tree.filters.opened",
         "name": "all-open-complaints",
         "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
         "default": true
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "userSearch",
-      "title": "complaints.comp.userSearch.title",
+      "title": "complaints.userSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,

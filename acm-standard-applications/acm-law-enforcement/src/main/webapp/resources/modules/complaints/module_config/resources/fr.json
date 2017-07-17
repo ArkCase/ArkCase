@@ -331,10 +331,6 @@
       "approverDecision": "fr_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "Sélectionnez les utilisateurs",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "fr_userSearch",
     "title": "fr_User/Group Search",
@@ -372,7 +368,7 @@
       "approvalRouting.label": "Routage d'approbation"
     },
     "filters": {
-      "openComplaints": "Toutes les plaintes ouvertes",
+      "opened": "Toutes les plaintes ouvertes",
       "iHaveCreated": "Tout ce que j'ai créé",
       "iAmAssigned": "Tout ce que je suis assigné",
       "iAmFollowing": "Tout ce que je suis",
