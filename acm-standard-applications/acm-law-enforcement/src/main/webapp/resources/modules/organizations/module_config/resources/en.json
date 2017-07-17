@@ -3,13 +3,18 @@
     "title": "Organizations",
     "progressNoComplaint": "[ No organizations data ]",
     "progressLoading": "Loading organization ",
-    "progressError": "Failed to load organization "
+    "progressError": "Failed to load organization ",
+    "noDataMessage": "No Data"
   },
   "organizations.menus": {
     "leftnav.item": "Organizations",
     "topbar.item": "Organization"
   },
+  "organizations.comp.main": {
+    "title": "Overview"
+  },
   "organizations.comp.info": {
+    "title": "Info",
     "phone.label": "Phone",
     "email.label": "Email",
     "status.label": "Status",
@@ -19,6 +24,7 @@
     "parent.placeholder": "Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Actions",
     "export.button": "Export",
     "import.button": "Import",
     "delete.button": "Delete",

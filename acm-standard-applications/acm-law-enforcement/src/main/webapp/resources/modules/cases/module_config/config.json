@@ -26,66 +26,66 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All Open Cases",
+        "desc": "cases.tree.filters.opened",
         "name": "all-open-cases",
         "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
         "default": true
       },
       {
-        "desc": "All I've Created",
+        "desc": "cases.tree.filters.iHaveCreated",
         "name": "my-created-cases",
         "value": "fq=author_s:${user}"
       },
       {
-        "desc": "All I'm Assigned",
+        "desc": "cases.tree.filters.iAmAssigned",
         "name": "my-assigned-cases",
         "value": "fq=assignee_s:${user}"
       },
       {
-        "desc": "All I'm Following",
+        "desc": "cases.tree.filters.iAmFollowing",
         "name": "my-following-cases",
         "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
       },
       {
-        "desc": "All Closed",
+        "desc": "cases.tree.filters.closed",
         "name": "all-closed-cases",
         "value": "fq=status_s:CLOSED"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "cases.tree.filters.noFilter",
         "name": "",
         "value": ""
       }
     ],
     "sorters": [
       {
-        "desc": "Sort Date Asc",
+        "desc": "cases.tree.sorters.dateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "Sort Date Desc",
+        "desc": "cases.tree.sorters.dateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort Case ID Asc",
+        "desc": "cases.tree.sorters.caseIdAsc",
         "name": "sort-case-id-asc",
         "value": "object_id_s ASC"
       },
       {
-        "desc": "Sort Case ID Desc",
+        "desc": "cases.tree.sorters.caseIdDesc",
         "name": "sort-case-id-desc",
         "value": "object_id_s DESC"
       },
       {
-        "desc": "Sort By Case Name",
+        "desc": "cases.tree.sorters.byNameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "cases.tree.sorters.noSort",
         "name": "",
         "value": ""
       }
@@ -116,12 +116,12 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
         "type": "p/CASE_FILE/det",
-        "label": "Details",
+        "label": "cases.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -129,7 +129,7 @@
       },
       {
         "type": "p/CASE_FILE/ppl",
-        "label": "People",
+        "label": "cases.tree.nodeTypes.people.label",
         "icon": "fa fa-user",
         "components": [
           "people"
@@ -137,7 +137,7 @@
       },
       {
         "type": "p/CASE_FILE/org",
-        "label": "Organizations",
+        "label": "cases.tree.nodeTypes.organizations.label",
         "icon": "fa fa-building",
         "components": [
           "organizations"
@@ -145,7 +145,7 @@
       },
       {
         "type": "p/CASE_FILE/doc",
-        "label": "Documents",
+        "label": "cases.tree.nodeTypes.documents.label",
         "icon": "fa fa-file",
         "components": [
           "documents"
@@ -153,7 +153,7 @@
       },
       {
         "type": "p/CASE_FILE/par",
-        "label": "Participants",
+        "label": "cases.tree.nodeTypes.participants.label",
         "icon": "fa fa-users",
         "components": [
           "participants"
@@ -161,7 +161,7 @@
       },
       {
         "type": "p/CASE_FILE/note",
-        "label": "Notes",
+        "label": "cases.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -169,7 +169,7 @@
       },
       {
         "type": "p/CASE_FILE/task",
-        "label": "Tasks",
+        "label": "cases.tree.nodeTypes.tasks.label",
         "icon": "fa fa-check-circle",
         "components": [
           "tasks"
@@ -177,7 +177,7 @@
       },
       {
         "type": "p/CASE_FILE/ref",
-        "label": "References",
+        "label": "cases.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -185,7 +185,7 @@
       },
       {
         "type": "p/CASE_FILE/his",
-        "label": "History",
+        "label": "cases.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -193,7 +193,7 @@
       },
       {
         "type": "p/CASE_FILE/time",
-        "label": "Time",
+        "label": "cases.tree.nodeTypes.time.label",
         "icon": "fa fa-clock-o",
         "components": [
           "time"
@@ -201,7 +201,7 @@
       },
       {
         "type": "p/CASE_FILE/cost",
-        "label": "Cost",
+        "label": "cases.tree.nodeTypes.cost.label",
         "icon": "fa fa-money",
         "components": [
           "cost"
@@ -209,7 +209,7 @@
       },
       {
         "type": "p/CASE_FILE/tags",
-        "label": "Tags",
+        "label": "cases.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -217,7 +217,7 @@
       },
       {
         "type": "p/CASE_FILE/calendar",
-        "label": "Calendar",
+        "label": "cases.tree.nodeTypes.calendar.label",
         "icon": "fa fa-calendar",
         "components": [
           "calendar"
@@ -225,10 +225,10 @@
       },
       {
         "type": "p/CASE_FILE/apr",
-        "label": "Approval Routing",
+        "label": "cases.tree.nodeTypes.approvalRouting.label",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -236,7 +236,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "cases.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -288,6 +288,27 @@
               "name": "lastName",
               "field": "person.familyName",
               "displayName": "cases.comp.people.table.columns.lastName",
+              "headerCellFilter": "translate"
+            }
+          ]
+        },
+        {
+          "id": "organizations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "organization.organizationRole",
+              "displayName": "cases.comp.organizations.table.columns.type",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationName",
+              "displayName": "cases.comp.organizations.table.columns.name",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.organizationType",
+              "displayName": "cases.comp.organizations.table.columns.type",
               "headerCellFilter": "translate"
             }
           ]
@@ -416,38 +437,87 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "cases.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "cases.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "cases.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         },
         {
           "id": "calendar",
           "type": "component"
+        },
+        {
+          "id": "approvalRouting",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
+              "displayName": "cases.comp.approvalRouting.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title_parseable' title='{{row.entity.title_parseable}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "width": 150,
+              "name": "assignee",
+              "field": "assignee_s",
+              "displayName": "cases.comp.approvalRouting.assignee.label",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "width": 150,
+              "name": "due",
+              "field": "due_tdt",
+              "displayName": "cases.comp.approvalRouting.dueDate.label",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            }
+          ]
         }
       ]
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "cases.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "cases.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "cases.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "documents",
-      "title": "Documents",
+      "title": "cases.comp.documents.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -464,7 +534,7 @@
     },
     {
       "id": "people",
-      "title": "People",
+      "title": "cases.comp.people.title",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",
       "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
@@ -522,7 +592,7 @@
     },
     {
       "id": "organizations",
-      "title": "Organizations",
+      "title": "cases.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
@@ -568,6 +638,7 @@
           "displayName": "cases.comp.organizations.table.columns.phone",
           "headerCellFilter": "translate",
           "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
+
         },
         {
           "name": "organization.defaultAddress.city",
@@ -579,7 +650,7 @@
     },
     {
       "id": "participants",
-      "title": "Participants",
+      "title": "cases.comp.participants.title",
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
@@ -665,7 +736,7 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "cases.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -706,7 +777,7 @@
     },
     {
       "id": "tasks",
-      "title": "Tasks",
+      "title": "cases.comp.tasks.title",
       "icon": "fa fa-check-circle",
       "enabled": true,
       "type": "grid",
@@ -772,7 +843,7 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "cases.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -823,7 +894,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "cases.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -858,7 +929,7 @@
     },
     {
       "id": "time",
-      "title": "Time",
+      "title": "cases.comp.time.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
@@ -904,7 +975,7 @@
     },
     {
       "id": "cost",
-      "title": "Cost",
+      "title": "cases.comp.cost.title",
       "icon": "fa fa-money",
       "enabled": true,
       "type": "grid",
@@ -952,7 +1023,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "cases.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
@@ -990,7 +1061,7 @@
     },
     {
       "id": "calendar",
-      "title": "Calendar",
+      "title": "cases.comp.calendar.title",
       "icon": "fa fa-calendar",
       "enabled": true,
       "type": "empty"
@@ -1110,8 +1181,8 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
-      "title": "Approval Routing",
+      "id": "approvalRouting",
+      "title": "cases.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "cases.comp.approvalRouting.addNewTooltip",
       "enabled": true,
@@ -1156,7 +1227,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "cases.comp.pastapprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
@@ -1192,7 +1263,7 @@
     },
     {
       "id": "userSearch",
-      "title": "Select users",
+      "title": "cases.comp.userSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,

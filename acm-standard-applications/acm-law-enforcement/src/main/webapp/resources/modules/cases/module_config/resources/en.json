@@ -12,7 +12,11 @@
   "cases.error": {
     "invalidData": ""
   },
+  "cases.comp.main": {
+    "title": "Overview"
+  },
   "cases.comp.info": {
+    "title": "Info",
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
     "courtRoomName": "Court Room Name:",
@@ -24,6 +28,7 @@
     "dueDate.label": "Due Date"
   },
   "cases.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "new.button": "New",
     "edit.button": "Edit",
@@ -67,8 +72,9 @@
   "cases.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
+      "name": "Organization Name",
       "associationType": "Role",
-      "type": "Type",
+      "type": "Organization Type",
       "identification": "ID",
       "value": "Organization",
       "contact": "Primary Contact",
@@ -287,5 +293,40 @@
       "title": "Title",
       "username": "Username"
     }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "people.label": "People",
+      "organizations.label": "Organizations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tasks",
+      "references.label": "References",
+      "history.label": "History",
+      "time.label": "Time",
+      "cost.label": "Cost",
+      "tags.label": "Tags",
+      "calendar.label": "Calendar",
+      "approvalRouting.label": "Approval Routing"
+    },
+    "filters": {
+      "opened": "All Open Cases",
+      "iHaveCreated": "All I've Created",
+      "iAmAssigned": "All I'm Assigned",
+      "iAmFollowing": "All I'm Following",
+      "closed": "All Closed",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Asc",
+      "dateDesc": "Sort Date Desc",
+      "caseIdAsc": "Sort Case ID Asc",
+      "caseIdDesc": "Sort Case ID Desc",
+      "byNameAsc": "Sort By Case Name Asc",
+      "noSort": "(No Sort)"
+    }
   }
+
 }

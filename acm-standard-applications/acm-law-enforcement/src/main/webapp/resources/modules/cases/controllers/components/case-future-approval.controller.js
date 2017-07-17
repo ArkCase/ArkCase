@@ -20,7 +20,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
@@ -68,6 +68,8 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             $scope.oldData = angular.copy($scope.gridOptions.data);
 
         });
+
+        $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
 
         $scope.userSearch = function () {
             var modalInstance = $modal.open({

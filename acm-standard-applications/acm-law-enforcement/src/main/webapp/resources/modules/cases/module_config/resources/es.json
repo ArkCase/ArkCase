@@ -12,7 +12,11 @@
   "cases.error": {
     "invalidData": "es_"
   },
+  "cases.comp.main": {
+    "title": "Descripción general"
+  },
   "cases.comp.info": {
+    "title": "Información",
     "caseId": "es_Case id:",
     "caseNumber": "es_Case Number:",
     "courtRoomName": "es_Court Room Name:",
@@ -24,6 +28,7 @@
     "dueDate.label": "es_Due Date"
   },
   "cases.comp.actions": {
+    "title": "Acciones",
     "restrict": "es_Restrict?",
     "new.button": "es_New",
     "edit.button": "es_Edit",
@@ -37,7 +42,7 @@
     "split.button": "es_Split"
   },
   "cases.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Case details saved",
     "table.columns": {
       "title": "es_Details",
@@ -46,13 +51,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "es_Documents",
+    "title": "Documentos",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "cases.comp.people": {
-    "title": "es_People",
+    "title": "Personas",
     "table.columns": {
       "entity": "es_Entity",
       "type": "es_Type",
@@ -71,7 +76,7 @@
       }
     },
     "organizations": {
-      "title": "es_Organizations",
+      "title": "Organizaciones",
       "table.columns": {
         "type": "es_Type",
         "value": "es_Value",
@@ -119,8 +124,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organizaciones",
+    "table.columns": {
+      "name": "es_Organization Name",
+      "associationType": "es_Role",
+      "type": "es_Organization Type",
+      "identification": "es_ID",
+      "value": "es_Organization",
+      "contact": "es_Primary Contact",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "es_Participants",
+    "title": "Participantes",
     "table.columns": {
       "type": "es_Type",
       "name": "es_Name"
@@ -142,7 +160,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "es_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "es_Note",
       "created": "es_Created",
@@ -150,7 +168,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "es_Tasks",
+    "title": "Tareas",
     "table.columns": {
       "title": "es_Title",
       "assignee": "es_Assignee",
@@ -163,7 +181,7 @@
     "table.deadline.tooltip": "es_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "es_References",
+    "title": "Referencias",
     "table.columns": {
       "targetName": "es_Number",
       "parentName": "es_Parent",
@@ -174,7 +192,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "es_History",
+    "title": "Historia",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -182,7 +200,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "es_Time",
+    "title": "Tiempo",
     "table.columns": {
       "name": "es_Form Name",
       "user": "es_User",
@@ -193,7 +211,7 @@
     "formNamePrefix": "es_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "es_Cost",
+    "title": "Costo",
     "table.columns": {
       "name": "es_Form Name",
       "user": "es_User",
@@ -204,7 +222,7 @@
     "formNamePrefix": "es_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -228,7 +246,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "es_Calendar"
+    "title": "Calendario"
   },
   "cases.comp.merge": {
     "id": "es_merge",
@@ -287,7 +305,7 @@
     "searchGroupHeader": "es_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "es_Future Approvers",
+    "title": "Ruta de Aprobación",
     "addNewTooltip": "es_Add new approver",
     "noBuckslipMessage": "es_No Data",
     "button": {
@@ -304,7 +322,7 @@
     "state.label": "es_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "es_Past Approvers",
+    "title": "Aprobaciones anteriores",
     "noBuckslipMessage": "es_No Data",
     "table.columns": {
       "approvalDate": "es_Approval Date",
@@ -329,6 +347,40 @@
       "type": "es_Type",
       "title": "es_Title",
       "username": "es_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "people.label": "Personas",
+      "organizations.label": "Organizaciones",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tareas",
+      "references.label": "Referencias",
+      "history.label": "Historia",
+      "time.label": "Tiempo",
+      "cost.label": "Costo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendario",
+      "approvalRouting.label": "Ruta de Aprobació"
+    },
+    "filters": {
+      "opened": "Todas las quejas abiertas",
+      "iHaveCreated": "Todo lo que he creado",
+      "iAmAssigned": "Todo lo que estoy asignado",
+      "iAmFollowing": "Todo lo que estoy siguiendo",
+      "closed": "Todos cerrados",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "caseIdAsc": "Ordenar caso de la identificación Asc",
+      "caseIdDesc": "Ordenar caso de la identificación Dec",
+      "byNameAsc": "Ordenar por nombre Asc",
+      "noSort": "(Sin Clasificar)"
     }
   }
 }

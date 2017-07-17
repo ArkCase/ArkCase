@@ -220,6 +220,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         widget.title = "dashboard.widgets.reworkDetails.title";
                                     } else if ("Documents Under Review" == widget.title) {
                                         widget.title = "dashboard.widgets.docReview.title";
+                                    } else if ("Parent Documents" == widget.title) {
+                                        widget.title = "dashboard.widgets.parentDocs.title";
                                     } else if ("Workflow Overview" == widget.title) {
                                         widget.title = "dashboard.widgets.workflow.title";
                                     } else if ("eSignature" == widget.title) {

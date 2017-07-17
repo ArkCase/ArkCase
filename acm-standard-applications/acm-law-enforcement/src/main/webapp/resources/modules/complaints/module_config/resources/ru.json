@@ -331,10 +331,6 @@
       "approverDecision": "ru_Approver Decision"
     }
   },
-  "complaints.comp.userOrGroupSearch": {
-    "title": "Выбрать пользователей",
-    "__TODO__": "TODO: move entries in complaints.userOrGroupSearch to complaints.comp.userOrGroupSearch"
-  },
   "complaints.userOrGroupSearch": {
     "id": "ru_userSearch",
     "title": "ru_User/Group Search",
@@ -372,14 +368,14 @@
       "approvalRouting.label": "Маршрутизация Одобрения"
     },
     "filters": {
-      "openComplaints": "Все открытые жалобы",
+      "opened": "Все открытые жалобы",
       "iHaveCreated": "Все, что я создал",
       "iAmAssigned": "Все назначено",
       "iAmFollowing": "Все, за чем я слежу",
       "closedNoFurtherAction": "Все закрыты без дальнейших действий",
-      "closedReferExternal": "All Closed Refer External",
+      "closedReferExternal": "Все закрыты Ссылки",
       "closedOpenInvestigation": "Все закрытые открытые расследования",
-      "noFilter": "(No Filter)"
+      "noFilter": "(Нет фильтра)"
     },
     "sorters": {
       "incidentDateAsc": "Сортировка даты инцидента Asc",
@@ -387,7 +383,7 @@
       "createdDateAsc": "Сортировка Дата создания Asc",
       "createdDateDesc": "Сортировка Дата создания Desc",
       "byNameAsc": "Сортировать по имени Asc",
-      "noSort": "(Нет фильтра)"
+      "noSort": "(нет Сортировать)"
     }
   }
 }
