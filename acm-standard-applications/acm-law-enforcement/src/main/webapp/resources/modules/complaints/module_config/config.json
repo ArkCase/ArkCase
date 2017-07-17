@@ -25,7 +25,7 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "complaints.tree.filters.openComplaints",
+        "desc": "complaints.tree.filters.opened",
         "name": "all-open-complaints",
         "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
         "default": true
@@ -126,7 +126,7 @@
           "cost",
           "tags",
           "calendar",
-          "approvalrouting"
+          "approvalRouting"
         ]
       },
       {
@@ -246,7 +246,7 @@
         "label": "complaints.tree.nodeTypes.approvalRouting.label",
         "icon": "fa fa-sort-amount-desc",
         "components": [
-          "approvalrouting"
+          "approvalRouting"
         ]
       }
     ]
@@ -516,7 +516,7 @@
           "type": "component"
         },
         {
-          "id": "approvalrouting",
+          "id": "approvalRouting",
           "type": "component",
           "columnDefs": [
             {
@@ -1209,7 +1209,7 @@
       "reportFileName": "search"
     },
     {
-      "id": "approvalrouting",
+      "id": "approvalRouting",
       "title": "complaints.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
@@ -1291,7 +1291,7 @@
     },
     {
       "id": "userSearch",
-      "title": "complaints.comp.userSearch.title",
+      "title": "complaints.userSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,

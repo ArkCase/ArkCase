@@ -8,7 +8,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
         dashboardProvider
             .widget('calendar', {
                 title: 'dashboard.widgets.calendar.title',
-                description: 'dashboard.widgets.calendar.title.description',
+                description: 'dashboard.widgets.calendar.description',
                 controller: 'Dashboard.CalendarController',
                 controllerAs: 'calendar',
                 reload: true,

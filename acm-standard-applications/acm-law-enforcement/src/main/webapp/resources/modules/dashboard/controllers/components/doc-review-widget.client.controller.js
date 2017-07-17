@@ -5,7 +5,7 @@ angular.module('dashboard.docReview', ['adf.provider'])
         dashboardProvider
             .widget('docReview', {
                 title: 'dashboard.widgets.docReview.title',
-                description: 'dashboard.widgets.docReview.title.description',
+                description: 'dashboard.widgets.docReview.description',
                 controller: 'Dashboard.DocReviewController',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/doc-review-widget.client.view.html',

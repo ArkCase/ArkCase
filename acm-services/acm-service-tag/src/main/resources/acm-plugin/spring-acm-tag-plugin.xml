@@ -36,7 +36,7 @@
                 <bean id="listAssociatedTagsByObjectTypeAndId"
                       class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url" value="/api/{version}/service/tag/{objectId}/{objectType}"/>
+                    <property name="url" value="/api/{version}/service/tag/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="tagPrivilege"/>
                 </bean>
                 <bean id="removeTag" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
