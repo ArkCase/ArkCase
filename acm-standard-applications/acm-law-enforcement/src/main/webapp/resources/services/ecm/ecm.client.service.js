@@ -113,6 +113,10 @@ angular.module('services').factory('EcmService', ['$resource', 'UtilService'
                 url: 'api/latest/service/ecm/file/:fileId/type/:fileType',
                 cache: false
             }
+            , updateFile: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/file/metadata/:fileId'
+            }
         });
 
         Service._getFolderDocumentCounts = function(params){
