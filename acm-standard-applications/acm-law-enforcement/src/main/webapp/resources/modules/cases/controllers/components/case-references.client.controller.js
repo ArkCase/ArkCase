@@ -169,6 +169,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                         }
                     );
                     var orig_reference = {};
+                    orig_reference.referenceId = $scope.objectInfo.id;
                     orig_reference.referenceTitle = $scope.objectInfo.title_parseable;
                     orig_reference.referenceType = ObjectService.ObjectTypes.CASE_FILE;
                     orig_reference.referenceNumber = $scope.objectInfo.name;
