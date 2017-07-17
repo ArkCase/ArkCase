@@ -44,19 +44,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
-    protected PropertyFileManager propertyFileManager;
+    private PropertyFileManager propertyFileManager;
 
-    protected String emailSenderPropertyFileLocation;
+    private String emailSenderPropertyFileLocation;
 
-    protected EcmFileService ecmFileService;
+    private EcmFileService ecmFileService;
 
-    protected MuleContextManager muleContextManager;
+    private MuleContextManager muleContextManager;
 
     private ApplicationEventPublisher eventPublisher;
 
-    protected String flow;
+    private String flow;
 
-    protected AcmEmailContentGeneratorService acmEmailContentGeneratorService;
+    private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
