@@ -15,6 +15,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.news',
     'dashboard.details',
     'dashboard.locations',
+    'dashboard.emails',
     'dashboard.people',
     'dashboard.organizations',
     'dashboard.reworkDetails',
