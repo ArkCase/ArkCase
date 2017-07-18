@@ -196,7 +196,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
-
             getEntityManager().persist(in);
             getEntityManager().flush();
         }

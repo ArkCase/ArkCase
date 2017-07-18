@@ -3,9 +3,11 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.control.PagedResultsCookie;
@@ -60,6 +62,19 @@ public class SpringLdapPagedDao implements SpringLdapDao
 
     public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
     {
+        return findChangedUsersPaged(template, syncConfig, attributes, null);
+    }
+
+    @Override
+    public List<LdapGroup> findGroupsPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    {
+        return findChangedGroupsPaged(template, syncConfig, null);
+    }
+
+    @Override
+    public List<AcmUser> findChangedUsersPaged(LdapTemplate template, AcmLdapSyncConfig syncConfig,
+                                               String[] attributes, String ldapLastSyncDate)
+    {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
         if (ArrayUtils.isNotEmpty(attributes))
@@ -70,6 +85,12 @@ public class SpringLdapPagedDao implements SpringLdapDao
         }
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
+
+        if (StringUtils.isNotBlank(ldapLastSyncDate))
+        {
+            ldapLastSyncDate = syncConfig.getDirectoryType().equals(AcmLdapConstants.LDAP_OPENLDAP) ?
+                    convertToOpenLdapTimestamp(ldapLastSyncDate) : convertToActiveDirectoryTimestamp(ldapLastSyncDate);
+        }
 
         String searchBase = syncConfig.getUserSearchBase();
 
@@ -83,7 +104,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
         {
-            List<AcmUser> users = fetchLdapPaged(template, base, syncConfig.getAllUsersFilter(), searchControls,
+            List<AcmUser> users = fetchLdapPaged(template, base, buildUsersSearchFilter(syncConfig, ldapLastSyncDate), searchControls,
                     syncConfig.getSyncPageSize(), userGroupsContextMapper);
             log.info("Fetched total '{}' users for search base '{}'", users.size(), base);
             acmUsers.addAll(users);
@@ -105,15 +126,23 @@ public class SpringLdapPagedDao implements SpringLdapDao
     }
 
     @Override
-    public List<LdapGroup> findGroupsPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    public List<LdapGroup> findChangedGroupsPaged(LdapTemplate template, AcmLdapSyncConfig syncConfig, String ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
+        searchControls.setReturningAttributes(new String[] { "cn", "memberOf" });
 
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
+
+        if (StringUtils.isNotBlank(ldapLastSyncDate))
+        {
+            ldapLastSyncDate = syncConfig.getDirectoryType().equals(AcmLdapConstants.LDAP_OPENLDAP) ?
+                    convertToOpenLdapTimestamp(ldapLastSyncDate) : convertToActiveDirectoryTimestamp(ldapLastSyncDate);
+        }
+
         String searchBase = syncConfig.getGroupSearchBase();
-        List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
+
+        List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, buildGroupSearchFilter(syncConfig, ldapLastSyncDate),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);
 
         log.info("LDAP sync number of groups: {}", acmGroups.size());

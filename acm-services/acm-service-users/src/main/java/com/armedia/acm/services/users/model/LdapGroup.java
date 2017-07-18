@@ -1,6 +1,9 @@
 package com.armedia.acm.services.users.model;
 
+import com.google.common.base.Objects;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +14,7 @@ public class LdapGroup
     private String sortableValue;
     private String[] memberDistinguishedNames = {};
     private List<AcmUser> users = new ArrayList<>();
-    private Set<String> memberOfGroups;
+    private Set<String> memberOfGroups = new HashSet<>();
 
     public String getGroupName()
     {
@@ -71,5 +74,26 @@ public class LdapGroup
     public void setSortableValue(String sortableValue)
     {
         this.sortableValue = sortableValue;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LdapGroup ldapGroup = (LdapGroup) o;
+        return Objects.equal(groupName, ldapGroup.groupName);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hashCode(groupName);
+    }
+
+    @Override
+    public String toString()
+    {
+        return groupName;
     }
 }

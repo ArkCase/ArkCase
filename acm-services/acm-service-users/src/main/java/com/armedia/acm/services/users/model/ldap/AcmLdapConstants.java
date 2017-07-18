@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.model.ldap;
 
-
 public interface AcmLdapConstants
 {
     int RETRY_ATTEMPTS = 3;
@@ -21,5 +20,8 @@ public interface AcmLdapConstants
     String LDAP_HOME_DIRECTORY_ATTR = "homeDirectory";
     String LDAP_OBJECT_CLASS_ATTR = "objectClass";
     String LDAP_AD = "activedirectory";
+    String LDAP_AD_DATE_PATTERN = "yyyyMMddHHmmss.0VV";
     String LDAP_OPENLDAP = "openldap";
+    String LDAP_OPENLDAP_DATE_PATTERN = "yyyyMMddHHmmssVV";
+    String LDAP_LAST_SYNC_PROPERTY_KEY = "ldap.sync.last.run.date";
 }

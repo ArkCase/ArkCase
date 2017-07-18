@@ -13,22 +13,23 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
-
 
 /**
  * Created by dmiller on 6/28/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
-        locations = {"/spring/spring-library-user-service.xml",
+        locations = { "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-acm-encryption.xml",
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-property-file-manager.xml",
                 "/spring/spring-config-user-service-test-dummy-beans.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-user-service-test-user-home-files.xml",
-                "/spring/spring-library-search.xml"}
+                "/spring/spring-library-search.xml" }
 )
 
 public class SpringLdapDaoIT
@@ -71,9 +72,8 @@ public class SpringLdapDaoIT
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapGroup ->
-        {
-            log.trace("Ldap Group: {} -> {}", ldapGroup.getGroupName(), ldapGroup.getMemberOfGroups());
-        });
+                log.trace("Ldap Group: {} -> {}", ldapGroup.getGroupName(), ldapGroup.getMemberOfGroups())
+        );
     }
 
     @Test
@@ -96,7 +96,7 @@ public class SpringLdapDaoIT
     @Test
     public void findUsersWithSpecificAttributes()
     {
-        String[] attributes = new String[]{
+        String[] attributes = new String[] {
                 "cn", "sn", "givenName", "dn", "distinguishedname", "sAMAccountName", "mail"
         };
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
@@ -138,6 +138,33 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("User found: {}", acmUser.getDistinguishedName());
+    }
+
+    @Test
+    public void findChangedLdapGroups()
+    {
+        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        long start = System.currentTimeMillis();
+        List<LdapGroup> result = springLdapDao.findChangedGroupsPaged(ldapTemplate, acmSyncLdapConfig,
+                ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+        long time = System.currentTimeMillis() - start;
+        log.debug("Time: {}ms", time);
+        log.debug("Result: {}", result.size());
+        result.forEach(ldapGroup ->
+                log.debug("Ldap Group: {} -> {}", ldapGroup.getGroupName(), ldapGroup.getMemberOfGroups())
+        );
+    }
+
+    @Test
+    public void findChangedUsersWithSpecificAttributes()
+    {
+        LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
+        long start = System.currentTimeMillis();
+        List<AcmUser> result = springLdapDao.findChangedUsersPaged(ldapTemplate, acmSyncLdapConfig,
+                acmSyncLdapConfig.getUserSyncAttributes(), ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+        long time = System.currentTimeMillis() - start;
+        log.debug("Result: {}", result.size());
+        log.debug("Time: {}ms", time);
     }
 }
 
