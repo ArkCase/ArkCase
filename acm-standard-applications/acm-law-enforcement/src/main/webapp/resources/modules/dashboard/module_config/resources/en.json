@@ -188,6 +188,11 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "phones": {
+        "title": "Phone Numbers",
+        "description": "Displays phone numbers",
+        "noDataMessage": "Currently there are no phone numbers to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",
