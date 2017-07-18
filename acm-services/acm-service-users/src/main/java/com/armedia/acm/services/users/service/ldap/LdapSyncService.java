@@ -247,7 +247,7 @@ public class LdapSyncService
 
     public void processPartialResultsAndUpdateDatabase(List<AcmUser> ldapUsers, List<LdapGroup> ldapGroups)
     {
-        List<AcmGroup> existingAcmGroups = getLdapSyncDatabaseHelper().findAllAcmGroups();
+        List<AcmGroup> existingAcmGroups = getLdapSyncDatabaseHelper().findAllLdapGroups();
 
         ldapUsers = filterUsers(ldapUsers, ldapGroups, existingAcmGroups);
         ldapGroups = filterParentGroupsOnChangedGroups(ldapGroups, existingAcmGroups);
@@ -389,7 +389,6 @@ public class LdapSyncService
         List<AcmUser> filteredUsers = new ArrayList<>();
         for (AcmUser user : ldapUsers)
         {
-
             Set<String> userGroups = user.getLdapGroups();
 
             // check if ldapGroupNames contains at least one user group
@@ -421,9 +420,7 @@ public class LdapSyncService
             if (!groupParents.isEmpty())
             {
                 // find only groups with parent groups and return child-parent group pairs
-                groupParents
-                        .forEach(groupParent -> groupParentPairs.put(group.getGroupName(), groupParent)
-                        );
+                groupParents.forEach(groupParent -> groupParentPairs.put(group.getGroupName(), groupParent));
             }
         }
         return groupParentPairs;
