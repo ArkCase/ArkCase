@@ -55,7 +55,7 @@ public class LdapSyncDatabaseHelper
         storeRoles(directoryName, usersByLdapGroup);
     }
 
-    public List<AcmGroup> findAllAcmGroups()
+    public List<AcmGroup> findAllLdapGroups()
     {
         return groupDao.findAllLdapGroups();
     }
@@ -84,7 +84,7 @@ public class LdapSyncDatabaseHelper
                     if (acmGroup != null)
                     {
                         AcmUser acmUser = userDao.findByUserId(user.getUserId());
-                        log.debug("Adding user: [] as member to group: []", acmUser.getUserId(), groupName);
+                        log.debug("Adding user: [{}] as member to group: [{}]", acmUser.getUserId(), groupName);
                         acmGroup.addMember(acmUser);
                     }
                 })
@@ -99,9 +99,9 @@ public class LdapSyncDatabaseHelper
         return getUserDao().saveAcmUserRole(role);
     }
 
-    private void storeRoles(String directoryName, Map<String, Set<AcmUser>> userByRole)
+    private void storeRoles(String directoryName, Map<String, Set<AcmUser>> userMap)
     {
-        userByRole.forEach((key, value) -> persistUserRoles(directoryName, value, key));
+        userMap.forEach((key, value) -> persistUserRoles(directoryName, value, key));
     }
 
     private List<AcmUserRole> persistUserRoles(String directoryName, Set<AcmUser> savedUsers, String roleName)

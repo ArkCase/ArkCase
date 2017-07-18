@@ -276,7 +276,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public List<AcmGroup> findAllLdapGroups()
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup FrOM AcmGroup acmGroup WHERE acmGroup.type = :groupType",
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup FROM AcmGroup acmGroup WHERE acmGroup.type = :groupType",
                 AcmGroup.class);
         query.setParameter("groupType", "LDAP_GROUP");
         return query.getResultList();

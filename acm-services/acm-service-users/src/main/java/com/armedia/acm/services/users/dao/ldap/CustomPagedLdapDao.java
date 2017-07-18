@@ -40,10 +40,9 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        if (ArrayUtils.isNotEmpty(syncConfig.getUserSyncAttributes()))
+        if (ArrayUtils.isNotEmpty(attributes))
         {
-            String[] allAttributes = ArrayUtils.addAll(syncConfig.getUserSyncAttributes(), syncConfig.getUserIdAttributeName(),
-                    syncConfig.getMailAttributeName());
+            String[] allAttributes = ArrayUtils.addAll(attributes, syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
             searchControls.setReturningAttributes(allAttributes);
         }
 
