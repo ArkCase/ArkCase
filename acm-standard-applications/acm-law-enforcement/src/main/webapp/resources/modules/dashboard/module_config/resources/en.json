@@ -188,6 +188,11 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",
