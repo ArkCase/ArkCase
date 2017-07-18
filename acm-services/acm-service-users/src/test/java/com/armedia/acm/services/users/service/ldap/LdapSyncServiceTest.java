@@ -3,13 +3,13 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ldap.core.LdapTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,16 +23,16 @@ import java.util.TreeMap;
 
 import static org.easymock.EasyMock.expect;
 import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.isIn;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by armdev on 7/3/14.
- */
 public class LdapSyncServiceTest extends EasyMockSupport
 {
     static final Logger log = LoggerFactory.getLogger(LdapSyncServiceTest.class);
+
     private LdapSyncService unit;
 
     private SpringLdapDao mockLdapDao;
@@ -332,5 +332,70 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<AcmUser> result = unit.filterUsersForKnownGroups(ldapUsers, ldapGroups);
         log.debug("Took: {}ms", System.currentTimeMillis() - start);
         assertThat("Arrays should be equal", result, containsInAnyOrder(expected.toArray()));
+    }
+
+    @Test
+    public void filterUsersFromPartialSyncTest()
+    {
+        String newlySyncedGroup = "GROUP-N";
+        LdapGroup syncedGroup = new LdapGroup();
+        syncedGroup.setGroupName(newlySyncedGroup);
+
+        AcmGroup acmGroup = new AcmGroup();
+        acmGroup.setName("GROUP-A");
+
+        // not an arkcase-group or just a group with an arkcase-user
+        String unknownGroup = "GROUP-X";
+
+        List<AcmUser> newlySyncedUsers = new ArrayList<>();
+        AcmUser user1 = new AcmUser();
+        user1.setUserId("user1");
+        user1.setLdapGroups(fromArray("GROUP-N"));
+        AcmUser user2 = new AcmUser();
+        user2.setUserId("user2");
+        user2.setLdapGroups(fromArray("GROUP-A", "GROUP-N", "GROUP-X"));
+        AcmUser user3 = new AcmUser();
+        user3.setUserId("user3");
+        user3.setLdapGroups(fromArray("GROUP-X"));
+
+        newlySyncedUsers.add(user1);
+        newlySyncedUsers.add(user2);
+        newlySyncedUsers.add(user3);
+
+        List<AcmUser> users = unit.filterUsers(newlySyncedUsers, Arrays.asList(syncedGroup), Arrays.asList(acmGroup));
+
+        assertThat("users from GROUP-X are not valid", users, contains(user1, user2));
+        assertFalse(users.contains(user3));
+        assertFalse(user2.getLdapGroups().contains(unknownGroup));
+    }
+
+    @Test
+    public void filterParentGroupsOnChangedGroupsTest()
+    {
+        // arkcase group
+        LdapGroup group1 = new LdapGroup();
+        group1.setGroupName("GROUP-A");
+        AcmGroup acmGroup = new AcmGroup();
+        acmGroup.setName("GROUP-A");
+
+        // new synced group
+        LdapGroup group2 = new LdapGroup();
+        group2.setGroupName("GROUP-B");
+
+        // unknown group
+        LdapGroup group3 = new LdapGroup();
+        group3.setGroupName("GROUP-Z");
+
+        List<LdapGroup> ldapGroups = new ArrayList<>();
+        ldapGroups.add(group1);
+        ldapGroups.add(group2);
+
+        group1.setMemberOfGroups(fromArray("GROUP-A", "GROUP-B", "GROUP-Z"));
+
+        replayAll();
+        unit.filterParentGroupsOnChangedGroups(ldapGroups, Arrays.asList(acmGroup));
+
+        verifyAll();
+        assertFalse(group1.getMemberOfGroups().contains("GROUP-Z"));
     }
 }

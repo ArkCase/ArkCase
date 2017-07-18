@@ -60,8 +60,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         } catch (NonUniqueResultException e)
         {
             LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
@@ -80,8 +79,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             getEm().remove(groupToBeDeleted);
             return true;
-        }
-        else
+        } else
         {
             return false;
         }
@@ -214,7 +212,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return clonedMembers;
     }
 
-
     public AcmGroup groupByUIName(AcmGroup group)
     {
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
@@ -261,7 +258,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         TypedQuery dbQuery = this.getEm().createQuery(query);
         AcmGroup retval = null;
 
-
         try
         {
             retval = (AcmGroup) dbQuery.getSingleResult();
@@ -276,6 +272,14 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
             LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
         return retval;
+    }
+
+    public List<AcmGroup> findAllLdapGroups()
+    {
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup FrOM AcmGroup acmGroup WHERE acmGroup.type = :groupType",
+                AcmGroup.class);
+        query.setParameter("groupType", "LDAP_GROUP");
+        return query.getResultList();
     }
 
     @Override

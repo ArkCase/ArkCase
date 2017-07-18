@@ -3,9 +3,11 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
@@ -28,26 +30,35 @@ public class CustomPagedLdapDao implements SpringLdapDao
         return findUsers(template, syncConfig, syncConfig.getUserSyncAttributes());
     }
 
-    public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
+    @Override
+    public List<AcmUser> findChangedUsersPaged(LdapTemplate template, AcmLdapSyncConfig syncConfig,
+                                               String[] attributes, String ldapLastSyncDate)
     {
-        SearchControls searchControls = new SearchControls();
-        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        if (ArrayUtils.isNotEmpty(attributes))
-        {
-            String[] allAttributes = ArrayUtils.addAll(attributes, syncConfig.getUserIdAttributeName(), syncConfig.getMailAttributeName());
-            searchControls.setReturningAttributes(allAttributes);
-        }
         AggregateDirContextProcessor sortedAndPaged = buildSortedAndPagesProcessor(syncConfig, syncConfig.getAllUsersSortingAttribute());
 
         AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
 
-        String searchFilter = syncConfig.getAllUsersFilter();
+        SearchControls searchControls = new SearchControls();
+        searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+        if (ArrayUtils.isNotEmpty(syncConfig.getUserSyncAttributes()))
+        {
+            String[] allAttributes = ArrayUtils.addAll(syncConfig.getUserSyncAttributes(), syncConfig.getUserIdAttributeName(),
+                    syncConfig.getMailAttributeName());
+            searchControls.setReturningAttributes(allAttributes);
+        }
+
+        if (StringUtils.isNotBlank(ldapLastSyncDate))
+        {
+            ldapLastSyncDate = syncConfig.getDirectoryType().equals(AcmLdapConstants.LDAP_OPENLDAP) ?
+                    convertToOpenLdapTimestamp(ldapLastSyncDate) : convertToActiveDirectoryTimestamp(ldapLastSyncDate);
+        }
+
+        String searchFilter = buildUsersSearchFilter(syncConfig, ldapLastSyncDate);
         String searchBase = syncConfig.getUserSearchBase();
         String[] bases = searchBase.split("\\|");
         List<AcmUser> acmUsers = new ArrayList<>();
         for (String base : bases)
         {
-
             boolean searchUsers = true;
             boolean skipFirst = false;
             while (searchUsers)
@@ -63,7 +74,9 @@ public class CustomPagedLdapDao implements SpringLdapDao
                     acmUsers.addAll(found);
                 }
 
-                String usersFound = found.stream().map(u -> u.getDistinguishedName()).collect(Collectors.joining("\n"));
+                String usersFound = found.stream()
+                        .map(AcmUser::getDistinguishedName)
+                        .collect(Collectors.joining("\n"));
 
                 log.debug("Users found: {}. DNs: {}", found.size(), usersFound);
 
@@ -72,7 +85,8 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 {
                     skipFirst = true;
                     AcmUser lastFound = found.get(found.size() - 1);
-                    searchFilter = String.format(syncConfig.getAllUsersPageFilter(), lastFound.getSortableValue());
+
+                    searchFilter = buildPagedUsersSearchFilter(syncConfig, lastFound.getSortableValue(), ldapLastSyncDate);
 
                     // A change to the search filter requires us to rebuild the search controls... even though
                     // the controls will have the same values as before.
@@ -96,20 +110,8 @@ public class CustomPagedLdapDao implements SpringLdapDao
         return acmUsers;
     }
 
-    private AggregateDirContextProcessor buildSortedAndPagesProcessor(AcmLdapSyncConfig syncConfig, String sortAttribute)
-    {
-        AggregateDirContextProcessor sortedAndPaged = new AggregateDirContextProcessor();
-        SortControlDirContextProcessor sorted = new SortControlDirContextProcessor(sortAttribute);
-        PagedResultsDirContextProcessor pagedResultsProcessor = new PagedResultsDirContextProcessor(syncConfig.getSyncPageSize());
-
-        sortedAndPaged.addDirContextProcessor(sorted);
-        sortedAndPaged.addDirContextProcessor(pagedResultsProcessor);
-
-        return sortedAndPaged;
-    }
-
     @Override
-    public List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config)
+    public List<LdapGroup> findChangedGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config, String lastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -120,7 +122,14 @@ public class CustomPagedLdapDao implements SpringLdapDao
 
         boolean searchGroups = true;
         boolean skipFirst = false;
-        String searchFilter = config.getGroupSearchFilter();
+
+        if (StringUtils.isNotBlank(lastSyncDate))
+        {
+            lastSyncDate = config.getDirectoryType().equals(AcmLdapConstants.LDAP_OPENLDAP) ?
+                    convertToOpenLdapTimestamp(lastSyncDate) : convertToActiveDirectoryTimestamp(lastSyncDate);
+        }
+
+        String searchFilter = buildGroupSearchFilter(config, lastSyncDate);
         List<LdapGroup> acmGroups = new ArrayList<>();
 
         while (searchGroups)
@@ -145,7 +154,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             {
                 skipFirst = true;
                 LdapGroup lastFound = found.get(found.size() - 1);
-                searchFilter = String.format(config.getGroupSearchPageFilter(), lastFound.getSortableValue());
+                searchFilter = buildPagedGroupsSearchFilter(config, lastFound.getSortableValue(), lastSyncDate);
 
                 // A change to the search filter requires us to rebuild the search controls... even though
                 // the controls will have the same values as before.
@@ -157,6 +166,29 @@ public class CustomPagedLdapDao implements SpringLdapDao
         log.info("LDAP sync number of groups: {}", acmGroups.size());
 
         return acmGroups;
+    }
+
+    public List<AcmUser> findUsers(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
+    {
+        return findChangedUsersPaged(template, syncConfig, attributes, null);
+    }
+
+    private AggregateDirContextProcessor buildSortedAndPagesProcessor(AcmLdapSyncConfig syncConfig, String sortAttribute)
+    {
+        AggregateDirContextProcessor sortedAndPaged = new AggregateDirContextProcessor();
+        SortControlDirContextProcessor sorted = new SortControlDirContextProcessor(sortAttribute);
+        PagedResultsDirContextProcessor pagedResultsProcessor = new PagedResultsDirContextProcessor(syncConfig.getSyncPageSize());
+
+        sortedAndPaged.addDirContextProcessor(sorted);
+        sortedAndPaged.addDirContextProcessor(pagedResultsProcessor);
+
+        return sortedAndPaged;
+    }
+
+    @Override
+    public List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config)
+    {
+        return findChangedGroupsPaged(template, config, null);
     }
 
 }
