@@ -188,6 +188,11 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Displays DBA details",
+        "noDataMessage": "Currently there are no DBAs to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",

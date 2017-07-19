@@ -151,6 +151,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
                 model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
                 model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
+                model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
                 model.title = "dashboard.title";
             } else {
                 model.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
@@ -200,6 +201,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         widget.title = "dashboard.widgets.documents.title";
                                     } else if ("Locations" == widget.title) {
                                         widget.title = "dashboard.widgets.locations.title";
+                                    } else if ("DBAs" == widget.title) {
+                                        widget.title = "dashboard.widgets.dbas.title";
                                     } else if ("Tasks" == widget.title) {
                                         widget.title = "dashboard.widgets.tasks.title";
                                     } else if ("Participants" == widget.title) {
