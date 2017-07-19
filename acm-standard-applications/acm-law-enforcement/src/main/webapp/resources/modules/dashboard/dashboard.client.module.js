@@ -17,6 +17,7 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.locations',
     'dashboard.phones',
     'dashboard.faxes',
+    'dashboard.emails',
     'dashboard.urls',
     'dashboard.people',
     'dashboard.organizations',

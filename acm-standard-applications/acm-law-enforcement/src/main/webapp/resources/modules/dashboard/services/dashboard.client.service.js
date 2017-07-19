@@ -167,7 +167,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                         columns.forEach(function(column){
                             var widgets = column.widgets;
                             if (widgets) {
-                                widgets.forEach(function(widget) {
+                                widgets.forEach(function(widget){
                                     if ("modules/dashboard/templates/widget-title.html" != widget.titleTemplateUrl) {
                                         oldCode = true;
                                     }
@@ -204,6 +204,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         widget.title = "dashboard.widgets.phones.title";
                                     } else if ("Fax Numbers" == widget.title) {
                                         widget.title = "dashboard.widgets.faxes.title";
+                                    } else if ("Email Address" == widget.title) {
+                                        widget.title = "dashboard.widgets.emails.title";
                                     } else if ("URLs" == widget.title) {
                                         widget.title = "dashboard.widgets.urls.title";
                                     } else if ("Tasks" == widget.title) {

@@ -198,6 +198,11 @@
         "description": "Displays faxes details",
         "noDataMessage": "Currently there are no faxes to display"
       },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
       "urls": {
         "title": "URLs",
         "description": "Displays URLs details",
