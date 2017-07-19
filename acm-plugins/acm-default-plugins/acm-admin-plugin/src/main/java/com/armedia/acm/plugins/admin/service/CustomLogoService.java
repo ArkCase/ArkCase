@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.service;
 
 
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
@@ -12,7 +12,8 @@ import java.io.InputStream;
 /**
  * Created by sergey.kolomiets on 6/22/15.
  */
-public class CustomLogoService {
+public class CustomLogoService
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private String brandingFilesLocation;
@@ -22,87 +23,106 @@ public class CustomLogoService {
 
     /**
      * Return Header logo
+     *
      * @return
      * @throws AcmCustomLogoException
      */
-    public byte[] getHeaderLogo() throws AcmCustomLogoException {
-        try {
+    public byte[] getHeaderLogo() throws AcmCustomLogoException
+    {
+        try
+        {
             File headerLogo = new File(brandingFilesLocation + headerLogoFile);
-            byte[] result =  FileUtils.readFileToByteArray(headerLogo);
+            byte[] result = FileUtils.readFileToByteArray(headerLogo);
             return result;
-        } catch (Exception e) {
-            if (log.isErrorEnabled()){
-                log.error("Can't get custom Header Logo file", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't get custom Header Logo file", e);
             throw new AcmCustomLogoException("Can't get custom Header Logo file", e);
         }
     }
 
     /**
      * Return Login logo
+     *
      * @return
      * @throws AcmCustomLogoException
      */
-    public byte[] getLoginLogo() throws AcmCustomLogoException {
-        try {
+    public byte[] getLoginLogo() throws AcmCustomLogoException
+    {
+        try
+        {
             File headerLogo = new File(brandingFilesLocation + loginLogoFile);
-            byte[] result =  FileUtils.readFileToByteArray(headerLogo);
+            byte[] result = FileUtils.readFileToByteArray(headerLogo);
             return result;
-        } catch (Exception e) {
-            if (log.isErrorEnabled()){
-                log.error("Can't get custom Login Logo file", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't get custom Login Logo file", e);
             throw new AcmCustomLogoException("Can't get custom Login Logo file", e);
         }
     }
 
     /**
      * Update Login logo
+     *
      * @param logoStream
      * @throws AcmCustomLogoException
      */
-    public void updateLoginLogo(InputStream logoStream) throws AcmCustomLogoException {
+    public void updateLoginLogo(InputStream logoStream) throws AcmCustomLogoException
+    {
         File logoFile = null;
-        try {
-            try {
+        try
+        {
+            try
+            {
                 logoFile = new File(brandingFilesLocation + loginLogoFile);
                 FileUtils.copyInputStreamToFile(logoStream, logoFile);
-            } finally {
+            } finally
+            {
                 logoStream.close();
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new AcmCustomLogoException("Can't update logo file");
         }
     }
 
     /**
      * Update Header Logo
+     *
      * @param logoStream
      * @throws AcmCustomLogoException
      */
-    public void updateHeaderLogo(InputStream logoStream) throws AcmCustomLogoException {
+    public void updateHeaderLogo(InputStream logoStream) throws AcmCustomLogoException
+    {
         File logoFile = null;
-        try {
-            try {
+        try
+        {
+            try
+            {
                 logoFile = new File(brandingFilesLocation + headerLogoFile);
                 FileUtils.copyInputStreamToFile(logoStream, logoFile);
-            } finally {
+            } finally
+            {
                 logoStream.close();
             }
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new AcmCustomLogoException("Can't update logo file");
         }
     }
 
-    public void setBrandingFilesLocation(String brandingFilesLocation) {
+    public void setBrandingFilesLocation(String brandingFilesLocation)
+    {
         this.brandingFilesLocation = brandingFilesLocation;
     }
 
-    public void setHeaderLogoFile(String headerLogoFile) {
+    public void setHeaderLogoFile(String headerLogoFile)
+    {
         this.headerLogoFile = headerLogoFile;
     }
 
-    public void setLoginLogoFile(String loginLogoFile) {
+    public void setLoginLogoFile(String loginLogoFile)
+    {
         this.loginLogoFile = loginLogoFile;
     }
 }

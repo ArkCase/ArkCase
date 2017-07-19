@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
+import com.armedia.acm.plugins.admin.service.CustomLogoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,8 +20,9 @@ import java.io.InputStream;
  * Created by sergey.kolomiets  on 6/22/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class CustomLogoUploadFile {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class CustomLogoUploadFile
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CustomLogoService customLogoService;
@@ -36,35 +38,44 @@ public class CustomLogoUploadFile {
             throws IOException, AcmWorkflowConfigurationException
     {
 
-        try {
-            if (headerLogoFile != null && !headerLogoFile.isEmpty()) {
-                if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
+        try
+        {
+            if (headerLogoFile != null && !headerLogoFile.isEmpty())
+            {
+                if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                {
                     InputStream headerLogoStream = headerLogoFile.getInputStream();
                     customLogoService.updateHeaderLogo(headerLogoStream);
-                } else {
+                }
+                else
+                {
                     throw new AcmCustomLogoException("Only PNG files are supported for logo");
                 }
             }
 
-            if (loginLogoFile != null &&  !loginLogoFile.isEmpty()) {
-                if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE)) {
+            if (loginLogoFile != null && !loginLogoFile.isEmpty())
+            {
+                if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
+                {
                     InputStream loginLogoStream = loginLogoFile.getInputStream();
                     customLogoService.updateLoginLogo(loginLogoStream);
-                } else {
+                }
+                else
+                {
                     throw new AcmCustomLogoException("Only PNG files are supported for logo");
                 }
             }
 
             return "{}";
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't update logos", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't update logos", e);
             throw new AcmWorkflowConfigurationException("Can't update logos. " + e.getLocalizedMessage(), e);
         }
     }
 
-    public void setCustomLogoService(CustomLogoService customLogoService) {
+    public void setCustomLogoService(CustomLogoService customLogoService)
+    {
         this.customLogoService = customLogoService;
     }
 }

@@ -92,19 +92,6 @@
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
-    <!-- LDAP configuration API -->
-    <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationService">
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        <property name="ldapDirectoryConfig" ref="ldapDirectoryConfig"/>
-        <property name="templatesConfigMap">
-            <map>
-                <entry key="openldap" value-ref="openLdapTemplateConfig"/>
-                <entry key="activedirectory" value-ref="adTemplateConfig"/>
-            </map>
-        </property>
-        <property name="contextHolder" ref="acmContextHolder"/>
-    </bean>
-
     <bean id="ldapConfigurationRetrieveDirectories"
           class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationRetrieveDirectories">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
@@ -169,10 +156,6 @@
     </bean>
 
     <!-- Workflow Configuration -->
-    <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationService">
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
-        <property name="temporaryFolder" value="#{ systemProperties ['user.home'] }/.arkcase/acm/activiti/temp/"/>
-    </bean>
 
     <bean id="workflowConfigurationRetrieveWorkflows"
           class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveWorkflows">
@@ -199,21 +182,12 @@
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
-    <bean id="workflowConfigurationDiagramAPIController" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+    <bean id="workflowConfigurationDiagramAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <!-- Link forms Workflows -->
-    <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsService">
-        <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
-        <property name="configurationFile" value="drools-form-business-process-rules.xlsx"/>
-        <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
-        <property name="configurationFileBackupRegex"
-                  value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
-
-        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
-        <property name="acmFileTypesService" ref="acmFileTypesService"/>
-    </bean>
 
     <bean id="linkFormsWorkflowsRetrieveConfiguration"
           class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
@@ -226,9 +200,6 @@
     </bean>
 
     <!-- Custom CSS -->
-    <bean id="customCssService" class="com.armedia.acm.plugins.admin.web.api.CustomCssService">
-        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/custom.css"/>
-    </bean>
 
     <bean id="customCssRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomCssRetrieveFile">
         <property name="customCssService" ref="customCssService"/>
@@ -239,12 +210,6 @@
     </bean>
 
     <!-- Custom Logo -->
-    <bean id="customLogoService" class="com.armedia.acm.plugins.admin.web.api.CustomLogoService">
-        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
-        <property name="headerLogoFile" value="header-logo.png"/>
-        <property name="loginLogoFile" value="login-logo.png"/>
-    </bean>
-
     <bean id="customLogoRetrieveFile" class="com.armedia.acm.plugins.admin.web.api.CustomLogoRetrieveFile">
         <property name="customLogoService" ref="customLogoService"/>
     </bean>
@@ -254,11 +219,6 @@
     </bean>
 
     <!-- Module Configuration -->
-    <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationService">
-        <property name="appConfigPropertiesFile"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-config.properties/"/>
-    </bean>
-
     <bean id="moduleConfigurationRetrieveModules"
           class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationRetrieveModules">
         <property name="moduleConfigurationService" ref="moduleConfigurationService"/>
@@ -303,24 +263,19 @@
           class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
-    <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
-        <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
-    </bean>
-
-    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
-        <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
-    </bean>
 
     <bean id="googleAnalyticsConfigAPIController"
           class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
         <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
     </bean>
 
-    <bean id="exchangeConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
+    <bean id="exchangeConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
     </bean>
 
-    <bean id="emailSenderConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
+    <bean id="emailSenderConfigurationAPIController"
+          class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
     </bean>
 
