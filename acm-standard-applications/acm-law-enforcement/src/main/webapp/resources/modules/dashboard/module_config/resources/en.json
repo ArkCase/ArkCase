@@ -188,6 +188,11 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "faxes": {
+        "title": "Fax Numbers",
+        "description": "Displays faxes details",
+        "noDataMessage": "Currently there are no faxes to display"
+      },
       "urls": {
         "title": "URLs",
         "description": "Displays URLs details",
