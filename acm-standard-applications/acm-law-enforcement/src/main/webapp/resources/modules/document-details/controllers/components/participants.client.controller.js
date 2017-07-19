@@ -152,7 +152,7 @@ angular.module('document-details').controller('Document.ParticipantsController',
                         saveInfoAndRefresh();
                     }
                     else {
-                        refresh();
+                        $scope.retrieveGridData();
                     }
                 }
             );
@@ -166,16 +166,13 @@ angular.module('document-details').controller('Document.ParticipantsController',
                 ,
                 data: JSOG.encode($scope.fileInfo)
             }).then(function (objectSaved) {
-                    refresh();
+                    $scope.retrieveGridData();
                     return objectSaved;
                 },
                 function (error) {
+                    $scope.retrieveGridData();
                     return error;
                 });
-        };
-
-        var refresh = function () {
-            $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
     }
