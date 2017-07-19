@@ -257,17 +257,131 @@
             }
           ]
         },
-        { "id": "phones",
-          "type": "component"
+        {
+          "id": "phones",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "subType",
+              "displayName": "organizations.comp.phones.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.type' title='{{row.entity.type}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "value",
+              "displayName": "organizations.comp.phones.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+              "width": 150
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.phones.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.phones.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "width": 150
+            }
+          ]
         },
         { "id": "faxes",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "subType",
+              "displayName": "organizations.comp.faxes.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.type' title='{{row.entity.type}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "value",
+              "displayName": "organizations.comp.faxes.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.faxes.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.faxes.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "width": 150
+            }
+          ]
         },
         { "id": "emails",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "subType",
+              "displayName": "organizations.comp.emails.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.type' title='{{row.entity.type}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "value",
+              "displayName": "organizations.comp.emails.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.emails.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.emails.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "width": 150
+            }
+          ]
         },
         { "id": "urls",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "subType",
+              "displayName": "organizations.comp.urls.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.type' title='{{row.entity.type}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "value",
+              "displayName": "organizations.comp.urls.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.urls.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.urls.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "width": 150
+            }
+          ]
         },
         { "id": "dbas",
           "type": "component",
