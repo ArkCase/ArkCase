@@ -202,6 +202,8 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         widget.title = "dashboard.widgets.locations.title";
                                     } else if ("Fax Numbers" == widget.title) {
                                         widget.title = "dashboard.widgets.faxes.title";
+                                    } else if ("URLs" == widget.title) {
+                                        widget.title = "dashboard.widgets.urls.title";
                                     } else if ("Tasks" == widget.title) {
                                         widget.title = "dashboard.widgets.tasks.title";
                                     } else if ("Participants" == widget.title) {

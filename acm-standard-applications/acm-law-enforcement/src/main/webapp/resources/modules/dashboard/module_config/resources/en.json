@@ -193,6 +193,11 @@
         "description": "Displays faxes details",
         "noDataMessage": "Currently there are no faxes to display"
       },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",
