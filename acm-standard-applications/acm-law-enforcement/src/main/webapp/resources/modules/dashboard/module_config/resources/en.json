@@ -188,6 +188,11 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",
