@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
+import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
+import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,9 @@ import java.io.IOException;
  * Created by sergey.kolomiets  on 6/2/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesCreateRole implements RolePrivilegesConstants{
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class RolesPrivilegesCreateRole implements RolePrivilegesConstants
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
@@ -29,26 +32,29 @@ public class RolesPrivilegesCreateRole implements RolePrivilegesConstants{
 
     @ResponseBody
     public String createRole(
-            @RequestBody String resource) throws IOException, AcmRolesPrivilegesException{
+            @RequestBody String resource) throws IOException, AcmRolesPrivilegesException
+    {
 
-        try {
+        try
+        {
             JSONObject newRoleObject = new JSONObject(resource);
             String roleName = newRoleObject.getString(PROP_ROLE_NAME);
-            if (roleName == null) {
+            if (roleName == null)
+            {
                 throw new AcmRolesPrivilegesException("Role name is undefined");
             }
             rolesPrivilegesService.createRole(roleName);
 
             return "{}";
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't create role", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't create role", e);
             throw new AcmRolesPrivilegesException("Can't create role", e);
         }
     }
 
-    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService) {
+    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService)
+    {
         this.rolesPrivilegesService = rolesPrivilegesService;
     }
 }
