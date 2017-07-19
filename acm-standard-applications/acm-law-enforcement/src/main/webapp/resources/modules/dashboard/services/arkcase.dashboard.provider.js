@@ -17,7 +17,7 @@ angular.module('adf.provider').provider('ArkCaseDashboard', function (dashboardP
         widget.titleTemplateUrl = widget.titleTemplateUrl || 'modules/dashboard/templates/widget-title.html';
         widget.editTemplateUrl = widget.editTemplateUrl || 'modules/dashboard/templates/widget-edit.html';
         widget.deleteTemplateUrl = widget.deleteTemplateUrl || 'modules/dashboard/templates/widget-delete.html';
-        widget.showUiGridUrl = widget.showUiGridUrl || 'modules/dashboard/templates/widget-ui-grid.html';
+        //widget.showUiGridUrl = widget.showUiGridUrl || 'modules/dashboard/templates/widget-ui-grid.html';
         widget.fullscreenTemplateUrl = widget.fullscreenTemplateUrl || 'modules/dashboard/templates/widget-fullscreen.html';
         dashboardProvider.widget(name, widget);
         return this;

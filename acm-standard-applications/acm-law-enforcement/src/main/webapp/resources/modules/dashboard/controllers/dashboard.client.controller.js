@@ -61,7 +61,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
                 titleTemplateUrl: 'modules/dashboard/templates/widget-title.html',
                 editTemplateUrl: 'modules/dashboard/templates/dashboard-edit.html',
                 addTemplateUrl : "modules/dashboard/templates/widget-add.html",
-                showUiGridUrl : "modules/dashboard/templates/widget-ui-grid.html",
+                //showUiGridUrl : "modules/dashboard/templates/widget-ui-grid.html",
                 title: ' '
             }
         };
@@ -73,7 +73,7 @@ angular.module('dashboard').controller('DashboardController', ['$rootScope', '$s
             $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
             $scope.dashboard.model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
             $scope.dashboard.model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
-            $scope.dashboard.model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
+            //$scope.dashboard.model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
 
             DashboardService.getWidgetsPerRoles(function (widgets) {
                 widgetsPerRoles = widgets;
