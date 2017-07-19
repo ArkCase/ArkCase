@@ -57,8 +57,10 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
                 params: {
                     'person-id': '@personId',
                     'parent-type': '@parentType',
-                    'parent-id': '@parentId',
-                    'parent-objects-only': '@parentObjectOnly'
+                    'start': '@start',
+                    'n': '@n',
+                    'sort': '@sort'
+
                 },
                 cache: false
             }
@@ -73,21 +75,23 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
          * @description
          * Query person data
          *
-         * @param {Number} personId  Person ID - parent associations for person
-         * @param {String} parentType  Parent Type - filter by parent type (optional)
-         * @param {Number} parentId  Parent ID - filter by parent id (optional)
-         * @param {boolean} parentObjectsOnly  - display parent objects instead of person association (optional), false by default
+         * @param {Number} personId  Person ID
+         * @param {String} parentType  Parent Type
+         * @param {Number} start  used for paging, from which row to start
+         * @param {Number} n  used for paging, how many rows to return
+         * @param {String} sort for which field sorting should be done, default is id
          *
          * @returns {Object} Promise
          */
-        Service.getPersonAssociations = function (personId, parentType, parentId, parentObjectOnly) {
+        Service.getPersonAssociations = function (personId, parentType, start, n, sort) {
             return Util.serviceCall({
                 service: Service.get,
                 data: {
                     personId: personId,
                     parentType: parentType,
-                    parentId: parentId,
-                    parentObjectOnly: parentObjectOnly
+                    start: start,
+                    n: n,
+                    sort: sort
                 },
                 onSuccess: function (data) {
                     return data;
