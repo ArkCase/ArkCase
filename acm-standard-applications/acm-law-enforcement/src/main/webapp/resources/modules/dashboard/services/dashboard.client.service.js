@@ -151,7 +151,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
                 model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
                 model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
-                model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
+                //model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
                 model.title = "dashboard.title";
             } else {
                 model.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
