@@ -6,11 +6,11 @@
 	    <option value="" translate>admin.forms.defaultValue</option>
 	</select>
     <div class="btn-group">
-        <a ng-disabled="selectedTarget == null" class="btn btn-sm btn-link"
-           ng-disabled="disabledSelectButton" ui-sref="frevvo.new-plainform(openNewFrevvoFormParams)">
+        <button ng-disabled="!selectedTarget" class="btn btn-sm btn-link"
+                ng-click=newForm()>
             <i class="glyphicon glyphicon-plus-sign"></i>
             <span translate>admin.forms.addForm</span>
-        </a>
+        </button>
     </div>
 </div>
 
