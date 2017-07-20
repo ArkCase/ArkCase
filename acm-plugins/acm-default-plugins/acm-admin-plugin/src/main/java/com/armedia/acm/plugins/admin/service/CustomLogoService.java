@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamSource;
 
 import java.io.File;
 import java.io.InputStream;
@@ -61,55 +62,36 @@ public class CustomLogoService
         }
     }
 
-    /**
-     * Update Login logo
-     *
-     * @param logoStream
-     * @throws AcmCustomLogoException
-     */
-    public void updateLoginLogo(InputStream logoStream) throws AcmCustomLogoException
+    public void updateLoginLogo(InputStreamSource logoFileSource) throws AcmCustomLogoException
     {
         File logoFile = null;
-        try
+        try (InputStream loginLogoStream = logoFileSource.getInputStream())
         {
-            try
-            {
-                logoFile = new File(brandingFilesLocation + loginLogoFile);
-                FileUtils.copyInputStreamToFile(logoStream, logoFile);
-            } finally
-            {
-                logoStream.close();
-            }
+            logoFile = new File(brandingFilesLocation + loginLogoFile);
+            FileUtils.copyInputStreamToFile(loginLogoStream, logoFile);
+
         } catch (Exception e)
         {
             throw new AcmCustomLogoException("Can't update logo file");
         }
     }
 
-    /**
-     * Update Header Logo
-     *
-     * @param logoStream
-     * @throws AcmCustomLogoException
-     */
-    public void updateHeaderLogo(InputStream logoStream) throws AcmCustomLogoException
+    public void updateHeaderLogo(InputStreamSource logoStreamSource) throws AcmCustomLogoException
     {
         File logoFile = null;
-        try
+
+        try (InputStream logoStream = logoStreamSource.getInputStream())
         {
-            try
-            {
-                logoFile = new File(brandingFilesLocation + headerLogoFile);
-                FileUtils.copyInputStreamToFile(logoStream, logoFile);
-            } finally
-            {
-                logoStream.close();
-            }
+            logoFile = new File(brandingFilesLocation + headerLogoFile);
+            FileUtils.copyInputStreamToFile(logoStream, logoFile);
+
         } catch (Exception e)
+
         {
             throw new AcmCustomLogoException("Can't update logo file");
         }
     }
+
 
     public void setBrandingFilesLocation(String brandingFilesLocation)
     {
