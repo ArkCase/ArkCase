@@ -50,7 +50,7 @@ angular.module('dashboard.urls', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                var urls = _.filter($scope.objectInfo.contactMethods, {type: 'urls'});
+                var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
                 $scope.gridOptions.data = urls;
             };
 
