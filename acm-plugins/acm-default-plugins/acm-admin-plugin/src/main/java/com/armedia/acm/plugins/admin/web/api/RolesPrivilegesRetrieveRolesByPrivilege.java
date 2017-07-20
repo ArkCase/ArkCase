@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
+import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
+import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,8 +19,9 @@ import java.util.List;
  * Created by sergey.kolomiets  on 7/8/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesRetrieveRolesByPrivilege  implements RolePrivilegesConstants {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesConstants
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private RolesPrivilegesService rolesPrivilegesService;
@@ -29,19 +32,21 @@ public class RolesPrivilegesRetrieveRolesByPrivilege  implements RolePrivilegesC
 
     @ResponseBody
     public List<String> retrieveRoles(
-            @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName) throws IOException, AcmRolesPrivilegesException{
+            @PathVariable(PROP_PRIVILEGE_NAME) String privilegeName) throws IOException, AcmRolesPrivilegesException
+    {
 
-        try {
+        try
+        {
             return rolesPrivilegesService.retrieveRolesByPrivilege(privilegeName);
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't retrieve roles", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't retrieve roles", e);
             throw new AcmRolesPrivilegesException("Can't retrieve roles", e);
         }
     }
 
-    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService) {
+    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService)
+    {
         this.rolesPrivilegesService = rolesPrivilegesService;
     }
 }

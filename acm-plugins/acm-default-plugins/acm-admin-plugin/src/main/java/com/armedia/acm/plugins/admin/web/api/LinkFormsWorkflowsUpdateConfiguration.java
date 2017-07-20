@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
+import com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService;
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,9 @@ import java.util.List;
  * Created by sergey.kolomiets  on 6/15/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LinkFormsWorkflowsUpdateConfiguration {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LinkFormsWorkflowsUpdateConfiguration
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private LinkFormsWorkflowsService linkFormsWorkflowsService;
@@ -30,18 +32,22 @@ public class LinkFormsWorkflowsUpdateConfiguration {
     })
     @ResponseBody
     public String updateConfiguration(
-            @RequestBody String resource) throws IOException, AcmLinkFormsWorkflowException {
+            @RequestBody String resource) throws IOException, AcmLinkFormsWorkflowException
+    {
 
-        try {
+        try
+        {
 
             JSONArray cellsArray = new JSONArray(resource);
 
             // Convert cells JSON into array of arrays
-            List<List<String>> values = new ArrayList();
-            for(int rowNum = 0; rowNum < cellsArray.length(); rowNum++) {
+            List<List<String>> values = new ArrayList<>();
+            for (int rowNum = 0; rowNum < cellsArray.length(); rowNum++)
+            {
                 JSONArray row = cellsArray.getJSONArray(rowNum);
-                List<String> valuesRow = new ArrayList();
-                for (int colNum = 0; colNum < row.length(); colNum++) {
+                List<String> valuesRow = new ArrayList<>();
+                for (int colNum = 0; colNum < row.length(); colNum++)
+                {
                     valuesRow.add(row.getString(colNum));
                 }
                 values.add(valuesRow);
@@ -50,15 +56,15 @@ public class LinkFormsWorkflowsUpdateConfiguration {
             linkFormsWorkflowsService.updateConfiguration(values);
 
             return "{}";
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't update Link Forms Workflows Configuration", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't update Link Forms Workflows Configuration", e);
             throw new AcmLinkFormsWorkflowException("Can't update Link Forms Workflows Configuration", e);
         }
     }
 
-    public void setLinkFormsWorkflowsService(LinkFormsWorkflowsService linkFormsWorkflowsService) {
+    public void setLinkFormsWorkflowsService(LinkFormsWorkflowsService linkFormsWorkflowsService)
+    {
         this.linkFormsWorkflowsService = linkFormsWorkflowsService;
     }
 }

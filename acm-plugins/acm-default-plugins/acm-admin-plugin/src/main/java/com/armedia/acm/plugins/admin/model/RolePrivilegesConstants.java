@@ -1,4 +1,4 @@
-package com.armedia.acm.plugins.admin.web.api;
+package com.armedia.acm.plugins.admin.model;
 
 /**
  * Created by admin on 6/24/15.

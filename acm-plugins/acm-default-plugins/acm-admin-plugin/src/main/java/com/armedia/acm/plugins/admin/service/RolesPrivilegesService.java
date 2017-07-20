@@ -1,22 +1,21 @@
-package com.armedia.acm.plugins.admin.web.api;
-
-import static com.armedia.acm.plugins.admin.web.api.RolePrivilegesConstants.PROP_APPLICATION_ROLES;
-import static com.armedia.acm.plugins.admin.web.api.RolePrivilegesConstants.ROLE_PREFIX;
+package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
-
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TransactionRequiredException;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -30,8 +29,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.PROP_APPLICATION_ROLES;
+import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.ROLE_PREFIX;
 
 /**
  * Created by admin on 6/3/15.
@@ -89,11 +88,11 @@ public class RolesPrivilegesService
      */
     public List<String> retrieveRolesByPrivilege(String privilegeName) throws AcmRolesPrivilegesException
     {
-        try
+        try (InputStream propertyStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
             List<String> roles = new ArrayList<>();
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            props.load(propertyStream);
 
             // Search privilegeName in role-privileges maps
             for (Object roleNameIter : props.keySet())
@@ -114,7 +113,7 @@ public class RolesPrivilegesService
 
         } catch (Exception e)
         {
-            log.error(String.format("Can't load privilege's '%s' roles", privilegeName), e);
+            log.error("Can't load privilege's [{}] roles", privilegeName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't load privilege's '%s' roles", privilegeName), e);
         }
     }
@@ -122,10 +121,8 @@ public class RolesPrivilegesService
     /**
      * Update Role Privileges
      *
-     * @param roleName
-     *            Updated role name
-     * @param privileges
-     *            List of role's privileges
+     * @param roleName   Updated role name
+     * @param privileges List of role's privileges
      */
     public void updateRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -155,8 +152,7 @@ public class RolesPrivilegesService
     /**
      * Create new role
      *
-     * @param roleName
-     *            new role name
+     * @param roleName new role name
      * @throws AcmRolesPrivilegesException
      */
     @Transactional
@@ -179,7 +175,8 @@ public class RolesPrivilegesService
         if (rolePresent)
         {
             throw new AcmRolesPrivilegesException(String.format("Role '%s' already exists", roleName));
-        } else
+        }
+        else
         {
             roles.add(roleName);
             saveRoles(roles);
@@ -215,7 +212,8 @@ public class RolesPrivilegesService
         if (presentRoleIndex == -1)
         {
             throw new AcmRolesPrivilegesException(String.format("Role '%s' doesn't exist", roleName));
-        } else
+        }
+        else
         {
             roles.set(presentRoleIndex, newRoleName);
             saveRoles(roles);
@@ -320,11 +318,11 @@ public class RolesPrivilegesService
      */
     private List<String> loadRoles() throws AcmRolesPrivilegesException
     {
-        try
+        try (InputStream rolesStream = FileUtils.openInputStream(new File(applicationRolesFile)))
         {
             // Load Application Roles properties file
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesFile)));
+            props.load(rolesStream);
 
             String propRoles = props.getProperty(PROP_APPLICATION_ROLES);
             List<String> roles = new ArrayList<>(Arrays.asList(propRoles.split(",")));
@@ -344,14 +342,14 @@ public class RolesPrivilegesService
      */
     private Map<String, String> loadPrivileges() throws AcmRolesPrivilegesException
     {
-        try
+        try (InputStream privilegesStream = FileUtils.openInputStream(new File(applicationPrivilegesFile)))
         {
             // Load Privileges properties file
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
+            props.load(privilegesStream);
 
             Set<String> privilegesKeys = props.stringPropertyNames();
-            Map<String, String> priveleges = new HashMap<String, String>();
+            Map<String, String> priveleges = new HashMap<>();
             for (String keyIter : privilegesKeys)
             {
                 priveleges.put(keyIter, props.getProperty(keyIter));
@@ -368,30 +366,18 @@ public class RolesPrivilegesService
     /**
      * Save list of roles
      *
-     * @param roles
-     *            saved roles list
+     * @param roles saved roles list
      * @throws AcmRolesPrivilegesException
      */
     private void saveRoles(List<String> roles) throws AcmRolesPrivilegesException
     {
-        FileOutputStream fos = null;
-        try
+        try (OutputStream rolesStream = FileUtils.openOutputStream(new File(applicationRolesFile)))
         {
             Properties props = new Properties();
             String propRoles = String.join(",", roles);
             props.setProperty(PROP_APPLICATION_ROLES, propRoles);
-            fos = FileUtils.openOutputStream(new File(applicationRolesFile));
-            try
-            {
-                props.store(fos, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
-            } finally
-            {
-                if (fos != null)
-                {
-                    fos.flush();
-                    fos.close();
-                }
-            }
+
+            props.store(rolesStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
         } catch (Exception e)
         {
             log.error("Can't save info into the roles file", e);
@@ -401,11 +387,11 @@ public class RolesPrivilegesService
 
     private Map<String, String> loadRolesPrivileges() throws AcmRolesPrivilegesException
     {
-        try
+        try (InputStream applicationStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
             Map<String, String> result = new HashMap<>();
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            props.load(applicationStream);
             for (Object keyIter : props.keySet())
             {
                 String key = (String) keyIter;
@@ -423,19 +409,20 @@ public class RolesPrivilegesService
     /**
      * Load specific role's privileges
      *
-     * @param roleName
-     *            Role name
+     * @param roleName Role name
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
     private Map<String, String> loadRolePrivileges(String roleName) throws AcmRolesPrivilegesException
     {
-        try
+        try (
+                InputStream applicationStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile));
+                InputStream privilegesStream = FileUtils.openInputStream(new File(applicationPrivilegesFile)))
         {
-            Map<String, String> rolePrivileges = new HashMap<String, String>();
+            Map<String, String> rolePrivileges = new HashMap<>();
 
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            props.load(applicationStream);
 
             // Search roleName in role-privileges maps
             String propPrivileges = props.getProperty(roleName, "");
@@ -445,7 +432,7 @@ public class RolesPrivilegesService
 
                 // Get all privileges with descriptions
                 Properties allPrivilegesProps = new Properties();
-                allPrivilegesProps.load(FileUtils.openInputStream(new File(applicationPrivilegesFile)));
+                allPrivilegesProps.load(privilegesStream);
 
                 // Combine privileges and descriptions into one map
                 for (String privilegeIter : privileges)
@@ -457,7 +444,7 @@ public class RolesPrivilegesService
 
         } catch (Exception e)
         {
-            log.error(String.format("Can't load role '%s' privileges from file", roleName), e);
+            log.error("Can't load role [{}] privileges from file", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't load role '%s' privileges from file", roleName), e);
         }
     }
@@ -465,55 +452,35 @@ public class RolesPrivilegesService
     /**
      * Save role's privileges to the file
      *
-     * @param roleName
-     *            Role name
-     * @param privileges
-     *            List of privileges
+     * @param roleName   Role name
+     * @param privileges List of privileges
      */
     private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
-        try
+        try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile));
+             InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            props.load(applicationInputStream);
             String propPrivileges = String.join(",", privileges);
             props.setProperty(roleName, propPrivileges);
+            props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
 
-            FileOutputStream fos = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile));
-            try
-            {
-                props.store(fos, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
-            } finally
-            {
-                fos.flush();
-                fos.close();
-            }
         } catch (Exception e)
         {
-            log.error(String.format("Can't save role '%s' privileges to file", roleName), e);
+            log.error("Can't save role [{}] privileges to file", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' privileges to file", roleName), e);
         }
     }
 
     private void saveRolesPrivileges(Map<String, String> rolesPrivileges) throws AcmRolesPrivilegesException
     {
-        FileOutputStream fos = null;
-        try
+        try (OutputStream applicationStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
-            fos = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile));
             Properties props = new Properties();
             props.putAll(rolesPrivileges);
-            try
-            {
-                props.store(fos, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
-            } finally
-            {
-                if (fos != null)
-                {
-                    fos.flush();
-                    fos.close();
-                }
-            }
+            props.store(applicationStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
+
         } catch (Exception e)
         {
             log.error("Can't save roles privileges to file", e);
@@ -523,14 +490,16 @@ public class RolesPrivilegesService
 
     private void updateRolesPrivilegesConfig() throws AcmRolesPrivilegesException
     {
-        try
+        try (InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile));
+             OutputStream applicationOutputStream = new FileOutputStream(new File(applicationRolesPrivilegesFile));
+             Writer writer = new BufferedWriter(new OutputStreamWriter(applicationOutputStream, StandardCharsets.UTF_8)))
         {
             // Load roles privileges properties
             Properties props = new Properties();
-            props.load(FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)));
+            props.load(applicationInputStream);
 
             // Create Map of lists. Roles should be grouped by privileges
-            Map<String, List<String>> privileges = new HashMap<String, List<String>>();
+            Map<String, List<String>> privileges = new HashMap<>();
             for (Object roleKeyIter : props.keySet())
             {
                 String role = (String) roleKeyIter;
@@ -539,7 +508,7 @@ public class RolesPrivilegesService
                 {
                     if (!privileges.containsKey(privilegeIter))
                     {
-                        privileges.put(privilegeIter, new ArrayList<String>());
+                        privileges.put(privilegeIter, new ArrayList<>());
                     }
                     // Add Role to map grouped by privilege
                     privileges.get(privilegeIter).add(role);
@@ -550,19 +519,9 @@ public class RolesPrivilegesService
             Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
             cfg.setDirectoryForTemplateLoading(new File(applicationRolesPrivilegesTemplatesLocation));
             Template tmpl = cfg.getTemplate(applicationRolesPrivilegesTemplateFile);
-            Writer writer = null;
-            try
-            {
-                // writer = new FileWriter(new File(applicationRolesPrivilegesFile));
-                writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(applicationRolesPrivilegesFile)), StandardCharsets.UTF_8));
-                tmpl.process(privileges, writer);
-            } finally
-            {
-                if (writer != null)
-                {
-                    writer.close();
-                }
-            }
+
+            tmpl.process(privileges, writer);
+
 
         } catch (Exception e)
         {
