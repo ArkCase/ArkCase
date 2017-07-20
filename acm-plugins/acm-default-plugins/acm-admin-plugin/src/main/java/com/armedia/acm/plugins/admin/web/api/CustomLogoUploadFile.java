@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by sergey.kolomiets  on 6/22/15.
@@ -44,8 +43,7 @@ public class CustomLogoUploadFile
             {
                 if (headerLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
-                    InputStream headerLogoStream = headerLogoFile.getInputStream();
-                    customLogoService.updateHeaderLogo(headerLogoStream);
+                    customLogoService.updateHeaderLogo(headerLogoFile);
                 }
                 else
                 {
@@ -57,8 +55,7 @@ public class CustomLogoUploadFile
             {
                 if (loginLogoFile.getContentType().equals(MediaType.IMAGE_PNG_VALUE))
                 {
-                    InputStream loginLogoStream = loginLogoFile.getInputStream();
-                    customLogoService.updateLoginLogo(loginLogoStream);
+                    customLogoService.updateLoginLogo(loginLogoFile);
                 }
                 else
                 {
