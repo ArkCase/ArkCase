@@ -50,7 +50,7 @@ angular.module('dashboard.dbas', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                var dbas = _.filter($scope.objectInfo.contactMethods, {type: 'dbas'});
+                var dbas = _.filter($scope.objectInfo.organizationDBAs, {type: 'DBA'});
                 $scope.gridOptions.data = dbas;
             };
 
