@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "zh-cn_ records above...",
-    "btnPrev.toolTip": "zh-cn_Review previous records",
-    "btnNext.titleUnknownSize": "zh-cn_More records...",
-    "btnNext.title": "zh-cn_ more records...",
-    "btnNext.toolTip": "zh-cn_Load more records",
-    "edtQuery.placeHolder": "zh-cn_Search",
-    "btnQuery.text": "zh-cn_Go!",
-    "errorNode.title": "zh-cn_(Error)",
-    "errorNode.toolTip": "zh-cn_(Error)",
-    "noAccessNode.title": "zh-cn_(No Access)",
-    "noAccessNode.toolTip": "zh-cn_(No Access)"
+    "btnPrev.title": "以上的记录...",
+    "btnPrev.toolTip": "查看以上的记录",
+    "btnNext.titleUnknownSize": "更多记录...",
+    "btnNext.title": "更多记录...",
+    "btnNext.toolTip": "加载更多记录",
+    "edtQuery.placeHolder": "搜索",
+    "btnQuery.text": "搜索!",
+    "errorNode.title": "(错误)",
+    "errorNode.toolTip": "(错误)",
+    "noAccessNode.title": "(无访问权限)",
+    "noAccessNode.toolTip": "(无访问权限)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "zh-cn_items per page",

@@ -105,17 +105,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "pt_ records above...",
-    "btnPrev.toolTip": "pt_Review previous records",
-    "btnNext.titleUnknownSize": "pt_More records...",
-    "btnNext.title": "pt_ more records...",
-    "btnNext.toolTip": "pt_Load more records",
-    "edtQuery.placeHolder": "pt_Search",
-    "btnQuery.text": "pt_Go!",
-    "errorNode.title": "pt_(Error)",
-    "errorNode.toolTip": "pt_(Error)",
-    "noAccessNode.title": "pt_(No Access)",
-    "noAccessNode.toolTip": "pt_(No Access)"
+    "btnPrev.title": "Registros acima...",
+    "btnPrev.toolTip": "Reveja registros anteriores",
+    "btnNext.titleUnknownSize": "Mais registros...",
+    "btnNext.title": "Mais registros...",
+    "btnNext.toolTip": "Carregar mais registros",
+    "edtQuery.placeHolder": "Pesquisar",
+    "btnQuery.text": "Comece!",
+    "errorNode.title": "(Erro)",
+    "errorNode.toolTip": "(Erro)",
+    "noAccessNode.title": "(Sem acesso)",
+    "noAccessNode.toolTip": "(Sem acesso)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "pt_items per page",
