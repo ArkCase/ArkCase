@@ -264,7 +264,7 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
                         $scope.refresh();
                         return taskInfoUpdated;
                     }, function (error) {
-                        //Ignore a failed save here as the claim will take care of modifying Activiti Task.
+                        //Ignore a failed save here as the unclaim will take care of modifying Activiti Task.
                         //Error is caused by a participant data integrity issue that occurs every so often.
                         $scope.$emit("report-object-updated", taskInfoUpdated);
                         return taskInfoUpdated;
