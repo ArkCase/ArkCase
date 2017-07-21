@@ -190,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "タスク",
+    "title": "仕事",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -203,7 +203,7 @@
     "table.deadline.tooltip": "ja_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "また",
+    "title": "参照",
     "table.columns": {
       "targetName": "ja_Number",
       "targetTitle": "ja_Title",
@@ -358,8 +358,8 @@
       "documents.label": "ファイル",
       "participants.label": "参加者",
       "notes.label": "ノート",
-      "tasks.label": "タスク",
-      "references.label": "また",
+      "tasks.label": "仕事",
+      "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
       "cost.label": "支出",

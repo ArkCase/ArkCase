@@ -9,7 +9,11 @@
     "leftnav.item": "Tarefas",
     "topbar.item": "Tarefa"
   },
+  "tasks.comp.main": {
+    "title": "Visão geral"
+  },
   "tasks.comp.info": {
+    "title": "Informações",
     "taskId": "pt_Task id:",
     "percentage.label": "pt_% of Completion",
     "assignee.label": "pt_Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "Parent Info",
     "taskId": "pt_Task id:",
     "case": {
       "subjectType.label": "pt_Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "pt_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "Ações",
     "diagram.button": "pt_Process Diagram",
     "eSignature.button": "pt_Sign",
     "subscribe.button": "pt_Subscribe",
@@ -65,7 +71,7 @@
     }
   },
   "tasks.comp.details": {
-    "title": "pt_Task Details",
+    "title": "Detalhes",
     "informSaved": "pt_Task details saved",
     "table.columns": {
       "details": "pt_Details",
@@ -74,7 +80,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "pt_Rework Details",
+    "title": "Repita o trabalho",
     "informSaved": "pt_Rework details saved",
     "table.columns": {
       "title": "pt_Rework Details",
@@ -83,20 +89,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "pt_Parent Documents",
+    "title": "Documentos dos pais",
     "noParentDataMessage": "pt_No parent documents for standalone task",
     "sendEmail": "pt_Send Email",
     "filterInputPlaceholder": "pt_Filter",
     "searchInputPlaceholder": "pt_Search"
   },
   "tasks.comp.attachments": {
-    "title": "pt_Attachments",
+    "title": "Anexos",
     "sendEmail": "pt_Send Email",
     "filterInputPlaceholder": "pt_Filter",
     "searchInputPlaceholder": "pt_Search"
   },
   "tasks.comp.notes": {
-    "title": "pt_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "pt_Note",
       "created": "pt_Created",
@@ -104,7 +110,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "pt_References",
+    "title": "Referências",
     "table.columns": {
       "targetName": "pt_Number",
       "targetTitle": "pt_Title",
@@ -114,7 +120,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "pt_Reject Comments",
+    "title": "Rejeitar comentários",
     "table.columns": {
       "note": "pt_Comment",
       "created": "pt_Created",
@@ -122,7 +128,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "pt_Workflow",
+    "title": "Fluxo de trabalho",
     "table.columns": {
       "participant": "pt_Participant",
       "role": "pt_Role",
@@ -136,14 +142,14 @@
     "error.loading": "pt_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "pt_eSignatures",
+    "title": "Assinaturas eletroicas",
     "table.columns": {
       "signedDate": "pt_Date",
       "signedBy": "pt_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "pt_Documents Under Review",
+    "title": "Documentos sob revisão",
     "table.columns": {
       "fileId": "pt_ID",
       "fileName": "pt_Title",
@@ -153,7 +159,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "pt_History",
+    "title": "Histórico",
     "table.columns": {
       "eventType": "pt_Event Name",
       "eventDate": "pt_Date",
@@ -161,7 +167,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "pt_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "pt_Tag",
       "created": "pt_Created",
@@ -320,6 +326,39 @@
       "approverId": "pt_Approver",
       "approverFullName": "pt_Full Name",
       "approverDecision": "pt_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "reworkDetails.label": "Repita o trabalho",
+      "docReview.label": "Documentos sob revisão",
+      "parentDoc.label": "Documentos dos pais",
+      "attachments.label": "Anexos",
+      "references.label": "Referências",
+      "notes.label": "Notas",
+      "workflow.label": "Fluxo de trabalho",
+      "history.label": "Histórico",
+      "eSignatures.label": "Assinaturas eletroicas",
+      "tags.label": "Etiquetas",
+      "reject.label": "Rejeitar comentários"
+    },
+    "filters": {
+      "myTasks": "Minhas tarefas",
+      "opened": "Todas as tarefas abertas",
+      "completed": "Todas as tarefas concluídas",
+      "dueToday": "Todas as tarefas devidas hoje",
+      "myDueToday": "Todas as minhas tarefas devidas hoje",
+      "overdue": "Todas as tarefas atrasadas",
+      "myOverdue": "Todas as minhas tarefas atrasadas",
+      "noFilter": "(Sem filtror)"
+    },
+    "sorters": {
+      "createdDateAsc": "Ordenar Data de Criação Asc",
+      "createdDateDesc": "Ordenar Data de Criação Desc",
+      "byNameAsc": "Ordenar Nome da tarefa Asc",
+      "byNameDesc": "Ordenar Nome da tarefa Desc",
+      "noSort": "(Não classificar)"
     }
   }
 }
