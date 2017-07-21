@@ -1,5 +1,6 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
@@ -69,7 +70,7 @@ public interface CalendarEntityHandler
      * @return
      */
     List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                             String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
+            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
 
     /**
      * @param objectId
@@ -79,7 +80,14 @@ public interface CalendarEntityHandler
      * @param sortDirection
      * @return
      */
-    List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                     String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException;
+    List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before, String sort,
+            String sortDirection, int start, int maxItems) throws CalendarServiceException;
+
+    /**
+     * @param service
+     * @param purgeOptions
+     * @param daysClosed
+     */
+    void purgeCalendars(ExchangeService service, PurgeOptions purgeOptions, Integer daysClosed);
 
 }

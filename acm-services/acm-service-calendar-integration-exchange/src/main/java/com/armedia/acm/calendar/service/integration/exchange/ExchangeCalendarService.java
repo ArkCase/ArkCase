@@ -62,6 +62,8 @@ public class ExchangeCalendarService
      */
     private static final String CONFIGURATION_FILENAME = "calendarService.properties";
 
+    private static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
+
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
      *
@@ -151,8 +153,7 @@ public class ExchangeCalendarService
     /**
      * Checks if the event was triggered by a change of the scheduler configuration file.
      *
-     * @param abstractConfigurationFileEvent
-     *            the event encapsulating a reference to the modified file.
+     * @param abstractConfigurationFileEvent the event encapsulating a reference to the modified file.
      * @return <code>true</code> if the event was triggered by the calendar configuration <code>false</code> otherwise.
      */
     private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
@@ -284,7 +285,7 @@ public class ExchangeCalendarService
             appointment.save(folderId);
         } catch (Exception e)
         {
-            log.debug("Error while trying to create eventfor object with id: {} of {} type.", calendarEvent.getObjectId(),
+            log.debug("Error while trying to create event for object with id: {} of {} type.", calendarEvent.getObjectId(),
                     calendarEvent.getObjectType(), e);
             throw new CalendarServiceException(e);
         }
@@ -464,6 +465,25 @@ public class ExchangeCalendarService
     /*
      * (non-Javadoc)
      *
+     * @see com.armedia.acm.calendar.service.CalendarService#purgeEvents(java.lang.String,
+     * com.armedia.acm.calendar.config.service.CalendarConfiguration)
+     */
+    @Override
+    public void purgeEvents(String objectType, CalendarConfiguration config) throws CalendarServiceException
+    {
+        CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
+
+        AcmOutlookUser outlookUser = getOutlookUserForObjectType(PROCESS_USER, objectType);
+        ExchangeService exchangeService = outlookDao.connect(outlookUser);
+
+        handler.purgeCalendars(exchangeService, config.getPurgeOptions(), config.getDaysClosed());
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.armedia.acm.calendar.service.CalendarService#getExceptionMapper(com.armedia.acm.calendar.service.
      * CalendarServiceException)
      */
@@ -481,7 +501,17 @@ public class ExchangeCalendarService
      */
     private AcmOutlookUser getOutlookUserForObjectType(Authentication auth, String objectType) throws CalendarServiceException
     {
-        String userId = auth.getName();
+        return this.getOutlookUserForObjectType(auth.getName(), objectType);
+    }
+
+    /**
+     * @param userId
+     * @param objectType
+     * @return
+     * @throws CalendarServiceException
+     */
+    private AcmOutlookUser getOutlookUserForObjectType(String userId, String objectType) throws CalendarServiceException
+    {
         CalendarConfiguration configuration = configurationsByType.get(objectType);
         if (configuration.getSystemEmail() == null || configuration.getSystemEmail().isEmpty() || configuration.getPassword() == null
                 || configuration.getPassword().isEmpty())
@@ -518,8 +548,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param calendarAdminService
-     *            the calendarAdminService to set
+     * @param calendarAdminService the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
@@ -527,8 +556,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param entityHandlers
-     *            the entityHandlers to set
+     * @param entityHandlers the entityHandlers to set
      */
     public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
     {
@@ -536,16 +564,14 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param outlookService
-     *            the outlookService to set
+     * @param outlookService the outlookService to set
      */
     public void setOutlookService(OutlookService outlookService)
     {
     }
 
     /**
-     * @param outlookDao
-     *            the outlookDao to set
+     * @param outlookDao the outlookDao to set
      */
     public void setOutlookDao(OutlookDao outlookDao)
     {
