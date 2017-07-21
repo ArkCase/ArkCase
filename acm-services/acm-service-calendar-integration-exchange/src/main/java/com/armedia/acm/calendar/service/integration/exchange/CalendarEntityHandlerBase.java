@@ -3,11 +3,13 @@
  */
 package com.armedia.acm.calendar.service.integration.exchange;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +32,7 @@ import java.util.stream.Collectors;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
@@ -37,6 +42,7 @@ import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.property.complex.FolderPermissionCollection;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.CalendarView;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
@@ -52,6 +58,8 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     private EntityManager em;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private OutlookDao outlookDao;
 
     protected Map<String, PropertyDefinition> sortFields;
 
@@ -78,7 +86,9 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
      * @param restrictedOnly
      * @return
      */
-    protected abstract Object getEntity(String objectId, boolean restrictedOnly);
+    protected abstract AcmContainerEntity getEntity(String objectId, boolean restrictedOnly);
+
+    protected abstract List<AcmContainerEntity> getEntities(Integer daysClosed);
 
     @Override
     public boolean isRestricted(String objectId)
@@ -93,12 +103,11 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectId,
             PermissionType permissionType) throws CalendarServiceException
     {
-        Object caseFile = getEntity(objectId, true);
-        if (caseFile == null)
+        AcmContainerEntity entity = getEntity(objectId, true);
+        if (entity == null)
         {
             return true;
         }
-        AcmContainerEntity entity = (AcmContainerEntity) caseFile;
         String calendarId = entity.getContainer().getCalendarFolderId();
         try
         {
@@ -163,18 +172,17 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
     @Override
     public String getCalendarId(String objectId) throws CalendarServiceException
     {
-        Object entity = getEntity(objectId, false);
+        AcmContainerEntity entity = getEntity(objectId, false);
         if (entity == null)
         {
             throw new CalendarServiceException(String.format("No calendar associated with %s with id %s.", getEntityType(), objectId));
         }
-        AcmContainerEntity containerEntity = (AcmContainerEntity) entity;
-        return containerEntity.getContainer().getCalendarFolderId();
+        return entity.getContainer().getCalendarFolderId();
     }
 
     @Override
     public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                                    String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
         try
         {
@@ -205,7 +213,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
 
     @Override
     public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-                                            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
 
         try
@@ -245,7 +253,7 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
      * @throws Exception
      */
     private FindItemsResults<Appointment> retreiveAppointments(ExchangeService service, ZonedDateTime after, ZonedDateTime before,
-                                                               String sort, String sortDirection, int start, int maxItems, String objectId) throws ServiceLocalException, Exception
+            String sort, String sortDirection, int start, int maxItems, String objectId) throws ServiceLocalException, Exception
     {
         Date startDate = Date.from(after.toInstant());
         Date endDate = Date.from(before.toInstant());
@@ -272,12 +280,92 @@ public abstract class CalendarEntityHandlerBase implements CalendarEntityHandler
         return findResults;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler#purgeCalendar(com.armedia.acm.
+     * calendar.config.service.CalendarConfiguration.PurgeOptions)
+     */
+    @Override
+    public void purgeCalendars(ExchangeService service, PurgeOptions purgeOptions, Integer daysClosed)
+    {
+        switch (purgeOptions)
+        {
+        case RETAIN_INDEFINITELY:
+            return;
+        case CLOSED:
+        case CLOSED_X_DAYS:
+            List<AcmContainerEntity> purgeCandidates = getEntities(daysClosed);
+            purgeCalendars(service, purgeCandidates);
+            break;
+        }
+
+    }
+
+    /**
+     * @param daysClosed
+     * @return
+     */
+    protected Date calculateModifiedDate(Integer daysClosed)
+    {
+        LocalDate now = LocalDate.now().minusDays(daysClosed);
+        return Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * @param purgeCandidates
+     */
+    private void purgeCalendars(ExchangeService service, List<AcmContainerEntity> purgeCandidates)
+    {
+        for (AcmContainerEntity entity : purgeCandidates)
+        {
+            try
+            {
+                // The start date and end date are chosen on the assumption that no events would be created prior to the
+                // creation of the object, and that possible events that are 1 year after the event creation are part of
+                // recurring events.
+                Date startDate = entity.getContainer().getCreated();
+                Date endDate = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+                CalendarView calendarView = new CalendarView(startDate, endDate);
+                CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(entity.getContainer().getCalendarFolderId()));
+
+                FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
+
+                for (Appointment appointment : findResults.getItems())
+                {
+                    String calendarEventId = appointment.getId().getUniqueId();
+                    if (appointment.getIsRecurring())
+                    {
+                        appointment = Appointment.bindToRecurringMaster(service, new ItemId(calendarEventId));
+                        outlookDao.deleteAppointmentItem(service, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
+                    } else
+                    {
+                        outlookDao.deleteAppointmentItem(service, calendarEventId, false, DeleteMode.MoveToDeletedItems);
+                    }
+                }
+
+            } catch (Exception e)
+            {
+                log.warn("Error while trying to purge calendar events for calendar folder with id: {}",
+                        entity.getContainer().getCalendarFolderId(), e);
+            }
+        }
+    }
+
     /**
      * @return the em
      */
     protected EntityManager getEm()
     {
         return em;
+    }
+
+    /**
+     * @param outlookDao the outlookDao to set
+     */
+    public void setOutlookDao(OutlookDao outlookDao)
+    {
+        this.outlookDao = outlookDao;
     }
 
 }
