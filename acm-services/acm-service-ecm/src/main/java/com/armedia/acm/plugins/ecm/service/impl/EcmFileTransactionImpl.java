@@ -17,12 +17,13 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -144,7 +145,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
 
-        } catch (MimeTypeException | IOException e1)
+        } catch (IOException | SAXException | TikaException e1)
         {
             finalMimeType = mimeType;
             finalExtension = getFolderAndFilesUtils().getFileNameExtension(filename);
@@ -202,7 +203,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
                     ecmFile.getFileName());
-        } catch (MimeTypeException | IOException e1)
+        } catch (TikaException | SAXException | IOException e1)
         {
             log.debug("Can not auto detect file using Tika");
             ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
