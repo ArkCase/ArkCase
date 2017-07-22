@@ -17,7 +17,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -60,6 +59,36 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_file_version_name_extension")
     private String versionFileNameExtension;
+
+    @Column(name = "cm_media_gps_iso_6709")
+    private String gpsIso6709;
+
+    @Column(name = "cm_media_gps_latitude_degrees")
+    private Double gpsLatitudeDegrees;
+
+    @Column(name = "cm_media_gps_longitude_degrees")
+    private Double gpsLongitudeDegrees;
+
+    @Column(name = "cm_media_gps_readable")
+    private String gpsReadable;
+
+    @Column(name = "cm_media_created_date")
+    private Date mediaCreated;
+
+    @Column(name = "cm_media_height_pixels")
+    private Integer heightPixels;
+
+    @Column(name = "cm_media_width_pixels")
+    private Integer widthPixels;
+
+    @Column(name = "cm_media_camera_make")
+    private String cameraMake;
+
+    @Column(name = "cm_media_camera_model")
+    private String cameraModel;
+
+    @Column(name = "cm_media_vid_duration_seconds")
+    private Double videoDurationSeconds;
 
     @JsonIgnore
     @ManyToOne
@@ -173,6 +202,106 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     public void setFile(EcmFile file)
     {
         this.file = file;
+    }
+
+    public String getGpsIso6709()
+    {
+        return gpsIso6709;
+    }
+
+    public void setGpsIso6709(String gpsIso6709)
+    {
+        this.gpsIso6709 = gpsIso6709;
+    }
+
+    public Double getGpsLatitudeDegrees()
+    {
+        return gpsLatitudeDegrees;
+    }
+
+    public void setGpsLatitudeDegrees(Double gpsLatitudeDegrees)
+    {
+        this.gpsLatitudeDegrees = gpsLatitudeDegrees;
+    }
+
+    public Double getGpsLongitudeDegrees()
+    {
+        return gpsLongitudeDegrees;
+    }
+
+    public void setGpsLongitudeDegrees(Double gpsLongitudeDegrees)
+    {
+        this.gpsLongitudeDegrees = gpsLongitudeDegrees;
+    }
+
+    public String getGpsReadable()
+    {
+        return gpsReadable;
+    }
+
+    public void setGpsReadable(String gpsReadable)
+    {
+        this.gpsReadable = gpsReadable;
+    }
+
+    public Integer getHeightPixels()
+    {
+        return heightPixels;
+    }
+
+    public void setHeightPixels(Integer heightPixels)
+    {
+        this.heightPixels = heightPixels;
+    }
+
+    public Integer getWidthPixels()
+    {
+        return widthPixels;
+    }
+
+    public void setWidthPixels(Integer widthPixels)
+    {
+        this.widthPixels = widthPixels;
+    }
+
+    public String getCameraMake()
+    {
+        return cameraMake;
+    }
+
+    public void setCameraMake(String cameraMake)
+    {
+        this.cameraMake = cameraMake;
+    }
+
+    public String getCameraModel()
+    {
+        return cameraModel;
+    }
+
+    public void setCameraModel(String cameraModel)
+    {
+        this.cameraModel = cameraModel;
+    }
+
+    public Double getVideoDurationSeconds()
+    {
+        return videoDurationSeconds;
+    }
+
+    public void setVideoDurationSeconds(Double videoDurationSeconds)
+    {
+        this.videoDurationSeconds = videoDurationSeconds;
+    }
+
+    public Date getMediaCreated()
+    {
+        return mediaCreated;
+    }
+
+    public void setMediaCreated(Date mediaCreated)
+    {
+        this.mediaCreated = mediaCreated;
     }
 
     @JsonIgnore

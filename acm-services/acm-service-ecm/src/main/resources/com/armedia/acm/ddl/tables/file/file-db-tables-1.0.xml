@@ -583,24 +583,39 @@
             <column name="cm_file_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
-    
-       <changeSet id="53-acm_file-add-file-lang-column" author="marko.stojanoski" dbms="mysql">
+
+    <changeSet id="53-acm_file-add-file-lang-column" author="marko.stojanoski" dbms="mysql">
         <addColumn tableName="acm_file">
             <column name="cm_file_lang" type="TEXT"></column>
         </addColumn>
     </changeSet>
-        
+
     <changeSet id="53-acm_file-add-file-lang-column" author="marko.stojanoski" dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_file">
             <column name="cm_file_lang" type="VARCHAR(255)"></column>
         </addColumn>
-    </changeSet>    
+    </changeSet>
 
     <changeSet id="53-acm_file-add-description-column" author="dragan.simonovski">
         <addColumn tableName="acm_file">
             <column name="cm_file_description" type="VARCHAR(1024)">
                 <constraints nullable="true"/>
             </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="54-ecm-file-media-columns" author="dmiller">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_media_gps_iso_6709" type="VARCHAR(255)"/>
+            <column name="cm_media_gps_latitude_degrees" type="${gpsLatLong}"/>
+            <column name="cm_media_gps_longitude_degrees" type="${gpsLatLong}"/>
+            <column name="cm_media_gps_readable" type="VARCHAR(255)"/>
+            <column name="cm_media_created_date" type="${timestampType}"/>
+            <column name="cm_media_height_pixels" type="INTEGER"/>
+            <column name="cm_media_width_pixels" type="INTEGER"/>
+            <column name="cm_media_camera_make" type="VARCHAR(255)"/>
+            <column name="cm_media_camera_model" type="VARCHAR(255)"/>
+            <column name="cm_media_vid_duration_seconds" type="${duration}"/>
         </addColumn>
     </changeSet>
 
