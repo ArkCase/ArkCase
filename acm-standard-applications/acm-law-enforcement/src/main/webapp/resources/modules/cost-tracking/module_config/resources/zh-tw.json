@@ -9,9 +9,11 @@
     "leftnav.item": "成本跟踪",
     "topbar.item": "成本項目"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "概述"
   },
   "costTracking.comp.info": {
+    "title": "信息",
     "incidentDate": "zh-tw_Incident Date",
     "priority": "zh-tw_Priority",
     "assignedTo": "zh-tw_Assigned To",
@@ -19,11 +21,12 @@
     "state": "zh-tw_State"
   },
   "costTracking.comp.actions": {
+    "title": "行動",
     "new.button": "zh-tw_New Costsheet",
     "edit.button": "zh-tw_Edit Costsheet"
   },
   "costTracking.comp.details": {
-    "title": "zh-tw_Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Costsheet details saved",
     "table.columns": {
       "title": "zh-tw_Details",
@@ -31,15 +34,15 @@
       "modifier": "zh-tw_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "zh-tw_Person",
+  "costTracking.comp.person": {
+    "title": "成員",
     "table.columns": {
       "fullName": "zh-tw_Full Name",
       "userId": "zh-tw_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "zh-tw_Cost Summary",
+    "title": "成本總結",
     "table.columns": {
       "parentId": "zh-tw_ID",
       "parentNumber": "zh-tw_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "zh-tw_Tags",
+    "title": "標籤",
     "table.columns": {
       "tag": "zh-tw_Tag",
       "created": "zh-tw_Created",
@@ -71,6 +74,22 @@
         "success": "zh-tw_Tag deleted successfully",
         "error": "zh-tw_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "person.label": "成員",
+      "summary.label": "費用",
+      "tags.label": "標籤"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "caseIdAsc": "按成本表格號排序",
+      "caseIdDesc": "按成本表格號反排序",
+      "byNameAsc": "按名稱排序",
+      "noSort": "(不排序)"
     }
   }
 }

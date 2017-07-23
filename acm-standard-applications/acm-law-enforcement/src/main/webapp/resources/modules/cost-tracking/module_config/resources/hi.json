@@ -9,9 +9,11 @@
     "leftnav.item": "लागत ट्रैकिंग",
     "topbar.item": "कॉस्टशीट"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "अवलोकन"
   },
   "costTracking.comp.info": {
+    "title": "जानकारी",
     "incidentDate": "hi_Incident Date",
     "priority": "hi_Priority",
     "assignedTo": "hi_Assigned To",
@@ -19,11 +21,12 @@
     "state": "hi_State"
   },
   "costTracking.comp.actions": {
+    "title": "क्रियाएं",
     "new.button": "hi_New Costsheet",
     "edit.button": "hi_Edit Costsheet"
   },
   "costTracking.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Costsheet details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -31,15 +34,15 @@
       "modifier": "hi_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "hi_Person",
+  "costTracking.comp.person": {
+    "title": "लोग",
     "table.columns": {
       "fullName": "hi_Full Name",
       "userId": "hi_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "hi_Cost Summary",
+    "title": "लागत सारांश",
     "table.columns": {
       "parentId": "hi_ID",
       "parentNumber": "hi_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -71,6 +74,22 @@
         "success": "hi_Tag deleted successfully",
         "error": "hi_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "person.label": "लोग",
+      "summary.label": "व्यय",
+      "tags.label": "टैग"
+    },
+    "sorters": {
+      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
+      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
+      "costsheetIdAsc": "चढ़ाई में लागत पत्रक को सॉर्ट करें",
+      "costsheetIdDesc": "लागत पत्रक आईडी उतरते क्रमबद्ध करें",
+      "byNameDesc": "सॉर्ट इन एएनएससी",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }
