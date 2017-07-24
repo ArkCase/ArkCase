@@ -73,6 +73,33 @@
         "created": "zh-tw_Created",
         "versionTag": "zh-tw_Version"
       }
+    },
+    "comp.details": {
+      "title": "zh-tw_Details",
+      "label": {
+        "creator": "zh-tw_Owner",
+        "modifier": "zh-tw_Author",
+        "created": "zh-tw_Creation Date",
+        "modified": "zh-tw_Modified Date",
+        "description": "zh-tw_Description",
+        "type": "zh-tw_Type",
+        "organization": "zh-tw_Source Organization",
+        "person": "zh-tw_Source Entity",
+        "format": "zh-tw_Format",
+        "size": "zh-tw_Size",
+        "gps": "zh-tw_Location",
+        "duration": "zh-tw_Duration (seconds)",
+        "width": "zh-tw_Width (pixels)",
+        "height": "zh-tw_Height (pixels)",
+        "camera.type": "zh-tw_Camera Type",
+        "camera.version": "zh-tw_Camera Version",
+        "button.save": "zh-tw_Save",
+        "button.wait": "zh_tw_Please Wait"
+      },
+      "message": {
+        "save.success": "zh-tw_File metadata are successfully updated",
+        "save.error": "zh-tw_Unable to update file metadata"
+      }
     }
   }
 }

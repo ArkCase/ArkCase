@@ -631,5 +631,17 @@
                       newColumnName="cm_media_duration_seconds" columnDataType="${duration}"/>
     </changeSet>
 
+    <changeSet id="56-acm_file-add-organization-assoc-column" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_organization_association" type="${idType}"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="57-acm_file-add-person-assoc-column" author="riste.tutureski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_person_association" type="${idType}"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 
