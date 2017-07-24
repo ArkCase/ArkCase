@@ -86,8 +86,8 @@
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "caseIdAsc": "按成本表格號排序",
-      "caseIdDesc": "按成本表格號反排序",
+      "costsheetIdAsc": "按成本表格號排序",
+      "costsheetIdDesc": "按成本表格號反排序",
       "byNameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }

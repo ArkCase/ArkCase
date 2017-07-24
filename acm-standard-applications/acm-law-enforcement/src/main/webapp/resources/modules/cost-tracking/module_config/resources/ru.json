@@ -9,8 +9,6 @@
     "leftnav.item": "Отслеживание затрат",
     "topbar.item": "Стоимость лист"
   },
-  "costTracking.tree": {
-  },
   "costTracking.comp.main": {
     "title": "Обзор"
   },
@@ -88,8 +86,8 @@
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
-      "costsheetIdAsc": "Сортировка расходы Asc",
-      "costsheetIdDesc": "Сортировка расходы Desc",
+      "costsheetIdAsc": "Сортировка Стоимость Asc",
+      "costsheetIdDesc": "Сортировка Стоимость Desc",
       "byNameDesc": "Сортировать по имени",
       "noSort": "(Нет Сортировать)"
     }

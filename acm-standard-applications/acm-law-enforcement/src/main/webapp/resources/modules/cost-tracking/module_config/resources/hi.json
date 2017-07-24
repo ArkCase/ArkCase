@@ -80,7 +80,7 @@
     "nodeTypes": {
       "details.label": "विवरण",
       "person.label": "लोग",
-      "summary.label": "व्यय",
+      "summary.label": "लागत",
       "tags.label": "टैग"
     },
     "sorters": {

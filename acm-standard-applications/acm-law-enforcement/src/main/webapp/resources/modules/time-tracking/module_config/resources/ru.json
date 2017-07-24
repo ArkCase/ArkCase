@@ -9,17 +9,20 @@
     "leftnav.item": "Отслеживание времени",
     "topbar.item": "Время лист"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Обзор"
   },
   "timeTracking.comp.info": {
+    "title": "Информация",
     "lastModified.label": "ru_Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Действия",
     "new.button": "ru_New Timesheet",
     "edit.button": "ru_Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Timesheet details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -27,15 +30,15 @@
       "modifier": "ru_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "ru_Person",
+  "timeTracking.comp.person": {
+    "title": "Люди",
     "table.columns": {
       "fullName": "ru_Full Name",
       "userId": "ru_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "ru_Hours Summary",
+    "title": "Обзор часов",
     "table.columns": {
       "code": "ru_Parent ID",
       "type": "ru_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -66,6 +69,22 @@
         "success": "ru_Tag deleted successfully",
         "error": "ru_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "person.label": "Люди",
+      "summary.label": "расходы",
+      "tags.label": "Теги"
+    },
+    "sorters": {
+      "dateAsc": "Сортировка даты Asc",
+      "dateDesc": "Сортировка даты Desc",
+      "timesheetIdAsc": "Сортировка расходы Asc",
+      "timesheetIdDesc": "Сортировка расходы Desc",
+      "byNameDesc": "Сортировать по имени",
+      "noSort": "(Нет Сортировать)"
     }
   }
 }
