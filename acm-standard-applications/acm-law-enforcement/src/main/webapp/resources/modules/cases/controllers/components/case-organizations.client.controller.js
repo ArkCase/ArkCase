@@ -47,7 +47,8 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+            gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -72,9 +73,24 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
         };
 
         $scope.addOrganization = function () {
+            pickOrganization(null);
+        };
+
+        function pickOrganization(association) {
 
             var params = {};
             params.types = $scope.organizationTypes;
+
+            if (association) {
+                angular.extend(params, {
+                    organizationId: association.organization.organizationId,
+                    organizationValue: association.organization.organizationValue,
+                    type: association.associationType,
+                    description: association.description
+                });
+            } else {
+                association = new newOrganizationAssociation();
+            }
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -92,31 +108,36 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    var association = new newOrganizationAssociation();
-                    association.organization = data.organization;
-                    association.associationType = data.type;
-                    $scope.objectInfo.organizationAssociations.push(association);
-                    saveObjectInfoAndRefresh();
+                    updateOrganizationAssociationData(association, data.organization, data);
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        var association = new newOrganizationAssociation();
-                        association.organization = organization;
-                        association.associationType = data.type;
-                        $scope.objectInfo.organizationAssociations.push(association);
-                        saveObjectInfoAndRefresh();
+                        updateOrganizationAssociationData(association, organization, data);
                     })
                 }
             });
-        };
+        }
+
+        function updateOrganizationAssociationData(association, organization, data) {
+            association.organization = organization;
+            association.associationType = data.type;
+            if (!association.id) {
+                $scope.objectInfo.organizationAssociations.push(association);
+            }
+            saveObjectInfoAndRefresh();
+        }
 
         $scope.deleteRow = function (rowEntity) {
             var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.organizationAssociations = _.remove($scope.objectInfo.organizationAssociations, function (item) {
-                    return item.id != id;
-                });
-                saveObjectInfoAndRefresh()
+            _.remove($scope.objectInfo.organizationAssociations, function (item) {
+                return item === rowEntity;
+            });
+            if (rowEntity.id) {
+                saveObjectInfoAndRefresh();
             }
+        };
+
+        $scope.editRow = function (rowEntity) {
+            pickOrganization(rowEntity);
         };
 
         function saveObjectInfoAndRefresh() {
@@ -137,5 +158,15 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
             }
             return promiseSaveInfo;
         }
+
+        $scope.isEditDisabled = function (rowEntity) {
+            //add conditions if edit button shouldn't be visible
+            return false;
+        };
+
+        $scope.isDeleteDisabled = function (rowEntity) {
+            //add conditions if delete button shouldn't be visible
+            return false;
+        };
     }
 ]);
