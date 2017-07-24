@@ -74,11 +74,13 @@
                 <!-- Right column-->
                 <div class="col-sm-6">
                     <!-- Creation date -->
-                    <div class="form-group">
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('audio/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('image/') == 0">
                         <label translate>documentDetails.comp.details.label.created</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.ecmFile.created"
+                               ng-model="details.activeVersion.mediaCreated"
                                ng-readonly="true">
                     </div>
 
@@ -114,9 +116,9 @@
             <!-- Media -->
             <div class="row">
                 <!-- Left column-->
-                <div class="col-sm-6" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 || details.activeVersion.versionMimeType.indexOf('audio/') == 0">
+                <div class="col-sm-6">
                     <!-- Camera Type -->
-                    <div class="form-group">
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0">
                         <label translate>documentDetails.comp.details.label.camera.type</label>
                         <input class="form-control"
                                type="text"
@@ -124,35 +126,15 @@
                                ng-readonly="true">
                     </div>
                     <!-- Camera Version -->
-                    <div class="form-group">
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0">
                         <label translate>documentDetails.comp.details.label.camera.version</label>
                         <input class="form-control"
                                type="text"
                                ng-model="details.activeVersion.cameraModel"
                                ng-readonly="true">
                     </div>
-                    <!-- GPS -->
-                    <div class="form-group">
-                        <label translate>documentDetails.comp.details.label.gps</label>
-                        <input class="form-control"
-                               type="text"
-                               ng-model="details.activeVersion.gpsReadable"
-                               ng-readonly="true">
-                    </div>
-                    <!-- Duration in seconds -->
-                    <div class="form-group">
-                        <label translate>documentDetails.comp.details.label.duration</label>
-                        <input class="form-control"
-                               type="text"
-                               ng-model="details.activeVersion.videoDurationSeconds"
-                               ng-readonly="true">
-                    </div>
-                </div>
-
-                <!-- Right column-->
-                <div class="col-sm-6" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0">
                     <!-- Width in pixels -->
-                    <div class="form-group">
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0 || details.activeVersion.versionMimeType.indexOf('video/') == 0">
                         <label translate>documentDetails.comp.details.label.width</label>
                         <input class="form-control"
                                type="text"
@@ -160,11 +142,32 @@
                                ng-readonly="true">
                     </div>
                     <!-- Height in pixels -->
-                    <div class="form-group">
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0 || details.activeVersion.versionMimeType.indexOf('video/') == 0">
                         <label translate>documentDetails.comp.details.label.height</label>
                         <input class="form-control"
                                type="text"
                                ng-model="details.activeVersion.heightPixels"
+                               ng-readonly="true">
+                    </div>
+                </div>
+                <!-- Right column-->
+                <div class="col-sm-6">
+                    <!-- GPS -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('audio/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('image/') == 0">
+                        <label translate>documentDetails.comp.details.label.gps</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.gpsReadable"
+                               ng-readonly="true">
+                    </div>
+                    <!-- Duration in seconds -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 || details.activeVersion.versionMimeType.indexOf('audio/') == 0">
+                        <label translate>documentDetails.comp.details.label.duration</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.videoDurationSeconds"
                                ng-readonly="true">
                     </div>
                 </div>
