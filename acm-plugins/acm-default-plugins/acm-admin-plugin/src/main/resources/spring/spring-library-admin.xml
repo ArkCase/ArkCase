@@ -26,6 +26,57 @@
         <property name="pluginProperties" ref="adminPluginProperties"/>
     </bean>
 
+    <!-- LDAP configuration API -->
+    <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.service.LdapConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="ldapDirectoryConfig" ref="ldapDirectoryConfig"/>
+        <property name="templatesConfigMap">
+            <map>
+                <entry key="openldap" value-ref="openLdapTemplateConfig"/>
+                <entry key="activedirectory" value-ref="adTemplateConfig"/>
+            </map>
+        </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.service.WorkflowConfigurationService">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="temporaryFolder" value="#{ systemProperties ['user.home'] }/.arkcase/acm/activiti/temp/"/>
+    </bean>
+
+    <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService">
+        <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
+        <property name="configurationFile" value="drools-form-business-process-rules.xlsx"/>
+        <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
+        <property name="configurationFileBackupRegex"
+                  value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
+
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="acmFileTypesService" ref="acmFileTypesService"/>
+    </bean>
+
+    <bean id="customCssService" class="com.armedia.acm.plugins.admin.service.CustomCssService">
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/custom.css"/>
+    </bean>
+
+    <bean id="customLogoService" class="com.armedia.acm.plugins.admin.service.CustomLogoService">
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
+        <property name="headerLogoFile" value="header-logo.png"/>
+        <property name="loginLogoFile" value="login-logo.png"/>
+    </bean>
+
+    <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.service.ModuleConfigurationService">
+        <property name="appConfigPropertiesFile"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-config.properties/"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
+        <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
+    </bean>
 
     <bean id="labelManagementService" class="com.armedia.acm.plugins.admin.service.LabelManagementService">
         <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
@@ -56,7 +107,7 @@
     </bean>
 
     <!-- Roles Privileges API-->
-    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
+    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
         <property name="applicationRolesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
         <property name="applicationPrivilegesFile"

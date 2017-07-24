@@ -188,6 +188,26 @@
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
       },
+      "phones": {
+        "title": "Phone Numbers",
+        "description": "Displays phone numbers",
+        "noDataMessage": "Currently there are no phone numbers to display"
+      },
+      "faxes": {
+        "title": "Fax Numbers",
+        "description": "Displays faxes details",
+        "noDataMessage": "Currently there are no faxes to display"
+      },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",

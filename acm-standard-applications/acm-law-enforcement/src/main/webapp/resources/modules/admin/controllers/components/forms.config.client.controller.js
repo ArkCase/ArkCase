@@ -34,7 +34,11 @@ angular.module('admin').controller('Admin.FormsConfigController', ['$scope', '$s
             $scope.openNewFrevvoFormParams = {
                 target: $scope.selectedTarget
             };
-        }
+        };
+
+        $scope.newForm = function () {
+            $state.go("frevvo.new-plainform", $scope.openNewFrevvoFormParams);
+        };
 
         function addEditColumn() {
             var columnDef = {

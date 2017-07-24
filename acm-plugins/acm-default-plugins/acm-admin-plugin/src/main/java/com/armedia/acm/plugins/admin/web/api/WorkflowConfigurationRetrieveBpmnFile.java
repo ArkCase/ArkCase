@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
+import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,9 @@ import java.io.InputStream;
  * Created by sergey.kolomiets  on 6/9/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class WorkflowConfigurationRetrieveBpmnFile {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class WorkflowConfigurationRetrieveBpmnFile
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkflowConfigurationService workflowConfigurationService;
@@ -30,21 +32,23 @@ public class WorkflowConfigurationRetrieveBpmnFile {
     @ResponseBody
     public String retrieveFile(
             @PathVariable("key") String key,
-            @PathVariable("version") int  version) throws IOException, AcmWorkflowConfigurationException {
+            @PathVariable("version") int version) throws IOException, AcmWorkflowConfigurationException
+    {
 
-        try {
+        try
+        {
             InputStream bpmnStream = workflowConfigurationService.retrieveBpmnFile(key, version);
             String bpmnFileContent = IOUtils.toString(bpmnStream);
             return bpmnFileContent;
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't get workflow BPMN file", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't get workflow BPMN file", e);
             throw new AcmWorkflowConfigurationException("Can't get workflow BPMN file", e);
         }
     }
 
-    public void setWorkflowConfigurationService(WorkflowConfigurationService workflowConfigurationService) {
+    public void setWorkflowConfigurationService(WorkflowConfigurationService workflowConfigurationService)
+    {
         this.workflowConfigurationService = workflowConfigurationService;
     }
 }
