@@ -73,6 +73,28 @@
         "created": "Created",
         "versionTag": "Version"
       }
+    },
+    "comp.details": {
+      "title": "Details",
+      "label": {
+        "creator": "Owner",
+        "modifier": "Author",
+        "created": "Creation Date",
+        "modified": "Modified Date",
+        "description": "Description",
+        "type": "Type",
+        "organization": "Source Organization",
+        "person": "Source Entity",
+        "format": "Format",
+        "size": "Size",
+        "gps": "Location",
+        "duration": "Duration (seconds)",
+        "width": "Width (pixels)",
+        "height": "Height (pixels)",
+        "camera.type": "Camera Type",
+        "camera.version": "Camera Version",
+        "button.save": "Save"
+      }
     }
   }
 }
