@@ -80,7 +80,7 @@
     "nodeTypes": {
       "details.label": "Détails",
       "person.label": "Personnes",
-      "summary.label": "Gastos",
+      "summary.label": "Frais",
       "tags.label": "étiquettes"
     },
     "sorters": {

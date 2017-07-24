@@ -89,7 +89,7 @@
       "costsheetIdAsc": "Sortieren Kostenblatt-ID Auf",
       "costsheetIdDesc": "Sortieren Kostenblatt-ID Dec",
       "byNameDesc": "Nach Name sortieren",
-      "noSort": "(No Sort)"
+      "noSort": "(Keine Sortierung)"
     }
   }
 }
