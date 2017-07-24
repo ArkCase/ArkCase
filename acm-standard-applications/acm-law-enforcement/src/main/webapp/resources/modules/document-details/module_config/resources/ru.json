@@ -93,7 +93,8 @@
         "height": "ru_Height (pixels)",
         "camera.type": "ru_Camera Type",
         "camera.version": "ru_Camera Version",
-        "button.save": "ru_Save"
+        "button.save": "ru_Save",
+        "button.wait": "ru_Please Wait"
       },
       "message": {
         "save.success": "ru_File metadata are successfully updated",

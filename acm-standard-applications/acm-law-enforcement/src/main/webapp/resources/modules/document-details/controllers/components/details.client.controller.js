@@ -1,44 +1,80 @@
 'use strict';
 
 angular.module('document-details').controller('Document.DetailsController',
-    ['$scope', '$translate', '$filter', '$modal', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'ConfigService'
-        , function ($scope, $translate, $filter, $modal, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, ConfigService) {
+    ['$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService'
+        , function ($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService) {
 
         $scope.$on('document-data', function (event, ecmFile) {
 
             var _ecmFile = angular.copy(ecmFile);
-            var _activeVersion = $scope.getActiveVersion(_ecmFile);
-
-            if (_ecmFile.created) {
-                _ecmFile.created = $filter('date')(_ecmFile.created, $translate.instant("common.defaultDateTimeUIFormat"));
-            }
-            if (_ecmFile.modified) {
-                _ecmFile.modified = $filter('date')(_ecmFile.created, $translate.instant("common.defaultDateTimeUIFormat"));
-            }
-            if (_activeVersion.created) {
-                _activeVersion.created = $filter('date')(_activeVersion.created, $translate.instant("common.defaultDateTimeUIFormat"));
-            }
-            if (_activeVersion.modified) {
-                _activeVersion.modified = $filter('date')(_activeVersion.created, $translate.instant("common.defaultDateTimeUIFormat"));
-            }
-
-            // Keep original EcmFile. We will need later just to get original (not changed) dates for created, modified, version-created, version-modified
-            $scope.ecmFile = ecmFile;
-
-            $scope.details = {};
-            $scope.details.ecmFile = _ecmFile;
-            $scope.details.activeVersion = _activeVersion;
-            $scope.details.personFullName = '';
+            var promiseGetUserFullNames = LookupService.getUserFullNames();
+            var promiseGetPersonInfo = null;
+            var promiseGetOrganizationInfo = null;
 
             if (_ecmFile.personAssociation) {
-                $scope.details.personFullName = (_ecmFile.personAssociation.person.givenName + ' ' + _ecmFile.personAssociation.person.familyName).trim();
+                promiseGetPersonInfo = PersonInfoService.getPersonInfo(_ecmFile.personAssociation.targetId);
             }
 
+            if (_ecmFile.organizationAssociation) {
+                promiseGetOrganizationInfo = OrganizationInfoService.getOrganizationInfo(_ecmFile.organizationAssociation.targetId);
+            }
+
+            var promises = [promiseGetUserFullNames, promiseGetPersonInfo, promiseGetOrganizationInfo];
+
+            // Be sure that all needed information will be loaded. After that proceed with populating all information.
+            // This will show all information on the UI in the same moment
+            $q.all(promises).then(
+                function (response) {
+                    var _activeVersion = $scope.getActiveVersion(_ecmFile);
+
+                    // Keep original EcmFile. We will need later just to get original version-modified date
+                    $scope.ecmFile = ecmFile;
+
+                    $scope.details.ecmFile = _ecmFile;
+                    $scope.details.activeVersion = _activeVersion;
+                    $scope.details.person = response[1] != null ? (response[1].givenName + ' ' + response[1].familyName).trim() : '';
+                    $scope.details.organization = response[2] != null ? response[2].organizationValue : '';
+                    $scope.details.creator = $scope.get(_.find(response[0], {id: $scope.details.activeVersion.creator}), 'name');
+                    $scope.details.modifier = $scope.get(_.find(response[0], {id: $scope.details.activeVersion.modifier}), 'name');
+                    $scope.details.modified = $filter('date')(_activeVersion.created, $translate.instant("common.defaultDateTimeUIFormat"));
+                    $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
+                    $scope.details.mediaCreated = $filter('date')(_activeVersion.mediaCreated, $translate.instant("common.defaultDateTimeUIFormat"));
+
+                    $scope.saveButton.disabled = false;
+                    $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
+                }
+            );
+
         });
+
+        $scope.details = {};
+        $scope.saveButton = {};
+        $scope.saveButton.disabled = true;
+        $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
 
         $scope.options = {
             focus: false,
             dialogsInBody: true
+        };
+
+        $scope.get = function(object, key) {
+          if (_.has(object, key)) {
+              return object[key];
+          }
+          return '';
+        };
+
+        $scope.convert = function(bytes, precision) {
+            if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) {
+                return '';
+            }
+            if (typeof precision === 'undefined') {
+                precision = 1;
+            }
+            var units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+            var number = Math.floor(Math.log(bytes) / Math.log(1024));
+
+            return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
         };
 
         ObjectLookupService.getFileTypes().then(function (fileTypes) {
@@ -109,10 +145,22 @@ angular.module('document-details').controller('Document.DetailsController',
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    $scope.details.ecmFile.organization = data.organization;
+                    OrganizationInfoService.saveOrganizationInfo(data.organization).then(function (saved) {
+                        var association = $scope.newAssociation();
+                        association.targetId = saved.organizationId;
+                        association.targetType = 'ORGANIZATION';
+                        association.targetSubtype = data.type;
+                        $scope.details.ecmFile.organizationAssociation = association;
+                        $scope.details.organization = saved.organizationValue;
+                    });
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        $scope.details.ecmFile.organization = organization;
+                        var association = $scope.newAssociation();
+                        association.targetId = organization.organizationId;
+                        association.targetType = 'ORGANIZATION';
+                        association.targetSubtype = data.type;
+                        $scope.details.ecmFile.organizationAssociation = association;
+                        $scope.details.organization = organization.organizationValue;
                     })
                 }
             });
@@ -138,49 +186,50 @@ angular.module('document-details').controller('Document.DetailsController',
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    var association = $scope.newPersonAssociation();
-                    association.person = data.person;
-                    association.personType = data.type;
-                    $scope.details.ecmFile.personAssociation = association;
-                    // Do this since Person object don't have full name
-                    $scope.details.personFullName = (data.person.givenName + ' ' + data.person.familyName).trim();
+                    PersonInfoService.savePersonInfo(data.person).then(function (saved) {
+                        var fullName = (saved.givenName + ' ' + saved.familyName).trim();
+                        var association = $scope.newAssociation();
+                        association.targetId = saved.id;
+                        association.targetType = 'PERSON';
+                        association.targetSubtype = data.type;
+                        $scope.details.ecmFile.personAssociation = association;
+                        $scope.details.person = fullName;
+                    });
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        var association = $scope.newPersonAssociation();
-                        association.person = person;
-                        association.personType = data.type;
+                        var fullName = (person.givenName + ' ' + person.familyName).trim();
+                        var association = $scope.newAssociation();
+                        association.targetId = person.id;
+                        association.targetType = 'PERSON';
+                        association.targetSubtype = data.type
                         $scope.details.ecmFile.personAssociation = association;
-                        // Do this since Person object don't have full name
-                        $scope.details.personFullName = (person.givenName + ' ' + person.familyName).trim();
+                        $scope.details.person = fullName;
                     })
                 }
             });
         };
 
-        $scope.newPersonAssociation = function () {
+        $scope.newAssociation = function () {
             return {
-                id: null
-                , personType: ""
-                , parentId: $scope.details.ecmFile.fileId
-                , parentType: $scope.details.ecmFile.fileType
-                , parentTitle: $scope.details.ecmFile.fileName
-                , personDescription: ""
-                , notes: ""
-                , person: null
-                , className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+                associationId: null,
+                status: '',
+                parentId: $scope.details.ecmFile.fileId,
+                parentType: $scope.details.ecmFile.fileType,
+                parentTitle: '',
+                targetId: null,
+                targetType: '',
+                targetSubtype: '',
+                targetName: '',
+                targetTitle: '',
+                category: '',
+                description: ''
             };
         };
 
         // Save Details
         $scope.save = function () {
-            // Back changed date formats to original
-            $scope.details.ecmFile.created = $scope.ecmFile.created;
-            $scope.details.ecmFile.modified = $scope.ecmFile.modified;
-
-            var _activeVersion = $scope.getActiveVersion($scope.ecmFile);
-            $scope.details.activeVersion.created = _activeVersion.created;
-            $scope.details.activeVersion.modified = _activeVersion.modified;
-
+            $scope.saveButton.disabled = true;
+            $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.wait");
             $scope.details.ecmFile = $scope.setActiveVersion($scope.details.ecmFile, $scope.details.activeVersion);
 
             UtilService.serviceCall({

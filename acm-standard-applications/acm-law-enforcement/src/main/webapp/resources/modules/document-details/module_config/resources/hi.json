@@ -93,7 +93,8 @@
         "height": "hi_Height (pixels)",
         "camera.type": "hi_Camera Type",
         "camera.version": "hi_Camera Version",
-        "button.save": "hi_Save"
+        "button.save": "hi_Save",
+        "button.wait": "hi_Please Wait"
       },
       "message": {
         "save.success": "hi_File metadata are successfully updated",

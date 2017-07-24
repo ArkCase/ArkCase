@@ -93,7 +93,8 @@
         "height": "ja_Height (pixels)",
         "camera.type": "ja_Camera Type",
         "camera.version": "ja_Camera Version",
-        "button.save": "ja_Save"
+        "button.save": "ja_Save",
+        "button.wait": "ja_Please Wait"
       },
       "message": {
         "save.success": "ja_File metadata are successfully updated",

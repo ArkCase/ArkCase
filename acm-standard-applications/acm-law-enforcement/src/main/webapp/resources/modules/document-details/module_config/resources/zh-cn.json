@@ -93,7 +93,8 @@
         "height": "zh-cn_Height (pixels)",
         "camera.type": "zh-cn_Camera Type",
         "camera.version": "zh-cn_Camera Version",
-        "button.save": "zh-cn_Save"
+        "button.save": "zh-cn_Save",
+        "button.wait": "zh-cn_Please Wait"
       },
       "message": {
         "save.success": "zh-cn_File metadata are successfully updated",
