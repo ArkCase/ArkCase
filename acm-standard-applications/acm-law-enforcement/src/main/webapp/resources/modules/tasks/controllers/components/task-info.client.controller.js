@@ -169,7 +169,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     var size = 20;
                     var start = 0;
                     var searchQuery = '*';
-                    var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
+                    var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + '"' + chosenOwningGroup + '"';
                     
                     // Creating a query to get all the users that belong to a particular Owning Group
                     // this query is need for the search logic below
@@ -230,17 +230,14 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             var owningGroupParticipantType = 'owning group';
             $scope.owningGroup = 'Unknown';
 
-            // If when creating a new Task a Group Task is created check the candidateGroups array for the Owning Group 
-            if ($scope.objectInfo.candidateGroups.length > 0) {
+            if (!Util.isEmpty(ObjectModelService.getGroup(objectInfo))) {
+                // If the owning group gets updated, check the participants array for the current Owning group
+                $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
+            }
+            // If when creating a new Task a Group Task is created check the candidateGroups array for the Owning Group
+            else if ($scope.objectInfo.candidateGroups.length > 0) {
                 $scope.owningGroup = $scope.objectInfo.candidateGroups[0];
-            } else if ($scope.objectInfo.participants.length > 0 ) {
-                // If the owning group gets updated, check the participants aaray for the current Owning group
-                _.each($scope.objectInfo.participants, function(participant) {
-                    if(participant.participantType == owningGroupParticipantType){
-                        $scope.owningGroup = participant.participantLdapId;
-                    }
-                });
-            }      
+            }
         };
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;

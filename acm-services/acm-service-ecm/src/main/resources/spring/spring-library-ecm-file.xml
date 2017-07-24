@@ -209,8 +209,6 @@
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
 
-    <bean id="ecmTikaFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmTikaFileServiceImpl"/>
-
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
     <bean id="folderEventPublisher" class="com.armedia.acm.plugins.ecm.service.FolderEventPublisher"/>

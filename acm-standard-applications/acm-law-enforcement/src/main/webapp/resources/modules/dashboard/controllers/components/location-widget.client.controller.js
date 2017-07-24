@@ -13,8 +13,8 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
     })
     .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
-        , function ($scope, $stateParams, ComplaintInfoService
+        , 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+        , function ($scope, $stateParams, ComplaintInfoService, OrganizationInfoService
             , HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
@@ -23,6 +23,12 @@ angular.module('dashboard.locations', ['adf.provider'])
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 
@@ -58,6 +64,8 @@ angular.module('dashboard.locations', ['adf.provider'])
                     $scope.gridOptions.data = [objectInfo];
                     var fullAddress = createFullAddress(objectInfo.location);
                     $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
+                } else if(objectInfo.addresses){
+                    $scope.gridOptions.data = $scope.objectInfo.addresses;
                 } else {
                     $scope.gridOptions.data = [];
                 }

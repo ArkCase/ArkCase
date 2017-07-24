@@ -2,17 +2,19 @@
 
 angular.module('document-details').controller('Document.ParticipantsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.ParticipantService', 'Authentication', 'MessageService', '$translate',
-    function ($scope, $stateParams, $q, $modal, Util, ConfigService, HelperUiGridService, ObjectService, ObjectParticipantService, Authentication, messageService, $translate) {
+    'Object.LookupService', 'Object.ModelService', 'EcmService',
+    function ($scope, $stateParams, $q, $modal, Util, ConfigService, HelperUiGridService, ObjectService, ObjectParticipantService, Authentication, MessageService, $translate
+        , ObjectLookupService, ObjectModelService, EcmService) {
 
         $scope.participantType = {};
         $scope.chosenUser = null;
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
+        var promiseTypes = ObjectLookupService.getParticipantTypes().then(
+            function (participantTypes) {
+                $scope.participantTypes = participantTypes;
+                return participantTypes;
             }
         );
 
@@ -29,76 +31,148 @@ angular.module('document-details').controller('Document.ParticipantsController',
 
         $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
-                var promiseQueryParticipants = ObjectParticipantService.retrieveParticipants(ObjectService.ObjectTypes.FILE, $stateParams.id);
-                $q.all([promiseQueryParticipants, promiseUsers, promiseConfig]).then(function (data) {
-                    var participants = data[0];
+                var promiseFileInfo = EcmService.getFile({fileId: $stateParams.id}).$promise;
+                $q.all([promiseFileInfo, promiseUsers]).then(function (data) {
+                    $scope.fileInfo = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridOptions.data = participants;
-                    $scope.gridOptions.totalItems = participants.length;
+                    $scope.gridOptions.data = $scope.fileInfo.participants;
+                    $scope.gridOptions.totalItems = Util.goodValue($scope.fileInfo.participants.length, 0);
                 });
             }
         };
 
         $scope.addNew = function () {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/document-details/views/components/document-user-search.client.view.html',
-                controller: 'Document.UserSearchController',
-                size: 'lg',
-                resolve: {
-                    $scopeParticipant: function () {
-                        return $scope;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (chosenUser) {
-                if (chosenUser) {
-                    $scope.chosenUser = chosenUser.name;
-                    ObjectParticipantService.addNewParticipant($scope.chosenUser, $scope.participantType, ObjectService.ObjectTypes.FILE, $stateParams.id).then(
-                        function (participantAdded) {
-                            $scope.retrieveGridData();
-                        }
-                    );
-                }
-            }, function () {
-                // Cancel button was clicked.
-            });
+            $scope.participant = {};
+            var item = {
+                id: '',
+                participantType: '',
+                participantLdapId: '',
+                participantTypes: $scope.participantTypes,
+                config: $scope.config
+            };
+            showModal(item, false);
         };
 
         $scope.deleteRow = function (rowEntity) {
-            ObjectParticipantService.removeParticipant(rowEntity.participantLdapId, rowEntity.participantType, ObjectService.ObjectTypes.FILE, $stateParams.id).then(function () {
+            var typeOwningGroup = "owning group";
+            var typeAssignee = "assignee";
+
+            if (rowEntity.participantType == typeOwningGroup) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupDelete"));
+            }
+            else if (rowEntity.participantType == typeAssignee) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeDelete"));
+            }
+            else {
                 gridHelper.deleteRow(rowEntity);
-                messageService.info($translate.instant('documentDetails.comp.participants.message.delete.success'));
-            }, function () {
-                messageService.error($translate.instant('documentDetails.comp.participants.message.delete.error'));
-            });
+                var id = Util.goodMapValue(rowEntity, "id", 0);
+                if (0 < id) {    //do not need to call service when deleting a new row
+                    saveInfoAndRefresh();
+                }
+            }
         };
 
         $scope.editRow = function (rowEntity) {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/document-details/views/components/participants-role-modal.client.view.html',
-                controller: 'Document.ParticipantRoleController',
-                size: 'lg',
-                resolve: {
-                    $scopeRole: function () {
-                        return $scope;
-                    }
-
+            $scope.participant = rowEntity;
+            var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
+            participantDataPromise.then(function (participantData) {
+                if (!Util.isArrayEmpty(participantData)) {
+                    var item = {
+                        id: rowEntity.id,
+                        participantType: rowEntity.participantType,
+                        participantLdapId: rowEntity.participantLdapId,
+                        participantTypes: $scope.participantTypes,
+                        selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
+                        config: $scope.config
+                    };
+                    showModal(item, true);
                 }
+            })
+
+        };
+
+        var showModal = function (participant, isEdit) {
+
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+            modalScope.isEdit = isEdit || false;
+            modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
+                controller: "Directives.CoreParticipantsModalController",
+                size: 'lg',
+                backdrop: 'static'
             });
 
-            modalInstance.result.then(function (participantRole) {
-                ObjectParticipantService.changeParticipantRole(rowEntity.id, participantRole).then(
-                    function () {
+            modalInstance.result.then(function (data) {
+                    if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                        $scope.participant.id = data.participant.id;
+                        $scope.participant.participantLdapId = data.participant.participantLdapId;
+                        $scope.participant.participantType = data.participant.participantType;
+
+                        var assignee = ObjectModelService.getParticipantByType($scope.fileInfo, "assignee");
+                        var typeNoAccess = 'No Access';
+                        if ($scope.config.typeNoAccess) {
+                            typeNoAccess = $scope.config.typeNoAccess;
+                        }
+
+                        if (data.isEdit) {
+                            var participant = _.find($scope.fileInfo.participants, function (pa) {
+                                return Util.compare(pa.id, data.participant.id);
+                            });
+                            participant.participantLdapId = data.participant.participantLdapId;
+                            participant.id = data.participant.id;
+
+                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                            }
+                            else {
+                                participant.participantType = data.participant.participantType;
+                            }
+                        }
+                        else {
+                            var participant = {};
+                            participant.participantLdapId = data.participant.participantLdapId;
+
+                            if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                            }
+                            else {
+                                participant.participantType = data.participant.participantType;
+                                participant.className = $scope.config.className;
+                                $scope.fileInfo.participants.push(participant);
+                            }
+                        }
+
+                    }
+                    if (ObjectParticipantService.validateParticipants($scope.fileInfo.participants)) {
+                        saveInfoAndRefresh();
+                    }
+                    else {
                         $scope.retrieveGridData();
                     }
-                );
-            }, function () {
-                // Cancel button was clicked.
-            });
+                }
+            );
+        };
 
+        var saveInfoAndRefresh = function () {
+
+            Util.serviceCall({
+                service: EcmService.updateFile
+                , param: {fileId: $stateParams.id}
+                ,
+                data: JSOG.encode($scope.fileInfo)
+            }).then(function (objectSaved) {
+                    $scope.retrieveGridData();
+                    return objectSaved;
+                },
+                function (error) {
+                    $scope.retrieveGridData();
+                    return error;
+                });
         };
 
     }

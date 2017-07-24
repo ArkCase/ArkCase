@@ -17,12 +17,13 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.tika.mime.MimeTypeException;
+import org.apache.tika.exception.TikaException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -56,16 +57,28 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         log.debug("Creating ecm file pipeline context");
 
-        EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                fileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument);
 
-        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(ecmUniqueFilename,
-                metadata.getFileActiveVersionMimeType(), pipelineContext.getFileByteArray());
+        byte[] fileBytes = IOUtils.toByteArray(fileContents);
+        EcmTikaFile detectedMetadata = null;
+
+        try
+        {
+            detectedMetadata = extractFileMetadata(fileBytes);
+        } catch (SAXException | TikaException e)
+        {
+            log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
+        }
+
+        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
+                metadata.getFileActiveVersionMimeType());
         String finalMimeType = mimeTypeAndExtension.getLeft();
         String finalExtension = mimeTypeAndExtension.getRight();
 
         ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
-        pipelineContext.setOriginalFileName(ecmUniqueFilename);
+
+        EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                fileBytes, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                detectedMetadata, ecmUniqueFilename);
 
         String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
         metadata.setFileName(fileName);
@@ -131,7 +144,40 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     }
 
+    protected EcmTikaFile extractFileMetadata(byte[] fileByteArray) throws IOException,
+            SAXException, TikaException
+    {
+        try (InputStream fileStream = new ByteArrayInputStream(fileByteArray))
+        {
+            EcmTikaFile retval = getEcmTikaFileService().detectFileUsingTika(fileStream, fileByteArray);
+            return retval;
+        }
+    }
 
+    protected Pair<String, String> buildMimeTypeAndExtension(EcmTikaFile detectedFileMetadata, String filename, String mimeType)
+    {
+        String finalMimeType = detectedFileMetadata == null ? mimeType : detectedFileMetadata.getContentType();
+        String finalExtension = detectedFileMetadata == null ? getFolderAndFilesUtils().getFileNameExtension(filename)
+                : detectedFileMetadata.getNameExtension();
+
+        // do not change content type in case of freevo
+        if (mimeType != null && mimeType.contains("frevvo"))
+        {
+            finalMimeType = mimeType;
+        }
+
+        return Pair.of(finalMimeType, finalExtension);
+    }
+
+
+    /**
+     * @param filename      The extension in this file name is used as default, in case file type detection fails
+     * @param mimeType      MIME type to be used as default in case MIME type detection fails
+     * @param fileByteArray File contents
+     * @return Detected MIME type and extension for the fileByteArray, or the supplied default values if detection fails.
+     * @deprecated Call buildMimeTypeAndExtension(EcmTikaFile, filename, mimeType) instead.
+     */
+    @Deprecated
     protected Pair<String, String> buildMimeTypeAndExtension(String filename, String mimeType, byte[] fileByteArray)
     {
         String finalMimeType;
@@ -140,11 +186,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(fileByteArray),
-                    filename);
+                    fileByteArray);
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
 
-        } catch (MimeTypeException | IOException e1)
+        } catch (IOException | SAXException | TikaException e1)
         {
             finalMimeType = mimeType;
             finalExtension = getFolderAndFilesUtils().getFileNameExtension(filename);
@@ -160,21 +206,25 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     protected EcmFileTransactionPipelineContext buildEcmFileTransactionPipelineContext(Authentication authentication,
-                                                                                       InputStream fileInputStream,
+                                                                                       byte[] fileBytes,
                                                                                        String cmisFolderId,
                                                                                        AcmContainer container,
                                                                                        String filename,
                                                                                        Document existingCmisDocument,
+                                                                                       EcmTikaFile detectedFileMetadata,
+                                                                                       String ecmUniqueFilename,
                                                                                        Object... otherArgs) throws IOException
     {
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
         pipelineContext.setCmisFolderId(cmisFolderId);
         // we are storing byte array so we can read this stream multiple times
-        pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
+        pipelineContext.setFileByteArray(fileBytes);
         pipelineContext.setContainer(container);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setOriginalFileName(filename);
         pipelineContext.setCmisDocument(existingCmisDocument);
+        pipelineContext.setDetectedFileMetadata(detectedFileMetadata);
+        pipelineContext.setOriginalFileName(ecmUniqueFilename);
         return pipelineContext;
     }
 
@@ -201,13 +251,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
-                    ecmFile.getFileName());
-        } catch (MimeTypeException | IOException e1)
+                    pipelineContext.getFileByteArray());
+        } catch (TikaException | SAXException | IOException e1)
         {
             log.debug("Can not auto detect file using Tika");
             ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
             ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
         }
+
+        pipelineContext.setDetectedFileMetadata(ecmTikaFile);
 
         if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
         {
