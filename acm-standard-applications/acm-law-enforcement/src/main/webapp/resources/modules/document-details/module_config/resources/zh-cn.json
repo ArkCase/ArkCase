@@ -41,14 +41,19 @@
         "name": "zh-cn_Name",
         "type": "zh-cn_Type"
       },
-      "message.delete.success": "zh-cn_Successfully deleted row.",
-      "message.delete.error": "zh-cn_Error deleting row.",
-      "role": {
-        "title": "zh-cn_Change participant Role",
-        "dropdownLabel": "zh-cn_Available Roles",
-        "buttons": {
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_Change Role"
+      "dialogUserPicker": {
+        "header": "zh-cn_Choose User",
+        "table.columns": {
+          "name": "zh-cn_Name",
+          "type": "zh-cn_Type",
+          "title": "zh-cn_Title",
+          "id": "zh-cn_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "zh-cn_Choose Group",
+        "table.columns": {
+          "name": "zh-cn_Name"
         }
       }
     },
@@ -69,26 +74,32 @@
         "versionTag": "zh-cn_Version"
       }
     },
-    "userSearch": {
-      "id": "zh-cn_userSearch",
-      "title": "zh-cn_Add New Participant",
-      "search": {
-        "btn": "zh-cn_Go!",
-        "placeholder": "zh-cn_Enter to search for a participant"
-      },
-      "cancelButton": "zh-cn_Cancel",
-      "confirmButton": "zh-cn_Select",
-      "enabled": true,
-      "userFacetFilter": "zh-cn_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "zh-cn_Name",
+    "comp.details": {
+      "title": "zh-cn_Details",
+      "label": {
+        "creator": "zh-cn_Owner",
+        "modifier": "zh-cn_Author",
+        "created": "zh-cn_Creation Date",
+        "modified": "zh-cn_Modified Date",
+        "description": "zh-cn_Description",
         "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "parent": "zh-cn_Parent",
-        "assignee": "zh-cn_Assignee",
-        "modified": "zh-cn_Modified"
+        "organization": "zh-cn_Source Organization",
+        "person": "zh-cn_Source Entity",
+        "format": "zh-cn_Format",
+        "size": "zh-cn_Size",
+        "gps": "zh-cn_Location",
+        "duration": "zh-cn_Duration (seconds)",
+        "width": "zh-cn_Width (pixels)",
+        "height": "zh-cn_Height (pixels)",
+        "camera.type": "zh-cn_Camera Type",
+        "camera.version": "zh-cn_Camera Version",
+        "button.save": "zh-cn_Save",
+        "button.wait": "zh-cn_Please Wait"
       },
-      "dropdownLabel": "zh-cn_Participant Type"
+      "message": {
+        "save.success": "zh-cn_File metadata are successfully updated",
+        "save.error": "zh-cn_Unable to update file metadata"
+      }
     }
   }
 }

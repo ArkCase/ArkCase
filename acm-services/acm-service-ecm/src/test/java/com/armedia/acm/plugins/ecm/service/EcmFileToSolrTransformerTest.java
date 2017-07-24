@@ -23,7 +23,8 @@ import java.util.Collections;
 import java.util.Date;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by maksud.sharif on 6/19/2017.
@@ -144,6 +145,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockUserDao.quietFindByUserId(eq("user"))).andReturn(user).times(2);
+        expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
 
         replayAll();
         SolrAdvancedSearchDocument result = unit.toContentFileIndex(in);
@@ -162,6 +164,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         expectLastCall();
 
         expect(mockUserDao.quietFindByUserId(eq("user"))).andReturn(user).times(2);
+        expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
 
         replayAll();
         SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
