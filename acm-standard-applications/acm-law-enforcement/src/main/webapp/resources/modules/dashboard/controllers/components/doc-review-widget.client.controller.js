@@ -55,8 +55,16 @@ angular.module('dashboard.docReview', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.documentUnderReview ? [objectInfo.documentUnderReview] : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                if (objectInfo.documentUnderReview != null) {
+                    $scope.gridOptions.data = objectInfo.documentUnderReview;
+                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                    $scope.gridOptions.noData = false;
+                }
+                else {
+                    $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.docReview.noDataMessage');
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {

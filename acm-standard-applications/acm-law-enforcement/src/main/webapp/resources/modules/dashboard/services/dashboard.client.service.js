@@ -151,7 +151,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
                 model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
                 model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
-                //model.showUiGridUrl = 'modules/dashboard/templates/widget-ui-grid.html';
                 model.title = "dashboard.title";
             } else {
                 model.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
@@ -173,83 +172,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         oldCode = true;
                                     }
                                     widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
-                                    if ("My Tasks" == widget.title) {
-                                        widget.title = "dashboard.widgets.myTasks.title";
-                                    } else if ("My Complaints" == widget.title) {
-                                        widget.title = "dashboard.widgets.myComplaints.title";
-                                    } else if ("New Complaints" == widget.title) {
-                                        widget.title = "dashboard.widgets.newComplaints.title";
-                                    } else if ("Active Case Files by Queue" == widget.title) {
-                                        widget.title = "dashboard.widgets.casesByQueue.title";
-                                    } else if ("Cases By Status" == widget.title) {
-                                        widget.title = "dashboard.widgets.casesByStatus.title";
-                                    } else if ("My Cases" == widget.title) {
-                                        widget.title = "dashboard.widgets.myCases.title";
-                                    } else if ("New Cases" == widget.title) {
-                                        widget.title = "dashboard.widgets.newCases.title";
-                                    } else if ("Team Workload" == widget.title) {
-                                        widget.title = "dashboard.widgets.teamWorkload.title";
-                                    } else if ("Displays weather" == widget.title) {
-                                        widget.title = "dashboard.widgets.weather.title";
-                                    } else if ("News" == widget.title) {
-                                        widget.title = "dashboard.widgets.news.title";
-                                    } else if ("Details" == widget.title) {
-                                        widget.title = "dashboard.widgets.details.title";
-                                    } else if ("People" == widget.title) {
-                                        widget.title = "dashboard.widgets.people.title";
-                                    } else if ("Documents" == widget.title) {
-                                        widget.title = "dashboard.widgets.documents.title";
-                                    } else if ("Locations" == widget.title) {
-                                        widget.title = "dashboard.widgets.locations.title";
-                                    } else if ("Phone Numbers" == widget.title) {
-                                        widget.title = "dashboard.widgets.phones.title";
-                                    } else if ("Fax Numbers" == widget.title) {
-                                        widget.title = "dashboard.widgets.faxes.title";
-                                    } else if ("Email Address" == widget.title) {
-                                        widget.title = "dashboard.widgets.emails.title";
-                                    } else if ("URLs" == widget.title) {
-                                        widget.title = "dashboard.widgets.urls.title";
-                                    } else if ("DBAs" == widget.title) {
-                                        widget.title = "dashboard.widgets.dbas.title";
-                                    } else if ("Tasks" == widget.title) {
-                                        widget.title = "dashboard.widgets.tasks.title";
-                                    } else if ("Participants" == widget.title) {
-                                        widget.title = "dashboard.widgets.participants.title";
-                                    } else if ("References" == widget.title) {
-                                        widget.title = "dashboard.widgets.references.title";
-                                    } else if ("History" == widget.title) {
-                                        widget.title = "dashboard.widgets.history.title";
-                                    } else if ("Notes" == widget.title) {
-                                        widget.title = "dashboard.widgets.notes.title";
-                                    } else if ("Time" == widget.title) {
-                                        widget.title = "dashboard.widgets.time.title";
-                                    } else if ("Cost" == widget.title) {
-                                        widget.title = "dashboard.widgets.cost.title";
-                                    } else if ("Calendar" == widget.title) {
-                                        widget.title = "dashboard.widgets.calendar.title";
-                                    } else if ("Rework Details" == widget.title) {
-                                        widget.title = "dashboard.widgets.reworkDetails.title";
-                                    } else if ("Documents Under Review" == widget.title) {
-                                        widget.title = "dashboard.widgets.docReview.title";
-                                    } else if ("Parent Documents" == widget.title) {
-                                        widget.title = "dashboard.widgets.parentDocs.title";
-                                    } else if ("Workflow Overview" == widget.title) {
-                                        widget.title = "dashboard.widgets.workflow.title";
-                                    } else if ("eSignature" == widget.title) {
-                                        widget.title = "dashboard.widgets.signature.title";
-                                    } else if ("Person" == widget.title) {
-                                        widget.title = "dashboard.widgets.person.title";
-                                    } else if ("Hours Summary" == widget.title) {
-                                        widget.title = "dashboard.widgets.hoursSummary.title";
-                                    } else if ("Expenses" == widget.title) {
-                                        widget.title = "dashboard.widgets.expenses.title";
-                                    } else if ("Organizations" == widget.title) {
-                                        widget.title = "dashboard.widgets.organizations.title";
-                                    } else if ("Tags" == widget.title) {
-                                        widget.title = "dashboard.widgets.tags.title";
-                                    } else if ("Approval Routing" == widget.title) {
-                                        widget.title = "dashboard.widgets.approvalRouting.title";
-                                    }
+
                                 });
                             }
                         });

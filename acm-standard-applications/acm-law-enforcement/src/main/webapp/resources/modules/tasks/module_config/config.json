@@ -373,22 +373,28 @@
             {
               "name": "fileName",
               "displayName": "tasks.comp.docsreview.table.columns.fileName",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "created",
               "displayName": "tasks.comp.docsreview.table.columns.created",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "creator",
               "displayName": "tasks.comp.docsreview.table.columns.creator",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "fullNameField": "creator_full_name_lcs",
+              "cellTemplate": "<div ng-bind-html='row.entity.creator' title='{{row.entity.creator}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.docsreview.table.columns.status",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
             }
           ]
         },
@@ -471,7 +477,8 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.participant' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
@@ -626,7 +633,8 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
@@ -824,7 +832,7 @@
           "name": "created",
           "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "creator",

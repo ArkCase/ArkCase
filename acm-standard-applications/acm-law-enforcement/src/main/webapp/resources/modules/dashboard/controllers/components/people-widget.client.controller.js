@@ -12,29 +12,31 @@ angular.module('dashboard.people', ['adf.provider'])
                 commonName: 'people'
             });
     })
-    .controller('Dashboard.PeopleController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService) {
-            var modules = [
-                {
-                    name: "CASE_FILE",
-                    configName: "cases",
-                    getInfo: CaseInfoService.getCaseInfo,
-                    validateInfo: CaseInfoService.validateCaseInfo
-                },
-                {
-                    name: "COMPLAINT",
-                    configName: "complaints",
-                    getInfo: ComplaintInfoService.getComplaintInfo,
-                    validateInfo: ComplaintInfoService.validateComplaintInfo
-                },
-                {
-                    name: "ORGANIZATION",
-                    configName: "organizations",
-                    getInfo: OrganizationInfoService.getOrganizationInfo,
-                    validateInfo: OrganizationInfoService.validateOrganizationInfo
-                }
-            ];
+    .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService',
+            function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService) {
+
+                var modules = [
+                        {
+                            name: "CASE_FILE",
+                            configName: "cases",
+                            getInfo: CaseInfoService.getCaseInfo,
+                            validateInfo: CaseInfoService.validateCaseInfo
+                        },
+                        {
+                            name: "COMPLAINT",
+                            configName: "complaints",
+                            getInfo: ComplaintInfoService.getComplaintInfo,
+                            validateInfo: ComplaintInfoService.validateComplaintInfo
+                        },
+                        {
+                            name: "ORGANIZATION",
+                            configName: "organizations",
+                            getInfo: OrganizationInfoService.getOrganizationInfo,
+                            validateInfo: OrganizationInfoService.validateOrganizationInfo
+                        }
+                ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
@@ -61,8 +63,17 @@ angular.module('dashboard.people', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.personAssociations ? objectInfo.personAssociations : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                if(objectInfo.personAssociations != 0){
+                    $scope.gridOptions.data = objectInfo.personAssociations
+                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                    $scope.gridOptions.noData = false;
+                }
+                else {
+                    $scope.gridOptions.data = [];
+                    $scope.gridOptions.totalItems = 0;
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.people.noDataMessage');
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
