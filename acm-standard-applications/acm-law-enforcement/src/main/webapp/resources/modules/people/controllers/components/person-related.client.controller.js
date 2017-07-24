@@ -137,7 +137,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             if (associationData.inverseType) {
                 if (!association.inverseAssociation) {
                     association.inverseAssociation = {};
-                }
+            }
                 if (association.inverseAssociation.inverseAssociation != association) {
                     association.inverseAssociation.inverseAssociation = association;
                 }

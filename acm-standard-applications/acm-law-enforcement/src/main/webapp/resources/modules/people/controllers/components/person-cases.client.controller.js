@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.CasesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.PersonService', 'PersonAssociation.Service'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectPersonService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectPersonService, PersonAssociationService) {
 
 
         Authentication.queryUserInfo().then(
@@ -46,9 +46,8 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
             $scope.objectInfo = objectInfo;
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
-                ObjectPersonService.getPersonCases(currentObjectId).then(function (data) {
-                    var cases = data.response.docs;
-                    $scope.gridOptions.data = cases;
+                PersonAssociationService.getPersonAssociations(currentObjectId, "CASE_FILE").then(function (data) {
+                    $scope.gridOptions.data = data.response.docs;
                     $scope.gridOptions.totalItems = data.response.numFound;
                     return data;
                 });

@@ -39,6 +39,9 @@
         <div class="right-sidebar well-sm documentDetails">
             <ng-form name="docDetails" novalidate>
                 <tabset>
+                    <tab heading="{{'documentDetails.comp.details.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/details.client.view.html'"></div>
+                    </tab>
                     <tab heading="{{'documentDetails.comp.versionHistory.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/version-history.client.view.html'"></div>
                     </tab>
