@@ -200,6 +200,14 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         widget.title = "dashboard.widgets.documents.title";
                                     } else if ("Locations" == widget.title) {
                                         widget.title = "dashboard.widgets.locations.title";
+                                    } else if ("Phone Numbers" == widget.title) {
+                                        widget.title = "dashboard.widgets.phones.title";
+                                    } else if ("Fax Numbers" == widget.title) {
+                                        widget.title = "dashboard.widgets.faxes.title";
+                                    } else if ("Email Address" == widget.title) {
+                                        widget.title = "dashboard.widgets.emails.title";
+                                    } else if ("URLs" == widget.title) {
+                                        widget.title = "dashboard.widgets.urls.title";
                                     } else if ("Tasks" == widget.title) {
                                         widget.title = "dashboard.widgets.tasks.title";
                                     } else if ("Participants" == widget.title) {

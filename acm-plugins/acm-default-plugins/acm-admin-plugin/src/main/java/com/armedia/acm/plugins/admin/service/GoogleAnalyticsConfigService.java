@@ -61,12 +61,13 @@ public class GoogleAnalyticsConfigService
     public String getGoogleAnalyticsSettingsJs()
     {
         Properties properties = new Properties();
-        Writer stringWriter = new StringWriter();
-        try (FileInputStream fis = new FileInputStream(configFile))
+
+        try (FileInputStream fis = new FileInputStream(configFile);
+             Writer stringWriter = new StringWriter())
         {
             properties.load(fis);
             template.process(properties, stringWriter);
-            stringWriter.close();
+            return stringWriter.toString();
         } catch (IOException e)
         {
             logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
@@ -78,7 +79,7 @@ public class GoogleAnalyticsConfigService
             logger.error("Template [config.js.ftl] not loaded", e);
         }
 
-        return stringWriter.toString();
+        return "";
     }
 
     /**

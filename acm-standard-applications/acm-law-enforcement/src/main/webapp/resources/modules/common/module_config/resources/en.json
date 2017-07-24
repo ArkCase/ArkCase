@@ -580,6 +580,9 @@
     "radioYes.text": "Yes",
     "radioNo.text": "No"
   },
+  "common.editOrganization": {
+    "title": "Edit Organization"
+  },
   "common.newOrganization": {
     "title": "Organization",
     "addAnother": "Add Another",

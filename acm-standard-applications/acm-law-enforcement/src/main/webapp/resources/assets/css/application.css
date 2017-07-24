@@ -992,6 +992,12 @@ a.editable.editable-click {
 
 }
 
+.analytics-iframe {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 60px;
+}
+
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }

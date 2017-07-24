@@ -3,8 +3,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.QueryType;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
+import com.armedia.acm.plugins.admin.exception.CorrespondenceQueryNotFoundException;
 import com.armedia.acm.plugins.admin.model.CorrespondenceQueryResponse;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 25, 2017
- *
  */
 @Controller
 @RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
+import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,9 @@ import java.util.Map;
  * Created by sergey.kolomiets  on 5/26/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class LdapConfigurationUpdateDirectory {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class LdapConfigurationUpdateDirectory
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private LdapConfigurationService ldapConfigurationService;
@@ -32,29 +34,32 @@ public class LdapConfigurationUpdateDirectory {
     @ResponseBody
     public String updateDirectory(
             @RequestBody String resource,
-            @PathVariable("directoryId") String directoryId) throws IOException, AcmLdapConfigurationException {
+            @PathVariable("directoryId") String directoryId) throws IOException, AcmLdapConfigurationException
+    {
 
-        try {
+        try
+        {
 
             JSONObject ldapObject = new JSONObject(resource);
-            if (directoryId == null) {
+            if (directoryId == null)
+            {
                 throw new AcmLdapConfigurationException("Directory Id is undefined");
             }
 
             Map<String, Object> props = ldapConfigurationService.getProperties(ldapObject);
             ldapConfigurationService.updateLdapDirectory(directoryId, props);
 
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't update LDAP directory", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't update LDAP directory", e);
             throw new AcmLdapConfigurationException("Update LDAP directory error", e);
         }
 
         return "{}";
     }
 
-    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService) {
+    public void setLdapConfigurationService(LdapConfigurationService ldapConfigurationService)
+    {
         this.ldapConfigurationService = ldapConfigurationService;
     }
 }
