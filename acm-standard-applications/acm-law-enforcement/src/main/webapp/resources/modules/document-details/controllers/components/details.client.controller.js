@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('document-details').controller('Document.DetailsController',
-    ['$scope', '$translate', '$filter', 'Object.LookupService', 'ConfigService'
-        , function ($scope, $translate, $filter, ObjectLookupService, ConfigService) {
+    ['$scope', '$translate', '$filter', '$modal', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'ConfigService'
+        , function ($scope, $translate, $filter, $modal, ObjectLookupService, OrganizationInfoService, PersonInfoService, ConfigService) {
 
         $scope.$on('document-data', function (event, ecmFile) {
 
@@ -26,6 +26,12 @@ angular.module('document-details').controller('Document.DetailsController',
             $scope.details = {};
             $scope.details.ecmFile = _ecmFile;
             $scope.details.activeVersion = _activeVersion;
+            $scope.details.personFullName = '';
+
+            if (_ecmFile.personAssociation) {
+                $scope.details.personFullName = (_ecmFile.personAssociation.person.givenName + ' ' + _ecmFile.personAssociation.person.familyName).trim();
+            }
+
         });
 
         $scope.options = {
@@ -36,6 +42,20 @@ angular.module('document-details').controller('Document.DetailsController',
         ObjectLookupService.getFileTypes().then(function (fileTypes) {
                 $scope.fileTypes = fileTypes;
                 return fileTypes;
+        });
+
+        ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
+            $scope.organizationTypes = organizationTypes;
+            return organizationTypes;
+        });
+
+        ObjectLookupService.getPersonTypes().then(function (personTypes) {
+            var options = [];
+            _.forEach(personTypes, function (v, k) {
+                options.push({type: v, name: v});
+            });
+            $scope.personTypes = options;
+            return personTypes;
         });
 
         $scope.getActiveVersion = function (ecmFile) {
@@ -55,11 +75,85 @@ angular.module('document-details').controller('Document.DetailsController',
 
 
         $scope.addOrganization = function () {
-            // TODO: Add Organisation
+            var params = {};
+            params.types = $scope.organizationTypes;
+
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                if (data.isNew) {
+                    $scope.details.ecmFile.organization = data.organization;
+                } else {
+                    OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                        $scope.details.ecmFile.organization = organization;
+                    })
+                }
+            });
         };
 
         $scope.addPerson = function () {
-            // TODO: Add Person
+            var params = {};
+            params.types = $scope.personTypes;
+
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                controller: 'Common.AddPersonModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                if (data.isNew) {
+                    var association = $scope.newPersonAssociation();
+                    association.person = data.person;
+                    association.personType = data.type;
+                    $scope.details.ecmFile.personAssociation = association;
+                    // Do this since Person object don't have full name
+                    $scope.details.personFullName = (data.person.givenName + ' ' + data.person.familyName).trim();
+                } else {
+                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                        var association = $scope.newPersonAssociation();
+                        association.person = person;
+                        association.personType = data.type;
+                        $scope.details.ecmFile.personAssociation = association;
+                        // Do this since Person object don't have full name
+                        $scope.details.personFullName = (person.givenName + ' ' + person.familyName).trim();
+                    })
+                }
+            });
+        };
+
+        $scope.newPersonAssociation = function () {
+            return {
+                id: null
+                , personType: ""
+                , parentId: $scope.details.ecmFile.fileId
+                , parentType: $scope.details.ecmFile.fileType
+                , parentTitle: $scope.details.ecmFile.fileName
+                , personDescription: ""
+                , notes: ""
+                , person: null
+                , className: "com.armedia.acm.plugins.person.model.PersonAssociation"
+            };
         };
 
         // Save Details
