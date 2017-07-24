@@ -782,10 +782,10 @@
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "person.defaultOrganization",
-          "displayName": "organizations.comp.people.table.columns.organization",
+          "name": "person.personToOrganizationAssociationType",
+          "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.person.defaultIOrganization ? row.entity.person.defaultIOrganization.organizationValue  : ''}}</span>"
+          "cellTemplate": "<span ng-bind=\"(row.entity.person.organizationAssociations | filter :{organization : {organizationId : grid.appScope.currentObjectId}})[0].personToOrganizationAssociationType\"></span>"
         },
         {
           "name": "phone",
