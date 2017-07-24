@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+
 import java.util.Date;
 
 public class EcmTikaFile
@@ -16,6 +18,20 @@ public class EcmTikaFile
     private String cameraMake;
     private String cameraModel;
     private Double videoDurationSeconds;
+
+    public void stampVersionInfo(EcmFileVersion version)
+    {
+        version.setCameraMake(getCameraMake());
+        version.setCameraModel(getCameraModel());
+        version.setGpsIso6709(getGpsIso6709());
+        version.setGpsLatitudeDegrees(getGpsLatitudeDegrees());
+        version.setGpsLongitudeDegrees(getGpsLongitudeDegrees());
+        version.setGpsReadable(getGpsReadable());
+        version.setHeightPixels(getHeightPixels());
+        version.setWidthPixels(getWidthPixels());
+        version.setMediaCreated(getCreated());
+        version.setVideoDurationSeconds(getVideoDurationSeconds());
+    }
 
     public Double getVideoDurationSeconds()
     {

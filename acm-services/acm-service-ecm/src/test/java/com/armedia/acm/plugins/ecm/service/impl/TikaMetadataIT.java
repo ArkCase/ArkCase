@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
+import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class TikaMetadataIT
         logger.info("------------------- Video (Camera) ------------------------");
         Resource videoResource = new ClassPathResource("media-files/VID_20170721_130803497.mp4");
         EcmTikaFile video = ecmTikaFileService.detectFileUsingTika(
-                videoResource.getInputStream(), videoResource.getFile().getCanonicalPath());
+                videoResource.getInputStream(), IOUtils.toByteArray(videoResource.getInputStream()));
         assertEquals("video/mp4", video.getContentType());
         assertEquals(".mp4", video.getNameExtension());
         assertEquals("39°18'00\"N 77°48'55\"W", video.getGpsReadable());
@@ -56,7 +57,7 @@ public class TikaMetadataIT
         logger.info("------------------- Picture (Camera) ------------------------");
         Resource imageResource = new ClassPathResource("media-files/IMG_20170721_125157844.jpg");
         EcmTikaFile image = ecmTikaFileService.detectFileUsingTika(
-                imageResource.getInputStream(), imageResource.getFile().getCanonicalPath());
+                imageResource.getInputStream(), IOUtils.toByteArray(imageResource.getInputStream()));
         assertEquals("image/jpeg", image.getContentType());
         assertEquals(".jpg", image.getNameExtension());
         assertEquals("39°18'00\"N 77°48'56\"W", image.getGpsReadable());
