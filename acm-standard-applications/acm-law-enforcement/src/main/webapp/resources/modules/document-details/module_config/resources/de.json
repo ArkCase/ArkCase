@@ -93,7 +93,8 @@
         "height": "de_Height (pixels)",
         "camera.type": "de_Camera Type",
         "camera.version": "de_Camera Version",
-        "button.save": "de_Save"
+        "button.save": "de_Save",
+        "button.wait": "de_Please Wait"
       },
       "message": {
         "save.success": "de_File metadata are successfully updated",

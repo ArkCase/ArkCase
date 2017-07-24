@@ -16,7 +16,7 @@
                         <label translate>documentDetails.comp.details.label.modifier</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.modifier"
+                               ng-model="details.modifier"
                                ng-readonly="true">
                     </div>
 
@@ -36,7 +36,7 @@
                             <input type="text"
                                    class="form-control"
                                    disabled
-                                   ng-model="details.ecmFile.organization.organizationValue">
+                                   ng-model="details.organization">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="addOrganization()">
                                     <i class="fa fa-ellipsis-h"></i>
@@ -52,7 +52,7 @@
                             <input type="text"
                                    class="form-control"
                                    disabled
-                                   ng-model="details.personFullName">
+                                   ng-model="details.person">
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="addPerson()">
                                     <i class="fa fa-ellipsis-h"></i>
@@ -66,7 +66,7 @@
                         <label translate>documentDetails.comp.details.label.creator</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.creator"
+                               ng-model="details.creator"
                                ng-readonly="true">
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                         <label translate>documentDetails.comp.details.label.created</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.mediaCreated"
+                               ng-model="details.mediaCreated"
                                ng-readonly="true">
                     </div>
 
@@ -89,7 +89,7 @@
                         <label translate>documentDetails.comp.details.label.modified</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.modified"
+                               ng-model="details.modified"
                                ng-readonly="true">
                     </div>
 
@@ -107,7 +107,7 @@
                         <label translate>documentDetails.comp.details.label.size</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.size"
+                               ng-model="details.size"
                                ng-readonly="true">
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                         <label translate>documentDetails.comp.details.label.camera.type</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.cameraMake"
+                               ng-model="details.activeVersion.deviceMake"
                                ng-readonly="true">
                     </div>
                     <!-- Camera Version -->
@@ -130,7 +130,7 @@
                         <label translate>documentDetails.comp.details.label.camera.version</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.cameraModel"
+                               ng-model="details.activeVersion.deviceModel"
                                ng-readonly="true">
                     </div>
                     <!-- Width in pixels -->
@@ -167,7 +167,7 @@
                         <label translate>documentDetails.comp.details.label.duration</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.activeVersion.videoDurationSeconds"
+                               ng-model="details.activeVersion.durationSeconds"
                                ng-readonly="true">
                     </div>
                 </div>
@@ -184,10 +184,12 @@
             </div>
 
             <!-- Save panel -->
-            <div class="well-sm">
-                <button class="btn btn-primary" ng-click="save()">
-                    <span translate="" class="ng-scope">documentDetails.comp.details.label.button.save</span>
-                </button>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary col-md-4 col-xs-12" ng-click="save()" ng-disabled="saveButton.disabled">
+                        <span translate="" class="ng-scope">{{saveButton.label}}</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -93,7 +93,8 @@
         "height": "zh-tw_Height (pixels)",
         "camera.type": "zh-tw_Camera Type",
         "camera.version": "zh-tw_Camera Version",
-        "button.save": "zh-tw_Save"
+        "button.save": "zh-tw_Save",
+        "button.wait": "zh_tw_Please Wait"
       },
       "message": {
         "save.success": "zh-tw_File metadata are successfully updated",
