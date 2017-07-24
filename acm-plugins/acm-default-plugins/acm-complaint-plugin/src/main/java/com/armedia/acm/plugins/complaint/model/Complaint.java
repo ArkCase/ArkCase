@@ -1,4 +1,4 @@
-    package com.armedia.acm.plugins.complaint.model;
+package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
@@ -145,7 +145,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Transient
     private List<String> approvers;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
             @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
