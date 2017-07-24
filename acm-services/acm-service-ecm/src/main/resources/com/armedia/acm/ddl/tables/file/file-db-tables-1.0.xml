@@ -619,5 +619,17 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="55-more-ecm-file-media-columns" author="dmiller">
+        <addColumn tableName="acm_file_version">
+            <column name="cm_file_size_bytes" type="${idType}"/>
+        </addColumn>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_make"
+                      newColumnName="cm_media_device_make" columnDataType="VARCHAR(255)"/>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_model"
+                      newColumnName="cm_media_device_model" columnDataType="VARCHAR(255)"/>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_vid_duration_seconds"
+                      newColumnName="cm_media_duration_seconds" columnDataType="${duration}"/>
+    </changeSet>
+
 </databaseChangeLog>
 

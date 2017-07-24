@@ -40,13 +40,13 @@ public class TikaMetadataIT
         assertEquals(".mp4", video.getNameExtension());
         assertEquals("39°18'00\"N 77°48'55\"W", video.getGpsReadable());
         assertEquals("+39.30010-077.81540/", video.getGpsIso6709());
-        assertNull(video.getCameraMake());
-        assertNull(video.getCameraModel());
+        assertNull(video.getDeviceMake());
+        assertNull(video.getDeviceModel());
         assertEquals(Integer.valueOf(1080), video.getHeightPixels());
         assertEquals(Integer.valueOf(1920), video.getWidthPixels());
         assertEquals(39.3001, video.getGpsLatitudeDegrees(), 0.005);
         assertEquals(-77.8154, video.getGpsLongitudeDegrees(), 0.005);
-        assertEquals(4.86, video.getVideoDurationSeconds(), 0.001);
+        assertEquals(4.86, video.getDurationSeconds(), 0.001);
 
         Calendar videoCreated = Calendar.getInstance();
         videoCreated.setTime(video.getCreated());
@@ -62,13 +62,13 @@ public class TikaMetadataIT
         assertEquals(".jpg", image.getNameExtension());
         assertEquals("39°18'00\"N 77°48'56\"W", image.getGpsReadable());
         assertEquals("+39.30007-077.81552/", image.getGpsIso6709());
-        assertEquals("Motorola", image.getCameraMake());
-        assertEquals("XT1254", image.getCameraModel());
+        assertEquals("Motorola", image.getDeviceMake());
+        assertEquals("XT1254", image.getDeviceModel());
         assertEquals(Integer.valueOf(5248), image.getHeightPixels());
         assertEquals(Integer.valueOf(2952), image.getWidthPixels());
         assertEquals(39.300068, image.getGpsLatitudeDegrees(), 0.005);
         assertEquals(-77.815521, image.getGpsLongitudeDegrees(), 0.005);
-        assertEquals(0.0, image.getVideoDurationSeconds(), 0.001);
+        assertEquals(0.0, image.getDurationSeconds(), 0.001);
 
         Calendar imageCreated = Calendar.getInstance();
         imageCreated.setTime(image.getCreated());
