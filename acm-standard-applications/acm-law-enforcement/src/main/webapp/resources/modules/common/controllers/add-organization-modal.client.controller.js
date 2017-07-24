@@ -14,6 +14,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
 
             $scope.organizationId = params.organizationId;
+            $scope.editMode = !!params.organizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
