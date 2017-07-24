@@ -54,6 +54,11 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
+            int fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
+                    pipelineContext.getMergedFileByteArray().length > 0 ?
+                    pipelineContext.getMergedFileByteArray().length :
+                    pipelineContext.getFileByteArray() != null ? pipelineContext.getFileByteArray().length : 0;
+            version.setFileSizeBytes(Long.valueOf(fileSizeBytes));
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)

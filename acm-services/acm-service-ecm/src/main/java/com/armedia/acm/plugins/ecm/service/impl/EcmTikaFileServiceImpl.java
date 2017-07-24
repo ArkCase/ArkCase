@@ -7,6 +7,7 @@ import com.googlecode.mp4parser.DataSource;
 import com.googlecode.mp4parser.MemoryDataSourceImpl;
 import com.googlecode.mp4parser.boxes.apple.AppleGPSCoordinatesBox;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConversionException;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -64,7 +65,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
             try
             {
                 BeanUtils.setProperty(retval, mToP.getValue(), metadata.get(mToP.getKey()));
-            } catch (IllegalAccessException | InvocationTargetException e)
+            } catch (IllegalAccessException | InvocationTargetException | ConversionException e)
             {
                 logger.error("Could not set property [{}] to value [{}]", mToP.getValue(), metadata.get(mToP.getKey()), e);
             }

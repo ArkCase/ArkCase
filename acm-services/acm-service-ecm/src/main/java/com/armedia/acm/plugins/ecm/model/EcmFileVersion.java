@@ -81,14 +81,17 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_media_width_pixels")
     private Integer widthPixels;
 
-    @Column(name = "cm_media_camera_make")
-    private String cameraMake;
+    @Column(name = "cm_media_device_make")
+    private String deviceMake;
 
-    @Column(name = "cm_media_camera_model")
-    private String cameraModel;
+    @Column(name = "cm_media_device_model")
+    private String deviceModel;
 
-    @Column(name = "cm_media_vid_duration_seconds")
-    private Double videoDurationSeconds;
+    @Column(name = "cm_media_duration_seconds")
+    private Double durationSeconds;
+
+    @Column(name = "cm_file_size_bytes")
+    private Long fileSizeBytes;
 
     @JsonIgnore
     @ManyToOne
@@ -264,34 +267,34 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
         this.widthPixels = widthPixels;
     }
 
-    public String getCameraMake()
+    public String getDeviceMake()
     {
-        return cameraMake;
+        return deviceMake;
     }
 
-    public void setCameraMake(String cameraMake)
+    public void setDeviceMake(String deviceMake)
     {
-        this.cameraMake = cameraMake;
+        this.deviceMake = deviceMake;
     }
 
-    public String getCameraModel()
+    public String getDeviceModel()
     {
-        return cameraModel;
+        return deviceModel;
     }
 
-    public void setCameraModel(String cameraModel)
+    public void setDeviceModel(String deviceModel)
     {
-        this.cameraModel = cameraModel;
+        this.deviceModel = deviceModel;
     }
 
-    public Double getVideoDurationSeconds()
+    public Double getDurationSeconds()
     {
-        return videoDurationSeconds;
+        return durationSeconds;
     }
 
-    public void setVideoDurationSeconds(Double videoDurationSeconds)
+    public void setDurationSeconds(Double durationSeconds)
     {
-        this.videoDurationSeconds = videoDurationSeconds;
+        this.durationSeconds = durationSeconds;
     }
 
     public Date getMediaCreated()
@@ -302,6 +305,16 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     public void setMediaCreated(Date mediaCreated)
     {
         this.mediaCreated = mediaCreated;
+    }
+
+    public Long getFileSizeBytes()
+    {
+        return fileSizeBytes;
+    }
+
+    public void setFileSizeBytes(Long fileSizeBytes)
+    {
+        this.fileSizeBytes = fileSizeBytes;
     }
 
     @JsonIgnore

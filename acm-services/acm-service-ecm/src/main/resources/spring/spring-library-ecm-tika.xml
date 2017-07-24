@@ -9,15 +9,15 @@
                 <entry key="Content-Type" value="contentType"/>
                 <entry key="GPS-Coordinates-Readable" value="gpsReadable"/>
                 <entry key="GPS-Coordinates-ISO6709" value="gpsIso6709"/>
-                <entry key="Make" value="cameraMake"/>
-                <entry key="Model" value="cameraModel"/>
+                <entry key="Make" value="deviceMake"/>
+                <entry key="Model" value="deviceModel"/>
                 <entry key="tiff:ImageLength" value="heightPixels"/>
                 <entry key="tiff:ImageWidth" value="widthPixels"/>
                 <entry key="GPS-Coordinates-Longitude" value="gpsLongitudeDegrees"/>
                 <entry key="GPS-Coordinates-Latitude" value="gpsLatitudeDegrees"/>
                 <entry key="File-Name-Extension" value="nameExtension"/>
                 <entry key="Creation-Date-Local" value="created"/>
-                <entry key="xmpDM:duration" value="videoDurationSeconds"/>
+                <entry key="xmpDM:duration" value="durationSeconds"/>
             </map>
         </property>
     </bean>

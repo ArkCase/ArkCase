@@ -15,14 +15,14 @@ public class EcmTikaFile
     private Date created;
     private Integer heightPixels;
     private Integer widthPixels;
-    private String cameraMake;
-    private String cameraModel;
-    private Double videoDurationSeconds;
+    private String deviceMake;
+    private String deviceModel;
+    private Double durationSeconds;
 
     public void stampVersionInfo(EcmFileVersion version)
     {
-        version.setCameraMake(getCameraMake());
-        version.setCameraModel(getCameraModel());
+        version.setDeviceMake(getDeviceMake());
+        version.setDeviceModel(getDeviceModel());
         version.setGpsIso6709(getGpsIso6709());
         version.setGpsLatitudeDegrees(getGpsLatitudeDegrees());
         version.setGpsLongitudeDegrees(getGpsLongitudeDegrees());
@@ -30,18 +30,9 @@ public class EcmTikaFile
         version.setHeightPixels(getHeightPixels());
         version.setWidthPixels(getWidthPixels());
         version.setMediaCreated(getCreated());
-        version.setVideoDurationSeconds(getVideoDurationSeconds());
+        version.setDurationSeconds(getDurationSeconds());
     }
 
-    public Double getVideoDurationSeconds()
-    {
-        return videoDurationSeconds;
-    }
-
-    public void setVideoDurationSeconds(Double videoDurationSeconds)
-    {
-        this.videoDurationSeconds = videoDurationSeconds;
-    }
 
     public String getContentType()
     {
@@ -133,24 +124,34 @@ public class EcmTikaFile
         this.widthPixels = widthPixels;
     }
 
-    public String getCameraMake()
+    public String getDeviceMake()
     {
-        return cameraMake;
+        return deviceMake;
     }
 
-    public void setCameraMake(String cameraMake)
+    public void setDeviceMake(String deviceMake)
     {
-        this.cameraMake = cameraMake;
+        this.deviceMake = deviceMake;
     }
 
-    public String getCameraModel()
+    public String getDeviceModel()
     {
-        return cameraModel;
+        return deviceModel;
     }
 
-    public void setCameraModel(String cameraModel)
+    public void setDeviceModel(String deviceModel)
     {
-        this.cameraModel = cameraModel;
+        this.deviceModel = deviceModel;
+    }
+
+    public Double getDurationSeconds()
+    {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(Double durationSeconds)
+    {
+        this.durationSeconds = durationSeconds;
     }
 
     @Override
@@ -166,9 +167,9 @@ public class EcmTikaFile
                 ", created=" + created +
                 ", heightPixels=" + heightPixels +
                 ", widthPixels=" + widthPixels +
-                ", cameraMake='" + cameraMake + '\'' +
-                ", cameraModel='" + cameraModel + '\'' +
-                ", videoDurationSeconds=" + videoDurationSeconds +
+                ", deviceMake='" + deviceMake + '\'' +
+                ", deviceModel='" + deviceModel + '\'' +
+                ", durationSeconds=" + durationSeconds +
                 '}';
     }
 }
