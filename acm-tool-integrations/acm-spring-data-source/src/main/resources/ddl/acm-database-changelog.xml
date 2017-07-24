@@ -12,6 +12,18 @@
     <!--<property name="idType" value="BIGSERIAL" dbms="postgresql"/>-->
     <property name="idType" value="BIGINT" dbms="postgresql"/>
 
+    <!-- gps properties -->
+    <property name="gpsLatLong" value="NUMBER(10, 5)" dbms="oracle"/>
+    <property name="gpsLatLong" value="NUMERIC" dbms="postgresql"/>
+    <property name="gpsLatLong" value="FLOAT(10, 5)" dbms="mysql"/>
+    <property name="gpsLatLong" value="NUMERIC(10, 5)" dbms="mssql"/>
+
+    <!-- duration -->
+    <property name="duration" value="NUMBER(32, 5)" dbms="oracle"/>
+    <property name="duration" value="NUMERIC" dbms="postgresql"/>
+    <property name="duration" value="FLOAT(32, 5)" dbms="mysql"/>
+    <property name="duration" value="NUMERIC(32, 5)" dbms="mssql"/>
+
     <property name="fkIdType" value="NUMBER(32,0)" dbms="oracle"/>
     <property name="fkIdType" value="BIGINT" dbms="mysql,postgresql,mssql"/>
 
