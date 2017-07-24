@@ -1,21 +1,22 @@
 'use strict';
 
-angular.module('dashboard.dbas', ['adf.provider'])
+angular.module('dashboard.relOrganizations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('dbas', {
-                title: 'dashboard.widgets.dbas.title',
-                description: 'dashboard.widgets.dbas.description',
-                controller: 'Dashboard.DbasController',
-                reload: true,
-                templateUrl: 'modules/dashboard/views/components/dbas-widget.client.view.html',
-                commonName: 'dbas'
-            });
+            .widget('relOrganizations', {
+                    title: 'dashboard.widgets.relOrganizations.title',
+                    description: 'dashboard.widgets.relOrganizations.description',
+                    controller: 'Dashboard.RelatedOrganizationsController',
+                    reload: true,
+                    templateUrl: 'modules/dashboard/views/components/related-organizations-widget.client.view.html',
+                    commonName: 'relOrganizations'
+                }
+            );
     })
-    .controller('Dashboard.DbasController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService',
-            function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+        function ($scope, $stateParams, $translate,
+                  OrganizationInfoService, HelperObjectBrowserService) {
 
             var modules = [
                 {
@@ -51,25 +52,23 @@ angular.module('dashboard.dbas', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                var dbas = _.filter($scope.objectInfo.organizationDBAs, {type: 'DBA'});
-                if(dbas.length != 0) {
-                    $scope.gridOptions.data = dbas;
+                //FIX this when relations between organizations are done on backend
+                /*if(objectInfo.relOrganizations.length != 0) {
+                    $scope.gridOptions.data = objectInfo.relOrganizations;
                     $scope.gridOptions.noData = false;
                 }
                 else {
                     $scope.gridOptions.data = [];
                     $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.dbas.noDataMessage');
-                }
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.relOrganizations.noDataMessage');
+                }*/
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "dbas";
+                    return widget.id === "relOrganizations";
                 });
                 $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
-
         }
     ]);

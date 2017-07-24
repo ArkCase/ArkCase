@@ -1,21 +1,21 @@
 'use strict';
 
-angular.module('dashboard.dbas', ['adf.provider'])
+angular.module('dashboard.cases', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('dbas', {
-                title: 'dashboard.widgets.dbas.title',
-                description: 'dashboard.widgets.dbas.description',
-                controller: 'Dashboard.DbasController',
+            .widget('cases', {
+                title: 'dashboard.widgets.cases.title',
+                description: 'dashboard.widgets.cases.description',
+                controller: 'Dashboard.CasesController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/dbas-widget.client.view.html',
-                commonName: 'dbas'
+                templateUrl: 'modules/dashboard/views/components/cases-widget.client.view.html',
+                commonName: 'cases'
             });
     })
-    .controller('Dashboard.DbasController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService',
-            function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+        function ($scope, $stateParams, $translate,
+                  OrganizationInfoService, HelperObjectBrowserService) {
 
             var modules = [
                 {
@@ -51,22 +51,20 @@ angular.module('dashboard.dbas', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                var dbas = _.filter($scope.objectInfo.organizationDBAs, {type: 'DBA'});
-                if(dbas.length != 0) {
-                    $scope.gridOptions.data = dbas;
+                if(objectInfo.cases.length != 0) {
+                    $scope.gridOptions.data = objectInfo.cases;
                     $scope.gridOptions.noData = false;
                 }
                 else {
                     $scope.gridOptions.data = [];
                     $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.dbas.noDataMessage');
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.cases.noDataMessage');
                 }
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "dbas";
+                    return widget.id === "cases";
                 });
                 $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };

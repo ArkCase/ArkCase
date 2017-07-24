@@ -8,15 +8,14 @@ angular.module('dashboard.notes', ['adf.provider'])
                 description: 'dashboard.widgets.notes.description',
                 controller: 'Dashboard.NotesController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+                templateUrl: 'modules/dashboard/views/components/notes-widget.client.view.html',
                 commonName: 'notes'
             });
     })
-    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
-        , 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q',
+        'UtilService', 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $translate, $stateParams, $q,
+                  Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -55,8 +54,17 @@ angular.module('dashboard.notes', ['adf.provider'])
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         var notes = info;
-                        $scope.gridOptions.data = notes;
-                        $scope.gridOptions.totalItems = notes ? notes.length : 0;
+                        if(notes.length != 0) {
+                            $scope.gridOptions.data = notes;
+                            $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                            $scope.gridOptions.noData = false;
+                        }
+                        else {
+                            $scope.gridOptions.data = [];
+                            $scope.gridOptions.totalItems = 0;
+                            $scope.gridOptions.noData = true;
+                            $scope.noDataMessage = $translate.instant('dashboard.widgets.notes.noDataMessage');
+                        }
                     },
                     function (err) {
 

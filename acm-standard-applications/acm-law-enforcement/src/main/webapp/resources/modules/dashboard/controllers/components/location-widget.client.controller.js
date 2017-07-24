@@ -12,10 +12,10 @@ angular.module('dashboard.locations', ['adf.provider'])
                 commonName: 'locations'
             });
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
-        , 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
-        , function ($scope, $stateParams, ComplaintInfoService, OrganizationInfoService
-            , HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
+        'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                      ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -64,10 +64,15 @@ angular.module('dashboard.locations', ['adf.provider'])
                     $scope.gridOptions.data = [objectInfo];
                     var fullAddress = createFullAddress(objectInfo.location);
                     $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
-                } else if(objectInfo.addresses){
+                }
+                else if(objectInfo.addresses){
                     $scope.gridOptions.data = $scope.objectInfo.addresses;
-                } else {
+                    $scope.gridOptions.noData = false;
+                }
+                else {
                     $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.locations.noDataMessage');
                 }
                 $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
             };

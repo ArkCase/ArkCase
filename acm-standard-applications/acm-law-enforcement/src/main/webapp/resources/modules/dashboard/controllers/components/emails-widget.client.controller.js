@@ -12,8 +12,10 @@ angular.module('dashboard.emails', ['adf.provider'])
                 commonName: 'emails'
             });
     })
-    .controller('Dashboard.EmailsController', ['$scope', '$stateParams', 'Organization.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, OrganizationInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.EmailsController', ['$scope', '$stateParams', '$translate',
+        'Organization.InfoService', 'Helper.ObjectBrowserService',
+            function ($scope, $stateParams, $translate,
+                      OrganizationInfoService, HelperObjectBrowserService) {
 
             var modules = [
                 {
@@ -51,7 +53,15 @@ angular.module('dashboard.emails', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
                 var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
-                $scope.gridOptions.data = emails;
+                if(emails.length != 0) {
+                    $scope.gridOptions.data = emails;
+                    $scope.gridOptions.noData = false;
+                }
+                else {
+                    $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.emails.noDataMessage');
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
