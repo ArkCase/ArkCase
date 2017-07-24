@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('filters').filter('urlhyperlinkfilter', function () {
+angular.module('filters').filter('urlHyperLink', function () {
     return function (link) {
         var result;
         var startingUrl = "http://";
         var httpsStartingUrl = "https://";
-        if (link.startWith(startingUrl) || link.startWith(httpsStartingUrl)) {
+        if (_.startsWith(link,startingUrl) || _.startsWith(link,httpsStartingUrl)) {
             result = link;
         }
         else {
@@ -14,6 +14,3 @@ angular.module('filters').filter('urlhyperlinkfilter', function () {
         return result;
     }
 });
-String.prototype.startWith = function (str) {
-    return this.indexOf(str) == 0;
-};
