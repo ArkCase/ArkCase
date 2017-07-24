@@ -164,11 +164,11 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             return promiseSaveInfo;
         }
 
-        $scope.isEditable = function (rowEntity) {
+        $scope.isEditDisabled = function (rowEntity) {
             return rowEntity.personType == 'Initiator';
         };
 
-        $scope.isDeletable = function (rowEntity) {
+        $scope.isDeleteDisabled = function (rowEntity) {
             return rowEntity.personType == 'Initiator';
         };
     }
