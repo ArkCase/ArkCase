@@ -580,13 +580,13 @@
           "field": "person.defaultPhone.value",
           "displayName": "cases.comp.people.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone.value}} [{{row.entity.person.defaultPhone.subType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "location",
           "displayName": "cases.comp.people.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress.city}}, {{row.entity.person.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
         }
       ]
     },
@@ -638,7 +638,6 @@
           "displayName": "cases.comp.organizations.table.columns.phone",
           "headerCellFilter": "translate",
           "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
-
         },
         {
           "name": "organization.defaultAddress.city",

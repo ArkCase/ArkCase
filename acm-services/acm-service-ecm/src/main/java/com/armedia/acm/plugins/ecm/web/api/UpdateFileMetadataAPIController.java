@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Date;
+
 /**
  * Created by manoj.dhungana 04/10/2017.
  */
@@ -46,6 +48,9 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
             log.error("Invalid incoming file [{}]", file.toString());
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Invalid incoming file", null);
         }
+
+        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed (e.g participants)
+        file.setModified(new Date());
 
         log.debug("Incoming file id to be updated [{}]", file.getId());
         file = getEcmFileService().updateFile(file);

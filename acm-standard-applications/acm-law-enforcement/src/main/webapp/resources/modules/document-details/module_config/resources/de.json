@@ -41,14 +41,19 @@
         "name": "de_Name",
         "type": "de_Type"
       },
-      "message.delete.success": "de_Successfully deleted row.",
-      "message.delete.error": "de_Error deleting row.",
-      "role": {
-        "title": "de_Change participant Role",
-        "dropdownLabel": "de_Available Roles",
-        "buttons": {
-          "cancel": "de_Cancel",
-          "ok": "de_Change Role"
+      "dialogUserPicker": {
+        "header": "de_Choose User",
+        "table.columns": {
+          "name": "de_Name",
+          "type": "de_Type",
+          "title": "de_Title",
+          "id": "de_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "de_Choose Group",
+        "table.columns": {
+          "name": "de_Name"
         }
       }
     },
@@ -69,26 +74,32 @@
         "versionTag": "de_Version"
       }
     },
-    "userSearch": {
-      "id": "de_userSearch",
-      "title": "de_Add New Participant",
-      "search": {
-        "btn": "de_Go!",
-        "placeholder": "de_Enter to search for a participant"
-      },
-      "cancelButton": "de_Cancel",
-      "confirmButton": "de_Select",
-      "enabled": true,
-      "userFacetFilter": "de_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "de_Name",
+    "comp.details": {
+      "title": "de_Details",
+      "label": {
+        "creator": "de_Owner",
+        "modifier": "de_Author",
+        "created": "de_Creation Date",
+        "modified": "de_Modified Date",
+        "description": "de_Description",
         "type": "de_Type",
-        "title": "de_Title",
-        "parent": "de_Parent",
-        "assignee": "de_Assignee",
-        "modified": "de_Modified"
+        "organization": "de_Source Organization",
+        "person": "de_Source Entity",
+        "format": "de_Format",
+        "size": "de_Size",
+        "gps": "de_Location",
+        "duration": "de_Duration (seconds)",
+        "width": "de_Width (pixels)",
+        "height": "de_Height (pixels)",
+        "camera.type": "de_Camera Type",
+        "camera.version": "de_Camera Version",
+        "button.save": "de_Save",
+        "button.wait": "de_Please Wait"
       },
-      "dropdownLabel": "de_Participant Type"
+      "message": {
+        "save.success": "de_File metadata are successfully updated",
+        "save.error": "de_Unable to update file metadata"
+      }
     }
   }
 }

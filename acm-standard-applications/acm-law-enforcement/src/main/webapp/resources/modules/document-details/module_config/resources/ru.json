@@ -41,14 +41,19 @@
         "name": "ru_Name",
         "type": "ru_Type"
       },
-      "message.delete.success": "ru_Successfully deleted row.",
-      "message.delete.error": "ru_Error deleting row.",
-      "role": {
-        "title": "ru_Change participant Role",
-        "dropdownLabel": "ru_Available Roles",
-        "buttons": {
-          "cancel": "ru_Cancel",
-          "ok": "ru_Change Role"
+      "dialogUserPicker": {
+        "header": "ru_Choose User",
+        "table.columns": {
+          "name": "ru_Name",
+          "type": "ru_Type",
+          "title": "ru_Title",
+          "id": "ru_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "ru_Choose Group",
+        "table.columns": {
+          "name": "ru_Name"
         }
       }
     },
@@ -69,26 +74,32 @@
         "versionTag": "ru_Version"
       }
     },
-    "userSearch": {
-      "id": "ru_userSearch",
-      "title": "ru_Add New Participant",
-      "search": {
-        "btn": "ru_Go!",
-        "placeholder": "ru_Enter to search for a participant"
-      },
-      "cancelButton": "ru_Cancel",
-      "confirmButton": "ru_Select",
-      "enabled": true,
-      "userFacetFilter": "ru_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "ru_Name",
+    "comp.details": {
+      "title": "ru_Details",
+      "label": {
+        "creator": "ru_Owner",
+        "modifier": "ru_Author",
+        "created": "ru_Creation Date",
+        "modified": "ru_Modified Date",
+        "description": "ru_Description",
         "type": "ru_Type",
-        "title": "ru_Title",
-        "parent": "ru_Parent",
-        "assignee": "ru_Assignee",
-        "modified": "ru_Modified"
+        "organization": "ru_Source Organization",
+        "person": "ru_Source Entity",
+        "format": "ru_Format",
+        "size": "ru_Size",
+        "gps": "ru_Location",
+        "duration": "ru_Duration (seconds)",
+        "width": "ru_Width (pixels)",
+        "height": "ru_Height (pixels)",
+        "camera.type": "ru_Camera Type",
+        "camera.version": "ru_Camera Version",
+        "button.save": "ru_Save",
+        "button.wait": "ru_Please Wait"
       },
-      "dropdownLabel": "ru_Participant Type"
+      "message": {
+        "save.success": "ru_File metadata are successfully updated",
+        "save.error": "ru_Unable to update file metadata"
+      }
     }
   }
 }
