@@ -9,5 +9,5 @@ import java.io.InputStream;
 
 public interface EcmTikaFileService
 {
-    EcmTikaFile detectFileUsingTika(InputStream inputStream, String fileName) throws IOException, SAXException, TikaException;
+    EcmTikaFile detectFileUsingTika(InputStream inputStream, byte[] fileBytes) throws IOException, SAXException, TikaException;
 }
