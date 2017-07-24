@@ -599,9 +599,10 @@
           "cellTemplate": "<span>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</span>"
         },
         {
-          "name": "organization.organizationType",
-          "displayName": "people.comp.organizations.table.columns.type",
-          "headerCellFilter": "translate"
+          "name": "organization.organizationToPersonAssociationType",
+          "displayName": "people.comp.related.table.columns.type",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span ng-bind=\"(row.entity.organization.personAssociations | filter :{person : {id : grid.appScope.currentObjectId}})[0].organizationToPersonAssociationType\"></span>"
         },
         {
           "name": "organizationType",
