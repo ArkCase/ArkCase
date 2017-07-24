@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('document-details').controller('Document.DetailsController',
-    ['$scope', '$translate', '$filter', '$modal', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'ConfigService'
-        , function ($scope, $translate, $filter, $modal, ObjectLookupService, OrganizationInfoService, PersonInfoService, ConfigService) {
+    ['$scope', '$translate', '$filter', '$modal', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'ConfigService'
+        , function ($scope, $translate, $filter, $modal, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, ConfigService) {
 
         $scope.$on('document-data', function (event, ecmFile) {
 
@@ -22,6 +22,8 @@ angular.module('document-details').controller('Document.DetailsController',
                 _activeVersion.modified = $filter('date')(_activeVersion.created, $translate.instant("common.defaultDateTimeUIFormat"));
             }
 
+            // Keep original EcmFile. We will need later just to get original (not changed) dates for created, modified, version-created, version-modified
+            $scope.ecmFile = ecmFile;
 
             $scope.details = {};
             $scope.details.ecmFile = _ecmFile;
@@ -67,6 +69,19 @@ angular.module('document-details').controller('Document.DetailsController',
             }
 
             return {};
+        }
+
+        $scope.setActiveVersion = function (ecmFile, activeVersion) {
+            if (ecmFile && ecmFile.versions && activeVersion) {
+                for (var i = 0; i < ecmFile.versions.length; i++) {
+                    // Set strong guard
+                    if (ecmFile.versions[i].versionTag === ecmFile.activeVersionTag && ecmFile.versions[i].versionTag === activeVersion.versionTag) {
+                        ecmFile.versions[i] = activeVersion;
+                    }
+                }
+            }
+
+            return ecmFile;
         }
 
         ConfigService.getModuleConfig('common').then(function (moduleConfig) {
@@ -158,7 +173,31 @@ angular.module('document-details').controller('Document.DetailsController',
 
         // Save Details
         $scope.save = function () {
-            // TODO: Save changes
+            // Back changed date formats to original
+            $scope.details.ecmFile.created = $scope.ecmFile.created;
+            $scope.details.ecmFile.modified = $scope.ecmFile.modified;
+
+            var _activeVersion = $scope.getActiveVersion($scope.ecmFile);
+            $scope.details.activeVersion.created = _activeVersion.created;
+            $scope.details.activeVersion.modified = _activeVersion.modified;
+
+            $scope.details.ecmFile = $scope.setActiveVersion($scope.details.ecmFile, $scope.details.activeVersion);
+
+            UtilService.serviceCall({
+                service: EcmService.updateFile
+                , param: {fileId: $scope.details.ecmFile.fileId}
+                , data: JSOG.encode(UtilService.omitNg($scope.details.ecmFile))
+            }).then(
+                function (data) {
+                    $scope.$broadcast('document-data', data);
+                    MessageService.info($translate.instant('documentDetails.comp.details.message.save.success'));
+                    return data;
+                },
+                function (error) {
+                    MessageService.error($translate.instant('documentDetails.comp.details.message.save.error'));
+                    return error;
+                }
+             );
         }
     }
     ]);

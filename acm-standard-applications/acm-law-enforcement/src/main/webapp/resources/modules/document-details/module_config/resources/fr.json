@@ -73,6 +73,32 @@
         "created": "fr_Created",
         "versionTag": "fr_Version"
       }
+    },
+    "comp.details": {
+      "title": "fr_Details",
+      "label": {
+        "creator": "fr_Owner",
+        "modifier": "fr_Author",
+        "created": "fr_Creation Date",
+        "modified": "fr_Modified Date",
+        "description": "fr_Description",
+        "type": "fr_Type",
+        "organization": "fr_Source Organization",
+        "person": "fr_Source Entity",
+        "format": "fr_Format",
+        "size": "fr_Size",
+        "gps": "fr_Location",
+        "duration": "fr_Duration (seconds)",
+        "width": "fr_Width (pixels)",
+        "height": "fr_Height (pixels)",
+        "camera.type": "fr_Camera Type",
+        "camera.version": "fr_Camera Version",
+        "button.save": "fr_Save"
+      },
+      "message": {
+        "save.success": "fr_File metadata are successfully updated",
+        "save.error": "fr_Unable to update file metadata"
+      }
     }
   }
 }

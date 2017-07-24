@@ -94,6 +94,10 @@
         "camera.type": "Camera Type",
         "camera.version": "Camera Version",
         "button.save": "Save"
+      },
+      "message": {
+        "save.success": "File metadata are successfully updated",
+        "save.error": "Unable to update file metadata"
       }
     }
   }
