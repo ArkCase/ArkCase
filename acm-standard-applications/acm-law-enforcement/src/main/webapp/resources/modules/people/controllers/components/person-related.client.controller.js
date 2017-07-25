@@ -224,5 +224,12 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 // }, 2500);
             });
         };
+
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = 'PERSON';
+            var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
+            gridHelper.showObject(targetType, targetId);
+        };
     }
 ]);
