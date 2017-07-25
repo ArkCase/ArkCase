@@ -54,7 +54,7 @@ angular.module('dashboard.notes', ['adf.provider'])
                         $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                         var notes = info;
-                        if(notes.length != 0) {
+                        if(!Util.isArrayEmpty(notes)) {
                             $scope.gridOptions.data = notes;
                             $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                             $scope.gridOptions.noData = false;

@@ -13,9 +13,9 @@ angular.module('dashboard.ids', ['adf.provider'])
             });
     })
     .controller('Dashboard.IdsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
-        function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService) {
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+            function ($scope, $stateParams, $translate,
+                  OrganizationInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -51,7 +51,7 @@ angular.module('dashboard.ids', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(objectInfo.identifications.length != 0) {
+                if(!Util.isEmpty(objectInfo.identifications)) {
                     $scope.gridOptions.data = objectInfo.identifications;
                     $scope.gridOptions.noData = false;
                 }

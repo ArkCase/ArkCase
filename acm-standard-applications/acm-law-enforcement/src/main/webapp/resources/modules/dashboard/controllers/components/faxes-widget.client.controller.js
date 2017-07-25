@@ -13,9 +13,9 @@ angular.module('dashboard.faxes', ['adf.provider'])
             });
     })
     .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+                      OrganizationInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -53,7 +53,7 @@ angular.module('dashboard.faxes', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
                 var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                if(faxes.length != 0) {
+                if(!Util.isArrayEmpty(faxes)) {
                     $scope.gridOptions.data = faxes;
                     $scope.gridOptions.noData = false;
                 }

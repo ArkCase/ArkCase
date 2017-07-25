@@ -13,9 +13,9 @@ angular.module('dashboard.workflow', ['adf.provider'])
             });
     })
     .controller('Dashboard.WorkflowOverviewController', ['$scope', '$stateParams', '$translate',
-        'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService',
+        'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      TaskInfoService, TaskHistoryService, HelperObjectBrowserService) {
+                      TaskInfoService, TaskHistoryService, HelperObjectBrowserService, Util) {
 
                 var modules = [
                     {
@@ -61,8 +61,8 @@ angular.module('dashboard.workflow', ['adf.provider'])
                 var onObjectInfoRetrieved = function (objectInfo) {
                     module.getHistory(objectInfo).then(function (taskHistoryInfo) {
                         var taskHistory = taskHistoryInfo[0];
-                        if(taskHistory != 0) {
-                            $scope.gridOptions.data = taskHistory;
+                        if(!Util.isEmpty(taskHistory)) {
+                            $scope.gridOptions.data = [taskHistory];
                             $scope.gridOptions.totalItems = taskHistoryInfo.length;
                             $scope.gridOptions.noData = false;
                         }

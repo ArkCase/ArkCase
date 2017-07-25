@@ -14,9 +14,9 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
         function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService) {
+                  OrganizationInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -53,7 +53,7 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 //FIX this when relations between organizations are done on backend
-                /*if(objectInfo.relOrganizations.length != 0) {
+                /*if(!Util.isArrayEmpty(objectInfo.relOrganizations)) {
                     $scope.gridOptions.data = objectInfo.relOrganizations;
                     $scope.gridOptions.noData = false;
                 }

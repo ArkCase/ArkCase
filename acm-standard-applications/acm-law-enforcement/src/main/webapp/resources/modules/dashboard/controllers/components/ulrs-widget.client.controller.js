@@ -13,9 +13,9 @@ angular.module('dashboard.urls', ['adf.provider'])
             });
     })
     .controller('Dashboard.UrlsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+                      OrganizationInfoService, HelperObjectBrowserService, Util) {
 
                 var modules = [
                     {
@@ -53,7 +53,7 @@ angular.module('dashboard.urls', ['adf.provider'])
                 var onObjectInfoRetrieved = function (objectInfo) {
                     $scope.objectInfo = objectInfo;
                     var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
-                    if(urls.length != 0) {
+                    if(!Util.isArrayEmpty(urls)) {
                         $scope.gridOptions.data = urls;
                         $scope.gridOptions.noData = false;
                     }

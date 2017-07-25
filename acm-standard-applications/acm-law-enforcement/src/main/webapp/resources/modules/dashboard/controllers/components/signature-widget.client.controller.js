@@ -48,7 +48,7 @@ angular.module('dashboard.signature', ['adf.provider'])
                             $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                             var signatures = info;
-                            if(signatures != 0) {
+                            if(!Util.isArrayEmpty(signatures)) {
                                 $scope.gridOptions.data = signatures;
                                 $scope.gridOptions.totalItems = signatures.length;
                             }

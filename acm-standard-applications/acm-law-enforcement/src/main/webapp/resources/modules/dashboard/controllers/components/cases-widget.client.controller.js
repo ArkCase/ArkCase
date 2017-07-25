@@ -13,9 +13,9 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
-        function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService) {
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+            function ($scope, $stateParams, $translate,
+                  OrganizationInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -51,7 +51,7 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(objectInfo.cases.length != 0) {
+                if(!Util.isEmpty(objectInfo.cases)) {
                     $scope.gridOptions.data = objectInfo.cases;
                     $scope.gridOptions.noData = false;
                 }

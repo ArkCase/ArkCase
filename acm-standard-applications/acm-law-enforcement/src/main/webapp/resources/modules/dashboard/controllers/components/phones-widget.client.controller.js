@@ -13,9 +13,9 @@ angular.module('dashboard.phones', ['adf.provider'])
             });
     })
     .controller('Dashboard.PhonesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+                      OrganizationInfoService, HelperObjectBrowserService, Util) {
 
                 var modules = [
                     {
@@ -53,7 +53,7 @@ angular.module('dashboard.phones', ['adf.provider'])
                 var onObjectInfoRetrieved = function (objectInfo) {
                     $scope.objectInfo = objectInfo;
                     var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                    if(phones.length != 0) {
+                    if(!Util.isArrayEmpty(phones)) {
                         $scope.gridOptions.data = phones;
                         $scope.gridOptions.noData = false;
                     }
