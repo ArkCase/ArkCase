@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "ja_ records above...",
-    "btnPrev.toolTip": "ja_Review previous records",
-    "btnNext.titleUnknownSize": "ja_More records...",
-    "btnNext.title": "ja_ more records...",
-    "btnNext.toolTip": "ja_Load more records",
-    "edtQuery.placeHolder": "ja_Search",
-    "btnQuery.text": "ja_Go!",
-    "errorNode.title": "ja_(Error)",
-    "errorNode.toolTip": "ja_(Error)",
-    "noAccessNode.title": "ja_(No Access)",
-    "noAccessNode.toolTip": "ja_(No Access)"
+    "btnPrev.title": "記録上の...",
+    "btnPrev.toolTip": "レコードの上を参照",
+    "btnNext.titleUnknownSize": "複数のレコード...",
+    "btnNext.title": "複数のレコード...",
+    "btnNext.toolTip": "複数のレコードのロード",
+    "edtQuery.placeHolder": "検索",
+    "btnQuery.text": "開始!",
+    "errorNode.title": "(エラー)",
+    "errorNode.toolTip": "(エラー)",
+    "noAccessNode.title": "(アクセス権なし)",
+    "noAccessNode.toolTip": "(アクセス権なし)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "ja_items per page",
