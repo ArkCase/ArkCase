@@ -23,11 +23,9 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseConfig = ConfigService.getModuleConfig("tasks");
 
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
         LookupService.getUsers().then(
