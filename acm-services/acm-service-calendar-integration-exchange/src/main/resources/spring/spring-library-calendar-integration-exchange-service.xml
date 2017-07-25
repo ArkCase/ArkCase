@@ -8,7 +8,7 @@
             <property name="entityType" ref="CASE_FILE"/>
             <property name="entityTypeForQuery" ref="CaseFile"/>
         </bean>
-        <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandlerr">
+        <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
             <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
             <property name="entityType" ref="COMPLAINT"/>
             <property name="entityTypeForQuery" ref="Complaint"/>
