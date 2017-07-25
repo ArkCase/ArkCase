@@ -109,7 +109,10 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    updatePersonAssociationData(association, data.person, data);
+                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                        data.person = response.data;
+                        updatePersonAssociationData(association, data.person, data);
+                    });
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         updatePersonAssociationData(association, person, data);

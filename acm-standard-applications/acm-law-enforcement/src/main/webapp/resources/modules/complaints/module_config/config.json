@@ -645,13 +645,13 @@
           "field": "person.defaultPhone.value",
           "displayName": "complaints.comp.people.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone.value}} [{{row.entity.person.defaultPhone.subType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "location",
           "displayName": "complaints.comp.people.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress.city}}, {{row.entity.person.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
         }
       ]
     },
