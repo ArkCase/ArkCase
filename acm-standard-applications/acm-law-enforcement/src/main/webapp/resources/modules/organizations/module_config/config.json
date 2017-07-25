@@ -290,7 +290,8 @@
             }
           ]
         },
-        { "id": "faxes",
+        {
+          "id": "faxes",
           "type": "component",
           "columnDefs": [
             {
@@ -321,7 +322,8 @@
             }
           ]
         },
-        { "id": "emails",
+        {
+          "id": "emails",
           "type": "component",
           "columnDefs": [
             {
@@ -352,7 +354,8 @@
             }
           ]
         },
-        { "id": "urls",
+        {
+          "id": "urls",
           "type": "component",
           "columnDefs": [
             {
@@ -383,7 +386,8 @@
             }
           ]
         },
-        { "id": "dbas",
+        {
+          "id": "dbas",
           "type": "component"
         },
         {
@@ -418,13 +422,16 @@
           "id": "complaints",
           "type": "component"
         },
-        { "id": "cases",
+        {
+          "id": "cases",
           "type": "component"
         },
-        { "id": "related",
+        {
+          "id": "related",
           "type": "component"
         },
-        { "id": "history",
+        {
+          "id": "history",
           "type": "component"
         }
       ]
@@ -1007,7 +1014,7 @@
           "field": "target_object.value_parseable",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
         },
         {
           "name": "organization.defaultIdentification.identificationNumber",
