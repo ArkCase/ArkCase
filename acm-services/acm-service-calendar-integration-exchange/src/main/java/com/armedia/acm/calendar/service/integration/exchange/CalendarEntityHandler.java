@@ -11,6 +11,8 @@ import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -77,6 +79,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private OutlookDao outlookDao;
+
+    private AcmContainerDao containerEntityDao;
 
     protected Map<String, PropertyDefinition> sortFields;
 
@@ -292,13 +296,12 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         TypedQuery<AcmContainerEntity> query;
         if (restrictedOnly)
         {
-            query = getEm().createQuery(String
-                    .format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId AND ot.restricted = :restricted", entityTypeForQuery),
-                    AcmContainerEntity.class);
+            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId AND ot.restricted = :restricted",
+                    entityTypeForQuery), AcmContainerEntity.class);
             query.setParameter("restricted", true);
         } else
         {
-            query = getEm().createQuery(String.format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId", entityTypeForQuery),
+            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId", entityTypeForQuery),
                     AcmContainerEntity.class);
         }
         query.setParameter("objectId", Long.valueOf(objectId));
@@ -367,7 +370,6 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
             return;
         case CLOSED:
         case CLOSED_X_DAYS:
-            System.currentTimeMillis();
             List<AcmContainerEntity> purgeCandidates = getEntities(daysClosed);
             purgeCalendars(service, purgeCandidates);
             break;
@@ -380,13 +382,13 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         TypedQuery<AcmContainerEntity> query;
         if (daysClosed == null)
         {
-            query = getEm().createQuery(
+            query = em.createQuery(
                     String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL",
                             entityTypeForQuery),
                     AcmContainerEntity.class);
         } else
         {
-            query = getEm().createQuery(String.format(
+            query = em.createQuery(String.format(
                     "SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL AND obj.modified <= :modified",
                     entityTypeForQuery), AcmContainerEntity.class);
             query.setParameter("modified", calculateModifiedDate(daysClosed));
@@ -414,15 +416,16 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     {
         for (AcmContainerEntity entity : purgeCandidates)
         {
+            AcmContainer container = entity.getContainer();
             try
             {
                 // The start date and end date are chosen on the assumption that no events would be created prior to the
                 // creation of the object, and that possible events that are 1 year after the event creation are part of
                 // recurring events.
-                Date startDate = entity.getContainer().getCreated();
+                Date startDate = container.getCreated();
                 Date endDate = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
                 CalendarView calendarView = new CalendarView(startDate, endDate);
-                CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(entity.getContainer().getCalendarFolderId()));
+                CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(container.getCalendarFolderId()));
 
                 FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
 
@@ -439,25 +442,15 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
                     }
                 }
                 calendar.delete(DeleteMode.MoveToDeletedItems);
-                // update the container with removing the outlook folder id.
-                // also, update the queries to include only containers that have outlook folder id set.
-                entity.getContainer().setCalendarFolderId(null);
-                getEm().merge(entity);
+
+                container.setCalendarFolderId(null);
+                containerEntityDao.save(container);
 
             } catch (Exception e)
             {
-                log.warn("Error while trying to purge calendar events for calendar folder with id: {}",
-                        entity.getContainer().getCalendarFolderId(), e);
+                log.warn("Error while trying to purge calendar events for calendar folder with id: {}", container.getCalendarFolderId(), e);
             }
         }
-    }
-
-    /**
-     * @return the em
-     */
-    protected EntityManager getEm()
-    {
-        return em;
     }
 
     /**
@@ -466,6 +459,14 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     public void setOutlookDao(OutlookDao outlookDao)
     {
         this.outlookDao = outlookDao;
+    }
+
+    /**
+     * @param containerEntityDao the containerEntityDao to set
+     */
+    public void setContainerEntityDao(AcmContainerDao containerEntityDao)
+    {
+        this.containerEntityDao = containerEntityDao;
     }
 
     /**
