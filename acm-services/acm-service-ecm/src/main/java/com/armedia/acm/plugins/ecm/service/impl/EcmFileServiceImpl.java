@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -47,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -978,19 +980,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         }
 
         ObjectAssociation copy = new ObjectAssociation();
-        copy.setParentType(EcmFileConstants.OBJECT_FILE_TYPE);
-        copy.setAssociationType(original.getAssociationType());
-        copy.setCategory(original.getCategory());
-        copy.setDescription(original.getDescription());
-        copy.setTargetId(original.getTargetId());
-        copy.setTargetName(original.getTargetName());
-        copy.setTargetSubtype(original.getTargetSubtype());
-        copy.setTargetTitle(original.getTargetTitle());
-        copy.setTargetType(original.getTargetType());
-        copy.setStatus(original.getStatus());
 
-        return copy;
-
+        try
+        {
+            ArkCaseBeanUtils beanUtils = new ArkCaseBeanUtils();
+            beanUtils.copyProperties(copy, original);
+            copy.setAssociationId(null);
+            copy.setParentName(null);
+            copy.setParentId(null);
+            return copy;
+        } catch (IllegalAccessException | InvocationTargetException e)
+        {
+            log.error("Could not copy object association - should never happen! [{}]", e.getMessage(), e);
+            return null;
+        }
     }
 
     protected void copyFileVersionMetadata(EcmFile file, EcmFileVersion fileCopyVersion)
@@ -1463,4 +1466,5 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.cmisConfigUtils = cmisConfigUtils;
     }
+
 }
