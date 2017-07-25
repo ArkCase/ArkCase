@@ -835,14 +835,14 @@
           "field": "target_object.first_name_lcs",
           "displayName": "people.comp.related.table.columns.firstName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
         },
         {
           "name": "lastName",
           "field": "target_object.last_name_lcs",
           "displayName": "people.comp.related.table.columns.lastName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
         },
         {
           "name": "personDescription",

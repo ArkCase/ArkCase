@@ -60,7 +60,6 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
                     'start': '@start',
                     'n': '@n',
                     'sort': '@sort'
-
                 },
                 cache: false
             }
