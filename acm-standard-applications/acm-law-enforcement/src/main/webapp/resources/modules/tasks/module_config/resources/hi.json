@@ -9,7 +9,11 @@
     "leftnav.item": "कार्य",
     "topbar.item": "कार्य"
   },
+  "tasks.comp.main": {
+    "title": "अवलोकन"
+  },
   "tasks.comp.info": {
+    "title": "जानकारी",
     "taskId": "hi_Task id:",
     "percentage.label": "hi_% of Completion",
     "assignee.label": "hi_Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "जनक जानकारी",
     "taskId": "hi_Task id:",
     "case": {
       "subjectType.label": "hi_Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "hi_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "क्रियाएं",
     "diagram.button": "hi_Process Diagram",
     "eSignature.button": "hi_Sign",
     "subscribe.button": "hi_Subscribe",
@@ -65,7 +71,7 @@
     }
   },
   "tasks.comp.details": {
-    "title": "hi_Task Details",
+    "title": "विवरण",
     "informSaved": "hi_Task details saved",
     "table.columns": {
       "details": "hi_Details",
@@ -74,7 +80,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "hi_Rework Details",
+    "title": "पुनर्पूंजी विवरण",
     "informSaved": "hi_Rework details saved",
     "table.columns": {
       "title": "hi_Rework Details",
@@ -83,20 +89,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "hi_Parent Documents",
+    "title": "जनक दस्तावेज़",
     "noParentDataMessage": "hi_No parent documents for standalone task",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
     "searchInputPlaceholder": "hi_Search"
   },
   "tasks.comp.attachments": {
-    "title": "hi_Attachments",
+    "title": "अटैचमेंट्स",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
     "searchInputPlaceholder": "hi_Search"
   },
   "tasks.comp.notes": {
-    "title": "hi_Notes",
+    "title": "नोट्स",
     "table.columns": {
       "note": "hi_Note",
       "created": "hi_Created",
@@ -104,7 +110,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "hi_References",
+    "title": "संदर्भ",
     "table.columns": {
       "targetName": "hi_Number",
       "targetTitle": "hi_Title",
@@ -114,7 +120,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "hi_Reject Comments",
+    "title": "टिप्पणियों को अस्वीकार करें",
     "table.columns": {
       "note": "hi_Comment",
       "created": "hi_Created",
@@ -122,7 +128,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "hi_Workflow",
+    "title": "वर्कफ़्लो अवलोकन",
     "table.columns": {
       "participant": "hi_Participant",
       "role": "hi_Role",
@@ -143,7 +149,7 @@
     }
   },
   "tasks.comp.docsreview": {
-    "title": "hi_Documents Under Review",
+    "title": "समीक्षाधीन दस्तावेज़",
     "table.columns": {
       "fileId": "hi_ID",
       "fileName": "hi_Title",
@@ -153,7 +159,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -161,7 +167,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -320,6 +326,39 @@
       "approverId": "hi_Approver",
       "approverFullName": "hi_Full Name",
       "approverDecision": "hi_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "reworkDetails.label": "पुनर्पूंजी विवरण",
+      "docReview.label": "समीक्षाधीन दस्तावेज़",
+      "parentDoc.label": "जनक दस्तावेज़",
+      "attachments.label": "अटैचमेंट्स",
+      "references.label": "संदर्भ",
+      "notes.label": "नोट्स",
+      "workflow.label": "वर्कफ़्लो अवलोकन",
+      "history.label": "इतिहास",
+      "eSignatures.label": "ईसाइग्नेचर",
+      "tags.label": "टैग",
+      "reject.label": "टिप्पणियों को अस्वीकार करें"
+    },
+    "filters": {
+      "myTasks": "मेरा कार्य",
+      "opened": "सभी ओपन टास्क",
+      "completed": "सभी पूर्ण कार्य",
+      "dueToday": "सभी कार्य अब आज",
+      "myDueToday": "ऑल माय टास्क्स के कारण",
+      "overdue": "सभी कार्य अतिदेय",
+      "myOverdue": "ऑल माय टास्क ओवरड्यू",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट की गई दिनांक एएससी",
+      "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
+      "byNameAsc": "सॉर्ट कार्य नाम एएससी",
+      "byNameDesc": "सॉर्ट कार्य नाम देश",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }

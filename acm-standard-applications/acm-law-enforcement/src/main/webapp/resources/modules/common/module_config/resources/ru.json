@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "ru_ records above...",
-    "btnPrev.toolTip": "ru_Review previous records",
-    "btnNext.titleUnknownSize": "ru_More records...",
-    "btnNext.title": "ru_ more records...",
-    "btnNext.toolTip": "ru_Load more records",
-    "edtQuery.placeHolder": "ru_Search",
-    "btnQuery.text": "ru_Go!",
-    "errorNode.title": "ru_(Error)",
-    "errorNode.toolTip": "ru_(Error)",
-    "noAccessNode.title": "ru_(No Access)",
-    "noAccessNode.toolTip": "ru_(No Access)"
+    "btnPrev.title": "записи выше...",
+    "btnPrev.toolTip": "Просмотр предыдущих записей",
+    "btnNext.titleUnknownSize": "Больше записей...",
+    "btnNext.title": "Больше записей...",
+    "btnNext.toolTip": "Загрузить больше записей",
+    "edtQuery.placeHolder": "Поиск",
+    "btnQuery.text": "Поиск!",
+    "errorNode.title": "(Ошибка)",
+    "errorNode.toolTip": "(Ошибка)",
+    "noAccessNode.title": "(Нет доступа)",
+    "noAccessNode.toolTip": "(Нет доступа)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "ru_items per page",
