@@ -14,7 +14,7 @@ angular.module('dashboard.complaints', ['adf.provider'])
     })
     .controller('Dashboard.ComplaintsController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService',
-        function ($scope, $stateParams, $translate,
+            function ($scope, $stateParams, $translate,
                   OrganizationInfoService, HelperObjectBrowserService) {
 
             var modules = [
@@ -51,7 +51,7 @@ angular.module('dashboard.complaints', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                //if(objectInfo.complaints.length != 0) {
+                //if(!Util.isEmpty(objectInfo.cases)) {
                     $scope.gridOptions.data = objectInfo.response.docs;
                     $scope.gridOptions.noData = false;
                 //}

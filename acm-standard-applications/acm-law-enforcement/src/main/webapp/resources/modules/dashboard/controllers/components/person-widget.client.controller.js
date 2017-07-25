@@ -13,9 +13,9 @@ angular.module('dashboard.person', ['adf.provider'])
             });
     })
     .controller('Dashboard.PersonController', ['$scope', '$stateParams', '$translate',
-        'CostTracking.InfoService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'CostTracking.InfoService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                      CostTrackingInfoService, TimeTrackingInfoService, HelperObjectBrowserService, HelperUiGridService, Util) {
 
                 var modules = [
                     {
@@ -61,7 +61,7 @@ angular.module('dashboard.person', ['adf.provider'])
 
                 var onObjectInfoRetrieved = function (objectInfo) {
                     $scope.costsheetInfo = objectInfo;
-                    if(objectInfo.user != 0) {
+                    if(!Util.isArrayEmpty(objectInfo.user)) {
                         $scope.gridOptions.data = objectInfo.user;
                         $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                         $scope.gridOptions.noData = false;

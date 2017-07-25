@@ -13,9 +13,9 @@ angular.module('dashboard.dbas', ['adf.provider'])
             });
     })
     .controller('Dashboard.DbasController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService) {
+                      OrganizationInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -53,7 +53,7 @@ angular.module('dashboard.dbas', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
                 var dbas = _.filter($scope.objectInfo.organizationDBAs, {type: 'DBA'});
-                if(dbas.length != 0) {
+                if(!Util.isArrayEmpty(dbas)) {
                     $scope.gridOptions.data = dbas;
                     $scope.gridOptions.noData = false;
                 }

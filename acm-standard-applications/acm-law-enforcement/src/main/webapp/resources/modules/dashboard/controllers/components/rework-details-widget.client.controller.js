@@ -13,9 +13,9 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
             });
     })
     .controller('Dashboard.ReworkDetailsController', ['$scope', '$stateParams', '$translate',
-        'Task.InfoService', 'Helper.ObjectBrowserService',
+        'Task.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      TaskInfoService, HelperObjectBrowserService) {
+                      TaskInfoService, HelperObjectBrowserService, Util) {
 
                 var modules = [
                     {
@@ -60,7 +60,7 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
                     var data = angular.copy(objectInfo);
                     $scope.gridOptions.data = [data];
 
-                    if ($scope.gridOptions.data[0].reworkInstructions != null) {
+                    if (!Util.isEmpty($scope.gridOptions.data[0].reworkInstructions)) {
                             $scope.gridOptions.data[0].taskStartDate = "";
                             $scope.gridOptions.data[0].assignee = "";
                             $scope.gridOptions.noData = false;

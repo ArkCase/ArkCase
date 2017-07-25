@@ -51,7 +51,7 @@ angular.module('dashboard.tasks', ['adf.provider'])
                             $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                             var tasks = info.response.docs;
-                            if(tasks != 0) {
+                            if(!Util.isArrayEmpty(tasks)) {
                                 $scope.gridOptions.data = tasks;
                                 $scope.gridOptions.noData = false;
                                 $scope.gridOptions.totalItems = info.response.numFound;

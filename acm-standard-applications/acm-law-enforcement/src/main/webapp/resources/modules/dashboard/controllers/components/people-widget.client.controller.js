@@ -13,9 +13,9 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService) {
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, Util) {
 
                 var modules = [
                         {
@@ -63,8 +63,8 @@ angular.module('dashboard.people', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(objectInfo.personAssociations != 0){
-                    $scope.gridOptions.data = objectInfo.personAssociations
+                if(!Util.isArrayEmpty(objectInfo.personAssociations)){
+                    $scope.gridOptions.data = objectInfo.personAssociations;
                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                     $scope.gridOptions.noData = false;
                 }

@@ -483,12 +483,14 @@
             {
               "name": "role",
               "displayName": "tasks.comp.workflow.table.columns.role",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.role' title='{{row.entity.role}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.workflow.table.columns.status",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "startDateTime",

@@ -12,8 +12,10 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 commonName: 'docReview'
             });
     })
-    .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', '$translate',
+        'Task.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+            function ($scope, $stateParams, $translate,
+                    TaskInfoService, HelperObjectBrowserService, Util) {
 
             var modules = [
                 {
@@ -55,8 +57,8 @@ angular.module('dashboard.docReview', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if (objectInfo.documentUnderReview != null) {
-                    $scope.gridOptions.data = objectInfo.documentUnderReview;
+                if (!Util.isEmpty(objectInfo.documentUnderReview)) {
+                    $scope.gridOptions.data = [objectInfo.documentUnderReview];
                     $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
                     $scope.gridOptions.noData = false;
                 }
