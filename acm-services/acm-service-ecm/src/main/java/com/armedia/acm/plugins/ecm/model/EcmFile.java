@@ -195,6 +195,18 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
         }
+
+        if (personAssociation != null)
+        {
+            personAssociation.setParentId(getId());
+            personAssociation.setParentName(getFileName());
+        }
+
+        if (organizationAssociation != null)
+        {
+            organizationAssociation.setParentId(getId());
+            organizationAssociation.setParentName(getFileName());
+        }
     }
 
     protected void setDefaultCmisRepositoryId()
