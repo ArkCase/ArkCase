@@ -4,11 +4,8 @@ angular.module('cases').controller('Cases.GroupPickerController', ['$scope', '$m
     '$translate', 'UtilService', 'ConfigService', '$q', 'owningGroup',
     function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, $q, owningGroup) {
 
-        var promiseConfig = ConfigService.getModuleConfig("cases");
-
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
         $scope.onClickOk = function () {
@@ -27,7 +24,7 @@ angular.module('cases').controller('Cases.GroupPickerController', ['$scope', '$m
             params.header = $translate.instant("cases.comp.groupPickerModal.searchGroupHeader");
             params.filter = 'fq="object_type_s": GROUP';
             params.extraFilter = '&fq="name": ';
-            params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
+            params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
 
             var modalInstance = $modal.open({
                 templateUrl: "modules/cases/views/components/case-group-picker-search-modal.client.view.html",
