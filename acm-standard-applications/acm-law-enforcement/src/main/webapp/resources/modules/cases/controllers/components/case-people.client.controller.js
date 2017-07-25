@@ -46,8 +46,8 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit", null, null, "isEditable");
-            gridHelper.addButton(config, "delete", null, null, "isDeletable");
+            gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+            gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -109,7 +109,10 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    updatePersonAssociationData(association, data.person, data);
+                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                        data.person = response.data;
+                        updatePersonAssociationData(association, data.person, data);
+                    });
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                         updatePersonAssociationData(association, person, data);
@@ -161,11 +164,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
             return promiseSaveInfo;
         }
 
-        $scope.isEditable = function (rowEntity) {
+        $scope.isEditDisabled = function (rowEntity) {
             return rowEntity.personType == 'Initiator';
         };
 
-        $scope.isDeletable = function (rowEntity) {
+        $scope.isDeleteDisabled = function (rowEntity) {
             return rowEntity.personType == 'Initiator';
         };
     }
