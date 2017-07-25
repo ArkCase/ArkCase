@@ -9,7 +9,11 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "cases.comp.main": {
+    "title": "Overzicht"
+  },
   "document-repository.comp.info": {
+    "title": "Informatie",
     "docRepoId": "de_Repository ID:",
     "docRepoName": "de_Document Repository Name:",
     "modified.label": "de_Modified Date",
@@ -18,13 +22,14 @@
     "description.label": "de_Description"
   },
   "document-repository.comp.actions": {
+    "title": "Acties",
     "restrict": "de_Restrict?",
     "subscribe.button": "de_Subscribe",
     "unsubscribe.button": "de_Unsubscribe",
     "confirm.delete.documentRepository.msg": "de_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Document Repository details saved",
     "table.columns": {
       "title": "de_Details",
@@ -33,13 +38,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "de_Documents",
+    "title": "Dokumente",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "document-repository.comp.participants": {
-    "title": "de_Participants",
+    "title": "Teilnehmer",
     "table.columns": {
       "type": "de_Type",
       "name": "de_Name"
@@ -61,7 +66,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "de_Notes",
+    "title": "Notizen",
     "table.columns": {
       "note": "de_Note",
       "created": "de_Created",
@@ -69,7 +74,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "de_References",
+    "title": "Referenzen",
     "table.columns": {
       "targetName": "de_Number",
       "parentName": "de_Parent",
@@ -80,7 +85,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -88,7 +93,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
