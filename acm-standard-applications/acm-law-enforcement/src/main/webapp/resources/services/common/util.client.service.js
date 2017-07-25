@@ -442,7 +442,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
 
             , forEachStripNg: function (data, callback) {
                 _.forEach(data, function (v, k) {
-                    if (_.isString(k) && !k.startsWith("$")) {
+                    if (_.isString(k) && !_.startsWith(k,"$")) {
                         callback(v, k);
                     }
                 });
@@ -456,7 +456,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 var copy = _.cloneDeep(obj);
                 _.cloneDeep(copy, function (v, k, o) {
                     if (_.isString(k)) {
-                        if (k.startsWith("$") || k.startsWith("acm$_")) {
+                        if (_.startsWith(k,"$") || _.startsWith(k,"acm$_")) {
                             delete o[k];
                             var z = 1;
                         }
@@ -697,12 +697,12 @@ angular.module('services').factory('UtilService', ['$q', '$log'
         // startsWith is a method proposed for the next version of JavaScript, ES6.
         // It's currently unsupported outside of Chrome 41+, and Firefox 17+.
         //
-        if (!String.prototype.startsWith) {
+        /*if (!String.prototype.startsWith) {
             String.prototype.startsWith = function (searchString, position) {
                 position = position || 0;
                 return this.indexOf(searchString, position) === position;
             };
-        }
+        }*/
 
         return Util;
     }
