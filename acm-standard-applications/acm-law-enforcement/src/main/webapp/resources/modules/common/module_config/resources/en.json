@@ -545,6 +545,9 @@
     "radioYes.text": "Yes",
     "radioNo.text": "No"
   },
+  "common.editPerson": {
+    "title": "Edit person"
+  },
   "common.dialogPersonPicker": {
     "header": "Search for People",
     "table.columns": {
