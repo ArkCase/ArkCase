@@ -290,7 +290,8 @@
             }
           ]
         },
-        { "id": "faxes",
+        {
+          "id": "faxes",
           "type": "component",
           "columnDefs": [
             {
@@ -321,7 +322,8 @@
             }
           ]
         },
-        { "id": "emails",
+        {
+          "id": "emails",
           "type": "component",
           "columnDefs": [
             {
@@ -352,7 +354,8 @@
             }
           ]
         },
-        { "id": "urls",
+        {
+          "id": "urls",
           "type": "component",
           "columnDefs": [
             {
@@ -383,7 +386,8 @@
             }
           ]
         },
-        { "id": "dbas",
+        {
+          "id": "dbas",
           "type": "component",
           "columnDefs": [
             {
@@ -518,7 +522,8 @@
             }
           ]
         },
-        { "id": "cases",
+        {
+          "id": "cases",
           "type": "component",
           "columnDefs": [
             {
@@ -561,7 +566,8 @@
             }
           ]
         },
-        { "id": "relOrganizations",
+        {
+          "id": "relOrganizations",
           "type": "component",
           "columnDefs": [
             {
@@ -591,7 +597,8 @@
             }
           ]
         },
-        { "id": "history",
+        {
+          "id": "history",
           "type": "component"
         }
       ]
@@ -848,7 +855,7 @@
           "name": "value",
           "displayName": "organizations.comp.urls.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" href=\"{{row.entity.value}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
         },
         {
           "name": "description",
@@ -949,10 +956,10 @@
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
         },
         {
-          "name": "person.defaultOrganization",
-          "displayName": "organizations.comp.people.table.columns.organization",
+          "name": "person.personToOrganizationAssociationType",
+          "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.person.defaultIOrganization ? row.entity.person.defaultIOrganization.organizationValue  : ''}}</span>"
+          "cellTemplate": "<span ng-bind=\"(row.entity.person.organizationAssociations | filter :{organization : {organizationId : grid.appScope.currentObjectId}})[0].personToOrganizationAssociationType\"></span>"
         },
         {
           "name": "phone",
@@ -1174,7 +1181,7 @@
           "field": "target_object.value_parseable",
           "displayName": "organizations.comp.related.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{COL_FIELD}}</a>"
         },
         {
           "name": "organization.defaultIdentification.identificationNumber",

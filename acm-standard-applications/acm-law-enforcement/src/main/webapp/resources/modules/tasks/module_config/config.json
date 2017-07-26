@@ -25,42 +25,42 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "Tasks for Me",
+        "desc": "tasks.tree.filters.myTasks",
         "name": "my-tasks",
         "value": "fq=assignee_s:${user}"
       },
       {
-        "desc": "All Open Tasks",
+        "desc": "tasks.tree.filters.opened",
         "name": "opened-tasks",
         "value": "fq=status_s:OPEN"
       },
       {
-        "desc": "All Completed Tasks",
+        "desc": "tasks.tree.filters.completed",
         "name": "completed-tasks",
         "value": "fq=status_s:COMPLETE"
       },
       {
-        "desc": "All Tasks Due Today",
+        "desc": "tasks.tree.filters.dueToday",
         "name": "tasks-due-today",
         "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
       },
       {
-        "desc": "All Tasks Due Today for Me",
+        "desc": "tasks.tree.filters.myDueToday",
         "name": "my-tasks-due-today",
         "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
       },
       {
-        "desc": "All Tasks Overdue",
+        "desc": "tasks.tree.filters.overdue",
         "name": "tasks-overdue",
         "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
       },
       {
-        "desc": "All Tasks Overdue for Me",
+        "desc": "tasks.tree.filters.myOverdue",
         "name": "my-tasks-overdue",
         "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "tasks.tree.filters.noFilter",
         "name": "",
         "value": "",
         "default": true
@@ -68,12 +68,12 @@
     ],
     "sorters": [
       {
-        "desc": "Sort Create Date Asc",
+        "desc": "ScreatedDateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "Sort Create Date Desc",
+        "desc": "createdDateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
@@ -122,7 +122,7 @@
       },
       {
         "type": "p/TASK/det",
-        "label": "Details",
+        "label": "tasks.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -130,7 +130,7 @@
       },
       {
         "type": "p/TASK/rewk",
-        "label": "Rework Details",
+        "label": "tasks.tree.nodeTypes.reworkDetails.label",
         "icon": "fa fa-repeat",
         "components": [
           "reworkdetails"
@@ -138,7 +138,7 @@
       },
       {
         "type": "p/TASK/docrev",
-        "label": "Documents Under Review",
+        "label": "tasks.tree.nodeTypes.docReview.label",
         "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
@@ -146,7 +146,7 @@
       },
       {
         "type": "p/TASK/patt",
-        "label": "Parent Documents",
+        "label": "tasks.tree.nodeTypes.parentDoc.label",
         "icon": "fa fa-file",
         "components": [
           "parentdocs"
@@ -154,7 +154,7 @@
       },
       {
         "type": "p/TASK/att",
-        "label": "Attachments",
+        "label": "tasks.tree.nodeTypes.attachments.label",
         "icon": "fa fa-file",
         "components": [
           "attachments"
@@ -162,7 +162,7 @@
       },
       {
         "type": "p/TASK/note",
-        "label": "Notes",
+        "label": "tasks.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -170,7 +170,7 @@
       },
       {
         "type": "p/TASK/ref",
-        "label": "References",
+        "label": "tasks.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -178,7 +178,7 @@
       },
       {
         "type": "p/TASK/wkfl",
-        "label": "Workflow Overview",
+        "label": "tasks.tree.nodeTypes.workflow.label",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -186,7 +186,7 @@
       },
       {
         "type": "p/TASK/his",
-        "label": "History",
+        "label": "tasks.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -194,7 +194,7 @@
       },
       {
         "type": "p/TASK/sig",
-        "label": "eSignatures",
+        "label": "tasks.tree.nodeTypes.eSignatures.label",
         "icon": "fa fa-certificate",
         "components": [
           "signatures"
@@ -202,7 +202,7 @@
       },
       {
         "type": "p/TASK/tags",
-        "label": "Tags",
+        "label": "tasks.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -226,7 +226,7 @@
       },
       {
         "type": "p/ADHOC/det",
-        "label": "Details",
+        "label": "tasks.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -234,7 +234,7 @@
       },
       {
         "type": "p/ADHOC/rej",
-        "label": "Reject Comments",
+        "label": "tasks.tree.nodeTypes.reject.label",
         "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
@@ -242,7 +242,7 @@
       },
       {
         "type": "p/ADHOC/patt",
-        "label": "Parent Documents",
+        "label": "tasks.tree.nodeTypes.parentDoc.label",
         "icon": "fa fa-file",
         "components": [
           "parentdocs"
@@ -250,7 +250,7 @@
       },
       {
         "type": "p/ADHOC/att",
-        "label": "Attachments",
+        "label": "tasks.tree.nodeTypes.attachments.label",
         "icon": "fa fa-file",
         "components": [
           "attachments"
@@ -258,7 +258,7 @@
       },
       {
         "type": "p/ADHOC/note",
-        "label": "Notes",
+        "label": "tasks.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -266,7 +266,7 @@
       },
       {
         "type": "p/ADHOC/ref",
-        "label": "References",
+        "label": "tasks.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -274,7 +274,7 @@
       },
       {
         "type": "p/ADHOC/wkfl",
-        "label": "Workflow Overview",
+        "label": "tasks.tree.nodeTypes.workflow.label",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -282,7 +282,7 @@
       },
       {
         "type": "p/ADHOC/his",
-        "label": "History",
+        "label": "tasks.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -290,7 +290,7 @@
       },
       {
         "type": "p/ADHOC/sig",
-        "label": "eSignatures",
+        "label": "tasks.tree.nodeTypes.eSignatures.label",
         "icon": "fa fa-certificate",
         "components": [
           "signatures"
@@ -298,7 +298,7 @@
       },
       {
         "type": "p/ADHOC/tags",
-        "label": "Tags",
+        "label": "tasks.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -309,7 +309,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "tasks.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -717,7 +717,7 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "tasks.comp.info.title",
       "dialogUserPicker": {
         "enableFiltering": false,
         "multiSelect": false,
@@ -752,32 +752,52 @@
         ],
         "paginationPageSize": 10,
         "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "tasks.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
       }
     },
     {
       "id": "parentinfo",
-      "title": "Parent Info",
+      "title": "tasks.comp.parentinfo.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "tasks.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "tasks.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "reworkdetails",
-      "title": "Rework Details",
+      "title": "tasks.comp.reworkdetails.title",
       "icon": "fa fa-repeat",
       "enabled": true,
       "type": "grid",
@@ -811,7 +831,7 @@
     },
     {
       "id": "docsreview",
-      "title": "Documents Under Review",
+      "title": "tasks.comp.docsreview.title",
       "icon": "fa fa-search-plus",
       "enabled": true,
       "type": "grid",
@@ -852,7 +872,7 @@
     },
     {
       "id": "rejcomments",
-      "title": "Reject Comments",
+      "title": "tasks.comp.rejcomments.title",
       "icon": "fa fa-hand-stop-o",
       "enabled": true,
       "type": "grid",
@@ -888,7 +908,7 @@
     },
     {
       "id": "parentdocs",
-      "title": "Parent Documents",
+      "title": "tasks.comp.parentdocs.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -902,7 +922,7 @@
     },
     {
       "id": "attachments",
-      "title": "Attachments",
+      "title": "tasks.comp.attachments.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -917,7 +937,7 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "tasks.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -958,7 +978,7 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "tasks.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -1003,7 +1023,7 @@
     },
     {
       "id": "workflow",
-      "title": "Workflow Overview",
+      "title": "tasks.comp.workflow.title",
       "icon": "fa fa-code-fork",
       "enabled": true,
       "type": "grid",
@@ -1051,7 +1071,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "tasks.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -1086,7 +1106,7 @@
     },
     {
       "id": "signatures",
-      "title": "eSignatures",
+      "title": "tasks.comp.signatures.title",
       "icon": "fa fa-certificate",
       "enabled": true,
       "type": "grid",
@@ -1117,7 +1137,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "tasks.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
@@ -1155,7 +1175,7 @@
     },
     {
       "id": "userSearch",
-      "title": "Select users",
+      "title": "tasks.userOrGroupSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
@@ -1192,7 +1212,7 @@
     },
     {
       "id": "objectSearch",
-      "title": "Select object",
+      "title": "tasks.objectSearch",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
@@ -1366,7 +1386,7 @@
     },
     {
       "id": "approvalRouting",
-      "title": "Approval Routing",
+      "title": "tasks.comp.approvalRouting",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
       "enabled": true,

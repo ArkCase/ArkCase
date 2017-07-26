@@ -88,14 +88,15 @@ angular.module('dashboard.locations', ['adf.provider'])
             var createFullAddress = function (location) {
                 if (location) {
                     var street = location.streetAddress;
-                    street += location.streetAddress2 ? " " + location.streetAddress2 : "";
+                    //street += location.streetAddress2 ? " " + location.streetAddress2 : "";
+                    street = _.filter([street, location.streetAddress2]).join(" ");
                     var city = location.city;
                     var state = location.state;
                     var zip = location.zip;
                     var country = location.country ? location.country : "USA";
-                    return street + ", " + city + ", " + state + " " + zip + " " + country;
+                    return _.filter([street, city, state, zip, country]).join(", ");
                 }
-                return undefined;
+                return "";
             };
         }
     ]);

@@ -9,7 +9,11 @@
     "leftnav.item": "Tareas",
     "topbar.item": "Tarea"
   },
+  "tasks.comp.main": {
+    "title": "Descripción general"
+  },
   "tasks.comp.info": {
+    "title": "Información",
     "taskId": "es_Task id:",
     "percentage.label": "es_% of Completion",
     "assignee.label": "es_Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "Información para Padres",
     "taskId": "es_Task id:",
     "case": {
       "subjectType.label": "es_Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "es_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "Acciones",
     "diagram.button": "es_Process Diagram",
     "eSignature.button": "es_Sign",
     "subscribe.button": "es_Subscribe",
@@ -65,7 +71,7 @@
     }
   },
   "tasks.comp.details": {
-    "title": "es_Task Details",
+    "title": "Detalles",
     "informSaved": "es_Task details saved",
     "table.columns": {
       "details": "es_Details",
@@ -74,7 +80,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "es_Rework Details",
+    "title": "Repetir Trabajo",
     "informSaved": "es_Rework details saved",
     "table.columns": {
       "title": "es_Rework Details",
@@ -83,20 +89,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "es_Parent Documents",
+    "title": "Documentos de los padres",
     "noParentDataMessage": "es_No parent documents for standalone task",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "tasks.comp.attachments": {
-    "title": "es_Attachments",
+    "title": "Adjuntos",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "tasks.comp.notes": {
-    "title": "es_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "es_Note",
       "created": "es_Created",
@@ -104,7 +110,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "es_References",
+    "title": "Referencias",
     "table.columns": {
       "targetName": "es_Number",
       "targetTitle": "es_Title",
@@ -114,7 +120,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "es_Reject Comments",
+    "title": "Rechazar comentarios",
     "table.columns": {
       "note": "es_Comment",
       "created": "es_Created",
@@ -122,7 +128,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "es_Workflow",
+    "title": "Flujo de trabajo",
     "table.columns": {
       "participant": "es_Participant",
       "role": "es_Role",
@@ -136,14 +142,14 @@
     "error.loading": "es_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "es_eSignatures",
+    "title": "Firmas Electrónicas",
     "table.columns": {
       "signedDate": "es_Date",
       "signedBy": "es_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "es_Documents Under Review",
+    "title": "Documentos bajo revisión",
     "table.columns": {
       "fileId": "es_ID",
       "fileName": "es_Title",
@@ -153,7 +159,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "es_History",
+    "title": "Historia",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -161,7 +167,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -320,6 +326,39 @@
       "approverId": "es_Approver",
       "approverFullName": "es_Full Name",
       "approverDecision": "es_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "reworkDetails.label": "Repetir Trabajo",
+      "docReview.label": "Documentos bajo revisión",
+      "parentDoc.label": "Documentos de los padres",
+      "attachments.label": "Adjuntos",
+      "references.label": "Referencias",
+      "notes.label": "Notas",
+      "workflow.label": "Flujo de trabajo",
+      "history.label": "Historia",
+      "eSignatures.label": "Firmas Electrónicas",
+      "tags.label": "Etiquetas",
+      "reject.label": "Rechazar comentarios"
+    },
+    "filters": {
+      "myTasks": "Mis tareas",
+      "opened": "Todas las tareas abiertas",
+      "completed": "Todas las tareas completadas",
+      "dueToday": "Todas las tareas debidas hoy",
+      "myDueToday": "Todas mis tareas debidas",
+      "overdue": "Todas las tareas pendientes",
+      "myOverdue": "Todas mis tareas atrasadas",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "createdDateAsc": "Ordenar Fecha de creación Asc",
+      "createdDateDesc": "Ordenar Fecha de creación Desc",
+      "byNameAsc": "Ordenar el nombre de la tarea Asc",
+      "byNameDesc": "Ordenar el nombre de la tarea Desc",
+      "noSort": "(Sin clasificación)"
     }
   }
 }

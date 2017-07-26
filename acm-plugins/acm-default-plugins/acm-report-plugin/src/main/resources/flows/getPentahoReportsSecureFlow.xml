@@ -31,6 +31,9 @@ http://www.mulesoft.org/schema/mule/https http://www.mulesoft.org/schema/mule/ht
                                 method="GET"
                                 doc:name="Get Pentaho Reports"
                                 ref="https-pentaho-reports">
+            <message-properties-transformer scope="outbound">
+                <add-message-property key="X-ARKCASE-EXTERNAL-USER" value="#[message.inboundProperties.username]"/>
+            </message-properties-transformer>
             <response>
                 <object-to-string-transformer/>
             </response>

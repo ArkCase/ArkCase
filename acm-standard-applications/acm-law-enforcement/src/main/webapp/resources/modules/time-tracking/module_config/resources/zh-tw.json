@@ -9,17 +9,20 @@
     "leftnav.item": "時間跟踪",
     "topbar.item": "時間項目"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "概述"
   },
   "timeTracking.comp.info": {
+    "title": "信息",
     "lastModified.label": "zh-tw_Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "行動",
     "new.button": "zh-tw_New Timesheet",
     "edit.button": "zh-tw_Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "zh-tw_Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Timesheet details saved",
     "table.columns": {
       "title": "zh-tw_Details",
@@ -27,15 +30,15 @@
       "modifier": "zh-tw_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "zh-tw_Person",
+  "timeTracking.comp.person": {
+    "title": "成員",
     "table.columns": {
       "fullName": "zh-tw_Full Name",
       "userId": "zh-tw_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "zh-tw_Hours Summary",
+    "title": "時間總結",
     "table.columns": {
       "code": "zh-tw_Parent ID",
       "type": "zh-tw_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "zh-tw_Tags",
+    "title": "標籤",
     "table.columns": {
       "tag": "zh-tw_Tag",
       "created": "zh-tw_Created",
@@ -66,6 +69,22 @@
         "success": "zh-tw_Tag deleted successfully",
         "error": "zh-tw_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "person.label": "成員",
+      "summary.label": "時間",
+      "tags.label": "標籤"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "timesheetIdAsc": "按時間表格號排序",
+      "timesheetIdDesc": "按時間表格號反排序",
+      "byNameAsc": "按名稱排序",
+      "noSort": "(不排序)"
     }
   }
 }
