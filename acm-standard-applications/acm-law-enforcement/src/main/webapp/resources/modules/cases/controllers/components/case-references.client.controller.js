@@ -197,6 +197,9 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                     }
 
                     //update row immediately
+                    rowEntity.target_object.referenceId=payload.id;
+                    rowEntity.target_object.referenceNumber = payload.name;
+                    rowEntity.target_object.referenceTitle = payload.title_parseable;
                     rowEntity.target_object.referenceType = ObjectService.ObjectTypes.CASE_FILE;
                     rowEntity.target_object.referenceStatus = payload.status_lcs;
                     rowEntity.target_object.parentId = payload.object_id_s;
