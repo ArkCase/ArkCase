@@ -9,9 +9,11 @@
     "leftnav.item": "Suivi des coûts",
     "topbar.item": "Coûts"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "Vue d'ensemble"
   },
   "costTracking.comp.info": {
+    "title": "Information",
     "incidentDate": "fr_Incident Date",
     "priority": "fr_Priority",
     "assignedTo": "fr_Assigned To",
@@ -19,11 +21,12 @@
     "state": "fr_State"
   },
   "costTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "fr_New Costsheet",
     "edit.button": "fr_Edit Costsheet"
   },
   "costTracking.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Costsheet details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -31,15 +34,15 @@
       "modifier": "fr_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "fr_Person",
+  "costTracking.comp.person": {
+    "title": "Personnes",
     "table.columns": {
       "fullName": "fr_Full Name",
       "userId": "fr_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "fr_Cost Summary",
+    "title": "Résumé des coûts",
     "table.columns": {
       "parentId": "fr_ID",
       "parentNumber": "fr_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "fr_Tags",
+    "title": "étiquettes",
     "table.columns": {
       "tag": "fr_Tag",
       "created": "fr_Created",
@@ -71,6 +74,22 @@
         "success": "fr_Tag deleted successfully",
         "error": "fr_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "person.label": "Personnes",
+      "summary.label": "Frais",
+      "tags.label": "étiquettes"
+    },
+    "sorters": {
+      "dateAsc": "Trier Date Asc",
+      "dateDesc": "Trier Date Déc",
+      "costsheetIdAsc": "Trier ID de Coût Asc",
+      "costsheetIdDesc": "Trier ID de Coût Déc",
+      "byNameDesc": "Trier par nom Déc",
+      "noSort": "(Non Trier)"
     }
   }
 }
