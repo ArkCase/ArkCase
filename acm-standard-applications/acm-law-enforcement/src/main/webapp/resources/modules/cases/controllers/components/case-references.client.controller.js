@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService'
+    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService, SearchService, SearchQueryBuilder
+        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService
     ) {
 
         new HelperObjectBrowserService.Component({
@@ -149,44 +149,59 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 }
             });
 
+            //chosenReference - target
+            //parent - objectInfo
             modalInstance.result.then(function (chosenReference) {
-                if (chosenReference) {
-                    var reference = {};
-                    reference.referenceId = chosenReference.object_id_s;
-                    reference.referenceTitle = chosenReference.title_parseable;
-                    reference.referenceType = chosenReference.object_type_s;
-                    reference.referenceNumber = chosenReference.name;
-                    reference.referenceStatus = chosenReference.status_lcs;
-                    reference.parentId = $stateParams.id;
-                    reference.parentType = ObjectService.ObjectTypes.CASE_FILE;
-                    referenceService.addReference(reference).then(
-                        function (objectSaved) {
-                            $scope.refresh();
-                            return objectSaved;
-                        },
-                        function (error) {
-                            return error;
-                        }
-                    );
-                    var orig_reference = {};
-                    orig_reference.referenceId = $scope.objectInfo.id;
-                    orig_reference.referenceTitle = $scope.objectInfo.title_parseable;
-                    orig_reference.referenceType = ObjectService.ObjectTypes.CASE_FILE;
-                    orig_reference.referenceNumber = $scope.objectInfo.name;
-                    orig_reference.referenceStatus = $scope.objectInfo.status_lcs;
-                    orig_reference.parentId = chosenReference.object_id_s;
-                    orig_reference.parentType = chosenReference.object_type_s;
-                    referenceService.addReference(orig_reference).then(
-                        function (objectSaved) {
-                            $scope.refresh();
-                            return objectSaved;
-                        },
-                        function (error) {
-                            return error;
-                        }
-                    );
-                    return;
+                var association = {};
+                var parent=$scope.objectInfo;
+                var target=chosenReference;
+                if (target) {
+                    association.parentId = $stateParams.id;
+                    association.parentType = ObjectService.ObjectTypes.CASE_FILE;
+
+                    //association.targetId = target.id;
+                    association.targetType = ObjectService.ObjectTypes.CASE_FILE;
+
+                    association.referenceId = target.object_id_s;
+                    association.referenceTitle = target.title_parseable;
+                    association.referenceType = target.object_type_s;
+                    association.referenceNumber = target.name;
+                    association.referenceStatus = target.status_lcs;
+                    //association.parentId = $stateParams.id;
+                    //association.parentType = ObjectService.ObjectTypes.CASE_FILE;
+
+                    association.inverseAssociation={};
+                    if (association.inverseAssociation.inverseAssociation != association) {
+                        association.inverseAssociation.inverseAssociation = association;
+                    }
+                    association.inverseAssociation.parentId = target.object_id_s;
+                    association.inverseAssociation.parentType = target.object_type_s;
+
+                    //association.inverseAssociation.targetId = parent.id;
+                    association.inverseAssociation.targetType = ObjectService.ObjectTypes.CASE_FILE;
+
+                    association.inverseAssociation.referenceId = $stateParams.id;
+                    association.inverseAssociation.referenceTitle = parent.title_parseable;
+                    association.inverseAssociation.referenceType = ObjectService.ObjectTypes.CASE_FILE;
+                    association.inverseAssociation.referenceNumber = parent.name;
+                    association.inverseAssociation.referenceStatus = parent.status_lcs;
                 }
+                ObjectAssociationService.saveObjectAssociation(association).then(function (payload,rowEntity) {
+                    //success
+                    if (!rowEntity) {
+                        //append new entity as last item in the grid
+                        rowEntity = {
+                            target_object: {}
+                        };
+                        $scope.gridOptions.data.push(rowEntity);
+                    }
+
+                    //update row immediately
+                    rowEntity.target_object.referenceType = ObjectService.ObjectTypes.CASE_FILE;
+                    rowEntity.target_object.referenceStatus = payload.status_lcs;
+                    rowEntity.target_object.parentId = payload.object_id_s;
+                });
+                return;
             }, function () {
                 // Cancel button was clicked.
                 return [];
