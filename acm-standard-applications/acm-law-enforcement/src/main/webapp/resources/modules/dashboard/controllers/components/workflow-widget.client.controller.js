@@ -13,9 +13,9 @@ angular.module('dashboard.workflow', ['adf.provider'])
             });
     })
     .controller('Dashboard.WorkflowOverviewController', ['$scope', '$stateParams', '$translate',
-        'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService', 'UtilService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      TaskInfoService, TaskHistoryService, HelperObjectBrowserService, Util) {
+                      TaskInfoService, TaskHistoryService, HelperObjectBrowserService, Util, HelperUiGridService) {
 
                 var modules = [
                     {
@@ -42,6 +42,8 @@ angular.module('dashboard.workflow', ['adf.provider'])
                     enableColumnResizing: true,
                     columnDefs: []
                 };
+
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
                 new HelperObjectBrowserService.Component({
                     scope: $scope
@@ -79,7 +81,7 @@ angular.module('dashboard.workflow', ['adf.provider'])
                     var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                         return widget.id === "workflow";
                     });
-                    $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                    gridHelper.setColumnDefs(widgetInfo);
                 };
             }
     ]);

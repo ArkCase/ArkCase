@@ -51,7 +51,7 @@ angular.module('dashboard.tags', ['adf.provider'])
                             });
                             gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                             $scope.config = config;
-                            $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                            gridHelper.setColumnDefs(widgetInfo);
                             var tags = info;
                             gridHelper.setWidgetsGridData(tags);
                         },

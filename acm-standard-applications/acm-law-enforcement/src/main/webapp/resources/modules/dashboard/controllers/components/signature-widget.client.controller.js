@@ -47,7 +47,7 @@ angular.module('dashboard.signature', ['adf.provider'])
                                 return widget.id === "signatures";
                             });
                             $scope.config = config;
-                            $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                            gridHelper.setColumnDefs(widgetInfo);
 
                             var signatures = info;
                             gridHelper.setWidgetsGridData(signatures);

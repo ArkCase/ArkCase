@@ -62,7 +62,7 @@ angular.module('dashboard.phones', ['adf.provider'])
                     var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                         return widget.id === "phones";
                     });
-                    $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                    gridHelper.setColumnDefs(widgetInfo);
                 };
 
         }

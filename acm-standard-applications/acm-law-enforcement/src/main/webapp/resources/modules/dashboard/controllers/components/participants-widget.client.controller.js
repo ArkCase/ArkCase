@@ -73,7 +73,7 @@ angular.module('dashboard.participants', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "participants";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
         }

@@ -52,7 +52,7 @@ angular.module('dashboard.notes', ['adf.provider'])
                         });
                         gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        gridHelper.setColumnDefs(widgetInfo);
 
                         var notes = info;
                         gridHelper.setWidgetsGridData(notes);

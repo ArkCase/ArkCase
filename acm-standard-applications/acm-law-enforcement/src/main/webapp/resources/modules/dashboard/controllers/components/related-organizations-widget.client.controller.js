@@ -62,7 +62,7 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "relOrganizations";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
         }
     ]);

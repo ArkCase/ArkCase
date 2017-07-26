@@ -120,8 +120,7 @@ angular.module('dashboard.details', ['adf.provider'])
                     return widget.id === "details";
                 });
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
         }

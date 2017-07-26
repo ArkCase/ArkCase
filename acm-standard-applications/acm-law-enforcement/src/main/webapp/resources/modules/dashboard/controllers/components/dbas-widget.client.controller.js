@@ -62,7 +62,7 @@ angular.module('dashboard.dbas', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "dbas";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
         }

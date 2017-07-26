@@ -65,7 +65,7 @@ angular.module('dashboard.organizations', ['adf.provider'])
                     var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                         return widget.id === "organizations";
                     });
-                    $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                    gridHelper.setColumnDefs(widgetInfo);
                 };
         }
     ]);
