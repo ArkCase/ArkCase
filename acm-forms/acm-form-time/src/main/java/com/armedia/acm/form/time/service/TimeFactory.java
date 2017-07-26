@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.form.time.service;
 
+import com.armedia.acm.core.AcmTitleEntity;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.form.time.model.TimeForm;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
@@ -10,6 +12,7 @@ import com.armedia.acm.services.timesheet.dao.AcmTimeDao;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author riste.tutureski
@@ -32,6 +36,7 @@ public class TimeFactory extends FrevvoFormFactory
 
     private AcmTimeDao acmTimeDao;
     private AcmTimesheetDao acmTimesheetDao;
+    private SpringContextHolder springContextHolder;
 
     /**
      * Converting Frevvo TimeForm to AcmTimesheet
@@ -263,6 +268,7 @@ public class TimeFactory extends FrevvoFormFactory
                 item.setObjectId(time.getObjectId());
                 item.setCode(time.getCode());
                 item.setType(time.getType());
+                item.setTitle(getObjectTitleByObjectCode(item.getObjectId(), item.getType()));
 
                 item = setTimeFromAcmTime(item, time);
             });
@@ -335,6 +341,28 @@ public class TimeFactory extends FrevvoFormFactory
 
         return item;
     }
+    
+    public String getObjectTitleByObjectCode(Long objectId, String objectType) {
+        
+        String title = "";
+        
+        Map<String, AcmAbstractDao> daos = getSpringContextHolder().getAllBeansOfType(AcmAbstractDao.class);
+        
+        AcmAbstractDao<AcmTitleEntity> dao = daos.values()
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(item -> item.getSupportedObjectType() != null)
+            .filter(item -> item.getSupportedObjectType().equals(objectType))
+            .findFirst()
+            .orElse(null);
+        
+        if(dao != null) {
+            AcmTitleEntity entityObject = dao.find(objectId);
+            title = entityObject.getTitle();
+        } 
+        
+        return title;
+    }
 
     public Date getStartDate(Date period)
     {
@@ -391,5 +419,15 @@ public class TimeFactory extends FrevvoFormFactory
     public void setAcmTimesheetDao(AcmTimesheetDao acmTimesheetDao)
     {
         this.acmTimesheetDao = acmTimesheetDao;
+    }
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
     }
 }
