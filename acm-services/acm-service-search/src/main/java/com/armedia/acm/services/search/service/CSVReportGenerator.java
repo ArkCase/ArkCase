@@ -62,7 +62,16 @@ public class CSVReportGenerator extends ReportGenerator
             {
                 if (data.has(field))
                 {
-                    sb.append(purifyForCSV(data.getString(field)));
+                    Object value = data.get(field);
+
+                    if(value instanceof String)
+                    {
+                        sb.append(purifyForCSV(data.getString(field)));
+                    }
+
+                    if(value instanceof Integer){
+                        sb.append(purifyForCSV(Integer.toString(data.getInt(field))));
+                    }
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);
             }
