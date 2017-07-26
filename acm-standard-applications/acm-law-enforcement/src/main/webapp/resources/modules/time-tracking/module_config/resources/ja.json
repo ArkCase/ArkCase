@@ -9,17 +9,20 @@
     "leftnav.item": "トラック時間",
     "topbar.item": "時間ログ"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "概観"
   },
   "timeTracking.comp.info": {
+    "title": "情報",
     "lastModified.label": "ja_Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "行动",
     "new.button": "ja_New Timesheet",
     "edit.button": "ja_Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Timesheet details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -27,15 +30,15 @@
       "modifier": "ja_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "ja_Person",
+  "timeTracking.comp.person": {
+    "title": "人員",
     "table.columns": {
       "fullName": "ja_Full Name",
       "userId": "ja_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "ja_Hours Summary",
+    "title": "時間の概要",
     "table.columns": {
       "code": "ja_Parent ID",
       "type": "ja_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -66,6 +69,22 @@
         "success": "ja_Tag deleted successfully",
         "error": "ja_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "person.label": "人員",
+      "summary.label": "時間",
+      "tags.label": "タグ"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "アンチ日付順",
+      "timesheetIdAsc": "時間IDを並べ替える",
+      "timesheetIdDesc": "時間IDを昇順で並べ替え",
+      "byNameDesc": "名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }
