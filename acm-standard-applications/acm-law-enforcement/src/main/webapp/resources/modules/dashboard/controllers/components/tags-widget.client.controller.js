@@ -35,11 +35,12 @@ angular.module('dashboard.tags', ['adf.provider'])
                     columnDefs: []
                 };
 
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
                 var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                 if (module && Util.goodPositive(currentObjectId, false)) {
                     promiseConfig = ConfigService.getModuleConfig(module.configName);
                     promiseInfo = module.getInfo(currentObjectId, module.objectType);
-                    var gridHelper = new HelperUiGridService.Grid({scope: $scope});
                     var promiseUsers = gridHelper.getUsers();
 
                     $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
@@ -52,18 +53,7 @@ angular.module('dashboard.tags', ['adf.provider'])
                             $scope.config = config;
                             $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
                             var tags = info;
-
-                            if (!Util.isArrayEmpty(tags)) {
-                                $scope.gridOptions.data = tags;
-                                $scope.gridOptions.totalItems = tags ? tags.length : 0;
-                                $scope.gridOptions.noData = false;
-                            }
-                            else
-                            {
-                                $scope.gridOptions.data = [];
-                                $scope.gridOptions.noData = true;
-                                $scope.noDataMessage = $translate.instant('dashboard.widgets.tags.noDataMessage');
-                            }
+                            gridHelper.setWidgetsGridData(tags);
                         },
                         function (err) {
 

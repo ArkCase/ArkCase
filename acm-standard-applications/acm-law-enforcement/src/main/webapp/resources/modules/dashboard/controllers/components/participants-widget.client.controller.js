@@ -66,17 +66,7 @@ angular.module('dashboard.participants', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(objectInfo.participants != 0) {
-                    $scope.gridOptions.data = objectInfo.participants;
-                    $scope.gridOptions.totalItems =  $scope.gridOptions.data.length;
-                    $scope.gridOptions.noData = false;
-                }
-                else {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.totalItems = 0;
-                    $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.participants.noDataMessage');
-                }
+                gridHelper.setWidgetsGridData(objectInfo.participants);
             };
 
             var onConfigRetrieved = function (componentConfig) {

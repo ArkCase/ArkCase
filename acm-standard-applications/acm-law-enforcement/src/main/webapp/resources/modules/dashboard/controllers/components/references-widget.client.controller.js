@@ -13,9 +13,9 @@ angular.module('dashboard.references', ['adf.provider'])
             });
     })
     .controller('Dashboard.ReferencesController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService', 'Helper.UiGridService', 'DocumentRepository.InfoService', 'UtilService',
+        'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService', 'Helper.UiGridService', 'DocumentRepository.InfoService',
             function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, TaskInfoService, HelperObjectBrowserService, ObjectService, HelperUiGridService, DocumentRepositoryInfoService, Util) {
+                      CaseInfoService, ComplaintInfoService, TaskInfoService, HelperObjectBrowserService, ObjectService, HelperUiGridService, DocumentRepositoryInfoService) {
 
                 var modules = [
                     {
@@ -93,29 +93,9 @@ angular.module('dashboard.references', ['adf.provider'])
                                 references.push(childObject);
                             }
                         });
-                        if(!Util.isArrayEmpty(references)) {
-                            $scope.gridOptions.data = references;
-                            $scope.gridOptions.noData = false;
-                            $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                        }
-                        else {
-                            $scope.gridOptions.data = [];
-                            $scope.gridOptions.noData = true;
-                            $scope.gridOptions.totalItems = 0;
-                            $scope.noDataMessage = $translate.instant('dashboard.widgets.references.noDataMessage');
-                        }
+                        gridHelper.setWidgetsGridData(references);
                     } else {
-                        if(!Util.isArrayEmpty(objectInfo.references)){
-                            $scope.gridOptions.data = objectInfo.references;
-                            $scope.gridOptions.noData = false;
-                            $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                        }
-                        else {
-                            $scope.gridOptions.data = [];
-                            $scope.gridOptions.noData = true;
-                            $scope.gridOptions.totalItems = 0;
-                            $scope.noDataMessage = $translate.instant('dashboard.widgets.references.noDataMessage');
-                        }
+                        gridHelper.setWidgetsGridData(objectInfo.references);
                     }
 
                 };

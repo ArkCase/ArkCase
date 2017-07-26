@@ -33,11 +33,12 @@ angular.module('dashboard.tasks', ['adf.provider'])
                     columnDefs: []
                 };
 
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
                 var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                 if (module && Util.goodPositive(currentObjectId, false)) {
                     promiseConfig = ConfigService.getModuleConfig(module.configName);
                     promiseInfo = module.getInfo(module.objectType, currentObjectId, 0, 5);
-                    var gridHelper = new HelperUiGridService.Grid({scope: $scope});
                     var promiseUsers = gridHelper.getUsers();
 
                     $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
@@ -46,22 +47,11 @@ angular.module('dashboard.tasks', ['adf.provider'])
                             var widgetInfo = _.find(config.widgets, function (widget) {
                                 return widget.id === "tasks";
                             });
-                            gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                            $scope.config = config;
-                            $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
-
                             var tasks = info.response.docs;
-                            if(!Util.isArrayEmpty(tasks)) {
-                                $scope.gridOptions.data = tasks;
-                                $scope.gridOptions.noData = false;
-                                $scope.gridOptions.totalItems = info.response.numFound;
-                            }
-                            else {
-                                $scope.gridOptions.data = [];
-                                $scope.gridOptions.noData = true;
-                                $scope.gridOptions.totalItems = 0;
-                                $scope.noDataMessage = $translate.instant('dashboard.widgets.tasks.noDataMessage');
-                            }
+
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                            gridHelper.setColumnDefs(widgetInfo);
+                            gridHelper.setWidgetsGridData(tasks);
                         },
                         function (err) {
 

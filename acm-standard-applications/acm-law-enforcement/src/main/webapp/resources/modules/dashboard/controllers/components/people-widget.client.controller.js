@@ -13,9 +13,9 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, Util) {
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
                 var modules = [
                         {
@@ -47,6 +47,8 @@ angular.module('dashboard.people', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -63,17 +65,7 @@ angular.module('dashboard.people', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(!Util.isArrayEmpty(objectInfo.personAssociations)){
-                    $scope.gridOptions.data = objectInfo.personAssociations;
-                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                    $scope.gridOptions.noData = false;
-                }
-                else {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.totalItems = 0;
-                    $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.people.noDataMessage');
-                }
+                gridHelper.setWidgetsGridData(objectInfo.personAssociations);
             };
 
             var onConfigRetrieved = function (componentConfig) {

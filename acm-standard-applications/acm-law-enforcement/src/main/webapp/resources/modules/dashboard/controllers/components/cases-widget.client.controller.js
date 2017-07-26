@@ -13,9 +13,9 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService, Util) {
+                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -35,6 +35,8 @@ angular.module('dashboard.cases', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -51,15 +53,8 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if(!Util.isEmpty(objectInfo.cases)) {
-                    $scope.gridOptions.data = objectInfo.cases;
-                    $scope.gridOptions.noData = false;
-                }
-                else {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.cases.noDataMessage');
-                }
+                //FIX this when relations between cases and organizations works
+                //gridHelper.setWidgetsGridData(objectInfo.cases);
             };
 
             var onConfigRetrieved = function (componentConfig) {

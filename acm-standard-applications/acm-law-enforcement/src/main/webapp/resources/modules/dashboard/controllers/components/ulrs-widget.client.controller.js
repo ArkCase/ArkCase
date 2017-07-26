@@ -13,9 +13,9 @@ angular.module('dashboard.urls', ['adf.provider'])
             });
     })
     .controller('Dashboard.UrlsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService, Util) {
+                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
                 var modules = [
                     {
@@ -35,6 +35,8 @@ angular.module('dashboard.urls', ['adf.provider'])
                     columnDefs: []
                 };
 
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
                 new HelperObjectBrowserService.Component({
                     scope: $scope
                     , stateParams: $stateParams
@@ -53,15 +55,7 @@ angular.module('dashboard.urls', ['adf.provider'])
                 var onObjectInfoRetrieved = function (objectInfo) {
                     $scope.objectInfo = objectInfo;
                     var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
-                    if(!Util.isArrayEmpty(urls)) {
-                        $scope.gridOptions.data = urls;
-                        $scope.gridOptions.noData = false;
-                    }
-                    else {
-                        $scope.gridOptions.data = [];
-                        $scope.gridOptions.noData = true;
-                        $scope.noDataMessage = $translate.instant('dashboard.widgets.urls.noDataMessage');
-                    }
+                    gridHelper.setWidgetsGridData(urls);
                 };
 
                 var onConfigRetrieved = function (componentConfig) {
