@@ -61,7 +61,7 @@ angular.module('dashboard.complaints', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "complaints";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
         }

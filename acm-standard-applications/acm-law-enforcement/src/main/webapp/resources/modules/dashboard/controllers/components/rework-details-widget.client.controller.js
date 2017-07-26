@@ -13,9 +13,9 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
             });
     })
     .controller('Dashboard.ReworkDetailsController', ['$scope', '$stateParams', '$translate',
-        'Task.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Task.InfoService', 'Helper.ObjectBrowserService', 'UtilService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      TaskInfoService, HelperObjectBrowserService, Util) {
+                      TaskInfoService, HelperObjectBrowserService, Util, HelperUiGridService) {
 
                 var modules = [
                     {
@@ -40,6 +40,8 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
                     enableColumnResizing: true,
                     columnDefs: []
                 };
+
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
                 new HelperObjectBrowserService.Component({
                     scope: $scope
@@ -76,8 +78,7 @@ angular.module('dashboard.reworkDetails', ['adf.provider'])
                     var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                         return widget.id === "reworkDetails";
                     });
-
-                    $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                    gridHelper.setColumnDefs(widgetInfo);
                 };
         }
     ]);

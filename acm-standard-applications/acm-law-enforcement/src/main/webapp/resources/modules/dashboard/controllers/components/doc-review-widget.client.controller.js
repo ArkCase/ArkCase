@@ -13,9 +13,9 @@ angular.module('dashboard.docReview', ['adf.provider'])
             });
     })
     .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', '$translate',
-        'Task.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Task.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                    TaskInfoService, HelperObjectBrowserService, Util) {
+                    TaskInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -40,6 +40,8 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 enableColumnResizing: true,
                 columnDefs: []
             };
+
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
             new HelperObjectBrowserService.Component({
                 scope: $scope
@@ -73,8 +75,7 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "docsReview";
                 });
-
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
         }
     ]);

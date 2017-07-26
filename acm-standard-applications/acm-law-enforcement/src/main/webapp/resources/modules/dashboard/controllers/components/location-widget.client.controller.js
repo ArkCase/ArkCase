@@ -82,7 +82,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                     return widget.id === "locations";
                 });
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
             var createFullAddress = function (location) {
