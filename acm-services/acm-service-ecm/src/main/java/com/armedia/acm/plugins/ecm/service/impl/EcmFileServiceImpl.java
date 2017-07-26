@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -24,6 +25,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -46,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -185,7 +188,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         return upload(arkcaseFileName, fileType, null, file, authentication, targetCmisFolderId, parentObjectType, parentObjectId);
     }
-    
+
     @Transactional
     @Override
     public EcmFile upload(
@@ -943,9 +946,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setFile(file);
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
 
+            ObjectAssociation personCopy = copyObjectAssociation(file.getPersonAssociation());
+            fileCopy.setPersonAssociation(personCopy);
+
+            ObjectAssociation organizationCopy = copyObjectAssociation(file.getOrganizationAssociation());
+            fileCopy.setOrganizationAssociation(organizationCopy);
+
+            copyFileVersionMetadata(file, fileCopyVersion);
+
             fileCopy.getVersions().add(fileCopyVersion);
 
             result = getEcmFileDao().save(fileCopy);
+
             return result;
         } catch (MuleException e)
         {
@@ -957,6 +969,65 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("Could not copy file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
                     "Could not copy file", e);
+        }
+    }
+
+    protected ObjectAssociation copyObjectAssociation(ObjectAssociation original)
+    {
+        if (original == null)
+        {
+            return null;
+        }
+
+        ObjectAssociation copy = new ObjectAssociation();
+
+        try
+        {
+            ArkCaseBeanUtils beanUtils = new ArkCaseBeanUtils();
+            beanUtils.copyProperties(copy, original);
+            copy.setAssociationId(null);
+            copy.setParentName(null);
+            copy.setParentId(null);
+            return copy;
+        } catch (IllegalAccessException | InvocationTargetException e)
+        {
+            log.error("Could not copy object association - should never happen! [{}]", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    protected void copyFileVersionMetadata(EcmFile file, EcmFileVersion fileCopyVersion)
+    {
+        List<EcmFileVersion> versions = file.getVersions();
+
+        // take the most recent version by default
+        EcmFileVersion activeVersion = versions == null || versions.isEmpty() ? null : versions.get(versions.size() - 1);
+
+        // but use the active version if it is there
+        if (versions != null)
+        {
+            for (EcmFileVersion version : versions)
+            {
+                if (version.getVersionTag().equals(file.getActiveVersionTag()))
+                {
+                    activeVersion = version;
+                }
+            }
+        }
+
+        if (activeVersion != null)
+        {
+            fileCopyVersion.setFileSizeBytes(activeVersion.getFileSizeBytes());
+            fileCopyVersion.setMediaCreated(activeVersion.getMediaCreated());
+            fileCopyVersion.setWidthPixels(activeVersion.getWidthPixels());
+            fileCopyVersion.setHeightPixels(activeVersion.getHeightPixels());
+            fileCopyVersion.setGpsReadable(activeVersion.getGpsReadable());
+            fileCopyVersion.setGpsLongitudeDegrees(activeVersion.getGpsLongitudeDegrees());
+            fileCopyVersion.setGpsLatitudeDegrees(activeVersion.getGpsLatitudeDegrees());
+            fileCopyVersion.setGpsIso6709(activeVersion.getGpsIso6709());
+            fileCopyVersion.setDeviceMake(activeVersion.getDeviceMake());
+            fileCopyVersion.setDeviceModel(activeVersion.getDeviceModel());
+            fileCopyVersion.setDurationSeconds(activeVersion.getDurationSeconds());
         }
     }
 
@@ -1395,4 +1466,5 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.cmisConfigUtils = cmisConfigUtils;
     }
+
 }

@@ -9,9 +9,11 @@
     "leftnav.item": "トラック費用",
     "topbar.item": "費用項目"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "概観"
   },
   "costTracking.comp.info": {
+    "title": "情報",
     "incidentDate": "ja_Incident Date",
     "priority": "ja_Priority",
     "assignedTo": "ja_Assigned To",
@@ -19,11 +21,12 @@
     "state": "ja_State"
   },
   "costTracking.comp.actions": {
+    "title": "行动",
     "new.button": "ja_New Costsheet",
     "edit.button": "ja_Edit Costsheet"
   },
   "costTracking.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Costsheet details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -31,15 +34,15 @@
       "modifier": "ja_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "ja_Person",
+  "costTracking.comp.person": {
+    "title": "人員",
     "table.columns": {
       "fullName": "ja_Full Name",
       "userId": "ja_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "ja_Cost Summary",
+    "title": "費用の概要",
     "table.columns": {
       "parentId": "ja_ID",
       "parentNumber": "ja_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -71,6 +74,22 @@
         "success": "ja_Tag deleted successfully",
         "error": "ja_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "person.label": "人員",
+      "summary.label": "費用",
+      "tags.label": "タグ"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "アンチ日付順",
+      "costsheetIdAsc": "費用IDを並べ替える",
+      "costsheetIdDesc": "費用IDを昇順で並べ替え",
+      "byNameDesc": "名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }

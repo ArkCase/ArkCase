@@ -375,7 +375,7 @@
       "closedNoFurtherAction": "關閉並無進一步操作的",
       "closedReferExternal": "外部參考被關閉的",
       "closedOpenInvestigation": "調查被關閉的",
-      "noFilter": "(無限制的)"
+      "noFilter": "(無限制)"
     },
     "sorters": {
       "incidentDateAsc": "按事件日期排序",

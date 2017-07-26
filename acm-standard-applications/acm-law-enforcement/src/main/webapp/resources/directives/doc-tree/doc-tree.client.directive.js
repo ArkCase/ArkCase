@@ -1502,7 +1502,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     parentNode = root.data;
                                 }
                                 var urlArgs = node.data.objectId + "/" + parentNode.containerObjectId + "/" +
-                                    parentNode.containerObjectType + "/" + node.data.name + "/" + selectedIdsList;
+                                    parentNode.containerObjectType + "/" + encodeURIComponent(node.data.name) + "/" + selectedIdsList;
                                 window.open(baseUrl + '!/viewer/' + urlArgs);
                             }
                         }

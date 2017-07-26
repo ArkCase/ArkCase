@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "hi_ records above...",
-    "btnPrev.toolTip": "hi_Review previous records",
-    "btnNext.titleUnknownSize": "hi_More records...",
-    "btnNext.title": "hi_ more records...",
-    "btnNext.toolTip": "hi_Load more records",
-    "edtQuery.placeHolder": "hi_Search",
-    "btnQuery.text": "hi_Go!",
-    "errorNode.title": "hi_(Error)",
-    "errorNode.toolTip": "hi_(Error)",
-    "noAccessNode.title": "hi_(No Access)",
-    "noAccessNode.toolTip": "hi_(No Access)"
+    "btnPrev.title": "ऊपर रिकॉर्ड...",
+    "btnPrev.toolTip": "पिछला रिकॉर्ड की समीक्षा करें",
+    "btnNext.titleUnknownSize": "अधिक अभिलेख...",
+    "btnNext.title": "अधिक अभिलेख...",
+    "btnNext.toolTip": "अधिक अभिलेख लोड करें",
+    "edtQuery.placeHolder": "खोज",
+    "btnQuery.text": "जाओ!",
+    "errorNode.title": "(त्रुटि)",
+    "errorNode.toolTip": "(त्रुटि)",
+    "noAccessNode.title": "(प्रवेश नहीं)",
+    "noAccessNode.toolTip": "(प्रवेश नहीं)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "hi_items per page",

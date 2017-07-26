@@ -580,13 +580,13 @@
           "field": "person.defaultPhone.value",
           "displayName": "cases.comp.people.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone.value}} [{{row.entity.person.defaultPhone.subType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultPhone ? row.entity.person.defaultPhone.value + '[' + row.entity.person.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "location",
           "displayName": "cases.comp.people.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress.city}}, {{row.entity.person.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.person.defaultAddress ? row.entity.person.defaultAddress.city + ',' + row.entity.person.defaultAddress.state : ''}}</div>"
         }
       ]
     },
@@ -614,37 +614,38 @@
           "name": "organization.organizationValue",
           "displayName": "cases.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organizationId})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
+        },
+        {
+          "name": "organization.organizationType",
+          "displayName": "cases.comp.organizations.table.columns.type",
+          "width": 150,
+          "headerCellFilter": "translate"
         },
         {
           "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "cases.comp.organizations.table.columns.identification",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
-        },
-        {
-          "name": "organization.organizationType",
-          "displayName": "cases.comp.organizations.table.columns.type",
-          "headerCellFilter": "translate"
+          "width": 100,
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
         },
         {
           "name": "organization.defaultPerson.givenName",
           "displayName": "cases.comp.organizations.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName + ' ' + row.entity.defaultPerson.organization.familyName}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
           "displayName": "cases.comp.organizations.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
-
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "organization.defaultAddress.city",
           "displayName": "cases.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
         }
       ]
     },

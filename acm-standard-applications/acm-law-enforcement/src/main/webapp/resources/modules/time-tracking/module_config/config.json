@@ -25,24 +25,24 @@
     "pageSize": 32,
     "sorters": [
       {
-        "desc": "Sort Date Ascending",
+        "desc": "timeTracking.tree.sorters.dateAsc",
         "name": "create_tdt ASC",
         "default": true
       },
       {
-        "desc": "Sort Date Decending",
+        "desc": "timeTracking.tree.sorters.dateDesc",
         "name": "create_tdt DESC"
       },
       {
-        "desc": "Sort Timesheet ID Ascending",
+        "desc": "timeTracking.tree.sorters.timesheetIdAsc",
         "name": "id ASC"
       },
       {
-        "desc": "Sort Timesheet ID Decending",
+        "desc": "timeTracking.tree.sorters.timesheetIdDesc",
         "name": "id DESC"
       },
       {
-        "desc": "Sort By Timesheet Name",
+        "desc": "timeTracking.tree.sorters.byNameDesc",
         "name": "name DESC"
       }
     ],
@@ -68,7 +68,7 @@
       {
         "type": "p/TIMESHEET/detail",
         "icon": "fa fa-info-circle",
-        "label": "Details",
+        "label": "timeTracking.tree.nodeTypes.details.label",
         "components": [
           "details"
         ]
@@ -76,7 +76,7 @@
       {
         "type": "p/TIMESHEET/person",
         "icon": "fa fa-user",
-        "label": "Person",
+        "label": "timeTracking.tree.nodeTypes.person.label",
         "components": [
           "person"
         ]
@@ -84,14 +84,14 @@
       {
         "type": "p/TIMESHEET/summary",
         "icon": "fa fa-clock-o",
-        "label": "Hour Summary",
+        "label": "timeTracking.tree.nodeTypes.summary.label",
         "components": [
           "summary"
         ]
       },
       {
         "type": "p/TIMESHEET/tags",
-        "label": "Tags",
+        "label": "timeTracking.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -102,7 +102,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "timeTracking.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -161,28 +161,28 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "timeTracking.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "timeTracking.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "timeTracking.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "person",
-      "title": "Person",
+      "title": "timeTracking.comp.person.title",
       "icon": "fa fa-user",
       "enabled": true,
       "type": "grid",
@@ -198,12 +198,12 @@
       "columnDefs": [
         {
           "name": "fullName",
-          "displayName": "timeTracking.comp.people.table.columns.fullName",
+          "displayName": "timeTracking.comp.person.table.columns.fullName",
           "headerCellFilter": "translate"
         },
         {
           "name": "userId",
-          "displayName": "timeTracking.comp.people.table.columns.userId",
+          "displayName": "timeTracking.comp.person.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         }
@@ -211,7 +211,7 @@
     },
     {
       "id": "summary",
-      "title": "Hour Summary",
+      "title": "timeTracking.comp.summary.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
       "type": "grid",
@@ -258,7 +258,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "timeTracking.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",
