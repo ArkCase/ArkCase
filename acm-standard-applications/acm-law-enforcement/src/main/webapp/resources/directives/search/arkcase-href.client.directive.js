@@ -65,7 +65,7 @@ angular.module('directives').directive('arkcaseHref', ['UtilService', 'ObjectSer
                                 objectUrlKey = "viewerUrl";
                                 pathVariables[":containerId"] = containerId;
                                 pathVariables[":containerType"] = containerType;
-                                pathVariables[":name"] = name;
+                                pathVariables[":name"] = encodeURIComponent(name);
                                 pathVariables[":selectedIds"] = objectId;
                             }
                         }
