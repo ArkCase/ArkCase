@@ -13,65 +13,59 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'UtilService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, Util) {
-            var modules = [
-                {
-                    name: "CASE_FILE",
-                    configName: "cases",
-                    getInfo: CaseInfoService.getCaseInfo,
-                    validateInfo: CaseInfoService.validateCaseInfo
-                },
-                {
-                    name: "COMPLAINT",
-                    configName: "complaints",
-                    getInfo: ComplaintInfoService.getComplaintInfo,
-                    validateInfo: ComplaintInfoService.validateComplaintInfo
-                }
-            ];
+    .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams',
+        'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                var modules = [
+                    {
+                        name: "CASE_FILE",
+                        configName: "cases",
+                        getInfo: CaseInfoService.getCaseInfo,
+                        validateInfo: CaseInfoService.validateCaseInfo
+                    },
+                    {
+                        name: "COMPLAINT",
+                        configName: "complaints",
+                        getInfo: ComplaintInfoService.getComplaintInfo,
+                        validateInfo: ComplaintInfoService.validateComplaintInfo
+                    }
+                ];
 
-            var module = _.find(modules, function (module) {
-                return module.name == $stateParams.type;
-            });
-
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
-            new HelperObjectBrowserService.Component({
-                scope: $scope
-                , stateParams: $stateParams
-                , moduleId: module.configName
-                , componentId: "main"
-                , retrieveObjectInfo: module.getInfo
-                , validateObjectInfo: module.validateInfo
-                , onObjectInfoRetrieved: function (objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
-                }
-                , onConfigRetrieved: function (componentConfig) {
-                    onConfigRetrieved(componentConfig);
-                }
-            });
-
-            var onObjectInfoRetrieved = function (objectInfo) {
-                if(!Util.isArrayEmpty(objectInfo.organizationAssociations)) {
-                    $scope.gridOptions.data = objectInfo.organizationAssociations ? objectInfo.organizationAssociations : [];
-                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                    $scope.gridOptions.noData = false;
-                }
-                else
-                {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.noData = true;
-                }
-            };
-
-            var onConfigRetrieved = function (componentConfig) {
-                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "organizations";
+                var module = _.find(modules, function (module) {
+                    return module.name == $stateParams.type;
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
-            };
+
+                $scope.gridOptions = {
+                    enableColumnResizing: true,
+                    columnDefs: []
+                };
+
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
+                new HelperObjectBrowserService.Component({
+                    scope: $scope
+                    , stateParams: $stateParams
+                    , moduleId: module.configName
+                    , componentId: "main"
+                    , retrieveObjectInfo: module.getInfo
+                    , validateObjectInfo: module.validateInfo
+                    , onObjectInfoRetrieved: function (objectInfo) {
+                        onObjectInfoRetrieved(objectInfo);
+                    }
+                    , onConfigRetrieved: function (componentConfig) {
+                        onConfigRetrieved(componentConfig);
+                    }
+                });
+
+                var onObjectInfoRetrieved = function (objectInfo) {
+                    gridHelper.setWidgetsGridData(objectInfo.organizationAssociations);
+                };
+
+                var onConfigRetrieved = function (componentConfig) {
+                    var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                        return widget.id === "organizations";
+                    });
+                    $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                };
         }
     ]);

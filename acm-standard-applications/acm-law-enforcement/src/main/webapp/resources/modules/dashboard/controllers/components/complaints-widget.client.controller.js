@@ -13,9 +13,9 @@ angular.module('dashboard.complaints', ['adf.provider'])
             });
     })
     .controller('Dashboard.ComplaintsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService) {
+                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -35,6 +35,8 @@ angular.module('dashboard.complaints', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -51,15 +53,8 @@ angular.module('dashboard.complaints', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                //if(!Util.isEmpty(objectInfo.cases)) {
-                    $scope.gridOptions.data = objectInfo.response.docs;
-                    $scope.gridOptions.noData = false;
-                //}
-                /*else {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.complaints.noDataMessage');
-                }*/
+                //FIX this when relations between complaints and organizations works
+                //gridHelper.setWidgetsGridData(objectInfo.complaints);
             };
 
             var onConfigRetrieved = function (componentConfig) {

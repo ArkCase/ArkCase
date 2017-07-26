@@ -14,9 +14,9 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService, Util) {
+                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -36,6 +36,8 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -53,15 +55,7 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 //FIX this when relations between organizations are done on backend
-                /*if(!Util.isArrayEmpty(objectInfo.relOrganizations)) {
-                    $scope.gridOptions.data = objectInfo.relOrganizations;
-                    $scope.gridOptions.noData = false;
-                }
-                else {
-                    $scope.gridOptions.data = [];
-                    $scope.gridOptions.noData = true;
-                    $scope.noDataMessage = $translate.instant('dashboard.widgets.relOrganizations.noDataMessage');
-                }*/
+                //setWidgetsGridData(objectInfo.relOrganizations);
             };
 
             var onConfigRetrieved = function (componentConfig) {

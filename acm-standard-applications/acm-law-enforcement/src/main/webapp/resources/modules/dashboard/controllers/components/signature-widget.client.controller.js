@@ -13,9 +13,9 @@ angular.module('dashboard.signature', ['adf.provider'])
             });
     })
     .controller('Dashboard.SignatureController', ['$scope', '$translate', '$stateParams', '$q',
-        'UtilService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService', 'Helper.ObjectBrowserService',
+        'UtilService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'Object.SignatureService', 'ObjectService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $translate, $stateParams, $q,
-                      Util, TaskInfoService, Authentication, DashboardService, ObjectSignatureService, ObjectService, ConfigService, HelperObjectBrowserService) {
+                      Util, TaskInfoService, Authentication, DashboardService, ObjectSignatureService, ObjectService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
                 var promiseConfig;
                 var promiseInfo;
@@ -33,6 +33,8 @@ angular.module('dashboard.signature', ['adf.provider'])
                     columnDefs: []
                 };
 
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
                 var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                 if (module && Util.goodPositive(currentObjectId, false)) {
                     promiseConfig = ConfigService.getModuleConfig(module.configName);
@@ -48,16 +50,7 @@ angular.module('dashboard.signature', ['adf.provider'])
                             $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
 
                             var signatures = info;
-                            if(!Util.isArrayEmpty(signatures)) {
-                                $scope.gridOptions.data = signatures;
-                                $scope.gridOptions.totalItems = signatures.length;
-                            }
-                            else {
-                                $scope.gridOptions.data = [];
-                                $scope.gridOptions.totalItems = 0;
-                                $scope.gridOptions.noData = true;
-                                $scope.noDataMessage = $translate.instant('dashboard.widgets.signature.noDataMessage');
-                            }
+                            gridHelper.setWidgetsGridData(signatures);
                         },
                         function (err) {
 
