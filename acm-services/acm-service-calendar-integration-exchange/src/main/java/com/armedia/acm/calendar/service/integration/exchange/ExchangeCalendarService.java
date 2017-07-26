@@ -62,7 +62,7 @@ public class ExchangeCalendarService
      */
     private static final String CONFIGURATION_FILENAME = "calendarService.properties";
 
-    private static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
+    static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
 
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017

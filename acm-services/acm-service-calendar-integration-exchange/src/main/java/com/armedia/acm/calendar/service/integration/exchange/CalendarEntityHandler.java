@@ -1,13 +1,13 @@
-/**
- *
- */
 package com.armedia.acm.calendar.service.integration.exchange;
+
+import static com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService.PROCESS_USER;
 
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
@@ -81,6 +81,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     private OutlookDao outlookDao;
 
     private AcmContainerDao containerEntityDao;
+
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     protected Map<String, PropertyDefinition> sortFields;
 
@@ -417,6 +419,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         for (AcmContainerEntity entity : purgeCandidates)
         {
             AcmContainer container = entity.getContainer();
+            auditPropertyEntityAdapter.setUserId(PROCESS_USER);
             try
             {
                 // The start date and end date are chosen on the assumption that no events would be created prior to the
@@ -467,6 +470,14 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     public void setContainerEntityDao(AcmContainerDao containerEntityDao)
     {
         this.containerEntityDao = containerEntityDao;
+    }
+
+    /**
+     * @param auditPropertyEntityAdapter the auditPropertyEntityAdapter to set
+     */
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
     /**

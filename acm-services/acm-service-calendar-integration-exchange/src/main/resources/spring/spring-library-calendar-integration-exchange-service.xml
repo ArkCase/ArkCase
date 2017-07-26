@@ -8,12 +8,14 @@
             <property name="entityType" value="CASE_FILE"/>
             <property name="entityTypeForQuery" value="CaseFile"/>
             <property name="containerEntityDao" ref="acmContainerFolderDao"/>
+            <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </bean>
         <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
             <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
             <property name="entityType" value="COMPLAINT"/>
             <property name="entityTypeForQuery" value="Complaint"/>
             <property name="containerEntityDao" ref="acmContainerFolderDao"/>
+            <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         </bean>
 
         <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
