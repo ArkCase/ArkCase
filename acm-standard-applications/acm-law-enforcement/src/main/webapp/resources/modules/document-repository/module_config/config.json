@@ -124,11 +124,11 @@
         ]
       },
       {
-        "type": "p/DOC_REPO/tags",
-        "label": "Tags",
-        "icon": "fa fa-tags",
+        "type": "p/DOC_REPO/note",
+        "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
-          "tags"
+          "notes"
         ]
       },
       {
@@ -140,19 +140,19 @@
         ]
       },
       {
-        "type": "p/DOC_REPO/note",
-        "label": "Notes",
-        "icon": "fa fa-comments",
-        "components": [
-          "notes"
-        ]
-      },
-      {
         "type": "p/DOC_REPO/his",
         "label": "History",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
         ]
       }
     ]

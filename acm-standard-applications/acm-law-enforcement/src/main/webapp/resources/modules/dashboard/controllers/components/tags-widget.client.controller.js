@@ -25,6 +25,7 @@ angular.module('dashboard.tags', ['adf.provider'])
                 {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE}
                 , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT}
                 , {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK}
+                , {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO}
             ];
 
             var module = _.find(modules, function (module) {
