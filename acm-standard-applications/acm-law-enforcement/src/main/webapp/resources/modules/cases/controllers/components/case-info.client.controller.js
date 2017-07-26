@@ -23,11 +23,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseConfig = ConfigService.getModuleConfig("cases");
 
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
         ObjectLookupService.getPriorities().then(

@@ -11,7 +11,7 @@
       "menuItemTitle": "document-repository.menus.leftnav.item",
       "moduleId": "document-repository",
       "iconClass": "fa fa-file",
-      "position": 60
+      "position": 55
     },
     {
       "menuId": "topbar",

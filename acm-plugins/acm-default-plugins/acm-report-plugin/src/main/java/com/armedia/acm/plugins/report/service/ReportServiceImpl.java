@@ -10,6 +10,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -45,10 +47,6 @@ public class ReportServiceImpl implements ReportService
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
-    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
-    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
-    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -65,18 +63,21 @@ public class ReportServiceImpl implements ReportService
     {
         Reports reports = null;
 
-        String serverFormUser = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER,
-                PENTAHO_SERVER_USER_DEFAULT);
-        String serverFormPassword = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD,
-                PENTAHO_SERVER_PASSWORD_DEFAULT);
+        String username = "";
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+        if (authentication != null)
+        {
+            username = authentication.getName();
+        }
 
         String fullReportUrl = getReportUrl().getReportsUrl();
         String reportListUrl = fullReportUrl.replace("http://", "").replace("https://", "");
-        reportListUrl += "?userid=" + serverFormUser + "&password=" + serverFormPassword;
 
         String muleEndPoint = fullReportUrl.startsWith("http://") ? "vm://getPentahoReports.in" : "vm://getPentahoReportsSecure.in";
 
-        MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl);
+        Map<String, Object> properties = new HashedMap();
+        properties.put("username", username);
+        MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl, properties);
 
         String xml = received.getPayload(String.class);
 

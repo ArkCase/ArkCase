@@ -742,6 +742,26 @@
         ],
         "paginationPageSize": 10,
         "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "tasks.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
       }
     },
     {
