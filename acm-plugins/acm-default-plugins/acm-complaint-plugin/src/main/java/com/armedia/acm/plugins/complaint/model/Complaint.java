@@ -290,6 +290,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     }
     
     @Override
+    @JsonIgnore
     public String getTitle()
     {
         return complaintTitle;
