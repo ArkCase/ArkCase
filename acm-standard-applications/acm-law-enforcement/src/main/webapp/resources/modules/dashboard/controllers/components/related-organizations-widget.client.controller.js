@@ -1,21 +1,22 @@
 'use strict';
 
-angular.module('dashboard.faxes', ['adf.provider'])
+angular.module('dashboard.relOrganizations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('faxes', {
-                title: 'dashboard.widgets.faxes.title',
-                description: 'dashboard.widgets.faxes.description',
-                controller: 'Dashboard.FaxesController',
-                reload: true,
-                templateUrl: 'modules/dashboard/views/components/faxes-widget.client.view.html',
-                commonName: 'faxes'
-            });
+            .widget('relOrganizations', {
+                    title: 'dashboard.widgets.relOrganizations.title',
+                    description: 'dashboard.widgets.relOrganizations.description',
+                    controller: 'Dashboard.RelatedOrganizationsController',
+                    reload: true,
+                    templateUrl: 'modules/dashboard/views/components/related-organizations-widget.client.view.html',
+                    commonName: 'relOrganizations'
+                }
+            );
     })
-    .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        function ($scope, $stateParams, $translate,
+                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -53,17 +54,15 @@ angular.module('dashboard.faxes', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                gridHelper.setWidgetsGridData(faxes);
+                //FIX this when relations between organizations are done on backend
+                //setWidgetsGridData(objectInfo.relOrganizations);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "faxes";
+                    return widget.id === "relOrganizations";
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
-
         }
     ]);

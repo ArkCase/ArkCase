@@ -13,9 +13,10 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$filter', 'ObjectService', 'Object.TaskService', 'UtilService', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Task.InfoService', 'ConfigService', 'Helper.ObjectBrowserService',
-        , function ($scope, $stateParams, $q, $translate, $filter, ObjectService, ObjectTaskService , Util, CaseInfoService, ComplaintInfoService, TaskInfoService, ConfigService, HelperObjectBrowserService) {
+    .controller('Dashboard.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$filter',
+        'ObjectService', 'Object.TaskService', 'UtilService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'ConfigService', 'Helper.ObjectBrowserService',
+            function ($scope, $stateParams, $q, $translate, $filter,
+                      ObjectService, ObjectTaskService , Util, CaseInfoService, ComplaintInfoService, TaskInfoService, ConfigService, HelperObjectBrowserService) {
 
             var modules = [
                 {
@@ -89,7 +90,7 @@ angular.module('dashboard.approvalRouting', ['adf.provider'])
                             {
                                 $scope.gridOptions.data = [];
                                 $scope.gridOptions.noData = true;
-                                $scope.noDataMessage = $translate.instant('complaints.comp.approvalRouting.noBuckslipMessage');
+                                $scope.noDataMessage = $translate.instant('dashboard.widgets.approvalRouting.noDataMessage');
                             }
                     });
                 })
