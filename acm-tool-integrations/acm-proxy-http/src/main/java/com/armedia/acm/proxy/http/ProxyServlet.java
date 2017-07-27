@@ -852,12 +852,15 @@ public class ProxyServlet extends HttpServlet
                 {
                     // we need to encode to gzip before sending it back
                     GzipCompressingEntity gzipCompressingEntity = new GzipCompressingEntity(stringEntity);
+                    int intLength = getIntLength(gzipCompressingEntity);
+                    servletResponse.setContentLength(intLength);
                     gzipCompressingEntity.writeTo(servletResponse.getOutputStream());
                 }
                 else
                 {
                     // set new content length
-                    servletResponse.setContentLength(responseString.length());
+                    int intLength = getIntLength(stringEntity);
+                    servletResponse.setContentLength(intLength);
                     // write processed entity to the output stream
                     stringEntity.writeTo(servletResponse.getOutputStream());
                 }
@@ -869,6 +872,13 @@ public class ProxyServlet extends HttpServlet
                 entity.writeTo(servletOutputStream);
             }
         }
+    }
+
+    private int getIntLength(HttpEntity entity)
+    {
+        long entityLength = entity.getContentLength();
+        // we know it must really be an int since StringEntity casts it from an int
+        return Math.toIntExact(entityLength);
     }
 
     /**
