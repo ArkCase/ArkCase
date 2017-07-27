@@ -73,18 +73,15 @@ public class CSVReportGenerator extends ReportGenerator
                     if (value instanceof String)
                     {
                         sb.append(purifyForCSV(data.getString(field)));
-                    }
-                    if (value instanceof Integer || value instanceof Long)
+                    } else if (value instanceof Integer || value instanceof Long)
                     {
                         String formattedNumber = nf.format(data.getLong(field));
                         sb.append(String.format(purifyForCSV(formattedNumber)));
-                    }
-                    if (value instanceof Double || value instanceof Float)
+                    } else if (value instanceof Double || value instanceof Float)
                     {
                         String formattedNumber = df.format(data.getDouble(field));
                         sb.append(purifyForCSV(formattedNumber));
-                    }
-                    if (value instanceof Boolean)
+                    } else if (value instanceof Boolean)
                     {
                         sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
                     }
