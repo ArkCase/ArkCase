@@ -190,5 +190,12 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 // }, 2500);
             });
         };
+
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = 'ORGANIZATION';
+            var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
+            gridHelper.showObject(targetType, targetId);
+        };
     }
 ]);

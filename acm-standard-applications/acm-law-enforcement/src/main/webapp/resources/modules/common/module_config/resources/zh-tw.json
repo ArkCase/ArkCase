@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "zh-tw_ records above...",
-    "btnPrev.toolTip": "zh-tw_Review previous records",
-    "btnNext.titleUnknownSize": "zh-tw_More records...",
-    "btnNext.title": "zh-tw_ more records...",
-    "btnNext.toolTip": "zh-tw_Load more records",
-    "edtQuery.placeHolder": "zh-tw_Search",
-    "btnQuery.text": "zh-tw_Go!",
-    "errorNode.title": "zh-tw_(Error)",
-    "errorNode.toolTip": "zh-tw_(Error)",
-    "noAccessNode.title": "zh-tw_(No Access)",
-    "noAccessNode.toolTip": "zh-tw_(No Access)"
+    "btnPrev.title": "以上的記錄...",
+    "btnPrev.toolTip": "查看以上的記錄",
+    "btnNext.titleUnknownSize": "更多記錄...",
+    "btnNext.title": "更多記錄...",
+    "btnNext.toolTip": "加載更多記錄",
+    "edtQuery.placeHolder": "搜索",
+    "btnQuery.text": "搜索!",
+    "errorNode.title": "(錯誤)",
+    "errorNode.toolTip": "(錯誤)",
+    "noAccessNode.title": "(無訪問權限)",
+    "noAccessNode.toolTip": "(無訪問權限)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "zh-tw_items per page",

@@ -9,17 +9,20 @@
     "leftnav.item": "Seguimiento de Tiempo",
     "topbar.item": "Tiempo"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Descripción general"
   },
   "timeTracking.comp.info": {
+    "title": "Información",
     "lastModified.label": "es_Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Acciones",
     "new.button": "es_New Timesheet",
     "edit.button": "es_Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Timesheet details saved",
     "table.columns": {
       "title": "es_Details",
@@ -27,15 +30,15 @@
       "modifier": "es_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "es_Person",
+  "timeTracking.comp.person": {
+    "title": "Personas",
     "table.columns": {
       "fullName": "es_Full Name",
       "userId": "es_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "es_Hours Summary",
+    "title": "Resumen de la hora",
     "table.columns": {
       "code": "es_Parent ID",
       "type": "es_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -66,6 +69,22 @@
         "success": "es_Tag deleted successfully",
         "error": "es_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "person.label": "Personas",
+      "summary.label": "Gastos",
+      "tags.label": "Etiquetas"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "timesheetIdAsc": "Ordenar tiempos de la identificación Asc",
+      "timesheetIdDesc": "Ordenar tiempos de la identificación Dec",
+      "byNameDesc": "Ordenar por nombre Dec",
+      "noSort": "(Sin Clasificar)"
     }
   }
 }

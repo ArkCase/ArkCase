@@ -9,17 +9,20 @@
     "leftnav.item": "Suivi du temps",
     "topbar.item": "Temp"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Vue d'ensemble"
   },
   "timeTracking.comp.info": {
+    "title": "Information",
     "lastModified.label": "fr_Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "fr_New Timesheet",
     "edit.button": "fr_Edit Timesheet"
   },
   "timeTracking.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Timesheet details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -27,15 +30,15 @@
       "modifier": "fr_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "fr_Person",
+  "timeTracking.comp.person": {
+    "title": "Personnes",
     "table.columns": {
       "fullName": "fr_Full Name",
       "userId": "fr_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "fr_Hours Summary",
+    "title": "Résumé de l'heure",
     "table.columns": {
       "code": "fr_Parent ID",
       "type": "fr_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "fr_Tags",
+    "title": "étiquettes",
     "table.columns": {
       "tag": "fr_Tag",
       "created": "fr_Created",
@@ -67,5 +70,20 @@
         "error": "fr_Error deleting tag"
       }
     }
-  }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "person.label": "Personnes",
+      "summary.label": "Frais",
+      "tags.label": "étiquettes"
+    },
+    "sorters": {
+      "dateAsc": "Trier Date Asc",
+      "dateDesc": "Trier Date Déc",
+      "timesheetIdAsc": "Trier ID de Temps Asc",
+      "timesheetIdDesc": "Trier ID de Temps Déc",
+      "byNameDesc": "Trier par nom Déc",
+      "noSort": "(Non Trier)"
+    }
 }
