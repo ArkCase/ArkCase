@@ -358,11 +358,11 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         return findResults;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      *
-     * @see com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler#purgeCalendar(com.armedia.acm.
-     * calendar.config.service.CalendarConfiguration.PurgeOptions)
+     * @param service
+     * @param purgeOptions
+     * @param daysClosed
      */
     public void purgeCalendars(ExchangeService service, PurgeOptions purgeOptions, Integer daysClosed)
     {
