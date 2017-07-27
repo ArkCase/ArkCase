@@ -65,7 +65,7 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
                 id: null,
                 associationType: "",
                 parentId: $scope.objectInfo.complaintId,
-                parentType: 'COMPLAINT',
+                parentType: ObjectService.ObjectTypes.COMPLAINT,
                 parentTitle: $scope.objectInfo.complaintNumber,
                 organization: null,
                 className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"
