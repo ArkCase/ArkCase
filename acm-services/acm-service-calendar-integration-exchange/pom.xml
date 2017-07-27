@@ -26,6 +26,12 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-ms-outlook-integration</artifactId>
             <version>${acm.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Testing -->
