@@ -9,7 +9,11 @@
     "leftnav.item": "仕事",
     "topbar.item": "仕事"
   },
+  "tasks.comp.main": {
+    "title": "概観"
+  },
   "tasks.comp.info": {
+    "title": "情報",
     "taskId": "ja_Task id:",
     "percentage.label": "ja_% of Completion",
     "assignee.label": "ja_Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "ファイルの起源",
     "taskId": "ja_Task id:",
     "case": {
       "subjectType.label": "ja_Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "ja_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "行动",
     "diagram.button": "ja_Process Diagram",
     "eSignature.button": "ja_Sign",
     "subscribe.button": "ja_Subscribe",
@@ -65,7 +71,7 @@
     }
   },
   "tasks.comp.details": {
-    "title": "ja_Task Details",
+    "title": "詳細",
     "informSaved": "ja_Task details saved",
     "table.columns": {
       "details": "ja_Details",
@@ -74,7 +80,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "ja_Rework Details",
+    "title": "詳細をやり直し",
     "informSaved": "ja_Rework details saved",
     "table.columns": {
       "title": "ja_Rework Details",
@@ -83,20 +89,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "ja_Parent Documents",
+    "title": "情報の起源",
     "noParentDataMessage": "ja_No parent documents for standalone task",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
   },
   "tasks.comp.attachments": {
-    "title": "ja_Attachments",
+    "title": "添付ファイル",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
   },
   "tasks.comp.notes": {
-    "title": "ja_Notes",
+    "title": "コメント",
     "table.columns": {
       "note": "ja_Note",
       "created": "ja_Created",
@@ -104,7 +110,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "ja_References",
+    "title": "参照",
     "table.columns": {
       "targetName": "ja_Number",
       "targetTitle": "ja_Title",
@@ -114,7 +120,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "ja_Reject Comments",
+    "title": "を説明することを拒否し",
     "table.columns": {
       "note": "ja_Comment",
       "created": "ja_Created",
@@ -122,7 +128,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "ja_Workflow",
+    "title": "プロセスの概要",
     "table.columns": {
       "participant": "ja_Participant",
       "role": "ja_Role",
@@ -136,14 +142,14 @@
     "error.loading": "ja_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "ja_eSignatures",
+    "title": "電子署名",
     "table.columns": {
       "signedDate": "ja_Date",
       "signedBy": "ja_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "ja_Documents Under Review",
+    "title": "レビュー文書",
     "table.columns": {
       "fileId": "ja_ID",
       "fileName": "ja_Title",
@@ -153,7 +159,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "ja_History",
+    "title": "歴史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -161,7 +167,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -302,7 +308,7 @@
     "searchGroupHeader": "ja_Search Group"
   },
   "tasks.comp.approvalRouting": {
-    "title": "ja_Future Approvers",
+    "title": "承認ル",
     "addNewTooltip": "ja_Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {
@@ -313,13 +319,46 @@
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "ja_Past Approvers",
+    "title": "過去の承認",
     "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "ja_Approval Date",
       "approverId": "ja_Approver",
       "approverFullName": "ja_Full Name",
       "approverDecision": "ja_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "reworkDetails.label": "詳細をやり直し",
+      "docReview.label": "レビュー文書",
+      "parentDoc.label": "ファイルの起源",
+      "attachments.label": "添付ファイル",
+      "references.label": "参照",
+      "notes.label": "コメント",
+      "workflow.label": "プロセスの概要",
+      "history.label": "歴史",
+      "eSignatures.label": "電子署名",
+      "tags.label": "タグ",
+      "reject.label": "を説明することを拒否し"
+    },
+    "filters": {
+      "myTasks": "私の仕事",
+      "opened": "開いているすべて",
+      "completed": "すべて終了",
+      "dueToday": "今日はすべてが原因",
+      "myDueToday": "私はすべてのため",
+      "overdue": "すべての延滞",
+      "myOverdue": "すべては私が遅れますよ",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "アンチは、イベントの日付順",
+      "byNameAsc": "タスク名で並べ替え",
+      "byNameDesc": "アンチは、タスク名でソート",
+      "noSort": "(注文しません)"
     }
   }
 }

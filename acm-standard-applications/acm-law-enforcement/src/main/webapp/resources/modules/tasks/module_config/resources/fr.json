@@ -9,7 +9,11 @@
     "leftnav.item": "Tâches",
     "topbar.item": "Tâches"
   },
+  "tasks.comp.main": {
+    "title": "Vue d'ensemble"
+  },
   "tasks.comp.info": {
+    "title": "Information",
     "taskId": "fr_Task id:",
     "percentage.label": "fr_% of Completion",
     "assignee.label": "fr_Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "Information parentale",
     "taskId": "fr_Task id:",
     "case": {
       "subjectType.label": "fr_Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "fr_Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "Actes",
     "diagram.button": "fr_Process Diagram",
     "eSignature.button": "fr_Sign",
     "subscribe.button": "fr_Subscribe",
@@ -65,7 +71,7 @@
     }
   },
   "tasks.comp.details": {
-    "title": "fr_Task Details",
+    "title": "Détails",
     "informSaved": "fr_Task details saved",
     "table.columns": {
       "details": "fr_Details",
@@ -74,7 +80,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "fr_Rework Details",
+    "title": "Détails de rétractation",
     "informSaved": "fr_Rework details saved",
     "table.columns": {
       "title": "fr_Rework Details",
@@ -83,20 +89,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "fr_Parent Documents",
+    "title": "Documents Parentaux",
     "noParentDataMessage": "fr_No parent documents for standalone task",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
     "searchInputPlaceholder": "fr_Search"
   },
   "tasks.comp.attachments": {
-    "title": "fr_Attachments",
+    "title": "Pièces jointes",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
     "searchInputPlaceholder": "fr_Search"
   },
   "tasks.comp.notes": {
-    "title": "fr_Notes",
+    "title": "Notes",
     "table.columns": {
       "note": "fr_Note",
       "created": "fr_Created",
@@ -104,7 +110,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "fr_References",
+    "title": "Références",
     "table.columns": {
       "targetName": "fr_Number",
       "targetTitle": "fr_Title",
@@ -114,7 +120,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "fr_Reject Comments",
+    "title": "Rejeter des commentaires",
     "table.columns": {
       "note": "fr_Comment",
       "created": "fr_Created",
@@ -122,7 +128,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "fr_Workflow",
+    "title": "Flux de travail",
     "table.columns": {
       "participant": "fr_Participant",
       "role": "fr_Role",
@@ -136,14 +142,14 @@
     "error.loading": "fr_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "fr_eSignatures",
+    "title": "Signatures électroniques",
     "table.columns": {
       "signedDate": "fr_Date",
       "signedBy": "fr_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "fr_Documents Under Review",
+    "title": "Documents sous revue",
     "table.columns": {
       "fileId": "fr_ID",
       "fileName": "fr_Title",
@@ -153,7 +159,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "fr_History",
+    "title": "Histoire",
     "table.columns": {
       "eventType": "fr_Event Name",
       "eventDate": "fr_Date",
@@ -161,7 +167,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "fr_Tags",
+    "title": "Étiquettes",
     "table.columns": {
       "tag": "fr_Tag",
       "created": "fr_Created",
@@ -320,6 +326,39 @@
       "approverId": "fr_Approver",
       "approverFullName": "fr_Full Name",
       "approverDecision": "fr_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "reworkDetails.label": "Détails de rétractation",
+      "docReview.label": "Documents sous revue",
+      "parentDoc.label": "Documents Parentaux",
+      "attachments.label": "Pièces jointes",
+      "references.label": "Références",
+      "notes.label": "Notes",
+      "workflow.label": "Flux de travail",
+      "history.label": "Histoire",
+      "eSignatures.label": "Signatures électroniques",
+      "tags.label": "Étiquettes",
+      "reject.label": "Rejeter des commentaires"
+    },
+    "filters": {
+      "myTasks": "Mes tâches",
+      "opened": "Toutes les tâches ouvertes",
+      "completed": "Toutes les tâches ouvertes",
+      "dueToday": "Toutes les tâches attendues aujourd'hui",
+      "myDueToday": "Toutes mes tâches à venir",
+      "overdue": "Toutes les tâches en retard",
+      "myOverdue": "Toutes mes tâches sont en retard",
+      "noFilter": "(Pas de filtre)"
+    },
+    "sorters": {
+      "createdDateAsc": "Trier Date créée Asc",
+      "createdDateDesc": "Trier Date de création Desc",
+      "byNameAsc": "Trier nom de la tâche Asc",
+      "byNameDesc": "Trier nom de la tâche desc",
+      "noSort": "(Non Trier)"
     }
   }
 }

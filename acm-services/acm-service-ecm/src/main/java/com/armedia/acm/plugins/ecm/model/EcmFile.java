@@ -5,6 +5,7 @@ import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -155,6 +156,13 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "cm_file_organization_association")
+    private ObjectAssociation organizationAssociation;
+
+    @ManyToOne
+    @JoinColumn(name = "cm_file_person_association")
+    private ObjectAssociation personAssociation;
 
     @PrePersist
     protected void beforeInsert()
@@ -186,6 +194,18 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+
+        if (personAssociation != null)
+        {
+            personAssociation.setParentId(getId());
+            personAssociation.setParentName(getFileName());
+        }
+
+        if (organizationAssociation != null)
+        {
+            organizationAssociation.setParentId(getId());
+            organizationAssociation.setParentName(getFileName());
         }
     }
 
@@ -503,6 +523,26 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public ObjectAssociation getOrganizationAssociation()
+    {
+        return organizationAssociation;
+    }
+
+    public void setOrganizationAssociation(ObjectAssociation organizationAssociation)
+    {
+        this.organizationAssociation = organizationAssociation;
+    }
+
+    public ObjectAssociation getPersonAssociation()
+    {
+        return personAssociation;
+    }
+
+    public void setPersonAssociation(ObjectAssociation personAssociation)
+    {
+        this.personAssociation = personAssociation;
     }
 
     @Override

@@ -372,7 +372,7 @@
       "iAmAssigned": "指定給我的",
       "iAmFollowing": "我關注的",
       "closed": "所有關閉的",
-      "noFilter": "(無限制的)"
+      "noFilter": "(無限制)"
     },
     "sorters": {
       "dateAsc": "按日期排序",

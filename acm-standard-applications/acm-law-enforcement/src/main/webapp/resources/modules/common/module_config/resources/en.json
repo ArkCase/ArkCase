@@ -545,6 +545,9 @@
     "radioYes.text": "Yes",
     "radioNo.text": "No"
   },
+  "common.editPerson": {
+    "title": "Edit person"
+  },
   "common.dialogPersonPicker": {
     "header": "Search for People",
     "table.columns": {
@@ -579,6 +582,9 @@
     "setPrimary.label": "Set As Primary?",
     "radioYes.text": "Yes",
     "radioNo.text": "No"
+  },
+  "common.editOrganization": {
+    "title": "Edit Organization"
   },
   "common.newOrganization": {
     "title": "Organization",
