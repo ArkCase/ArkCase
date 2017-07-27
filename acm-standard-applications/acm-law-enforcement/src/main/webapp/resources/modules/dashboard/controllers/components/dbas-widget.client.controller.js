@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('dashboard.faxes', ['adf.provider'])
+angular.module('dashboard.dbas', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('faxes', {
-                title: 'dashboard.widgets.faxes.title',
-                description: 'dashboard.widgets.faxes.description',
-                controller: 'Dashboard.FaxesController',
+            .widget('dbas', {
+                title: 'dashboard.widgets.dbas.title',
+                description: 'dashboard.widgets.dbas.description',
+                controller: 'Dashboard.DbasController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/faxes-widget.client.view.html',
-                commonName: 'faxes'
+                templateUrl: 'modules/dashboard/views/components/dbas-widget.client.view.html',
+                commonName: 'dbas'
             });
     })
-    .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.DbasController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
                       OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
@@ -54,13 +54,13 @@ angular.module('dashboard.faxes', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                gridHelper.setWidgetsGridData(faxes);
+                var dbas = _.filter($scope.objectInfo.organizationDBAs, {type: 'DBA'});
+                gridHelper.setWidgetsGridData(dbas);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "faxes";
+                    return widget.id === "dbas";
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };

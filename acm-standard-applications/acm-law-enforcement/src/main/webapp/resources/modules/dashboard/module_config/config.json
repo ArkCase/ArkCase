@@ -335,9 +335,9 @@
     "urls",
     "dbas",
     "ids",
-    "cases",
     "complaints",
-    "related",
+    "cases",
+    "relOrganizations",
     "tags"
   ],
   "structures": [
@@ -708,5 +708,4 @@
       }
     }
   ]
-
 }

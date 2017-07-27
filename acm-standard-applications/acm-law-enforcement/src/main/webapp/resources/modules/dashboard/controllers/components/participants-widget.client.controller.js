@@ -12,10 +12,10 @@ angular.module('dashboard.participants', ['adf.provider'])
                 commonName: 'participants'
             });
     })
-    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService) {
+    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService',
+            function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService) {
 
             var modules = [
                 {
@@ -66,15 +66,14 @@ angular.module('dashboard.participants', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.participants ? objectInfo.participants : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                gridHelper.setWidgetsGridData(objectInfo.participants);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "participants";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
         }
