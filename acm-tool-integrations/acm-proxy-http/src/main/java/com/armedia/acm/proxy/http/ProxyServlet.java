@@ -17,7 +17,6 @@
 package com.armedia.acm.proxy.http;
 
 import com.armedia.acm.web.api.MDCConstants;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -59,7 +58,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -102,7 +100,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings({
         "deprecation",
-        "serial" })
+        "serial"})
 public class ProxyServlet extends HttpServlet
 {
 
@@ -293,8 +291,7 @@ public class ProxyServlet extends HttpServlet
         try
         {
             targetUriObj = new URI(targetUri);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new ServletException("Trying to process targetUri init parameter: " + e, e);
         }
@@ -305,11 +302,11 @@ public class ProxyServlet extends HttpServlet
      * Called from {@link #init(javax.servlet.ServletConfig)}. HttpClient offers many opportunities for customization. By default,
      * <a href="http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">
      * SystemDefaultHttpClient</a> is used if available, otherwise it falls back to:
-     *
+     * <p>
      * <pre>
      * new DefaultHttpClient(new ThreadSafeClientConnManager(), hcParams)
      * </pre>
-     *
+     * <p>
      * SystemDefaultHttpClient uses PoolingClientConnectionManager. In any case, it should be thread-safe.
      */
     protected HttpClient createHttpClient(HttpParams hcParams)
@@ -321,12 +318,10 @@ public class ProxyServlet extends HttpServlet
             Class<?> clientClazz = Class.forName("org.apache.http.impl.client.SystemDefaultHttpClient");
             Constructor<?> constructor = clientClazz.getConstructor(HttpParams.class);
             return (HttpClient) constructor.newInstance(hcParams);
-        }
-        catch (ClassNotFoundException e)
+        } catch (ClassNotFoundException e)
         {
             // no problem; use v4.1 below
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new RuntimeException(e);
         }
@@ -366,8 +361,7 @@ public class ProxyServlet extends HttpServlet
             {
                 // noinspection unchecked
                 val_obj = type.getMethod("valueOf", String.class).invoke(type, val_str);
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 throw new RuntimeException(e);
             }
@@ -384,8 +378,7 @@ public class ProxyServlet extends HttpServlet
             try
             {
                 ((Closeable) proxyClient).close();
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 log("While destroying servlet, shutting down HttpClient: " + e, e);
             }
@@ -467,8 +460,7 @@ public class ProxyServlet extends HttpServlet
                 copyResponseEntity(proxyResponse, servletResponse, proxyRequest, servletRequest);
             }
 
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             logger.error("Error in proxy servlet!", e);
             // abort request, according to best practice with HttpClient
@@ -492,8 +484,7 @@ public class ProxyServlet extends HttpServlet
             }
             throw new RuntimeException(e);
 
-        }
-        finally
+        } finally
         {
             // make sure the entire entity was consumed, so the connection is released
             if (proxyResponse != null)
@@ -553,8 +544,7 @@ public class ProxyServlet extends HttpServlet
         try
         {
             closeable.close();
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             log(e.getMessage(), e);
         }
@@ -568,8 +558,7 @@ public class ProxyServlet extends HttpServlet
         try
         {
             EntityUtils.consume(entity);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {// ignore
             log(e.getMessage(), e);
         }
@@ -584,7 +573,7 @@ public class ProxyServlet extends HttpServlet
     static
     {
         hopByHopHeaders = new HeaderGroup();
-        String[] headers = new String[] {
+        String[] headers = new String[]{
                 "Connection",
                 "Keep-Alive",
                 "Proxy-Authenticate",
@@ -592,7 +581,7 @@ public class ProxyServlet extends HttpServlet
                 "TE",
                 "Trailers",
                 "Transfer-Encoding",
-                "Upgrade" };
+                "Upgrade"};
         for (String header : headers)
         {
             hopByHopHeaders.addHeader(new BasicHeader(header, null));
@@ -783,7 +772,7 @@ public class ProxyServlet extends HttpServlet
      * Copy response body data (the entity) from the proxy to the servlet client.
      */
     protected void copyResponseEntity(HttpResponse proxyResponse, HttpServletResponse servletResponse, HttpRequest proxyRequest,
-            HttpServletRequest servletRequest) throws IOException
+                                      HttpServletRequest servletRequest) throws IOException
     {
 
         boolean shouldBeSkipped = false;
@@ -858,7 +847,7 @@ public class ProxyServlet extends HttpServlet
                     responseString = responseString.replaceAll(pairsArray[0], pairsArray[1]);
                 }
 
-                StringEntity stringEntity = new StringEntity(responseString);
+                StringEntity stringEntity = new StringEntity(responseString, "UTF-8");
                 if (isGzip)
                 {
                     // we need to encode to gzip before sending it back
@@ -1037,10 +1026,10 @@ public class ProxyServlet extends HttpServlet
     {
         switch (headerVariableName)
         {
-        case MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY: // "MDC_USER_ID"
-            return getMDCUserIdValue();
-        default:
-            throw new RuntimeException("Header variable name '" + headerVariableName + "' unknown!");
+            case MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY: // "MDC_USER_ID"
+                return getMDCUserIdValue();
+            default:
+                throw new RuntimeException("Header variable name '" + headerVariableName + "' unknown!");
         }
     }
 
@@ -1077,8 +1066,7 @@ public class ProxyServlet extends HttpServlet
      * has a valid URI because it uses Java's {@link URI}. To be more forgiving, we must escape the problematic characters. See the URI
      * class for the spec.
      *
-     * @param in
-     *            example: name=value&amp;foo=bar#fragment
+     * @param in example: name=value&amp;foo=bar#fragment
      */
     protected static CharSequence encodeUriQuery(CharSequence in)
     {
@@ -1163,8 +1151,7 @@ public class ProxyServlet extends HttpServlet
     /**
      * parse csv. Null and empty String is allowed.
      *
-     * @param csv
-     *            String that contains values separated with comma ","
+     * @param csv String that contains values separated with comma ","
      * @return List
      */
     private List<String> parseCsvAsList(String csv)
@@ -1179,10 +1166,8 @@ public class ProxyServlet extends HttpServlet
     /**
      * checks if value matches given pattern. it compiles pattern and keep in memory for further use
      *
-     * @param patternStr
-     *            String regex pattern
-     * @param value
-     *            String value that should be tested if matches against pattern
+     * @param patternStr String regex pattern
+     * @param value      String value that should be tested if matches against pattern
      * @return boolean
      */
     private boolean matches(String patternStr, String value)
