@@ -388,7 +388,35 @@
         },
         {
           "id": "dbas",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "value",
+              "displayName": "organizations.comp.dbas.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.value}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+            },
+            {
+              "name": "subType",
+              "displayName": "organizations.comp.dbas.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.type' title='{{row.entity.type}}' class='ui-grid-cell-contents'></div>"
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.dbas.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "width": 150,
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.dbas.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "width": 150
+            }
+          ]
         },
         {
           "id": "people",
@@ -416,19 +444,158 @@
         },
         {
           "id": "ids",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "identificationType",
+              "displayName": "organizations.comp.ids.table.columns.type",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "identificationID",
+              "displayName": "organizations.comp.ids.table.columns.id",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "identificationNumber",
+              "displayName": "organizations.comp.ids.table.columns.number",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.identificationNumber}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+            },
+            {
+              "name": "modifier",
+              "displayName": "organizations.comp.ids.table.columns.modifier",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "name": "modified",
+              "displayName": "organizations.comp.ids.table.columns.modified",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "width": 150
+            }
+          ]
         },
         {
           "id": "complaints",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "id",
+              "field": "object_id_s",
+              "displayName": "organizations.comp.complaints.table.columns.id",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "width": 130
+            },
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
+              "displayName": "organizations.comp.complaints.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+            },
+            {
+              "name": "status",
+              "field": "status_lcs",
+              "displayName": "organizations.comp.complaints.table.columns.status",
+              "headerCellFilter": "translate"
+            },
+            {
+              "width": 150,
+              "name": "assignee",
+              "field": "assignee_id_lcs",
+              "displayName": "organizations.comp.complaints.table.columns.assignee",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "field": "modified_date_tdt",
+              "displayName": "organizations.comp.complaints.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            }
+          ]
         },
         {
           "id": "cases",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "id",
+              "field": "object_id_s",
+              "displayName": "organizations.comp.cases.table.columns.id",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "width": 130
+            },
+            {
+              "name": "title",
+              "field": "title_parseable",
+              "sortField": "title_parseable_lcs",
+              "displayName": "organizations.comp.cases.table.columns.title",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+            },
+            {
+              "name": "status",
+              "field": "status_lcs",
+              "displayName": "organizations.comp.cases.table.columns.status",
+              "headerCellFilter": "translate"
+            },
+            {
+              "width": 150,
+              "name": "assignee",
+              "field": "assignee_id_lcs",
+              "displayName": "organizations.comp.cases.table.columns.assignee",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            },
+            {
+              "width": 150,
+              "name": "modified",
+              "field": "modified_date_tdt",
+              "displayName": "organizations.comp.cases.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+            }
+          ]
         },
         {
-          "id": "related",
-          "type": "component"
+          "id": "relOrganizations",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "association_type_s",
+              "displayName": "organizations.comp.related.table.columns.associationType",
+              "headerCellFilter": "translate",
+              "lookup": "organizationTypes"
+            },
+            {
+              "name": "organizationValue",
+              "field": "target_object.value_parseable",
+              "displayName": "organizations.comp.related.table.columns.value",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.target_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+            },
+            {
+              "name": "organization.organizationType",
+              "field": "target_object.type_lcs",
+              "displayName": "organizations.comp.related.table.columns.type",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "organization.defaultPerson.givenName",
+              "displayName": "organizations.comp.related.table.columns.contact",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+            }
+          ]
         },
         {
           "id": "history",
