@@ -100,7 +100,7 @@
         "ids",
         "complaints",
         "cases",
-        "related",
+        "relOrganizations",
         "history"
       ]
     },

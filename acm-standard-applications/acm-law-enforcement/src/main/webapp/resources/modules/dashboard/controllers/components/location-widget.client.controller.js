@@ -12,10 +12,10 @@ angular.module('dashboard.locations', ['adf.provider'])
                 commonName: 'locations'
             });
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
-        , 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
-        , function ($scope, $stateParams, ComplaintInfoService, OrganizationInfoService
-            , HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
+        'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
+            function ($scope, $stateParams, $translate,
+                      ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util) {
 
             var modules = [
                 {
@@ -60,14 +60,19 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if (objectInfo.location) {
+                if (!Util.isEmpty(objectInfo.location)) {
                     $scope.gridOptions.data = [objectInfo];
                     var fullAddress = createFullAddress(objectInfo.location);
                     $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
-                } else if(objectInfo.addresses){
+                }
+                else if(!Util.isArrayEmpty(objectInfo.addresses)){
                     $scope.gridOptions.data = $scope.objectInfo.addresses;
-                } else {
+                    $scope.gridOptions.noData = false;
+                }
+                else {
                     $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.locations.noDataMessage');
                 }
                 $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
             };
@@ -77,7 +82,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                     return widget.id === "locations";
                 });
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
             var createFullAddress = function (location) {
