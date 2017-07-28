@@ -151,7 +151,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
