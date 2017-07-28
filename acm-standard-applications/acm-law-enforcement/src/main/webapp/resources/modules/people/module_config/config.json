@@ -602,7 +602,7 @@
           "name": "organization.organizationToPersonAssociationType",
           "displayName": "people.comp.related.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span ng-bind=\"(row.entity.organization.personAssociations | filter :{person : {id : grid.appScope.currentObjectId}})[0].organizationToPersonAssociationType\"></span>"
+          "cellTemplate": "<span>{{row.entity.organizationToPersonAssociationType}}</span>"
         },
         {
           "name": "organizationType",
