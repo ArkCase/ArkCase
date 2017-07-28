@@ -1,5 +1,10 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -12,17 +17,26 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 import java.util.Objects;
 
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
-
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -31,6 +45,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
     private String caseFileStatusClosed;
+
+    private CalendarAdminService calendarAdminService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -82,13 +98,14 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                     "Case File Title changed from " + title + " to " + updatedTitle);
                         }
 
-
                         String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(existing.getParticipants());
                         String updatedOwningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(updatedCaseFile.getParticipants());
                         if (!Objects.equals(owningGroup, updatedOwningGroup))
                         {
-                            AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream().filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
-                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, event.getIpAddress(), "changed",
+                            AcmParticipant updatedParticipant = updatedCaseFile.getParticipants().stream()
+                                    .filter(p -> "owning group".equals(p.getParticipantType())).findFirst().orElse(null);
+                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile,
+                                    event.getIpAddress(), "changed",
                                     "Owning Group Changed from " + owningGroup + " to " + updatedOwningGroup);
                         }
 
@@ -97,13 +114,14 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         if (isStatusChanged(existing, updatedCaseFile))
                         {
                             String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                            if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed)
-                                    && shouldDeleteCalendarFolder && calId != null)
+                            if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed) && shouldDeleteCalendarFolder
+                                    && calId != null)
                             {
 
-                                //delete shared calendar if case closed
-                                getCalendarService().deleteFolder(updatedCaseFile.getContainer().getContainerObjectId(),
-                                        calId, DeleteMode.MoveToDeletedItems);
+                                // delete shared calendar if case closed
+                                AcmOutlookUser user = getConfiguredCalendarUser();
+                                getCalendarService().deleteFolder(user, updatedCaseFile.getContainer().getContainerObjectId(), calId,
+                                        DeleteMode.MoveToDeletedItems);
                             }
                             getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
                         }
@@ -116,9 +134,28 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                     AcmAssignment assignmentSaved = getAcmAssignmentDao().save(acmAssignment);
 
                     // Raise an event
-                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(assignmentSaved, event.getUserId(), event.getIpAddress());
+                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(assignmentSaved, event.getUserId(),
+                            event.getIpAddress());
                 }
             }
+        }
+    }
+
+    /**
+     * @return
+     * @throws PipelineProcessException
+     */
+    private AcmOutlookUser getConfiguredCalendarUser() throws AcmOutlookItemNotFoundException
+    {
+        try
+        {
+            CalendarConfigurationsByObjectType onfigurations = calendarAdminService.readConfiguration(true);
+            CalendarConfiguration configuration = onfigurations.getConfiguration("CASE_FILE");
+            return new AcmOutlookUser(null, configuration.getSystemEmail(), configuration.getPassword());
+        } catch (CalendarConfigurationException e)
+        {
+            log.warn("Could not read calendar configuration.", e);
+            throw new AcmOutlookItemNotFoundException(e);
         }
     }
 
@@ -165,8 +202,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
             if (!updated.contains(participant))
             {
                 // participant deleted
-                getCaseFileEventUtility()
-                        .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "deleted");
+                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "deleted");
             }
         }
 
@@ -175,11 +211,10 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
             if (!existing.contains(participant))
             {
                 // participant added
-                getCaseFileEventUtility()
-                        .raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
+                getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(participant, updatedCaseFile, ipAddress, "added");
             }
         }
-        
+
         for (AcmParticipant existingParticipant : existing)
         {
             for (AcmParticipant updatedParticipant : updated)
@@ -191,8 +226,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         if (!existingParticipant.getParticipantType().equals(updatedParticipant.getParticipantType()))
                         {
                             // participant changed
-                            getCaseFileEventUtility()
-                                    .raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, ipAddress, "changed");
+                            getCaseFileEventUtility().raiseParticipantsModifiedInCaseFile(updatedParticipant, updatedCaseFile, ipAddress,
+                                    "changed");
                         }
                     }
                 }
@@ -285,5 +320,13 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setCaseFileStatusClosed(String caseFileStatusClosed)
     {
         this.caseFileStatusClosed = caseFileStatusClosed;
+    }
+
+    /**
+     * @param calendarAdminService the calendarAdminService to set
+     */
+    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 }
