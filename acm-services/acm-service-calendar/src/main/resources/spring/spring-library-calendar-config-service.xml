@@ -9,4 +9,9 @@
             <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
         </bean>
 
+        <bean id="scheduledCalendarPurger" class="com.armedia.acm.calendar.service.AcmScheduledCalendarPurger">
+            <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
+            <property name="calendarService" ref="calendarServiceProvider"/>
+        </bean>
+
 </beans>
