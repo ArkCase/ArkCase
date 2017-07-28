@@ -1,21 +1,21 @@
 'use strict';
 
-angular.module('dashboard.faxes', ['adf.provider'])
+angular.module('dashboard.cases', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('faxes', {
-                title: 'dashboard.widgets.faxes.title',
-                description: 'dashboard.widgets.faxes.description',
-                controller: 'Dashboard.FaxesController',
+            .widget('cases', {
+                title: 'dashboard.widgets.cases.title',
+                description: 'dashboard.widgets.cases.description',
+                controller: 'Dashboard.CasesController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/faxes-widget.client.view.html',
-                commonName: 'faxes'
+                templateUrl: 'modules/dashboard/views/components/cases-widget.client.view.html',
+                commonName: 'cases'
             });
     })
-    .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
         'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -53,16 +53,15 @@ angular.module('dashboard.faxes', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                gridHelper.setWidgetsGridData(faxes);
+                //FIX this when relations between cases and organizations works
+                //gridHelper.setWidgetsGridData(objectInfo.cases);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "faxes";
+                    return widget.id === "cases";
                 });
-                gridHelper.setColumnDefs(widgetInfo);
+                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
             };
 
         }

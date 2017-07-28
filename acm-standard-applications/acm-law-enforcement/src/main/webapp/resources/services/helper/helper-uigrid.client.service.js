@@ -271,6 +271,29 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name setWidgetsGridData
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} widgetData Widgets data object with grid options
+             *
+             * @description
+             * Define ui-grid data
+             */
+            , setWidgetsGridData: function (widgetData) {
+                if(!Util.isArrayEmpty(widgetData)) {
+                    this.scope.gridOptions.data = widgetData;
+                    this.scope.gridOptions.noData = false;
+                    $scope.gridOptions.totalItems = widgetData.length;
+                }
+                else {
+                    this.scope.gridOptions.data = [];
+                    this.scope.gridOptions.noData = true;
+                    this.scope.gridOptions.totalItems = 0;
+                }
+            }
+
+            /**
+             * @ngdoc method
              * @name getUsers
              * @methodOf services:Helper.UiGridService
              *

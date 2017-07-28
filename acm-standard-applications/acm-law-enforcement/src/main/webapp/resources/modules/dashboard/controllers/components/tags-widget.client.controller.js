@@ -13,11 +13,10 @@ angular.module('dashboard.tags', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.TagsController', ['$scope', '$stateParams', '$q', 'UtilService', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TagsService'
-        , 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, TaskInfoService, Authentication
-            , DashboardService, ObjectService, ObjectTagsService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.TagsController', ['$scope', '$stateParams', '$q', '$translate',
+        'UtilService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TagsService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $q, $translate,
+                      Util, CaseInfoService, ComplaintInfoService, TaskInfoService, Authentication, DashboardService, ObjectService, ObjectTagsService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -29,48 +28,39 @@ angular.module('dashboard.tags', ['adf.provider'])
                 , {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO}
             ];
 
-            var module = _.find(modules, function (module) {
-                return module.name == $stateParams.type;
-            });
+                var module = _.find(modules, function (module) {
+                    return module.name == $stateParams.type;
+                });
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
+                $scope.gridOptions = {
+                    enableColumnResizing: true,
+                    columnDefs: []
+                };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId, module.objectType);
                 var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-                var promiseUsers = gridHelper.getUsers();
 
-                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "tags";
-                        });
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
-                        var tags = info;
+                var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+                if (module && Util.goodPositive(currentObjectId, false)) {
+                    promiseConfig = ConfigService.getModuleConfig(module.configName);
+                    promiseInfo = module.getInfo(currentObjectId, module.objectType);
+                    var promiseUsers = gridHelper.getUsers();
 
-                        if (!Util.isArrayEmpty(tags)) {
-                            $scope.gridOptions.data = tags;
-                            $scope.gridOptions.totalItems = tags ? tags.length : 0;
-                            $scope.gridOptions.noData = false;
+                    $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
+                            var config = _.find(data[0].components, {id: "main"});
+                            var info = data[1];
+                            var widgetInfo = _.find(config.widgets, function (widget) {
+                                return widget.id === "tags";
+                            });
+                            gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                            $scope.config = config;
+                            gridHelper.setColumnDefs(widgetInfo);
+                            var tags = info;
+                            gridHelper.setWidgetsGridData(tags);
+                        },
+                        function (err) {
+
                         }
-                        else
-                        {
-                            $scope.gridOptions.data = [];
-                            $scope.gridOptions.noData = true;
-                        }
-                    },
-                    function (err) {
-
-                    }
-                );
-            }
+                    );
+                }
         }
     ]);
