@@ -114,7 +114,8 @@
         "participants",
         "notes",
         "references",
-        "history"
+        "history",
+        "tags"
       ]
     },
     {
@@ -127,7 +128,8 @@
         "participants",
         "notes",
         "references",
-        "history"
+        "history",
+        "tags"
       ]
     },
     {

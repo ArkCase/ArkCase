@@ -18,13 +18,15 @@ angular.module('dashboard.tags', ['adf.provider'])
             function ($scope, $stateParams, $q, $translate,
                       Util, CaseInfoService, ComplaintInfoService, TaskInfoService, Authentication, DashboardService, ObjectService, ObjectTagsService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
-                var promiseConfig;
-                var promiseInfo;
-                var modules = [
-                    {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE}
-                    , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT}
-                    , {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK}
-                ];
+            var promiseConfig;
+            var promiseInfo;
+            var modules = [
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT}
+                , {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK}
+                , {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                , {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO}
+            ];
 
                 var module = _.find(modules, function (module) {
                     return module.name == $stateParams.type;
