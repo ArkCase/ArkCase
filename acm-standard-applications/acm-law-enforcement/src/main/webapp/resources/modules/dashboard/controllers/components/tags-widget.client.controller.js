@@ -21,11 +21,13 @@ angular.module('dashboard.tags', ['adf.provider'])
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT}
-                , {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK}
-                , {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
-                , {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO}
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE},
+                {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT},
+                {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK},
+                {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                {name: "TIMESHEET", configName: "time-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TIMESHEET},
+                {name: "COSTSHEET", configName: "cost-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COSTSHEET}
             ];
 
                 var module = _.find(modules, function (module) {
