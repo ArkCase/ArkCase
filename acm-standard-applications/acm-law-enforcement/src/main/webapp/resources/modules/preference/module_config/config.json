@@ -139,7 +139,8 @@
       "allowedWidgets": [
         "details",
         "person",
-        "expenses"
+        "expenses",
+        "tags"
       ]
     },
     {
@@ -149,7 +150,8 @@
       "allowedWidgets": [
         "details",
         "person",
-        "hoursSummary"
+        "hoursSummary",
+        "tags"
       ]
     }
   ]
