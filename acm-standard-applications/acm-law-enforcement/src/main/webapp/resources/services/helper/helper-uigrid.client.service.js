@@ -283,7 +283,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 if(!Util.isArrayEmpty(widgetData)) {
                     this.scope.gridOptions.data = widgetData;
                     this.scope.gridOptions.noData = false;
-                    $scope.gridOptions.totalItems = widgetData.length;
+                    this.scope.gridOptions.totalItems = widgetData.length;
                 }
                 else {
                     this.scope.gridOptions.data = [];
