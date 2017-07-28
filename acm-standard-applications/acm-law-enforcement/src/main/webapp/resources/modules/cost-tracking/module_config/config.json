@@ -138,12 +138,12 @@
           "columnDefs": [
             {
               "name": "fullName",
-              "displayName": "costTracking.comp.people.table.columns.fullName",
+              "displayName": "costTracking.comp.person.table.columns.fullName",
               "headerCellFilter": "translate"
             },
             {
               "name": "userId",
-              "displayName": "costTracking.comp.people.table.columns.userId",
+              "displayName": "costTracking.comp.person.table.columns.userId",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
             }
@@ -155,7 +155,26 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "costTracking.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "costTracking.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "costTracking.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
