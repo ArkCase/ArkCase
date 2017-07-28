@@ -81,6 +81,16 @@
       "name": "PERSON",
       "allowedWidgets": [
         "details",
+        "locations",
+        "phones",
+        "emails",
+        "urls",
+        "aliases",
+        "organizations",
+        "ids",
+        "complaints",
+        "cases",
+        "related",
         "history"
       ]
     },
