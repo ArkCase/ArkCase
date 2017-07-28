@@ -133,6 +133,7 @@
           class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
         <property name="autoCreateFolderForComplaint" value="${complaint.auto_create_calendar_folder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
+        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
     </bean>
 
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -220,6 +221,7 @@
         <property name="calendarService" ref="outlookContainerService"/>
         <property name="shouldDeleteCalendarFolder" value="${complaint.delete_calendar_folder_after_complaint_closed}"/>
         <property name="complaintStatusClosed" value="${complaint.status.closed}"/>
+        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
     </bean>
 
     <bean id="complaintDataAccessUpdateLocator"
