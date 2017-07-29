@@ -34,15 +34,15 @@
         "name": "create_tdt DESC"
       },
       {
-        "desc": "timeTracking.tree.sorters.timesheetIdAsc",
+        "desc": "timeTracking.tree.sorters.idAsc",
         "name": "id ASC"
       },
       {
-        "desc": "timeTracking.tree.sorters.timesheetIdDesc",
+        "desc": "timeTracking.tree.sorters.idAsc",
         "name": "id DESC"
       },
       {
-        "desc": "timeTracking.tree.sorters.byNameDesc",
+        "desc": "timeTracking.tree.sorters.nameDesc",
         "name": "name DESC"
       }
     ],

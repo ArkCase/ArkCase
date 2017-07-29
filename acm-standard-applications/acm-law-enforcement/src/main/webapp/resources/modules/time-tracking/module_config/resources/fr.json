@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
-      "timesheetIdAsc": "Trier ID de Temps Asc",
-      "timesheetIdDesc": "Trier ID de Temps Déc",
-      "byNameDesc": "Trier par nom Déc",
+      "idAsc": "Trier ID de Temps Asc",
+      "idAsc": "Trier ID de Temps Déc",
+      "nameDesc": "Trier par nom Déc",
       "noSort": "(Non Trier)"
     }
 }

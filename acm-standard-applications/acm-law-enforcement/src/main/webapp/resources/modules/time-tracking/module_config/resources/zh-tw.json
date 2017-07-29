@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "timesheetIdAsc": "按時間表格號排序",
-      "timesheetIdDesc": "按時間表格號反排序",
-      "byNameAsc": "按名稱排序",
+      "idAsc": "按時間表格號排序",
+      "idAsc": "按時間表格號反排序",
+      "nameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }
   }

@@ -25,7 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
-    "title": "行动",
+    "title": "操作",
     "restrict": "ja_Restrict?",
     "new.button": "ja_New Complaint",
     "close.button": "ja_Close Complaint",
@@ -379,10 +379,10 @@
     },
     "sorters": {
       "incidentDateAsc": "イベントの日付で並べ替え",
-      "incidentDateDesc": "アンチは、イベントの日付順",
+      "incidentDateDesc": "イベントの日付で並べ替え降順",
       "createdDateAsc": "作成日で並べ替え",
-      "createdDateDesc": "アンチは作成日順にソート",
-      "byNameAsc": "名で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "nameAsc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

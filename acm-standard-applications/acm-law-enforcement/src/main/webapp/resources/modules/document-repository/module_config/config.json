@@ -37,7 +37,7 @@
         "value": "fq={!join from=parent_object_id_s to=object_id_s}(owner_s:${user} AND object_type_s:SUBSCRIPTION)"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "document-repository.tree.filters.noFilter",
         "name": "default-filter",
         "value": "fq=repository_type_s:GENERAL",
         "default": true
@@ -101,7 +101,7 @@
       },
       {
         "type": "p/DOC_REPO/det",
-        "label": "tree.nodeTypes.details.label",
+        "label": "document-repository.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"

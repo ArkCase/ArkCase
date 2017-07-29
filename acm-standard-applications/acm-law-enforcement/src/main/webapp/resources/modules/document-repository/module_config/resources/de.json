@@ -186,5 +186,29 @@
     "table.columns.type": "de_Type",
     "table.columns.title": "de_Title",
     "table.columns.id": "de_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "tags.label": "Etiketten",
+      "references.label": "Referenzen",
+      "notes.label": "Notizen",
+      "history.label": "Geschichte"
+    },
+    "filters": {
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "iAmFollowing": "Alles, was ich folge",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "idAsc": "Sortieren ID Auf",
+      "idDesc": "Sortieren ID Dec",
+      "nameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
+    }
   }
 }

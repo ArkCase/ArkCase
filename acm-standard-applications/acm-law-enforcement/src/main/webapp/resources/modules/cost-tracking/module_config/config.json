@@ -34,15 +34,15 @@
         "name": "create_tdt DESC"
       },
       {
-        "desc": "costTracking.tree.sorters.costsheetIdAsc",
+        "desc": "costTracking.tree.sorters.idAsc",
         "name": "id ASC"
       },
       {
-        "desc": "costTracking.tree.sorters.costsheetIdDesc",
+        "desc": "costTracking.tree.sorters.idDesc",
         "name": "id DESC"
       },
       {
-        "desc": "costTracking.tree.sorters.byNameDesc",
+        "desc": "costTracking.tree.sorters.nameDesc",
         "name": "name DESC"
       }
     ],

@@ -68,28 +68,28 @@
     ],
     "sorters": [
       {
-        "desc": "ScreatedDateAsc",
+        "desc": "tasks.tree.sorters.createdDateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "createdDateDesc",
+        "desc": "tasks.tree.sorters.createdDateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort Task Name Asc",
+        "desc": "tasks.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "Sort Task Name Desc",
+        "desc": "tasks.tree.sorters.nameDesc",
         "name": "sort-by-name-desc",
         "value": "name DESC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "tasks.tree.sorters.noSort",
         "name": "",
         "value": ""
       }

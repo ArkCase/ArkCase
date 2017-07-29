@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
-      "costsheetIdAsc": "Trier ID de Coût Asc",
-      "costsheetIdDesc": "Trier ID de Coût Déc",
-      "byNameDesc": "Trier par nom Déc",
+      "idAsc": "Trier ID de Coût Asc",
+      "idDesc": "Trier ID de Coût Déc",
+      "nameDesc": "Trier par nom Déc",
       "noSort": "(Non Trier)"
     }
   }

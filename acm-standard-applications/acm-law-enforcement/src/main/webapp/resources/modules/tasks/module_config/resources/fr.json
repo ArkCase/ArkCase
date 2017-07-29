@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "Trier Date créée Asc",
       "createdDateDesc": "Trier Date de création Desc",
-      "byNameAsc": "Trier nom de la tâche Asc",
-      "byNameDesc": "Trier nom de la tâche desc",
+      "nameAsc": "Trier nom de la tâche Asc",
+      "nameDesc": "Trier nom de la tâche desc",
       "noSort": "(Non Trier)"
     }
   }
