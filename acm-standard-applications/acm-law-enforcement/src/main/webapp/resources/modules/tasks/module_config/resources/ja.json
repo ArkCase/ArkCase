@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "作成日で並べ替え",
       "createdDateDesc": "アンチは、イベントの日付順",
-      "byNameAsc": "タスク名で並べ替え",
-      "byNameDesc": "アンチは、タスク名でソート",
+      "nameAsc": "タスク名で並べ替え",
+      "nameDesc": "アンチは、タスク名でソート",
       "noSort": "(注文しません)"
     }
   }

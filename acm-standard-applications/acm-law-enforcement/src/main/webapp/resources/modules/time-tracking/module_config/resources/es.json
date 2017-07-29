@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Ordenar Fecha Asc",
       "dateDesc": "Ordenar Fecha Dec",
-      "timesheetIdAsc": "Ordenar tiempos de la identificación Asc",
-      "timesheetIdDesc": "Ordenar tiempos de la identificación Dec",
-      "byNameDesc": "Ordenar por nombre Dec",
+      "idAsc": "Ordenar tiempos de la identificación Asc",
+      "idAsc": "Ordenar tiempos de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
       "noSort": "(Sin Clasificar)"
     }
   }

@@ -367,8 +367,8 @@
       "approvalRouting.label": "Toekomstige Goedkeuringen"
     },
     "filters": {
-      "opened": "Alle offenen Beschwerden",
-      "iHaveCreated": "Alle offenen Beschwerden",
+      "opened": "Alle offenen Fälle",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
       "iAmAssigned": "Alles, was ich zugewiesen bin",
       "iAmFollowing": "Alles, was ich folge",
       "closed": "Alle Geschlossenen",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "caseIdAsc": "Sortieren Fall-ID Auf",
-      "caseIdDesc": "Sortieren Fall-ID Dec",
-      "byNameAsc": "Nach Name sortieren Auf",
+      "idAsc": "Sortieren Fall-ID Auf",
+      "idDesc": "Sortieren Fall-ID Dec",
+      "nameAsc": "Nach Name sortieren Auf",
       "noSort": "(Keine Sortierung)"
     }
   }

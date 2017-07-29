@@ -9,7 +9,11 @@
     "leftnav.item": "Pessoas",
     "topbar.item": "Pessoa"
   },
+  "people.comp.main": {
+    "title": "Visão geral"
+  },
   "people.comp.info": {
+    "title": "Informações",
     "phone.label": "pt_Phone",
     "email.label": "pt_Email",
     "status.label": "pt_Status",
@@ -17,6 +21,7 @@
     "identification.label": "pt_ID"
   },
   "people.comp.actions": {
+    "title": "Ações",
     "export.button": "pt_Export",
     "import.button": "pt_Import",
     "delete.button": "pt_Delete",
@@ -25,7 +30,7 @@
     "merge.button": "pt_Merge"
   },
   "people.comp.details": {
-    "title": "pt_Details",
+    "title": "Detalhes",
     "informSaved": "pt_Person details saved",
     "table.columns": {
       "title": "pt_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "pt_History",
+    "title": "Histórico",
     "table.columns": {
       "eventType": "pt_Event Name",
       "eventDate": "pt_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "pt_Pictures",
+    "title": "Imagens",
     "actions": {
       "delete": "pt_Delete",
       "setPrimary": "pt_Set as Primary",
@@ -70,7 +75,7 @@
     }
   },
   "people.comp.addresses": {
-    "title": "pt_Locations",
+    "title": "Localizações",
     "table.columns": {
       "type": "pt_Type",
       "streetAddress": "pt_Address 1",
@@ -113,7 +118,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "pt_Phone Numbers",
+    "title": "Números de telefone",
     "table.columns": {
       "type": "pt_Type",
       "value": "pt_Phone Number",
@@ -145,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "pt_Email Addresses",
+    "title": "E-mail",
     "table.columns": {
       "type": "pt_Type",
       "value": "pt_Email Address",
@@ -177,7 +182,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "pt_URLs",
+    "title": "URL",
     "table.columns": {
       "value": "pt_URL",
       "type": "pt_Type",
@@ -209,7 +214,7 @@
     }
   },
   "people.comp.aliases": {
-    "title": "pt_Aliases",
+    "title": "Alias",
     "actions": {
       "delete": "pt_Delete",
       "setPrimary": "pt_Set as Primary",
@@ -243,7 +248,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "pt_IDs",
+    "title": "Identidade",
     "table.columns": {
       "type": "pt_Type",
       "id": "pt_ID",
@@ -283,7 +288,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "pt_Organizations",
+    "title": "Organizações",
     "table.columns": {
       "type": "pt_Type",
       "id": "pt_ID",
@@ -305,7 +310,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "pt_Cases",
+    "title": "Casos",
     "table.columns": {
       "priority": "pt_Priority",
       "id": "pt_ID",
@@ -316,7 +321,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "pt_Complaints",
+    "title": "Reclamações",
     "table.columns": {
       "priority": "pt_Priority",
       "id": "pt_ID",
@@ -327,7 +332,7 @@
     }
   },
   "people.comp.related": {
-    "title": "pt_Related People",
+    "title": "Pessoas Relacionadas",
     "table.columns": {
       "firstName": "pt_First Name",
       "lastName": "pt_Last Name",
@@ -411,6 +416,36 @@
       "identificationYearIssued": "pt_Identification Issued",
       "identificationYearIssued.placeholder": "pt_Select Identification Issued",
       "identificationYearIssued.close.button": "pt_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "pictures.label": "Imagens",
+      "addresses.label": "Localizações",
+      "phones.label": "Números de telefone",
+      "emails.label": "E-mail",
+      "urls.label": "URL",
+      "aliases.label": "Alias",
+      "organizations.label": "Organizações",
+      "ids.label": "Identidade",
+      "complaints.label": "Reclamações",
+      "cases.label": "Casos",
+      "related.label": "Pessoas Relacionadas",
+      "history.label": "Histórico"
+    },
+    "filters": {
+      "IHaveCreated": "Tudo o que eu criei",
+      "NoFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "CreatedDateAsc": "Data de classificação criada ascendente",
+      "CreatedDateDesc": "Data de classificação criada decrescente",
+      "idAsc": "Classificar pessoa ID Ascendente",
+      "idDesc": "Classificar Identificação de Pessoas Descendente",
+      "NameAsc": "Classificar por pessoas Nome A-Z",
+      "NomeDesc": "Classificar por nome da pessoa Z-A",
+      "NoSort": "(Não classificar)"
     }
   }
 }

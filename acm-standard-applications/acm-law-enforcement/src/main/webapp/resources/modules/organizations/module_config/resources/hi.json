@@ -9,7 +9,11 @@
     "leftnav.item": "संगठन",
     "topbar.item": "संगठन"
   },
+  "organizations.comp.main": {
+    "title": "अवलोकन"
+  },
   "organizations.comp.info": {
+    "title": "जानकारी",
     "phone.label": "hi_Phone",
     "email.label": "hi_Email",
     "status.label": "hi_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "hi_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "क्रियाएं",
     "export.button": "hi_Export",
     "import.button": "hi_Import",
     "delete.button": "hi_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "hi_Merge"
   },
   "organizations.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Organization details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "hi_Locations",
+    "title": "स्थान",
     "table.columns": {
       "type": "hi_Type",
       "streetAddress": "hi_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "hi_Phone Numbers",
+    "title": "फोन नंबर",
     "table.columns": {
       "type": "hi_Phone Type",
       "value": "hi_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "hi_Fax Numbers",
+    "title": "फैक्स नंबर",
     "table.columns": {
       "type": "hi_Fax Type",
       "value": "hi_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "hi_Email Addresses",
+    "title": "ईमेल पते",
     "table.columns": {
       "type": "hi_Email Address Type",
       "value": "hi_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "hi_URLs",
+    "title": "यूआरएल",
     "table.columns": {
       "type": "hi_Type",
       "value": "hi_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "hi_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "hi_Delete",
       "setPrimary": "hi_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "hi_IDs",
+    "title": "संगठन संख्या",
     "table.columns": {
       "type": "hi_Type",
       "id": "hi_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "hi_People",
+    "title": "लोग",
     "table.columns": {
       "type": "hi_Role",
       "firstName": "hi_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "hi_Cases",
+    "title": "मामले",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "hi_Complaints",
+    "title": "शिकायतें",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "hi_Related Organizations",
+    "title": "संबंधित संगठनों",
     "table.columns": {
       "associationType": "hi_Relationship",
       "type": "hi_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -414,5 +419,35 @@
     },
     "informCreated": "hi_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "hi_New Organization"
+  "organizations.menus.topbar.item": "hi_New Organization",
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "addresses.label": "स्थान",
+      "phones.label": "फ़ोन नंबर",
+      "faxes.label": "फैक्स नंबर",
+      "emails.label": "ईमेल पते",
+      "urls.label": "यूआरएल",
+      "dbas.label": "DBA",
+      "people.label": "लोग",
+      "ids.label": "संगठन संख्या",
+      "complaints.label": "शिकायतें",
+      "cases.label": "मामले",
+      "related.label": "संबंधित संगठनों",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "noFilter": "(नो फिटर)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
+      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
+      "idAsc": "संगठन आईडी बढ़ते क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध संगठन आईडी अवरोही",
+      "nameAsc": "संगठन द्वारा क्रमबद्ध करें नाम A-Z",
+      "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
 }

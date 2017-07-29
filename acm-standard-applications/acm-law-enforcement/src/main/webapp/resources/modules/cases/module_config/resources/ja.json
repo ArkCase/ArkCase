@@ -10,7 +10,7 @@
     "topbar.item": "案件"
   },
   "cases.error": {
-    "invalidData": "ja_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "概観"
@@ -28,7 +28,7 @@
     "dueDate.label": "ja_Due Date"
   },
   "cases.comp.actions": {
-    "title": "行动",
+    "title": "操作",
     "restrict": "ja_Restrict?",
     "new.button": "ja_New",
     "edit.button": "ja_Edit",
@@ -51,7 +51,7 @@
     }
   },
   "cases.comp.documents": {
-    "title": "ファイル",
+    "title": "操作",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "日付で並べ替え降順",
-      "caseIdAsc": "ケース番号で並べ替え",
-      "caseIdDesc": "ケース番号で並べ替え降順",
-      "byNameAsc": "名で並べ替え",
+      "idAsc": "ケース番号で並べ替え",
+      "idDesc": "ケース番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

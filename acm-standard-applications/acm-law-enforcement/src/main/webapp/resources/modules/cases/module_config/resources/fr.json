@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
-      "caseIdAsc": "Trier cas ID Asc",
-      "caseIdDesc": "Trier cas ID Déc",
-      "byNameAsc": "Trier par nom Asc",
+      "idAsc": "Trier cas ID Asc",
+      "idDesc": "Trier cas ID Déc",
+      "nameAsc": "Trier par nom Asc",
       "noSort": "(Non Trier)"
     }
   }

@@ -369,7 +369,7 @@
     },
     "filters": {
       "opened": "Alle offenen Beschwerden",
-      "iHaveCreated": "Alle offenen Beschwerden",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
       "iAmAssigned": "Alles, was ich zugewiesen bin",
       "iAmFollowing": "Alles, was ich folge",
       "closedNoFurtherAction": "Alle geschlossenen Keine weitere Aktion",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "Vorlaufdatum sortieren Dec",
       "createdDateAsc": "ufSortieren Erstellungsdatum Auf",
       "createdDateDesc": "Nach Name sortieren Dec",
-      "byNameAsc": "Nach Name sortieren Auf",
+      "nameAsc": "Nach Name sortieren Auf",
       "noSort": "(Keine Sortierung)"
     }
   }
