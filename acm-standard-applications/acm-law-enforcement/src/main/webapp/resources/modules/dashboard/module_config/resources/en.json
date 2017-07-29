@@ -178,6 +178,21 @@
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
       },
+      "ids": {
+        "title": "IDs",
+        "description": "Displays IDs details",
+        "noDataMessage": "Currently there are no IDs to display"
+      },
+      "complaints": {
+        "title": "Complaints",
+        "description": "Displays complaint details",
+        "noDataMessage": "Currently there are no complaints to display"
+      },
+      "cases": {
+        "title": "Cases",
+        "description": "Displays case details",
+        "noDataMessage": "Currently there are no cases to display"
+      },
       "documents": {
         "title": "Documents",
         "description": "Displays chart of documents by folder",
@@ -208,6 +223,11 @@
         "description": "Displays URLs details",
         "noDataMessage": "Currently there are no URLs to display"
       },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Displays DBA details",
+        "noDataMessage": "Currently there are no DBAs to display"
+      },
       "tasks": {
         "title": "Tasks",
         "description": "Displays task details",
@@ -222,6 +242,11 @@
         "title": "References",
         "description": "Displays reference details",
         "noDataMessage": "Currently there are no references to display"
+      },
+      "relOrganizations": {
+        "title": "Related Organizations",
+        "description": "Displays Related Organizations details",
+        "noDataMessage": "Currently there are no Related Organizations to display"
       },
       "history": {
         "title": "History",
