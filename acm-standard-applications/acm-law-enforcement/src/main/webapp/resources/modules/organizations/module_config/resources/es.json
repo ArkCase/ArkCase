@@ -315,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "Quejas",
+    "title": "Reclamaciones",
     "table.columns": {
       "priority": "es_Priority",
       "id": "es_ID",
@@ -430,7 +430,7 @@
       "dbas.label": "DBA",
       "people.label": "Personas",
       "ids.label": "Identificación de organización",
-      "complaints.label": "Quejas",
+      "complaints.label": "Reclamaciones",
       "cases.label": "Casos",
       "related.label": "Organizaciones relacionadas",
       "history.label": "Historia"

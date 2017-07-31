@@ -10,10 +10,10 @@
     "topbar.item": "Person"
   },
   "people.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "people.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "phone.label": "de_Phone",
     "email.label": "de_Email",
     "status.label": "de_Status",
@@ -21,7 +21,7 @@
     "identification.label": "de_ID"
   },
   "people.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "export.button": "de_Export",
     "import.button": "de_Import",
     "delete.button": "de_Delete",

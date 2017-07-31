@@ -10,10 +10,10 @@
     "invalidData": ""
   },
   "cases.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "document-repository.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "docRepoId": "de_Repository ID:",
     "docRepoName": "de_Document Repository Name:",
     "modified.label": "de_Modified Date",
@@ -22,7 +22,7 @@
     "description.label": "de_Description"
   },
   "document-repository.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "restrict": "de_Restrict?",
     "subscribe.button": "de_Subscribe",
     "unsubscribe.button": "de_Unsubscribe",
