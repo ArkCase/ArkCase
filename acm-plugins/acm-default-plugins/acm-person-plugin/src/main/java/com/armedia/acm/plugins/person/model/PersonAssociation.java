@@ -53,7 +53,7 @@ public class PersonAssociation implements Serializable, AcmEntity
     @Column(name = "cm_person_assoc_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "cm_person_assoc_person_id", nullable = false)
     private Person person;
 
@@ -244,9 +244,15 @@ public class PersonAssociation implements Serializable, AcmEntity
         this.className = className;
     }
 
-    public String getParentTitle() { return parentTitle; }
+    public String getParentTitle()
+    {
+        return parentTitle;
+    }
 
-    public void setParentTitle(String parentTitle) { this.parentTitle = parentTitle; }
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
+    }
 
     @Override
     public boolean equals(Object obj)
@@ -270,7 +276,8 @@ public class PersonAssociation implements Serializable, AcmEntity
         if (getId() == null)
         {
             return super.hashCode();
-        } else
+        }
+        else
         {
             return getId().hashCode();
         }
