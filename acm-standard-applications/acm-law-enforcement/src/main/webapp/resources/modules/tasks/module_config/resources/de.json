@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "Sortieren Erstellungsdatum Asc",
       "createdDateDesc": "Sortieren Erstellungsdatum Desc",
-      "byNameAsc": "Sortieren Aufgabennname Asc",
-      "byNameDesc": "Sortieren Aufgabennname Desc",
+      "nameAsc": "Sortieren Aufgabennname Asc",
+      "nameDesc": "Sortieren Aufgabennname Desc",
       "noSort": "(Keine Sortierung)"
     }
   }

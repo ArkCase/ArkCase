@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "按創建日期排序",
       "createdDateDesc": "按事件日期反排序",
-      "byNameAsc": "按任務名稱排序",
-      "byNameDesc": "按任務名稱反排序",
+      "nameAsc": "按任務名稱排序",
+      "nameDesc": "按任務名稱反排序",
       "noSort": "(不排序)"
     }
   }

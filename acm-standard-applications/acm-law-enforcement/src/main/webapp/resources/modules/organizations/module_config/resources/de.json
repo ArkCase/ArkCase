@@ -9,7 +9,11 @@
     "leftnav.item": "Organisationen",
     "topbar.item": "Organisation"
   },
+  "organizations.comp.main": {
+    "title": "Overzicht"
+  },
   "organizations.comp.info": {
+    "title": "Informatie",
     "phone.label": "de_Phone",
     "email.label": "de_Email",
     "status.label": "de_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "de_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Acties",
     "export.button": "de_Export",
     "import.button": "de_Import",
     "delete.button": "de_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "de_Merge"
   },
   "organizations.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Organization details saved",
     "table.columns": {
       "title": "de_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "de_Locations",
+    "title": "Standorte",
     "table.columns": {
       "type": "de_Type",
       "streetAddress": "de_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "de_Phone Numbers",
+    "title": "Telefonnummern",
     "table.columns": {
       "type": "de_Phone Type",
       "value": "de_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "de_Fax Numbers",
+    "title": "Faxnummern",
     "table.columns": {
       "type": "de_Fax Type",
       "value": "de_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "de_Email Addresses",
+    "title": "E-Mail-Adressen",
     "table.columns": {
       "type": "de_Email Address Type",
       "value": "de_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "de_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "de_Type",
       "value": "de_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "de_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "de_Delete",
       "setPrimary": "de_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "de_IDs",
+    "title": "Organisations-ID",
     "table.columns": {
       "type": "de_Type",
       "id": "de_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "de_People",
+    "title": "Menschen",
     "table.columns": {
       "type": "de_Role",
       "firstName": "de_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "de_Cases",
+    "title": "Falldateien",
     "table.columns": {
       "priority": "de_Priority",
       "id": "de_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "de_Complaints",
+    "title": "Beschwerden",
     "table.columns": {
       "priority": "de_Priority",
       "id": "de_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "de_Related Organizations",
+    "title": "Verwandte Organisationen",
     "table.columns": {
       "associationType": "de_Relationship",
       "type": "de_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -350,7 +355,7 @@
     }
   },
   "organizations.comp.newOrganization": {
-    "title": "de_Organization",
+    "title": "Organisationen",
     "addAnother": "de_Add Another",
     "remove": "de_Remove",
     "name": "de_Organization Name",
@@ -414,5 +419,34 @@
     },
     "informCreated": "de_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "de_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "addresses.label": "Standorte",
+      "phones.label": "Telefonnummern",
+      "faxes.label": "Faxnummern",
+      "emails.label": "E-Mail-Adressen",
+      "urls.label": "URL",
+      "dbas.label": "DBA",
+      "people.label": "Menschen",
+      "ids.label": "Organisations-ID",
+      "complaints.label": "Beschwerden",
+      "cases.label": "Falldateien",
+      "related.label": "Verwandte Organisationen",
+      "history.label": "Geschichte"
+    },
+    "filters": {
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sortierung Datum Erstellt aufsteigend",
+      "createdDateDesc": "Sortierung Datum Erstellt absteigend",
+      "idAsc": "Sortieren Organisations-ID Aufsteigend",
+      "idDesc": "Sortieren Organisations-ID Absteigend,",
+      "NameAsc": "Sortieren nach Organisation Name Aufsteigend",
+      "NameDesc": "Sortieren nach Organisation Name Absteigend",
+      "noSort": "(Keine Sortierung)"
+    }
+  }
 }

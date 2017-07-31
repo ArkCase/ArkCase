@@ -382,7 +382,7 @@
       "incidentDateDesc": "Сортировка даты инцидента Desc",
       "createdDateAsc": "Сортировка Дата создания Asc",
       "createdDateDesc": "Сортировка Дата создания Desc",
-      "byNameAsc": "Сортировать по имени Asc",
+      "nameAsc": "Сортировать по имени Asc",
       "noSort": "(нет Сортировать)"
     }
   }

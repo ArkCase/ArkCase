@@ -382,7 +382,7 @@
       "incidentDateDesc": "Ordenar Data do evento Desc",
       "createdDateAsc": "Ordenar Data de Criação Asc",
       "createdDateDesc": "Ordenar Data de Criação Desc",
-      "byNameAsc": "Classificar por nome Asc",
+      "nameAsc": "Classificar por nome Asc",
       "noSort": "(Não classificar)"
     }
   }

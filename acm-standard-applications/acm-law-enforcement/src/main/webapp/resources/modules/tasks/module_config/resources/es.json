@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "Ordenar Fecha de creación Asc",
       "createdDateDesc": "Ordenar Fecha de creación Desc",
-      "byNameAsc": "Ordenar el nombre de la tarea Asc",
-      "byNameDesc": "Ordenar el nombre de la tarea Desc",
+      "nameAsc": "Ordenar el nombre de la tarea Asc",
+      "nameDesc": "Ordenar el nombre de la tarea Desc",
       "noSort": "(Sin clasificación)"
     }
   }

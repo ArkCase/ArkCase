@@ -382,7 +382,7 @@
       "incidentDateDesc": "按事件日期反排序",
       "createdDateAsc": "按創建日期排序",
       "createdDateDesc": "按創建日期反排序",
-      "byNameAsc": "按名稱排序",
+      "nameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }
   }

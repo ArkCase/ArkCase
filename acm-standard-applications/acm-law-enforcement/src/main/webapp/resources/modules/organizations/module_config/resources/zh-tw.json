@@ -9,7 +9,11 @@
     "leftnav.item": "組織",
     "topbar.item": "組織"
   },
+  "organizations.comp.main": {
+    "title": "概述"
+  },
   "organizations.comp.info": {
+    "title": "信息",
     "phone.label": "zh-tw_Phone",
     "email.label": "zh-tw_Email",
     "status.label": "zh-tw_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "zh-tw_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "行動",
     "export.button": "zh-tw_Export",
     "import.button": "zh-tw_Import",
     "delete.button": "zh-tw_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "zh-tw_Merge"
   },
   "organizations.comp.details": {
-    "title": "zh-tw_Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Organization details saved",
     "table.columns": {
       "title": "zh-tw_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "zh-tw_Locations",
+    "title": "地點",
     "table.columns": {
       "type": "zh-tw_Type",
       "streetAddress": "zh-tw_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "zh-tw_Phone Numbers",
+    "title": "電話號碼",
     "table.columns": {
       "type": "zh-tw_Phone Type",
       "value": "zh-tw_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "zh-tw_Fax Numbers",
+    "title": "傳真號碼",
     "table.columns": {
       "type": "zh-tw_Fax Type",
       "value": "zh-tw_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "zh-tw_Email Addresses",
+    "title": "電子郵址",
     "table.columns": {
       "type": "zh-tw_Email Address Type",
       "value": "zh-tw_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "zh-tw_URLs",
+    "title": "網址",
     "table.columns": {
       "type": "zh-tw_Type",
       "value": "zh-tw_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "zh-tw_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "zh-tw_Delete",
       "setPrimary": "zh-tw_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "zh-tw_IDs",
+    "title": "組織號碼",
     "table.columns": {
       "type": "zh-tw_Type",
       "id": "zh-tw_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "zh-tw_People",
+    "title": "成員",
     "table.columns": {
       "type": "zh-tw_Role",
       "firstName": "zh-tw_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "zh-tw_Cases",
+    "title": "案件",
     "table.columns": {
       "priority": "zh-tw_Priority",
       "id": "zh-tw_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "zh-tw_Complaints",
+    "title": "投訴",
     "table.columns": {
       "priority": "zh-tw_Priority",
       "id": "zh-tw_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "zh-tw_Related Organizations",
+    "title": "相關組織",
     "table.columns": {
       "associationType": "zh-tw_Relationship",
       "type": "zh-tw_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "zh-tw_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "zh-tw_Event Name",
       "eventDate": "zh-tw_Date",
@@ -414,5 +419,34 @@
     },
     "informCreated": "zh-tw_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "zh-tw_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "addresses.label": "地點",
+      "phones.label": "電話號碼",
+      "faxes.label": "傳真號碼",
+      "emails.label": "電子郵址",
+      "urls.label": "網址",
+      "dbas.label": "DBA",
+      "people.label": "成員",
+      "ids.label": "組織號碼",
+      "complaints.label": "投訴",
+      "cases.label": "案件",
+      "related.label": "相關組織",
+      "history.label": "歷史"
+    },
+    "filters": {
+      "iHaveCreated": "我創建的所有",
+      "noFilter": "(無限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按創建日期排序",
+      "createdDateDesc": "按創建日期反排序",
+      "idAsc": "按組織號排序",
+      "idDesc": "按組織號反排序",
+      "nameAsc": "按組織名排序",
+      "nameDesc": "按組織名反排序",
+      "noSort": "(不排序)"
+    }
+  }
 }
