@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "Plaintes",
-    "progressNoComplaint": "fr_[ No complaint data ]",
-    "progressLoading": "fr_Loading complaint ",
-    "progressError": "fr_Failed to load complaint "
+    "progressNoComplaint": "[Aucune donnée de plainte]",
+    "progressLoading": "Chargement de la plainte",
+    "progressError": "Impossible de charger la plainte"
   },
   "complaints.menus": {
     "leftnav.item": "Plaintes",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "Information",
-    "complaintId": "fr_Complaint id:",
-    "complaintNumber": "fr_Complaint ID:",
-    "courtRoomName": "fr_Court Room Name:",
+    "complaintId": "ID de plainte:",
+    "complaintNumber": "Numéro de plainte:",
+    "courtRoomName": "Nom de la salle de la cour:",
     "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "created.label": "Date créée",
+    "priority.label": "Priorité",
+    "assignee.label": "Assigné à",
+    "owningGroup.label": "Appartenant au groupe",
+    "dueDate.label": "Date d'échéance"
   },
   "complaints.comp.actions": {
     "title": "Actions",
-    "restrict": "fr_Restrict?",
-    "new.button": "fr_New Complaint",
-    "close.button": "fr_Close Complaint",
-    "subscribe.button": "fr_Subscribe",
-    "unsubscribe.button": "fr_Unsubscribe",
-    "claim.button": "fr_Claim",
-    "unclaim.button": "fr_Unclaim"
+    "restrict": "Restreindre?",
+    "new.button": "Nouvelle plainte",
+    "close.button": "Fermer la plainte",
+    "subscribe.button": "S'abonner",
+    "unsubscribe.button": "Désabonner",
+    "claim.button": "Réclamation",
+    "unclaim.button": "Non-réclamation"
   },
   "complaints.comp.details": {
     "title": "Détails",

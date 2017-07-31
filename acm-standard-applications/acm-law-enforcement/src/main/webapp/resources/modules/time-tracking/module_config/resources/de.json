@@ -10,14 +10,14 @@
     "topbar.item": "Zeiterfassung"
   },
   "timeTracking.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "timeTracking.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "lastModified.label": "de_Last Modified"
   },
   "timeTracking.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "new.button": "de_New Timesheet",
     "edit.button": "de_Edit Timesheet"
   },
