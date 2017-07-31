@@ -10,10 +10,10 @@
     "topbar.item": "Organisation"
   },
   "organizations.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "organizations.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "phone.label": "de_Phone",
     "email.label": "de_Email",
     "status.label": "de_Status",
@@ -23,7 +23,7 @@
     "parent.placeholder": "de_Enter Parent Organization"
   },
   "organizations.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "export.button": "de_Export",
     "import.button": "de_Import",
     "delete.button": "de_Delete",

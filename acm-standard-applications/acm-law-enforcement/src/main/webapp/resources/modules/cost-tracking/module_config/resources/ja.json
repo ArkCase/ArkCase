@@ -86,8 +86,8 @@
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "アンチ日付順",
-      "idAsc": "費用IDを並べ替える",
-      "idDesc": "費用IDを昇順で並べ替え",
+      "idAsc": "費用識別番号を並べ替える",
+      "idDesc": "費用識別番号を昇順で並べ替え",
       "nameDesc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
