@@ -25,7 +25,8 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
     private CalendarService calendarService;
 
     /**
-     * @param calendarAdminService the calendarAdminService to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
@@ -33,7 +34,8 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
     }
 
     /**
-     * @param calendarService the calendarService to set
+     * @param calendarService
+     *            the calendarService to set
      */
     public void setCalendarService(CalendarService calendarService)
     {
@@ -53,13 +55,13 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
             CalendarConfigurationsByObjectType configurations = calendarAdminService.readConfiguration(false);
             Map<String, CalendarConfiguration> configurationsByType = configurations.getConfigurationsByType();
             configurationsByType.forEach((k, v) -> {
-                log.debug("Purging calenadr events for {}.", k);
+                log.debug("Purging calendar events for {}.", k);
                 try
                 {
                     calendarService.purgeEvents(k, v);
                 } catch (CalendarServiceException e)
                 {
-                    log.error("Could not purge calndars for {}.", k, e);
+                    log.error("Could not purge calendars for {}.", k, e);
                 }
             });
 
