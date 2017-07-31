@@ -382,7 +382,7 @@
       "incidentDateDesc": "Sort Incident Date Déc",
       "createdDateAsc": "Trier Date créée Asc",
       "createdDateDesc": "Trier Date créée Déc",
-      "byNameAsc": "Trier par nom Asc",
+      "nameAsc": "Trier par nom Asc",
       "noSort": "(Non Trier)"
     }
   }

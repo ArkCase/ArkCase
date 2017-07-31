@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Ordenar Fecha Asc",
       "dateDesc": "Ordenar Fecha Dec",
-      "caseIdAsc": "Ordenar caso de la identificación Asc",
-      "caseIdDesc": "Ordenar caso de la identificación Dec",
-      "byNameAsc": "Ordenar por nombre Asc",
+      "idAsc": "Ordenar caso de la identificación Asc",
+      "idDesc": "Ordenar caso de la identificación Dec",
+      "nameAsc": "Ordenar por nombre Asc",
       "noSort": "(Sin Clasificar)"
     }
   }

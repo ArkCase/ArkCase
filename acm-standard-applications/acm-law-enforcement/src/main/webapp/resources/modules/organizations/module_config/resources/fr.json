@@ -9,7 +9,11 @@
     "leftnav.item": "Organisations",
     "topbar.item": "Organisation"
   },
+  "organizations.comp.main": {
+    "title": "Vue d'ensemble"
+  },
   "organizations.comp.info": {
+    "title": "Information",
     "phone.label": "fr_Phone",
     "email.label": "fr_Email",
     "status.label": "fr_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "fr_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Actions",
     "export.button": "fr_Export",
     "import.button": "fr_Import",
     "delete.button": "fr_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "fr_Merge"
   },
   "organizations.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Organization details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "fr_Locations",
+    "title": "Emplacements",
     "table.columns": {
       "type": "fr_Type",
       "streetAddress": "fr_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "fr_Phone Numbers",
+    "title": "Numéros de téléphone",
     "table.columns": {
       "type": "fr_Phone Type",
       "value": "fr_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "fr_Fax Numbers",
+    "title": "Numéros de fax",
     "table.columns": {
       "type": "fr_Fax Type",
       "value": "fr_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "fr_Email Addresses",
+    "title": "Email",
     "table.columns": {
       "type": "fr_Email Address Type",
       "value": "fr_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "fr_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "fr_Type",
       "value": "fr_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "fr_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "fr_Delete",
       "setPrimary": "fr_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "fr_IDs",
+    "title": "Identification des Organisations",
     "table.columns": {
       "type": "fr_Type",
       "id": "fr_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "fr_People",
+    "title": "Personnes",
     "table.columns": {
       "type": "fr_Role",
       "firstName": "fr_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "fr_Cases",
+    "title": "Cas",
     "table.columns": {
       "priority": "fr_Priority",
       "id": "fr_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "fr_Complaints",
+    "title": "Plaintes",
     "table.columns": {
       "priority": "fr_Priority",
       "id": "fr_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "fr_Related Organizations",
+    "title": "Organisations associées",
     "table.columns": {
       "associationType": "fr_Relationship",
       "type": "fr_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "fr_History",
+    "title": "historique",
     "table.columns": {
       "eventType": "fr_Event Name",
       "eventDate": "fr_Date",
@@ -414,5 +419,35 @@
     },
     "informCreated": "fr_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "fr_New Organization"
+  "organizations.menus.topbar.item": "fr_New Organization",
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "addresses.label": "Emplacements",
+      "phones.label": "Numéros de téléphone",
+      "faxes.label": "Numéros de fax",
+      "emails.label": "Email",
+      "urls.label": "URL",
+      "dbas.label": "DBA",
+      "people.label": "Personnes",
+      "ids.label": "Identification des Organisations",
+      "complaints.label": "Plaintes",
+      "cases.label": "Cas",
+      "related.label": "Organisations associées",
+      "history.label": "historique"
+    },
+    "filters": {
+      "iHaveCreated": "Tout ce que j'ai créé",
+      "noFilter": "(Pas de filtre)"
+    },
+    "sorters": {
+      "CreatedDateAsc": "Date de tri crête croissante",
+      "CreatedDateDesc": "Date de tri Créé Décroissant",
+      "idAsc": "Trier l'ID des Organization croissante",
+      "idDesc": "Trier l'ID des Organization décroissant",
+      "NameAsc": "Trier par le nom des Organization A-Z",
+      "NomDesc": "Trier par les Organization Nom Z-A",
+      "NoSort": "(Non Trier)"
+    }
+  }
 }

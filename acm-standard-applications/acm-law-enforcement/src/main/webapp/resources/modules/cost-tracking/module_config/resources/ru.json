@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
-      "costsheetIdAsc": "Сортировка Стоимость Asc",
-      "costsheetIdDesc": "Сортировка Стоимость Desc",
-      "byNameDesc": "Сортировать по имени",
+      "idAsc": "Сортировка Стоимость Asc",
+      "idDesc": "Сортировка Стоимость Desc",
+      "nameDesc": "Сортировать по имени",
       "noSort": "(Нет Сортировать)"
     }
   }

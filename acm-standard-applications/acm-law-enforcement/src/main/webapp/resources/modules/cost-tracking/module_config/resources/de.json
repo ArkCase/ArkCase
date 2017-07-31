@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "costsheetIdAsc": "Sortieren Kostenblatt-ID Auf",
-      "costsheetIdDesc": "Sortieren Kostenblatt-ID Dec",
-      "byNameDesc": "Nach Name sortieren",
+      "idAsc": "Sortieren Kostenblatt-ID Auf",
+      "idDesc": "Sortieren Kostenblatt-ID Dec",
+      "nameDesc": "Nach Name sortieren",
       "noSort": "(Keine Sortierung)"
     }
   }

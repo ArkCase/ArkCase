@@ -9,7 +9,11 @@
     "leftnav.item": "Организации",
     "topbar.item": "Организация"
   },
+  "organizations.comp.main": {
+    "title": "Обзор"
+  },
   "organizations.comp.info": {
+    "title": "Информация",
     "phone.label": "ru_Phone",
     "email.label": "ru_Email",
     "status.label": "ru_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "ru_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Действия",
     "export.button": "ru_Export",
     "import.button": "ru_Import",
     "delete.button": "ru_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "ru_Merge"
   },
   "organizations.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Organization details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "ru_Locations",
+    "title": "Местоположения",
     "table.columns": {
       "type": "ru_Type",
       "streetAddress": "ru_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "ru_Phone Numbers",
+    "title": "Телефонные номера",
     "table.columns": {
       "type": "ru_Phone Type",
       "value": "ru_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "ru_Fax Numbers",
+    "title": "Номера факсов",
     "table.columns": {
       "type": "ru_Fax Type",
       "value": "ru_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "ru_Email Addresses",
+    "title": "Адреса электронной почты",
     "table.columns": {
       "type": "ru_Email Address Type",
       "value": "ru_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "ru_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "ru_Type",
       "value": "ru_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "ru_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "ru_Delete",
       "setPrimary": "ru_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "ru_IDs",
+    "title": "Идентификаторы",
     "table.columns": {
       "type": "ru_Type",
       "id": "ru_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "ru_People",
+    "title": "Люди",
     "table.columns": {
       "type": "ru_Role",
       "firstName": "ru_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "ru_Cases",
+    "title": "Случаи",
     "table.columns": {
       "priority": "ru_Priority",
       "id": "ru_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "ru_Complaints",
+    "title": "Жалобы",
     "table.columns": {
       "priority": "ru_Priority",
       "id": "ru_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "ru_Related Organizations",
+    "title": "Связанные организации",
     "table.columns": {
       "associationType": "ru_Relationship",
       "type": "ru_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "ru_History",
+    "title": "История",
     "table.columns": {
       "eventType": "ru_Event Name",
       "eventDate": "ru_Date",
@@ -414,5 +419,34 @@
     },
     "informCreated": "ru_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "ru_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "address.label": "Местоположения",
+      "phones.label": "Телефонные номера",
+      "faxes.label": "Номера факсов",
+      "emails.label": "Адреса электронной почты",
+      "urls.label": "URL",
+      "dbas.label": "Администраторы баз данных",
+      "people.label": "Люди",
+      "ids.label": "Идентификаторы",
+      "complaints.label": "Жалобы",
+      "cases.label": "Случаи",
+      "related.label": "Связанные организации",
+      "history.label": "История"
+    },
+    "filters": {
+      "iHaveCreated": "Все, что я создал",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "createdDateAsc": "Дата сортировки по возрастанию",
+      "createdDateDesc": "Дата сортировки по убыванию",
+      "idAsc": "Идентификатор организации сортировки по возрастанию",
+      "idDesc": "Идентификатор организации сортировки по убыванию",
+      "nameAsc": "Сортировать по названию организации A-Z",
+      "nameDesc": "Сортировать по названию организации Z-A",
+      "noSort": "(Нет сортировки)"
+    }
+  }
 }

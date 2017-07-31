@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "timesheetIdAsc": "Sortieren Zeiterzeugung-ID Auf",
-      "timesheetIdDesc": "Sortieren Zeiterzeugung-ID Dec",
-      "byNameDesc": "Nach Name sortieren",
+      "idAsc": "Sortieren Zeiterzeugung-ID Auf",
+      "idAsc": "Sortieren Zeiterzeugung-ID Dec",
+      "nameDesc": "Nach Name sortieren",
       "noSort": "(Keine Sortierung)"
     }
   }
