@@ -12,8 +12,10 @@ angular.module('dashboard.faxes', ['adf.provider'])
                 commonName: 'faxes'
             });
     })
-    .controller('Dashboard.FaxesController', ['$scope', '$stateParams', 'Organization.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, OrganizationInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -33,6 +35,8 @@ angular.module('dashboard.faxes', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -51,14 +55,14 @@ angular.module('dashboard.faxes', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
                 var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-                $scope.gridOptions.data = faxes;
+                gridHelper.setWidgetsGridData(faxes);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "faxes";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
         }

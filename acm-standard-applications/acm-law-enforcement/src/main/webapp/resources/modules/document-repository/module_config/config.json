@@ -124,11 +124,11 @@
         ]
       },
       {
-        "type": "p/DOC_REPO/tags",
-        "label": "Tags",
-        "icon": "fa fa-tags",
+        "type": "p/DOC_REPO/note",
+        "label": "Notes",
+        "icon": "fa fa-comments",
         "components": [
-          "tags"
+          "notes"
         ]
       },
       {
@@ -140,19 +140,19 @@
         ]
       },
       {
-        "type": "p/DOC_REPO/note",
-        "label": "Notes",
-        "icon": "fa fa-comments",
-        "components": [
-          "notes"
-        ]
-      },
-      {
         "type": "p/DOC_REPO/his",
         "label": "History",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/tags",
+        "label": "Tags",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
         ]
       }
     ]
@@ -278,7 +278,26 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "document-repository.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "document-repository.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "document-repository.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
