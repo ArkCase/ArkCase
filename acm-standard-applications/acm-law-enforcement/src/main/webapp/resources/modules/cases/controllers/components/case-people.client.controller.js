@@ -64,7 +64,7 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 id: null
                 , personType: ""
                 , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.caseType
+                , parentType: $scope.objectInfo.objectType
                 , parentTitle: $scope.objectInfo.caseNumber
                 , personDescription: ""
                 , notes: ""
