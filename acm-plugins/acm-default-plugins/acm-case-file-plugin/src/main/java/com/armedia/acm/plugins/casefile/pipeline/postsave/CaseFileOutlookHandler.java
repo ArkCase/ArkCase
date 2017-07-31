@@ -141,7 +141,8 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
     }
 
     /**
-     * @param calendarAdminService the calendarAdminService to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
