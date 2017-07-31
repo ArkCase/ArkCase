@@ -12,8 +12,10 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 commonName: 'docReview'
             });
     })
-    .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', 'Task.InfoService', 'Helper.ObjectBrowserService'
-        , function ($scope, $stateParams, TaskInfoService, HelperObjectBrowserService) {
+    .controller('Dashboard.DocReviewController', ['$scope', '$stateParams', '$translate',
+        'Task.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                    TaskInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -39,6 +41,8 @@ angular.module('dashboard.docReview', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
@@ -55,16 +59,23 @@ angular.module('dashboard.docReview', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.documentUnderReview ? [objectInfo.documentUnderReview] : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                if (!Util.isEmpty(objectInfo.documentUnderReview)) {
+                    $scope.gridOptions.data = [objectInfo.documentUnderReview];
+                    $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                    $scope.gridOptions.noData = false;
+                }
+                else {
+                    $scope.gridOptions.data = [];
+                    $scope.gridOptions.noData = true;
+                    $scope.noDataMessage = $translate.instant('dashboard.widgets.docReview.noDataMessage');
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "docsReview";
                 });
-
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
         }
     ]);

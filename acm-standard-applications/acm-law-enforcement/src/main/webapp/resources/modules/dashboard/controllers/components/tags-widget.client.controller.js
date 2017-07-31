@@ -13,18 +13,21 @@ angular.module('dashboard.tags', ['adf.provider'])
                 }
             );
     })
-    .controller('Dashboard.TagsController', ['$scope', '$stateParams', '$q', 'UtilService', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TagsService'
-        , 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, TaskInfoService, Authentication
-            , DashboardService, ObjectService, ObjectTagsService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.TagsController', ['$scope', '$stateParams', '$q', '$translate',
+        'UtilService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.TagsService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        function ($scope, $stateParams, $q, $translate,
+                  Util, CaseInfoService, ComplaintInfoService, TaskInfoService, Authentication, DashboardService, ObjectService, ObjectTagsService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT}
-                , {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK}
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.CASE_FILE},
+                {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT},
+                {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK},
+                {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                {name: "TIMESHEET", configName: "time-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TIMESHEET},
+                {name: "COSTSHEET", configName: "cost-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COSTSHEET}
             ];
 
             var module = _.find(modules, function (module) {
@@ -36,11 +39,12 @@ angular.module('dashboard.tags', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(currentObjectId, module.objectType);
-                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
                 var promiseUsers = gridHelper.getUsers();
 
                 $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
@@ -51,19 +55,9 @@ angular.module('dashboard.tags', ['adf.provider'])
                         });
                         gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        gridHelper.setColumnDefs(widgetInfo);
                         var tags = info;
-
-                        if (!Util.isArrayEmpty(tags)) {
-                            $scope.gridOptions.data = tags;
-                            $scope.gridOptions.totalItems = tags ? tags.length : 0;
-                            $scope.gridOptions.noData = false;
-                        }
-                        else
-                        {
-                            $scope.gridOptions.data = [];
-                            $scope.gridOptions.noData = true;
-                        }
+                        gridHelper.setWidgetsGridData(tags);
                     },
                     function (err) {
 
