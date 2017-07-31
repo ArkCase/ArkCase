@@ -1,5 +1,6 @@
 package com.armedia.acm.calendar.service;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.security.core.Authentication;
@@ -68,6 +69,13 @@ public interface CalendarService
      */
     void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId,
             boolean deleteRecurring) throws CalendarServiceException;
+
+    /**
+     * @param objectType
+     * @param config
+     * @throws CalendarServiceException
+     */
+    void purgeEvents(String objectType, CalendarConfiguration config) throws CalendarServiceException;
 
     <CSE extends CalendarServiceException> CalendarExceptionMapper<CSE> getExceptionMapper(CalendarServiceException e);
 
