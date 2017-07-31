@@ -247,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "組織番号",
+    "title": "組織識別番号",
     "table.columns": {
       "type": "ja_Type",
       "id": "ja_ID",
@@ -315,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "申し立て",
+    "title": "訴状",
     "table.columns": {
       "priority": "ja_Priority",
       "id": "ja_ID",
@@ -429,8 +429,8 @@
       "urls.label": "URL",
       "dbas.label": "DBA",
       "people.label": "人員",
-      "ids.label": "組織番号",
-      "complaints.label": "申し立て",
+      "ids.label": "組織識別番号",
+      "complaints.label": "訴状",
       "cases.label": "案件",
       "related.label": "関連組織",
       "history.label": "歴史"
