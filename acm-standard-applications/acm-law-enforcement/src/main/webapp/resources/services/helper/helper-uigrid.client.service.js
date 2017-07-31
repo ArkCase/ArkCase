@@ -341,43 +341,41 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME), promiseUsers]).then(function (data) {
                     var userNamePop = data[0];
 
-                    if (userNamePop == "userName" && _.get(config, 'columnDefs'))
-                    {
+                    if (userNamePop == "userName" && _.get(config, 'columnDefs')) {
                         for (var i = 0; i < config.columnDefs.length; i++) {
                             if (Service.Lookups.USER_FULL_NAMES == config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == config.columnDefs[i].lookup) {
                                 var tempColumn = angular.copy(config.columnDefs[i]);
                                 tempColumn.cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
-                                config.columnDefs.splice(i,1, tempColumn);
+                                config.columnDefs.splice(i, 1, tempColumn);
                             }
                         }
                     }
                 });
             }
 
-                    /**
-                     * @ngdoc method
-                     * @name showUserFullNames
-                     * @methodOf services:Helper.UiGridService
-                     *
-                     * @description
-                     * Replace user id with user full name.
-                     */
-                    , showUserFullNames: function () {
-                    var that = this;
-                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
-                    {
-                        var userNamePop = result[0];
+            /**
+             * @ngdoc method
+             * @name showUserFullNames
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Replace user id with user full name.
+             */
+            , showUserFullNames: function () {
+                var that = this;
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result) {
+                    var userNamePop = result[0];
 
-				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
-					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-								    tempColumn.field = tempColumn.fullNameField;
-								    that.scope.config.columnDefs.splice(i,1, tempColumn);
-							    }
-						    }
-					    }
-                    });
+                    if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
+                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                            if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+                                var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+                                tempColumn.field = tempColumn.fullNameField;
+                                that.scope.config.columnDefs.splice(i, 1, tempColumn);
+                            }
+                        }
+                    }
+                });
             }
 
             /**
@@ -497,7 +495,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 return ObjectService.showObject(objTypeKey, objId);
 
             }
-            
+
             /**
              * @ngdoc method
              * @name openObject
@@ -555,14 +553,18 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
                 var columnDef = {
                     name: "act"
-                    , cellEditableCondition: false
+                    ,
+                    cellEditableCondition: false
                     //, enableFiltering: false
                     //, enableHiding: false
                     //, enableSorting: false
                     //, enableColumnResizing: false
-                    , width: 40
-                    , headerCellTemplate: "<span></span>"
-                    , cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
+                    ,
+                    width: 40
+                    ,
+                    headerCellTemplate: "<span></span>"
+                    ,
+                    cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
             }
@@ -653,7 +655,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              *                  contained within config. Calls were structured this way for code readability
              */
 
-            , addConfigurableButton: function(config, button) {
+            , addConfigurableButton: function (config, button) {
                 var icon, clickFn, readOnlyFn;
                 // if the config file was missing a button parameter, search the predefined buttons for the missing params
                 if (Util.isEmpty(button.icon) || Util.isEmpty(button.clickFn) || Util.isEmpty(button.readOnlyFn)) {
@@ -724,43 +726,43 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     that.scope.gridOptions.data.splice(idx, 1);
                 }
             }
-            
+
             /**
              * @ngdoc method
              * @name retrieveAuditData
              * @methodOf services:Helper.UiGridService
              *
              * @param {String} objectType query audit for given object type
-             *            
+             *
              * @description
              * Retrieves audit data for current grid context (objectType, objectId)
              */
             , retrieveAuditData: function (objectType, objectId) {
-                  var that = this;
-                  if (Util.goodPositive(objectId, false)) {
-                      var promiseQueryAudit = ObjectAuditService.queryAudit(
-                            objectType, objectId
-                          , Util.goodValue(this.scope.start, 0)
-                          , Util.goodValue(this.scope.pageSize, 10)
-                          , Util.goodMapValue(this.scope.sort, "by")
-                          , Util.goodMapValue(this.scope.sort, "dir")
-                      );
-     
-                      $q.all([promiseQueryAudit]).then(function (data) {
-                          var auditData = data[0];
-                          that.scope.gridOptions = that.scope.gridOptions || {};
-                          that.scope.gridOptions.data = auditData.resultPage;
-                          that.scope.gridOptions.totalItems = auditData.totalCount;
-                      });
-                  }
-                  // subscribe for update, reload data
-                  var eventName = "object.changed/" + objectType + "/" + objectId;
-                  var subscription = this.scope.subscription;
-                  if (subscription) {
-                      this.scope.$bus.unsubscribe(subscription);
-                  }
-                  subscription = this.scope.$bus.subscribe(eventName, function(data) {
-                      that.retrieveAuditData(objectType, objectId);
+                var that = this;
+                if (Util.goodPositive(objectId, false)) {
+                    var promiseQueryAudit = ObjectAuditService.queryAudit(
+                        objectType, objectId
+                        , Util.goodValue(this.scope.start, 0)
+                        , Util.goodValue(this.scope.pageSize, 10)
+                        , Util.goodMapValue(this.scope.sort, "by")
+                        , Util.goodMapValue(this.scope.sort, "dir")
+                    );
+
+                    $q.all([promiseQueryAudit]).then(function (data) {
+                        var auditData = data[0];
+                        that.scope.gridOptions = that.scope.gridOptions || {};
+                        that.scope.gridOptions.data = auditData.resultPage;
+                        that.scope.gridOptions.totalItems = auditData.totalCount;
+                    });
+                }
+                // subscribe for update, reload data
+                var eventName = "object.changed/" + objectType + "/" + objectId;
+                var subscription = this.scope.subscription;
+                if (subscription) {
+                    this.scope.$bus.unsubscribe(subscription);
+                }
+                this.scope.subscription = this.scope.$bus.subscribe(eventName, function (data) {
+                    that.retrieveAuditData(objectType, objectId);
                 });
             }
 
