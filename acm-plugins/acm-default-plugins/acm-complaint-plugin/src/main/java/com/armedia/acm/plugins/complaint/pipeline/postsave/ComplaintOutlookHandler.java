@@ -1,16 +1,14 @@
 package com.armedia.acm.plugins.complaint.pipeline.postsave;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -35,7 +33,7 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
      */
     private OutlookContainerCalendarService outlookContainerCalendarService;
 
-    private CalendarAdminService calendarAdminService;
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @Override
     public void execute(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException
@@ -58,26 +56,6 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
         logger.trace("Complaint exiting ComplaintOutlookHandler : [{}]", entity);
     }
 
-    /**
-     * @param pipelineContext
-     * @return
-     * @throws PipelineProcessException
-     */
-    private AcmOutlookUser getConfiguredCalendarUser(ComplaintPipelineContext pipelineContext) throws PipelineProcessException
-    {
-        try
-        {
-            CalendarConfigurationsByObjectType onfigurations = calendarAdminService.readConfiguration(true);
-            CalendarConfiguration configuration = onfigurations.getConfiguration("CASE_FILE");
-            return new AcmOutlookUser(pipelineContext.getAuthentication().getName(), configuration.getSystemEmail(),
-                    configuration.getPassword());
-        } catch (CalendarConfigurationException e)
-        {
-            logger.warn("Could not read calendar configuration.", e);
-            throw new PipelineProcessException(e);
-        }
-    }
-
     @Override
     public void rollback(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException
     {
@@ -85,6 +63,16 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
         AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
         getOutlookContainerCalendarService().deleteFolder(user, entity.getContainer().getContainerObjectId(),
                 entity.getContainer().getCalendarFolderId(), DeleteMode.HardDelete);
+    }
+
+    /**
+     * @param pipelineContext
+     * @return
+     * @throws PipelineProcessException
+     */
+    private AcmOutlookUser getConfiguredCalendarUser(ComplaintPipelineContext pipelineContext) throws PipelineProcessException
+    {
+        return calendarAdminService.getHandlerOutlookUser(pipelineContext.getAuthentication().getName(), ComplaintConstants.OBJECT_TYPE);
     }
 
     private void createOutlookFolder(AcmOutlookUser outlookUser, Complaint complaint)
@@ -136,9 +124,10 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
     }
 
     /**
-     * @param calendarAdminService the calendarAdminService to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
-    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
     {
         this.calendarAdminService = calendarAdminService;
     }
