@@ -457,14 +457,19 @@ public class RolesPrivilegesService
      */
     private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
-        try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile));
-             InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
+        // opening an output stream and input stream for the same file at the same time means the output stream
+        // will overwrite the file contents before the input stream can read it... so here, we split into two
+        // try blocks.
+        try (InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
             Properties props = new Properties();
             props.load(applicationInputStream);
             String propPrivileges = String.join(",", privileges);
             props.setProperty(roleName, propPrivileges);
-            props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
+            try (OutputStream applicationOutputStream = FileUtils.openOutputStream(new File(applicationRolesPrivilegesPropertiesFile)))
+            {
+                props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
+            }
 
         } catch (Exception e)
         {
@@ -490,9 +495,7 @@ public class RolesPrivilegesService
 
     private void updateRolesPrivilegesConfig() throws AcmRolesPrivilegesException
     {
-        try (InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile));
-             OutputStream applicationOutputStream = new FileOutputStream(new File(applicationRolesPrivilegesFile));
-             Writer writer = new BufferedWriter(new OutputStreamWriter(applicationOutputStream, StandardCharsets.UTF_8)))
+        try (InputStream applicationInputStream = FileUtils.openInputStream(new File(applicationRolesPrivilegesPropertiesFile)))
         {
             // Load roles privileges properties
             Properties props = new Properties();
@@ -520,7 +523,11 @@ public class RolesPrivilegesService
             cfg.setDirectoryForTemplateLoading(new File(applicationRolesPrivilegesTemplatesLocation));
             Template tmpl = cfg.getTemplate(applicationRolesPrivilegesTemplateFile);
 
-            tmpl.process(privileges, writer);
+            try (OutputStream applicationOutputStream = new FileOutputStream(new File(applicationRolesPrivilegesFile));
+                 Writer writer = new BufferedWriter(new OutputStreamWriter(applicationOutputStream, StandardCharsets.UTF_8)))
+            {
+                tmpl.process(privileges, writer);
+            }
 
 
         } catch (Exception e)
