@@ -97,6 +97,24 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
         }
     }
 
+    @Override
+    public PersonAssociation getPersonAssociation(Long id, Authentication auth)
+    {
+        return personAssociationDao.find(id);
+    }
+
+    /**
+     * Delete Person association
+     *
+     * @param id   person association id
+     * @param auth Authentication
+     */
+    @Override
+    public void deletePersonAssociation(Long id, Authentication auth)
+    {
+        personAssociationDao.deletePersonAssociationById(id);
+    }
+
     private String combineResults(String parentResult, String associationsResult) throws IOException, AcmObjectNotFoundException
     {
         ObjectMapper om = new ObjectMapper();

@@ -570,6 +570,13 @@
       "location": "Location"
     }
   },
+  "common.dialogObjectPicker": {
+    "header": "Search",
+    "table.columns": {
+      "name": "Name",
+      "id": "ID"
+    }
+  },
   "common.addOrganization": {
     "title": "Add Organization",
     "addNew.label": "Add new Organization",
@@ -579,6 +586,18 @@
     "type.label": "Organization Association Type",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Organization",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No"
+  },
+  "common.addObjectAssociation": {
+    "title": "Add",
+    "object.label": "Select",
+    "selectExisting.label": "Select existing",
+    "description": "Description",
+    "type.label": "Association Type",
+    "btnCancel.text": "Cancel",
+    "btnOk.text": "Save",
     "setPrimary.label": "Set As Primary?",
     "radioYes.text": "Yes",
     "radioNo.text": "No"
