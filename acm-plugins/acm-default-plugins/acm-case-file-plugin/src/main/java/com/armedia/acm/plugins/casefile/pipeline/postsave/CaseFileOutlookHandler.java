@@ -1,16 +1,14 @@
 package com.armedia.acm.plugins.casefile.pipeline.postsave;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.outlook.service.OutlookContainerCalendarService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -39,7 +37,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
      */
     private OutlookContainerCalendarService outlookContainerCalendarService;
 
-    private CalendarAdminService calendarAdminService;
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
@@ -63,26 +61,6 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
 
     }
 
-    /**
-     * @param pipelineContext
-     * @return
-     * @throws PipelineProcessException
-     */
-    private AcmOutlookUser getConfiguredCalendarUser(CaseFilePipelineContext pipelineContext) throws PipelineProcessException
-    {
-        try
-        {
-            CalendarConfigurationsByObjectType onfigurations = calendarAdminService.readConfiguration(true);
-            CalendarConfiguration configuration = onfigurations.getConfiguration("CASE_FILE");
-            return new AcmOutlookUser(pipelineContext.getAuthentication().getName(), configuration.getSystemEmail(),
-                    configuration.getPassword());
-        } catch (CalendarConfigurationException e)
-        {
-            log.warn("Could not read calendar configuration.", e);
-            throw new PipelineProcessException(e);
-        }
-    }
-
     @Override
     public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
@@ -90,6 +68,16 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
         getOutlookContainerCalendarService().deleteFolder(user, entity.getContainer().getContainerObjectId(),
                 entity.getContainer().getCalendarFolderId(), DeleteMode.MoveToDeletedItems);
+    }
+
+    /**
+     * @param pipelineContext
+     * @return
+     * @throws PipelineProcessException
+     */
+    private AcmOutlookUser getConfiguredCalendarUser(CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    {
+        return calendarAdminService.getHandlerOutlookUser(pipelineContext.getAuthentication().getName(), CaseFileConstants.OBJECT_TYPE);
     }
 
     private void createOutlookFolder(AcmOutlookUser outlookUser, CaseFile caseFile, CaseFilePipelineContext pipelineContext)
@@ -144,7 +132,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
      * @param calendarAdminService
      *            the calendarAdminService to set
      */
-    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
     {
         this.calendarAdminService = calendarAdminService;
     }

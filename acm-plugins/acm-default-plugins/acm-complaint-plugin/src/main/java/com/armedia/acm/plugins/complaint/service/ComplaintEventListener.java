@@ -1,10 +1,5 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
-import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -18,9 +13,9 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +41,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private boolean shouldDeleteCalendarFolder;
     private String complaintStatusClosed;
 
-    private CalendarAdminService calendarAdminService;
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -98,7 +93,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                         {
 
                             // delete shared calendar if complaint closed
-                            AcmOutlookUser user = getConfiguredCalendarUser();
+                            AcmOutlookUser user = calendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE);
                             getCalendarService().deleteFolder(user, updatedComplaint.getContainer().getContainerObjectId(), calId,
                                     DeleteMode.MoveToDeletedItems);
                         }
@@ -123,24 +118,6 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), ipAddress);
                 }
             }
-        }
-    }
-
-    /**
-     * @return
-     * @throws PipelineProcessException
-     */
-    private AcmOutlookUser getConfiguredCalendarUser() throws AcmOutlookItemNotFoundException
-    {
-        try
-        {
-            CalendarConfigurationsByObjectType onfigurations = calendarAdminService.readConfiguration(true);
-            CalendarConfiguration configuration = onfigurations.getConfiguration("COMPLAINT");
-            return new AcmOutlookUser(null, configuration.getSystemEmail(), configuration.getPassword());
-        } catch (CalendarConfigurationException e)
-        {
-            log.warn("Could not read calendar configuration.", e);
-            throw new AcmOutlookItemNotFoundException(e);
         }
     }
 
@@ -298,9 +275,10 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     }
 
     /**
-     * @param calendarAdminService the calendarAdminService to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
-    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
     {
         this.calendarAdminService = calendarAdminService;
     }

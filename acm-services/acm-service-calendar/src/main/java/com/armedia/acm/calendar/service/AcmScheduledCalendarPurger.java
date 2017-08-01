@@ -55,19 +55,19 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
             CalendarConfigurationsByObjectType configurations = calendarAdminService.readConfiguration(false);
             Map<String, CalendarConfiguration> configurationsByType = configurations.getConfigurationsByType();
             configurationsByType.forEach((k, v) -> {
-                log.debug("Purging calendar events for {}.", k);
+                log.debug("Purging calendar events for [{}].", k);
                 try
                 {
                     calendarService.purgeEvents(k, v);
                 } catch (CalendarServiceException e)
                 {
-                    log.error("Could not purge calendars for {}.", k, e);
+                    log.error("Could not purge calendars for [{}].", k, e);
                 }
             });
 
         } catch (CalendarConfigurationException e)
         {
-            log.error("Could not load configuration for {}.", getClass().getName(), e);
+            log.error("Could not load configuration for [{}].", getClass().getName(), e);
         }
 
     }

@@ -7,9 +7,6 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -25,6 +22,8 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
+import com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
 
@@ -55,9 +54,8 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     private CaseFileEventUtility mockCaseFileEventUtility;
     private AcmAssignmentDao mockAcmAssignmentDao;
     private OutlookContainerCalendarService mockCalendarService;
-    private CalendarAdminService mockedCalendarAdminService;
-    private CalendarConfigurationsByObjectType mockedCalendarConfigurations;
-    private CalendarConfiguration mockedCalendarConfiguration;
+    private OutlookCalendarAdminServiceExtension mockedCalendarAdminService;
+    private AcmOutlookUser mockedOutlookUser;
     private CaseFileEventListener caseFileEventListener;
 
     @Before
@@ -69,9 +67,8 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         mockCaseFileEventUtility = createMock(CaseFileEventUtility.class);
         mockAcmAssignmentDao = createMock(AcmAssignmentDao.class);
         mockCalendarService = createMock(OutlookContainerCalendarService.class);
-        mockedCalendarAdminService = createMock(CalendarAdminService.class);
-        mockedCalendarConfigurations = createMock(CalendarConfigurationsByObjectType.class);
-        mockedCalendarConfiguration = createMock(CalendarConfiguration.class);
+        mockedCalendarAdminService = createMock(OutlookCalendarAdminService.class);
+        mockedOutlookUser = createMock(AcmOutlookUser.class);
 
         caseFileEventListener.setAcmObjectHistoryService(mockAcmObjectHistoryService);
         caseFileEventListener.setAcmObjectHistoryEventPublisher(mockAcmObjectHistoryEventPublisher);
@@ -477,10 +474,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture), capture(eventStatusCapture));
         expectLastCall().once();
 
-        expect(mockedCalendarAdminService.readConfiguration(eq(true))).andReturn(mockedCalendarConfigurations);
-        expect(mockedCalendarConfigurations.getConfiguration(eq("CASE_FILE"))).andReturn(mockedCalendarConfiguration);
-        expect(mockedCalendarConfiguration.getSystemEmail()).andReturn("system_email");
-        expect(mockedCalendarConfiguration.getPassword()).andReturn("system_password");
+        expect(mockedCalendarAdminService.getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE)).andReturn(mockedOutlookUser);
 
         replayAll();
         caseFileEventListener.onApplicationEvent(event);
