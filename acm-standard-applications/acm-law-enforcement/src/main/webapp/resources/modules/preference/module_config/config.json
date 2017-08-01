@@ -81,6 +81,7 @@
       "name": "PERSON",
       "allowedWidgets": [
         "details",
+        "pictures",
         "locations",
         "phones",
         "emails",

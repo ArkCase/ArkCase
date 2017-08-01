@@ -14,9 +14,9 @@ angular.module('dashboard.pictures', ['adf.provider'])
             );
     })
     .controller('Dashboard.PicturesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Person.PicturesService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  PersonInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, PersonPicturesService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -54,8 +54,15 @@ angular.module('dashboard.pictures', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                gridHelper.setWidgetsGridData(objectInfo.pictures);
+                $scope.objectInfo = objectInfo;
+                refreshGridData(objectInfo.id);
             };
+
+            function refreshGridData(objectId) {
+                PersonPicturesService.listPersonPictures(objectId).then(function (result) {
+                    gridHelper.setWidgetsGridData(result.response.docs);
+                });
+            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {

@@ -13,11 +13,17 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'PersonAssociation.Service', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, PersonAssociationService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
                 {
                     name: "ORGANIZATION",
                     configName: "organizations",
@@ -53,15 +59,24 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                //FIX this when relations between cases and organizations works
-                //gridHelper.setWidgetsGridData(objectInfo.cases);
+                $scope.objectInfo = objectInfo;
+                refreshGridData(objectInfo.id);
             };
+
+            function refreshGridData(objectId) {
+                ObjectPersonService.getPersonCases(objectId).then(function (data) {
+                    gridHelper.setWidgetsGridData(data.response.docs);
+                });
+                PersonAssociationService.getPersonAssociations(currentObjectId, "CASE_FILE").then(function (data) {
+                    gridHelper.setWidgetsGridData(data.response.docs);
+                });
+            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "cases";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
         }
