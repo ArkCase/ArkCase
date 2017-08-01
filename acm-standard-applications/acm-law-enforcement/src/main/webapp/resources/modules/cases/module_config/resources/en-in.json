@@ -20,7 +20,7 @@
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
     "courtRoomName": "Court Room Name:",
-    "caseType.label": "Type",
+    "type.label": "Type",
     "created.label": "Created Date",
     "priority.label": "Priority",
     "assignee.label": "Assigned To",
@@ -55,73 +55,18 @@
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
     "searchInputPlaceholder": "Search"
+
   },
   "cases.comp.people": {
     "title": "People",
     "table.columns": {
       "entity": "Entity",
-      "type": "Type",
+      "type": "Role",
       "firstName": "FirstName",
-      "lastName": "LastName"
-    },
-    "contactMethods": {
-      "title": "ContactMethods",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organizations",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "addresses": {
-      "title": "Locations",
-      "table.columns": {
-        "type": "Type",
-        "streetAddress": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "aliases": {
-      "title": "Aliases",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "Security Tags",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By",
-        "modified": "Last Modified",
-        "modifier": "Modified By"
-      }
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "cases.comp.organizations": {
@@ -326,8 +271,8 @@
     "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "Approval Date",
-      "approverFullName": "Approver",
       "approverId": "Approver",
+      "approverFullName": "Approver",
       "approverDecision": "Approver Decision"
     }
   },
@@ -383,4 +328,5 @@
       "noSort": "(No Sort)"
     }
   }
+
 }

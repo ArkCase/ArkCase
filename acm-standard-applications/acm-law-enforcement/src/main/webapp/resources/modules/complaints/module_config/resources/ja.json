@@ -3,7 +3,7 @@
     "title": "訴状",
     "progressNoComplaint": "[ 訴状のデータはありません ]",
     "progressLoading": "訴状の読み込み",
-    "progressError": "不満を読み込めませんでした"
+    "progressError": "訴状の読み込みに失敗しました"
   },
   "complaints.menus": {
     "leftnav.item": "訴状",

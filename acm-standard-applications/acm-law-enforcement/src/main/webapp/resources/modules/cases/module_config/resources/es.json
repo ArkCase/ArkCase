@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "Casos",
-    "progressNoCase": "es_[ No case file data ]",
-    "progressLoading": "es_Loading case file ",
-    "progressError": "es_Failed to load case file"
+    "progressNoCase": "[ Sin datos de archivo de caso ]",
+    "progressLoading": "Cargando el archivo de caso",
+    "progressError": "No se pudo cargar el archivo de caso"
   },
   "cases.menus": {
     "leftnav.item": "Expedientes de Caso",
     "topbar.item": "Caso"
   },
   "cases.error": {
-    "invalidData": "es_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "Descripción general"
   },
   "cases.comp.info": {
     "title": "Información",
-    "caseId": "es_Case id:",
-    "caseNumber": "es_Case Number:",
-    "courtRoomName": "es_Court Room Name:",
-    "type.label": "es_Type",
-    "created.label": "es_Created Date",
-    "priority.label": "es_Priority",
-    "assignee.label": "es_Assigned To",
-    "owningGroup.label": "es_Owning Group",
-    "dueDate.label": "es_Due Date"
+    "caseId": "Identificación del caso:",
+    "caseNumber": "Número de caso:",
+    "courtRoomName": "Nombre de la sala:",
+    "type.label": "Tipo",
+    "created.label": "Fecha de creación",
+    "priority.label": "Prioridad",
+    "assignee.label": "Asignado a",
+    "owningGroup.label": "Grupo propietario",
+    "dueDate.label": "Fecha de vencimiento"
   },
   "cases.comp.actions": {
     "title": "Acciones",
-    "restrict": "es_Restrict?",
-    "new.button": "es_New",
-    "edit.button": "es_Edit",
-    "status.button": "es_Change Case Status",
-    "reinvestigate.button": "es_Reinvestigate",
-    "subscribe.button": "es_Subscribe",
-    "unsubscribe.button": "es_Unsubscribe",
-    "merge.button": "es_Merge",
-    "claim.button": "es_Claim",
-    "unclaim.button": "es_Unclaim",
-    "split.button": "es_Split"
+    "restrict": "Restringir?",
+    "new.button": "Nuevo",
+    "edit.button": "Editar",
+    "status.button": "Cambiar estado del caso",
+    "reinvestigate.button": "Reinvestigar",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "merge.button": "Combinar",
+    "claim.button": "Reclamación",
+    "unclaim.button": "No reclamar",
+    "split.button": "Dividir"
   },
   "cases.comp.details": {
     "title": "Detalles",
