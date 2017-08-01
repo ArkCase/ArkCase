@@ -3,7 +3,7 @@
 angular.module('dashboard.related', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('aliases', {
+            .widget('related', {
                     title: 'dashboard.widgets.related.title',
                     description: 'dashboard.widgets.related.description',
                     controller: 'Dashboard.RelatedController',
@@ -14,9 +14,9 @@ angular.module('dashboard.related', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  PersonInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -54,8 +54,15 @@ angular.module('dashboard.related', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                gridHelper.setWidgetsGridData(objectInfor.aliases);
+                $scope.objectInfo = objectInfo;
+                refreshGridData(objectInfo.id, objectInfo.objectType);
             };
+
+            function refreshGridData(objectId, objectType) {
+                ObjectAssociationService.getObjectAssociations(objectId, objectType, 'PERSON').then(function (data) {
+                    gridHelper.setWidgetsGridData(data.response.docs);
+                });
+            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {

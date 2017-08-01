@@ -14,9 +14,9 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Organization.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -54,9 +54,15 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                //FIX this when relations between organizations are done on backend
-                //setWidgetsGridData(objectInfo.relOrganizations);
+                $scope.objectInfo = objectInfo;
+                refreshGridData(objectInfo.organizationId, objectInfo.objectType);
             };
+
+            function refreshGridData(objectId, objectType) {
+                ObjectAssociationService.getObjectAssociations(objectId, objectType, 'ORGANIZATION').then(function (data) {
+                    gridHelper.setWidgetsGridData(data.response.docs);
+                });
+            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {

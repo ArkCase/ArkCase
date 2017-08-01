@@ -54,7 +54,7 @@ angular.module('dashboard.aliases', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                gridHelper.setWidgetsGridData(objectInfor.aliases);
+                gridHelper.setWidgetsGridData(objectInfo.personAliases);
             };
 
             var onConfigRetrieved = function (componentConfig) {
