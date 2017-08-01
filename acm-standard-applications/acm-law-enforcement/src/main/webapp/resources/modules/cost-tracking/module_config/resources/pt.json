@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Ordenar Data Asc",
       "dateDesc": "Ordenar Data Desc",
-      "costsheetIdAsc": "Ordenar ID de custos Asc",
-      "costsheetIdDesc": "Ordenar ID de custos Desc",
-      "byNameDesc": "Classificar por nome",
+      "idAsc": "Ordenar ID de custos Asc",
+      "idDesc": "Ordenar ID de custos Desc",
+      "nameDesc": "Classificar por nome",
       "noSort": "(Não classificar)"
     }
   }

@@ -10,10 +10,10 @@
     "topbar.item": "Kostenverfolgung"
   },
   "costTracking.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "costTracking.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "incidentDate": "de_Incident Date",
     "priority": "de_Priority",
     "assignedTo": "de_Assigned To",
@@ -21,7 +21,7 @@
     "state": "de_State"
   },
   "costTracking.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "new.button": "de_New Costsheet",
     "edit.button": "de_Edit Costsheet"
   },
@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "costsheetIdAsc": "Sortieren Kostenblatt-ID Auf",
-      "costsheetIdDesc": "Sortieren Kostenblatt-ID Dec",
-      "byNameDesc": "Nach Name sortieren",
+      "idAsc": "Sortieren Kostenblatt-ID Auf",
+      "idDesc": "Sortieren Kostenblatt-ID Dec",
+      "nameDesc": "Nach Name sortieren",
       "noSort": "(Keine Sortierung)"
     }
   }

@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "アンチ日付順",
-      "timesheetIdAsc": "時間IDを並べ替える",
-      "timesheetIdDesc": "時間IDを昇順で並べ替え",
-      "byNameDesc": "名で並べ替え",
+      "idAsc": "時間識別番号を並べ替える",
+      "idAsc": "時間識別番号を昇順で並べ替え",
+      "nameDesc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

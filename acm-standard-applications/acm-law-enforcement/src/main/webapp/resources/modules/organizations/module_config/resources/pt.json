@@ -9,7 +9,11 @@
     "leftnav.item": "Organizações",
     "topbar.item": "Organização"
   },
+  "organizations.comp.main": {
+    "title": "Visão geral"
+  },
   "organizations.comp.info": {
+    "title": "Informações",
     "phone.label": "pt_Phone",
     "email.label": "pt_Email",
     "status.label": "pt_Status",
@@ -19,6 +23,7 @@
     "parent.placeholder": "pt_Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Ações",
     "export.button": "pt_Export",
     "import.button": "pt_Import",
     "delete.button": "pt_Delete",
@@ -27,7 +32,7 @@
     "merge.button": "pt_Merge"
   },
   "organizations.comp.details": {
-    "title": "pt_Details",
+    "title": "Detalhes",
     "informSaved": "pt_Organization details saved",
     "table.columns": {
       "title": "pt_Details",
@@ -36,7 +41,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "pt_Locations",
+    "title": "Localizações",
     "table.columns": {
       "type": "pt_Type",
       "streetAddress": "pt_Address 1",
@@ -82,7 +87,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "pt_Phone Numbers",
+    "title": "Números de telefone",
     "table.columns": {
       "type": "pt_Phone Type",
       "value": "pt_Phone Number",
@@ -114,7 +119,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "pt_Fax Numbers",
+    "title": "Números de fax",
     "table.columns": {
       "type": "pt_Fax Type",
       "value": "pt_Fax Number",
@@ -146,7 +151,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "pt_Email Addresses",
+    "title": "E-mail",
     "table.columns": {
       "type": "pt_Email Address Type",
       "value": "pt_Email Address",
@@ -178,7 +183,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "pt_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "pt_Type",
       "value": "pt_Url",
@@ -210,7 +215,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "pt_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "pt_Delete",
       "setPrimary": "pt_Set as Primary",
@@ -242,7 +247,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "pt_IDs",
+    "title": "Identificação da organização",
     "table.columns": {
       "type": "pt_Type",
       "id": "pt_ID",
@@ -282,7 +287,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "pt_People",
+    "title": "Pessoas",
     "table.columns": {
       "type": "pt_Role",
       "firstName": "pt_FirstName",
@@ -299,7 +304,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "pt_Cases",
+    "title": "Casos",
     "table.columns": {
       "priority": "pt_Priority",
       "id": "pt_ID",
@@ -310,7 +315,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "pt_Complaints",
+    "title": "Reclamações",
     "table.columns": {
       "priority": "pt_Priority",
       "id": "pt_ID",
@@ -321,7 +326,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "pt_Related Organizations",
+    "title": "Organizações Relacionadas",
     "table.columns": {
       "associationType": "pt_Relationship",
       "type": "pt_Type",
@@ -342,7 +347,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "pt_History",
+    "title": "Histórico",
     "table.columns": {
       "eventType": "pt_Event Name",
       "eventDate": "pt_Date",
@@ -414,5 +419,39 @@
     },
     "informCreated": "pt_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "pt_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "addresses.label": "Localizações",
+      "phones.label": "Números de telefone",
+      "faxes.label": "Números de fax",
+      "emails.label": "E-mail",
+      "urls.label": "URL",
+      "dbas.label": "DBA",
+      "people.label": "Pessoas",
+      "ids.label": "Identificação da organização",
+      "complaints.label": "Reclamações",
+      "cases.label": "Casos",
+      "related.label": "Organizações Relacionadas",
+      "history.label": "Histórico"
+    },
+    "filters": {
+      "IHaveCreated": "Tudo o que eu criei",
+      "NoFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "CreatedDateAsc": "Data de classificação criada ascendente",
+      "CreatedDateDesc": "Data de classificação criada decrescente",
+      "idAsc": "Sort Organization ID Ascending",
+      "idDesc": "Sort Organization ID Descending",
+      "nameAsc": "Sort By Organization Name A-Z",
+      "nameDesc": "Sort By Organization Name Z-A",
+
+      "idAsc": "Classificar ID de organização Ascendente",
+      "idDesc": "Classificar ID de organização Descendente",
+      "NameAsc": "Classificar nome da organização A-Z",
+      "NomeDesc": "Classificar nome da organização Z-A",
+      "NoSort": "(Não classificar)"
+    }
+  }
 }

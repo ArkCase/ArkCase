@@ -1,38 +1,38 @@
 {
   "complaints": {
     "title": "Beschwerden",
-    "progressNoComplaint": "de_[ No complaint data ]",
-    "progressLoading": "de_Loading complaint ",
-    "progressError": "de_Failed to load complaint "
+    "progressNoComplaint": "[Keine Reklamationsdaten]",
+    "ProgressLoading": "Beschwerde einlegen",
+    "ProgressError": "Fehler beim Laden der Beschwerde"
   },
   "complaints.menus": {
     "leftnav.item": "Beschwerden",
-    "topbar.item": "Beschwerden"
+    "topbar.item": "Beschwerde"
   },
   "complaints.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "complaints.comp.info": {
-    "title": "Informatie",
-    "complaintId": "de_Complaint id:",
-    "complaintNumber": "de_Complaint ID:",
-    "courtRoomName": "de_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "title": "Info",
+    "complaintId": "Beschwerde ID:",
+    "complaintNumber": "Beschwerde-Nummer:",
+    "courtRoomName": "Gericht Zimmer Name:",
+    "type.label": "Typ",
+    "created.label": "Erstellungsdatum",
+    "priority.label": "Priorität",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "dueDate.label": "Fälligkeitsdatum"
   },
   "complaints.comp.actions": {
-    "title": "Acties",
-    "restrict": "de_Restrict?",
-    "new.button": "de_New Complaint",
-    "close.button": "de_Close Complaint",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim"
+    "title": "Aktionen",
+    "restrict": "Einschränken?",
+    "new.button": "Neue Beschwerde",
+    "close.button": "Schließen Beschwerde",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung"
   },
   "complaints.comp.details": {
     "title": "Details",
@@ -369,7 +369,7 @@
     },
     "filters": {
       "opened": "Alle offenen Beschwerden",
-      "iHaveCreated": "Alle offenen Beschwerden",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
       "iAmAssigned": "Alles, was ich zugewiesen bin",
       "iAmFollowing": "Alles, was ich folge",
       "closedNoFurtherAction": "Alle geschlossenen Keine weitere Aktion",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "Vorlaufdatum sortieren Dec",
       "createdDateAsc": "ufSortieren Erstellungsdatum Auf",
       "createdDateDesc": "Nach Name sortieren Dec",
-      "byNameAsc": "Nach Name sortieren Auf",
+      "nameAsc": "Nach Name sortieren Auf",
       "noSort": "(Keine Sortierung)"
     }
   }

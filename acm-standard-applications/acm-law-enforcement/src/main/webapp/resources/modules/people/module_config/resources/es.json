@@ -9,7 +9,11 @@
     "leftnav.item": "Gente",
     "topbar.item": "Persona"
   },
+  "people.comp.main": {
+    "title": "Descripción general"
+  },
   "people.comp.info": {
+    "title": "Información",
     "phone.label": "es_Phone",
     "email.label": "es_Email",
     "status.label": "es_Status",
@@ -17,6 +21,7 @@
     "identification.label": "es_ID"
   },
   "people.comp.actions": {
+    "title": "Acciones",
     "export.button": "es_Export",
     "import.button": "es_Import",
     "delete.button": "es_Delete",
@@ -25,7 +30,7 @@
     "merge.button": "es_Merge"
   },
   "people.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Person details saved",
     "table.columns": {
       "title": "es_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "es_History",
+    "title": "Historial",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "es_Pictures",
+    "title": "Imágenes",
     "actions": {
       "delete": "es_Delete",
       "setPrimary": "es_Set as Primary",
@@ -70,7 +75,7 @@
     }
   },
   "people.comp.addresses": {
-    "title": "es_Locations",
+    "title": "Ubicaciones",
     "table.columns": {
       "type": "es_Type",
       "streetAddress": "es_Address 1",
@@ -113,7 +118,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "es_Phone Numbers",
+    "title": "Números de teléfono",
     "table.columns": {
       "type": "es_Type",
       "value": "es_Phone Number",
@@ -145,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "es_Email Addresses",
+    "title": "Correo electrónico",
     "table.columns": {
       "type": "es_Type",
       "value": "es_Email Address",
@@ -177,9 +182,9 @@
     }
   },
   "people.comp.urls": {
-    "title": "es_URLs",
+    "title": "URL",
     "table.columns": {
-      "value": "es_URL",
+      "value": "URL",
       "type": "es_Type",
       "description": "es_Description",
       "created": "es_Date Added",
@@ -209,7 +214,7 @@
     }
   },
   "people.comp.aliases": {
-    "title": "es_Aliases",
+    "title": "Aliases",
     "actions": {
       "delete": "es_Delete",
       "setPrimary": "es_Set as Primary",
@@ -243,7 +248,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "es_IDs",
+    "title": "Identificación de personas",
     "table.columns": {
       "type": "es_Type",
       "id": "es_ID",
@@ -283,7 +288,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "es_Organizations",
+    "title": "Organizaciones",
     "table.columns": {
       "type": "es_Type",
       "id": "es_ID",
@@ -305,7 +310,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "es_Cases",
+    "title": "Casos",
     "table.columns": {
       "priority": "es_Priority",
       "id": "es_ID",
@@ -316,7 +321,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "es_Complaints",
+    "title": "Reclamaciones",
     "table.columns": {
       "priority": "es_Priority",
       "id": "es_ID",
@@ -327,7 +332,7 @@
     }
   },
   "people.comp.related": {
-    "title": "es_Related People",
+    "title": "Personas relacionadas",
     "table.columns": {
       "firstName": "es_First Name",
       "lastName": "es_Last Name",
@@ -411,6 +416,36 @@
       "identificationYearIssued": "es_Identification Issued",
       "identificationYearIssued.placeholder": "es_Select Identification Issued",
       "identificationYearIssued.close.button": "es_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "pictures.label": "Imágenes",
+      "addresses.label": "Ubicaciones",
+      "phones.label": "Ubicaciones",
+      "emails.label": "Correo electrónico",
+      "urls.label": "URL",
+      "aliases.label": "Aliases",
+      "organizations.label": "Organizaciones",
+      "ids.label": "Identificación de personas",
+      "complaints.label": "Reclamaciones",
+      "cases.label": "Casos",
+      "related.label": "Personas relacionadas",
+      "history.label": "Historial"
+    },
+    "filters": {
+      "iHaveCreated": "Todo lo que he creado",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "CreatedDateAsc": "Ordenar Fecha Creciente Ascendente",
+      "CreatedDateDesc": "Ordenar Fecha Creciente Descendente",
+      "idAsc": "Ordenar ID de personas Ascending",
+      "idDesc": "Ordenar ID de personas descendente",
+      "NameAsc": "Ordenar por nombre de personas A-Z",
+      "NameDesc": "Ordenar por nombre de personas Z-A",
+      "NoSort": "(Sin clasificación)"
     }
   }
 }

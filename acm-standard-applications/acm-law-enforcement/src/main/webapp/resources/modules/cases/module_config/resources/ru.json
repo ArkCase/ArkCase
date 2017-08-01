@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
-      "caseIdAsc": "Сортировка случая ID Asc",
-      "caseIdDesc": "Сортировка случая ID Desc",
-      "byNameAsc": "Сортировать по имени Asc",
+      "idAsc": "Сортировка случая ID Asc",
+      "idDesc": "Сортировка случая ID Desc",
+      "nameAsc": "Сортировать по имени Asc",
       "noSort": "(Нет Сортировать)"
     }
   }

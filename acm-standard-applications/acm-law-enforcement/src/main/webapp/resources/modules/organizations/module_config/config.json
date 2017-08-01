@@ -25,40 +25,40 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All I've Created",
+        "desc": "organizations.tree.filters.iHaveCreated",
         "name": "my-created",
         "value": "fq=author_s:${user}"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "organizations.tree.filters.noFilter",
         "name": "",
         "value": ""
       }
     ],
     "sorters": [
       {
-        "desc": "Sort Date Created Ascending",
+        "desc": "organizations.tree.sorters.createdDateAsc",
         "name": "sort-date-asc"
       },
       {
-        "desc": "Sort Date Created Descending",
+        "desc": "organizations.tree.sorters.createdDateDesc",
         "name": "sort-date-desc"
       },
       {
-        "desc": "Sort Organization ID Ascending",
+        "desc": "organizations.tree.sorters.idAsc",
         "name": "sort-by-id-asc"
       },
       {
-        "desc": "Sort Organization ID Descending",
+        "desc": "organizations.tree.sorters.idDesc",
         "name": "sort-by-id-desc"
       },
       {
-        "desc": "Sort By Organization Name A-Z",
+        "desc": "organizations.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "default": true
       },
       {
-        "desc": "Sort By Organization Name Z-A",
+        "desc": "organizations.tree.sorters.nameDesc",
         "name": "sort-by-name-desc"
       }
     ],
@@ -92,7 +92,7 @@
       },
       {
         "type": "p/ORGANIZATION/det",
-        "label": "Details",
+        "label": "organizations.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -100,7 +100,7 @@
       },
       {
         "type": "p/ORGANIZATION/add",
-        "label": "Locations",
+        "label": "organizations.tree.nodeTypes.addresses.label",
         "icon": "fa fa-map-marker",
         "components": [
           "addresses"
@@ -108,7 +108,7 @@
       },
       {
         "type": "p/ORGANIZATION/pho",
-        "label": "Phone Numbers",
+        "label": "organizations.tree.nodeTypes.phones.label",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -116,7 +116,7 @@
       },
       {
         "type": "p/ORGANIZATION/fax",
-        "label": "Fax Numbers",
+        "label": "organizations.tree.nodeTypes.faxes.label",
         "icon": "fa fa-fax",
         "components": [
           "faxes"
@@ -124,7 +124,7 @@
       },
       {
         "type": "p/ORGANIZATION/ema",
-        "label": "Email Addresses",
+        "label": "organizations.tree.nodeTypes.emails.label",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -132,7 +132,7 @@
       },
       {
         "type": "p/ORGANIZATION/url",
-        "label": "URLs",
+        "label": "organizations.tree.nodeTypes.urls.label",
         "icon": "fa fa-link",
         "components": [
           "urls"
@@ -140,7 +140,7 @@
       },
       {
         "type": "p/ORGANIZATION/dba",
-        "label": "DBAs",
+        "label": "organizations.tree.nodeTypes.dbas.label",
         "icon": "fa fa-eye",
         "components": [
           "dbas"
@@ -148,7 +148,7 @@
       },
       {
         "type": "p/ORGANIZATION/peo",
-        "label": "People",
+        "label": "organizations.tree.nodeTypes.people.label",
         "icon": "fa fa-users",
         "components": [
           "people"
@@ -156,7 +156,7 @@
       },
       {
         "type": "p/ORGANIZATION/ids",
-        "label": "IDs",
+        "label": "organizations.tree.nodeTypes.ids.label",
         "icon": "fa fa-credit-card",
         "components": [
           "ids"
@@ -164,7 +164,7 @@
       },
       {
         "type": "p/ORGANIZATION/com",
-        "label": "Complaints",
+        "label": "organizations.tree.nodeTypes.complaints.label",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
@@ -172,7 +172,7 @@
       },
       {
         "type": "p/ORGANIZATION/cas",
-        "label": "Cases",
+        "label": "organizations.tree.nodeTypes.cases.label",
         "icon": "fa fa-folder",
         "components": [
           "cases"
@@ -180,7 +180,7 @@
       },
       {
         "type": "p/ORGANIZATION/rel",
-        "label": "Related Organizations",
+        "label": "organizations.tree.nodeTypes.related.label",
         "icon": "fa fa-exchange",
         "components": [
           "related"
@@ -188,7 +188,7 @@
       },
       {
         "type": "p/ORGANIZATION/his",
-        "label": "History",
+        "label": "organizations.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -199,7 +199,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "organizations.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -605,28 +605,28 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "organizations.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "organizations.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "organizations.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "addresses",
-      "title": "Locations",
+      "title": "organizations.comp.addresses.title",
       "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
@@ -693,7 +693,7 @@
     },
     {
       "id": "phones",
-      "title": "Phone Numbers",
+      "title": "organizations.comp.phones.title",
       "icon": "fa fa-phone",
       "enabled": true,
       "type": "grid",
@@ -740,7 +740,7 @@
     },
     {
       "id": "faxes",
-      "title": "Fax Numbers",
+      "title": "organizations.comp.faxes.title",
       "icon": "fa fa-fax",
       "enabled": true,
       "type": "grid",
@@ -787,7 +787,7 @@
     },
     {
       "id": "emails",
-      "title": "Email Addresses",
+      "title": "organizations.comp.emails.title",
       "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
@@ -834,7 +834,7 @@
     },
     {
       "id": "urls",
-      "title": "URLs",
+      "title": "organizations.comp.urls.title",
       "icon": "fa fa-link",
       "enabled": true,
       "type": "grid",
@@ -880,7 +880,7 @@
     },
     {
       "id": "dbas",
-      "title": "DBAs",
+      "title": "organizations.comp.dbas.title",
       "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
@@ -929,7 +929,7 @@
     },
     {
       "id": "people",
-      "title": "People",
+      "title": "organizations.comp.people.title",
       "icon": "fa fa-users",
       "enabled": true,
       "type": "grid",
@@ -977,7 +977,7 @@
     },
     {
       "id": "ids",
-      "title": "IDs",
+      "title": "organizations.comp.ids.title",
       "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
@@ -1035,7 +1035,7 @@
     },
     {
       "id": "cases",
-      "title": "Cases",
+      "title": "organizations.comp.cases.title",
       "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
@@ -1096,7 +1096,7 @@
     },
     {
       "id": "complaints",
-      "title": "Complaints",
+      "title": "organizations.comp.complaints.title",
       "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
@@ -1157,7 +1157,7 @@
     },
     {
       "id": "related",
-      "title": "Related Organizations",
+      "title": "organizations.comp.related.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -1217,7 +1217,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "organizations.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",

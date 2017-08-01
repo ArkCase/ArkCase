@@ -89,7 +89,7 @@
         "default": true
       },
       {
-        "desc": "complaints.tree.sorters.byNameAsc",
+        "desc": "complaints.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
