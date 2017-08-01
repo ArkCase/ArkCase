@@ -9,7 +9,11 @@
     "leftnav.item": "Gens",
     "topbar.item": "La Personne"
   },
+  "people.comp.main": {
+    "title": "Vue d'ensemble"
+  },
   "people.comp.info": {
+    "title": "Information",
     "phone.label": "fr_Phone",
     "email.label": "fr_Email",
     "status.label": "fr_Status",
@@ -17,6 +21,7 @@
     "identification.label": "fr_ID"
   },
   "people.comp.actions": {
+    "title": "Actions",
     "export.button": "fr_Export",
     "import.button": "fr_Import",
     "delete.button": "fr_Delete",
@@ -25,7 +30,7 @@
     "merge.button": "fr_Merge"
   },
   "people.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Person details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "fr_History",
+    "title": "Historique",
     "table.columns": {
       "eventType": "fr_Event Name",
       "eventDate": "fr_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "fr_Pictures",
+    "title": "Photos",
     "actions": {
       "delete": "fr_Delete",
       "setPrimary": "fr_Set as Primary",
@@ -70,7 +75,7 @@
     }
   },
   "people.comp.addresses": {
-    "title": "fr_Locations",
+    "title": "Emplacements",
     "table.columns": {
       "type": "fr_Type",
       "streetAddress": "fr_Address 1",
@@ -113,7 +118,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "fr_Phone Numbers",
+    "title": "Numéros de téléphone",
     "table.columns": {
       "type": "fr_Type",
       "value": "fr_Phone Number",
@@ -145,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "fr_Email Addresses",
+    "title": "Email",
     "table.columns": {
       "type": "fr_Type",
       "value": "fr_Email Address",
@@ -177,7 +182,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "fr_URLs",
+    "title": "URL",
     "table.columns": {
       "value": "fr_URL",
       "type": "fr_Type",
@@ -209,7 +214,7 @@
     }
   },
   "people.comp.aliases": {
-    "title": "fr_Aliases",
+    "title": "Alias",
     "actions": {
       "delete": "fr_Delete",
       "setPrimary": "fr_Set as Primary",
@@ -243,7 +248,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "fr_IDs",
+    "title": "Identification des personnes",
     "table.columns": {
       "type": "fr_Type",
       "id": "fr_ID",
@@ -283,7 +288,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "fr_Organizations",
+    "title": "Organisations",
     "table.columns": {
       "type": "fr_Type",
       "id": "fr_ID",
@@ -305,7 +310,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "fr_Cases",
+    "title": "Cas",
     "table.columns": {
       "priority": "fr_Priority",
       "id": "fr_ID",
@@ -316,7 +321,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "fr_Complaints",
+    "title": "Plaintes",
     "table.columns": {
       "priority": "fr_Priority",
       "id": "fr_ID",
@@ -327,7 +332,7 @@
     }
   },
   "people.comp.related": {
-    "title": "fr_Related People",
+    "title": "Personnes apparentées",
     "table.columns": {
       "firstName": "fr_First Name",
       "lastName": "fr_Last Name",
@@ -411,6 +416,36 @@
       "identificationYearIssued": "fr_Identification Issued",
       "identificationYearIssued.placeholder": "fr_Select Identification Issued",
       "identificationYearIssued.close.button": "fr_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "pictures.label": "Photos",
+      "addresses.label": "Emplacements",
+      "phones.label": "Numéros de téléphone",
+      "emails.label": "Email",
+      "urls.label": "URL",
+      "aliases.label": "Alias",
+      "organizations.label": "Organisations",
+      "ids.label": "Identification des personnes",
+      "complaints.label": "Plaintes",
+      "cases.label": "Cas",
+      "related.label": "Personnes apparentées",
+      "history.label": "Historique"
+    },
+    "filters": {
+      "iHaveCreated": "Tout ce que j'ai créé",
+      "noFilter": "(Pas de filtre)"
+    },
+    "sorters": {
+      "CreatedDateAsc": "Date de tri crête croissante",
+      "CreatedDateDesc": "Date de tri Créé Décroissant",
+      "idAsc": "Trier l'ID des personnes croissante",
+      "idDesc": "Trier l'ID des personnes décroissant",
+      "NameAsc": "Trier par le nom des personnes A-Z",
+      "NomDesc": "Trier par les personnes Nom Z-A",
+      "NoSort": "(Non Trier)"
     }
   }
 }

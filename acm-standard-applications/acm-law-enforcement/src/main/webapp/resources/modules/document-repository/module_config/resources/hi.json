@@ -9,7 +9,11 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "अवलोकन"
+  },
   "document-repository.comp.info": {
+    "title": "जानकारी",
     "docRepoId": "hi_Repository ID:",
     "docRepoName": "hi_Document Repository Name:",
     "modified.label": "hi_Modified Date",
@@ -18,13 +22,14 @@
     "description.label": "hi_Description"
   },
   "document-repository.comp.actions": {
+    "title": "क्रियाएं",
     "restrict": "hi_Restrict?",
     "subscribe.button": "hi_Subscribe",
     "unsubscribe.button": "hi_Unsubscribe",
     "confirm.delete.documentRepository.msg": "hi_This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Document Repository details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -33,13 +38,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "hi_Documents",
+    "title": "दस्तावेज़",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
     "searchInputPlaceholder": "hi_Search"
   },
   "document-repository.comp.participants": {
-    "title": "hi_Participants",
+    "title": "प्रतिभागियों",
     "table.columns": {
       "type": "hi_Type",
       "name": "hi_Name"
@@ -61,7 +66,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "hi_Notes",
+    "title": "नोट्स",
     "table.columns": {
       "note": "hi_Note",
       "created": "hi_Created",
@@ -69,7 +74,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "hi_References",
+    "title": "संदर्भ",
     "table.columns": {
       "targetName": "hi_Number",
       "parentName": "hi_Parent",
@@ -80,7 +85,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -88,7 +93,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -181,5 +186,29 @@
     "table.columns.type": "hi_Type",
     "table.columns.title": "hi_Title",
     "table.columns.id": "hi_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "documents.label": "दस्तावेज़",
+      "participants.label": "प्रतिभागियों को",
+      "tags.label": "टैग",
+      "references.label": "सन्दर्भ",
+      "notes.label": "टिप्पणियाँ",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
+      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
+      "idAsc": "सॉर्ट रिपॉजिटरी आईडी एएससी",
+      "idDesc": "कसॉर्ट रिपॉजिटरी आईडी डेस्क",
+      "nameAsc": "सॉर्ट इन एएनएससी एसी",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
   }
 }

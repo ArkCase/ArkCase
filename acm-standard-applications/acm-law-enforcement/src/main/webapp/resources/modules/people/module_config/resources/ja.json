@@ -9,7 +9,11 @@
     "leftnav.item": "人員",
     "topbar.item": "個人"
   },
+  "people.comp.main": {
+    "title": "概観"
+  },
   "people.comp.info": {
+    "title": "情報",
     "phone.label": "ja_Phone",
     "email.label": "ja_Email",
     "status.label": "ja_Status",
@@ -17,6 +21,7 @@
     "identification.label": "ja_ID"
   },
   "people.comp.actions": {
+    "title": "操作",
     "export.button": "ja_Export",
     "import.button": "ja_Import",
     "delete.button": "ja_Delete",
@@ -25,7 +30,7 @@
     "merge.button": "ja_Merge"
   },
   "people.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Person details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "ja_History",
+    "title": "歴史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "ja_Pictures",
+    "title": "写真",
     "actions": {
       "delete": "ja_Delete",
       "setPrimary": "ja_Set as Primary",
@@ -70,7 +75,7 @@
     }
   },
   "people.comp.addresses": {
-    "title": "ja_Locations",
+    "title": "場所",
     "table.columns": {
       "type": "ja_Type",
       "streetAddress": "ja_Address 1",
@@ -113,7 +118,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "ja_Phone Numbers",
+    "title": "電話番号",
     "table.columns": {
       "type": "ja_Type",
       "value": "ja_Phone Number",
@@ -145,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "ja_Email Addresses",
+    "title": "電子メール",
     "table.columns": {
       "type": "ja_Type",
       "value": "ja_Email Address",
@@ -177,7 +182,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "ja_URLs",
+    "title": "URL",
     "table.columns": {
       "value": "ja_URL",
       "type": "ja_Type",
@@ -209,7 +214,7 @@
     }
   },
   "people.comp.aliases": {
-    "title": "ja_Aliases",
+    "title": "別名",
     "actions": {
       "delete": "ja_Delete",
       "setPrimary": "ja_Set as Primary",
@@ -243,7 +248,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "ja_IDs",
+    "title": "人員識別番号",
     "table.columns": {
       "type": "ja_Type",
       "id": "ja_ID",
@@ -283,7 +288,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "ja_Organizations",
+    "title": "組織",
     "table.columns": {
       "type": "ja_Type",
       "id": "ja_ID",
@@ -305,7 +310,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "ja_Cases",
+    "title": "案件",
     "table.columns": {
       "priority": "ja_Priority",
       "id": "ja_ID",
@@ -316,7 +321,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "ja_Complaints",
+    "title": "訴状",
     "table.columns": {
       "priority": "ja_Priority",
       "id": "ja_ID",
@@ -327,7 +332,7 @@
     }
   },
   "people.comp.related": {
-    "title": "ja_Related People",
+    "title": "関連する人々",
     "table.columns": {
       "firstName": "ja_First Name",
       "lastName": "ja_Last Name",
@@ -411,6 +416,36 @@
       "identificationYearIssued": "ja_Identification Issued",
       "identificationYearIssued.placeholder": "ja_Select Identification Issued",
       "identificationYearIssued.close.button": "ja_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "pictures.label": "写真",
+      "addresses.label": "場所",
+      "phones.label": "電話番号",
+      "emails.label": "電子メール",
+      "urls.label": "URL",
+      "aliases.label": "別名",
+      "organizations.label": "組織",
+      "ids.label": "人員識番号",
+      "complaints.label": "訴状",
+      "cases.label": "案件",
+      "related.label": "関連する人々",
+      "history.label": "歴史"
+    },
+    "filters": {
+      "iHaveCreated": "私が作成しました",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "idAsc": "人員番号で並べ替え",
+      "idDesc": "人員番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
+      "nameDesc": "名で並べ替え降順",
+      "noSort": "(注文しません)"
     }
   }
 }

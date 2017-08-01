@@ -25,40 +25,40 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "All I've Created",
+        "desc": "people.tree.filters.iHaveCreated",
         "name": "my-created",
         "value": "fq=author_s:${user}"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "people.tree.filters.noFilter",
         "name": "",
         "value": ""
       }
     ],
     "sorters": [
       {
-        "desc": "Sort Date Created Ascending",
+        "desc": "people.tree.sorters.createdDateAsc",
         "name": "sort-date-asc"
       },
       {
-        "desc": "Sort Date Created Descending",
+        "desc": "people.tree.sorters.createdDateDesc",
         "name": "sort-date-desc"
       },
       {
-        "desc": "Sort People ID Ascending",
+        "desc": "people.tree.sorters.idAsc",
         "name": "sort-by-id-asc"
       },
       {
-        "desc": "Sort People ID Descending",
+        "desc": "people.tree.sorters.idDesc",
         "name": "sort-by-id-desc"
       },
       {
-        "desc": "Sort By People Name A-Z",
+        "desc": "people.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "default": true
       },
       {
-        "desc": "Sort By People Name Z-A",
+        "desc": "people.tree.sorters.nameDesc",
         "name": "sort-by-name-desc"
       }
     ],
@@ -92,7 +92,7 @@
       },
       {
         "type": "p/PERSON/det",
-        "label": "Details",
+        "label": "people.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -100,7 +100,7 @@
       },
       {
         "type": "p/PERSON/pic",
-        "label": "Pictures",
+        "label": "people.tree.nodeTypes.pictures.label",
         "icon": "fa fa-picture-o",
         "components": [
           "pictures"
@@ -108,7 +108,7 @@
       },
       {
         "type": "p/PERSON/add",
-        "label": "Locations",
+        "label": "people.tree.nodeTypes.addresses.label",
         "icon": "fa fa-map-marker",
         "components": [
           "addresses"
@@ -116,7 +116,7 @@
       },
       {
         "type": "p/PERSON/pho",
-        "label": "Phone Numbers",
+        "label": "people.tree.nodeTypes.phones.label",
         "icon": "fa fa-phone",
         "components": [
           "phones"
@@ -124,7 +124,7 @@
       },
       {
         "type": "p/PERSON/ema",
-        "label": "Email Addresses",
+        "label": "people.tree.nodeTypes.emails.label",
         "icon": "fa fa-envelope",
         "components": [
           "emails"
@@ -132,7 +132,7 @@
       },
       {
         "type": "p/PERSON/url",
-        "label": "URLs",
+        "label": "people.tree.nodeTypes.urls.label",
         "icon": "fa fa-link",
         "components": [
           "urls"
@@ -140,7 +140,7 @@
       },
       {
         "type": "p/PERSON/ali",
-        "label": "Aliases",
+        "label": "people.tree.nodeTypes.aliases.label",
         "icon": "fa fa-eye",
         "components": [
           "aliases"
@@ -148,7 +148,7 @@
       },
       {
         "type": "p/PERSON/org",
-        "label": "Organizations",
+        "label": "people.tree.nodeTypes.organizations.label",
         "icon": "fa fa-building",
         "components": [
           "organizations"
@@ -156,7 +156,7 @@
       },
       {
         "type": "p/PERSON/ids",
-        "label": "IDs",
+        "label": "people.tree.nodeTypes.ids.label",
         "icon": "fa fa-credit-card",
         "components": [
           "ids"
@@ -164,7 +164,7 @@
       },
       {
         "type": "p/PERSON/com",
-        "label": "Complaints",
+        "label": "people.tree.nodeTypes.complaints.label",
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "complaints"
@@ -172,7 +172,7 @@
       },
       {
         "type": "p/PERSON/cas",
-        "label": "Cases",
+        "label": "people.tree.nodeTypes.cases.label",
         "icon": "fa fa-folder",
         "components": [
           "cases"
@@ -180,7 +180,7 @@
       },
       {
         "type": "p/PERSON/rel",
-        "label": "Related People",
+        "label": "people.tree.nodeTypes.related.label",
         "icon": "fa fa-exchange",
         "components": [
           "related"
@@ -188,7 +188,7 @@
       },
       {
         "type": "p/PERSON/his",
-        "label": "History",
+        "label": "people.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -199,7 +199,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "people.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -613,28 +613,28 @@
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "people.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "people.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "people.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "pictures",
-      "title": "Pictures",
+      "title": "people.comp.pictures.title",
       "icon": "fa fa-picture-o",
       "enabled": true,
       "type": "grid",
@@ -688,7 +688,7 @@
     },
     {
       "id": "addresses",
-      "title": "Locations",
+      "title": "people.comp.addresses.title",
       "icon": "fa fa-map-marker",
       "enabled": true,
       "type": "grid",
@@ -755,7 +755,7 @@
     },
     {
       "id": "phones",
-      "title": "Phone Numbers",
+      "title": "people.comp.phones.title",
       "icon": "fa fa-phone",
       "enabled": true,
       "type": "grid",
@@ -802,7 +802,7 @@
     },
     {
       "id": "emails",
-      "title": "Email Addresses",
+      "title": "people.comp.emails.title",
       "icon": "fa fa-envelope",
       "enabled": true,
       "type": "grid",
@@ -849,7 +849,7 @@
     },
     {
       "id": "urls",
-      "title": "URLs",
+      "title": "people.comp.urls.title",
       "icon": "fa fa-link",
       "enabled": true,
       "type": "grid",
@@ -896,7 +896,7 @@
     },
     {
       "id": "aliases",
-      "title": "Aliases",
+      "title": "people.comp.aliases.title",
       "icon": "fa fa-eye",
       "enabled": true,
       "type": "grid",
@@ -946,7 +946,7 @@
     },
     {
       "id": "organizations",
-      "title": "Organizations",
+      "title": "people.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
       "type": "grid",
@@ -1000,7 +1000,7 @@
     },
     {
       "id": "ids",
-      "title": "IDs",
+      "title": "people.comp.ids.title",
       "icon": "fa fa-credit-card",
       "enabled": true,
       "type": "grid",
@@ -1058,7 +1058,7 @@
     },
     {
       "id": "cases",
-      "title": "Cases",
+      "title": "people.comp.cases.title",
       "icon": "fa fa-folder",
       "enabled": true,
       "type": "grid",
@@ -1074,41 +1074,41 @@
         {
           "name": "type",
           "field": "type_lcs",
-          "displayName": "people.comp.cases.table.columns.role",
+          "displayName": "people.comp.people.table.columns.role",
           "headerCellFilter": "translate"
         },
         {
           "name": "priority",
           "field": "parent_object.priority_lcs",
-          "displayName": "people.comp.cases.table.columns.priority",
+          "displayName": "people.comp.people.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
           "name": "id",
           "field": "parent_object.object_id_s",
-          "displayName": "people.comp.cases.table.columns.id",
+          "displayName": "people.comp.people.table.columns.id",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
           "name": "title",
           "field": "parent_object.title_parseable",
-          "displayName": "people.comp.cases.table.columns.title",
+          "displayName": "people.comp.people.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
           "field": "parent_object.status_lcs",
-          "displayName": "people.comp.cases.table.columns.status",
+          "displayName": "people.comp.people.table.columns.status",
           "headerCellFilter": "translate"
         },
         {
           "width": 150,
           "name": "assignee",
           "field": "parent_object.assignee_id_lcs",
-          "displayName": "people.comp.cases.table.columns.assignee",
+          "displayName": "people.comp.people.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         },
@@ -1116,7 +1116,7 @@
           "width": 150,
           "name": "modified",
           "field": "parent_object.modified_date_tdt",
-          "displayName": "people.comp.cases.table.columns.modified",
+          "displayName": "people.comp.people.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
@@ -1124,7 +1124,7 @@
     },
     {
       "id": "complaints",
-      "title": "Complaints",
+      "title": "people.comp.complaints.title",
       "icon": "fa fa-exclamation-triangle",
       "enabled": true,
       "type": "grid",
@@ -1185,7 +1185,7 @@
     },
     {
       "id": "related",
-      "title": "Related People",
+      "title": "people.comp.related.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -1246,7 +1246,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "people.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",

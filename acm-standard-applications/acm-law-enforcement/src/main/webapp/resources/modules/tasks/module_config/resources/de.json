@@ -10,10 +10,10 @@
     "topbar.item": "Aufgaben"
   },
   "tasks.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "tasks.comp.info": {
-    "title": "Informatie",
+    "title": "Informationen",
     "taskId": "de_Task id:",
     "percentage.label": "de_% of Completion",
     "assignee.label": "de_Assignee",
@@ -51,7 +51,7 @@
     "_xxx_courtRoomName": "de_Court Room Name:"
   },
   "tasks.comp.actions": {
-    "title": "Acties",
+    "title": "Aktionen",
     "diagram.button": "de_Process Diagram",
     "eSignature.button": "de_Sign",
     "subscribe.button": "de_Subscribe",
@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "Sortieren Erstellungsdatum Asc",
       "createdDateDesc": "Sortieren Erstellungsdatum Desc",
-      "byNameAsc": "Sortieren Aufgabennname Asc",
-      "byNameDesc": "Sortieren Aufgabennname Desc",
+      "nameAsc": "Sortieren Aufgabennname Asc",
+      "nameDesc": "Sortieren Aufgabennname Desc",
       "noSort": "(Keine Sortierung)"
     }
   }

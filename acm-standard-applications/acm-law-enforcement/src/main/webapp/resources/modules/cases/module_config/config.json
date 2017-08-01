@@ -70,17 +70,17 @@
         "default": true
       },
       {
-        "desc": "cases.tree.sorters.caseIdAsc",
+        "desc": "cases.tree.sorters.idAsc",
         "name": "sort-case-id-asc",
         "value": "object_id_s ASC"
       },
       {
-        "desc": "cases.tree.sorters.caseIdDesc",
+        "desc": "cases.tree.sorters.idDesc",
         "name": "sort-case-id-desc",
         "value": "object_id_s DESC"
       },
       {
-        "desc": "cases.tree.sorters.byNameAsc",
+        "desc": "cases.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },

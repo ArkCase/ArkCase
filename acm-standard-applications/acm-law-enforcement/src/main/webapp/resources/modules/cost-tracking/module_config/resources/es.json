@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Ordenar Fecha Asc",
       "dateDesc": "Ordenar Fecha Dec",
-      "costsheetIdAsc": "Ordenar coste de la identificación Asc",
-      "costsheetIdDesc": "Ordenar coste de la identificación Dec",
-      "byNameDesc": "Ordenar por nombre Dec",
+      "idAsc": "Ordenar coste de la identificación Asc",
+      "idDesc": "Ordenar coste de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
       "noSort": "(Sin Clasificar)"
     }
   }

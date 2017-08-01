@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Sort Date Asc",
       "dateDesc": "Sort Date Desc",
-      "caseIdAsc": "Sort Case ID Asc",
-      "caseIdDesc": "Sort Case ID Desc",
-      "byNameAsc": "Sort By Case Name Asc",
+      "idAsc": "Sort Case ID Asc",
+      "idDesc": "Sort Case ID Desc",
+      "nameAsc": "Sort By Case Name Asc",
       "noSort": "(No Sort)"
     }
   }

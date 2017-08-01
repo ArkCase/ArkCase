@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "Сортировка Дата создания Asc",
       "createdDateDesc": "Сортировка даты создания Desc",
-      "byNameAsc": "Сортировать имя задачи Asc",
-      "byNameDesc": "Сортировать имя задачи Desc",
+      "nameAsc": "Сортировать имя задачи Asc",
+      "nameDesc": "Сортировать имя задачи Desc",
       "noSort": "(Нет сортировки)"
     }
   }
