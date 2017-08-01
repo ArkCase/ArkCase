@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "Tarefas",
-    "progressNoTask": "pt_[ No task data ]",
-    "progressLoading": "pt_Loading task ",
-    "progressError": "pt_Failed to load task"
+    "progressNoTask": "[ Não há dados da tarefa ]",
+    "progressLoading": "Carregando tarefa",
+    "progressError": "Falha ao carregar a tarefa"
   },
   "tasks.menus": {
     "leftnav.item": "Tarefas",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "Informações",
-    "taskId": "pt_Task id:",
-    "percentage.label": "pt_% of Completion",
-    "assignee.label": "pt_Assignee",
-    "Priority.label": "pt_Priority",
-    "startDate.label": "pt_Start Date",
-    "dueDate.label": "pt_Due Date",
-    "state.label": "pt_State",
-    "overdue.tooltip": "pt_Task is Overdue",
+    "taskId": "Identificação da tarefa:",
+    "percentage.label": "% de Conclusão",
+    "assignee.label": "Atribuído a",
+    "priority.label": "Prioridade",
+    "startDate.label": "Data de Início",
+    "dueDate.label": "Data de vencimento",
+    "state.label": "Estado",
+    "overdue.tooltip": "Tarefa está atrasada",
     "deadline.tooltip": "pt_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "owningGroup.label": "O grupo pertence a"
   },
   "tasks.comp.parentinfo": {
-    "title": "Parent Info",
-    "taskId": "pt_Task id:",
+    "title": "nformação principal",
+    "taskId": "Identificação da tarefa:",
     "case": {
-      "subjectType.label": "pt_Subject Type",
-      "incidentDate.label": "pt_Incident Date",
-      "priority.label": "pt_Priority",
-      "assignee.label": "pt_Assigned To",
-      "owningGroup.label": "pt_Owning Group"
+      "subjectType.label": "Tipo de Assunto",
+      "incidentDate.label": "Data do Incidente",
+      "priority.label": "Prioridade",
+      "assignee.label": "Atribuído a",
+      "owningGroup.label": "O grupo pertence a"
     },
     "complaint": {
-      "subjectType.label": "pt_Subject Type",
-      "incidentDate.label": "pt_Incident Date",
-      "priority.label": "pt_Priority",
-      "assignee.label": "pt_Assigned To",
-      "owningGroup.label": "pt_Owning Group"
+      "subjectType.label": "Tipo de Assunto",
+      "incidentDate.label": "Data do Incidente",
+      "priority.label": "Prioridade",
+      "assignee.label": "Atribuído a",
+      "owningGroup.label": "O grupo pertence a"
     },
     "costsheet": {
-      "approver.label": "pt_Approver"
+      "approver.label": "Aprovador"
     },
     "timesheet": {
-      "approver.label": "pt_Approver"
-    },
-    "_xxx_courtRoomName": "pt_Court Room Name:"
+      "approver.label": "Aprovador"
+    }
   },
   "tasks.comp.actions": {
     "title": "Ações",
-    "diagram.button": "pt_Process Diagram",
-    "eSignature.button": "pt_Sign",
-    "subscribe.button": "pt_Subscribe",
-    "unsubscribe.button": "pt_Unsubscribe",
-    "reject.button": "pt_Reject",
-    "delete.button": "pt_Delete",
-    "complete.button": "pt_Complete",
-    "approve.button": "pt_Approve Document",
-    "rework.button": "pt_Send for Rework",
-    "claim.button": "pt_Claim",
-    "unclaim.button": "pt_Unclaim",
-    "error.outcomeFieldMissing": "pt_Cannot complete task because of missing required value",
+    "diagram.button": "Diagrama de processo",
+    "eSignature.button": "Placa",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "reject.button": "Rejeitar",
+    "delete.button": "Excluir",
+    "complete.button": "Concluir",
+    "approve.button": "Aprovar documento",
+    "rework.button": "Enviar para Repita",
+    "claim.button": "Reclamaçõe",
+    "unclaim.button": "Retirar Reclamaçõe",
+    "error.outcomeFieldMissing": "Não é possível concluir a tarefa por falta do valor necessário",
     "modal": {
-      "errorHeaderText": "pt_Error",
-      "btnOk.text": "pt_OK",
-      "btnClose.text": "pt_Close"
+      "errorHeaderText": "Erro",
+      "btnOk.text": "OK",
+      "btnClose.text": "Fechar"
     }
   },
   "tasks.comp.details": {
