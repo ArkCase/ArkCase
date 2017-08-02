@@ -106,7 +106,7 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
              */
             delete: {
                 method: 'DELETE',
-                url: 'api/latest/service/person-associations/:id',
+                url: 'api/latest/plugin/person-associations/:id',
                 cache: false,
                 isArray: false
             }
