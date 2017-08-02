@@ -5,10 +5,14 @@ package com.armedia.acm.form.cost.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.armedia.acm.core.AcmTitleEntity;
+import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.form.cost.model.CostForm;
 import com.armedia.acm.form.cost.model.CostItem;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
@@ -16,6 +20,7 @@ import com.armedia.acm.services.costsheet.dao.AcmCostDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+import com.armedia.acm.spring.SpringContextHolder;
 
 /**
  * @author riste.tutureski
@@ -27,6 +32,7 @@ public class CostFactory extends FrevvoFormFactory {
 	
 	private AcmCostDao acmCostDao;
 	private AcmCostsheetDao acmCostsheetDao;
+	private SpringContextHolder springContextHolder;
 	
 	/**
 	 * Converting Frevvo CostForm to AcmCostsheet
@@ -98,6 +104,7 @@ public class CostFactory extends FrevvoFormFactory {
 			form.setObjectId(costsheet.getParentId());
 			form.setObjectType(costsheet.getParentType());
 			form.setObjectNumber(costsheet.getParentNumber());
+			form.setObjectTitle(getObjectTitleByObjectCode(costsheet.getParentId(), costsheet.getParentType()));
 			form.setStatus(costsheet.getStatus());
 			form.setItems(asFrevvoCostItems(costsheet.getCosts()));
 			form.setApprovers(asFrevvoApprovers(costsheet.getParticipants()));
@@ -183,6 +190,28 @@ public class CostFactory extends FrevvoFormFactory {
 		
 		return retval;
 	}
+	
+	public String getObjectTitleByObjectCode(Long objectId, String objectType) {
+        
+        String title = "";
+        
+        Map<String, AcmAbstractDao> daos = getSpringContextHolder().getAllBeansOfType(AcmAbstractDao.class);
+        
+        AcmAbstractDao<AcmTitleEntity> dao = daos.values()
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(item -> item.getSupportedObjectType() != null)
+            .filter(item -> item.getSupportedObjectType().equals(objectType))
+            .findFirst()
+            .orElse(null);
+        
+        if(dao != null) {
+            AcmTitleEntity entityObject = dao.find(objectId);
+            title = entityObject.getTitle();
+        } 
+        
+        return title;
+    }
 
 	public AcmCostsheetDao getAcmCostsheetDao() {
 		return acmCostsheetDao;
@@ -198,6 +227,15 @@ public class CostFactory extends FrevvoFormFactory {
 
 	public void setAcmCostDao(AcmCostDao acmCostDao) {
 		this.acmCostDao = acmCostDao;
-	}	
-	
+	}
+
+    public SpringContextHolder getSpringContextHolder()
+    {
+        return springContextHolder;
+    }
+
+    public void setSpringContextHolder(SpringContextHolder springContextHolder)
+    {
+        this.springContextHolder = springContextHolder;
+    }
 }
