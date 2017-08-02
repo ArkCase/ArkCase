@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
+import org.apache.tika.exception.TikaException;
 import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,11 +12,17 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -76,6 +83,44 @@ public class TikaMetadataIT
 
         logger.info(image.toString());
 
+    }
+
+    @Test
+    public void detectJsonFile() throws Exception
+    {
+        Resource resource = new ClassPathResource("json/simple.json");
+        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(resource.getInputStream(), IOUtils.toByteArray(resource.getInputStream()));
+        assertEquals("application/json", file.getContentType());
+    }
+
+    @Test
+    public void detectPDFFile() throws Exception
+    {
+        Resource resource = new ClassPathResource("adobe/xfa.pdf");
+        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(resource.getInputStream(), IOUtils.toByteArray(resource.getInputStream()));
+        assertEquals("application/pdf", file.getContentType());
+    }
+
+    @Test
+    public void detectExcelFile() throws Exception
+    {
+        List<Resource> resources = Arrays.asList(new ClassPathResource("office/excel_1.xls")
+                , new ClassPathResource("office/excel_2.xls")
+                , new ClassPathResource("office/excel_3.xls")
+                , new ClassPathResource("office/excel_4.xlsx"));
+
+        List<String> expectedMimeTypes = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                , "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12"
+                , "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12", "application/vnd.ms-excel.sheet.binary.macroenabled.12");
+
+        for (Resource resource : resources)
+        {
+            try (InputStream is = resource.getInputStream())
+            {
+                EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(is, IOUtils.toByteArray(is));
+                assertTrue(expectedMimeTypes.contains(file.getContentType()));
+            }
+        }
     }
 
 
