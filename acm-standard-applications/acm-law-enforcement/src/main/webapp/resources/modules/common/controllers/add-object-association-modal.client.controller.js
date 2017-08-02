@@ -17,7 +17,16 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
             $scope.description = params.description;
             $scope.configName = params.customConfigName ? params.customConfigName : 'dialogObjectPicker';
             $scope.filter = params.customFilter ? params.customFilter : '';
+
+            $scope.headerLabel = $translate.instant("common.addObjectAssociation.title." + ($scope.editMode ? 'edit' : 'add'), {
+                objectLabel: params.objectTypeLabel
+            });
+        $scope.selectExistingLabel = $translate.instant("common.addObjectAssociation.selectExisting.label", {
+            objectLabel: params.objectTypeLabel
+        });
+
             $scope.objectNameProperty = params.objectNameProperty;
+            $scope.objectTypeLabel = params.objectTypeLabel;
             $scope.type = _.find($scope.types, function (type) {
                 return type.type == params.type;
             });
@@ -42,7 +51,9 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
 
             $scope.pickObject = function () {
                 var params = {};
-                params.header = $translate.instant("common.dialogOrganizationPicker.header");
+                params.header = $translate.instant("common.dialogObjectPicker.header", {
+                    objectLabel: $scope.objectTypeLabel
+                });
                 params.filter = $scope.filter;
                 params.config = Util.goodMapValue($scope.config, $scope.configName);
 

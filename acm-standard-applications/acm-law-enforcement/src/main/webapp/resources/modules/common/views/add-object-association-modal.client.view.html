@@ -1,9 +1,6 @@
 <div class="modal-header">
     <h3>
-        <ng-switch on="editMode">
-            <span ng-switch-when="true" translate>common.addObjectAssociation.title</span>
-            <span ng-switch-default translate>common.addObjectAssociation.title</span>
-        </ng-switch>
+        <span>{{headerLabel}}</span>
     </h3>
 </div>
 <div class="modal-body">
@@ -25,12 +22,12 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <div>
-                    <label translate>common.addObjectAssociation.object.label</label>
+                    <label>{{objectTypeLabel}}</label>
                     <span class="required-asterisk">*</span>
                 </div>
                 <input class="form-control" type="text" ng-model="objectName" readonly ng-disabled="editMode"
                        ng-click="pickObject()"
-                       placeholder="{{'common.addObjectAssociation.selectExisting.label' | translate}}"
+                       placeholder="{{selectExistingLabel}}"
                        required>
             </div>
             <div class="col-sm-6 form-group">
@@ -44,6 +41,7 @@
         </div>
         <div class="row" ng-show="showDescription">
             <div class="col-sm-12">
+                <label for="types" translate>common.addObjectAssociation.description</label>
                 <textarea id="description" class="form-control" ng-model="description"></textarea>
             </div>
         </div>

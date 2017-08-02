@@ -571,7 +571,7 @@
     }
   },
   "common.dialogObjectPicker": {
-    "header": "Search",
+    "header": "Search {{objectLabel}}",
     "table.columns": {
       "name": "Name",
       "id": "ID"
@@ -591,9 +591,10 @@
     "radioNo.text": "No"
   },
   "common.addObjectAssociation": {
-    "title": "Add",
-    "object.label": "Select",
-    "selectExisting.label": "Select existing",
+    "title.add": "Add {{objectLabel}} Association",
+    "title.edit": "Edit {{objectLabel}} Association",
+    "object.label": "Select {{objectLabel}}",
+    "selectExisting.label": "Select existing {{objectLabel}}",
     "description": "Description",
     "type.label": "Association Type",
     "btnCancel.text": "Cancel",

@@ -112,7 +112,9 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     @Override
     public void deletePersonAssociation(Long id, Authentication auth)
     {
+        PersonAssociation pa = personAssociationDao.find(id);
         personAssociationDao.deletePersonAssociationById(id);
+        getPersonAssociationEventPublisher().publishPersonAssociationDeletedEvent(pa);
     }
 
     private String combineResults(String parentResult, String associationsResult) throws IOException, AcmObjectNotFoundException
