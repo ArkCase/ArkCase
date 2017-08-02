@@ -1,73 +1,72 @@
 {
   "tasks": {
     "title": "Aufgaben",
-    "progressNoTask": "de_[ No task data ]",
-    "progressLoading": "de_Loading task ",
-    "progressError": "de_Failed to load task"
+    "progressNoCase": "[ Keine Aufgabe Daten ]",
+    "progressLoading": "Aufgabe laden",
+    "progressError": "Fehler beim Laden der Aufgabe"
   },
   "tasks.menus": {
     "leftnav.item": "Aufgaben",
-    "topbar.item": "Aufgaben"
+    "topbar.item": "Aufgabe"
   },
   "tasks.comp.main": {
     "title": "Übersicht"
   },
   "tasks.comp.info": {
     "title": "Informationen",
-    "taskId": "de_Task id:",
-    "percentage.label": "de_% of Completion",
-    "assignee.label": "de_Assignee",
-    "Priority.label": "de_Priority",
-    "startDate.label": "de_Start Date",
-    "dueDate.label": "de_Due Date",
-    "state.label": "de_State",
-    "overdue.tooltip": "de_Task is Overdue",
-    "deadline.tooltip": "de_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "Aufgabenstellung:",
+    "percentage.label": "% der Fertigstellung",
+    "assignee.label": "Zugewiesen",
+    "priority.label": "Priorität",
+    "startDate.label": "Anfangsdatum",
+    "dueDate.label": "Fälligkeitsdatum",
+    "state.label": "Zustand",
+    "overdue.tooltip": "Aufgabe ist überfällig",
+    "deadline.tooltip": "Fälligkeitsdatum ist Annäherung",
+    "owningGroup.label": "Besitzgruppe"
   },
   "tasks.comp.parentinfo": {
     "title": "Übergeordnete Info",
-    "taskId": "de_Task id:",
+    "taskId": "Aufgabenstellung:",
     "case": {
-      "subjectType.label": "de_Subject Type",
-      "incidentDate.label": "de_Incident Date",
-      "priority.label": "de_Priority",
-      "assignee.label": "de_Assigned To",
-      "owningGroup.label": "de_Owning Group"
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität2",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
     },
     "complaint": {
-      "subjectType.label": "de_Subject Type",
-      "incidentDate.label": "de_Incident Date",
-      "priority.label": "de_Priority",
-      "assignee.label": "de_Assigned To",
-      "owningGroup.label": "de_Owning Group"
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität3",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
     },
     "costsheet": {
-      "approver.label": "de_Approver"
+      "approver.label": "Genehmiger"
     },
     "timesheet": {
-      "approver.label": "de_Approver"
-    },
-    "_xxx_courtRoomName": "de_Court Room Name:"
+      "approver.label": "Genehmiger"
+    }
   },
   "tasks.comp.actions": {
     "title": "Aktionen",
-    "diagram.button": "de_Process Diagram",
-    "eSignature.button": "de_Sign",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "reject.button": "de_Reject",
-    "delete.button": "de_Delete",
-    "complete.button": "de_Complete",
-    "approve.button": "de_Approve Document",
-    "rework.button": "de_Send for Rework",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim",
-    "error.outcomeFieldMissing": "de_Cannot complete task because of missing required value",
+    "diagram.button": "Prozessdiagramm",
+    "eSignature.button": "Zeichen",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "reject.button": "Ablehnen",
+    "delete.button": "Löschen",
+    "complete.button": "Komplett",
+    "approve.button": "Dokument genehmigen",
+    "rework.button": "Wiederholen Arbeit",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung",
+    "error.outcomeFieldMissing": "Kann die Aufgabe nicht verpassen, weil der fehlende erforderliche Wert",
     "modal": {
-      "errorHeaderText": "de_Error",
-      "btnOk.text": "de_OK",
-      "btnClose.text": "de_Close"
+      "errorHeaderText": "Fehler",
+      "btnOk.text": "Okay",
+      "btnClose.text": "Schließen"
     }
   },
   "tasks.comp.details": {
