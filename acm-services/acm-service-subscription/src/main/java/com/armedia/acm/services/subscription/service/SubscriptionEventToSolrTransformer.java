@@ -11,7 +11,9 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by marjan.stefanoski on 29.01.2015.
@@ -23,6 +25,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     private AcmPlugin subscriptionEventPlugin;
     private UserDao userDao;
     private NotificationFormatter notificationFormater;
+    private Map<String, Object> eventTypeProperties = new HashMap<>();
 
     @Override
     public List<AcmSubscriptionEvent> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -51,7 +54,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
         } else if (in.getEventType() != null)
         {
-            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
+            title = getEventTypeProperties().get("eventType." + in.getEventType()) + ": " + in.getEventObjectId() + " - " + in.getEventObjectName();
         } else
         {
             title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
@@ -180,6 +183,16 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     public void setNotificationFormater(NotificationFormatter notificationFormater)
     {
         this.notificationFormater = notificationFormater;
+    }  
+
+    public Map<String, Object> getEventTypeProperties()
+    {
+        return eventTypeProperties;
+    }
+
+    public void setEventTypeProperties(Map<String, Object> eventTypeProperties)
+    {
+        this.eventTypeProperties = eventTypeProperties;
     }
 
     @Override
