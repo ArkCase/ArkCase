@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "任務",
-    "progressNoTask": "zh-tw_[ No task data ]",
-    "progressLoading": "zh-tw_Loading task ",
-    "progressError": "zh-tw_Failed to load task"
+    "progressNoTask": "[ 無任務數據 ]",
+    "progressLoading": "加載任務數據",
+    "progressError": "加載任務數據失敗"
   },
   "tasks.menus": {
     "leftnav.item": "任務",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "信息",
-    "taskId": "zh-tw_Task id:",
-    "percentage.label": "zh-tw_% of Completion",
-    "assignee.label": "zh-tw_Assignee",
-    "Priority.label": "zh-tw_Priority",
-    "startDate.label": "zh-tw_Start Date",
-    "dueDate.label": "zh-tw_Due Date",
-    "state.label": "zh-tw_State",
-    "overdue.tooltip": "zh-tw_Task is Overdue",
-    "deadline.tooltip": "zh-tw_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "任務識別號:",
+    "percentage.label": "完成百分比",
+    "assignee.label": "指定人員",
+    "priority.label": "優先級別",
+    "startDate.label": "開始日期",
+    "dueDate.label": "到期日期",
+    "state.label": "狀態",
+    "overdue.tooltip": "任務已逾期",
+    "deadline.tooltip": "截止日期正在接近",
+    "owningGroup.label": "所屬群體"
   },
   "tasks.comp.parentinfo": {
     "title": "原屬信息",
-    "taskId": "zh-tw_Task id:",
+    "taskId": "任務識別號:",
     "case": {
-      "subjectType.label": "zh-tw_Subject Type",
-      "incidentDate.label": "zh-tw_Incident Date",
-      "priority.label": "zh-tw_Priority",
-      "assignee.label": "zh-tw_Assigned To",
-      "owningGroup.label": "zh-tw_Owning Group"
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
     },
     "complaint": {
-      "subjectType.label": "zh-tw_Subject Type",
-      "incidentDate.label": "zh-tw_Incident Date",
-      "priority.label": "zh-tw_Priority",
-      "assignee.label": "zh-tw_Assigned To",
-      "owningGroup.label": "zh-tw_Owning Group"
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
     },
     "costsheet": {
-      "approver.label": "zh-tw_Approver"
+      "approver.label": "審批者"
     },
     "timesheet": {
-      "approver.label": "zh-tw_Approver"
-    },
-    "_xxx_courtRoomName": "zh-tw_Court Room Name:"
+      "approver.label": "審批者"
+    }
   },
   "tasks.comp.actions": {
     "title": "行動",
-    "diagram.button": "zh-tw_Process Diagram",
-    "eSignature.button": "zh-tw_Sign",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "reject.button": "zh-tw_Reject",
-    "delete.button": "zh-tw_Delete",
-    "complete.button": "zh-tw_Complete",
-    "approve.button": "zh-tw_Approve Document",
-    "rework.button": "zh-tw_Send for Rework",
-    "claim.button": "zh-tw_Claim",
-    "unclaim.button": "zh-tw_Unclaim",
-    "error.outcomeFieldMissing": "zh-tw_Cannot complete task because of missing required value",
+    "diagram.button": "圖標處理",
+    "eSignature.button": "簽名",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "reject.button": "回絕",
+    "delete.button": "刪除",
+    "complete.button": "完成",
+    "approve.button": "文件審批",
+    "rework.button": "遣返重做",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權",
+    "error.outcomeFieldMissing": "由於缺少必需的值而無法完成任務",
     "modal": {
-      "errorHeaderText": "zh-tw_Error",
-      "btnOk.text": "zh-tw_OK",
-      "btnClose.text": "zh-tw_Close"
+      "errorHeaderText": "錯誤",
+      "btnOk.text": "確定",
+      "btnClose.text": "關閉"
     }
   },
   "tasks.comp.details": {
