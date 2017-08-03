@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.service.ldap;
 
-import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -115,11 +114,11 @@ public class AcmGroupsSyncResult
                     newUsers.forEach(user -> {
                         AcmUser acmUser = dnUserMap.get(user);
                         currentGroup.addMember(acmUser);
-                        addUserNewGroup(user, currentGroup.getName());
+                        addUserNewGroup(acmUser.getUserId(), currentGroup.getName());
                         if (parentGroup != null)
                         {
                             parentGroup.addMember(acmUser);
-                            addUserNewGroup(user, parentGroup.getName());
+                            addUserNewGroup(acmUser.getUserId(), parentGroup.getName());
                         }
                     });
 
@@ -127,11 +126,11 @@ public class AcmGroupsSyncResult
                     removedUsers.forEach(user -> {
                         AcmUser acmUser = dnUserMap.get(user);
                         currentGroup.removeMember(acmUser);
-                        addUserRemovedGroup(user, currentGroup.getName());
+                        addUserRemovedGroup(acmUser.getUserId(), currentGroup.getName());
                         if (parentGroup != null)
                         {
                             parentGroup.removeMember(acmUser);
-                            addUserRemovedGroup(user, parentGroup.getName());
+                            addUserRemovedGroup(acmUser.getUserId(), parentGroup.getName());
                         }
                     });
                 });
@@ -144,7 +143,7 @@ public class AcmGroupsSyncResult
                 .filter(it -> it.isChanged(currentGroups.get(it.getName())))
                 .map(it -> {
                     AcmGroup currentGroup = currentGroups.get(it.getName());
-                    return updateEditableGroupFields(currentGroup, it);
+                    return it.setAcmGroupEditableFields(currentGroup);
                 })
                 .collect(Collectors.toList());
     }
@@ -158,12 +157,7 @@ public class AcmGroupsSyncResult
         return ldapGroups.stream()
                 .filter(it -> !currentGroups.containsKey(it.getName()))
                 .map(it -> {
-                    AcmGroup acmGroup = new AcmGroup();
-                    acmGroup.setName(it.getName());
-                    acmGroup.setType(AcmRoleType.LDAP_GROUP.getRoleName());
-                    acmGroup.setDirectoryName(it.getDirectoryName());
-                    acmGroup.setDistinguishedName(it.getDistinguishedName());
-                    updateEditableGroupFields(acmGroup, it);
+                    AcmGroup acmGroup = it.toAcmGroup();
                     it.getMemberUsers()
                             .forEach(userDn -> {
                                 AcmUser acmUser = dnUserMap.get(userDn);
@@ -187,13 +181,6 @@ public class AcmGroupsSyncResult
         Set<String> groups = userRemovedGroups.getOrDefault(userId, new HashSet<>());
         groups.add(group);
         userRemovedGroups.put(userId, groups);
-    }
-
-    private AcmGroup updateEditableGroupFields(AcmGroup existingGroup, LdapGroup ldapGroup)
-    {
-        existingGroup.setDescription(ldapGroup.getDescription());
-        existingGroup.setStatus("ACTIVE"); // TODO: fix status
-        return existingGroup;
     }
 
     public Map<String, Set<String>> getUserNewGroups()

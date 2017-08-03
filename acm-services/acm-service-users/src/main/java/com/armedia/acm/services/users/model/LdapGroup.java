@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -18,16 +19,34 @@ public class LdapGroup
     private Set<String> memberUsers = new HashSet<>();
     private Set<String> parentGroups = new HashSet<>();
 
+    public AcmGroup toAcmGroup()
+    {
+        AcmGroup acmGroup = new AcmGroup();
+        acmGroup.setName(getName());
+        acmGroup.setType(AcmGroupType.LDAP_GROUP.name());
+        acmGroup.setDirectoryName(getDirectoryName());
+        acmGroup.setDistinguishedName(getDistinguishedName());
+        setAcmGroupEditableFields(acmGroup);
+        return acmGroup;
+    }
+
+    public AcmGroup setAcmGroupEditableFields(AcmGroup acmGroup)
+    {
+        acmGroup.setDescription(getDescription());
+        acmGroup.setStatus("ACTIVE"); // TODO: fix status
+        return acmGroup;
+    }
+
     public boolean isChanged(AcmGroup acmGroup)
     {
         return !(Objects.equals(getDirectoryName(), acmGroup.getDirectoryName()) &&
                 Objects.equals(getDescription(), acmGroup.getDescription()));
     }
 
-    public Set<String> groupAddedUserDns(Set<String> membersDns)
+    public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
     {
         return getMemberUsers().stream()
-                .filter(it -> !membersDns.contains(it))
+                .filter(it -> !existingMembersDns.contains(it))
                 .collect(Collectors.toSet());
     }
 
@@ -38,16 +57,16 @@ public class LdapGroup
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> groupRemovedGroupMembers(Set<String> childGroups)
+    public Set<String> groupRemovedGroupMembers(Set<String> existingMembers)
     {
-        return childGroups.stream()
+        return existingMembers.stream()
                 .filter(it -> !getMemberGroups().contains(it))
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> groupRemovedUserDns(Set<String> childGroups)
+    public Set<String> groupRemovedUserDns(Set<String> existingMembersDns)
     {
-        return childGroups.stream()
+        return existingMembersDns.stream()
                 .filter(it -> !getMemberUsers().contains(it))
                 .collect(Collectors.toSet());
     }

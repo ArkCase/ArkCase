@@ -265,7 +265,7 @@ public class LdapUser
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LdapUser ldapUser = (LdapUser) o;
-        return Objects.equals(userId, userId);
+        return Objects.equals(userId, ldapUser.userId);
     }
 
     @Override
