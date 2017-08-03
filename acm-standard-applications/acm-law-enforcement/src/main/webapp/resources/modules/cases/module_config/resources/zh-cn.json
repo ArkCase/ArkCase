@@ -378,7 +378,7 @@
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
       "idAsc": "按案件号排序",
-      "createdDateDesc": "按案件号反排序",
+      "idDesc": "按案件号反排序",
       "nameAsc": "按名称排序",
       "noSort": "(不排序)"
     }

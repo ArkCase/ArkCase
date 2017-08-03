@@ -1,9 +1,9 @@
 {
   "timeTracking": {
     "title": "Отслеживание времени",
-    "progressNoTimesheet": "ru_[ No timesheet is selected ]",
-    "progressLoading": "ru_Loading timesheet ",
-    "progressError": "ru_Failed to load timesheet"
+    "progressNoTimesheet": "[ Нет Время лист ]",
+    "progressLoading": "Загрузка Время лист",
+    "progressError": "Не удалось загрузить Время лист"
   },
   "timeTracking.menus": {
     "leftnav.item": "Отслеживание времени",
@@ -14,12 +14,12 @@
   },
   "timeTracking.comp.info": {
     "title": "Информация",
-    "lastModified.label": "ru_Last Modified"
+    "lastModified.label": "Последнее изменение"
   },
   "timeTracking.comp.actions": {
     "title": "Действия",
-    "new.button": "ru_New Timesheet",
-    "edit.button": "ru_Edit Timesheet"
+    "new.button": "Новый Время лист",
+    "edit.button": "Редактировать Время лист"
   },
   "timeTracking.comp.details": {
     "title": "Детали",
@@ -82,7 +82,7 @@
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
       "idAsc": "Сортировка расходы Asc",
-      "idAsc": "Сортировка расходы Desc",
+      "idDesc": "Сортировка расходы Desc",
       "nameDesc": "Сортировать по имени",
       "noSort": "(Нет Сортировать)"
     }

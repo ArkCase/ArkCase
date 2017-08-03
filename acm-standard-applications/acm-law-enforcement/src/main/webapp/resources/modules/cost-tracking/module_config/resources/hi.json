@@ -1,9 +1,9 @@
 {
   "costTracking": {
     "title": "लागत ट्रैकिंग",
-    "progressNoCostsheet": "hi_[ No costsheet is selected ]",
-    "progressLoading": "hi_Loading costsheet ",
-    "progressError": "hi_Failed to load costsheet"
+    "progressNoCostsheet": "[ कोई भी लागत पत्रक नहीं चुना जाता है ]",
+    "progressLoading": "लागत पत्रक लोड हो रहा है",
+    "progressError": "लागत पत्रक लोड करने में विफल"
   },
   "costTracking.menus": {
     "leftnav.item": "लागत ट्रैकिंग",
@@ -14,16 +14,16 @@
   },
   "costTracking.comp.info": {
     "title": "जानकारी",
-    "incidentDate": "hi_Incident Date",
-    "priority": "hi_Priority",
-    "assignedTo": "hi_Assigned To",
-    "subjectType": "hi_Subject Type",
-    "state": "hi_State"
+    "incidentDate": "घटना दिनांक",
+    "priority": "राथमिकता",
+    "assignedTo": "डेडलाइन ही आ रही है",
+    "subjectType": "विषय प्रकार",
+    "state": "राज्य"
   },
   "costTracking.comp.actions": {
     "title": "क्रियाएं",
-    "new.button": "hi_New Costsheet",
-    "edit.button": "hi_Edit Costsheet"
+    "new.button": "नई कॉस्टशीट",
+    "edit.button": "कॉस्टशीट संपादित करें"
   },
   "costTracking.comp.details": {
     "title": "विवरण",
