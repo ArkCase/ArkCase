@@ -109,9 +109,9 @@ public class AcmGroupsSyncResult
                     AcmGroup currentGroup = currentGroups.get(ldapGroup.getName());
                     AcmGroup parentGroup = currentGroup.getParentGroup();
 
-                    Set<String> memebersDns = currentGroup.getMembersDns();
+                    Set<String> membersDns = currentGroup.getMembersDns();
 
-                    Set<String> newUsers = ldapGroup.groupAddedUserDns(memebersDns);
+                    Set<String> newUsers = ldapGroup.groupAddedUserDns(membersDns);
                     newUsers.forEach(user -> {
                         AcmUser acmUser = dnUserMap.get(user);
                         currentGroup.addMember(acmUser);
@@ -123,7 +123,7 @@ public class AcmGroupsSyncResult
                         }
                     });
 
-                    Set<String> removedUsers = ldapGroup.groupRemovedUserDns(memebersDns);
+                    Set<String> removedUsers = ldapGroup.groupRemovedUserDns(membersDns);
                     removedUsers.forEach(user -> {
                         AcmUser acmUser = dnUserMap.get(user);
                         currentGroup.removeMember(acmUser);
