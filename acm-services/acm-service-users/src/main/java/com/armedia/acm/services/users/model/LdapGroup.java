@@ -1,29 +1,65 @@
 package com.armedia.acm.services.users.model;
 
-import com.google.common.base.Objects;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LdapGroup
 {
-    private String groupName;
+    private String name;
     private String distinguishedName;
     private String sortableValue;
-    private String[] memberDistinguishedNames = {};
-    private List<AcmUser> users = new ArrayList<>();
-    private Set<String> memberOfGroups = new HashSet<>();
+    private String description;
+    private String directoryName;
+    private Set<String> memberGroups = new HashSet<>();
+    private Set<String> memberUsers = new HashSet<>();
+    private Set<String> parentGroups = new HashSet<>();
 
-    public String getGroupName()
+    public boolean isChanged(AcmGroup acmGroup)
     {
-        return groupName;
+        return !(Objects.equals(getDirectoryName(), acmGroup.getDirectoryName()) &&
+                Objects.equals(getDescription(), acmGroup.getDescription()));
     }
 
-    public void setGroupName(String groupName)
+    public Set<String> groupAddedUserDns(Set<String> membersDns)
     {
-        this.groupName = groupName;
+        return getMemberUsers().stream()
+                .filter(it -> !membersDns.contains(it))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> groupAddedGroupMembers(Set<String> existingMembers)
+    {
+        return getMemberGroups().stream()
+                .filter(it -> !existingMembers.contains(it))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> groupRemovedGroupMembers(Set<String> childGroups)
+    {
+        return childGroups.stream()
+                .filter(it -> !getMemberGroups().contains(it))
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> groupRemovedUserDns(Set<String> childGroups)
+    {
+        return childGroups.stream()
+                .filter(it -> !getMemberUsers().contains(it))
+                .collect(Collectors.toSet());
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 
     public String getDistinguishedName()
@@ -36,36 +72,6 @@ public class LdapGroup
         this.distinguishedName = distinguishedName;
     }
 
-    public String[] getMemberDistinguishedNames()
-    {
-        return memberDistinguishedNames;
-    }
-
-    public void setMemberDistinguishedNames(String[] memberDistinguishedNames)
-    {
-        this.memberDistinguishedNames = memberDistinguishedNames;
-    }
-
-    public List<AcmUser> getUsers()
-    {
-        return users;
-    }
-
-    public void setUsers(List<AcmUser> users)
-    {
-        this.users = users;
-    }
-
-    public Set<String> getMemberOfGroups()
-    {
-        return memberOfGroups;
-    }
-
-    public void setMemberOfGroups(Set<String> memberOfGroups)
-    {
-        this.memberOfGroups = memberOfGroups;
-    }
-
     public String getSortableValue()
     {
         return sortableValue;
@@ -76,24 +82,74 @@ public class LdapGroup
         this.sortableValue = sortableValue;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public String getDirectoryName()
+    {
+        return directoryName;
+    }
+
+    public void setDirectoryName(String directoryName)
+    {
+        this.directoryName = directoryName;
+    }
+
+    public Set<String> getMemberGroups()
+    {
+        return memberGroups;
+    }
+
+    public void setMemberGroups(Set<String> memberGroups)
+    {
+        this.memberGroups = memberGroups;
+    }
+
+    public Set<String> getMemberUsers()
+    {
+        return memberUsers;
+    }
+
+    public void setMemberUsers(Set<String> memberUsers)
+    {
+        this.memberUsers = memberUsers;
+    }
+
+    public Set<String> getParentGroups()
+    {
+        return parentGroups;
+    }
+
+    public void setParentGroups(Set<String> parentGroups)
+    {
+        this.parentGroups = parentGroups;
+    }
+
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LdapGroup ldapGroup = (LdapGroup) o;
-        return Objects.equal(groupName, ldapGroup.groupName);
+        return Objects.equals(name, ldapGroup.name);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hashCode(groupName);
+        return Objects.hash(name);
     }
 
     @Override
     public String toString()
     {
-        return groupName;
+        return name;
     }
 }

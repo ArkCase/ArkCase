@@ -1,11 +1,11 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
-import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import org.apache.commons.collections.CollectionUtils;
@@ -29,12 +29,12 @@ public class SpringLdapUserDao
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public AcmUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
+    public LdapUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(config);
+        AcmUserContextMapper userGroupsContextMapper = new AcmUserContextMapper(config);
 
         if (attributes != null)
         {
@@ -42,41 +42,40 @@ public class SpringLdapUserDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        List<AcmUser> results = template
-                .search(config.getUserSearchBase(), String.format(config.getUserSearchFilter(), username), searchControls,
-                        userGroupsContextMapper);
+        List<LdapUser> results = template.search(config.getUserSearchBase(), String.format(config.getUserSearchFilter(),
+                username), searchControls, userGroupsContextMapper);
 
         if (CollectionUtils.isNotEmpty(results))
         {
             // Return the first entity that will be found. The above search can return multiple results under one domain if
             // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
-            AcmUser acmUser = results.get(0);
-            acmUser = appendDomainNameIfSet(acmUser, config);
-            return acmUser;
+            LdapUser ldapUser = results.get(0);
+            ldapUser = appendDomainNameIfSet(ldapUser, config);
+            return ldapUser;
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
     }
 
-    private AcmUser appendDomainNameIfSet(AcmUser acmUser, AcmLdapSyncConfig config)
+    private LdapUser appendDomainNameIfSet(LdapUser ldapUser, AcmLdapSyncConfig config)
     {
         // append user domain name if set. Used in Single Sign-On scenario.
         String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
-        log.debug("Adding user domain suffix to the username: {}", userDomainSuffix);
-        acmUser.setUserId(acmUser.getUserId() + userDomainSuffix);
-        return acmUser;
+        log.debug("Adding user domain suffix to the username: [{}]", userDomainSuffix);
+        ldapUser.setUserId(ldapUser.getUserId() + userDomainSuffix);
+        return ldapUser;
     }
 
-    public AcmUser findUserByLookup(String dn, LdapTemplate template, AcmLdapSyncConfig config)
+    public LdapUser findUserByLookup(String dn, LdapTemplate template, AcmLdapSyncConfig config)
     {
-        AcmUser user = lookupUser(dn, template, config);
+        LdapUser user = lookupUser(dn, template, config);
         user = appendDomainNameIfSet(user, config);
         return user;
     }
 
-    public AcmUser lookupUser(String dn, LdapTemplate template, AcmLdapSyncConfig config)
+    public LdapUser lookupUser(String dn, LdapTemplate template, AcmLdapSyncConfig config)
     {
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(config);
+        AcmUserContextMapper userGroupsContextMapper = new AcmUserContextMapper(config);
 
         String userDnStrippedBase = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
 
@@ -84,10 +83,10 @@ public class SpringLdapUserDao
         if (ArrayUtils.isNotEmpty(userSyncAttributes))
         {
             String[] allAttributes = ArrayUtils.addAll(userSyncAttributes, config.getUserIdAttributeName(), config.getMailAttributeName());
-            return (AcmUser) template.lookup(userDnStrippedBase, allAttributes, userGroupsContextMapper);
+            return (LdapUser) template.lookup(userDnStrippedBase, allAttributes, userGroupsContextMapper);
         } else
         {
-            return (AcmUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);
+            return (LdapUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);
         }
     }
 
@@ -110,11 +109,11 @@ public class SpringLdapUserDao
             context.close();
         } catch (AuthenticationException e)
         {
-            log.warn("User: {} failed to authenticate. ", dn);
+            log.warn("User: [{}] failed to authenticate. ", dn);
             throw e;
         } catch (Exception e)
         {
-            log.warn("Changing the password for User: {} failed. ", dn, e);
+            log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
     }
@@ -134,7 +133,7 @@ public class SpringLdapUserDao
             new RetryExecutor().retryChecked(() -> ldapTemplate.modifyAttributes(strippedBaseDn, mods));
         } catch (Exception e)
         {
-            log.warn("Changing the password for User: {} failed. ", dn, e);
+            log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
     }
@@ -143,7 +142,7 @@ public class SpringLdapUserDao
     {
         String passwordAttribute;
         byte[] passwordBytes;
-        if (AcmLdapConstants.LDAP_AD.equals(directoryType))
+        if (Directory.ACTIVE_DIRECTORY.getType().equals(directoryType))
         {
             passwordBytes = MapperUtils.encodeUTF16LE(password);
             passwordAttribute = "unicodePwd";

@@ -3,11 +3,14 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -26,28 +29,27 @@ import java.util.stream.Collectors;
  */
 public class LdapSyncDatabaseHelper
 {
-    private static final String ROLE_TYPE_APPLICATION_ROLE = "APPLICATION_ROLE";
-    private static final String ROLE_TYPE_LDAP_GROUP = "LDAP_GROUP";
     private UserDao userDao;
     private AcmGroupDao groupDao;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional
     @CacheEvict(value = "quiet-user-cache", allEntries = true)
-    public void updateDatabase(String directoryName, Set<String> allRoles, List<AcmUser> users, Map<String,
-            Set<AcmUser>> usersByRole, Map<String, Set<AcmUser>> usersByLdapGroup, Map<String, String> childParentPair,
+    public void updateDatabase(String directoryName, Set<String> allRoles, List<LdapUser> users, Map<String,
+            Set<LdapUser>> usersByRole, Map<String, Set<LdapUser>> usersByLdapGroup, Map<String, String> childParentPair,
                                Map<String, String> groupDNPairs, boolean singleUser)
     {
         if (!singleUser)
         {
             // Mark all users invalid... users still in LDAP will change to valid during the sync
-            getGroupDao().markAllGroupsInactive(directoryName, ROLE_TYPE_LDAP_GROUP);
+            getGroupDao().markAllGroupsInactive(directoryName, AcmRoleType.LDAP_GROUP.getRoleName());
             getUserDao().markAllUsersInvalid(directoryName);
             getUserDao().markAllRolesInvalid(directoryName);
 
-            persistApplicationRoles(directoryName, allRoles, ROLE_TYPE_APPLICATION_ROLE, null, null);
+            persistApplicationRoles(directoryName, allRoles, AcmRoleType.APPLICATION_ROLE.getRoleName(), null, null);
         }
-        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair, groupDNPairs);
+        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), AcmRoleType.LDAP_GROUP.getRoleName(), childParentPair,
+                groupDNPairs);
 
         persistUsers(directoryName, users);
 
@@ -55,17 +57,12 @@ public class LdapSyncDatabaseHelper
         storeRoles(directoryName, usersByLdapGroup);
     }
 
-    public List<AcmGroup> findAllLdapGroups()
-    {
-        return groupDao.findAllLdapGroups();
-    }
-
     @Transactional
-    public void updateDatabase(String directoryName, List<AcmUser> users, Map<String,
-            Set<AcmUser>> usersByRole, Map<String, Set<AcmUser>> usersByLdapGroup,
+    public void updateDatabase(String directoryName, List<LdapUser> users, Map<String,
+            Set<LdapUser>> usersByRole, Map<String, Set<LdapUser>> usersByLdapGroup,
                                Map<String, String> childParentPair, Map<String, String> groupDNPairs)
     {
-        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), ROLE_TYPE_LDAP_GROUP, childParentPair, groupDNPairs);
+        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), AcmRoleType.LDAP_GROUP.getRoleName(), childParentPair, groupDNPairs);
 
         persistUsers(directoryName, users);
 
@@ -74,7 +71,7 @@ public class LdapSyncDatabaseHelper
         storeGroupRolesAfterPartialSync(usersByLdapGroup);
     }
 
-    private void storeGroupRolesAfterPartialSync(Map<String, Set<AcmUser>> usersByLdapGroup)
+    private void storeGroupRolesAfterPartialSync(Map<String, Set<LdapUser>> usersByLdapGroup)
     {
         usersByLdapGroup.forEach((groupName, users) ->
                 users.forEach(user ->
@@ -99,12 +96,12 @@ public class LdapSyncDatabaseHelper
         return getUserDao().saveAcmUserRole(role);
     }
 
-    private void storeRoles(String directoryName, Map<String, Set<AcmUser>> userMap)
+    private void storeRoles(String directoryName, Map<String, Set<LdapUser>> userMap)
     {
         userMap.forEach((key, value) -> persistUserRoles(directoryName, value, key));
     }
 
-    private List<AcmUserRole> persistUserRoles(String directoryName, Set<AcmUser> savedUsers, String roleName)
+    private List<AcmUserRole> persistUserRoles(String directoryName, Set<LdapUser> savedUsers, String roleName)
     {
         int userCount = savedUsers.size();
         int current = 0;
@@ -115,7 +112,7 @@ public class LdapSyncDatabaseHelper
 
         Set<AcmUser> users = new HashSet<>();
 
-        for (AcmUser user : savedUsers)
+        for (LdapUser user : savedUsers)
         {
             log.trace("persisting user role '{}' -> '{}'", user.getUserId(), roleName);
 
@@ -149,7 +146,7 @@ public class LdapSyncDatabaseHelper
         return retval;
     }
 
-    protected List<AcmUser> persistUsers(String directoryName, List<AcmUser> users)
+    protected List<AcmUser> persistUsers(String directoryName, List<LdapUser> users)
     {
         int userCount = users.size();
         int current = 0;
@@ -158,7 +155,7 @@ public class LdapSyncDatabaseHelper
 
         log.debug("Beginning to persist {} users", userCount);
 
-        for (AcmUser user : users)
+        for (LdapUser user : users)
         {
             log.trace("Persisting user '{}'", user.getUserId());
             current++;
@@ -166,12 +163,25 @@ public class LdapSyncDatabaseHelper
             {
                 log.debug("Saving user {} of {}", current, userCount);
             }
+            AcmUser acmUser = new AcmUser();
+            acmUser.setUserDirectoryName(directoryName);
+            acmUser.setUserId(user.getUserId());
+            acmUser.setFirstName(user.getFirstName());
+            acmUser.setLastName(user.getLastName());
+            acmUser.setUserState(user.getState());
+            acmUser.setMail(user.getMail());
+            acmUser.setDistinguishedName(user.getDistinguishedName());
+            acmUser.setFullName(user.getFullName());
+            acmUser.setsAMAccountName(user.getsAMAccountName());
+            acmUser.setUid(user.getUid());
+            acmUser.setUserPrincipalName(user.getUserPrincipalName());
+            acmUser.setCompany(user.getCompany());
+            acmUser.setCountry(user.getCountry());
+            acmUser.setCountryAbbreviation(user.getCountryAbbreviation());
 
-            user.setUserDirectoryName(directoryName);
+            preserveUserMetadata(acmUser);
 
-            preserveUserMetadata(user);
-
-            AcmUser saved = getUserDao().save(user);
+            AcmUser saved = getUserDao().save(acmUser);
             retval.add(saved);
         }
         return retval;
@@ -183,7 +193,7 @@ public class LdapSyncDatabaseHelper
         if (existing != null)
         {
             existing.getGroups().stream()
-                    .filter(g -> "ADHOC_GROUP".equalsIgnoreCase(g.getType()))
+                    .filter(g -> AcmGroupType.ADHOC.name().equalsIgnoreCase(g.getType()))
                     .forEach(user::addGroup);
 
             Date deletedAt = existing.getDeletedAt();
@@ -211,7 +221,7 @@ public class LdapSyncDatabaseHelper
             jpaRole.setRoleType(roleType);
             getUserDao().saveAcmRole(jpaRole);
 
-            if (ROLE_TYPE_LDAP_GROUP.equals(roleType))
+            if (AcmRoleType.LDAP_GROUP.getRoleName().equals(roleType))
             {
                 // Find or create parent group if exist
                 AcmGroup parentGroup = null;
@@ -227,16 +237,16 @@ public class LdapSyncDatabaseHelper
                     }
 
                     parentGroup.setName(parentName);
-                    parentGroup.setType(ROLE_TYPE_LDAP_GROUP);
+                    parentGroup.setType(AcmRoleType.LDAP_GROUP.getRoleName());
                     if (groupDNPairs != null)
                     {
                         String parentGroupDN = groupDNPairs.get(parentName);
                         parentGroup.setDistinguishedName(parentGroupDN);
                     }
 
-                    if (!AcmGroupStatus.DELETE.equals(parentGroup.getStatus()))
+                    if (!AcmGroupStatus.DELETE.name().equals(parentGroup.getStatus()))
                     {
-                        parentGroup.setStatus(AcmGroupStatus.ACTIVE);
+                        parentGroup.setStatus(AcmGroupStatus.ACTIVE.name());
                     }
                 }
 
@@ -257,9 +267,9 @@ public class LdapSyncDatabaseHelper
                     String groupDN = groupDNPairs.get(role);
                     group.setDistinguishedName(groupDN);
                 }
-                if (!AcmGroupStatus.DELETE.equals(group.getStatus()))
+                if (!AcmGroupStatus.DELETE.name().equals(group.getStatus()))
                 {
-                    group.setStatus(AcmGroupStatus.ACTIVE);
+                    group.setStatus(AcmGroupStatus.ACTIVE.name());
                 }
 
                 getGroupDao().save(group);

@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -85,7 +86,7 @@ public class LdapAuthenticateService
     protected void savePasswordExpirationDate(AcmUser acmUser, LdapTemplate ldapTemplate)
     {
         // passwordExpirationDate is set by ldap after the entry is there
-        AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
+        LdapUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
         acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
         userDao.save(acmUser);
     }
