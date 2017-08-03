@@ -26,7 +26,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "acm_user")
-public class AcmUser implements Serializable, AcmLdapUser
+public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -351,7 +351,6 @@ public class AcmUser implements Serializable, AcmLdapUser
         return user.getUserId().equals(getUserId());
     }
 
-    @Override
     @JsonIgnore
     public Set<String> getLdapGroups()
     {
@@ -363,14 +362,12 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.ldapGroups = ldapGroups;
     }
 
-    @Override
     @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
     }
 
-    @Override
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;

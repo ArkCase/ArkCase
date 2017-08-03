@@ -3,7 +3,7 @@ package com.armedia.acm.services.users.web.api;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
@@ -64,7 +64,7 @@ public class LdapUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser addLdapUser(@RequestBody @Valid LdapUser ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser addLdapUser(@RequestBody @Valid UserDTO ldapUserCreateRequest, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -155,7 +155,7 @@ public class LdapUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser cloneLdapUser(@RequestBody LdapUser ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser cloneLdapUser(@RequestBody @Valid UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
