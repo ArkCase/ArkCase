@@ -70,15 +70,4 @@ public class MapperUtilsTest
         assertThat("Sets should be equal", actual, containsInAnyOrder(expected.toArray()));
     }
 
-    @Test
-    public void t()
-    {
-        DistinguishedName dn = new DistinguishedName("cn=Ann,OU=Users,ou=company,dc=armedia,DC=com");
-        Name name = new DistinguishedName("DC=armedia,dc=com");
-        dn.removeFirst(name);
-        System.out.println("DN=" + dn);
-        Name suffix = new DistinguishedName("ou=company");
-        System.out.println("SUFFIX=" + suffix);
-        System.out.println(dn.startsWith(suffix));
-    }
 }
