@@ -2,8 +2,8 @@
   "costTracking": {
     "title": "Seguimiento de Costos",
     "progressNoCostsheet": "[ No hay datos de la hoja de ]",
-    "progressLoading": "es_Loading costsheet ",
-    "progressError": "es_Failed to load costsheet"
+    "progressLoading": "Hoja de costo de carga",
+    "progressError": "Error al cargar la hoja de o"
   },
   "costTracking.menus": {
     "leftnav.item": "Seguimiento de Costos",
