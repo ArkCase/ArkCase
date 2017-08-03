@@ -4,10 +4,11 @@
 package com.armedia.acm.services.users.dao.group;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-import com.armedia.acm.services.users.model.group.GroupConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -95,7 +96,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         if (group != null)
         {
-            group.setStatus(AcmGroupStatus.DELETE);
+            group.setStatus(AcmGroupStatus.DELETE.name());
             group.setParentGroup(null);
             if (group.getChildGroups() != null)
             {
@@ -176,7 +177,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                         "WHERE user.userDirectoryName != :directoryName " +
                         "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
-        query.setParameter("groupStatus", AcmGroupStatus.DELETE);
+        query.setParameter("groupStatus", AcmGroupStatus.DELETE.name());
         query.setParameter("userRoleState", "VALID");
         query.setParameter("directoryName", directoryName);
         query.setParameter("userState", "VALID");
@@ -187,7 +188,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             for (AcmGroup group : groups)
             {
-                group.setStatus(AcmGroupStatus.INACTIVE);
+                group.setStatus(AcmGroupStatus.INACTIVE.name());
                 save(group);
             }
         }
@@ -217,8 +218,8 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
                 "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
 
-        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
-        query.setParameter("status", AcmGroupStatus.DELETE);
+        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
+        query.setParameter("status", AcmGroupStatus.DELETE.name());
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);
@@ -229,9 +230,9 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
                 "group.parentGroup.name = :uuidName AND group.status <> :status", AcmGroup.class);
 
-        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
+        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
         query.setParameter("uuidName", group.getParentGroup().getName());
-        query.setParameter("status", AcmGroupStatus.DELETE);
+        query.setParameter("status", AcmGroupStatus.DELETE.name());
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);
@@ -274,12 +275,14 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return retval;
     }
 
-    public List<AcmGroup> findAllLdapGroups()
+    public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup FROM AcmGroup acmGroup WHERE acmGroup.type = :groupType",
-                AcmGroup.class);
-        query.setParameter("groupType", "LDAP_GROUP");
-        return query.getResultList();
+        String query =
+                "SELECT acmGroup FROM AcmGroup acmGroup WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName";
+        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().createQuery(query, AcmGroup.class);
+        allLdapGroupsInDirectory.setParameter("groupType", AcmRoleType.LDAP_GROUP.getRoleName());
+        allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
+        return allLdapGroupsInDirectory.getResultList();
     }
 
     @Override
