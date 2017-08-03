@@ -9,9 +9,8 @@ import org.springframework.ldap.core.DistinguishedName;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Common operations in mapping LDAP attributes
@@ -20,50 +19,58 @@ public class MapperUtils
 {
     private static Logger log = LoggerFactory.getLogger(MapperUtils.class);
 
-    public static final Function<String, String> MEMBER_TO_COMMON_NAME_UPPERCASE = element ->
+    public static Function<String, String> getRdnMappingFunction(final String key)
     {
-        if (StringUtils.isBlank(element))
-        {
-            return "";
-        }
-        try
-        {
-            DistinguishedName dn = new DistinguishedName(element);
-            return dn.getValue("cn").toUpperCase();
-        } catch (BadLdapGrammarException e)
-        {
-            return "";
-        }
-    };
+        return element -> {
+            if (StringUtils.isBlank(element))
+            {
+                return "";
+            }
+            try
+            {
+                DistinguishedName dn = new DistinguishedName(element);
+                return dn.getValue(key);
+            } catch (BadLdapGrammarException | IllegalArgumentException e)
+            {
+                log.warn("No RDN with the requested key [{}]", key);
 
-    public static Set<String> arrayToSet(String[] elements, Function<String, String> mapper)
+                return "";
+            }
+        };
+    }
+
+    public static Stream<String> mapAttributes(String[] elements, Function<String, String> mapper)
     {
         return Arrays.stream(elements)
-                .map(mapper)
-                .collect(Collectors.toSet());
+                .map(mapper);
     }
 
     public static String getAttribute(DirContextAdapter adapter, String... names)
     {
-        for (String name : names)
-        {
-            String result = adapter.attributeExists(name) ? adapter.getStringAttribute(name) : null;
-            if (result != null)
-            {
-                return result;
-            }
-        }
-        return null;
+        return Arrays.stream(names)
+                .filter(adapter::attributeExists)
+                .map(adapter::getStringAttribute)
+                .findFirst()
+                .orElse(null);
     }
 
     public static String stripBaseFromDn(String dn, String base)
     {
-        if (dn.endsWith(base))
+        DistinguishedName distinguishedName = new DistinguishedName(dn);
+        DistinguishedName baseDn = new DistinguishedName(base);
+        if (distinguishedName.startsWith(baseDn))
         {
-            base = "," + base;
-            dn = dn.substring(0, dn.indexOf(base));
+            distinguishedName.removeFirst(baseDn);
         }
-        return dn;
+        return distinguishedName.toString();
+    }
+
+    public static String appendBaseToDn(String dn, String base)
+    {
+        DistinguishedName distinguishedName = new DistinguishedName(dn);
+        DistinguishedName baseDn = new DistinguishedName(base);
+        distinguishedName.prepend(baseDn);
+        return distinguishedName.toString();
     }
 
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException

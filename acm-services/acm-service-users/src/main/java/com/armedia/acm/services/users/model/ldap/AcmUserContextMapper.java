@@ -1,6 +1,6 @@
 package com.armedia.acm.services.users.model.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
@@ -12,35 +12,37 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-public class AcmUserGroupsContextMapper implements ContextMapper
+public class AcmUserContextMapper implements ContextMapper
 {
     public static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmLdapSyncConfig acmLdapSyncConfig;
 
-    public AcmUserGroupsContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
+    public AcmUserContextMapper(AcmLdapSyncConfig acmLdapSyncConfig)
     {
         this.acmLdapSyncConfig = acmLdapSyncConfig;
     }
 
     @Override
-    public AcmUser mapFromContext(Object ctx)
+    public LdapUser mapFromContext(Object ctx)
     {
         DirContextAdapter adapter = (DirContextAdapter) ctx;
 
-        AcmUser user = setLdapUser(new AcmUser(), adapter);
-        log.trace("Retrieved user '{}'", user.getDistinguishedName());
+        LdapUser user = mapToLdapUser(adapter);
+        log.trace("Retrieved user [{}]", user.getDistinguishedName());
         return user;
     }
 
-    protected AcmUser setLdapUser(AcmUser user, DirContextAdapter adapter)
+    protected LdapUser mapToLdapUser(DirContextAdapter adapter)
     {
+        LdapUser user = new LdapUser();
+        user.setDirectoryName(acmLdapSyncConfig.getDirectoryName());
         user.setLastName(MapperUtils.getAttribute(adapter, "sn"));
         user.setFirstName(MapperUtils.getAttribute(adapter, "givenName"));
 
         String fullName = String.format("%s %s", user.getFirstName(), user.getLastName());
-
         user.setFullName(fullName);
 
         // because of how the LDAP query paging works, we can no longer return null for the disabled accounts.
@@ -48,13 +50,14 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         String uac = MapperUtils.getAttribute(adapter, "userAccountControl");
         if (isUserDisabled(uac))
         {
-            log.debug("User '{}' is disabled and won't be synced", fullName);
-            user.setUserState("DISABLED");
+            log.debug("User [{}] is disabled and won't be synced", fullName);
+            user.setState("DISABLED");
         } else
         {
-            user.setUserState("VALID");
+            user.setState("VALID");
         }
 
+        user.setDistinguishedName(MapperUtils.appendBaseToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         user.setUserId(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName()));
         user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
         user.setCountry(MapperUtils.getAttribute(adapter, "co"));
@@ -62,7 +65,6 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         user.setCompany(MapperUtils.getAttribute(adapter, "company"));
         user.setDepartment(MapperUtils.getAttribute(adapter, "department"));
         user.setTitle(MapperUtils.getAttribute(adapter, "title"));
-        user.setDistinguishedName(String.format("%s,%s", adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         user.setsAMAccountName(MapperUtils.getAttribute(adapter, "samAccountName"));
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
         user.setUid(MapperUtils.getAttribute(adapter, "uid"));
@@ -72,7 +74,9 @@ public class AcmUserGroupsContextMapper implements ContextMapper
         if (adapter.attributeExists("memberOf"))
         {
             String[] groupsUserIsMemberOf = adapter.getStringAttributes("memberOf");
-            ldapGroupsForUser = MapperUtils.arrayToSet(groupsUserIsMemberOf, MapperUtils.MEMBER_TO_COMMON_NAME_UPPERCASE);
+            ldapGroupsForUser = MapperUtils.mapAttributes(groupsUserIsMemberOf, MapperUtils.getRdnMappingFunction("cn"))
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toSet());
         }
         user.setLdapGroups(ldapGroupsForUser);
         user.setPasswordExpirationDate(getPasswordExpirationDate(adapter));
@@ -81,14 +85,14 @@ public class AcmUserGroupsContextMapper implements ContextMapper
 
     private LocalDate getPasswordExpirationDate(DirContextAdapter adapter)
     {
-        if (AcmLdapConstants.LDAP_AD.equals(acmLdapSyncConfig.getDirectoryType()))
+        if (Directory.ACTIVE_DIRECTORY.getType().equals(acmLdapSyncConfig.getDirectoryType()))
         {
             String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
             if (expirationTimePasswordAttr != null)
             {
                 return convertFileTimeTimestampToDate(expirationTimePasswordAttr);
             }
-        } else if (AcmLdapConstants.LDAP_OPENLDAP.equals(acmLdapSyncConfig.getDirectoryType()))
+        } else if (Directory.OPEN_LDAP.getType().equals(acmLdapSyncConfig.getDirectoryType()))
         {
             String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
             String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");

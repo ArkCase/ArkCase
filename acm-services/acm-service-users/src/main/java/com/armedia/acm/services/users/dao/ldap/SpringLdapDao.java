@@ -1,18 +1,16 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
-import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public interface SpringLdapDao
@@ -44,18 +42,11 @@ public interface SpringLdapDao
         return ldapTemplate;
     }
 
-    default String convertToOpenLdapTimestamp(String timestamp)
+    default String convertToDirectorySpecificTimestamp(String ldapLastSyncTimestamp, String directoryType)
     {
-        ZonedDateTime dateTime = ZonedDateTime.parse(timestamp);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AcmLdapConstants.LDAP_OPENLDAP_DATE_PATTERN);
-        return dateTime.format(formatter);
-    }
-
-    default String convertToActiveDirectoryTimestamp(String timestamp)
-    {
-        ZonedDateTime dateTime = ZonedDateTime.parse(timestamp, DateTimeFormatter.ISO_DATE_TIME);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AcmLdapConstants.LDAP_AD_DATE_PATTERN);
-        return dateTime.format(formatter);
+        return directoryType.equals(Directory.OPEN_LDAP.getType()) ?
+                Directory.OPEN_LDAP.convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp) :
+                Directory.ACTIVE_DIRECTORY.convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp);
     }
 
     default String buildGroupSearchFilter(AcmLdapSyncConfig syncConfig, String lastSyncDate)
@@ -86,11 +77,7 @@ public interface SpringLdapDao
                 sortAttributeValue, lastSyncDate) : String.format(syncConfig.getAllUsersPageFilter(), sortAttributeValue);
     }
 
-    List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig);
+    List<LdapUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String ldapLastSyncDate);
 
-    List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config);
-
-    List<AcmUser> findChangedUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes, String ldapLastSyncDate);
-
-    List<LdapGroup> findChangedGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config, String ldapLastSyncDate);
+    List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config, String ldapLastSyncDate);
 }

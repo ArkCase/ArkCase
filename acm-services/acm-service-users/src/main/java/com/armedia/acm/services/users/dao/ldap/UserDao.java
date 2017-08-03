@@ -5,11 +5,12 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
-import com.armedia.acm.services.users.model.RoleType;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -93,10 +94,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByRoleType(RoleType roleType)
+    public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
-        roleQuery.setParameter("roleType", roleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -112,13 +113,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, RoleType roleType)
+    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " + "WHERE acmRole.roleName IN "
                 + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
                 + "AND userRole.userRoleState = :userRoleState) " + "AND acmRole.roleType = :roleType");
         roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("roleType", roleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
         roleQuery.setParameter("userRoleState", "VALID");
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
@@ -192,7 +193,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmRole saveAcmRole(AcmRole in)
     {
-
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
@@ -216,10 +216,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             return userRole;
         }
 
-        existing.setUserRoleState("VALID");
-        getEntityManager().persist(existing);
-
-        return existing;
+        existing.setUserRoleState(userRole.getUserRoleState());
+        return userRole;
     }
 
     @Transactional
@@ -266,9 +264,17 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             return query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException e)
         {
-            log.error("User with password reset token: {} not found!", token, e.getMessage());
+            log.error("User with password reset token: [{}] not found!", token, e.getMessage());
             return null;
         }
+    }
+
+    public List<AcmUser> findByDirectory(String directoryName)
+    {
+        TypedQuery<AcmUser> allUsersInDirectory = getEm()
+                .createQuery("SELECT acmUser FROM AcmUser acmUser WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
+        allUsersInDirectory.setParameter("directoryName", directoryName);
+        return allUsersInDirectory.getResultList();
     }
 
     public EntityManager getEntityManager()
