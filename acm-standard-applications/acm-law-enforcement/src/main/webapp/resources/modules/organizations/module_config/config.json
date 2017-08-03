@@ -957,9 +957,10 @@
         },
         {
           "name": "person.personToOrganizationAssociationType",
+          "field": "person.personToOrganizationAssociationType",
           "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span ng-bind=\"(row.entity.person.organizationAssociations | filter :{organization : {organizationId : grid.appScope.currentObjectId}})[0].personToOrganizationAssociationType\"></span>"
+          "lookup": "personAssociationTypes"
         },
         {
           "name": "phone",
@@ -1187,7 +1188,7 @@
           "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "organizations.comp.related.table.columns.identification",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
         },
         {
           "name": "organization.organizationType",
@@ -1199,19 +1200,19 @@
           "name": "organization.defaultPerson.givenName",
           "displayName": "organizations.comp.related.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName + ' ' + row.entity.defaultPerson.organization.familyName}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
           "displayName": "organizations.comp.related.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "organization.defaultAddress.city",
           "displayName": "organizations.comp.related.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
         }
       ]
     },

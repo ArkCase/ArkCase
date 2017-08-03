@@ -1138,14 +1138,20 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
+          "name": "type",
+          "field": "type_lcs",
+          "displayName": "people.comp.complaints.table.columns.role",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "priority",
-          "field": "priority_lcs",
+          "field": "parent_object.priority_lcs",
           "displayName": "people.comp.complaints.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
           "name": "id",
-          "field": "object_id_s",
+          "field": "parent_object.object_id_s",
           "displayName": "people.comp.complaints.table.columns.id",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
@@ -1153,7 +1159,7 @@
         },
         {
           "name": "title",
-          "field": "title_parseable",
+          "field": "parent_object.title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "people.comp.complaints.table.columns.title",
           "headerCellFilter": "translate",
@@ -1161,14 +1167,14 @@
         },
         {
           "name": "status",
-          "field": "status_lcs",
+          "field": "parent_object.status_lcs",
           "displayName": "people.comp.complaints.table.columns.status",
           "headerCellFilter": "translate"
         },
         {
           "width": 150,
           "name": "assignee",
-          "field": "assignee_id_lcs",
+          "field": "parent_object.assignee_id_lcs",
           "displayName": "people.comp.complaints.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
@@ -1176,7 +1182,7 @@
         {
           "width": 150,
           "name": "modified",
-          "field": "modified_date_tdt",
+          "field": "parent_object.modified_date_tdt",
           "displayName": "people.comp.complaints.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
