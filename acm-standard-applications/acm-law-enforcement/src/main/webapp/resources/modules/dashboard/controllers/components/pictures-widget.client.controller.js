@@ -1,29 +1,29 @@
 'use strict';
 
-angular.module('dashboard.relOrganizations', ['adf.provider'])
+angular.module('dashboard.pictures', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
-            .widget('relOrganizations', {
-                    title: 'dashboard.widgets.relOrganizations.title',
-                    description: 'dashboard.widgets.relOrganizations.description',
-                    controller: 'Dashboard.RelatedOrganizationsController',
+            .widget('pictures', {
+                    title: 'dashboard.widgets.pictures.title',
+                    description: 'dashboard.widgets.pictures.description',
+                    controller: 'Dashboard.PicturesController',
                     reload: true,
-                    templateUrl: 'modules/dashboard/views/components/related-organizations-widget.client.view.html',
-                    commonName: 'relOrganizations'
+                    templateUrl: 'modules/dashboard/views/components/pictures-widget.client.view.html',
+                    commonName: 'pictures'
                 }
             );
     })
-    .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+    .controller('Dashboard.PicturesController', ['$scope', '$stateParams', '$translate',
+        'Person.InfoService', 'Person.PicturesService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, PersonPicturesService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
-                    name: "ORGANIZATION",
-                    configName: "organizations",
-                    getInfo: OrganizationInfoService.getOrganizationInfo,
-                    validateInfo: OrganizationInfoService.validateOrganizationInfo
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
                 }
             ];
 
@@ -55,20 +55,21 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                refreshGridData(objectInfo.organizationId, objectInfo.objectType);
+                refreshGridData(objectInfo.id);
             };
 
-            function refreshGridData(objectId, objectType) {
-                ObjectAssociationService.getObjectAssociations(objectId, objectType, 'ORGANIZATION').then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
+            function refreshGridData(objectId) {
+                PersonPicturesService.listPersonPictures(objectId).then(function (result) {
+                    gridHelper.setWidgetsGridData(result.response.docs);
                 });
             }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "relOrganizations";
+                    return widget.id === "pictures";
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
         }
     ]);
