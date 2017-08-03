@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
@@ -106,7 +107,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
                 mockLdapAuthenticateConfig);
         expectLastCall().once();
 
-        AcmUser userEntry = new AcmUser();
+        LdapUser userEntry = new LdapUser();
         userEntry.setDistinguishedName("cn=ann-acm,dc=arkcase,dc=com");
         userEntry.setPasswordExpirationDate(LocalDate.of(2017, 1, 1));
         expect(mockLdapUserDao.lookupUser(mockUser.getDistinguishedName(), mockTemplate, mockLdapSyncConfig)).andReturn(userEntry);
@@ -161,7 +162,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
                 mockLdapAuthenticateConfig);
         expectLastCall().once();
 
-        AcmUser userEntry = new AcmUser();
+        LdapUser userEntry = new LdapUser();
         userEntry.setDistinguishedName("cn=ann-acm,dc=arkcase,dc=com");
         userEntry.setPasswordExpirationDate(LocalDate.of(2017, 1, 1));
         expect(mockLdapUserDao.lookupUser(mockUser.getDistinguishedName(), mockTemplate, mockLdapSyncConfig)).andReturn(userEntry);
