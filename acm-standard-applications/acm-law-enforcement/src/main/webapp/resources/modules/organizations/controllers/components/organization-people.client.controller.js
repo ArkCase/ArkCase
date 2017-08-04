@@ -2,9 +2,9 @@
 
 angular.module('organizations').controller('Organizations.PeopleController', ['$scope', '$q', '$stateParams'
     , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService'
-    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService'
+    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService
-        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService) {
+        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -40,8 +40,12 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.ORGANIZATION}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

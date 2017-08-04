@@ -4,7 +4,7 @@
             <div class="panel-title">
                 <span translate>organizations.comp.related.title</span>
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)"
+                    <button permission="editOrganization" permission-properties="objectInfo" permission-action="hide" class="btn btn-default btn-xs"
                             ng-click="addOrganizationAssociation()"><i
                             class="fa fa-lg fa-plus"></i></button>
                 </div>

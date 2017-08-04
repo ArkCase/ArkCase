@@ -81,6 +81,7 @@
           "faxes",
           "emails",
           "urls",
+          "participants",
           "dbas",
           "people",
           "ids",
@@ -136,6 +137,14 @@
         "icon": "fa fa-link",
         "components": [
           "urls"
+        ]
+      },
+      {
+        "type": "p/ORGANIZATION/par",
+        "label": "organizations.tree.nodeTypes.participants.label",
+        "icon": "fa fa-users",
+        "components": [
+          "participants"
         ]
       },
       {
@@ -383,6 +392,24 @@
               "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
               "headerCellFilter": "translate",
               "width": 150
+            }
+          ]
+        },
+        {
+          "id": "participants",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "participantType",
+              "displayName": "organizations.comp.participants.table.columns.type",
+              "headerCellFilter": "translate",
+              "lookup": "participantTypes"
+            },
+            {
+              "name": "participantLdapId",
+              "displayName": "organizations.comp.participants.table.columns.name",
+              "headerCellFilter": "translate",
+              "lookup": "participantNames"
             }
           ]
         },
@@ -877,6 +904,92 @@
           "width": 150
         }
       ]
+    },
+    {
+      "id": "participants",
+      "title": "organizations.comp.participants.title",
+      "icon": "fa fa-users",
+      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "typeNoAccess": "No Access",
+      "columnDefs": [
+        {
+          "name": "participantType",
+          "displayName": "organizations.comp.participants.table.columns.type",
+          "headerCellFilter": "translate",
+          "lookup": "participantTypes"
+        },
+        {
+          "name": "participantLdapId",
+          "displayName": "organizations.comp.participants.table.columns.name",
+          "headerCellFilter": "translate",
+          "lookup": "participantNames"
+        }
+      ],
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "organizations.comp.participants.dialogUserPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_type_s",
+            "displayName": "organizations.comp.participants.dialogUserPicker.table.columns.type",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "title",
+            "displayName": "organizations.comp.participants.dialogUserPicker.table.columns.title",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "object_id_s",
+            "displayName": "organizations.comp.participants.dialogUserPicker.table.columns.id",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "cases.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
     },
     {
       "id": "dbas",
