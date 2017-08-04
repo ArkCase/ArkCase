@@ -30,7 +30,8 @@
     "delete.button": "Delete",
     "activate.button": "Activate",
     "deactivate.button": "Deactivate",
-    "merge.button": "Merge"
+    "merge.button": "Merge",
+    "restrict" : "Restrict?"
   },
   "organizations.comp.details": {
     "title": "Details",
@@ -213,6 +214,28 @@
       "type.placeholder": "Enter Type",
       "value.label": "URL",
       "value.placeholder": "Enter URL"
+    }
+  },
+  "organizations.comp.participants": {
+  	"title": "Participants",
+  	"table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
     }
   },
   "organizations.comp.dbas": {
@@ -428,6 +451,7 @@
       "faxes.label": "Fax Numbers",
       "emails.label": "Email Addresses",
       "urls.label": "URLs",
+      "participants.label": "Participants",
       "dbas.label": "DBAs",
       "people.label": "People",
       "ids.label": "IDs",
