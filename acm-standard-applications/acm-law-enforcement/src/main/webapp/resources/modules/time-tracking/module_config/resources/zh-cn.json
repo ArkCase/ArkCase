@@ -1,9 +1,9 @@
 {
   "timeTracking": {
     "title": "时间跟踪",
-    "progressNoTimesheet": "zh-cn_[ No timesheet is selected ]",
-    "progressLoading": "zh-cn_Loading timesheet ",
-    "progressError": "zh-cn_Failed to load timesheet"
+    "progressNoTimesheet": "[ 无时间数据  ]",
+    "progressLoading": "加载时间数据",
+    "progressError": "无法加载时间数据"
   },
   "timeTracking.menus": {
     "leftnav.item": "时间跟踪",
@@ -14,12 +14,12 @@
   },
   "timeTracking.comp.info": {
     "title": "信息",
-    "lastModified.label": "zh-cn_Last Modified"
+    "lastModified.label": "上次更改时间"
   },
   "timeTracking.comp.actions": {
     "title": "行动",
-    "new.button": "zh-cn_New Timesheet",
-    "edit.button": "zh-cn_Edit Timesheet"
+    "new.button": "新时间项目",
+    "edit.button": "更改时间项目"
   },
   "timeTracking.comp.details": {
     "title": "详情",
@@ -82,7 +82,7 @@
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
       "idAsc": "按时间表格号排序",
-      "idAsc": "按时间表格号反排序",
+      "idDesc": "按时间表格号反排序",
       "nameDesc": "按名称排序",
       "noSort": "(不排序)"
     }

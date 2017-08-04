@@ -31,14 +31,14 @@
     "case": {
       "subjectType.label": "Tipo de asunto",
       "incidentDate.label": "Fecha del incidente",
-      "priority.label": "Prioridad2",
+      "priority.label": "Prioridad",
       "assignee.label": "Asignado a",
       "owningGroup.label": "Grupo propietario"
     },
     "complaint": {
       "subjectType.label": "Tipo de asunto",
       "incidentDate.label": "Fecha del incidente",
-      "priority.label": "Prioridad3",
+      "priority.label": "Prioridad",
       "assignee.label": "Asignado a",
       "owningGroup.label": "Grupo propietario"
     },

@@ -737,5 +737,30 @@
     ],
     "paginationPageSize": 10,
     "start": 0
+  },
+  "dialogObjectPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogObjectPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "name",
+        "displayName": "common.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
   }
 }
