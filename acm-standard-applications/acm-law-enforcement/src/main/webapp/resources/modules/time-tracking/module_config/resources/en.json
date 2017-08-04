@@ -82,7 +82,7 @@
       "dateAsc": "Sort Date Ascending",
       "dateDesc": "Sort Date Decending",
       "idAsc": "Sort Timesheet ID Ascending",
-      "idDesc": "Sort Timesheet ID Decending",
+      "idDesc": "Sort Timesheet ID Descending",
       "nameDesc": "Sort By Timesheet Name",
       "noSort": "(No Sort)"
     }
