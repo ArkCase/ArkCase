@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "Организации",
-    "progressNoComplaint": "ru_[ No organizations data ]",
-    "progressLoading": "ru_Loading organization ",
-    "progressError": "ru_Failed to load organization "
+    "progressNoComplaint": "[ Нет данных организаций ]",
+    "progressLoading": "Организация загрузки",
+    "progressError": "Не удалось загрузить организацию",
+    "NoDataMessage": "Нет данных"
   },
   "organizations.menus": {
     "leftnav.item": "Организации",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "Информация",
-    "phone.label": "ru_Phone",
-    "email.label": "ru_Email",
-    "status.label": "ru_Status",
-    "identification.label": "ru_ID",
-    "primary.label": "ru_Primary Contact",
-    "parent.label": "ru_Parent Organization",
-    "parent.placeholder": "ru_Enter Parent Organization"
+    "phone.label": "Телефон",
+    "email.label": "Электронная почта",
+    "status.label": "Статус",
+    "organization.label": "Организация",
+    "identification.label": "Идентификация",
+    "primary.label": "Первичный контакт",
+    "parent.label": "Родительская организация",
+    "parent.placeholder": "Введите родительскую организацию"
   },
   "organizations.comp.actions": {
     "title": "Действия",
-    "export.button": "ru_Export",
-    "import.button": "ru_Import",
-    "delete.button": "ru_Delete",
-    "activate.button": "ru_Activate",
-    "deactivate.button": "ru_Deactivate",
-    "merge.button": "ru_Merge"
+    "export.button": "Экспорт",
+    "import.button": "Импорт",
+    "delete.button": "Удалить",
+    "activate.button": "Активировать",
+    "deactivate.button": "Деактивировать",
+    "merge.button": "Объединить"
   },
   "organizations.comp.details": {
     "title": "Детали",

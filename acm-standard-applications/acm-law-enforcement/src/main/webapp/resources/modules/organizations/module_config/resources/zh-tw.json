@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "組織",
-    "progressNoComplaint": "zh-tw_[ No organizations data ]",
-    "progressLoading": "zh-tw_Loading organization ",
-    "progressError": "zh-tw_Failed to load organization "
+    "progressNoComplaint": "[ 無組織數據 ]",
+    "progressLoading": "加載組織數據",
+    "progressError": "加載組織數據失敗",
+    "noDataMessage": "無數據"
   },
   "organizations.menus": {
     "leftnav.item": "組織",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "信息",
-    "phone.label": "zh-tw_Phone",
-    "email.label": "zh-tw_Email",
-    "status.label": "zh-tw_Status",
-    "identification.label": "zh-tw_ID",
-    "primary.label": "zh-tw_Primary Contact",
-    "parent.label": "zh-tw_Parent Organization",
-    "parent.placeholder": "zh-tw_Enter Parent Organization"
+    "phone.label": "電話",
+    "email.label": "電子郵箱",
+    "status.label": "狀態",
+    "organization.label": "組織",
+    "identification.label": "身份號碼",
+    "primary.label": "主要聯繫人",
+    "parent.label": "上層組織",
+    "parent.placeholder": "輸入上層組織"
   },
   "organizations.comp.actions": {
     "title": "行動",
-    "export.button": "zh-tw_Export",
-    "import.button": "zh-tw_Import",
-    "delete.button": "zh-tw_Delete",
-    "activate.button": "zh-tw_Activate",
-    "deactivate.button": "zh-tw_Deactivate",
-    "merge.button": "zh-tw_Merge"
+    "export.button": "輸出",
+    "import.button": "輸入",
+    "delete.button": "刪除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合併"
   },
   "organizations.comp.details": {
     "title": "詳情",
@@ -151,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "電子郵址",
+    "title": "電子郵箱",
     "table.columns": {
       "type": "zh-tw_Email Address Type",
       "value": "zh-tw_Email Address",
@@ -425,7 +427,7 @@
       "addresses.label": "地點",
       "phones.label": "電話號碼",
       "faxes.label": "傳真號碼",
-      "emails.label": "電子郵址",
+      "emails.label": "電子郵箱",
       "urls.label": "網址",
       "dbas.label": "DBA",
       "people.label": "成員",

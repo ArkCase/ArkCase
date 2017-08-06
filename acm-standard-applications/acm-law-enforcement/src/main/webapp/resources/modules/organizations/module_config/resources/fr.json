@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "Organisations",
-    "progressNoComplaint": "fr_[ No organizations data ]",
-    "progressLoading": "fr_Loading organization ",
-    "progressError": "fr_Failed to load organization "
+    "progressNoComplaint": "[ Aucune donnée d'organisation ]",
+    "progressLoading": "Chargement de l'organisation",
+    "progressError": "Impossible de charger l'organisation",
+    "NoDataMessage": "Aucune donnée"
   },
   "organizations.menus": {
     "leftnav.item": "Organisations",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "Information",
-    "phone.label": "fr_Phone",
-    "email.label": "fr_Email",
-    "status.label": "fr_Status",
-    "identification.label": "fr_ID",
-    "primary.label": "fr_Primary Contact",
-    "parent.label": "fr_Parent Organization",
-    "parent.placeholder": "fr_Enter Parent Organization"
+    "phone.label": "Téléphone",
+    "email.label": "Email",
+    "status.label": "Statut",
+    "organization.label": "Organisation",
+    "identification.label": "ID",
+    "primary.label": "Contact principal",
+    "parent.label": "Organisation parentale",
+    "parent.placeholder": "Entrez l'organisation parentale"
   },
   "organizations.comp.actions": {
     "title": "Actions",
-    "export.button": "fr_Export",
-    "import.button": "fr_Import",
-    "delete.button": "fr_Delete",
-    "activate.button": "fr_Activate",
-    "deactivate.button": "fr_Deactivate",
-    "merge.button": "fr_Merge"
+    "export.button": "Export",
+    "import.button": "Importer",
+    "delete.button": "Supprimer",
+    "activate.button": "Activer",
+    "deactivate.button": "Désactiver",
+    "merge.button": "Fusionner"
   },
   "organizations.comp.details": {
     "title": "Détails",
