@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "जानकारी",
-    "docRepoId": "hi_Repository ID:",
-    "docRepoName": "hi_Document Repository Name:",
-    "modified.label": "hi_Modified Date",
-    "assignee.label": "hi_Assigned To",
-    "owningGroup.label": "hi_Owning Group",
-    "description.label": "hi_Description"
+    "docRepoId": "रिपोजिटरी आईडी:",
+    "docRepoName": "दस्तावेज़ रिपॉजिटरी नाम:",
+    "modified.label": "संशोधित तिथि",
+    "assignee.label": "असाइन करने के लिए",
+    "owningGroup.label": "मालिकाना समूह",
+    "description.label": "विवरण"
   },
   "document-repository.comp.actions": {
     "title": "क्रियाएं",
-    "restrict": "hi_Restrict?",
-    "subscribe.button": "hi_Subscribe",
-    "unsubscribe.button": "hi_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "hi_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "प्रतिबंधित करें?",
+    "subscribe.button": "सदस्यता लें",
+    "unsubscribe.button": "सदस्यता रद्द करें",
+    "delete.button": "रिपॉजिटरी हटाएं",
+    "confirm.delete.documentRepository.msg": "यह क्रिया पूरे रिपॉजिटरी को हटा देगा। क्या आप वाकई आगे बढ़ना चाहते हैं?"
   },
   "document-repository.comp.details": {
     "title": "विवरण",

@@ -1,9 +1,9 @@
 {
   "people": {
     "title": "成員",
-    "progressNoComplaint": "zh-tw_[ No people data ]",
-    "progressLoading": "zh-tw_Loading people ",
-    "progressError": "zh-tw_Failed to load people "
+    "progressNoComplaint": "[ 無成員數據 ]",
+    "progressLoading": "加載成員數據",
+    "progressError": "無法加載成員數據"
   },
   "people.menus": {
     "leftnav.item": "成員",
@@ -14,20 +14,20 @@
   },
   "people.comp.info": {
     "title": "信息",
-    "phone.label": "zh-tw_Phone",
-    "email.label": "zh-tw_Email",
-    "status.label": "zh-tw_Status",
-    "organization.label": "zh-tw_Organization",
-    "identification.label": "zh-tw_ID"
+    "phone.label": "電話",
+    "email.label": "電子郵箱",
+    "status.label": "狀態",
+    "organization.label": "組織",
+    "identification.label": "身份號碼"
   },
   "people.comp.actions": {
     "title": "行動",
-    "export.button": "zh-tw_Export",
-    "import.button": "zh-tw_Import",
-    "delete.button": "zh-tw_Delete",
-    "activate.button": "zh-tw_Activate",
-    "deactivate.button": "zh-tw_Deactivate",
-    "merge.button": "zh-tw_Merge"
+    "export.button": "輸出",
+    "import.button": "輸入",
+    "delete.button": "刪除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合併"
   },
   "people.comp.details": {
     "title": "詳情",
@@ -150,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "電子郵址",
+    "title": "電子郵箱",
     "table.columns": {
       "type": "zh-tw_Type",
       "value": "zh-tw_Email Address",
@@ -424,7 +424,7 @@
       "pictures.label": "相片",
       "addresses.label": "地點",
       "phones.label": "電話號碼",
-      "emails.label": "電子郵址",
+      "emails.label": "電子郵箱",
       "urls.label": "網址",
       "aliases.label": "別名",
       "organizations.label": "組織",
