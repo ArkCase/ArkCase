@@ -1,0 +1,8 @@
+{
+  "key1": "ann-acm",
+  "key2": {
+    "nested_key": "value"
+  },
+  "key3": 175,
+  "key4": "192.168.56.101"
+}

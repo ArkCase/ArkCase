@@ -9,16 +9,19 @@ import com.googlecode.mp4parser.boxes.apple.AppleGPSCoordinatesBox;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.tika.config.TikaConfig;
+import org.apache.tika.detect.Detector;
 import org.apache.tika.exception.TikaException;
+import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import us.fatehi.pointlocation6709.Angle;
 import us.fatehi.pointlocation6709.Latitude;
 import us.fatehi.pointlocation6709.Longitude;
@@ -29,6 +32,7 @@ import us.fatehi.pointlocation6709.format.PointLocationFormatter;
 import us.fatehi.pointlocation6709.parse.ParserException;
 import us.fatehi.pointlocation6709.parse.PointLocationParser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -48,9 +52,10 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     private Map<String, String> tikaMetadataToFilePropertiesMap;
 
     @Override
-    public EcmTikaFile detectFileUsingTika(InputStream inputStream, byte[] fileBytes) throws IOException, SAXException, TikaException
+    public EcmTikaFile detectFileUsingTika(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
-        Map<String, Object> metadata = extract(inputStream, fileBytes);
+        Map<String, Object> metadata = extract(fileBytes, fileName);
+        metadata.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(e -> logger.debug("{}: {}", e.getKey(), e.getValue()));
         EcmTikaFile retval = fromMetadata(metadata);
 
         return retval;
@@ -97,52 +102,77 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         }
     }
 
-    protected Map<String, Object> extract(InputStream inputStream, byte[] fileBytes) throws IOException, SAXException, TikaException
+    protected Map<String, Object> extract(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
+        String contentType = null;
+        String extension = null;
 
         Metadata metadata = new Metadata();
-        Parser parser = new AutoDetectParser();
-        parser.parse(inputStream, new BodyContentHandler(), metadata, new ParseContext());
+        metadata.add(Metadata.RESOURCE_NAME_KEY, fileName);
 
-        Map<String, Object> extractedFromStream =
-                Arrays.stream(metadata.names()).
-                        collect(
-                                HashMap::new,
-                                (m, n) -> m.put(n, metadata.get(n)),
-                                (m, u) -> {
-                                });
+        TikaConfig defaultConfig = TikaConfig.getDefaultConfig();
+        Detector detector = defaultConfig.getDetector();
+        TikaInputStream stream = TikaInputStream.get(fileBytes);
+        MediaType mediaType = detector.detect(stream, metadata);
+        MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
+        contentType = mediaType.toString();
+        extension = mimeType.getExtension();
 
-        String contentType = metadata.get("Content-Type");
-        MimeType mimeType = TikaConfig.getDefaultConfig().getMimeRepository().forName(contentType);
-        extractedFromStream.put("File-Name-Extension", mimeType.getExtension());
+        Map<String, Object> fileMetadata = null;
 
-        if (extractedFromStream.containsKey("Creation-Date"))
+        try (InputStream inputStream = new ByteArrayInputStream(fileBytes))
         {
-            String strCreated = (String) extractedFromStream.get("Creation-Date");
+
+            Parser parser = new AutoDetectParser();
+            ParseContext parseContext = new ParseContext();
+
+            parser.parse(inputStream, new DefaultHandler(), metadata, parseContext);
+
+            fileMetadata =
+                    Arrays.stream(metadata.names()).
+                            collect(
+                                    HashMap::new,
+                                    (m, n) -> m.put(n, metadata.get(n)),
+                                    (m, u) -> {
+                                    });
+        } catch (TikaException tikaException)
+        {
+            // we have to at least return the mime type and extension, so we just log the parser error, and continue
+            // with the already-detected mime type.
+            logger.warn("Could not extract metadata from file: [{}]", tikaException.getMessage());
+            fileMetadata = new HashMap<>();
+        }
+
+        fileMetadata.put("Content-Type", contentType);
+        fileMetadata.put("File-Name-Extension", extension);
+
+        if (fileMetadata.containsKey("Creation-Date"))
+        {
+            String strCreated = (String) fileMetadata.get("Creation-Date");
             LocalDateTime created = LocalDateTime.parse(strCreated, DateTimeFormatter.ISO_DATE_TIME);
             Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
-            extractedFromStream.put("Creation-Date-Local", createdDate);
+            fileMetadata.put("Creation-Date-Local", createdDate);
         }
 
         PointLocation gpsPoint = null;
 
         if ("video/mp4".equals(contentType))
         {
-            gpsPoint = pointLocationFromVideo(fileBytes, extractedFromStream);
+            gpsPoint = pointLocationFromVideo(fileBytes, fileMetadata);
         }
 
         // Cameras store the GPS lat and long in geo:lat and geo:long tags.
-        if (extractedFromStream.containsKey("geo:lat") && extractedFromStream.containsKey("geo:long"))
+        if (fileMetadata.containsKey("geo:lat") && fileMetadata.containsKey("geo:long"))
         {
-            gpsPoint = pointLocationFromLatLong(extractedFromStream);
+            gpsPoint = pointLocationFromLatLong(fileMetadata);
         }
 
         if (gpsPoint != null)
         {
-            enrichGpsFields(extractedFromStream, gpsPoint);
+            enrichGpsFields(fileMetadata, gpsPoint);
         }
 
-        return extractedFromStream;
+        return fileMetadata;
 
     }
 

@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -63,7 +62,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         try
         {
-            detectedMetadata = extractFileMetadata(fileBytes);
+            detectedMetadata = extractFileMetadata(fileBytes, metadata.getFileName());
         } catch (SAXException | TikaException e)
         {
             log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
@@ -144,14 +143,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     }
 
-    protected EcmTikaFile extractFileMetadata(byte[] fileByteArray) throws IOException,
+    protected EcmTikaFile extractFileMetadata(byte[] fileByteArray, String fileName) throws IOException,
             SAXException, TikaException
     {
-        try (InputStream fileStream = new ByteArrayInputStream(fileByteArray))
-        {
-            EcmTikaFile retval = getEcmTikaFileService().detectFileUsingTika(fileStream, fileByteArray);
-            return retval;
-        }
+        EcmTikaFile retval = getEcmTikaFileService().detectFileUsingTika(fileByteArray, fileName);
+        return retval;
     }
 
     protected Pair<String, String> buildMimeTypeAndExtension(EcmTikaFile detectedFileMetadata, String filename, String mimeType)
@@ -185,8 +181,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         try
         {
-            EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(fileByteArray),
-                    fileByteArray);
+            EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(fileByteArray, filename);
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
 
@@ -250,8 +245,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         try
         {
-            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(new ByteArrayInputStream(pipelineContext.getFileByteArray()),
-                    pipelineContext.getFileByteArray());
+            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(pipelineContext.getFileByteArray(), ecmFile.getFileName());
         } catch (TikaException | SAXException | IOException e1)
         {
             log.debug("Can not auto detect file using Tika");
