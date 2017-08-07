@@ -1125,7 +1125,7 @@
         {
           "name": "type",
           "field": "type_lcs",
-          "displayName": "people.comp.people.table.columns.role",
+          "displayName": "organizations.comp.complaints.table.columns.role",
           "headerCellFilter": "translate"
         },
         {
