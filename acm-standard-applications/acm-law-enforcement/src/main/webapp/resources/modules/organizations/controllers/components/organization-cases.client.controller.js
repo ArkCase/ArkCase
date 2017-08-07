@@ -93,7 +93,7 @@ angular.module('organizations').controller('Organizations.CasesController', ['$s
             params.types = $scope.organizationTypes;
             params.showDescription = true;
             params.customFilter = '"Object Type": CASE_FILE';
-            params.objectTypeLabel = $translate.instant("people.comp.cases.objectType.label");
+            params.objectTypeLabel = $translate.instant("organizations.comp.cases.objectType.label");
 
             if (rowEntity) {
                 angular.extend(params, {

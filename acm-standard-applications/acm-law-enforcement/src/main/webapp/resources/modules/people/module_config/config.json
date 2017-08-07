@@ -1074,19 +1074,19 @@
         {
           "name": "type",
           "field": "type_lcs",
-          "displayName": "people.comp.people.table.columns.role",
+          "displayName": "people.comp.cases.table.columns.role",
           "headerCellFilter": "translate"
         },
         {
           "name": "priority",
           "field": "parent_object.priority_lcs",
-          "displayName": "people.comp.people.table.columns.priority",
+          "displayName": "people.comp.cases.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
           "name": "id",
           "field": "parent_object.object_id_s",
-          "displayName": "people.comp.people.table.columns.id",
+          "displayName": "people.comp.cases.table.columns.id",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
@@ -1094,21 +1094,21 @@
         {
           "name": "title",
           "field": "parent_object.title_parseable",
-          "displayName": "people.comp.people.table.columns.title",
+          "displayName": "people.comp.cases.table.columns.title",
           "headerCellFilter": "translate",
           "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
           "field": "parent_object.status_lcs",
-          "displayName": "people.comp.people.table.columns.status",
+          "displayName": "people.comp.cases.table.columns.status",
           "headerCellFilter": "translate"
         },
         {
           "width": 150,
           "name": "assignee",
           "field": "parent_object.assignee_id_lcs",
-          "displayName": "people.comp.people.table.columns.assignee",
+          "displayName": "people.comp.cases.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         },
@@ -1116,7 +1116,7 @@
           "width": 150,
           "name": "modified",
           "field": "parent_object.modified_date_tdt",
-          "displayName": "people.comp.people.table.columns.modified",
+          "displayName": "people.comp.cases.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
