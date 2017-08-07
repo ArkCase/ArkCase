@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "组织",
-    "progressNoComplaint": "zh-cn_[ No organizations data ]",
-    "progressLoading": "zh-cn_Loading organization ",
-    "progressError": "zh-cn_Failed to load organization "
+    "progressNoComplaint": "[ 无组织数据 ]",
+    "progressLoading": "加载组织数据",
+    "progressError": "加载组织数据失败",
+    "noDataMessage": "无数据"
   },
   "organizations.menus": {
     "leftnav.item": "组织",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "信息",
-    "phone.label": "zh-cn_Phone",
-    "email.label": "zh-cn_Email",
-    "status.label": "zh-cn_Status",
-    "identification.label": "zh-cn_ID",
-    "primary.label": "zh-cn_Primary Contact",
-    "parent.label": "zh-cn_Parent Organization",
-    "parent.placeholder": "zh-cn_Enter Parent Organization"
+    "phone.label": "电话",
+    "email.label": "电子邮箱",
+    "status.label": "状态",
+    "organization.label": "组织",
+    "identification.label": "身份号码",
+    "primary.label": "主要联系人",
+    "parent.label": "上层组织",
+    "parent.placeholder": "输入上层组织"
   },
   "organizations.comp.actions": {
     "title": "行动",
-    "export.button": "zh-cn_Export",
-    "import.button": "zh-cn_Import",
-    "delete.button": "zh-cn_Delete",
-    "activate.button": "zh-cn_Activate",
-    "deactivate.button": "zh-cn_Deactivate",
-    "merge.button": "zh-cn_Merge"
+    "export.button": "输出",
+    "import.button": "输入",
+    "delete.button": "删除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合并"
   },
   "organizations.comp.details": {
     "title": "详情",
@@ -151,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "电子邮址",
+    "title": "电子邮箱",
     "table.columns": {
       "type": "zh-cn_Email Address Type",
       "value": "zh-cn_Email Address",
@@ -360,7 +362,7 @@
       "addresses.label": "地点",
       "phones.label": "电话号码",
       "faxes.label": "传真号码",
-      "emails.label": "电子邮址",
+      "emails.label": "电子邮箱",
       "urls.label": "网址",
       "dbas.label": "DBA",
       "people.label": "成员",

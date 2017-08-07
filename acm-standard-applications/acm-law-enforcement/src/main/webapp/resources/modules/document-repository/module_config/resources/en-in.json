@@ -184,7 +184,7 @@
     "personalRepository": "My Documents"
   },
   "document-repository.dialogUserPicker":{
-    "table.columns.name": "Name",
+   "table.columns.name": "Name",
     "table.columns.type": "Type",
     "table.columns.title": "Title",
     "table.columns.id": "Username"
