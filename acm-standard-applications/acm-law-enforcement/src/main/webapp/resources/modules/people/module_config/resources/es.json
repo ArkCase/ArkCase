@@ -1,9 +1,9 @@
 {
   "people": {
     "title": "Gente",
-    "progressNoComplaint": "es_[ No people data ]",
-    "progressLoading": "es_Loading people ",
-    "progressError": "es_Failed to load people "
+    "progressNoComplaint": "[ No hay datos de personas ]",
+    "progressLoading": "Cargando personas",
+    "progressError": "Error al cargar personas"
   },
   "people.menus": {
     "leftnav.item": "Gente",
@@ -14,20 +14,20 @@
   },
   "people.comp.info": {
     "title": "Información",
-    "phone.label": "es_Phone",
-    "email.label": "es_Email",
-    "status.label": "es_Status",
-    "organization.label": "es_Organization",
-    "identification.label": "es_ID"
+    "phone.label": "Teléfono",
+    "email.label": "Email",
+    "status.label": "Estado",
+    "organization.label": "Organización",
+    "identification.label": "ID"
   },
   "people.comp.actions": {
     "title": "Acciones",
-    "export.button": "es_Export",
-    "import.button": "es_Import",
-    "delete.button": "es_Delete",
-    "activate.button": "es_Activate",
-    "deactivate.button": "es_Deactivate",
-    "merge.button": "es_Merge"
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Borrar",
+    "activate.button": "Activar",
+    "deactivate.button": "Desactivar",
+    "merge.button": "Combinar"
   },
   "people.comp.details": {
     "title": "Detalles",

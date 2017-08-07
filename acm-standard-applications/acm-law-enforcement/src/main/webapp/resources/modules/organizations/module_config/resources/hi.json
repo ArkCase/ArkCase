@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "संगठन",
-    "progressNoComplaint": "hi_[ No organizations data ]",
-    "progressLoading": "hi_Loading organization ",
-    "progressError": "hi_Failed to load organization "
+    "progressNoComplaint": "[ कोई संगठन डेटा नहीं ]",
+    "progressLoading": "संगठन लोड हो रहा है",
+    "progressError": "संगठन लोड करने में विफल",
+    "noDataMessage": "कोई डेटा नहीं"
   },
   "organizations.menus": {
     "leftnav.item": "संगठन",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "जानकारी",
-    "phone.label": "hi_Phone",
-    "email.label": "hi_Email",
-    "status.label": "hi_Status",
-    "identification.label": "hi_ID",
-    "primary.label": "hi_Primary Contact",
-    "parent.label": "hi_Parent Organization",
-    "parent.placeholder": "hi_Enter Parent Organization"
+    "phone.label": "फोन",
+    "email.label": "ईमेल",
+    "status.label": "स्थिति",
+    "organization.label": "संगठन",
+    "identification.label": "आईडी",
+    "primary.label": "प्राथमिक संपर्क",
+    "parent.label": "जनक संगठन",
+    "parent.placeholder": "अभिभावक संगठन दर्ज करें"
   },
   "organizations.comp.actions": {
     "title": "क्रियाएं",
-    "export.button": "hi_Export",
-    "import.button": "hi_Import",
-    "delete.button": "hi_Delete",
-    "activate.button": "hi_Activate",
-    "deactivate.button": "hi_Deactivate",
-    "merge.button": "hi_Merge"
+    "export.button": "निर्यात",
+    "import.button": "आयात",
+    "delete.button": "हटाएं",
+    "activate.button": "सक्रिय",
+    "deactivate.button": "निष्क्रिय करें",
+    "merge.button": "मर्ज"
   },
   "organizations.comp.details": {
     "title": "विवरण",

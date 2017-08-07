@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "Información",
-    "docRepoId": "es_Repository ID:",
-    "docRepoName": "es_Document Repository Name:",
-    "modified.label": "es_Modified Date",
-    "assignee.label": "es_Assigned To",
-    "owningGroup.label": "es_Owning Group",
-    "description.label": "es_Description"
+    "docRepoId": "ID de repositorio:",
+    "docRepoName": "Nombre del Repositorio de Documentos:",
+    "modified.label": "Fecha modificada",
+    "assignee.label": "Asignado a",
+    "owningGroup.label": "Grupo propietario",
+    "description.label": "Descripción"
   },
   "document-repository.comp.actions": {
     "title": "Acciones",
-    "restrict": "es_Restrict?",
-    "subscribe.button": "es_Subscribe",
-    "unsubscribe.button": "es_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "es_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "Restringir?",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "delete.button": "Eliminar el repositorio",
+    "confirm.delete.documentRepository.msg": "Esta acción eliminará todo el repositorio. ¿Está seguro de que desea continuar?"
   },
   "document-repository.comp.details": {
     "title": "Detalles",

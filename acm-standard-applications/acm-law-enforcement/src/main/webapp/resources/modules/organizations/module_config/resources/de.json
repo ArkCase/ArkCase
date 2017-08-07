@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "Organisationen",
-    "progressNoComplaint": "de_[ No organizations data ]",
-    "progressLoading": "de_Loading organization ",
-    "progressError": "de_Failed to load organization "
+    "progressNoComplaint": "[ Keine Organisationen Daten ]",
+    "progressLoading": "Organisation laden",
+    "progressError": "Fehler beim Laden der Organisation",
+    "NoDataMessage": "Keine Daten"
   },
   "organizations.menus": {
     "leftnav.item": "Organisationen",
@@ -14,22 +15,22 @@
   },
   "organizations.comp.info": {
     "title": "Informationen",
-    "phone.label": "de_Phone",
-    "email.label": "de_Email",
-    "status.label": "de_Status",
-    "identification.label": "de_ID",
-    "primary.label": "de_Primary Contact",
-    "parent.label": "de_Parent Organization",
-    "parent.placeholder": "de_Enter Parent Organization"
+    "phone.label": "Telefon",
+    "email.label": "E-Mail Adressen",
+    "status.label": "Status",
+    "identification.label": "Identifizierung",
+    "primary.label": "Primärer Kontakt",
+    "parent.label": "Elternorganisation",
+    "parent.placeholder": "Geben Sie die übergeordnete Organisation"
   },
   "organizations.comp.actions": {
     "title": "Aktionen",
-    "export.button": "de_Export",
-    "import.button": "de_Import",
-    "delete.button": "de_Delete",
-    "activate.button": "de_Activate",
-    "deactivate.button": "de_Deactivate",
-    "merge.button": "de_Merge"
+    "export.button": "Exportieren",
+    "import.button": "importieren",
+    "delete.button": "Löschen",
+    "activate.button": "Aktivieren",
+    "deactivate.button": "Deaktivieren",
+    "merge.button": "Zusammenführen"
   },
   "organizations.comp.details": {
     "title": "Details",

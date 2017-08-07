@@ -1,9 +1,9 @@
 {
   "people": {
     "title": "Pessoas",
-    "progressNoComplaint": "pt_[ No people data ]",
-    "progressLoading": "pt_Loading people ",
-    "progressError": "pt_Failed to load people "
+    "progressNoComplaint": "[ Não há dados de pessoas ]",
+    "progressLoading": "Carregando pessoas",
+    "progressError": "Falha ao carregar pessoas"
   },
   "people.menus": {
     "leftnav.item": "Pessoas",
@@ -14,20 +14,20 @@
   },
   "people.comp.info": {
     "title": "Informações",
-    "phone.label": "pt_Phone",
-    "email.label": "pt_Email",
-    "status.label": "pt_Status",
-    "organization.label": "pt_Organization",
-    "identification.label": "pt_ID"
+    "phone.label": "Telefone",
+    "email.label": "Email",
+    "status.label": "Status",
+    "organization.label": "Organização",
+    "identification.label": "ID"
   },
   "people.comp.actions": {
     "title": "Ações",
-    "export.button": "pt_Export",
-    "import.button": "pt_Import",
-    "delete.button": "pt_Delete",
-    "activate.button": "pt_Activate",
-    "deactivate.button": "pt_Deactivate",
-    "merge.button": "pt_Merge"
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Excluir",
+    "activate.button": "Ativar",
+    "deactivate.button": "Desativar",
+    "merge.button": "Mesclar"
   },
   "people.comp.details": {
     "title": "Detalhes",
@@ -435,17 +435,17 @@
       "history.label": "Histórico"
     },
     "filters": {
-      "IHaveCreated": "Tudo o que eu criei",
-      "NoFilter": "(Sem filtro)"
+      "iHaveCreated": "Tudo o que eu criei",
+      "noFilter": "(Sem filtro)"
     },
     "sorters": {
-      "CreatedDateAsc": "Data de classificação criada ascendente",
-      "CreatedDateDesc": "Data de classificação criada decrescente",
+      "createdDateAsc": "Data de classificação criada ascendente",
+      "createdDateDesc": "Data de classificação criada decrescente",
       "idAsc": "Classificar pessoa ID Ascendente",
       "idDesc": "Classificar Identificação de Pessoas Descendente",
-      "NameAsc": "Classificar por pessoas Nome A-Z",
-      "NomeDesc": "Classificar por nome da pessoa Z-A",
-      "NoSort": "(Não classificar)"
+      "nameAsc": "Classificar por pessoas Nome A-Z",
+      "nameDesc": "Classificar por nome da pessoa Z-A",
+      "noSort": "(Não classificar)"
     }
   }
 }

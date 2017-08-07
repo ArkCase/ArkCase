@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "信息",
-    "docRepoId": "zh-cn_Repository ID:",
-    "docRepoName": "zh-cn_Document Repository Name:",
-    "modified.label": "zh-cn_Modified Date",
-    "assignee.label": "zh-cn_Assigned To",
-    "owningGroup.label": "zh-cn_Owning Group",
-    "description.label": "zh-cn_Description"
+    "docRepoId": "文件存储号:",
+    "docRepoName": "文件存储名称:",
+    "modified.label": "修改日期",
+    "assignee.label": "指定人员",
+    "owningGroup.label": "所属群体",
+    "description.label": "说明"
   },
   "document-repository.comp.actions": {
     "title": "行动",
-    "restrict": "zh-cn_Restrict?",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "zh-cn_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "受限制?",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "delete.button": "删除",
+    "confirm.delete.documentRepository.msg": "此操作将删除整个文件存储，确定要继续吗?"
   },
   "document-repository.comp.details": {
     "title": "详情",
