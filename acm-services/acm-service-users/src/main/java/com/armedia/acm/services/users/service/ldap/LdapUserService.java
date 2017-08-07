@@ -280,8 +280,8 @@ public class LdapUserService
                 // groupContext.removeAttributeValue("member", ldapUser.getDistinguishedName()) is not
                 // working on AD because of DN case sensitivity
                 String[] members = groupContext.getStringAttributes("member");
-                members = Arrays.stream(members).filter(m -> !m.equalsIgnoreCase(ldapUser.getDistinguishedName())).toArray(String[]::new);
-                groupContext.setAttributeValues("member", members);
+                String member = Arrays.stream(members).filter(m -> m.equalsIgnoreCase(ldapUser.getDistinguishedName())).findFirst().orElse(null);
+                groupContext.removeAttributeValue("member", member);
                 new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                 updatedGroups.add(group);
             } catch (Exception e)
