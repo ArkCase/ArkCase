@@ -55,6 +55,7 @@
         <property name="subscriptionEventPlugin" ref="subscriptionPlugin"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationFormater" ref="notificationFormater"/>
+        <property name="eventTypeProperties" ref="eventTypeProperties"/>
     </bean>
 
     <bean id="subscriptionToSolrTransformer"
