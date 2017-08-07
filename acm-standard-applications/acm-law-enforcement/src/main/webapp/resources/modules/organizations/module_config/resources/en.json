@@ -307,6 +307,7 @@
   "organizations.comp.cases": {
     "title": "Cases",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -318,6 +319,7 @@
   "organizations.comp.complaints": {
     "title": "Complaints",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",

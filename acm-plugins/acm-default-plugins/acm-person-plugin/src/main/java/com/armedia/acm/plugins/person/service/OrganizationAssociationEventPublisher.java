@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +39,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         eventPublisher = applicationEventPublisher;
     }
 
+    @Async
     public void publishOrganizationAssociationEvent(OrganizationAssociation source, String ipAddress, boolean newOrganizationAssociation,
                                                     boolean succeeded)
     {
@@ -51,6 +53,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         eventPublisher.publishEvent(organizationAssociationPersistenceEvent);
     }
 
+    @Async
     public void publishOrganizationAssociationEvent(String organizationAssociationHistory, OrganizationAssociation source,
                                                     boolean succeeded)
     {
@@ -162,6 +165,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         return existingIds.stream().anyMatch(id -> !updatedIds.contains(id));
     }
 
+    @Async
     public void publishOrganizationEvent(Organization organization, String eventStatus, boolean succeeded, String parentType, Long parentId)
     {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -174,6 +178,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         eventPublisher.publishEvent(organizationEvent);
     }
 
+    @Async
     public void publishOrganizationAssociationEvent(OrganizationAssociation source, String eventAction, boolean succeeded)
     {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -187,6 +192,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
         eventPublisher.publishEvent(organizationAssociationEvent);
     }
 
+    @Async
     public void publishOrganizationAssociationDeletedEvent(OrganizationAssociation source)
     {
         OrganizationAssociationDeletedEvent event = new OrganizationAssociationDeletedEvent(source, source.getParentType(),
