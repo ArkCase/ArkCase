@@ -1,9 +1,9 @@
 {
   "costTracking": {
     "title": "Rastreamento de custo",
-    "progressNoCostsheet": "pt_[ No costsheet is selected ]",
-    "progressLoading": "pt_Loading costsheet ",
-    "progressError": "pt_Failed to load costsheet"
+    "progressNoCostsheet": "[ Nenhuma tabela de custo está selecionada ]",
+    "progressLoading": "Carregando folha de custo",
+    "progressError": "Falha ao carregar tabela de custo"
   },
   "costTracking.menus": {
     "leftnav.item": "Rastreamento de custo",
@@ -14,16 +14,16 @@
   },
   "costTracking.comp.info": {
     "title": "Informações",
-    "incidentDate": "pt_Incident Date",
-    "priority": "pt_Priority",
-    "assignedTo": "pt_Assigned To",
-    "subjectType": "pt_Subject Type",
-    "state": "pt_State"
+    "incidentDate": "Data do Incidente",
+    "priority": "Prioridade",
+    "assignedTo": "Atribuído a",
+    "subjectType": "Tipo de Assunto",
+    "state": "Estado"
   },
   "costTracking.comp.actions": {
     "title": "Ações",
-    "new.button": "pt_New Costsheet",
-    "edit.button": "pt_Edit Costsheet"
+    "new.button": "Nova folha de custo",
+    "edit.button": "Editar folha de custo"
   },
   "costTracking.comp.details": {
     "title": "Detalhes",

@@ -327,6 +327,21 @@
         "title": "Approval Routing",
         "description": "Displays approval routings",
         "noDataMessage": "Currently no approvers to display"
+      },
+      "pictures": {
+        "title": "Pictures",
+        "description": "Display pictures",
+        "noDataMessage": "Currently no pictures to display"
+      },
+      "aliases": {
+        "title": "Aliases",
+        "description": "Display aliases",
+        "noDataMessage": "Currently no aliases to display"
+      },
+      "related": {
+        "title": "Related People",
+        "description": "Display related people",
+        "noDataMessage": "Currently no related people to display"
       }
     }
   }
