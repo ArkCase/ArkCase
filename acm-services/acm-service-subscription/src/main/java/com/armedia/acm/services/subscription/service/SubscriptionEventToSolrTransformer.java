@@ -52,13 +52,12 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
         {
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        } else if (in.getEventType() != null)
+        } 
+        else
         {
-            title = getEventTypeProperties().get("eventType." + in.getEventType()) + ": " + in.getEventObjectId() + " - " + in.getEventObjectName();
-        } else
-        {
-            title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
-        }
+            title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + getEventTypeProperties().getOrDefault("eventType." + in.getEventType(), "Was updated");                    
+        } 
+       
         solr.setTitle_parseable(notificationFormater.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
 
         if (in.getEventObjectId() != null)
