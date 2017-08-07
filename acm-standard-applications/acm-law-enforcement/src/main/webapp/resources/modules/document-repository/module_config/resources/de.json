@@ -1,10 +1,10 @@
 {
   "document-repository": {
-    "title": "Unterlagen"
+    "title": "Dokumenten"
   },
   "document-repository.menus": {
-    "leftnav.item": "Unterlagen",
-    "topbar.item": "Dokumenten-Repository"
+    "leftnav.item": "Dokumenten",
+    "topbar.item": "Dokument-Repository"
   },
   "document-repository.error": {
     "invalidData": ""
@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "Informationen",
-    "docRepoId": "de_Repository ID:",
-    "docRepoName": "de_Document Repository Name:",
-    "modified.label": "de_Modified Date",
-    "assignee.label": "de_Assigned To",
-    "owningGroup.label": "de_Owning Group",
-    "description.label": "de_Description"
+    "docRepoId": "Repository ID:",
+    "docRepoName": "Repostitorischer Name:",
+    "modified.label": "Geändertes Datum",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "description.label": "Beschreibung"
   },
   "document-repository.comp.actions": {
     "title": "Aktionen",
-    "restrict": "de_Restrict?",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "de_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "Einschränken?",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "delete.button": "Repository löschen",
+    "confirm.delete.documentRepository.msg": "Diese Aktion löscht das gesamte Repository. Bist du sicher, dass du fortfahren willst?"
   },
   "document-repository.comp.details": {
     "title": "Details",

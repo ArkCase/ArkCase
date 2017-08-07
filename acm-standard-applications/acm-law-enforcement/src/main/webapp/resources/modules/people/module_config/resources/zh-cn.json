@@ -1,9 +1,9 @@
 {
   "people": {
     "title": "成员",
-    "progressNoComplaint": "zh-cn_[ No people data ]",
-    "progressLoading": "zh-cn_Loading people ",
-    "progressError": "zh-cn_Failed to load people "
+    "progressNoComplaint": "[ 无成员数据 ]",
+    "progressLoading": "加载成员数据",
+    "progressError": "无法加载成员数据"
   },
   "people.menus": {
     "leftnav.item": "成员",
@@ -14,20 +14,20 @@
   },
   "people.comp.info": {
     "title": "信息",
-    "phone.label": "zh-cn_Phone",
-    "email.label": "zh-cn_Email",
-    "status.label": "zh-cn_Status",
-    "organization.label": "zh-cn_Organization",
-    "identification.label": "zh-cn_ID"
+    "phone.label": "电话",
+    "email.label": "电子邮箱",
+    "status.label": "状态",
+    "organization.label": "组织",
+    "identification.label": "身份号码"
   },
   "people.comp.actions": {
     "title": "行动",
-    "export.button": "zh-cn_Export",
-    "import.button": "zh-cn_Import",
-    "delete.button": "zh-cn_Delete",
-    "activate.button": "zh-cn_Activate",
-    "deactivate.button": "zh-cn_Deactivate",
-    "merge.button": "zh-cn_Merge"
+    "export.button": "输出",
+    "import.button": "输入",
+    "delete.button": "删除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合并"
   },
   "people.comp.details": {
     "title": "详情",
@@ -150,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "电子邮址",
+    "title": "电子邮箱",
     "table.columns": {
       "type": "zh-cn_Type",
       "value": "zh-cn_Email Address",
@@ -424,7 +424,7 @@
       "pictures.label": "相片",
       "addresses.label": "地点",
       "phones.label": "电话号码",
-      "emails.label": "电子邮址",
+      "emails.label": "电子邮箱",
       "urls.label": "网址",
       "aliases.label": "别名",
       "organizations.label": "组织",

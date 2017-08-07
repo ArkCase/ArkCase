@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "Информация",
-    "docRepoId": "ru_Repository ID:",
-    "docRepoName": "ru_Document Repository Name:",
-    "modified.label": "ru_Modified Date",
-    "assignee.label": "ru_Assigned To",
-    "owningGroup.label": "ru_Owning Group",
-    "description.label": "ru_Description"
+    "docRepoId": "Идентификатор репозитория:",
+    "docRepoName": "Название репозитория документа:",
+    "modified.label": "Дата изменения",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "description.label": "Описание"
   },
   "document-repository.comp.actions": {
     "title": "Действия",
-    "restrict": "ru_Restrict?",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "ru_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "Ограничить?",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "delete.button": "Удалить репозиторий",
+    "confirm.delete.documentRepository.msg": "Это действие удалит весь репозиторий?"
   },
   "document-repository.comp.details": {
     "title": "Детали",

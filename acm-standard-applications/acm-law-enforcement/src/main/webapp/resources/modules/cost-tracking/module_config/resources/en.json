@@ -85,9 +85,9 @@
     },
     "sorters": {
       "dateAsc": "Sort Date Ascending",
-      "dateDesc": "Sort Date Decending",
+      "dateDesc": "Sort Date Descending",
       "idAsc": "Sort Costsheet ID Ascending",
-      "idDesc": "Sort Costsheet ID Decending",
+      "idDesc": "Sort Costsheet ID Descending",
       "nameDesc": "Sort By Costsheet Name",
       "noSort": "(No Sort)"
     }
