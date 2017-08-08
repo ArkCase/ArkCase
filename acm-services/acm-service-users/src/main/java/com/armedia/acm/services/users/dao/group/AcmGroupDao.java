@@ -254,7 +254,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         CriteriaQuery query = builder.createQuery(AcmGroup.class);
         Root group = query.from(AcmGroup.class);
         query.select(group);
-        query.where(builder.and(new Predicate[]{builder.like(group.<String>get("name"), name + "-UUID-%")}));
+        query.where(builder.and(new Predicate[] { builder.like(group.<String>get("name"), name + "-UUID-%") }));
 
         TypedQuery dbQuery = this.getEm().createQuery(query);
         AcmGroup retval = null;
@@ -277,9 +277,9 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
-        String query =
-                "SELECT acmGroup FROM AcmGroup acmGroup WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName";
-        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().createQuery(query, AcmGroup.class);
+        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
+                createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.members "
+                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName", AcmGroup.class);
         allLdapGroupsInDirectory.setParameter("groupType", AcmRoleType.LDAP_GROUP.getRoleName());
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();

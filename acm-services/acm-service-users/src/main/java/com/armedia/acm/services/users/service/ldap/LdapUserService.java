@@ -389,7 +389,7 @@ public class LdapUserService
             }
             String strippedBaseDCUserDn = MapperUtils.stripBaseFromDn(savedUser.getDistinguishedName(), ldapSyncConfig.getBaseDC());
             // set memberOf only for OpenLdap, AD sets this property automatically
-            if (Directory.OPEN_LDAP.equals(ldapSyncConfig.getDirectoryType()))
+            if (Directory.openldap.name().equals(ldapSyncConfig.getDirectoryType()))
             {
                 try
                 {
@@ -462,7 +462,7 @@ public class LdapUserService
 
         String uidAttr = String.format("%s=%s", "uid", userId);
         String cnAttr = String.format("%s=%s", "cn", userFullName);
-        String dnAttr = Directory.OPEN_LDAP.getType().equals(syncConfig.getDirectoryType()) ? uidAttr : cnAttr;
+        String dnAttr = Directory.openldap.name().equals(syncConfig.getDirectoryType()) ? uidAttr : cnAttr;
         return String.format("%s,%s,%s", dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 

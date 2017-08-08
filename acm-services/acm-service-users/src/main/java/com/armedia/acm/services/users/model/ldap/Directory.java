@@ -1,25 +1,32 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import org.springframework.ldap.core.DirContextAdapter;
+
+import javax.naming.directory.BasicAttribute;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Function;
 
 public enum Directory
 {
-    ACTIVE_DIRECTORY("activedirectory", "yyyyMMddHHmmss.0VV"),
-    OPEN_LDAP("openldap", "yyyyMMddHHmmssVV");
+    activedirectory("yyyyMMddHHmmss.0VV", MapperUtils.convertFileTimeTimestampToDate,
+            MapperUtils.activeDirectoryPasswordToAttribute),
+    openldap("yyyyMMddHHmmssVV", MapperUtils.calculatePasswordExpirationDateByShaddowAccount,
+            MapperUtils.openLdapPasswordToAttribute);
 
-    private final String type;
     private final String datePattern;
+    private final Function<DirContextAdapter, LocalDate> timestampToLocalDate;
+    private final Function<String, BasicAttribute> passwordToAttribute;
+    private DateTimeFormatter dateTimeFormatter;
 
-    Directory(String type, String datePattern)
+    Directory(String datePattern, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
+              Function<String, BasicAttribute> passwordToAttribute)
     {
-        this.type = type;
         this.datePattern = datePattern;
-    }
-
-    public String getType()
-    {
-        return type;
+        this.timestampToLocalDate = timestampToLocalDate;
+        dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
+        this.passwordToAttribute = passwordToAttribute;
     }
 
     public String getDatePattern()
@@ -30,8 +37,17 @@ public enum Directory
     public String convertToDirectorySpecificTimestamp(String date)
     {
         ZonedDateTime dateTime = ZonedDateTime.parse(date, DateTimeFormatter.ISO_DATE_TIME);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(datePattern);
-        return dateTime.format(formatter);
+        return dateTime.format(dateTimeFormatter);
+    }
+
+    public LocalDate getPasswordExpirationDate(DirContextAdapter adapter)
+    {
+        return timestampToLocalDate.apply(adapter);
+    }
+
+    public BasicAttribute getPasswordAttribute(String password)
+    {
+        return passwordToAttribute.apply(password);
     }
 
 }
