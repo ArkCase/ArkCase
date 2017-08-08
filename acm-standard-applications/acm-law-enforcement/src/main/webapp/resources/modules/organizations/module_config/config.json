@@ -977,7 +977,7 @@
         "columnDefs": [
           {
             "name": "name",
-            "displayName": "cases.comp.participants.dialogGroupPicker.table.columns.name",
+            "displayName": "organizations.comp.participants.dialogGroupPicker.table.columns.name",
             "headerCellFilter": "translate"
           }
         ],

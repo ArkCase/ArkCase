@@ -2,10 +2,10 @@
 
 angular.module('people').controller('Person.PicturesController', ['$scope', '$stateParams', '$translate', '$modal', '$timeout'
     , 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService'
-    , 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', 'EcmService'
+    , 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', 'EcmService', 'ObjectService', 'PermissionsService'
     , function ($scope, $stateParams, $translate, $modal, $timeout
         , Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService
-        , Authentication, PersonPicturesService, EcmService) {
+        , Authentication, PersonPicturesService, EcmService, ObjectService, PermissionsService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -34,8 +34,12 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.PERSON}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

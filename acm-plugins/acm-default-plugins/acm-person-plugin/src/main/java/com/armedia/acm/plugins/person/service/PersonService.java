@@ -7,13 +7,14 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-
 
 public interface PersonService
 {
@@ -31,8 +32,7 @@ public interface PersonService
     Person addPersonIdentification(String key, String value, Person person);
 
     /**
-     * Add person identifications for given list of keys (field names). The values are taken from Frevvo Person object
-     * using reflection
+     * Add person identifications for given list of keys (field names). The values are taken from Frevvo Person object using reflection
      *
      * @param keys
      * @param person
@@ -67,8 +67,10 @@ public interface PersonService
     /**
      * delete existing image for given Person. If default image in person is same as we want to delete, than operation throws an exception.
      *
-     * @param personId id of the Person
-     * @param imageId  id of the image
+     * @param personId
+     *            id of the Person
+     * @param imageId
+     *            id of the image
      */
     @Transactional
     void deleteImageForPerson(Long personId, Long imageId) throws AcmObjectNotFoundException, AcmUserActionFailedException;
@@ -76,47 +78,68 @@ public interface PersonService
     /**
      * insert image for a person. If is the only image than is set as default image for the person
      *
-     * @param person    Person person
-     * @param image       MultipartFile image
-     * @param isDefault   boolean should this picture be set as default
-     * @param description description for the image
-     * @param auth        Authentication authentication
+     * @param person
+     *            Person person
+     * @param image
+     *            MultipartFile image
+     * @param isDefault
+     *            boolean should this picture be set as default
+     * @param description
+     *            description for the image
+     * @param auth
+     *            Authentication authentication
      * @return boolean true if successfully inserted
      */
     @Transactional
-    EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+    EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
+            PipelineProcessException;
 
     /**
      * save image for a person with new file and metadata
      *
-     * @param personId  Long personId
-     * @param image     MultipartFile image
-     * @param isDefault boolean should this picture be set as default
-     * @param metadata  EcmFile metadata
-     * @param auth      Authentication authentication
+     * @param personId
+     *            Long personId
+     * @param image
+     *            MultipartFile image
+     * @param isDefault
+     *            boolean should this picture be set as default
+     * @param metadata
+     *            EcmFile metadata
+     * @param auth
+     *            Authentication authentication
      * @return boolean true if successfully inserted
      */
     @Transactional
-    EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth) throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+    EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
+            PipelineProcessException;
 
     /**
      * save person data
      *
-     * @param person         person data
-     * @param authentication authentication
+     * @param person
+     *            person data
+     * @param authentication
+     *            authentication
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException;
+    Person savePerson(Person person, Authentication authentication)
+            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException;
 
     /**
      * save person data
      *
-     * @param person         person data
-     * @param pictures       person pictures
-     * @param authentication authentication
+     * @param person
+     *            person data
+     * @param pictures
+     *            person pictures
+     * @param authentication
+     *            authentication
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException;
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException;
 }
