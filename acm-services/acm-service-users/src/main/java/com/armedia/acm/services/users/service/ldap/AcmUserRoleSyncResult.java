@@ -30,43 +30,63 @@ public class AcmUserRoleSyncResult
         };
     }
 
-    public AcmUserRoleSyncResult(Map<String, Set<String>> userNewGroups, Map<String, Set<String>> userRemovedGroups,
-                                 Map<String, List<String>> groupToRole)
+    public AcmUserRoleSyncResult(Map<String, Set<String>> userAddedGroups, Map<String, Set<String>> userRemovedGroups,
+                                 Map<String, List<String>> groupToRole, Map<String, Set<String>> userGroupsMap)
     {
         this.acmUserRoles = new ArrayList<>();
 
-        List<AcmUserRole> userRoles = userNewGroups.entrySet().stream()
-                .flatMap(userGroupsToAcmUserRoles(groupToRole, AcmUserRoleState.VALID.name()))
+        List<AcmUserRole> newUserRoles = userAddedGroups.entrySet().stream()
+                .flatMap(entry -> getRolesPerGroups(entry.getValue(), groupToRole).stream()
+                        .map(acmUserRole(entry.getKey(), AcmUserRoleState.VALID.name()))
+                )
                 .collect(Collectors.toList());
-        this.acmUserRoles.addAll(userRoles);
+        this.acmUserRoles.addAll(newUserRoles);
 
-        userRoles = userNewGroups.entrySet().stream()
+        List<AcmUserRole> invalidUserRoles = userRemovedGroups.entrySet().stream()
+                .flatMap(entry -> {
+                            String userId = entry.getKey();
+                            Set<String> removedGroups = entry.getValue();
+                            Set<String> rolesToRemove = getRolesPerGroups(removedGroups, groupToRole);
+                            Set<String> userGroupsToRemain = userGroupsMap.get(userId).stream()
+                                    .filter(group -> !removedGroups.contains(group))
+                                    .collect(Collectors.toSet());
+                            Set<String> rolesToRemain = getRolesPerGroups(userGroupsToRemain, groupToRole);
+                            return findInvalidUserRoles(rolesToRemove, rolesToRemain, userId);
+                        }
+                )
+                .collect(Collectors.toList());
+        this.acmUserRoles.addAll(invalidUserRoles);
+
+        newUserRoles = userAddedGroups.entrySet().stream()
                 .flatMap(userGroups -> userGroups.getValue().stream()
                         .map(acmUserRole(userGroups.getKey(), AcmUserRoleState.VALID.name())))
                 .collect(Collectors.toList());
-        this.acmUserRoles.addAll(userRoles);
+        this.acmUserRoles.addAll(newUserRoles);
 
-        userRoles = userRemovedGroups.entrySet().stream()
-                .flatMap(userGroupsToAcmUserRoles(groupToRole, AcmUserRoleState.INVALID.name()))
-                .collect(Collectors.toList());
-        this.acmUserRoles.addAll(userRoles);
-
-        userRoles = userRemovedGroups.entrySet().stream()
+        invalidUserRoles = userRemovedGroups.entrySet().stream()
                 .flatMap(userGroups -> userGroups.getValue().stream().map(
                         acmUserRole(userGroups.getKey(), AcmUserRoleState.INVALID.name()))
                 )
                 .collect(Collectors.toList());
-        this.acmUserRoles.addAll(userRoles);
+        this.acmUserRoles.addAll(invalidUserRoles);
 
     }
 
-    private Function<Map.Entry<String, Set<String>>, Stream<? extends AcmUserRole>> userGroupsToAcmUserRoles(
-            Map<String, List<String>> groupToRole, String state)
+    private Set<String> getRolesPerGroups(Set<String> groups, Map<String, List<String>> groupToRole)
     {
-        return entry -> entry.getValue().stream()
-                .map(groupToRole::get)
+        return groups.stream()
+                .filter(groupToRole::containsKey)
+                .flatMap(group -> groupToRole.get(group).stream())
                 .filter(Objects::nonNull)
-                .flatMap(roles -> roles.stream().map(acmUserRole(entry.getKey(), state)));
+                .collect(Collectors.toSet());
+    }
+
+    private Stream<? extends AcmUserRole> findInvalidUserRoles(Set<String> rolesToRemove,
+                                                               Set<String> rolesToRemain, String userId)
+    {
+        return rolesToRemove.stream()
+                .filter(role -> !rolesToRemain.contains(role))
+                .map(acmUserRole(userId, AcmUserRoleState.INVALID.name()));
     }
 
     public List<AcmUserRole> getAcmUserRoles()

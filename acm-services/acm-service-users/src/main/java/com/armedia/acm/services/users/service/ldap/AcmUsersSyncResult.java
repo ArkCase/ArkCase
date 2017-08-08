@@ -18,14 +18,14 @@ public class AcmUsersSyncResult
 
     public Map<String, AcmUser> sync(List<LdapUser> ldapUsers, List<AcmUser> currentUsers)
     {
-        final Map<String, AcmUser> currentUsersMap = getUsersMap(currentUsers);
+        Map<String, AcmUser> currentUsersMap = getUsersByIdMap(currentUsers);
         newUsers = findNewUsers(ldapUsers, currentUsersMap);
         changedUsers = findModifiedUsers(ldapUsers, currentUsersMap);
         newUsers.forEach(acmUser -> currentUsersMap.put(acmUser.getUserId(), acmUser));
         return currentUsersMap;
     }
 
-    private Map<String, AcmUser> getUsersMap(List<AcmUser> users)
+    public Map<String, AcmUser> getUsersByIdMap(List<AcmUser> users)
     {
         return users.stream()
                 .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
