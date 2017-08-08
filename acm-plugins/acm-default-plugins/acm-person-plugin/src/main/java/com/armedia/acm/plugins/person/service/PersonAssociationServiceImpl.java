@@ -8,23 +8,12 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class PersonAssociationServiceImpl implements PersonAssociationService
 {
@@ -71,13 +60,13 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     public String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException
     {
         return solrJoinDocumentsService.getJoinedDocuments(
-                personId, "child_id_s",
+                auth, personId, "child_id_s",
                 PersonOrganizationConstants.PERSON_OBJECT_TYPE, "child_type_s",
                 PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE,
                 parentType, "parent_type_s",
                 "parent_object",
-                start, limit, sort, auth,
-                "parent_ref_s", "id");
+                "parent_ref_s", "id", start, limit, sort
+        );
     }
 
     @Override
