@@ -1,9 +1,9 @@
 {
   "costTracking": {
     "title": "成本跟踪",
-    "progressNoCostsheet": "zh-cn_[ No costsheet is selected ]",
-    "progressLoading": "zh-cn_Loading costsheet ",
-    "progressError": "zh-cn_Failed to load costsheet"
+    "progressNoCostsheet": "[ 无成本数据 ]",
+    "progressLoading": "加载成本数据",
+    "progressError": "无法加载成本数据"
   },
   "costTracking.menus": {
     "leftnav.item": "成本跟踪",
@@ -14,16 +14,16 @@
   },
   "costTracking.comp.info": {
     "title": "信息",
-    "incidentDate": "zh-cn_Incident Date",
-    "priority": "zh-cn_Priority",
-    "assignedTo": "zh-cn_Assigned To",
-    "subjectType": "zh-cn_Subject Type",
-    "state": "zh-cn_State"
+    "incidentDate": "事件日期",
+    "priority": "优先级别",
+    "assignedTo": "指定人员",
+    "subjectType": "对象类型",
+    "state": "状态"
   },
   "costTracking.comp.actions": {
     "title": "行动",
-    "new.button": "zh-cn_New Costsheet",
-    "edit.button": "zh-cn_Edit Costsheet"
+    "new.button": "新成本项目",
+    "edit.button": "更改成本项目"
   },
   "costTracking.comp.details": {
     "title": "详情",
@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "costsheetIdAsc": "按费用表格号排序",
-      "costsheetIdDesc": "按费用表格号反排序",
-      "byNameDesc": "按名称排序",
+      "idAsc": "按费用表格号排序",
+      "idDesc": "按费用表格号反排序",
+      "nameDesc": "按名称排序",
       "noSort": "(不排序)"
     }
   }

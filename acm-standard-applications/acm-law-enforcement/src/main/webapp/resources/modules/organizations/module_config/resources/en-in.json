@@ -3,7 +3,8 @@
     "title": "Organizations",
     "progressNoComplaint": "[ No organizations data ]",
     "progressLoading": "Loading organization ",
-    "progressError": "Failed to load organization "
+    "progressError": "Failed to load organization ",
+    "noDataMessage": "No Data"
   },
   "organizations.menus": {
     "leftnav.item": "Organizations",
@@ -419,5 +420,34 @@
     },
     "informCreated": "{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "addresses.label": "Locations",
+      "phones.label": "Phone Numbers",
+      "faxes.label": "Fax Numbers",
+      "emails.label": "Email Addresses",
+      "urls.label": "URLs",
+      "dbas.label": "DBAs",
+      "people.label": "People",
+      "ids.label": "IDs",
+      "complaints.label": "Complaints",
+      "cases.label": "Cases",
+      "related.label": "Related Organizations",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sort Date Created Ascending",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Sort Organization ID Ascending",
+      "idDesc": "Sort Organization ID Descending",
+      "nameAsc": "Sort By Organization Name A-Z",
+      "nameDesc": "Sort By Organization Name Z-A",
+      "noSort": "(No Sort)"
+    }
+  }
 }

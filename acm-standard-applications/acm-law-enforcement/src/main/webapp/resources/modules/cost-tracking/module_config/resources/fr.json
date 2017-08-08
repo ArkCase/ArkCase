@@ -1,9 +1,9 @@
 {
   "costTracking": {
     "title": "Suivi des coûts",
-    "progressNoCostsheet": "fr_[ No costsheet is selected ]",
-    "progressLoading": "fr_Loading costsheet ",
-    "progressError": "fr_Failed to load costsheet"
+    "progressNoCostsheet": "[ Aucune feuille de coûts n'est sélectionnée ]",
+    "progressLoading": "Feuille de coûts de chargement",
+    "progressError": "Impossible de charger la feuille de coûts"
   },
   "costTracking.menus": {
     "leftnav.item": "Suivi des coûts",
@@ -14,16 +14,16 @@
   },
   "costTracking.comp.info": {
     "title": "Information",
-    "incidentDate": "fr_Incident Date",
-    "priority": "fr_Priority",
-    "assignedTo": "fr_Assigned To",
-    "subjectType": "fr_Subject Type",
-    "state": "fr_State"
+    "incidentDate": "Date d'incident",
+    "priority": "Priorité",
+    "assignedTo": "Assigné à",
+    "subjectType": "Type de sujet",
+    "state": "État"
   },
   "costTracking.comp.actions": {
-    "title": "Actions",
-    "new.button": "fr_New Costsheet",
-    "edit.button": "fr_Edit Costsheet"
+    "title": "Actes",
+    "new.button": "Nouvelle feuille ",
+    "edit.button": "Modifier la feuille"
   },
   "costTracking.comp.details": {
     "title": "Détails",
@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
-      "costsheetIdAsc": "Trier ID de Coût Asc",
-      "costsheetIdDesc": "Trier ID de Coût Déc",
-      "byNameDesc": "Trier par nom Déc",
+      "idAsc": "Trier ID de Coût Asc",
+      "idDesc": "Trier ID de Coût Déc",
+      "nameDesc": "Trier par nom Déc",
       "noSort": "(Non Trier)"
     }
   }

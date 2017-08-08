@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "शिकायतें",
-    "progressNoComplaint": "hi_[ No complaint data ]",
-    "progressLoading": "hi_Loading complaint ",
-    "progressError": "hi_Failed to load complaint "
+    "progressNoComplaint": "[ कोई शिकायत नहीं है ]",
+    "progressLoading": "शिकायत लोड",
+    "progressError": "शिकायत लोड करने में विफल"
   },
   "complaints.menus": {
     "leftnav.item": "शिकायतें",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "जानकारी",
-    "complaintId": "hi_Complaint id:",
-    "complaintNumber": "hi_Complaint ID:",
-    "courtRoomName": "hi_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "शिकायत आईडी:",
+    "complaintNumber": "शिकायत संख्या:",
+    "courtRoomName": "कोर्ट रूम का नाम::",
+    "type.label": "प्रकार",
+    "created.label": "बनाया दिनांक",
+    "priority.label": "प्राथमिकता",
+    "assignee.label": "असाइन करने के लिए",
+    "owningGroup.label": "स्वामी समूह",
+    "dueDate.label": "नियत दिनांक"
   },
   "complaints.comp.actions": {
     "title": "क्रियाएं",
-    "restrict": "hi_Restrict?",
-    "new.button": "hi_New Complaint",
-    "close.button": "hi_Close Complaint",
-    "subscribe.button": "hi_Subscribe",
-    "unsubscribe.button": "hi_Unsubscribe",
-    "claim.button": "hi_Claim",
-    "unclaim.button": "hi_Unclaim"
+    "restrict": "प्रतिबंधित करें?",
+    "new.button": "नई शिकायत",
+    "close.button": "बंद शिकायत",
+    "subscribe.button": "सदस्यता लें",
+    "unsubscribe.button": "सदस्यता रद्द करें",
+    "claim.button": "दावा",
+    "unclaim.button": "दावा नहीं करना"
   },
   "complaints.comp.details": {
     "title": "विवरण",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "क्रमबद्ध घटना दिनांक दिनांक",
       "createdDateAsc": "सॉर्ट की गई तारीख एएससी",
       "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
-      "byNameAsc": "सॉर्ट इन एएनएससी एसी",
+      "nameAsc": "सॉर्ट इन एएनएससी एसी",
       "noSort": "(कोई सॉर्ट नहीं)"
     }
   }

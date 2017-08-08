@@ -1,29 +1,30 @@
 {
   "costTracking": {
     "title": "Kostenverfolgung",
-    "progressNoCostsheet": "de_[ No costsheet is selected ]",
-    "progressLoading": "de_Loading costsheet ",
-    "progressError": "de_Failed to load costsheet"
+    "progressNoCostsheet": "[ Keine Daten der Kostenverfolgung ]",
+    "progressLoading": "Laden der Kostenblatt",
+    "progressError": "Fehler beim Laden der Kostenblatt"
   },
   "costTracking.menus": {
     "leftnav.item": "Kostenverfolgung",
-    "topbar.item": "Kostenverfolgung"
+    "topbar.item": "Kostenblatt"
   },
   "costTracking.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "costTracking.comp.info": {
-    "title": "Informatie",
-    "incidentDate": "de_Incident Date",
-    "priority": "de_Priority",
-    "assignedTo": "de_Assigned To",
-    "subjectType": "de_Subject Type",
-    "state": "de_State"
+    "title": "Informationen",
+    "incidentDate": "Vorfallsdatum",
+    "priority": "Priorität",
+    "assignedTo": "Zugewiesen",
+    "subjectType": "Thema Typ",
+    "state": "Zustand"
+
   },
   "costTracking.comp.actions": {
-    "title": "Acties",
-    "new.button": "de_New Costsheet",
-    "edit.button": "de_Edit Costsheet"
+    "title": "Aktionen",
+    "new.button": "Neues Kostenblatt",
+    "edit.button": "Kostenblatt bearbeiten"
   },
   "costTracking.comp.details": {
     "title": "Details",
@@ -86,9 +87,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "costsheetIdAsc": "Sortieren Kostenblatt-ID Auf",
-      "costsheetIdDesc": "Sortieren Kostenblatt-ID Dec",
-      "byNameDesc": "Nach Name sortieren",
+      "idAsc": "Sortieren Kostenblatt-ID Auf",
+      "idDesc": "Sortieren Kostenblatt-ID Dec",
+      "nameDesc": "Nach Name sortieren",
       "noSort": "(Keine Sortierung)"
     }
   }

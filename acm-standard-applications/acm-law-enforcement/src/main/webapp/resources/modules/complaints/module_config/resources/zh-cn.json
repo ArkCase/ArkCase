@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "投诉",
-    "progressNoComplaint": "zh-cn_[ No complaint data ]",
-    "progressLoading": "zh-cn_Loading complaint ",
-    "progressError": "zh-cn_Failed to load complaint "
+    "progressNoComplaint": "[ 无投诉数据 ]",
+    "progressLoading": "加载投诉数据",
+    "progressError": "无法加载投诉数据"
   },
   "complaints.menus": {
     "leftnav.item": "投诉",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "信息",
-    "complaintId": "zh-cn_Complaint id:",
-    "complaintNumber": "zh-cn_Complaint ID:",
-    "courtRoomName": "zh-cn_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "投诉识别号:",
+    "complaintNumber": "投诉编号:",
+    "courtRoomName": "法庭名称:",
+    "type.label": "种类",
+    "created.label": "创建日期",
+    "priority.label": "优先级别",
+    "assignee.label": "指定人员",
+    "owningGroup.label": "所属群体",
+    "dueDate.label": "到期日期"
   },
   "complaints.comp.actions": {
     "title": "行动",
-    "restrict": "zh-cn_Restrict?",
-    "new.button": "zh-cn_New Complaint",
-    "close.button": "zh-cn_Close Complaint",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "claim.button": "zh-cn_Claim",
-    "unclaim.button": "zh-cn_Unclaim"
+    "restrict": "受限制?",
+    "new.button": "新投诉",
+    "close.button": "关闭投诉",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "claim.button": "申明权益",
+    "unclaim.button": "取消申权"
   },
   "complaints.comp.details": {
     "title": "详情",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "按事件日期反排序",
       "createdDateAsc": "按创建日期排序",
       "createdDateDesc": "按创建日期反排序",
-      "byNameAsc": "按名称排序",
+      "nameAsc": "按名称排序",
       "noSort": "(不排序)"
     }
   }

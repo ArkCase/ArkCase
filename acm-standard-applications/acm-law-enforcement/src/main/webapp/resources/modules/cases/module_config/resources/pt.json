@@ -10,36 +10,36 @@
     "topbar.item": "Caso"
   },
   "cases.error": {
-    "invalidData": "pt_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "Visão geral"
   },
   "cases.comp.info": {
     "title": "Informações",
-    "caseId": "pt_Case id:",
-    "caseNumber": "pt_Case Number:",
-    "courtRoomName": "pt_Court Room Name:",
-    "type.label": "pt_Type",
-    "created.label": "pt_Created Date",
-    "priority.label": "pt_Priority",
-    "assignee.label": "pt_Assigned To",
-    "owningGroup.label": "pt_Owning Group",
-    "dueDate.label": "pt_Due Date"
+    "caseId": "Identificação do Caso:",
+    "caseNumber": "Número do Caso:",
+    "courtRoomName": "Sala do Tribunal:",
+    "type.label": "Tipo",
+    "created.label": "Data criada",
+    "priority.label": "Prioridade",
+    "assignee.label": "Atribuído a",
+    "owningGroup.label": "O grupo pertence a",
+    "dueDate.label": "Data de vencimento"
   },
   "cases.comp.actions": {
     "title": "Ações",
-    "restrict": "pt_Restrict?",
-    "new.button": "pt_New",
-    "edit.button": "pt_Edit",
-    "status.button": "pt_Change Case Status",
-    "reinvestigate.button": "pt_Reinvestigate",
-    "subscribe.button": "pt_Subscribe",
-    "unsubscribe.button": "pt_Unsubscribe",
-    "merge.button": "pt_Merge",
-    "claim.button": "pt_Claim",
-    "unclaim.button": "pt_Unclaim",
-    "split.button": "pt_Split"
+    "restrict": "Restringir?",
+    "new.button": "Novo",
+    "edit.button": "Editar",
+    "status.button": "Alterar Status do Caso",
+    "reinvestigate.button": "Investigar novamente",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "merge.button": "Mesclar",
+    "claim.button": "Reclamaçõe",
+    "unclaim.button": "Retirar Reclamaçõe",
+    "split.button": "Dividido"
   },
   "cases.comp.details": {
     "title": "Detalhes",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Ordenar Data Asc",
       "dateDesc": "Ordenar Data Desc",
-      "caseIdAsc": "Ordenar Caso ID Asc",
-      "caseIdDesc": "Ordenar Caso ID Desc",
-      "byNameAsc": "Classificar por nome Asc",
+      "idAsc": "Ordenar Caso ID Asc",
+      "idDesc": "Ordenar Caso ID Desc",
+      "nameAsc": "Classificar por nome Asc",
       "noSort": "(Não classificar)"
     }
   }

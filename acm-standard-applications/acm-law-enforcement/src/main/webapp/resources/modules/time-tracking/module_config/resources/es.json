@@ -1,25 +1,25 @@
 {
   "timeTracking": {
     "title": "Seguimiento de Tiempo",
-    "progressNoTimesheet": "es_[ No timesheet is selected ]",
-    "progressLoading": "es_Loading timesheet ",
-    "progressError": "es_Failed to load timesheet"
+    "progressNoTimesheet": "[ No hay datos de la hoja de tiempo ]",
+    "progressLoading": "Cargando la hoja de tiempo",
+    "progressError": "No se pudo cargar la hoja de tiempo"
   },
   "timeTracking.menus": {
     "leftnav.item": "Seguimiento de Tiempo",
-    "topbar.item": "Tiempo"
+    "topbar.item": "Hoja de tiempo"
   },
   "timeTracking.comp.main": {
     "title": "Descripción general"
   },
   "timeTracking.comp.info": {
     "title": "Información",
-    "lastModified.label": "es_Last Modified"
+    "lastModified.label": "Última modificación"
   },
   "timeTracking.comp.actions": {
     "title": "Acciones",
-    "new.button": "es_New Timesheet",
-    "edit.button": "es_Edit Timesheet"
+    "new.button": "Nuevo Hoja de Tiempo",
+    "edit.button": "Editar Hoja de Tiempo"
   },
   "timeTracking.comp.details": {
     "title": "Detalles",
@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Ordenar Fecha Asc",
       "dateDesc": "Ordenar Fecha Dec",
-      "timesheetIdAsc": "Ordenar tiempos de la identificación Asc",
-      "timesheetIdDesc": "Ordenar tiempos de la identificación Dec",
-      "byNameDesc": "Ordenar por nombre Dec",
+      "idAsc": "Ordenar tiempos de la identificación Asc",
+      "idDesc": "Ordenar tiempos de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
       "noSort": "(Sin Clasificar)"
     }
   }
