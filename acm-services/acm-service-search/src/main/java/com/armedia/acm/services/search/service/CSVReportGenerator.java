@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,14 +57,34 @@ public class CSVReportGenerator extends ReportGenerator
         sb.append(headersLine);
         sb.append("\n");
 
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        DecimalFormat df = new DecimalFormat("###,###.###");
+
         for (int i = 0; i < jsonDocs.length(); i++)
         {
             JSONObject data = jsonDocs.getJSONObject(i);
+
             for (String field : requestedFields)
             {
                 if (data.has(field))
                 {
-                    sb.append(purifyForCSV(data.getString(field)));
+                    Object value = data.get(field);
+
+                    if (value instanceof String)
+                    {
+                        sb.append(purifyForCSV(data.getString(field)));
+                    } else if (value instanceof Integer || value instanceof Long)
+                    {
+                        String formattedNumber = nf.format(data.getLong(field));
+                        sb.append(String.format(purifyForCSV(formattedNumber)));
+                    } else if (value instanceof Double || value instanceof Float)
+                    {
+                        String formattedNumber = df.format(data.getDouble(field));
+                        sb.append(purifyForCSV(formattedNumber));
+                    } else if (value instanceof Boolean)
+                    {
+                        sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
+                    }
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);
             }

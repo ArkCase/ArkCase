@@ -1,25 +1,25 @@
 {
   "timeTracking": {
-    "title": "Controle de Tempo",
-    "progressNoTimesheet": "pt_[ No timesheet is selected ]",
-    "progressLoading": "pt_Loading timesheet ",
-    "progressError": "pt_Failed to load timesheet"
+    "title": "Rastreamento de tempo",
+    "progressNoTimesheet": "[ Nenhuma tabela de horário está selecionada ]",
+    "progressLoading": "Folha de tempo de carregamento",
+    "progressError": "Falha ao carregar a folha de tempo"
   },
   "timeTracking.menus": {
-    "leftnav.item": "Controle de Tempo",
-    "topbar.item": "Quadro de Horários"
+    "leftnav.item": "Rastreamento de tempo",
+    "topbar.item": "Folha de Horário"
   },
   "timeTracking.comp.main": {
     "title": "Visão geral"
   },
   "timeTracking.comp.info": {
     "title": "Informações",
-    "lastModified.label": "pt_Last Modified"
+    "lastModified.label": "Última modificação"
   },
   "timeTracking.comp.actions": {
     "title": "Ações",
-    "new.button": "pt_New Timesheet",
-    "edit.button": "pt_Edit Timesheet"
+    "new.button": "Nova folha de hora",
+    "edit.button": "Editar folha de hora"
   },
   "timeTracking.comp.details": {
     "title": "Detalhes",
@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Ordenar Data Asc",
       "dateDesc": "Ordenar Data Desc",
-      "timesheetIdAsc": "Ordenar ID de hora Asc",
-      "timesheetIdDesc": "Ordenar ID de hora Desc",
-      "byNameDesc": "Classificar por nome",
+      "idAsc": "Ordenar ID de hora Asc",
+      "idDesc": "Ordenar ID de hora Desc",
+      "nameDesc": "Classificar por nome",
       "noSort": "(Não classificar)"
     }
   }

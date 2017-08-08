@@ -61,7 +61,7 @@ angular.module('dashboard.person', ['adf.provider'])
 
                 var onObjectInfoRetrieved = function (objectInfo) {
                     $scope.costsheetInfo = objectInfo;
-                    gridHelper.setWidgetsGridData(objectInfo.user);
+                    gridHelper.setWidgetsGridData([objectInfo.user]);
                 };
 
                 var onConfigRetrieved = function (componentConfig) {

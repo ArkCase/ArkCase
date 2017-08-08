@@ -311,7 +311,9 @@
   },
   "people.comp.cases": {
     "title": "Cases",
+    "objectType.label": "Case File",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -322,7 +324,9 @@
   },
   "people.comp.complaints": {
     "title": "Complaints",
+    "objectType.label": "Complaint",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -417,5 +421,36 @@
       "identificationYearIssued.placeholder": "Select Identification Issued",
       "identificationYearIssued.close.button": "Close"
     }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "pictures.label": "Pictures",
+      "addresses.label": "Locations",
+      "phones.label": "Phone Numbers",
+      "emails.label": "Email Addresses",
+      "urls.label": "URLs",
+      "aliases.label": "Aliases",
+      "organizations.label": "Organizations",
+      "ids.label": "IDs",
+      "complaints.label": "Complaints",
+      "cases.label": "Cases",
+      "related.label": "Related People",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sort Date Created Ascending",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Sort People ID Ascending",
+      "idDesc": "Sort People ID Descending",
+      "nameAsc": "Sort By People Name A-Z",
+      "nameDesc": "Sort By People Name Z-A",
+      "noSort": "(No Sort)"
+    }
   }
 }
+

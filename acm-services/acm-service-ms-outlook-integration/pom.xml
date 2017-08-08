@@ -42,6 +42,12 @@
             <artifactId>acm-service-email</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.microsoft.ews-java-api</groupId>

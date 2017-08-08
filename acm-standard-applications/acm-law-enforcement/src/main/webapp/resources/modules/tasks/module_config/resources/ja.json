@@ -1,52 +1,52 @@
 {
   "tasks": {
-    "title": "仕事",
-    "progressNoTask": "ja_[ No task data ]",
-    "progressLoading": "ja_Loading task ",
-    "progressError": "ja_Failed to load task"
+    "title": "タスク",
+    "progressNoTask": "[ タスクのデータはありません ]",
+    "progressLoading": "タスクの読み込み",
+    "progressError": "タスクの読み込みに失敗しました"
   },
   "tasks.menus": {
-    "leftnav.item": "仕事",
-    "topbar.item": "仕事"
+    "leftnav.item": "タスク",
+    "topbar.item": "タスク"
   },
   "tasks.comp.main": {
     "title": "概観"
   },
   "tasks.comp.info": {
     "title": "情報",
-    "taskId": "ja_Task id:",
-    "percentage.label": "ja_% of Completion",
-    "assignee.label": "ja_Assignee",
-    "Priority.label": "ja_Priority",
-    "startDate.label": "ja_Start Date",
-    "dueDate.label": "ja_Due Date",
-    "state.label": "ja_State",
-    "overdue.tooltip": "ja_Task is Overdue",
-    "deadline.tooltip": "ja_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "タスク識別番号:",
+    "percentage.label": "完成度％",
+    "assignee.label": "割り当て先",
+    "priority.label": "優先",
+    "startDate.label": "開始日",
+    "dueDate.label": "期限日",
+    "state.label": "状態",
+    "overdue.tooltip": "タスク延滞",
+    "deadline.tooltip": "締め切りが近づいています",
+    "owningGroup.label": "グループに所属"
   },
   "tasks.comp.parentinfo": {
-    "title": "ファイルの起源",
-    "taskId": "ja_Task id:",
+    "title": "タスクの起源",
+    "taskId": "タスク識別番号:",
     "case": {
-      "subjectType.label": "ja_Subject Type",
-      "incidentDate.label": "ja_Incident Date",
-      "priority.label": "ja_Priority",
-      "assignee.label": "ja_Assigned To",
-      "owningGroup.label": "ja_Owning Group"
+      "subjectType.label": "サブジェクトタイプ",
+      "incidentDate.label": "インシデントの日付",
+      "priority.label": "優先",
+      "assignee.label": "割り当て先",
+      "owningGroup.label": "グループに所属"
     },
     "complaint": {
-      "subjectType.label": "ja_Subject Type",
-      "incidentDate.label": "ja_Incident Date",
-      "priority.label": "ja_Priority",
-      "assignee.label": "ja_Assigned To",
-      "owningGroup.label": "ja_Owning Group"
+      "subjectType.label": "サブジェクトタイプ",
+      "incidentDate.label": "インシデントの日付",
+      "priority.label": "優先",
+      "assignee.label": "割り当て先",
+      "owningGroup.label": "グループに所属"
     },
     "costsheet": {
-      "approver.label": "ja_Approver"
+      "approver.label": "承認者"
     },
     "timesheet": {
-      "approver.label": "ja_Approver"
+      "approver.label": "承認者"
     },
     "_xxx_courtRoomName": "ja_Court Room Name:"
   },
@@ -333,7 +333,7 @@
       "details.label": "詳細",
       "reworkDetails.label": "詳細をやり直し",
       "docReview.label": "レビュー文書",
-      "parentDoc.label": "ファイルの起源",
+      "parentDoc.label": "タスクの起源",
       "attachments.label": "添付ファイル",
       "references.label": "参照",
       "notes.label": "コメント",
@@ -344,7 +344,7 @@
       "reject.label": "を説明することを拒否し"
     },
     "filters": {
-      "myTasks": "私の仕事",
+      "myTasks": "私のタスク",
       "opened": "開いているすべて",
       "completed": "すべて終了",
       "dueToday": "今日はすべてが原因",
@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "作成日で並べ替え",
       "createdDateDesc": "アンチは、イベントの日付順",
-      "byNameAsc": "タスク名で並べ替え",
-      "byNameDesc": "アンチは、タスク名でソート",
+      "nameAsc": "タスク名で並べ替え",
+      "nameDesc": "アンチは、タスク名でソート",
       "noSort": "(注文しません)"
     }
   }

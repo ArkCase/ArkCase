@@ -2,15 +2,14 @@ package com.armedia.acm.services.users.dao.ldap;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
-import com.armedia.acm.services.users.model.AcmRoleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -238,7 +237,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public boolean isUserPasswordExpired(String principal)
     {
-        log.debug("Check password expiration for user: [{}]", principal);
+        log.debug("Check password expiration for user [{}]", principal);
         try
         {
             AcmUser user = findByUserIdAnyCase(principal);
@@ -247,9 +246,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             {
                 return userPasswordExpirationDate.isBefore(LocalDate.now());
             }
+            log.info("Password expiration date is not set for user [{}]", principal);
         } catch (NoResultException | NonUniqueResultException e)
         {
-            log.debug("User: [{}] not found!", principal);
+            log.debug("User [{}] not found!", principal);
         }
         return false;
     }

@@ -81,6 +81,17 @@
       "name": "PERSON",
       "allowedWidgets": [
         "details",
+        "pictures",
+        "locations",
+        "phones",
+        "emails",
+        "urls",
+        "aliases",
+        "organizations",
+        "ids",
+        "complaints",
+        "cases",
+        "related",
         "history"
       ]
     },
@@ -114,7 +125,8 @@
         "participants",
         "notes",
         "references",
-        "history"
+        "history",
+        "tags"
       ]
     },
     {
@@ -127,7 +139,8 @@
         "participants",
         "notes",
         "references",
-        "history"
+        "history",
+        "tags"
       ]
     },
     {
@@ -137,7 +150,8 @@
       "allowedWidgets": [
         "details",
         "person",
-        "expenses"
+        "expenses",
+        "tags"
       ]
     },
     {
@@ -147,7 +161,8 @@
       "allowedWidgets": [
         "details",
         "person",
-        "hoursSummary"
+        "hoursSummary",
+        "tags"
       ]
     }
   ]

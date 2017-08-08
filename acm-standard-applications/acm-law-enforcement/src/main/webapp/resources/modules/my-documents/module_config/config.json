@@ -18,7 +18,7 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "(No Filter)",
+        "desc": "document-repository.tree.filters.noFilter",
         "name": "my-personal-document-repositories",
         "value": "fq=assignee_s:${user} AND repository_type_s:PERSONAL",
         "default": true
@@ -26,23 +26,23 @@
     ],
     "sorters": [
       {
-        "desc": "Sort Date Asc",
+        "desc": "document-repository.tree.sorters.dateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "Sort Date Desc",
+        "desc": "document-repository.tree.sorters.dateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort Repository ID Asc",
+        "desc": "document-repository.tree.sorters.idAsc",
         "name": "sort-document-repository-id-asc",
         "value": "object_id_s ASC"
       },
       {
-        "desc": "Sort Repository ID Desc",
+        "desc": "document-repository.tree.sorters.idDesc",
         "name": "sort-document-repository-id-desc",
         "value": "object_id_s DESC"
       },
@@ -52,7 +52,7 @@
         "value": "title_parseable_lcs ASC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "document-repository.tree.sorters.noSort",
         "name": "",
         "value": ""
       }
@@ -81,7 +81,7 @@
       },
       {
         "type": "p/DOC_REPO/det",
-        "label": "Details",
+        "label": "document-repository.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -89,7 +89,7 @@
       },
       {
         "type": "p/DOC_REPO/doc",
-        "label": "Documents",
+        "label": "document-repository.tree.nodeTypes.documents.label",
         "icon": "fa fa-file",
         "components": [
           "documents"
@@ -97,42 +97,42 @@
       },
       {
         "type": "p/DOC_REPO/par",
-        "label": "Participants",
+        "label": "document-repository.tree.nodeTypes.participants.label",
         "icon": "fa fa-users",
         "components": [
           "participants"
         ]
       },
       {
-        "type": "p/DOC_REPO/tags",
-        "label": "Tags",
-        "icon": "fa fa-tags",
-        "components": [
-          "tags"
-        ]
-      },
-      {
-        "type": "p/DOC_REPO/ref",
-        "label": "References",
-        "icon": "fa fa-exchange",
-        "components": [
-          "references"
-        ]
-      },
-      {
         "type": "p/DOC_REPO/note",
-        "label": "Notes",
+        "label": "document-repository.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
         ]
       },
       {
+        "type": "p/DOC_REPO/ref",
+        "label": "document-repository.tree.nodeTypes.references.label",
+        "icon": "fa fa-exchange",
+        "components": [
+          "references"
+        ]
+      },
+      {
         "type": "p/DOC_REPO/his",
-        "label": "History",
+        "label": "document-repository.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
+        ]
+      },
+      {
+        "type": "p/DOC_REPO/tags",
+        "label": "document-repository.tree.nodeTypes.tags.label",
+        "icon": "fa fa-tags",
+        "components": [
+          "tags"
         ]
       }
     ]
@@ -140,7 +140,7 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "document-repository.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
       "type": "empty",
@@ -258,34 +258,53 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "document-repository.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "document-repository.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "document-repository.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "document-repository.comp.info.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "document-repository.comp.actions.title",
       "enabled": false,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "document-repository.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "documents",
-      "title": "Documents",
+      "title": "document-repository.comp.documents.title",
       "icon": "fa fa-file",
       "enabled": true,
       "type": "empty",
@@ -301,7 +320,7 @@
     },
     {
       "id": "participants",
-      "title": "Participants",
+      "title": "document-repository.comp.participants.title",
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
@@ -387,7 +406,7 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "document-repository.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
       "type": "grid",
@@ -428,7 +447,7 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "document-repository.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
       "type": "grid",
@@ -479,7 +498,7 @@
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "document-repository.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
       "type": "grid",
@@ -514,7 +533,7 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "document-repository.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
       "type": "grid",

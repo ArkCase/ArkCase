@@ -346,8 +346,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     {
 
 
-        try (FileInputStream inputFile = new FileInputStream(new File(configurationLocation + configurationFile));
-             FileOutputStream outputFile = new FileOutputStream(configurationLocation + configurationFile))
+        try (FileInputStream inputFile = new FileInputStream(new File(configurationLocation + configurationFile)))
         {
 
             XSSFWorkbook workbook = new XSSFWorkbook(inputFile);
@@ -389,7 +388,10 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
             );
 
             // Store updates
-            workbook.write(outputFile);
+            try (FileOutputStream outputFile = new FileOutputStream(configurationLocation + configurationFile))
+            {
+                workbook.write(outputFile);
+            }
 
 
         } catch (Exception e)

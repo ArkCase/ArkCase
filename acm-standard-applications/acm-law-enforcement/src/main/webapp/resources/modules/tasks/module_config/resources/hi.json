@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "कार्य",
-    "progressNoTask": "hi_[ No task data ]",
-    "progressLoading": "hi_Loading task ",
-    "progressError": "hi_Failed to load task"
+    "progressNoTask": "[ कोई कार्य डेटा नहीं ]",
+    "progressLoading": "लोडिंग कार्य ",
+    "progressError": "कार्य को लोड करने में विफल"
   },
   "tasks.menus": {
     "leftnav.item": "कार्य",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "जानकारी",
-    "taskId": "hi_Task id:",
-    "percentage.label": "hi_% of Completion",
-    "assignee.label": "hi_Assignee",
-    "Priority.label": "hi_Priority",
-    "startDate.label": "hi_Start Date",
-    "dueDate.label": "hi_Due Date",
-    "state.label": "hi_State",
-    "overdue.tooltip": "hi_Task is Overdue",
-    "deadline.tooltip": "hi_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "कार्य आईडी:",
+    "percentage.label": "समापन का%",
+    "assignee.label": "नियुक्त",
+    "priority.label": "प्राथमिकता",
+    "startDate.label": "आरंभ दिनांक",
+    "dueDate.label": "नियत दिनांक",
+    "state.label": "राज्य",
+    "overdue.tooltip": "टास्क ओवरड्यू है",
+    "deadline.tooltip": "डेडलाइन ही आ रही है",
+    "owningGroup.label": "स्वामी समूह"
   },
   "tasks.comp.parentinfo": {
     "title": "जनक जानकारी",
-    "taskId": "hi_Task id:",
+    "taskId": "कार्य आईडी:",
     "case": {
-      "subjectType.label": "hi_Subject Type",
-      "incidentDate.label": "hi_Incident Date",
-      "priority.label": "hi_Priority",
-      "assignee.label": "hi_Assigned To",
-      "owningGroup.label": "hi_Owning Group"
+      "subjectType.label": "विषय प्रकार",
+      "incidentDate.label": "घटना दिनांक",
+      "priority.label": "प्राथमिकता",
+      "assignee.label": "डेडलाइन ही आ रही है",
+      "owningGroup.label": "स्वामी समूह"
     },
     "complaint": {
-      "subjectType.label": "hi_Subject Type",
-      "incidentDate.label": "hi_Incident Date",
-      "priority.label": "hi_Priority",
-      "assignee.label": "hi_Assigned To",
-      "owningGroup.label": "hi_Owning Group"
+      "subjectType.label": "विषय प्रकार",
+      "incidentDate.label": "घटना दिनांक",
+      "priority.label": "प्राथमिकता",
+      "assignee.label": "डेडलाइन ही आ रही है",
+      "owningGroup.label": "स्वामी समूह"
     },
     "costsheet": {
-      "approver.label": "hi_Approver"
+      "approver.label": "अनुज्ञा"
     },
     "timesheet": {
-      "approver.label": "hi_Approver"
-    },
-    "_xxx_courtRoomName": "hi_Court Room Name:"
+      "approver.label": "अनुज्ञा"
+    }
   },
   "tasks.comp.actions": {
     "title": "क्रियाएं",
-    "diagram.button": "hi_Process Diagram",
-    "eSignature.button": "hi_Sign",
-    "subscribe.button": "hi_Subscribe",
-    "unsubscribe.button": "hi_Unsubscribe",
-    "reject.button": "hi_Reject",
-    "delete.button": "hi_Delete",
-    "complete.button": "hi_Complete",
-    "approve.button": "hi_Approve Document",
-    "rework.button": "hi_Send for Rework",
-    "claim.button": "hi_Claim",
-    "unclaim.button": "hi_Unclaim",
-    "error.outcomeFieldMissing": "hi_Cannot complete task because of missing required value",
+    "diagram.button": "प्रक्रिया आरेख",
+    "eSignature.button": "साइन",
+    "Subscribe.button": "सदस्यता लें",
+    "Unsubscribe.button": "सदस्यता रद्द करें",
+    "reject.button": "अस्वीकार करें",
+    "delete.button": "हटाएं",
+    "complete.button": "पूर्ण",
+    "approve.button": "दस्तावेज़ स्वीकृत करें",
+    "rework.button": "रीवॉर्ट के लिए भेजें",
+    "claim.button": "दावा",
+    "unclaim.button": "दावा नहीं करना",
+    "error.outcomeFieldMissing": "अनुपलब्ध मूल्य की वजह से कार्य को पूरा नहीं किया जा सकता",
     "modal": {
-      "errorHeaderText": "hi_Error",
-      "btnOk.text": "hi_OK",
-      "btnClose.text": "hi_Close"
+      "errorHeaderText": "त्रुटि",
+      "btnOk.text": "ओके",
+      "btnClose.text": "बंद करें"
     }
   },
   "tasks.comp.details": {
@@ -356,8 +355,8 @@
     "sorters": {
       "createdDateAsc": "सॉर्ट की गई दिनांक एएससी",
       "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
-      "byNameAsc": "सॉर्ट कार्य नाम एएससी",
-      "byNameDesc": "सॉर्ट कार्य नाम देश",
+      "nameAsc": "सॉर्ट कार्य नाम एएससी",
+      "nameDesc": "सॉर्ट कार्य नाम देश",
       "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
