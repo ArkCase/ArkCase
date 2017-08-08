@@ -58,7 +58,7 @@ angular.module('organizations').controller('Organizations.CasesController', ['$s
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "organizationId");
-            OrganizationAssociationService.getOrganizationAssociations(currentObjectId, "CASE_FILE").then(function (data) {
+            OrganizationAssociationService.getOrganizationAssociations(currentObjectId, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
                 $scope.gridOptions.data = data.response.docs;
                 $scope.gridOptions.totalItems = data.response.numFound;
                 return data;

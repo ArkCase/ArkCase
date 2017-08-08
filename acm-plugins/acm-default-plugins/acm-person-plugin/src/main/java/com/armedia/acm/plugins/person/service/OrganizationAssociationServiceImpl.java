@@ -50,13 +50,13 @@ public class OrganizationAssociationServiceImpl implements OrganizationAssociati
     public String getOrganizationAssociations(Long organizationId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException
     {
         return solrJoinDocumentsService.getJoinedDocuments(
-                organizationId, "child_id_s",
+                auth, organizationId, "child_id_s",
                 PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE, "child_type_s",
                 PersonOrganizationConstants.ORGANIZATION_ASSOCIATION_OBJECT_TYPE,
                 parentType, "parent_type_s",
                 "parent_object",
-                start, limit, sort, auth,
-                "parent_ref_s", "id");
+                "parent_ref_s", "id", start, limit, sort
+        );
     }
 
     public OrganizationAssociationDao getOrganizationAssociationDao()

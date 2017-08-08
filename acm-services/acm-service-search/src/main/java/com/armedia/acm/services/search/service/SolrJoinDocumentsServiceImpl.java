@@ -22,13 +22,12 @@ public class SolrJoinDocumentsServiceImpl implements SolrJoinDocumentsService
     private ExecuteSolrQuery executeSolrQuery;
 
     @Override
-    public String getJoinedDocuments(Long ownerId, String ownerIdFieldName,
+    public String getJoinedDocuments(Authentication auth, Long ownerId, String ownerIdFieldName,
                                      String ownerType, String ownerTypeFieldName,
                                      String referenceType,
                                      String targetType, String targetTypeFieldName,
                                      String storeTargetObjectFieldName,
-                                     int start, int limit, String sort,
-                                     Authentication auth, String joinFromField, String joinToField) throws AcmObjectNotFoundException
+                                     String joinFromField, String joinToField, int start, int limit, String sort) throws AcmObjectNotFoundException
     {
 
         Objects.requireNonNull(ownerId, "ownerId is required");
@@ -42,26 +41,18 @@ public class SolrJoinDocumentsServiceImpl implements SolrJoinDocumentsService
         Objects.requireNonNull(joinFromField, "joinFromField is required");
         Objects.requireNonNull(joinToField, "joinToField is required");
 
-        if (StringUtils.isEmpty(sort))
-        {
-            sort = "id asc";
-        }
-        StringBuilder associationsQuery = new StringBuilder();
-        associationsQuery.append("object_type_s").append(":").append(referenceType);
-        associationsQuery.append(" AND ");
-        associationsQuery.append(ownerIdFieldName).append(":").append(ownerId);
-        associationsQuery.append(" AND ");
-        associationsQuery.append(ownerTypeFieldName).append(":").append(ownerType);
-        associationsQuery.append(" AND ");
-        associationsQuery.append(targetTypeFieldName).append(":").append(targetType);
+        sort = StringUtils.isEmpty(sort) ? "id asc" : sort;
+
+        String associationsQuery = "object_type_s" + ":" + referenceType
+                + " AND " + ownerIdFieldName + ":" + ownerId
+                + " AND " + ownerTypeFieldName + ":" + ownerType
+                + " AND " + targetTypeFieldName + ":" + targetType;
         log.debug("association query string [{}]", associationsQuery.toString());
 
 
-        StringBuilder targetQuery = new StringBuilder();
-        targetQuery.append("{!join from=").append(joinFromField).append(" to=").append(joinToField).append("}");
-        targetQuery.append(associationsQuery.toString());
+        String targetQuery = "{!join from=" + joinFromField + " to=" + joinToField + "}";
+        targetQuery += associationsQuery;
         log.debug("association join query string [{}]", targetQuery.toString());
-
 
         try
         {
