@@ -15,6 +15,7 @@ public class LdapGroup
     private String sortableValue;
     private String description;
     private String directoryName;
+    private Set<String> members = new HashSet<>();
     private Set<String> memberGroups = new HashSet<>();
     private Set<String> memberUsers = new HashSet<>();
     private Set<String> parentGroups = new HashSet<>();
@@ -43,7 +44,7 @@ public class LdapGroup
                 Objects.equals(getDescription(), acmGroup.getDescription()));
     }
 
-    public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
+     public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
     {
         return getMemberUsers().stream()
                 .filter(it -> !existingMembersDns.contains(it))
@@ -121,24 +122,34 @@ public class LdapGroup
         this.directoryName = directoryName;
     }
 
+    public Set<String> getMembers()
+    {
+        return members;
+    }
+
+    public void setMembers(Set<String> members)
+    {
+        this.members = members;
+    }
+
+    public void addGroupMember(String groupName)
+    {
+        getMemberGroups().add(groupName);
+    }
+
     public Set<String> getMemberGroups()
     {
         return memberGroups;
     }
 
-    public void setMemberGroups(Set<String> memberGroups)
+    public void addUserMember(String userDn)
     {
-        this.memberGroups = memberGroups;
+        getMemberUsers().add(userDn);
     }
 
     public Set<String> getMemberUsers()
     {
         return memberUsers;
-    }
-
-    public void setMemberUsers(Set<String> memberUsers)
-    {
-        this.memberUsers = memberUsers;
     }
 
     public Set<String> getParentGroups()

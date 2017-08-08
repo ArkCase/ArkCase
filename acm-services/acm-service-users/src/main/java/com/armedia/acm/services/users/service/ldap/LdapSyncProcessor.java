@@ -8,11 +8,15 @@ import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class LdapSyncProcessor
@@ -26,16 +30,20 @@ public class LdapSyncProcessor
     {
         List<AcmUser> currentUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
         AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult();
-        Map<String, AcmUser> currentUsersMap = acmUsersSyncResult.sync(ldapUsers, currentUsers);
+        Map<String, AcmUser> allUsersByIdMap = acmUsersSyncResult.sync(ldapUsers, currentUsers);
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
-        acmGroupsSyncResult.sync(ldapGroups, acmGroups, currentUsersMap);
+        Map<String, AcmGroup> allGroupsByIdMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, allUsersByIdMap);
 
-        Map<String, String> roleToGroup = ldapSyncConfig.getRoleToGroupMap();
-        Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroup);
+        Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.getGroupsByUserIdMap(allGroupsByIdMap);
+
+        Map<String, String> roleToGroupsString = ldapSyncConfig.getRoleToGroupMap();
+        Map<String, Set<String>> roleToGroup = LdapSyncService.roleToGroups(roleToGroupsString);
+        Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroupsString);
+
         AcmUserRoleSyncResult acmUserRoleSyncResult = new AcmUserRoleSyncResult(acmGroupsSyncResult.getUserNewGroups(),
-                acmGroupsSyncResult.getUserRemovedGroups(), groupToRoleMap);
+                acmGroupsSyncResult.getUserRemovedGroups(), groupToRoleMap, userGroupsMap);
 
         ldapDatabaseSyncService.saveUsers(acmUsersSyncResult);
 
