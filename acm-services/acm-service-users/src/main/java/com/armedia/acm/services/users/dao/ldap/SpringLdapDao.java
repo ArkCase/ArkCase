@@ -44,9 +44,7 @@ public interface SpringLdapDao
 
     default String convertToDirectorySpecificTimestamp(String ldapLastSyncTimestamp, String directoryType)
     {
-        return directoryType.equals(Directory.OPEN_LDAP.getType()) ?
-                Directory.OPEN_LDAP.convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp) :
-                Directory.ACTIVE_DIRECTORY.convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp);
+        return Directory.valueOf(directoryType).convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp);
     }
 
     default String buildGroupSearchFilter(AcmLdapSyncConfig syncConfig, String lastSyncDate)

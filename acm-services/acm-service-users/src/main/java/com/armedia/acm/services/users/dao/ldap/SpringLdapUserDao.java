@@ -102,8 +102,10 @@ public class SpringLdapUserDao
 
             // set old/new password attributes
             ModificationItem[] mods = new ModificationItem[2];
-            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, createPasswordAttribute(password, config.getDirectoryType()));
-            mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, createPasswordAttribute(newPassword, config.getDirectoryType()));
+            mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
+                    Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(password));
+            mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
+                    Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(newPassword));
             // Perform the update
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
@@ -125,7 +127,8 @@ public class SpringLdapUserDao
 
         try
         {
-            BasicAttribute passwordAttribute = createPasswordAttribute(password, config.getDirectoryType());
+            BasicAttribute passwordAttribute = Directory.valueOf(config.getDirectoryType())
+                    .getPasswordAttribute(password);
             // set new password attributes
             ModificationItem[] mods = new ModificationItem[1];
             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, passwordAttribute);
@@ -136,21 +139,5 @@ public class SpringLdapUserDao
             log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
-    }
-
-    private BasicAttribute createPasswordAttribute(String password, String directoryType) throws UnsupportedEncodingException
-    {
-        String passwordAttribute;
-        byte[] passwordBytes;
-        if (Directory.ACTIVE_DIRECTORY.getType().equals(directoryType))
-        {
-            passwordBytes = MapperUtils.encodeUTF16LE(password);
-            passwordAttribute = "unicodePwd";
-        } else
-        {
-            passwordBytes = password.getBytes();
-            passwordAttribute = "userPassword";
-        }
-        return new BasicAttribute(passwordAttribute, passwordBytes);
     }
 }

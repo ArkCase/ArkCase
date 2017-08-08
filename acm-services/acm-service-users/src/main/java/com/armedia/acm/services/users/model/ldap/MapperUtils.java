@@ -7,7 +7,12 @@ import org.springframework.ldap.BadLdapGrammarException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
+import javax.naming.directory.BasicAttribute;
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -77,4 +82,58 @@ public class MapperUtils
     {
         return String.format("\"%s\"", str).getBytes("UTF-16LE");
     }
+
+    public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter ->
+    {
+        String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
+        // FILETIME - representing the number of 100-nanosecond intervals since January 1, 1601 (UTC).
+        long fileTimeTimestamp = Long.parseLong(expirationTimePasswordAttr);
+        // 116444736000000000 100ns between 1601 and 1970
+        // https://stackoverflow.com/questions/5200192/convert-64-bit-windows-number-to-time-java
+        long mmSecTimestamp = (fileTimeTimestamp - 116444736000000000L) / 10000;
+        Instant instant = Instant.ofEpochMilli(mmSecTimestamp);
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        LocalDate localDate = localDateTime.toLocalDate();
+        // prevent "Data truncation: Incorrect date value" on mysql when date exceeds valid range
+        if (localDate.isAfter(LocalDate.now().plusYears(100L)))
+        {
+            return null;
+        }
+        return localDate;
+    };
+
+    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShaddowAccount = adapter ->
+    {
+        String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
+        String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");
+        if (shadowLastChangeAttr != null && shadowMaxAttr != null)
+        {
+            int passwordValidDays = Integer.parseInt(shadowMaxAttr);
+            // days since Jan 1, 1970 that password was last changed
+            int passwordLastChangedDays = Integer.parseInt(shadowLastChangeAttr);
+            LocalDate date = LocalDate.ofEpochDay(0);
+            // calculate the date when password was last changed
+            date = date.plusDays(passwordLastChangedDays);
+            // calculate last date the password must be changed
+            date = date.plusDays(passwordValidDays);
+            return date;
+        }
+        return null;
+    };
+
+    public static final Function<String, BasicAttribute> activeDirectoryPasswordToAttribute = password -> {
+        final byte[] passwordBytes;
+        try
+        {
+            passwordBytes = MapperUtils.encodeUTF16LE(password);
+            return new BasicAttribute("unicodePwd", passwordBytes);
+        } catch (UnsupportedEncodingException e)
+        {
+            log.warn("UnsupportedEncodingException", e);
+            throw new RuntimeException(e);
+        }
+    };
+
+    public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password ->
+            new BasicAttribute("userPassword", password.getBytes());
 }

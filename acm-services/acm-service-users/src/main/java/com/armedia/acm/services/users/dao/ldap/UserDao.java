@@ -272,7 +272,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public List<AcmUser> findByDirectory(String directoryName)
     {
         TypedQuery<AcmUser> allUsersInDirectory = getEm()
-                .createQuery("SELECT acmUser FROM AcmUser acmUser WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
+                .createQuery("SELECT DISTINCT acmUser FROM AcmUser acmUser LEFT JOIN FETCH acmUser.groups "
+                        + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
         allUsersInDirectory.setParameter("directoryName", directoryName);
         return allUsersInDirectory.getResultList();
     }
