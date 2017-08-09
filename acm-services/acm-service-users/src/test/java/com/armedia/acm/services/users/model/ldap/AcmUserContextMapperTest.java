@@ -20,6 +20,7 @@ public class AcmUserContextMapperTest extends EasyMockSupport
         acmLdapSyncConfig.setMailAttributeName("mail");
         acmLdapSyncConfig.setBaseDC("dc=armedia");
         acmLdapSyncConfig.setAllUsersSortingAttribute("cn");
+        acmLdapSyncConfig.setDirectoryType("openldap");
         unit = new AcmUserContextMapper(acmLdapSyncConfig);
 
         DirContextAdapter dirContextAdapter = new DirContextAdapter();
