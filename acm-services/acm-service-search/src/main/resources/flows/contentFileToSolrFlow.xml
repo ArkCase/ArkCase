@@ -81,12 +81,15 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
         <set-variable variableName="status" value="#[message.payload.status_lcs]"/>
         <set-variable variableName="parentRef" value="#[message.payload.parent_ref_s]"/>
         <set-variable variableName="hidden" value="#[message.payload.hidden_b]"/>
-        <set-variable variableName="titleParseable" value="#[java.net.URLEncoder.encode(message.payload.title_parseable,'UTF-8')]"/>
-        <set-variable variableName="titleParseableSortable" value="#[java.net.URLEncoder.encode(message.payload.title_parseable_lcs,'UTF-8')]"/>
+        <set-variable variableName="titleParseable"
+                      value="#[java.net.URLEncoder.encode(message.payload.title_parseable,'UTF-8')]"/>
+        <set-variable variableName="titleParseableSortable"
+                      value="#[java.net.URLEncoder.encode(message.payload.title_parseable_lcs,'UTF-8')]"/>
         <set-variable variableName="assigneeFullName" value="#[message.payload.assignee_full_name_lcs]"/>
         <set-variable variableName="type" value="#[message.payload.type_lcs]"/>
         <set-variable variableName="ext" value="#[message.payload.ext_s]"/>
-        <set-variable variableName="mime_type" value="#[message.payload.mime_type_s]"/>
+        <set-variable variableName="mime_type"
+                      value="#[java.net.URLEncoder.encode(message.payload.mime_type_s,'UTF-8')]"/>
         <set-variable variableName="creatorFullName"
                       value="#[message.inboundProperties.additionalProperties.creator_full_name_lcs]"/>
         <set-variable variableName="modifierFullName"
