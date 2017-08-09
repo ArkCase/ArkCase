@@ -122,7 +122,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         groupToRoles.forEach((key, value) -> {
             value.forEach(role -> {
                 String groups = roleToGroupArray.get(role);
-                assertThat("Comma separated groups string should contain key", key, containsString(groups));
+                assertThat("Comma separated groups string should contain key", groups, containsString(key));
             });
         });
     }
@@ -407,70 +407,5 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<LdapUser> result = unit.filterUsersForKnownGroups(ldapUsers, ldapGroups);
         log.debug("Took: {}ms", System.currentTimeMillis() - start);
         assertThat("Arrays should be equal", result, containsInAnyOrder(expected.toArray()));
-    }
-
-    @Test
-    public void filterUsersFromPartialSyncTest()
-    {
-        String newlySyncedGroup = "GROUP-N";
-        LdapGroup syncedGroup = new LdapGroup();
-        syncedGroup.setName(newlySyncedGroup);
-
-        AcmGroup acmGroup = new AcmGroup();
-        acmGroup.setName("GROUP-A");
-
-        // not an arkcase-group or just a group with an arkcase-user
-        String unknownGroup = "GROUP-X";
-
-        List<LdapUser> newlySyncedUsers = new ArrayList<>();
-        LdapUser user1 = new LdapUser();
-        user1.setUserId("user1");
-        user1.setLdapGroups(fromArray("GROUP-N"));
-        LdapUser user2 = new LdapUser();
-        user2.setUserId("user2");
-        user2.setLdapGroups(fromArray("GROUP-A", "GROUP-N", "GROUP-X"));
-        LdapUser user3 = new LdapUser();
-        user3.setUserId("user3");
-        user3.setLdapGroups(fromArray("GROUP-X"));
-
-        newlySyncedUsers.add(user1);
-        newlySyncedUsers.add(user2);
-        newlySyncedUsers.add(user3);
-
-        List<LdapUser> users = unit.filterUsers(newlySyncedUsers, Arrays.asList(syncedGroup), Arrays.asList(acmGroup));
-
-        assertThat("users from GROUP-X are not valid", users, contains(user1, user2));
-        assertFalse(users.contains(user3));
-        assertFalse(user2.getLdapGroups().contains(unknownGroup));
-    }
-
-    @Test
-    public void filterParentGroupsOnChangedGroupsTest()
-    {
-        // arkcase group
-        LdapGroup group1 = new LdapGroup();
-        group1.setName("GROUP-A");
-        AcmGroup acmGroup = new AcmGroup();
-        acmGroup.setName("GROUP-A");
-
-        // new synced group
-        LdapGroup group2 = new LdapGroup();
-        group2.setName("GROUP-B");
-
-        // unknown group
-        LdapGroup group3 = new LdapGroup();
-        group3.setName("GROUP-Z");
-
-        List<LdapGroup> ldapGroups = new ArrayList<>();
-        ldapGroups.add(group1);
-        ldapGroups.add(group2);
-
-        group1.setParentGroups(fromArray("GROUP-A", "GROUP-B", "GROUP-Z"));
-
-        replayAll();
-        unit.filterParentGroupsOnChangedGroups(ldapGroups, Arrays.asList(acmGroup));
-
-        verifyAll();
-        assertFalse(group1.getParentGroups().contains("GROUP-Z"));
     }
 }
