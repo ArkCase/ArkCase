@@ -57,36 +57,6 @@ public class LdapSyncDatabaseHelper
         storeRoles(directoryName, usersByLdapGroup);
     }
 
-    @Transactional
-    public void updateDatabase(String directoryName, List<LdapUser> users, Map<String,
-            Set<LdapUser>> usersByRole, Map<String, Set<LdapUser>> usersByLdapGroup,
-                               Map<String, String> childParentPair, Map<String, String> groupDNPairs)
-    {
-        persistApplicationRoles(directoryName, usersByLdapGroup.keySet(), AcmRoleType.LDAP_GROUP.getRoleName(), childParentPair, groupDNPairs);
-
-        persistUsers(directoryName, users);
-
-        storeRoles(directoryName, usersByRole);
-
-        storeGroupRolesAfterPartialSync(usersByLdapGroup);
-    }
-
-    private void storeGroupRolesAfterPartialSync(Map<String, Set<LdapUser>> usersByLdapGroup)
-    {
-        usersByLdapGroup.forEach((groupName, users) ->
-                users.forEach(user ->
-                {
-                    persistUserRole(user.getUserId(), groupName);
-                    AcmGroup acmGroup = getGroupDao().findByName(groupName);
-                    if (acmGroup != null)
-                    {
-                        AcmUser acmUser = userDao.findByUserId(user.getUserId());
-                        log.debug("Adding user: [{}] as member to group: [{}]", acmUser.getUserId(), groupName);
-                        acmGroup.addMember(acmUser);
-                    }
-                })
-        );
-    }
 
     private AcmUserRole persistUserRole(String userId, String roleName)
     {

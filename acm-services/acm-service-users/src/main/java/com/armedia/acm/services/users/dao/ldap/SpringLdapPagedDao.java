@@ -121,7 +121,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[] { "cn", "memberOf" });
+        searchControls.setReturningAttributes(new String[] { "cn", "memberOf", "member" });
 
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
 
