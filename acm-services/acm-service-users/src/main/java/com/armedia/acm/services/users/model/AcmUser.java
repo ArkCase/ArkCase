@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_user")
@@ -104,9 +105,6 @@ public class AcmUser implements Serializable
 
     @Embedded
     private PasswordResetToken passwordResetToken;
-
-    @Transient
-    private String sortableValue;
 
     @Transient
     private Set<String> ldapGroups = new HashSet<>();
@@ -249,6 +247,18 @@ public class AcmUser implements Serializable
         return groups;
     }
 
+    @JsonIgnore
+    public Set<String> getGroupIds(AcmUser in)
+    {
+        if (in.getGroups() != null)
+        {
+            return in.getGroups().stream()
+                    .map(AcmGroup::getName)
+                    .collect(Collectors.toSet());
+        }
+        return new HashSet<>();
+    }
+
     public void setGroups(Set<AcmGroup> groups)
     {
         // Bidirectional ManyToMany relation
@@ -381,17 +391,6 @@ public class AcmUser implements Serializable
     public void setUid(String uid)
     {
         this.uid = uid;
-    }
-
-    @JsonIgnore
-    public String getSortableValue()
-    {
-        return sortableValue;
-    }
-
-    public void setSortableValue(String sortableValue)
-    {
-        this.sortableValue = sortableValue;
     }
 
     public String getCountry()

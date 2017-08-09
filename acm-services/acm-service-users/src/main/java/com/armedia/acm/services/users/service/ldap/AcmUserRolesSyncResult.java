@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 /**
  * Synchronizes AcmUser roles
  */
-public class AcmUserRoleSyncResult
+public class AcmUserRolesSyncResult
 {
     private final List<AcmUserRole> acmUserRoles;
 
@@ -30,8 +30,8 @@ public class AcmUserRoleSyncResult
         };
     }
 
-    public AcmUserRoleSyncResult(Map<String, Set<String>> userAddedGroups, Map<String, Set<String>> userRemovedGroups,
-                                 Map<String, List<String>> groupToRole, Map<String, Set<String>> userGroupsMap)
+    public AcmUserRolesSyncResult(Map<String, Set<String>> userAddedGroups, Map<String, Set<String>> userRemovedGroups,
+                                  Map<String, List<String>> groupToRole, Map<String, Set<String>> userGroupsMap)
     {
         this.acmUserRoles = new ArrayList<>();
 
@@ -81,8 +81,7 @@ public class AcmUserRoleSyncResult
                 .collect(Collectors.toSet());
     }
 
-    private Stream<? extends AcmUserRole> findInvalidUserRoles(Set<String> rolesToRemove,
-                                                               Set<String> rolesToRemain, String userId)
+    private Stream<? extends AcmUserRole> findInvalidUserRoles(Set<String> rolesToRemove, Set<String> rolesToRemain, String userId)
     {
         return rolesToRemove.stream()
                 .filter(role -> !rolesToRemain.contains(role))
