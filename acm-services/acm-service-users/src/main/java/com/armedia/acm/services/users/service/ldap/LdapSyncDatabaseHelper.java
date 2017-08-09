@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
+import com.armedia.acm.services.users.model.AcmUserRoleState;
 import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -63,6 +64,7 @@ public class LdapSyncDatabaseHelper
         AcmUserRole role = new AcmUserRole();
         role.setUserId(userId);
         role.setRoleName(roleName);
+        role.setUserRoleState(AcmUserRoleState.VALID.name());
         return getUserDao().saveAcmUserRole(role);
     }
 
@@ -133,22 +135,8 @@ public class LdapSyncDatabaseHelper
             {
                 log.debug("Saving user {} of {}", current, userCount);
             }
-            AcmUser acmUser = new AcmUser();
-            acmUser.setUserDirectoryName(directoryName);
-            acmUser.setUserId(user.getUserId());
-            acmUser.setFirstName(user.getFirstName());
-            acmUser.setLastName(user.getLastName());
-            acmUser.setUserState(user.getState());
-            acmUser.setMail(user.getMail());
-            acmUser.setDistinguishedName(user.getDistinguishedName());
-            acmUser.setFullName(user.getFullName());
-            acmUser.setsAMAccountName(user.getsAMAccountName());
-            acmUser.setUid(user.getUid());
-            acmUser.setUserPrincipalName(user.getUserPrincipalName());
-            acmUser.setCompany(user.getCompany());
-            acmUser.setCountry(user.getCountry());
-            acmUser.setCountryAbbreviation(user.getCountryAbbreviation());
 
+            AcmUser acmUser = user.toAcmUser();
             preserveUserMetadata(acmUser);
 
             AcmUser saved = getUserDao().save(acmUser);
