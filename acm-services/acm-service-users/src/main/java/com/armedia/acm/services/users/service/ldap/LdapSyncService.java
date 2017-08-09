@@ -7,13 +7,13 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.LdapUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -92,6 +92,7 @@ public class LdapSyncService
     }
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
+    @Transactional
     public void ldapSync()
     {
         if (!isSyncEnabled())
@@ -142,37 +143,6 @@ public class LdapSyncService
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig());
 
         writeLastLdapSync();
-    }
-
-    public List<LdapGroup> filterParentGroupsOnChangedGroups(List<LdapGroup> ldapGroups, List<AcmGroup> existingGroups)
-    {
-        Set<String> allGroups = mergeNewAndExistingGroups(ldapGroups, existingGroups);
-
-        ldapGroups.forEach(group ->
-        {
-            Set<String> parentGroups = group.getParentGroups().stream()
-                    .filter(allGroups::contains)
-                    .collect(Collectors.toSet());
-            group.setParentGroups(parentGroups);
-        });
-        return new ArrayList<>(ldapGroups);
-    }
-
-    public Set<String> mergeNewAndExistingGroups(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups)
-    {
-        // newly synced group names
-        Set<String> ldapGroupNames = ldapGroups.stream()
-                .map(LdapGroup::getName)
-                .collect(Collectors.toSet());
-
-        // existing group names
-        Set<String> existing = acmGroups.stream()
-                .map(AcmGroup::getName)
-                .collect(Collectors.toSet());
-        // merge
-        existing.addAll(ldapGroupNames);
-
-        return existing;
     }
 
     /**
@@ -310,22 +280,6 @@ public class LdapSyncService
             groupGroups.retainAll(ldapGroupNames);
             group.setParentGroups(groupGroups);
         }
-    }
-
-    public List<LdapUser> filterUsers(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups, List<AcmGroup> existingGroups)
-    {
-        Set<String> allGroups = mergeNewAndExistingGroups(ldapGroups, existingGroups);
-
-        Function<LdapUser, LdapUser> filterUserGroups = user ->
-        {
-            user.getLdapGroups().removeIf(it -> !allGroups.contains(it));
-            return user;
-        };
-
-        return ldapUsers.stream()
-                .map(filterUserGroups)
-                .filter(user -> !user.getLdapGroups().isEmpty())
-                .collect(Collectors.toList());
     }
 
     /**
