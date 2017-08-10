@@ -1,9 +1,9 @@
 {
   "costTracking": {
     "title": "Отслеживание затрат",
-    "progressNoCostsheet": "ru_[ No costsheet is selected ]",
-    "progressLoading": "ru_Loading costsheet ",
-    "progressError": "ru_Failed to load costsheet"
+    "progressNoCostsheet": "[ Нет Стоимость листы ]",
+    "progressLoading": "Загрузка Стоимость лист",
+    "progressError": "Не удалось загрузить Стоимость лист"
   },
   "costTracking.menus": {
     "leftnav.item": "Отслеживание затрат",
@@ -14,16 +14,16 @@
   },
   "costTracking.comp.info": {
     "title": "Информация",
-    "incidentDate": "ru_Incident Date",
-    "priority": "ru_Priority",
-    "assignedTo": "ru_Assigned To",
-    "subjectType": "ru_Subject Type",
-    "state": "ru_State"
+    "incidentDate": "Дата инцидента",
+    "priority": "Приоритет",
+    "assignedTo": "Назначено",
+    "subjectType": "Тип объекта",
+    "state": "Состояние"
   },
   "costTracking.comp.actions": {
     "title": "Действия",
-    "new.button": "ru_New Costsheet",
-    "edit.button": "ru_Edit Costsheet"
+    "new.button": "Новый cтоимость лист",
+    "edit.button": "Редактировать cтоимость лист"
   },
   "costTracking.comp.details": {
     "title": "Детали",
@@ -86,9 +86,9 @@
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
-      "costsheetIdAsc": "Сортировка Стоимость Asc",
-      "costsheetIdDesc": "Сортировка Стоимость Desc",
-      "byNameDesc": "Сортировать по имени",
+      "idAsc": "Сортировка Стоимость Asc",
+      "idDesc": "Сортировка Стоимость Desc",
+      "nameDesc": "Сортировать по имени",
       "noSort": "(Нет Сортировать)"
     }
   }

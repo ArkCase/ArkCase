@@ -26,6 +26,7 @@
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
+    "delete.button": "Delete Repository",
     "confirm.delete.documentRepository.msg": "This action will delete the entire repository. Are you sure you want to proceed?"
   },
   "document-repository.comp.details": {
@@ -179,12 +180,37 @@
     "name.placeholder": "Enter Name",
     "descriptionLabel": "Description",
     "description.placeholder": "Enter Description",
-    "searchUser": "Search User"
+    "searchUser": "Search User",
+    "personalRepository": "My Documents"
   },
   "document-repository.dialogUserPicker":{
-    "table.columns.name": "Name",
+   "table.columns.name": "Name",
     "table.columns.type": "Type",
     "table.columns.title": "Title",
     "table.columns.id": "Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "tags.label": "Tags",
+      "references.label": "References",
+      "notes.label": "Notes",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "iAmFollowing": "All I'm Following",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Asc",
+      "dateDesc": "Sort Date Desc",
+      "idAsc": "Sort Repository ID Asc",
+      "idDesc": "Sort Repository ID Desc",
+      "nameAsc": "Sort By Repository Name Asc",
+      "noSort": "(No Sort)"
+    }
   }
 }

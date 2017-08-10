@@ -68,28 +68,28 @@
     ],
     "sorters": [
       {
-        "desc": "ScreatedDateAsc",
+        "desc": "tasks.tree.sorters.createdDateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "createdDateDesc",
+        "desc": "tasks.tree.sorters.createdDateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort Task Name Asc",
+        "desc": "tasks.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "Sort Task Name Desc",
+        "desc": "tasks.tree.sorters.nameDesc",
         "name": "sort-by-name-desc",
         "value": "name DESC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "tasks.tree.sorters.noSort",
         "name": "",
         "value": ""
       }
@@ -373,22 +373,28 @@
             {
               "name": "fileName",
               "displayName": "tasks.comp.docsreview.table.columns.fileName",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "created",
               "displayName": "tasks.comp.docsreview.table.columns.created",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "creator",
               "displayName": "tasks.comp.docsreview.table.columns.creator",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "fullNameField": "creator_full_name_lcs",
+              "cellTemplate": "<div ng-bind-html='row.entity.creator' title='{{row.entity.creator}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.docsreview.table.columns.status",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
             }
           ]
         },
@@ -471,17 +477,20 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.participant' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
               "displayName": "tasks.comp.workflow.table.columns.role",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.role' title='{{row.entity.role}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.workflow.table.columns.status",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "startDateTime",
@@ -626,7 +635,8 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
@@ -844,7 +854,7 @@
           "name": "created",
           "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "creator",

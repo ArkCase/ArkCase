@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "Tâches",
-    "progressNoTask": "fr_[ No task data ]",
-    "progressLoading": "fr_Loading task ",
-    "progressError": "fr_Failed to load task"
+    "progressNoTask": "[ Aucune donnée de tâche ]",
+    "progressLoading": "Chargement de la tâche",
+    "progressError": "Échec de charger la tâche"
   },
   "tasks.menus": {
     "leftnav.item": "Tâches",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "Information",
-    "taskId": "fr_Task id:",
-    "percentage.label": "fr_% of Completion",
-    "assignee.label": "fr_Assignee",
-    "Priority.label": "fr_Priority",
-    "startDate.label": "fr_Start Date",
-    "dueDate.label": "fr_Due Date",
-    "state.label": "fr_State",
-    "overdue.tooltip": "fr_Task is Overdue",
-    "deadline.tooltip": "fr_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "Identification de la tâche:",
+    "percentage.label": "% de l'achèvement",
+    "assignee.label": "Cessionnaire",
+    "priority.label": "Priorité",
+    "startDate.label": "Date de début",
+    "dueDate.label": "Date d'échéance",
+    "state.label": "État",
+    "overdue.tooltip": "La tâche est en retard",
+    "deadline.tooltip": "La date limite est l'approche",
+    "owningGroup.label": "Appartenant au groupe"
   },
   "tasks.comp.parentinfo": {
     "title": "Information parentale",
-    "taskId": "fr_Task id:",
+    "taskId": "Identification de la tâche:",
     "case": {
-      "subjectType.label": "fr_Subject Type",
-      "incidentDate.label": "fr_Incident Date",
-      "priority.label": "fr_Priority",
-      "assignee.label": "fr_Assigned To",
-      "owningGroup.label": "fr_Owning Group"
+      "subjectType.label": "Type de sujet",
+      "incidentDate.label": "Date d'incident",
+      "priority.label": "Priorité",
+      "assignee.label": "Assigné à",
+      "owningGroup.label": "Appartenant au groupe"
     },
     "complaint": {
-      "subjectType.label": "fr_Subject Type",
-      "incidentDate.label": "fr_Incident Date",
-      "priority.label": "fr_Priority",
-      "assignee.label": "fr_Assigned To",
-      "owningGroup.label": "fr_Owning Group"
+      "subjectType.label": "Type de sujet",
+      "incidentDate.label": "Date d'incident",
+      "priority.label": "Priorité",
+      "assignee.label": "Assigné à",
+      "owningGroup.label": "Appartenant au groupe"
     },
     "costsheet": {
-      "approver.label": "fr_Approver"
+      "approver.label": "Approuvant"
     },
     "timesheet": {
-      "approver.label": "fr_Approver"
-    },
-    "_xxx_courtRoomName": "fr_Court Room Name:"
+      "approver.label": "Approuvant"
+    }
   },
   "tasks.comp.actions": {
     "title": "Actes",
-    "diagram.button": "fr_Process Diagram",
-    "eSignature.button": "fr_Sign",
-    "subscribe.button": "fr_Subscribe",
-    "unsubscribe.button": "fr_Unsubscribe",
-    "reject.button": "fr_Reject",
-    "delete.button": "fr_Delete",
-    "complete.button": "fr_Complete",
-    "approve.button": "fr_Approve Document",
-    "rework.button": "fr_Send for Rework",
-    "claim.button": "fr_Claim",
-    "unclaim.button": "fr_Unclaim",
-    "error.outcomeFieldMissing": "fr_Cannot complete task because of missing required value",
+    "diagram.button": "Diagramme de processus",
+    "eSignature.button": "Signe",
+    "subscribe.button": "S'abonner",
+    "unsubscribe.button": "Désabonner",
+    "reject.button": "Rejeter",
+    "delete.button": "Supprimer",
+    "complete.button": "Achevée",
+    "approve.button": "Approuver le document",
+    "rework.button": "Envoyer pour retravailler",
+    "claim.button": "Réclamation",
+    "unclaim.button": "Non-réclamation",
+    "error.outcomeFieldMissing": "Impossible de terminer la tâche en raison de la perte de la valeur requise",
     "modal": {
-      "errorHeaderText": "fr_Error",
-      "btnOk.text": "fr_OK",
-      "btnClose.text": "fr_Close"
+      "errorHeaderText": "Erreur",
+      "btnOk.text": "D'accord",
+      "btnClose.text": "Fermer"
     }
   },
   "tasks.comp.details": {
@@ -356,8 +355,8 @@
     "sorters": {
       "createdDateAsc": "Trier Date créée Asc",
       "createdDateDesc": "Trier Date de création Desc",
-      "byNameAsc": "Trier nom de la tâche Asc",
-      "byNameDesc": "Trier nom de la tâche desc",
+      "nameAsc": "Trier nom de la tâche Asc",
+      "nameDesc": "Trier nom de la tâche desc",
       "noSort": "(Non Trier)"
     }
   }

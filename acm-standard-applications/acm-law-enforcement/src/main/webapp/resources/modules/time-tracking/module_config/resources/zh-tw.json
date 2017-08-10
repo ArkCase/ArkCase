@@ -1,25 +1,25 @@
 {
   "timeTracking": {
     "title": "時間跟踪",
-    "progressNoTimesheet": "zh-tw_[ No timesheet is selected ]",
-    "progressLoading": "zh-tw_Loading timesheet ",
-    "progressError": "zh-tw_Failed to load timesheet"
+    "progressNoTimesheet": "[ 無時間數據 ]",
+    "progressLoading": "加載時間數據",
+    "progressError": "無法加載時間數據"
   },
   "timeTracking.menus": {
     "leftnav.item": "時間跟踪",
-    "topbar.item": "時間項目"
+    "topbar.item": "時間文表"
   },
   "timeTracking.comp.main": {
     "title": "概述"
   },
   "timeTracking.comp.info": {
     "title": "信息",
-    "lastModified.label": "zh-tw_Last Modified"
+    "lastModified.label": "上次更改時間"
   },
   "timeTracking.comp.actions": {
     "title": "行動",
-    "new.button": "zh-tw_New Timesheet",
-    "edit.button": "zh-tw_Edit Timesheet"
+    "new.button": "新時間項目",
+    "edit.button": "更改時間項目"
   },
   "timeTracking.comp.details": {
     "title": "詳情",
@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "timesheetIdAsc": "按時間表格號排序",
-      "timesheetIdDesc": "按時間表格號反排序",
-      "byNameAsc": "按名稱排序",
+      "idAsc": "按時間表格號排序",
+      "idDesc": "按時間表格號反排序",
+      "nameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }
   }

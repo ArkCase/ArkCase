@@ -1,25 +1,25 @@
 {
   "timeTracking": {
     "title": "トラック時間",
-    "progressNoTimesheet": "ja_[ No timesheet is selected ]",
-    "progressLoading": "ja_Loading timesheet ",
-    "progressError": "ja_Failed to load timesheet"
+    "progressNoTimesheet": "[ 時間シートが選択されていません ]",
+    "progressLoading": "時間シートの読み込み",
+    "progressError": "時間シートの読み込みに失敗しました"
   },
   "timeTracking.menus": {
     "leftnav.item": "トラック時間",
-    "topbar.item": "時間ログ"
+    "topbar.item": "時間シート"
   },
   "timeTracking.comp.main": {
     "title": "概観"
   },
   "timeTracking.comp.info": {
     "title": "情報",
-    "lastModified.label": "ja_Last Modified"
+    "lastModified.label": "前回の時間変更"
   },
   "timeTracking.comp.actions": {
     "title": "行动",
-    "new.button": "ja_New Timesheet",
-    "edit.button": "ja_Edit Timesheet"
+    "new.button": "新しい時間シート",
+    "edit.button": "時間シートの編集"
   },
   "timeTracking.comp.details": {
     "title": "詳細",
@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "アンチ日付順",
-      "timesheetIdAsc": "時間IDを並べ替える",
-      "timesheetIdDesc": "時間IDを昇順で並べ替え",
-      "byNameDesc": "名で並べ替え",
+      "idAsc": "時間識別番号を並べ替える",
+      "idDesc": "時間識別番号を昇順で並べ替え",
+      "nameDesc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

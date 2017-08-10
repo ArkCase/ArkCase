@@ -9,22 +9,28 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "概述"
+  },
   "document-repository.comp.info": {
-    "docRepoId": "zh-cn_Repository ID:",
-    "docRepoName": "zh-cn_Document Repository Name:",
-    "modified.label": "zh-cn_Modified Date",
-    "assignee.label": "zh-cn_Assigned To",
-    "owningGroup.label": "zh-cn_Owning Group",
-    "description.label": "zh-cn_Description"
+    "title": "信息",
+    "docRepoId": "文件存储号:",
+    "docRepoName": "文件存储名称:",
+    "modified.label": "修改日期",
+    "assignee.label": "指定人员",
+    "owningGroup.label": "所属群体",
+    "description.label": "说明"
   },
   "document-repository.comp.actions": {
-    "restrict": "zh-cn_Restrict?",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "zh-cn_This action will delete the entire repository. Are you sure you want to proceed?"
+    "title": "行动",
+    "restrict": "受限制?",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "delete.button": "删除",
+    "confirm.delete.documentRepository.msg": "此操作将删除整个文件存储，确定要继续吗?"
   },
   "document-repository.comp.details": {
-    "title": "zh-cn_Details",
+    "title": "详情",
     "informSaved": "zh-cn_Document Repository details saved",
     "table.columns": {
       "title": "zh-cn_Details",
@@ -33,13 +39,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "zh-cn_Documents",
+    "title": "文件",
     "sendEmail": "zh-cn_Send Email",
     "filterInputPlaceholder": "zh-cn_Filter",
     "searchInputPlaceholder": "zh-cn_Search"
   },
   "document-repository.comp.participants": {
-    "title": "zh-cn_Participants",
+    "title": "参与成员",
     "table.columns": {
       "type": "zh-cn_Type",
       "name": "zh-cn_Name"
@@ -61,7 +67,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "zh-cn_Notes",
+    "title": "注释",
     "table.columns": {
       "note": "zh-cn_Note",
       "created": "zh-cn_Created",
@@ -69,7 +75,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "zh-cn_References",
+    "title": "参考",
     "table.columns": {
       "targetName": "zh-cn_Number",
       "parentName": "zh-cn_Parent",
@@ -80,7 +86,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "zh-cn_History",
+    "title": "历史",
     "table.columns": {
       "eventType": "zh-cn_Event Name",
       "eventDate": "zh-cn_Date",
@@ -88,7 +94,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "zh-cn_Tags",
+    "title": "标签",
     "table.columns": {
       "tag": "zh-cn_Tag",
       "created": "zh-cn_Created",
@@ -181,5 +187,29 @@
     "table.columns.type": "zh-cn_Type",
     "table.columns.title": "zh-cn_Title",
     "table.columns.id": "zh-cn_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "documents.label": "文件",
+      "participants.label": "参与成员",
+      "tags.label": "标签",
+      "references.label": "参考",
+      "notes.label": "注释",
+      "history.label": "历史"
+    },
+    "filters": {
+      "iHaveCreated": "我所创建的",
+      "iAmFollowing": "我关注的",
+      "noFilter": "(无限制)"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按文件号排序",
+      "idDesc": "按文件号反排序",
+      "nameAsc": "按名称排序",
+      "noSort": "(不排序)"
+    }
   }
 }

@@ -1,25 +1,25 @@
 {
   "timeTracking": {
     "title": "Zeiterfassung",
-    "progressNoTimesheet": "de_[ No timesheet is selected ]",
-    "progressLoading": "de_Loading timesheet ",
-    "progressError": "de_Failed to load timesheet"
+    "progressNoTimesheet": "[ Keine Daten der Zeiterfassung ]",
+    "progressLoading": "Laden der Arbeitszeitblatt",
+    "progressError": "Fehler beim Laden der Arbeitszeitblatt"
   },
   "timeTracking.menus": {
     "leftnav.item": "Zeiterfassung",
-    "topbar.item": "Zeiterfassung"
+    "topbar.item": "Arbeitszeitblatt"
   },
   "timeTracking.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "timeTracking.comp.info": {
-    "title": "Informatie",
-    "lastModified.label": "de_Last Modified"
+    "title": "Informationen",
+    "lastModified.label": "Zuletzt geändertes"
   },
   "timeTracking.comp.actions": {
-    "title": "Acties",
-    "new.button": "de_New Timesheet",
-    "edit.button": "de_Edit Timesheet"
+    "title": "Aktionen",
+    "new.button": "Neues Arbeitsblatt",
+    "edit.button": "Arbeitsblatt bearbeiten"
   },
   "timeTracking.comp.details": {
     "title": "Details",
@@ -81,9 +81,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "timesheetIdAsc": "Sortieren Zeiterzeugung-ID Auf",
-      "timesheetIdDesc": "Sortieren Zeiterzeugung-ID Dec",
-      "byNameDesc": "Nach Name sortieren",
+      "idAsc": "Sortieren Zeiterzeugung-ID Auf",
+      "idDesc": "Sortieren Zeiterzeugung-ID Dec",
+      "nameDesc": "Nach Name sortieren",
       "noSort": "(Keine Sortierung)"
     }
   }

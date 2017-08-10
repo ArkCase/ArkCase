@@ -1,45 +1,45 @@
 {
   "cases": {
-    "title": "Дела",
-    "progressNoCase": "ru_[ No case file data ]",
-    "progressLoading": "ru_Loading case file ",
-    "progressError": "ru_Failed to load case file"
+    "title": "Случаи",
+    "progressNoCase": "[ Нет файлов ]",
+    "progressLoading": "Загрузка файла",
+    "progressError": "Не удалось загрузить файл"
   },
   "cases.menus": {
-    "leftnav.item": "Дело Файл",
-    "topbar.item": "Дело"
+    "leftnav.item": "Случа Файл ",
+    "topbar.item": "Случа "
   },
   "cases.error": {
-    "invalidData": "ru_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "Обзор"
   },
   "cases.comp.info": {
     "title": "Информация",
-    "caseId": "ru_Case id:",
-    "caseNumber": "ru_Case Number:",
-    "courtRoomName": "ru_Court Room Name:",
-    "type.label": "ru_Type",
-    "created.label": "ru_Created Date",
-    "priority.label": "ru_Priority",
-    "assignee.label": "ru_Assigned To",
-    "owningGroup.label": "ru_Owning Group",
-    "dueDate.label": "ru_Due Date"
+    "caseId": "Идентификация случая:",
+    "caseNumber": "Номер случий:",
+    "courtRoomName": "Название судебного зала:",
+    "type.label": "Тип",
+    "created.label": "Дата создания",
+    "priority.label": "Приоритет",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "dueDate.label": "Дата погашения"
   },
   "cases.comp.actions": {
     "title": "Действия",
-    "restrict": "ru_Restrict?",
-    "new.button": "ru_New",
-    "edit.button": "ru_Edit",
-    "status.button": "ru_Change Case Status",
-    "reinvestigate.button": "ru_Reinvestigate",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "merge.button": "ru_Merge",
-    "claim.button": "ru_Claim",
-    "unclaim.button": "ru_Unclaim",
-    "split.button": "ru_Split"
+    "restrict": "Ограничить?",
+    "new.button": "Новый",
+    "edit.button": "Изменить",
+    "status.button": "Изменить статус",
+    "reinvestigate.button": "Повторное расследование",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "merge.button": "Объединить",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование",
+    "split.button": "Трещина"
   },
   "cases.comp.details": {
     "title": "Детали",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
       "dateDesc": "Сортировка даты Desc",
-      "caseIdAsc": "Сортировка случая ID Asc",
-      "caseIdDesc": "Сортировка случая ID Desc",
-      "byNameAsc": "Сортировать по имени Asc",
+      "idAsc": "Сортировка случая ID Asc",
+      "idDesc": "Сортировка случая ID Desc",
+      "nameAsc": "Сортировать по имени Asc",
       "noSort": "(Нет Сортировать)"
     }
   }

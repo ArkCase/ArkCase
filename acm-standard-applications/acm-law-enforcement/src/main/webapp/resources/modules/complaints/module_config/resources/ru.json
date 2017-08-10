@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "Жалобы",
-    "progressNoComplaint": "ru_[ No complaint data ]",
-    "progressLoading": "ru_Loading complaint ",
-    "progressError": "ru_Failed to load complaint "
+    "progressNoComplaint": "[ Нет данных о жалобах ]",
+    "progressLoading": "Загрузка жалобы",
+    "progressError": "Не удалось загрузить жалобу"
   },
   "complaints.menus": {
     "leftnav.item": "Жалобы",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "Информация",
-    "complaintId": "ru_Complaint id:",
-    "complaintNumber": "ru_Complaint ID:",
-    "courtRoomName": "ru_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "Идентификатор жалобы:",
+    "complaintNumber": "Номер жалобы:",
+    "courtRoomName": "Название судебного зала:",
+    "type.label": "Тип",
+    "created.label": "Дата создания",
+    "priority.label": "Приоритет",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "dueDate.label": "Дата погашения"
   },
   "complaints.comp.actions": {
     "title": "Действия",
-    "restrict": "ru_Restrict?",
-    "new.button": "ru_New Complaint",
-    "close.button": "ru_Close Complaint",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "claim.button": "ru_Claim",
-    "unclaim.button": "ru_Unclaim"
+    "restrict": "Ограничить?",
+    "new.button": "Новая жалоба",
+    "close.button": "Закрыть жалобу",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование"
   },
   "complaints.comp.details": {
     "title": "Детали",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "Сортировка даты инцидента Desc",
       "createdDateAsc": "Сортировка Дата создания Asc",
       "createdDateDesc": "Сортировка Дата создания Desc",
-      "byNameAsc": "Сортировать по имени Asc",
+      "nameAsc": "Сортировать по имени Asc",
       "noSort": "(нет Сортировать)"
     }
   }
