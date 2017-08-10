@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "Tareas",
-    "progressNoTask": "es_[ No task data ]",
-    "progressLoading": "es_Loading task ",
-    "progressError": "es_Failed to load task"
+    "progressNoTask": "[ Sin datos de tarea ]",
+    "progressLoading": "Cargar tarea",
+    "progressError": "Error al cargar la tarea"
   },
   "tasks.menus": {
     "leftnav.item": "Tareas",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "Información",
-    "taskId": "es_Task id:",
-    "percentage.label": "es_% of Completion",
-    "assignee.label": "es_Assignee",
-    "Priority.label": "es_Priority",
-    "startDate.label": "es_Start Date",
-    "dueDate.label": "es_Due Date",
-    "state.label": "es_State",
-    "overdue.tooltip": "es_Task is Overdue",
-    "deadline.tooltip": "es_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "Identificación de la tarea:",
+    "percentage.label": "% de finalización",
+    "assignee.label": "Cesionario",
+    "priority.label": "Prioridad1",
+    "startDate.label": "Fecha de inicio",
+    "dueDate.label": "Fecha de vencimiento",
+    "state.label": "Estado",
+    "overdue.tooltip": "La tarea está atrasada",
+    "deadline.tooltip": "La fecha límite es el acercamiento",
+    "owningGroup.label": "Grupo propietario"
   },
   "tasks.comp.parentinfo": {
     "title": "Información para Padres",
-    "taskId": "es_Task id:",
+    "taskId": "Identificación de la tarea:",
     "case": {
-      "subjectType.label": "es_Subject Type",
-      "incidentDate.label": "es_Incident Date",
-      "priority.label": "es_Priority",
-      "assignee.label": "es_Assigned To",
-      "owningGroup.label": "es_Owning Group"
+      "subjectType.label": "Tipo de asunto",
+      "incidentDate.label": "Fecha del incidente",
+      "priority.label": "Prioridad",
+      "assignee.label": "Asignado a",
+      "owningGroup.label": "Grupo propietario"
     },
     "complaint": {
-      "subjectType.label": "es_Subject Type",
-      "incidentDate.label": "es_Incident Date",
-      "priority.label": "es_Priority",
-      "assignee.label": "es_Assigned To",
-      "owningGroup.label": "es_Owning Group"
+      "subjectType.label": "Tipo de asunto",
+      "incidentDate.label": "Fecha del incidente",
+      "priority.label": "Prioridad",
+      "assignee.label": "Asignado a",
+      "owningGroup.label": "Grupo propietario"
     },
     "costsheet": {
-      "approver.label": "es_Approver"
+      "approver.label": "Aprobador"
     },
     "timesheet": {
-      "approver.label": "es_Approver"
-    },
-    "_xxx_courtRoomName": "es_Court Room Name:"
+      "approver.label": "Aprobador"
+    }
   },
   "tasks.comp.actions": {
     "title": "Acciones",
-    "diagram.button": "es_Process Diagram",
-    "eSignature.button": "es_Sign",
-    "subscribe.button": "es_Subscribe",
-    "unsubscribe.button": "es_Unsubscribe",
-    "reject.button": "es_Reject",
-    "delete.button": "es_Delete",
-    "complete.button": "es_Complete",
-    "approve.button": "es_Approve Document",
-    "rework.button": "es_Send for Rework",
-    "claim.button": "es_Claim",
-    "unclaim.button": "es_Unclaim",
-    "error.outcomeFieldMissing": "es_Cannot complete task because of missing required value",
+    "diagram.button": "Diagrama de proceso",
+    "eSignature.button": "Firmar",
+    "Subscribe.button": "Suscribirse",
+    "Unsubscribe.button": "Anular suscripción",
+    "reject.button": "Rechazar",
+    "delete.button": "Borrar",
+    "complete.button": "Completo",
+    "approve.button": "Aprobar documento",
+    "rework.button": "Repetir Trabajo",
+    "claim.button": "Reclamación",
+    "unclaim.button": "No reclamar",
+    "error.outcomeFieldMissing": "No se puede completar la tarea debido a la falta valor requerido",
     "modal": {
-      "errorHeaderText": "es_Error",
-      "btnOk.text": "es_OK",
-      "btnClose.text": "es_Close"
+      "errorHeaderText": "Error",
+      "btnOk.text": "Aceptar",
+      "btnClose.text": "Cerrar"
     }
   },
   "tasks.comp.details": {
@@ -356,8 +355,8 @@
     "sorters": {
       "createdDateAsc": "Ordenar Fecha de creación Asc",
       "createdDateDesc": "Ordenar Fecha de creación Desc",
-      "byNameAsc": "Ordenar el nombre de la tarea Asc",
-      "byNameDesc": "Ordenar el nombre de la tarea Desc",
+      "nameAsc": "Ordenar el nombre de la tarea Asc",
+      "nameDesc": "Ordenar el nombre de la tarea Desc",
       "noSort": "(Sin clasificación)"
     }
   }

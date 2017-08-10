@@ -1,31 +1,36 @@
 {
   "people": {
     "title": "लोग",
-    "progressNoComplaint": "hi_[ No people data ]",
-    "progressLoading": "hi_Loading people ",
-    "progressError": "hi_Failed to load people "
+    "progressNoComplaint": "[ कोई भी डेटा नहीं ]",
+    "progressLoading": "लोगों को लोड करना",
+    "progressError": "लोगों को लोड करने में विफल"
   },
   "people.menus": {
     "leftnav.item": "लोग",
     "topbar.item": "व्यक्ति"
   },
+  "people.comp.main": {
+    "title": "अवलोकन"
+  },
   "people.comp.info": {
-    "phone.label": "hi_Phone",
-    "email.label": "hi_Email",
-    "status.label": "hi_Status",
-    "organization.label": "hi_Organization",
-    "identification.label": "hi_ID"
+    "title": "जानकारी",
+    "phone.label": "फोन",
+    "email.label": "ईमेल",
+    "status.label": "स्थिति",
+    "organization.label": "संगठन",
+    "identification.label": "आईडी"
   },
   "people.comp.actions": {
-    "export.button": "hi_Export",
-    "import.button": "hi_Import",
-    "delete.button": "hi_Delete",
-    "activate.button": "hi_Activate",
-    "deactivate.button": "hi_Deactivate",
-    "merge.button": "hi_Merge"
+    "title": "क्रियाएं",
+    "export.button": "निर्यात",
+    "import.button": "आयात",
+    "delete.button": "हटाएं",
+    "activate.button": "सक्रिय",
+    "deactivate.button": "निष्क्रिय करें",
+    "merge.button": "मर्ज"
   },
   "people.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Person details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "hi_Pictures",
+    "title": "चित्र",
     "actions": {
       "delete": "hi_Delete",
       "setPrimary": "hi_Set as Primary",
@@ -70,7 +75,7 @@
     }
   },
   "people.comp.addresses": {
-    "title": "hi_Locations",
+    "title": "स्थान",
     "table.columns": {
       "type": "hi_Type",
       "streetAddress": "hi_Address 1",
@@ -113,7 +118,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "hi_Phone Numbers",
+    "title": "फ़ोन नंबर",
     "table.columns": {
       "type": "hi_Type",
       "value": "hi_Phone Number",
@@ -145,7 +150,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "hi_Email Addresses",
+    "title": "ईमेल पते",
     "table.columns": {
       "type": "hi_Type",
       "value": "hi_Email Address",
@@ -177,7 +182,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "hi_URLs",
+    "title": "यूआरएल",
     "table.columns": {
       "value": "hi_URL",
       "type": "hi_Type",
@@ -209,7 +214,7 @@
     }
   },
   "people.comp.aliases": {
-    "title": "hi_Aliases",
+    "title": "उपनाम",
     "actions": {
       "delete": "hi_Delete",
       "setPrimary": "hi_Set as Primary",
@@ -243,7 +248,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "hi_IDs",
+    "title": "आईडी",
     "table.columns": {
       "type": "hi_Type",
       "id": "hi_ID",
@@ -283,7 +288,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "hi_Organizations",
+    "title": "संगठन",
     "table.columns": {
       "type": "hi_Type",
       "id": "hi_ID",
@@ -305,7 +310,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "hi_Cases",
+    "title": "मामले",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -316,7 +321,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "hi_Complaints",
+    "title": "शिकायतें",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -327,7 +332,7 @@
     }
   },
   "people.comp.related": {
-    "title": "hi_Related People",
+    "title": "संबंधित लोग",
     "table.columns": {
       "firstName": "hi_First Name",
       "lastName": "hi_Last Name",
@@ -411,6 +416,36 @@
       "identificationYearIssued": "hi_Identification Issued",
       "identificationYearIssued.placeholder": "hi_Select Identification Issued",
       "identificationYearIssued.close.button": "hi_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "pictures.label": "चित्र",
+      "addresses.label": "स्थान",
+      "phones.label": "फ़ोन नंबर",
+      "emails.label": "ईमेल पते",
+      "urls.label": "यूआरएल",
+      "aliases.label": "उपनाम",
+      "organizations.label": "संगठन",
+      "ids.label": "आईडी",
+      "complaints.label": "शिकायतें",
+      "cases.label": "मामले",
+      "related.label": "संबंधित लोग",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "noFilter": "(नो फिटर)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
+      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
+      "idAsc": "लोग आईडी आरोही क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध लोग आईडी अवरोही",
+      "nameAsc": "लोगों द्वारा क्रमबद्ध करें नाम A-Z",
+      "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }

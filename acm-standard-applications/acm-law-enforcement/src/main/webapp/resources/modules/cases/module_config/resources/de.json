@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "Falldateien",
-    "progressNoCase": "de_[ No case file data ]",
-    "progressLoading": "de_Loading case file ",
-    "progressError": "de_Failed to load case file"
+    "progressNoCase": "[ Keine Falldatei Daten ]",
+    "progressLoading": "Falldatei laden",
+    "progressError": "Fehler beim Laden der Falldatei"
   },
   "cases.menus": {
     "leftnav.item": "Falldateien",
     "topbar.item": "Fall"
   },
   "cases.error": {
-    "invalidData": "de_"
+    "invalidData": ""
   },
   "cases.comp.main": {
-    "title": "Overzicht"
+    "title": "Übersicht"
   },
   "cases.comp.info": {
-    "title": "Informatie",
-    "caseId": "de_Case id:",
-    "caseNumber": "de_Case Number:",
-    "courtRoomName": "de_Court Room Name:",
-    "type.label": "de_Type",
-    "created.label": "de_Created Date",
-    "priority.label": "de_Priority",
-    "assignee.label": "de_Assigned To",
-    "owningGroup.label": "de_Owning Group",
-    "dueDate.label": "de_Due Date"
+    "title": "Informationen",
+    "caseId": "Fallidentifikation:",
+    "caseNumber": "Fallnummer:",
+    "courtRoomName": "Gericht Zimmer Name:",
+    "type.label": "Typ",
+    "created.label": "Erstellungsdatum",
+    "priority.label": "Priorität",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "dueDate.label": "Fälligkeitsdatum"
   },
   "cases.comp.actions": {
-    "title": "Acties",
-    "restrict": "de_Restrict?",
-    "new.button": "de_New",
-    "edit.button": "de_Edit",
-    "status.button": "de_Change Case Status",
-    "reinvestigate.button": "de_Reinvestigate",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "merge.button": "de_Merge",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim",
-    "split.button": "de_Split"
+    "title": "Aktionen",
+    "restrict": "Einschränken?",
+    "new.button": "Neu",
+    "edit.button": "Bearbeiten",
+    "status.button": "Änderungsfallstatus",
+    "reinvestigate.button": "Erneut untersuchen",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "merge.button": "Zusammenführen",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung",
+    "split.button": "Teilt"
   },
   "cases.comp.details": {
     "title": "Details",
@@ -367,8 +367,8 @@
       "approvalRouting.label": "Toekomstige Goedkeuringen"
     },
     "filters": {
-      "opened": "Alle offenen Beschwerden",
-      "iHaveCreated": "Alle offenen Beschwerden",
+      "opened": "Alle offenen Fälle",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
       "iAmAssigned": "Alles, was ich zugewiesen bin",
       "iAmFollowing": "Alles, was ich folge",
       "closed": "Alle Geschlossenen",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
       "dateDesc": "Sortieren Datum Dec",
-      "caseIdAsc": "Sortieren Fall-ID Auf",
-      "caseIdDesc": "Sortieren Fall-ID Dec",
-      "byNameAsc": "Nach Name sortieren Auf",
+      "idAsc": "Sortieren Fall-ID Auf",
+      "idDesc": "Sortieren Fall-ID Dec",
+      "nameAsc": "Nach Name sortieren Auf",
       "noSort": "(Keine Sortierung)"
     }
   }

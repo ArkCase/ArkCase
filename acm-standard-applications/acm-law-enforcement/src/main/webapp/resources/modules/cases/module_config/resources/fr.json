@@ -10,36 +10,36 @@
     "topbar.item": "Cas"
   },
   "cases.error": {
-    "invalidData": "fr_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "Vue d'ensemble"
   },
   "cases.comp.info": {
     "title": "Information",
-    "caseId": "fr_Case id:",
-    "caseNumber": "fr_Case Number:",
-    "courtRoomName": "fr_Court Room Name:",
-    "type.label": "fr_Type",
-    "created.label": "fr_Created Date",
-    "priority.label": "fr_Priority",
-    "assignee.label": "fr_Assigned To",
-    "owningGroup.label": "fr_Owning Group",
-    "dueDate.label": "fr_Due Date"
+    "caseId": "ID de cas:",
+    "caseNumber": "Numéro de cas:",
+    "courtRoomName": "Nom de la salle de la cour:",
+    "type.label": "Type",
+    "created.label": "Date créée",
+    "priority.label": "Priorité",
+    "assignee.label": "Assigné à",
+    "owningGroup.label": "Appartenant au groupe",
+    "dueDate.label": "Date d'échéance"
   },
   "cases.comp.actions": {
     "title": "Actions",
-    "restrict": "fr_Restrict?",
-    "new.button": "fr_New",
-    "edit.button": "fr_Edit",
-    "status.button": "fr_Change Case Status",
+    "restrict": "Restreindre?",
+    "new.button": "Nouveau",
+    "edit.button": "Edit",
+    "status.button": "Changer l'état du cas",
     "reinvestigate.button": "fr_Reinvestigate",
-    "subscribe.button": "fr_Subscribe",
-    "unsubscribe.button": "fr_Unsubscribe",
-    "merge.button": "fr_Merge",
-    "claim.button": "fr_Claim",
-    "unclaim.button": "fr_Unclaim",
-    "split.button": "fr_Split"
+    "subscribe.button": "S'abonner",
+    "unsubscribe.button": "Désabonner",
+    "merge.button": "Fusionner",
+    "claim.button": "Réclamation",
+    "unclaim.button": "Non-réclamation",
+    "split.button": "Divisé"
   },
   "cases.comp.details": {
     "title": "Détails",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
-      "caseIdAsc": "Trier cas ID Asc",
-      "caseIdDesc": "Trier cas ID Déc",
-      "byNameAsc": "Trier par nom Asc",
+      "idAsc": "Trier cas ID Asc",
+      "idDesc": "Trier cas ID Déc",
+      "nameAsc": "Trier par nom Asc",
       "noSort": "(Non Trier)"
     }
   }

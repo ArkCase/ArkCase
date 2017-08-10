@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "案件",
-    "progressNoCase": "zh-cn_[ No case file data ]",
-    "progressLoading": "zh-cn_Loading case file ",
-    "progressError": "zh-cn_Failed to load case file"
+    "progressNoCase": "[ 无案件文件 ]",
+    "progressLoading": "装载文件",
+    "progressError": "加载案例文件失败"
   },
   "cases.menus": {
     "leftnav.item": "案件",
     "topbar.item": "案件"
   },
   "cases.error": {
-    "invalidData": "zh-cn_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "概述"
   },
   "cases.comp.info": {
     "title": "信息",
-    "caseId": "zh-cn_Case id:",
-    "caseNumber": "zh-cn_Case Number:",
-    "courtRoomName": "zh-cn_Court Room Name:",
-    "type.label": "zh-cn_Type",
-    "created.label": "zh-cn_Created Date",
-    "priority.label": "zh-cn_Priority",
-    "assignee.label": "zh-cn_Assigned To",
-    "owningGroup.label": "zh-cn_Owning Group",
-    "dueDate.label": "zh-cn_Due Date"
+    "caseId": "案件识别号:",
+    "caseNumber": "案件号码:",
+    "courtRoomName": "法庭名称:",
+    "type.label": "种类",
+    "created.label": "创建日期",
+    "priority.label": "优先级别",
+    "assignee.label": "指定人员",
+    "owningGroup.label": "所属群体",
+    "dueDate.label": "到期日期"
   },
   "cases.comp.actions": {
     "title": "行动",
-    "restrict": "zh-cn_Restrict?",
-    "new.button": "zh-cn_New",
-    "edit.button": "zh-cn_Edit",
-    "status.button": "zh-cn_Change Case Status",
-    "reinvestigate.button": "zh-cn_Reinvestigate",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "merge.button": "zh-cn_Merge",
-    "claim.button": "zh-cn_Claim",
-    "unclaim.button": "zh-cn_Unclaim",
-    "split.button": "zh-cn_Split"
+    "restrict": "受限制?",
+    "new.button": "创建",
+    "edit.button": "更改",
+    "status.button": "更改案例状态",
+    "reinvestigate.button": "重新调查",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "claim.button": "申明权益",
+    "unclaim.button": "取消申权",
+    "merge.button": "合并",
+    "split.button": "分开"
   },
   "cases.comp.details": {
     "title": "详情",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "caseIdAsc": "按案件号排序",
-      "createdDateDesc": "按案件号反排序",
-      "byNameAsc": "按名称排序",
+      "idAsc": "按案件号排序",
+      "idDesc": "按案件号反排序",
+      "nameAsc": "按名称排序",
       "noSort": "(不排序)"
     }
   }

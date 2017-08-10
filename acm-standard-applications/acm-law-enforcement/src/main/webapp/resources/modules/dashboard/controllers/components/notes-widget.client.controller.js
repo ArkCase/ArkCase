@@ -8,15 +8,14 @@ angular.module('dashboard.notes', ['adf.provider'])
                 description: 'dashboard.widgets.notes.description',
                 controller: 'Dashboard.NotesController',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+                templateUrl: 'modules/dashboard/views/components/notes-widget.client.view.html',
                 commonName: 'notes'
             });
     })
-    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService'
-        , 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.NotesController', ['$scope', '$translate', '$stateParams', '$q',
+        'UtilService', 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ObjectService', 'Object.NoteService', 'ConfigService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $translate, $stateParams, $q,
+                  Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService, ObjectService, ObjectNoteService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
             var promiseConfig;
             var promiseInfo;
@@ -37,11 +36,12 @@ angular.module('dashboard.notes', ['adf.provider'])
                 columnDefs: []
             };
 
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
             if (module && Util.goodPositive(currentObjectId, false)) {
                 promiseConfig = ConfigService.getModuleConfig(module.configName);
                 promiseInfo = module.getInfo(module.objectType, currentObjectId);
-                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
                 var promiseUsers = gridHelper.getUsers();
 
                 $q.all([promiseConfig, promiseInfo]).then(function (data) {
@@ -52,11 +52,10 @@ angular.module('dashboard.notes', ['adf.provider'])
                         });
                         gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                         $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                        gridHelper.setColumnDefs(widgetInfo);
 
                         var notes = info;
-                        $scope.gridOptions.data = notes;
-                        $scope.gridOptions.totalItems = notes ? notes.length : 0;
+                        gridHelper.setWidgetsGridData(notes);
                     },
                     function (err) {
 

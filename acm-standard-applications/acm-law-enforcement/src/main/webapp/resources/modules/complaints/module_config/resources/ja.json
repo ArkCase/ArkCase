@@ -1,38 +1,38 @@
 {
   "complaints": {
-    "title": "申し立て",
-    "progressNoComplaint": "ja_[ No complaint data ]",
-    "progressLoading": "ja_Loading complaint ",
-    "progressError": "ja_Failed to load complaint "
+    "title": "訴状",
+    "progressNoComplaint": "[ 訴状のデータはありません ]",
+    "progressLoading": "訴状の読み込み",
+    "progressError": "訴状の読み込みに失敗しました"
   },
   "complaints.menus": {
-    "leftnav.item": "申し立て",
-    "topbar.item": "申し立て"
+    "leftnav.item": "訴状",
+    "topbar.item": "訴状"
   },
   "complaints.comp.main": {
     "title": "概観"
   },
   "complaints.comp.info": {
     "title": "情報",
-    "complaintId": "ja_Complaint id:",
-    "complaintNumber": "ja_Complaint ID:",
-    "courtRoomName": "ja_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "訴状識別番号:",
+    "complaintNumber": "訴状番号:",
+    "courtRoomName": "裁判所名:",
+    "type.label": "種類",
+    "created.label": "作成日",
+    "priority.label": "優先",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "グループに所属",
+    "dueDate.label": "期限日"
   },
   "complaints.comp.actions": {
-    "title": "行动",
-    "restrict": "ja_Restrict?",
-    "new.button": "ja_New Complaint",
-    "close.button": "ja_Close Complaint",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "claim.button": "ja_Claim",
-    "unclaim.button": "ja_Unclaim"
+    "title": "操作",
+    "restrict": "制限する?",
+    "new.button": "新しい訴状",
+    "close.button": "訴状を閉じる",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "claim.button": "申し立て",
+    "unclaim.button": "申し立て中止"
   },
   "complaints.comp.details": {
     "title": "詳細",
@@ -190,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "仕事",
+    "title": "タスク",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -358,7 +358,7 @@
       "documents.label": "ファイル",
       "participants.label": "参加者",
       "notes.label": "ノート",
-      "tasks.label": "仕事",
+      "tasks.label": "タスク",
       "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
@@ -379,10 +379,10 @@
     },
     "sorters": {
       "incidentDateAsc": "イベントの日付で並べ替え",
-      "incidentDateDesc": "アンチは、イベントの日付順",
+      "incidentDateDesc": "イベントの日付で並べ替え降順",
       "createdDateAsc": "作成日で並べ替え",
-      "createdDateDesc": "アンチは作成日順にソート",
-      "byNameAsc": "名で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "nameAsc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }
