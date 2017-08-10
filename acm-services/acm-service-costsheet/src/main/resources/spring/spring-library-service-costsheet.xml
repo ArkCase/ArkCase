@@ -44,7 +44,7 @@
 	</bean>
 	
 	<bean id="costsheetHistoryEventListener" class="com.armedia.acm.services.costsheet.service.CostsheetHistoryEventListener">		
-		<property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="acmDataService" ref="acmDataService"/>
 		<property name="costsheetAssociatedEventPublisher" ref="costsheetAssociatedEventPublisher" />
 	</bean>
     
