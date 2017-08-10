@@ -505,7 +505,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         {
             for (ObjectAssociation child : childObjects)
             {
-                if (ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+                if (ObjectAssociationConstants.REFFERENCE_TYPE.equals(child.getAssociationType()))
                 {
                     retval.add(child);
                 }

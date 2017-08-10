@@ -60,7 +60,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         };
 
         function refreshGridData(objectId, objectType) {
-            ObjectAssociationService.getObjectAssociations(objectId, objectType, 'PERSON').then(function (response) {
+            ObjectAssociationService.getObjectAssociations(objectId, objectType, ObjectService.ObjectTypes.PERSON).then(function (response) {
                 $scope.gridOptions.data = response.response.docs;
             });
         }
