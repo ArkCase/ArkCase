@@ -34,8 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -328,41 +331,41 @@ public class PersonServiceImpl implements PersonService
      */
     private void validateOrganizationAssociations(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
-        for (PersonOrganizationAssociation association : person.getOrganizationAssociations())
+        List<PersonOrganizationAssociation> missingAssocTypes = person.getOrganizationAssociations().stream().filter(
+                assoc -> assoc.getPersonToOrganizationAssociationType() == null || assoc.getOrganizationToPersonAssociationType() == null)
+                .collect(Collectors.toList());
+
+        if (missingAssocTypes.size() > 0)
         {
-            for (PersonOrganizationAssociation otherAssociation : person.getOrganizationAssociations())
-            {
-                if (!association.equals(otherAssociation))
-                {
-                    if (association.getOrganization().getId().equals(otherAssociation.getOrganization().getId()))
-                    {
-                        String errorMessage = null;
-                        if ((association.getOrganizationToPersonAssociationType() == null)
-                                || (association.getPersonToOrganizationAssociationType() == null))
-                        {
-                            errorMessage = "Organization to person association must have a type";
-                        }
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Missing person to organization relation type!");
+            missingAssocTypes.forEach(assoc -> {
+                errorMessage.append(" [OrganizationId: " + assoc.getPerson().getId() + "]");
+            });
+            throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
+        }
 
-                        if ((errorMessage == null) && (association.getOrganizationToPersonAssociationType()
-                                .equals(otherAssociation.getOrganizationToPersonAssociationType())))
-                        {
-                            errorMessage = "Duplicate organization to person relation type";
-                        }
+        Map<Long, List<String>> mapped = person.getOrganizationAssociations().stream()
+                .collect(Collectors.toMap(d -> d.getOrganization().getId(), d -> {
+                    List<String> value = new ArrayList<>();
+                    value.add(d.getOrganizationToPersonAssociationType());
+                    return value;
+                }, (oldValue, newValue) -> {
+                    oldValue.addAll(newValue);
+                    return oldValue;
+                }));
 
-                        if (errorMessage != null)
-                        {
-                            if (person.getId() == null)
-                            {
-                                throw new AcmCreateObjectFailedException("Person", errorMessage, null);
-                            }
-                            else
-                            {
-                                throw new AcmUpdateObjectFailedException("Person", person.getId(), errorMessage, null);
-                            }
-                        }
-                    }
-                }
-            }
+        List<Map.Entry<Long, List<String>>> withDupes = mapped.entrySet().stream()
+                .filter(ds -> ds.getValue().size() != ((new HashSet<>(ds.getValue())).size())).collect(Collectors.toList());
+
+        if (withDupes.size() > 0)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Duplicate organizations to person relations!");
+            withDupes.forEach(duplicate -> {
+                errorMessage.append(" [OrganizationId: " + duplicate.getKey() + " Relation: " + duplicate.getValue() + "]");
+            });
+            throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
         }
     }
 
