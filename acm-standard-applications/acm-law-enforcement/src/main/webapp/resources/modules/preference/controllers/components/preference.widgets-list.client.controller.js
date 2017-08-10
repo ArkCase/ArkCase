@@ -117,10 +117,12 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         function createWidgetStructure(widgetName) {
             var widgetToInsert = {};
             var widgetInfo = _.find($scope.preferenceDashboardWidgetsCopy, {commonName: widgetName});
-            widgetToInsert.type = widgetInfo.commonName;
-            widgetToInsert.config = {};
-            widgetToInsert.title = widgetInfo.title;
-            widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+            if(widgetInfo) {
+                widgetToInsert.type = widgetInfo.commonName;
+                widgetToInsert.config = {};
+                widgetToInsert.title = widgetInfo.title;
+                widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+            }
             return widgetToInsert;
         }
 

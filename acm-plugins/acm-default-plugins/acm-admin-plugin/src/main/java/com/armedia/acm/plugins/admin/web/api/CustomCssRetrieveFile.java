@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
+import com.armedia.acm.plugins.admin.service.CustomCssService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -14,28 +15,31 @@ import java.io.IOException;
  * Created by sergey.kolomiets on 6/19/15.
  */
 @Controller
-@RequestMapping( {"/branding"} )
-public class CustomCssRetrieveFile {
+@RequestMapping({"/branding"})
+public class CustomCssRetrieveFile
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private CustomCssService customCssService;
 
     @RequestMapping(value = "/customcss", method = RequestMethod.GET, produces = "text/css")
     @ResponseBody
-    public String retrieveFile() throws IOException, AcmCustomCssException {
+    public String retrieveFile() throws IOException, AcmCustomCssException
+    {
 
-        try {
+        try
+        {
             String customCSSFileContent = customCssService.getFile();
             return customCSSFileContent;
-        } catch (Exception e) {
-            if (log.isErrorEnabled()){
-                log.error("Can't get custom CSS file", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't get custom CSS file", e);
             throw new AcmCustomCssException("Can't get custom CSS file", e);
         }
     }
 
 
-    public void setCustomCssService(CustomCssService customCssService) {
+    public void setCustomCssService(CustomCssService customCssService)
+    {
         this.customCssService = customCssService;
     }
 }

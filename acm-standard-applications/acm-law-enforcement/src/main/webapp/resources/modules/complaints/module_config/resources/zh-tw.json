@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "投訴",
-    "progressNoComplaint": "zh-tw_[ No complaint data ]",
-    "progressLoading": "zh-tw_Loading complaint ",
-    "progressError": "zh-tw_Failed to load complaint "
+    "progressNoComplaint": "[ 無投訴數據 ]",
+    "progressLoading": "加載投訴數據",
+    "progressError": "無法加載投訴數據"
   },
   "complaints.menus": {
     "leftnav.item": "投訴",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "信息",
-    "complaintId": "zh-tw_Complaint id:",
-    "complaintNumber": "zh-tw_Complaint ID:",
-    "courtRoomName": "zh-tw_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "投訴號碼:",
+    "complaintNumber": "投訴編號:",
+    "courtRoomName": "法庭名稱:",
+    "type.label": "種類",
+    "created.label": "創建日期",
+    "priority.label": "優先級別",
+    "assignee.label": "指定人員",
+    "owningGroup.label": "所屬群體",
+    "dueDate.label": "到期日期"
   },
   "complaints.comp.actions": {
     "title": "行動",
-    "restrict": "zh-tw_Restrict?",
-    "new.button": "zh-tw_New Complaint",
-    "close.button": "zh-tw_Close Complaint",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "claim.button": "zh-tw_Claim",
-    "unclaim.button": "zh-tw_Unclaim"
+    "restrict": "受限制?",
+    "new.button": "新投訴",
+    "close.button": "關閉投訴",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權"
   },
   "complaints.comp.details": {
     "title": "詳情",
@@ -375,14 +375,14 @@
       "closedNoFurtherAction": "關閉並無進一步操作的",
       "closedReferExternal": "外部參考被關閉的",
       "closedOpenInvestigation": "調查被關閉的",
-      "noFilter": "(無限制的)"
+      "noFilter": "(無限制)"
     },
     "sorters": {
       "incidentDateAsc": "按事件日期排序",
       "incidentDateDesc": "按事件日期反排序",
       "createdDateAsc": "按創建日期排序",
       "createdDateDesc": "按創建日期反排序",
-      "byNameAsc": "按名稱排序",
+      "nameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }
   }

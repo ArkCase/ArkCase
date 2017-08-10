@@ -1,29 +1,32 @@
 {
   "costTracking": {
     "title": "成本跟踪",
-    "progressNoCostsheet": "zh-cn_[ No costsheet is selected ]",
-    "progressLoading": "zh-cn_Loading costsheet ",
-    "progressError": "zh-cn_Failed to load costsheet"
+    "progressNoCostsheet": "[ 无成本数据 ]",
+    "progressLoading": "加载成本数据",
+    "progressError": "无法加载成本数据"
   },
   "costTracking.menus": {
     "leftnav.item": "成本跟踪",
     "topbar.item": "成本项目"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "概述"
   },
   "costTracking.comp.info": {
-    "incidentDate": "zh-cn_Incident Date",
-    "priority": "zh-cn_Priority",
-    "assignedTo": "zh-cn_Assigned To",
-    "subjectType": "zh-cn_Subject Type",
-    "state": "zh-cn_State"
+    "title": "信息",
+    "incidentDate": "事件日期",
+    "priority": "优先级别",
+    "assignedTo": "指定人员",
+    "subjectType": "对象类型",
+    "state": "状态"
   },
   "costTracking.comp.actions": {
-    "new.button": "zh-cn_New Costsheet",
-    "edit.button": "zh-cn_Edit Costsheet"
+    "title": "行动",
+    "new.button": "新成本项目",
+    "edit.button": "更改成本项目"
   },
   "costTracking.comp.details": {
-    "title": "zh-cn_Details",
+    "title": "详情",
     "informSaved": "zh-cn_Costsheet details saved",
     "table.columns": {
       "title": "zh-cn_Details",
@@ -31,15 +34,15 @@
       "modifier": "zh-cn_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "zh-cn_Person",
+  "costTracking.comp.person": {
+    "title": "成员",
     "table.columns": {
       "fullName": "zh-cn_Full Name",
       "userId": "zh-cn_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "zh-cn_Cost Summary",
+    "title": "成本总结",
     "table.columns": {
       "parentId": "zh-cn_ID",
       "parentNumber": "zh-cn_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "zh-cn_Tags",
+    "title": "标签",
     "table.columns": {
       "tag": "zh-cn_Tag",
       "created": "zh-cn_Created",
@@ -71,6 +74,22 @@
         "success": "zh-cn_Tag deleted successfully",
         "error": "zh-cn_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "person.label": "成员",
+      "summary.label": "费用",
+      "tags.label": "标签"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按费用表格号排序",
+      "idDesc": "按费用表格号反排序",
+      "nameDesc": "按名称排序",
+      "noSort": "(不排序)"
     }
   }
 }

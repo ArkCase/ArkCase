@@ -137,7 +137,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             if (associationData.inverseType) {
                 if (!association.inverseAssociation) {
                     association.inverseAssociation = {};
-                }
+            }
                 if (association.inverseAssociation.inverseAssociation != association) {
                     association.inverseAssociation.inverseAssociation = association;
                 }
@@ -223,6 +223,13 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
                 // }, 2500);
             });
+        };
+
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+            var targetType = 'PERSON';
+            var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
+            gridHelper.showObject(targetType, targetId);
         };
     }
 ]);

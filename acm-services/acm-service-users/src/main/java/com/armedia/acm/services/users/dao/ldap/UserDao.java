@@ -246,12 +246,16 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         {
             AcmUser user = findByUserIdAnyCase(principal);
             LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
-            return userPasswordExpirationDate.isBefore(LocalDate.now());
+            if (userPasswordExpirationDate != null)
+            {
+                return userPasswordExpirationDate.isBefore(LocalDate.now());
+            }
+            log.info("Expiration date not set for user : {}", user.getUserId());
         } catch (NoResultException | NonUniqueResultException e)
         {
             log.debug("User: {} not found!", principal);
-            return false;
         }
+        return false;
     }
 
     public AcmUser findByPasswordResetToken(String token)

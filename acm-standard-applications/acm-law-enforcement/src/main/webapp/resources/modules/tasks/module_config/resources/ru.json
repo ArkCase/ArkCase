@@ -1,71 +1,76 @@
 {
   "tasks": {
     "title": "Задачи",
-    "progressNoTask": "ru_[ No task data ]",
-    "progressLoading": "ru_Loading task ",
-    "progressError": "ru_Failed to load task"
+    "progressNoTask": "[ Нет данных задачи ]",
+    "progressLoading": "Загрузка задачи",
+    "progressError": "Не удалось загрузить задачу"
   },
   "tasks.menus": {
     "leftnav.item": "Задачи",
     "topbar.item": "Задача"
   },
+  "tasks.comp.main": {
+    "title": "Обзор"
+  },
   "tasks.comp.info": {
-    "taskId": "ru_Task id:",
-    "percentage.label": "ru_% of Completion",
-    "assignee.label": "ru_Assignee",
-    "Priority.label": "ru_Priority",
-    "startDate.label": "ru_Start Date",
-    "dueDate.label": "ru_Due Date",
-    "state.label": "ru_State",
-    "overdue.tooltip": "ru_Task is Overdue",
-    "deadline.tooltip": "ru_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "title": "Информация",
+    "taskId": "Идентификатор задачи:",
+    "percentage.label": "% от завершения",
+    "assignee.label": "Правообладатель",
+    "priority.label": "Приоритет",
+    "startDate.label": "rДата начала",
+    "dueDate.label": "Дата погашения",
+    "state.label": "Состояние",
+    "overdue.tooltip": "Задача просрочена",
+    "deadline.tooltip": "Крайний срок приближается",
+    "owningGroup.label": "Собственная группа"
   },
   "tasks.comp.parentinfo": {
-    "taskId": "ru_Task id:",
+    "title": "Родительская информация",
+    "taskId": "Идентификатор задачи:",
     "case": {
-      "subjectType.label": "ru_Subject Type",
-      "incidentDate.label": "ru_Incident Date",
-      "priority.label": "ru_Priority",
-      "assignee.label": "ru_Assigned To",
-      "owningGroup.label": "ru_Owning Group"
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
     },
     "complaint": {
-      "subjectType.label": "ru_Subject Type",
-      "incidentDate.label": "ru_Incident Date",
-      "priority.label": "ru_Priority",
-      "assignee.label": "ru_Assigned To",
-      "owningGroup.label": "ru_Owning Group"
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
     },
     "costsheet": {
-      "approver.label": "ru_Approver"
+      "approver.label": "Приверженец"
     },
     "timesheet": {
-      "approver.label": "ru_Approver"
-    },
-    "_xxx_courtRoomName": "ru_Court Room Name:"
+      "approver.label": "Приверженец"
+    }
   },
   "tasks.comp.actions": {
-    "diagram.button": "ru_Process Diagram",
-    "eSignature.button": "ru_Sign",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "reject.button": "ru_Reject",
-    "delete.button": "ru_Delete",
-    "complete.button": "ru_Complete",
-    "approve.button": "ru_Approve Document",
-    "rework.button": "ru_Send for Rework",
-    "claim.button": "ru_Claim",
-    "unclaim.button": "ru_Unclaim",
-    "error.outcomeFieldMissing": "ru_Cannot complete task because of missing required value",
+    "title": "Действия",
+    "diagram.button": "Технологическая схема",
+    "eSignature.button": "Подписать",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "reject.button": "Отклонить",
+    "delete.button": "Удалить",
+    "complete.button": "Полный",
+    "approve.button": "Утвердить документ",
+    "rework.button": "Отправить для исправления",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование",
+    "error.outcomeFieldMissing": "Не удается выполнить задачу из-за отсутствия требуемого значения",
     "modal": {
-      "errorHeaderText": "ru_Error",
-      "btnOk.text": "ru_OK",
-      "btnClose.text": "ru_Close"
+      "errorHeaderText": "Ошибка",
+      "btnOk.text": "Хорошо",
+      "btnClose.text": "Закрыть"
     }
   },
   "tasks.comp.details": {
-    "title": "ru_Task Details",
+    "title": "Детали",
     "informSaved": "ru_Task details saved",
     "table.columns": {
       "details": "ru_Details",
@@ -74,7 +79,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "ru_Rework Details",
+    "title": "Детали исправления",
     "informSaved": "ru_Rework details saved",
     "table.columns": {
       "title": "ru_Rework Details",
@@ -83,20 +88,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "ru_Parent Documents",
+    "title": "Родительские документы",
     "noParentDataMessage": "ru_No parent documents for standalone task",
     "sendEmail": "ru_Send Email",
     "filterInputPlaceholder": "ru_Filter",
     "searchInputPlaceholder": "ru_Search"
   },
   "tasks.comp.attachments": {
-    "title": "ru_Attachments",
+    "title": "Вложения",
     "sendEmail": "ru_Send Email",
     "filterInputPlaceholder": "ru_Filter",
     "searchInputPlaceholder": "ru_Search"
   },
   "tasks.comp.notes": {
-    "title": "ru_Notes",
+    "title": "Заметки",
     "table.columns": {
       "note": "ru_Note",
       "created": "ru_Created",
@@ -104,7 +109,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "ru_References",
+    "title": "Ссылки ",
     "table.columns": {
       "targetName": "ru_Number",
       "targetTitle": "ru_Title",
@@ -114,7 +119,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "ru_Reject Comments",
+    "title": "Отклонить комментарии",
     "table.columns": {
       "note": "ru_Comment",
       "created": "ru_Created",
@@ -122,7 +127,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "ru_Workflow",
+    "title": "рабочего процесса",
     "table.columns": {
       "participant": "ru_Participant",
       "role": "ru_Role",
@@ -136,14 +141,14 @@
     "error.loading": "ru_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "ru_eSignatures",
+    "title": "Электронные подписи",
     "table.columns": {
       "signedDate": "ru_Date",
       "signedBy": "ru_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "ru_Documents Under Review",
+    "title": "находящиеся на рассмотрении",
     "table.columns": {
       "fileId": "ru_ID",
       "fileName": "ru_Title",
@@ -153,7 +158,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "ru_History",
+    "title": "История",
     "table.columns": {
       "eventType": "ru_Event Name",
       "eventDate": "ru_Date",
@@ -161,7 +166,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -320,6 +325,39 @@
       "approverId": "ru_Approver",
       "approverFullName": "ru_Full Name",
       "approverDecision": "ru_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "reworkDetails.label": "Детали исправления",
+      "docReview.label": "находящиеся на рассмотрении",
+      "parentDoc.label": "Родительские документы",
+      "attachments.label": "Вложения",
+      "references.label": "Ссылки",
+      "notes.label": "Заметки",
+      "workflow.label": "Рабочего процесса",
+      "history.label": "История",
+      "eSignatures.label": "Электронные подписи",
+      "tags.label": "Теги",
+      "reject.label": "Отклонить комментарии"
+    },
+    "filters": {
+      "myTasks": "Мои задачи",
+      "opened": "Все открытые задачи",
+      "completed": "Все завершенные задачи",
+      "dueToday": "Все задачи, которые нужно сегодня",
+      "myDueToday": "Все Мои задачи, необходимые сегодня",
+      "overdue": "Все задачи просрочены",
+      "myOverdue": "Все Мои задачи, просроченные",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "createdDateAsc": "Сортировка Дата создания Asc",
+      "createdDateDesc": "Сортировка даты создания Desc",
+      "nameAsc": "Сортировать имя задачи Asc",
+      "nameDesc": "Сортировать имя задачи Desc",
+      "noSort": "(Нет сортировки)"
     }
   }
 }

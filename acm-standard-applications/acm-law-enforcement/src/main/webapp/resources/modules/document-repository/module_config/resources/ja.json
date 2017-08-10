@@ -9,22 +9,28 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "概観"
+  },
   "document-repository.comp.info": {
-    "docRepoId": "ja_Repository ID:",
-    "docRepoName": "ja_Document Repository Name:",
-    "modified.label": "ja_Modified Date",
-    "assignee.label": "ja_Assigned To",
-    "owningGroup.label": "ja_Owning Group",
+    "title": "情報",
+    "docRepoId": "文書保存番号:",
+    "docRepoName": "文書保存名:",
+    "modified.label": "変更日",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "グループに所属",
     "description.label": "ja_Description"
   },
   "document-repository.comp.actions": {
-    "restrict": "ja_Restrict?",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "ja_This action will delete the entire repository. Are you sure you want to proceed?"
+    "title": "操作",
+    "restrict": "制限する?",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "delete.button": "文書を削除",
+    "confirm.delete.documentRepository.msg": "このアクションはリポジトリ全体を削除します。続行してもよろしいですか?"
   },
   "document-repository.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Document Repository details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -33,13 +39,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ja_Documents",
+    "title": "ファイル",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
   },
   "document-repository.comp.participants": {
-    "title": "ja_Participants",
+    "title": "参加者",
     "table.columns": {
       "type": "ja_Type",
       "name": "ja_Name"
@@ -61,7 +67,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "ja_Notes",
+    "title": "ノート",
     "table.columns": {
       "note": "ja_Note",
       "created": "ja_Created",
@@ -69,7 +75,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "ja_References",
+    "title": "参照",
     "table.columns": {
       "targetName": "ja_Number",
       "parentName": "ja_Parent",
@@ -80,7 +86,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "ja_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -88,7 +94,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -181,5 +187,29 @@
     "table.columns.type": "ja_Type",
     "table.columns.title": "ja_Title",
     "table.columns.id": "ja_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "documents.label": "ファイル",
+      "participants.label": "参加者",
+      "tags.label": "タグ",
+      "references.label": "参照",
+      "notes.label": "ノート",
+      "history.label": "歴史"
+    },
+    "filters": {
+      "iHaveCreated": "私が作成しました",
+      "iAmFollowing": "私は心配です",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "日付で並べ替え降順",
+      "idAsc": "ファイル番号で並べ替え",
+      "idDesc": "ファイル番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
+      "noSort": "(注文しません)"
+    }
   }
 }

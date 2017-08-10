@@ -150,39 +150,41 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         return objectAssociationDao.find(id);
     }
 
-    private String combineResults(String targetResult, String associationsResult) throws IOException
+    private String combineResults(String targetResult, String associationsResult) throws IOException, AcmObjectNotFoundException
     {
-        ObjectMapper om = new ObjectMapper();
-        JsonNode targetNode = om.readTree(targetResult);
-        JsonNode associationsNode = om.readTree(associationsResult);
+    ObjectMapper om = new ObjectMapper();
+    JsonNode targetNode = om.readTree(targetResult);
+    JsonNode associationsNode = om.readTree(associationsResult);
 
-        Map<String, JsonNode> targetObjects = new HashMap<>();
-        JsonNode associationsDocs = associationsNode.get("response").get("docs");
-        JsonNode targetDocs = targetNode.get("response").get("docs");
+    Map<String, JsonNode> targetObjects = new HashMap<>();
+    JsonNode associationsDocs = associationsNode.get("response").get("docs");
+    JsonNode targetDocs = targetNode.get("response").get("docs");
 
-        for (JsonNode targetObject : targetDocs)
-        {
-            targetObjects.put(targetObject.get("id").asText(), targetObject);
-        }
-
-        for (int i = 0; i < associationsDocs.size(); i++)
-        {
-            JsonNode associationDoc = associationsDocs.get(i);
-            JsonNode targetSolrId = targetObjects.get(associationDoc.get("target_ref_s").asText());
-            if (targetSolrId != null)
-            {
-                //if doesn't have errors, add target object as part of the association
-                ((ObjectNode) associationDoc).set("target_object", targetSolrId);
-            } else
-            {
-                log.error("Responses doesn't match: associations response = {}, targets response {}", associationsResult, targetResult);
-                //TODO handle in another way, instead of creating new empty object
-                ((ObjectNode) associationDoc).set("target_object", om.createObjectNode());
-            }
-        }
-
-        return om.writeValueAsString(associationsNode);
+    for (JsonNode targetObject : targetDocs)
+    {
+        targetObjects.put(targetObject.get("id").asText(), targetObject);
     }
+
+    for (int i = 0; i < associationsDocs.size(); i++)
+    {
+        JsonNode associationDoc = associationsDocs.get(i);
+        String targetIdString = associationDoc.get("target_id_s").asText() + "-" + associationDoc.get("target_type_s").asText();
+        JsonNode targetSolrId = targetObjects.get(targetIdString);
+        if (targetSolrId != null)
+        {
+            //if doesn't have errors, add target object as part of the association
+            ((ObjectNode) associationDoc).set("target_object",
+                    targetSolrId);
+        } else
+        {
+            log.error("Responses doesn't match: associations response = {}, targets response {}", associationsResult, targetResult);
+            //TODO handle in another way, instead of creating new empty object
+            ((ObjectNode) associationDoc).set("target_object", om.createObjectNode());
+        }
+    }
+
+    return om.writeValueAsString(associationsNode);
+}
 
     private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title, String status)
     {

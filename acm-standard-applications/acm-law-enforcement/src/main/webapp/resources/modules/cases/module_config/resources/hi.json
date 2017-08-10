@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "केस",
-    "progressNoCase": "hi_[ No case file data ]",
-    "progressLoading": "hi_Loading case file ",
-    "progressError": "hi_Failed to load case file"
+    "progressNoCase": "[ कोई फ़ाइल फ़ाइल डेटा नहीं ]",
+    "progressLoading": "मामले लोड करने की फ़ाइल",
+    "progressError": "केस फ़ाइल लोड करने में विफल"
   },
   "cases.menus": {
     "leftnav.item": "मामला फ़ाइलें",
     "topbar.item": "कार्य"
   },
   "cases.error": {
-    "invalidData": "hi_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "अवलोकन"
   },
   "cases.comp.info": {
     "title": "जानकारी",
-    "caseId": "hi_Case id:",
-    "caseNumber": "hi_Case Number:",
-    "courtRoomName": "hi_Court Room Name:",
-    "type.label": "hi_Type",
-    "created.label": "hi_Created Date",
-    "priority.label": "hi_Priority",
-    "assignee.label": "hi_Assigned To",
-    "owningGroup.label": "hi_Owning Group",
-    "dueDate.label": "hi_Due Date"
+    "caseId": "केस आईडी:",
+    "caseNumber": "केस नंबर:",
+    "courtRoomName": "कोर्ट रूम का नाम::",
+    "type.label": "प्रकार",
+    "created.label": "बनाया दिनांक",
+    "priority.label": "प्राथमिकता",
+    "assignee.label": "असाइन करने के लिए",
+    "owningGroup.label": "स्वामी समूह",
+    "dueDate.label": "नियत दिनांक"
   },
   "cases.comp.actions": {
     "title": "क्रियाएं",
-    "restrict": "hi_Restrict?",
-    "new.button": "hi_New",
-    "edit.button": "hi_Edit",
-    "status.button": "hi_Change Case Status",
-    "reinvestigate.button": "hi_Reinvestigate",
-    "subscribe.button": "hi_Subscribe",
-    "unsubscribe.button": "hi_Unsubscribe",
-    "merge.button": "hi_Merge",
-    "claim.button": "hi_Claim",
-    "unclaim.button": "hi_Unclaim",
-    "split.button": "hi_Split"
+    "restrict": "प्रतिबंधित करें?",
+    "new.button": "नया",
+    "edit.button": "संपादित करें",
+    "status.button": "केस स्थिति बदलें",
+    "reinvestigate.button": "पुनर्निवेश",
+    "subscribe.button": "सदस्यता लें",
+    "unsubscribe.button": "सदस्यता रद्द करें",
+    "merge.button": "मर्ज",
+    "claim.button": "दावा",
+    "unclaim.button": "दावा नहीं करना",
+    "split.button": "स्प्लिट"
   },
   "cases.comp.details": {
     "title": "विवरण",
@@ -377,9 +377,9 @@
     "sorters": {
       "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
       "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
-      "caseIdAsc": "कपर क्रमबद्ध मामला ए एस सी",
-      "caseIdDesc": "क्रमबद्ध प्रकरण वर्णन आईडी",
-      "byNameAsc": "सॉर्ट इन एएनएससी एसी",
+      "idAsc": "कपर क्रमबद्ध मामला ए एस सी",
+      "idDesc": "क्रमबद्ध प्रकरण वर्णन आईडी",
+      "nameAsc": "सॉर्ट इन एएनएससी एसी",
       "noSort": "(कोई सॉर्ट नहीं)"
     }
   }

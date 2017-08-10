@@ -1,29 +1,32 @@
 {
   "costTracking": {
     "title": "Seguimiento de Costos",
-    "progressNoCostsheet": "es_[ No costsheet is selected ]",
-    "progressLoading": "es_Loading costsheet ",
-    "progressError": "es_Failed to load costsheet"
+    "progressNoCostsheet": "[ No hay datos de la hoja de ]",
+    "progressLoading": "Hoja de costo de carga",
+    "progressError": "Error al cargar la hoja de o"
   },
   "costTracking.menus": {
     "leftnav.item": "Seguimiento de Costos",
-    "topbar.item": "Costo"
+    "topbar.item": "Hoja de costo"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "Descripción general"
   },
   "costTracking.comp.info": {
-    "incidentDate": "es_Incident Date",
-    "priority": "es_Priority",
-    "assignedTo": "es_Assigned To",
-    "subjectType": "es_Subject Type",
-    "state": "es_State"
+    "title": "Información",
+    "incidentDate": "Fecha del incidente",
+    "priority": "Prioridad",
+    "assignedTo": "Asignado a",
+    "subjectType": "Tipo de asunto",
+    "state": "Estado"
   },
   "costTracking.comp.actions": {
-    "new.button": "es_New Costsheet",
-    "edit.button": "es_Edit Costsheet"
+    "title": "Acciones",
+    "new.button": "Nueva Hoja de costo",
+    "edit.button": "Editar Hoja de costo"
   },
   "costTracking.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Costsheet details saved",
     "table.columns": {
       "title": "es_Details",
@@ -31,15 +34,15 @@
       "modifier": "es_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "es_Person",
+  "costTracking.comp.person": {
+    "title": "Personas",
     "table.columns": {
       "fullName": "es_Full Name",
       "userId": "es_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "es_Cost Summary",
+    "title": "Costo total",
     "table.columns": {
       "parentId": "es_ID",
       "parentNumber": "es_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -71,6 +74,22 @@
         "success": "es_Tag deleted successfully",
         "error": "es_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "person.label": "Personas",
+      "summary.label": "Gastos",
+      "tags.label": "Etiquetas"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "idAsc": "Ordenar coste de la identificación Asc",
+      "idDesc": "Ordenar coste de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
+      "noSort": "(Sin Clasificar)"
     }
   }
 }

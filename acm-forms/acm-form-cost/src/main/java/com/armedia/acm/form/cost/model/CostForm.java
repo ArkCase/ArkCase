@@ -33,6 +33,7 @@ public class CostForm extends FrevvoForm {
 	private String objectType;
 	private List<String> objectTypeOptions;
 	private String objectNumber;
+	private String objectTitle;
 	private List<CostItem> items;
 	private String status;
 	private List<String> statusOptions;
@@ -120,8 +121,19 @@ public class CostForm extends FrevvoForm {
 	public void setObjectNumber(String objectNumber) {
 		this.objectNumber = objectNumber;
 	}
+	
+	@XmlElement(name="objectTitle")
+	public String getObjectTitle()
+    {
+        return objectTitle;
+    }
 
-	@XmlElement(name="costTableItem")
+    public void setObjectTitle(String objectTitle)
+    {
+        this.objectTitle = objectTitle;
+    }
+
+    @XmlElement(name="costTableItem")
 	public List<CostItem> getItems() {
 		return items;
 	}

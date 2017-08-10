@@ -1,25 +1,28 @@
 {
   "timeTracking": {
     "title": "Seguimiento de Tiempo",
-    "progressNoTimesheet": "es_[ No timesheet is selected ]",
-    "progressLoading": "es_Loading timesheet ",
-    "progressError": "es_Failed to load timesheet"
+    "progressNoTimesheet": "[ No hay datos de la hoja de tiempo ]",
+    "progressLoading": "Cargando la hoja de tiempo",
+    "progressError": "No se pudo cargar la hoja de tiempo"
   },
   "timeTracking.menus": {
     "leftnav.item": "Seguimiento de Tiempo",
-    "topbar.item": "Tiempo"
+    "topbar.item": "Hoja de tiempo"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Descripción general"
   },
   "timeTracking.comp.info": {
-    "lastModified.label": "es_Last Modified"
+    "title": "Información",
+    "lastModified.label": "Última modificación"
   },
   "timeTracking.comp.actions": {
-    "new.button": "es_New Timesheet",
-    "edit.button": "es_Edit Timesheet"
+    "title": "Acciones",
+    "new.button": "Nuevo Hoja de Tiempo",
+    "edit.button": "Editar Hoja de Tiempo"
   },
   "timeTracking.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Timesheet details saved",
     "table.columns": {
       "title": "es_Details",
@@ -27,15 +30,15 @@
       "modifier": "es_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "es_Person",
+  "timeTracking.comp.person": {
+    "title": "Personas",
     "table.columns": {
       "fullName": "es_Full Name",
       "userId": "es_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "es_Hours Summary",
+    "title": "Resumen de la hora",
     "table.columns": {
       "code": "es_Parent ID",
       "type": "es_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -66,6 +69,22 @@
         "success": "es_Tag deleted successfully",
         "error": "es_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "person.label": "Personas",
+      "summary.label": "Gastos",
+      "tags.label": "Etiquetas"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "idAsc": "Ordenar tiempos de la identificación Asc",
+      "idDesc": "Ordenar tiempos de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
+      "noSort": "(Sin Clasificar)"
     }
   }
 }

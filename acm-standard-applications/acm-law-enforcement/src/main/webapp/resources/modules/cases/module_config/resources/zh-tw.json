@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "案件",
-    "progressNoCase": "zh-tw_[ No case file data ]",
-    "progressLoading": "zh-tw_Loading case file ",
-    "progressError": "zh-tw_Failed to load case file"
+    "progressNoCase": "[ 無案件文件 ]",
+    "progressLoading": "裝載文件",
+    "progressError": "加載案例文件失敗"
   },
   "cases.menus": {
     "leftnav.item": "案件",
     "topbar.item": "案件"
   },
   "cases.error": {
-    "invalidData": "zh-tw_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "概述"
   },
   "cases.comp.info": {
     "title": "信息",
-    "caseId": "zh-tw_Case id:",
-    "caseNumber": "zh-tw_Case Number:",
-    "courtRoomName": "zh-tw_Court Room Name:",
-    "type.label": "zh-tw_Type",
-    "created.label": "zh-tw_Created Date",
-    "priority.label": "zh-tw_Priority",
-    "assignee.label": "zh-tw_Assigned To",
-    "owningGroup.label": "zh-tw_Owning Group",
-    "dueDate.label": "zh-tw_Due Date"
+    "caseId": "案件識別號:",
+    "caseNumber": "案件號碼:",
+    "courtRoomName": "法庭名稱:",
+    "type.label": "種類",
+    "created.label": "創建日期",
+    "priority.label": "優先級別",
+    "assignee.label": "指定人員",
+    "owningGroup.label": "所屬群體",
+    "dueDate.label": "到期日期"
   },
   "cases.comp.actions": {
     "title": "行動",
-    "restrict": "zh-tw_Restrict?",
-    "new.button": "zh-tw_New",
-    "edit.button": "zh-tw_Edit",
-    "status.button": "zh-tw_Change Case Status",
-    "reinvestigate.button": "zh-tw_Reinvestigate",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "merge.button": "zh-tw_Merge",
-    "claim.button": "zh-tw_Claim",
-    "unclaim.button": "zh-tw_Unclaim",
-    "split.button": "zh-tw_Split"
+    "restrict": "受限制?",
+    "new.button": "創建",
+    "edit.button": "更改",
+    "status.button": "更改案例狀態",
+    "reinvestigate.button": "重新調查",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權",
+    "merge.button": "合併",
+    "split.button": "分開"
   },
   "cases.comp.details": {
     "title": "詳情",
@@ -372,14 +372,14 @@
       "iAmAssigned": "指定給我的",
       "iAmFollowing": "我關注的",
       "closed": "所有關閉的",
-      "noFilter": "(無限制的)"
+      "noFilter": "(無限制)"
     },
     "sorters": {
       "dateAsc": "按日期排序",
       "dateDesc": "按日期反排序",
-      "caseIdAsc": "按案件號排序",
-      "caseIdDesc": "按案件號反排序",
-      "byNameAsc": "按名稱排序",
+      "idAsc": "按案件號排序",
+      "idDesc": "按案件號反排序",
+      "nameAsc": "按名稱排序",
       "noSort": "(不排序)"
     }
   }

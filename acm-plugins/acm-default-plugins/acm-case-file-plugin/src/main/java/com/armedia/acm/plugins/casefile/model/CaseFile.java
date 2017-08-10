@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.casefile.model;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmStatefulEntity;
+import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -42,7 +43,7 @@ import java.util.*;
 @JsonPropertyOrder(value = {"id", "personAssociations", "originator"})
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
-        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity
+        AcmContainerEntity, AcmChildObjectEntity, AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
 {
     private static final long serialVersionUID = -6035628455385955008L;
 
@@ -128,12 +129,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Transient
     private String ecmFolderPath;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_case_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
@@ -356,6 +357,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.caseType = caseType;
     }
 
+    @Override
     public String getTitle()
     {
         return title;

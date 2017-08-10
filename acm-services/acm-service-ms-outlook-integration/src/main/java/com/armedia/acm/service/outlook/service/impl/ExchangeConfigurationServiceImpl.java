@@ -3,7 +3,6 @@ package com.armedia.acm.service.outlook.service.impl;
 import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
 import com.armedia.acm.service.outlook.model.ExchangeConfigurationConstants;
 import com.armedia.acm.service.outlook.service.ExchangeConfigurationService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -11,6 +10,8 @@ import org.springframework.security.core.Authentication;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -19,7 +20,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author sasko.tanaskoski
- *
  */
 public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationService
 {
@@ -48,13 +48,12 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
         Lock writeLock = lock.writeLock();
         writeLock.lock();
 
-        try
+        try (OutputStream propertyOutputStream = new FileOutputStream(exchangePropertiesResource.getFile()))
         {
-            exchangeProperties.store(new FileOutputStream(exchangePropertiesResource.getFile()),
-                    String.format("Updated by %s", auth.getName()));
+            exchangeProperties.store(propertyOutputStream, String.format("Updated by %s", auth.getName()));
         } catch (IOException e)
         {
-            log.error("Could not write properties to {} file.", exchangePropertiesResource.getFilename());
+            log.error("Could not write properties to [{}] file.", exchangePropertiesResource.getFilename());
         } finally
         {
             writeLock.unlock();
@@ -76,30 +75,30 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
             String propertyValue = exchangeProperties.getProperty(propertyName);
             switch (propertyName)
             {
-            case ExchangeConfigurationConstants.INTEGRATION_ENABLED:
-                exchangeConfiguration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
-                break;
-            case ExchangeConfigurationConstants.SERVER_VERSION:
-                exchangeConfiguration.setServerVersion(propertyValue);
-                break;
-            case ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY:
-                exchangeConfiguration.setEnableAutodiscovery(Boolean.valueOf(propertyValue));
-                break;
-            case ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER:
-                exchangeConfiguration.setClientAccessServer(propertyValue);
-                break;
-            case ExchangeConfigurationConstants.DEFAULT_ACCESS:
-                exchangeConfiguration.setDefaultAccess(propertyValue);
-                break;
-            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL:
-                exchangeConfiguration.setSystemUserEmail(propertyValue);
-                break;
-            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD:
-                exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
-                break;
-            case ExchangeConfigurationConstants.SYSTEM_USER_ID:
-                exchangeConfiguration.setSystemUserId(propertyValue);
-                break;
+                case ExchangeConfigurationConstants.INTEGRATION_ENABLED:
+                    exchangeConfiguration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
+                    break;
+                case ExchangeConfigurationConstants.SERVER_VERSION:
+                    exchangeConfiguration.setServerVersion(propertyValue);
+                    break;
+                case ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY:
+                    exchangeConfiguration.setEnableAutodiscovery(Boolean.valueOf(propertyValue));
+                    break;
+                case ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER:
+                    exchangeConfiguration.setClientAccessServer(propertyValue);
+                    break;
+                case ExchangeConfigurationConstants.DEFAULT_ACCESS:
+                    exchangeConfiguration.setDefaultAccess(propertyValue);
+                    break;
+                case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL:
+                    exchangeConfiguration.setSystemUserEmail(propertyValue);
+                    break;
+                case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD:
+                    exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
+                    break;
+                case ExchangeConfigurationConstants.SYSTEM_USER_ID:
+                    exchangeConfiguration.setSystemUserId(propertyValue);
+                    break;
             }
         }
 
@@ -111,12 +110,12 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
         Properties exchangeProperties = new Properties();
         Lock readLock = lock.readLock();
         readLock.lock();
-        try
+        try (InputStream propertyInputStream = exchangePropertiesResource.getInputStream())
         {
-            exchangeProperties.load(exchangePropertiesResource.getInputStream());
+            exchangeProperties.load(propertyInputStream);
         } catch (IOException e)
         {
-            log.error("Could not read properties from {} file.", exchangePropertiesResource.getFilename());
+            log.error("Could not read properties from [{}] file.", exchangePropertiesResource.getFilename());
         } finally
         {
             readLock.unlock();
@@ -126,8 +125,7 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
     }
 
     /**
-     * @param exchangePropertiesResource
-     *            the exchangePropertiesResource to set
+     * @param exchangePropertiesResource the exchangePropertiesResource to set
      */
     public void setExchangePropertiesResource(Resource exchangePropertiesResource)
     {
