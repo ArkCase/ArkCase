@@ -41,9 +41,12 @@ public class TimesheetHistoryEventListener implements ApplicationListener<AcmTim
                    AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
                    AcmStatefulEntity entity = dao.find(objectId);
                    
-                   AcmTimesheetAssociatedEvent acmTimesheetAssociatedEvent
-                                               = new AcmTimesheetAssociatedEvent(entity, objectId, objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
-                   getTimesheetAssociatedEventPublisher().publishEvent(acmTimesheetAssociatedEvent);
+                   if(entity != null)
+                   {
+                       AcmTimesheetAssociatedEvent acmTimesheetAssociatedEvent
+                               = new AcmTimesheetAssociatedEvent(entity, objectId, objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
+                       getTimesheetAssociatedEventPublisher().publishEvent(acmTimesheetAssociatedEvent);
+                   }
                }
            });
        }
