@@ -48,8 +48,9 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
              * @param {Object} params Map of input parameter.
              * @param {Number} params.personId  Person ID - parent associations for person
              * @param {String} params.parentType  Parent Type - filter by parent type (optional)
-             * @param {Number} params.parentId  Parent ID - filter by parent id (optional)
-             * @param {boolean} params.parentObjectsOnly  - display parent objects instead of person association (optional), false by default
+             * @param {Number} params.start  start row
+             * @param {Number} params.n  how many rows to return
+             * @param {String} params.sort sort field
              * @param {Function} onSuccess (Optional)Callback function of success query.
              * @param {Function} onError (Optional) Callback function when fail.
              *
