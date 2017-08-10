@@ -1,16 +1,19 @@
 package com.armedia.acm.plugins.person.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -23,13 +26,13 @@ import static org.junit.Assert.*;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml"
-})
+        "/spring/spring-library-object-history.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT
 {
@@ -50,7 +53,6 @@ public class PersonServiceIT
         String auth = "ann";
         adapter.setUserId(auth);
 
-
         person.setCompany("Company");
         person.setFamilyName("Family name");
         person.setGivenName("Name");
@@ -59,14 +61,12 @@ public class PersonServiceIT
 
         person = personDao.save(person);
 
-
         Person foundedPerson = personService.get(person.getId());
 
         assertNotNull(foundedPerson.getId());
         assertEquals(1, foundedPerson.getIdentifications().size());
 
         personDao.deletePersonById(person.getId());
-
 
         foundedPerson = personService.get(person.getId());
         assertNull(foundedPerson);
