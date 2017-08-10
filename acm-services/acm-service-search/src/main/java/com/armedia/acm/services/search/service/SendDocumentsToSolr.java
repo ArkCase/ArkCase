@@ -30,10 +30,9 @@ public class SendDocumentsToSolr
     // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
     {
-        log.debug("Converting a document to a JSON array");
+        log.trace("Converting a document to a JSON array");
         List<SolrBaseDocument> docs = Collections.singletonList(document);
         String json = mapper.writeValueAsString(docs);
-        log.debug("returning: " + json);
         return json;
     }
 
@@ -88,7 +87,7 @@ public class SendDocumentsToSolr
 
     public void sendSolrAdvancedSearchDeletes(List<SolrDeleteDocumentByIdRequest> deletes)
     {
-        log.debug("Received " + deletes.size() + " to be deleted.");
+        log.debug("Received [{}] to be deleted.", deletes.size());
         // send separate requests, in case any of them fail, e.g. maybe a doc with this id already is not in the
         // queue.
         if (deletes != null)
@@ -105,15 +104,14 @@ public class SendDocumentsToSolr
         try
         {
             String json = mapper.writeValueAsString(solrDocument);
-            if (log.isDebugEnabled())
-            {
-                log.debug("Sending JSON to SOLR: " + json);
-            }
+
+            log.debug("Sending JSON to SOLR with hash {}", json.hashCode());
+
             getMuleContextManager().dispatch(queueName, json);
-            if (log.isDebugEnabled())
-            {
-                log.debug("Returning JSON: " + json);
-            }
+            log.debug("Sent JSON to SOLR with hash {}", json.hashCode());
+
+            log.trace("Returning JSON: {}", json);
+
         } catch (JsonProcessingException | MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
@@ -124,14 +122,14 @@ public class SendDocumentsToSolr
     {
         try
         {
-            if (log.isDebugEnabled())
-            {
-                log.debug("Sending POJO to SOLR: " + solrDocument);
-            }
+            log.trace("Sending POJO to SOLR: {}", solrDocument);
 
             Map<String, Object> messageProperties = new HashMap<>();
             messageProperties.put("additionalProperties", solrDocument.getAdditionalProperties());
+
+            log.debug("Sending a doc to Solr with hash {}", solrDocument.hashCode());
             getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);
+            log.debug("Sent a doc to Solr with hash {}", solrDocument.hashCode());
         } catch (MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
@@ -144,11 +142,12 @@ public class SendDocumentsToSolr
         {
             String json = mapper.writeValueAsString(solrDocuments);
 
+            log.debug("Sending json to Solr via JMS with hash {}", json.hashCode());
             getMuleContextManager().dispatch(queueName, json);
-            if (log.isDebugEnabled())
-            {
-                log.debug("Returning JSON: " + json);
-            }
+            log.debug("Sent json to Solr via JMS with hash {}", json.hashCode());
+
+            log.trace("Returning JSON: {}", json);
+
         } catch (JsonProcessingException | MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
