@@ -1,45 +1,45 @@
 {
   "cases": {
     "title": "案件",
-    "progressNoCase": "ja_[ No case file data ]",
-    "progressLoading": "ja_Loading case file ",
-    "progressError": "ja_Failed to load case file"
+    "progressNoComplaint": "[ 案件のデータはありません ]",
+    "progressLoading": "案件の読み込み",
+    "progressError": "案件の読み込みに失敗しました"
   },
   "cases.menus": {
     "leftnav.item": "案件文書",
     "topbar.item": "案件"
   },
   "cases.error": {
-    "invalidData": "ja_"
+    "invalidData": ""
   },
   "cases.comp.main": {
     "title": "概観"
   },
   "cases.comp.info": {
     "title": "情報",
-    "caseId": "ja_Case id:",
-    "caseNumber": "ja_Case Number:",
-    "courtRoomName": "ja_Court Room Name:",
-    "type.label": "ja_Type",
-    "created.label": "ja_Created Date",
-    "priority.label": "ja_Priority",
-    "assignee.label": "ja_Assigned To",
-    "owningGroup.label": "ja_Owning Group",
-    "dueDate.label": "ja_Due Date"
+    "caseId": "案件識別番号:",
+    "caseNumber": "案件番号:",
+    "courtRoomName": "裁判所名:",
+    "type.label": "種類",
+    "created.label": "作成日",
+    "priority.label": "優先",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "グループに所属",
+    "dueDate.label": "期限日"
   },
   "cases.comp.actions": {
-    "title": "行动",
-    "restrict": "ja_Restrict?",
-    "new.button": "ja_New",
-    "edit.button": "ja_Edit",
-    "status.button": "ja_Change Case Status",
-    "reinvestigate.button": "ja_Reinvestigate",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "merge.button": "ja_Merge",
-    "claim.button": "ja_Claim",
-    "unclaim.button": "ja_Unclaim",
-    "split.button": "ja_Split"
+    "title": "操作",
+    "restrict": "制限する?",
+    "new.button": "新しい案件",
+    "edit.button": "変更",
+    "status.button": "状態の変更",
+    "reinvestigate.button": "再調査",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "claim.button": "申し立て",
+    "unclaim.button": "申し立て中止",
+    "merge.button": "合併",
+    "split.button": "分开"
   },
   "cases.comp.details": {
     "title": "詳細",
@@ -51,7 +51,7 @@
     }
   },
   "cases.comp.documents": {
-    "title": "ファイル",
+    "title": "操作",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
@@ -181,7 +181,7 @@
     "table.deadline.tooltip": "ja_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "また",
+    "title": "参照",
     "table.columns": {
       "targetName": "ja_Number",
       "parentName": "ja_Parent",
@@ -222,7 +222,7 @@
     "formNamePrefix": "ja_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -358,7 +358,7 @@
       "participants.label": "参加者",
       "notes.label": "ノート",
       "tasks.label": "タスク",
-      "references.label": "また",
+      "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
       "cost.label": "支出",
@@ -376,10 +376,10 @@
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",
-      "dateDesc": "アンチ日付順",
-      "caseIdAsc": "ケース番号で並べ替え",
-      "caseIdDesc": "ケース番号順にソート",
-      "byNameAsc": "名で並べ替え",
+      "dateDesc": "日付で並べ替え降順",
+      "idAsc": "ケース番号で並べ替え",
+      "idDesc": "ケース番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

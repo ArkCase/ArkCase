@@ -1,71 +1,76 @@
 {
   "tasks": {
     "title": "Aufgaben",
-    "progressNoTask": "de_[ No task data ]",
-    "progressLoading": "de_Loading task ",
-    "progressError": "de_Failed to load task"
+    "progressNoCase": "[ Keine Aufgabe Daten ]",
+    "progressLoading": "Aufgabe laden",
+    "progressError": "Fehler beim Laden der Aufgabe"
   },
   "tasks.menus": {
     "leftnav.item": "Aufgaben",
-    "topbar.item": "Aufgaben"
+    "topbar.item": "Aufgabe"
+  },
+  "tasks.comp.main": {
+    "title": "Übersicht"
   },
   "tasks.comp.info": {
-    "taskId": "de_Task id:",
-    "percentage.label": "de_% of Completion",
-    "assignee.label": "de_Assignee",
-    "Priority.label": "de_Priority",
-    "startDate.label": "de_Start Date",
-    "dueDate.label": "de_Due Date",
-    "state.label": "de_State",
-    "overdue.tooltip": "de_Task is Overdue",
-    "deadline.tooltip": "de_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "title": "Informationen",
+    "taskId": "Aufgabenstellung:",
+    "percentage.label": "% der Fertigstellung",
+    "assignee.label": "Zugewiesen",
+    "priority.label": "Priorität",
+    "startDate.label": "Anfangsdatum",
+    "dueDate.label": "Fälligkeitsdatum",
+    "state.label": "Zustand",
+    "overdue.tooltip": "Aufgabe ist überfällig",
+    "deadline.tooltip": "Fälligkeitsdatum ist Annäherung",
+    "owningGroup.label": "Besitzgruppe"
   },
   "tasks.comp.parentinfo": {
-    "taskId": "de_Task id:",
+    "title": "Übergeordnete Info",
+    "taskId": "Aufgabenstellung:",
     "case": {
-      "subjectType.label": "de_Subject Type",
-      "incidentDate.label": "de_Incident Date",
-      "priority.label": "de_Priority",
-      "assignee.label": "de_Assigned To",
-      "owningGroup.label": "de_Owning Group"
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
     },
     "complaint": {
-      "subjectType.label": "de_Subject Type",
-      "incidentDate.label": "de_Incident Date",
-      "priority.label": "de_Priority",
-      "assignee.label": "de_Assigned To",
-      "owningGroup.label": "de_Owning Group"
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
     },
     "costsheet": {
-      "approver.label": "de_Approver"
+      "approver.label": "Genehmiger"
     },
     "timesheet": {
-      "approver.label": "de_Approver"
-    },
-    "_xxx_courtRoomName": "de_Court Room Name:"
+      "approver.label": "Genehmiger"
+    }
   },
   "tasks.comp.actions": {
-    "diagram.button": "de_Process Diagram",
-    "eSignature.button": "de_Sign",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "reject.button": "de_Reject",
-    "delete.button": "de_Delete",
-    "complete.button": "de_Complete",
-    "approve.button": "de_Approve Document",
-    "rework.button": "de_Send for Rework",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim",
-    "error.outcomeFieldMissing": "de_Cannot complete task because of missing required value",
+    "title": "Aktionen",
+    "diagram.button": "Prozessdiagramm",
+    "eSignature.button": "Zeichen",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "reject.button": "Ablehnen",
+    "delete.button": "Löschen",
+    "complete.button": "Komplett",
+    "approve.button": "Dokument genehmigen",
+    "rework.button": "Wiederholen Arbeit",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung",
+    "error.outcomeFieldMissing": "Kann die Aufgabe nicht verpassen, weil der fehlende erforderliche Wert",
     "modal": {
-      "errorHeaderText": "de_Error",
-      "btnOk.text": "de_OK",
-      "btnClose.text": "de_Close"
+      "errorHeaderText": "Fehler",
+      "btnOk.text": "Okay",
+      "btnClose.text": "Schließen"
     }
   },
   "tasks.comp.details": {
-    "title": "de_Task Details",
+    "title": "Details",
     "informSaved": "de_Task details saved",
     "table.columns": {
       "details": "de_Details",
@@ -74,7 +79,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "de_Rework Details",
+    "title": "Wiederholen Arbeit",
     "informSaved": "de_Rework details saved",
     "table.columns": {
       "title": "de_Rework Details",
@@ -83,20 +88,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "de_Parent Documents",
+    "title": "Übergeordnete Dokumente",
     "noParentDataMessage": "de_No parent documents for standalone task",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "tasks.comp.attachments": {
-    "title": "de_Attachments",
+    "title": "Anhänge",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "tasks.comp.notes": {
-    "title": "de_Notes",
+    "title": "Notizen",
     "table.columns": {
       "note": "de_Note",
       "created": "de_Created",
@@ -104,7 +109,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "de_References",
+    "title": "Referenzen",
     "table.columns": {
       "targetName": "de_Number",
       "targetTitle": "de_Title",
@@ -114,7 +119,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "de_Reject Comments",
+    "title": "Kommentare ablehnen",
     "table.columns": {
       "note": "de_Comment",
       "created": "de_Created",
@@ -122,7 +127,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "de_Workflow",
+    "title": "Arbeitsablauf",
     "table.columns": {
       "participant": "de_Participant",
       "role": "de_Role",
@@ -136,14 +141,14 @@
     "error.loading": "de_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "de_eSignatures",
+    "title": "eSignaturen",
     "table.columns": {
       "signedDate": "de_Date",
       "signedBy": "de_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "de_Documents Under Review",
+    "title": "Dokumente unter Überprüfung",
     "table.columns": {
       "fileId": "de_ID",
       "fileName": "de_Title",
@@ -153,7 +158,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -161,7 +166,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
@@ -320,6 +325,39 @@
       "approverId": "de_Approver",
       "approverFullName": "de_Full Name",
       "approverDecision": "de_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "reworkDetails.label": "Wiederholen Arbeit",
+      "docReview.label": "Dokumente unter Überprüfung",
+      "parentDoc.label": "Übergeordnete Dokumente",
+      "attachments.label": "Anhänge",
+      "references.label": "Referenzen",
+      "notes.label": "Notizen",
+      "workflow.label": "Arbeitsablauf",
+      "history.label": "Geschichte",
+      "eSignatures.label": "eSignaturen",
+      "tags.label": "Etiketten",
+      "reject.label": "Kommentare ablehnen"
+    },
+    "filters": {
+      "myTasks": "Meine Aufgaben",
+      "opened": "Alle offenen Aufgaben",
+      "completed": "Alle abgeschlossenen Aufgaben",
+      "dueToday": "Alle Aufgaben heute",
+      "myDueToday": "Alle meine Aufgaben fällig",
+      "overdue": "Alle Aufgaben überfällig",
+      "myOverdue": "Alle meine Aufgaben überfällig",
+      "noFilter": "(Kein Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sortieren Erstellungsdatum Asc",
+      "createdDateDesc": "Sortieren Erstellungsdatum Desc",
+      "nameAsc": "Sortieren Aufgabennname Asc",
+      "nameDesc": "Sortieren Aufgabennname Desc",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

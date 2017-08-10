@@ -1,14 +1,6 @@
 <div class="panel-body">
-    <div ui-grid="gridOptions"
-         ui-grid-resize-columns
-         ui-grid-auto-resize
-         ui-grid-pagination
-         ui-grid-edit
-         ui-grid-cell-nav
-         adjust-table-height="gridOptions.data.length"
-         ng-hide="gridOptions.noData"
-         class="grid">
-    </div>
+    <div ng-include="'modules/dashboard/templates/widget-ui-grid.html'"/>
+
     <div class="alert" ng-if="gridOptions.noData">
         <p class="text-center">
             <span translate>dashboard.widgets.approvalRouting.noDataMessage</span>

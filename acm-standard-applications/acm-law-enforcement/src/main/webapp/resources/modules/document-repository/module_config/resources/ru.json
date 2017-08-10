@@ -9,22 +9,28 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "Обзор"
+  },
   "document-repository.comp.info": {
-    "docRepoId": "ru_Repository ID:",
-    "docRepoName": "ru_Document Repository Name:",
-    "modified.label": "ru_Modified Date",
-    "assignee.label": "ru_Assigned To",
-    "owningGroup.label": "ru_Owning Group",
-    "description.label": "ru_Description"
+    "title": "Информация",
+    "docRepoId": "Идентификатор репозитория:",
+    "docRepoName": "Название репозитория документа:",
+    "modified.label": "Дата изменения",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "description.label": "Описание"
   },
   "document-repository.comp.actions": {
-    "restrict": "ru_Restrict?",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "ru_This action will delete the entire repository. Are you sure you want to proceed?"
+    "title": "Действия",
+    "restrict": "Ограничить?",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "delete.button": "Удалить репозиторий",
+    "confirm.delete.documentRepository.msg": "Это действие удалит весь репозиторий?"
   },
   "document-repository.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Document Repository details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -33,13 +39,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ru_Documents",
+    "title": "Документы",
     "sendEmail": "ru_Send Email",
     "filterInputPlaceholder": "ru_Filter",
     "searchInputPlaceholder": "ru_Search"
   },
   "document-repository.comp.participants": {
-    "title": "ru_Participants",
+    "title": "Участники",
     "table.columns": {
       "type": "ru_Type",
       "name": "ru_Name"
@@ -61,7 +67,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "ru_Notes",
+    "title": "Заметки",
     "table.columns": {
       "note": "ru_Note",
       "created": "ru_Created",
@@ -69,7 +75,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "ru_References",
+    "title": "Ссылки",
     "table.columns": {
       "targetName": "ru_Number",
       "parentName": "ru_Parent",
@@ -80,7 +86,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "ru_History",
+    "title": "История",
     "table.columns": {
       "eventType": "ru_Event Name",
       "eventDate": "ru_Date",
@@ -88,7 +94,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -181,5 +187,29 @@
     "table.columns.type": "ru_Type",
     "table.columns.title": "ru_Title",
     "table.columns.id": "ru_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "documents.label": "Документы",
+      "participants.label": "Участники",
+      "tags.label": "Теги",
+      "references.label": "Ссылки",
+      "notes.label": "Заметки",
+      "history.label": "История"
+    },
+    "filters": {
+      "iHaveCreated": "Все, что я создал",
+      "iAmFollowing": "Все, за чем я слежу",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "dateAsc": "Сортировка даты Asc",
+      "dateDesc": "Сортировка даты Desc",
+      "idAsc": "Сортировка идентификатора репозитория Asc",
+      "idDesc": "Сортировка идентификатора репозитория Desc",
+      "nameAsc": "Сортировать по имени Asc",
+      "noSort": "(Нет Сортировать)"
+    }
   }
 }

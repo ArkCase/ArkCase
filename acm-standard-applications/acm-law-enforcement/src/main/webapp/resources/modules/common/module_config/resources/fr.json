@@ -104,17 +104,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "fr_ records above...",
-    "btnPrev.toolTip": "fr_Review previous records",
-    "btnNext.titleUnknownSize": "fr_More records...",
-    "btnNext.title": "fr_ more records...",
-    "btnNext.toolTip": "fr_Load more records",
-    "edtQuery.placeHolder": "fr_Search",
-    "btnQuery.text": "fr_Go!",
-    "errorNode.title": "fr_(Error)",
-    "errorNode.toolTip": "fr_(Error)",
-    "noAccessNode.title": "fr_(No Access)",
-    "noAccessNode.toolTip": "fr_(No Access)"
+    "btnPrev.title": "enregistrements ci-dessus...",
+    "btnPrev.toolTip": "Examiner les enregistrements précédents",
+    "btnNext.titleUnknownSize": "plus d'enregistrements...",
+    "btnNext.title": "plus d'enregistrements...",
+    "btnNext.toolTip": "Charger plus d'enregistrements",
+    "edtQuery.placeHolder": "Rechercher",
+    "btnQuery.text": "Commencer!",
+    "errorNode.title": "(Erreur)",
+    "errorNode.toolTip": "(Erreur)",
+    "noAccessNode.title": "(Pas d'accès)",
+    "noAccessNode.toolTip": "(Pas d'accès)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "fr_items per page",

@@ -1,71 +1,76 @@
 {
   "tasks": {
     "title": "任務",
-    "progressNoTask": "zh-tw_[ No task data ]",
-    "progressLoading": "zh-tw_Loading task ",
-    "progressError": "zh-tw_Failed to load task"
+    "progressNoTask": "[ 無任務數據 ]",
+    "progressLoading": "加載任務數據",
+    "progressError": "加載任務數據失敗"
   },
   "tasks.menus": {
     "leftnav.item": "任務",
     "topbar.item": "任務"
   },
+  "tasks.comp.main": {
+    "title": "概述"
+  },
   "tasks.comp.info": {
-    "taskId": "zh-tw_Task id:",
-    "percentage.label": "zh-tw_% of Completion",
-    "assignee.label": "zh-tw_Assignee",
-    "Priority.label": "zh-tw_Priority",
-    "startDate.label": "zh-tw_Start Date",
-    "dueDate.label": "zh-tw_Due Date",
-    "state.label": "zh-tw_State",
-    "overdue.tooltip": "zh-tw_Task is Overdue",
-    "deadline.tooltip": "zh-tw_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "title": "信息",
+    "taskId": "任務識別號:",
+    "percentage.label": "完成百分比",
+    "assignee.label": "指定人員",
+    "priority.label": "優先級別",
+    "startDate.label": "開始日期",
+    "dueDate.label": "到期日期",
+    "state.label": "狀態",
+    "overdue.tooltip": "任務已逾期",
+    "deadline.tooltip": "截止日期正在接近",
+    "owningGroup.label": "所屬群體"
   },
   "tasks.comp.parentinfo": {
-    "taskId": "zh-tw_Task id:",
+    "title": "原屬信息",
+    "taskId": "任務識別號:",
     "case": {
-      "subjectType.label": "zh-tw_Subject Type",
-      "incidentDate.label": "zh-tw_Incident Date",
-      "priority.label": "zh-tw_Priority",
-      "assignee.label": "zh-tw_Assigned To",
-      "owningGroup.label": "zh-tw_Owning Group"
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
     },
     "complaint": {
-      "subjectType.label": "zh-tw_Subject Type",
-      "incidentDate.label": "zh-tw_Incident Date",
-      "priority.label": "zh-tw_Priority",
-      "assignee.label": "zh-tw_Assigned To",
-      "owningGroup.label": "zh-tw_Owning Group"
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
     },
     "costsheet": {
-      "approver.label": "zh-tw_Approver"
+      "approver.label": "審批者"
     },
     "timesheet": {
-      "approver.label": "zh-tw_Approver"
-    },
-    "_xxx_courtRoomName": "zh-tw_Court Room Name:"
+      "approver.label": "審批者"
+    }
   },
   "tasks.comp.actions": {
-    "diagram.button": "zh-tw_Process Diagram",
-    "eSignature.button": "zh-tw_Sign",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "reject.button": "zh-tw_Reject",
-    "delete.button": "zh-tw_Delete",
-    "complete.button": "zh-tw_Complete",
-    "approve.button": "zh-tw_Approve Document",
-    "rework.button": "zh-tw_Send for Rework",
-    "claim.button": "zh-tw_Claim",
-    "unclaim.button": "zh-tw_Unclaim",
-    "error.outcomeFieldMissing": "zh-tw_Cannot complete task because of missing required value",
+    "title": "行動",
+    "diagram.button": "圖標處理",
+    "eSignature.button": "簽名",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "reject.button": "回絕",
+    "delete.button": "刪除",
+    "complete.button": "完成",
+    "approve.button": "文件審批",
+    "rework.button": "遣返重做",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權",
+    "error.outcomeFieldMissing": "由於缺少必需的值而無法完成任務",
     "modal": {
-      "errorHeaderText": "zh-tw_Error",
-      "btnOk.text": "zh-tw_OK",
-      "btnClose.text": "zh-tw_Close"
+      "errorHeaderText": "錯誤",
+      "btnOk.text": "確定",
+      "btnClose.text": "關閉"
     }
   },
   "tasks.comp.details": {
-    "title": "zh-tw_Task Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Task details saved",
     "table.columns": {
       "details": "zh-tw_Details",
@@ -74,7 +79,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "zh-tw_Rework Details",
+    "title": "重做詳情",
     "informSaved": "zh-tw_Rework details saved",
     "table.columns": {
       "title": "zh-tw_Rework Details",
@@ -83,20 +88,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "zh-tw_Parent Documents",
+    "title": "原屬文件",
     "noParentDataMessage": "zh-tw_No parent documents for standalone task",
     "sendEmail": "zh-tw_Send Email",
     "filterInputPlaceholder": "zh-tw_Filter",
     "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.attachments": {
-    "title": "zh-tw_Attachments",
+    "title": "附件",
     "sendEmail": "zh-tw_Send Email",
     "filterInputPlaceholder": "zh-tw_Filter",
     "searchInputPlaceholder": "zh-tw_Search"
   },
   "tasks.comp.notes": {
-    "title": "zh-tw_Notes",
+    "title": "註釋",
     "table.columns": {
       "note": "zh-tw_Note",
       "created": "zh-tw_Created",
@@ -104,7 +109,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "zh-tw_References",
+    "title": "參考",
     "table.columns": {
       "targetName": "zh-tw_Number",
       "targetTitle": "zh-tw_Title",
@@ -114,7 +119,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "zh-tw_Reject Comments",
+    "title": "回絕說明",
     "table.columns": {
       "note": "zh-tw_Comment",
       "created": "zh-tw_Created",
@@ -122,7 +127,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "zh-tw_Workflow",
+    "title": "流程概述",
     "table.columns": {
       "participant": "zh-tw_Participant",
       "role": "zh-tw_Role",
@@ -136,14 +141,14 @@
     "error.loading": "zh-tw_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "zh-tw_eSignatures",
+    "title": "電子簽名",
     "table.columns": {
       "signedDate": "zh-tw_Date",
       "signedBy": "zh-tw_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "zh-tw_Documents Under Review",
+    "title": "審查文件",
     "table.columns": {
       "fileId": "zh-tw_ID",
       "fileName": "zh-tw_Title",
@@ -153,7 +158,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "zh-tw_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "zh-tw_Event Name",
       "eventDate": "zh-tw_Date",
@@ -161,14 +166,14 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "zh-tw_Tags",
+    "title": "標籤",
     "table.columns": {
-      "tag": "zh-tw_Tag",
+      "tag": "標籤",
       "created": "zh-tw_Created",
       "createdBy": "zh-tw_Created By"
     },
     "modal": {
-      "title": "zh-tw_Tag",
+      "title": "標籤",
       "search": "zh-tw_Search for Tag",
       "buttons": {
         "cancel": "zh-tw_Cancel",
@@ -210,7 +215,7 @@
     "group.placeholder": "zh-tw_Please select a group."
   },
   "tasks.userOrGroupSearch": {
-    "id": "zh-tw_userSearch",
+    "id": "選擇用戶",
     "title": "zh-tw_User/Group Search",
     "search": {
       "btn": "zh-tw_Search",
@@ -266,7 +271,7 @@
     }
   },
   "tasks.comp.participants": {
-    "title": "zh-tw_Participants",
+    "title": "參與成員",
     "table.columns": {
       "type": "zh-tw_Type",
       "name": "zh-tw_Name"
@@ -302,7 +307,7 @@
     "searchGroupHeader": "zh-tw_Search Group"
   },
   "tasks.comp.approvalRouting": {
-    "title": "zh-tw_Future Approvers",
+    "title": "批准流程",
     "addNewTooltip": "zh-tw_Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {
@@ -313,13 +318,46 @@
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "zh-tw_Past Approvers",
+    "title": "過去批准",
     "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "zh-tw_Approval Date",
       "approverId": "zh-tw_Approver",
       "approverFullName": "zh-tw_Full Name",
       "approverDecision": "zh-tw_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "reworkDetails.label": "重做詳情",
+      "docReview.label": "審查文件",
+      "parentDoc.label": "原屬文件",
+      "attachments.label": "附件",
+      "references.label": "参考",
+      "notes.label": "註釋",
+      "workflow.label": "流程概述",
+      "history.label": "歷史",
+      "eSignatures.label": "電子簽名",
+      "tags.label": "標籤",
+      "reject.label": "回絕說明"
+    },
+    "filters": {
+      "myTasks": "我的任務",
+      "opened": "所有打開的",
+      "completed": "所有完成的",
+      "dueToday": "所有今天到期的",
+      "myDueToday": "我所有今天到期的",
+      "overdue": "所有逾期的",
+      "myOverdue": "我所有逾期的",
+      "noFilter": "(無限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按創建日期排序",
+      "createdDateDesc": "按事件日期反排序",
+      "nameAsc": "按任務名稱排序",
+      "nameDesc": "按任務名稱反排序",
+      "noSort": "(不排序)"
     }
   }
 }

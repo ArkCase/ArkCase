@@ -1,25 +1,28 @@
 {
   "timeTracking": {
     "title": "Отслеживание времени",
-    "progressNoTimesheet": "ru_[ No timesheet is selected ]",
-    "progressLoading": "ru_Loading timesheet ",
-    "progressError": "ru_Failed to load timesheet"
+    "progressNoTimesheet": "[ Нет Время лист ]",
+    "progressLoading": "Загрузка Время лист",
+    "progressError": "Не удалось загрузить Время лист"
   },
   "timeTracking.menus": {
     "leftnav.item": "Отслеживание времени",
     "topbar.item": "Время лист"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Обзор"
   },
   "timeTracking.comp.info": {
-    "lastModified.label": "ru_Last Modified"
+    "title": "Информация",
+    "lastModified.label": "Последнее изменение"
   },
   "timeTracking.comp.actions": {
-    "new.button": "ru_New Timesheet",
-    "edit.button": "ru_Edit Timesheet"
+    "title": "Действия",
+    "new.button": "Новый Время лист",
+    "edit.button": "Редактировать Время лист"
   },
   "timeTracking.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Timesheet details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -27,15 +30,15 @@
       "modifier": "ru_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "ru_Person",
+  "timeTracking.comp.person": {
+    "title": "Люди",
     "table.columns": {
       "fullName": "ru_Full Name",
       "userId": "ru_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "ru_Hours Summary",
+    "title": "Обзор часов",
     "table.columns": {
       "code": "ru_Parent ID",
       "type": "ru_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -66,6 +69,22 @@
         "success": "ru_Tag deleted successfully",
         "error": "ru_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "person.label": "Люди",
+      "summary.label": "расходы",
+      "tags.label": "Теги"
+    },
+    "sorters": {
+      "dateAsc": "Сортировка даты Asc",
+      "dateDesc": "Сортировка даты Desc",
+      "idAsc": "Сортировка расходы Asc",
+      "idDesc": "Сортировка расходы Desc",
+      "nameDesc": "Сортировать по имени",
+      "noSort": "(Нет Сортировать)"
     }
   }
 }

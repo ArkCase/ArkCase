@@ -1,9 +1,9 @@
 {
   "complaints": {
     "title": "Queixas",
-    "progressNoComplaint": "pt_[ No complaint data ]",
-    "progressLoading": "pt_Loading complaint ",
-    "progressError": "pt_Failed to load complaint "
+    "progressNoComplaint": "[ Não há dados sobre queixas ]",
+    "progressLoading": "Carregando queixas",
+    "progressError": "Falha ao carregar queixas"
   },
   "complaints.menus": {
     "leftnav.item": "Queixas",
@@ -14,25 +14,25 @@
   },
   "complaints.comp.info": {
     "title": "Informações",
-    "complaintId": "pt_Complaint id:",
-    "complaintNumber": "pt_Complaint ID:",
-    "courtRoomName": "pt_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "complaintId": "Identificação da Queixa:",
+    "complaintNumber": "Número da Queixa:",
+    "courtRoomName": "Sala do Tribunal:",
+    "type.label": "Tipo",
+    "created.label": "Data criada",
+    "priority.label": "Prioridade",
+    "assignee.label": "Atribuído a",
+    "owningGroup.label": "O grupo pertence a",
+    "dueDate.label": "Data de vencimento"
   },
   "complaints.comp.actions": {
     "title": "Ações",
-    "restrict": "pt_Restrict?",
-    "new.button": "pt_New Complaint",
-    "close.button": "pt_Close Complaint",
-    "subscribe.button": "pt_Subscribe",
-    "unsubscribe.button": "pt_Unsubscribe",
-    "claim.button": "pt_Claim",
-    "unclaim.button": "pt_Unclaim"
+    "restrict": "Restringir?",
+    "new.button": "Nova Queixa",
+    "close.button": "Fechar Queixa",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "claim.button": "Reclamaçõe",
+    "unclaim.button": "Retirar Reclamaçõe"
   },
   "complaints.comp.details": {
     "title": "Detalhes",
@@ -382,7 +382,7 @@
       "incidentDateDesc": "Ordenar Data do evento Desc",
       "createdDateAsc": "Ordenar Data de Criação Asc",
       "createdDateDesc": "Ordenar Data de Criação Desc",
-      "byNameAsc": "Classificar por nome Asc",
+      "nameAsc": "Classificar por nome Asc",
       "noSort": "(Não classificar)"
     }
   }

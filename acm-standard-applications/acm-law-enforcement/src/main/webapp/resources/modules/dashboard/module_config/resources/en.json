@@ -178,6 +178,21 @@
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
       },
+      "ids": {
+        "title": "IDs",
+        "description": "Displays IDs details",
+        "noDataMessage": "Currently there are no IDs to display"
+      },
+      "complaints": {
+        "title": "Complaints",
+        "description": "Displays complaint details",
+        "noDataMessage": "Currently there are no complaints to display"
+      },
+      "cases": {
+        "title": "Cases",
+        "description": "Displays case details",
+        "noDataMessage": "Currently there are no cases to display"
+      },
       "documents": {
         "title": "Documents",
         "description": "Displays chart of documents by folder",
@@ -187,6 +202,31 @@
         "title": "Locations",
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
+      },
+      "phones": {
+        "title": "Phone Numbers",
+        "description": "Displays phone numbers",
+        "noDataMessage": "Currently there are no phone numbers to display"
+      },
+      "faxes": {
+        "title": "Fax Numbers",
+        "description": "Displays faxes details",
+        "noDataMessage": "Currently there are no faxes to display"
+      },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Displays DBA details",
+        "noDataMessage": "Currently there are no DBAs to display"
       },
       "tasks": {
         "title": "Tasks",
@@ -202,6 +242,11 @@
         "title": "References",
         "description": "Displays reference details",
         "noDataMessage": "Currently there are no references to display"
+      },
+      "relOrganizations": {
+        "title": "Related Organizations",
+        "description": "Displays Related Organizations details",
+        "noDataMessage": "Currently there are no Related Organizations to display"
       },
       "history": {
         "title": "History",
@@ -282,6 +327,21 @@
         "title": "Approval Routing",
         "description": "Displays approval routings",
         "noDataMessage": "Currently no approvers to display"
+      },
+      "pictures": {
+        "title": "Pictures",
+        "description": "Display pictures",
+        "noDataMessage": "Currently no pictures to display"
+      },
+      "aliases": {
+        "title": "Aliases",
+        "description": "Display aliases",
+        "noDataMessage": "Currently no aliases to display"
+      },
+      "related": {
+        "title": "Related People",
+        "description": "Display related people",
+        "noDataMessage": "Currently no related people to display"
       }
     }
   }

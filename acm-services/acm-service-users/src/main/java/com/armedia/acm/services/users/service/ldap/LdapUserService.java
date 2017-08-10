@@ -24,6 +24,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -275,7 +276,12 @@ public class LdapUserService
             {
                 DirContextOperations groupContext = new RetryExecutor<DirContextOperations>()
                         .retryResult(() -> ldapTemplate.lookupContext(groupDnStrippedBase));
-                groupContext.removeAttributeValue("member", ldapUser.getDistinguishedName());
+                // a workaround for removing group members
+                // groupContext.removeAttributeValue("member", ldapUser.getDistinguishedName()) is not
+                // working on AD because of DN case sensitivity
+                String[] members = groupContext.getStringAttributes("member");
+                String member = Arrays.stream(members).filter(m -> m.equalsIgnoreCase(ldapUser.getDistinguishedName())).findFirst().orElse(null);
+                groupContext.removeAttributeValue("member", member);
                 new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                 updatedGroups.add(group);
             } catch (Exception e)

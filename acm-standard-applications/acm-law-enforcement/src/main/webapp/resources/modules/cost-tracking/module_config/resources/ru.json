@@ -1,29 +1,32 @@
 {
   "costTracking": {
     "title": "Отслеживание затрат",
-    "progressNoCostsheet": "ru_[ No costsheet is selected ]",
-    "progressLoading": "ru_Loading costsheet ",
-    "progressError": "ru_Failed to load costsheet"
+    "progressNoCostsheet": "[ Нет Стоимость листы ]",
+    "progressLoading": "Загрузка Стоимость лист",
+    "progressError": "Не удалось загрузить Стоимость лист"
   },
   "costTracking.menus": {
     "leftnav.item": "Отслеживание затрат",
     "topbar.item": "Стоимость лист"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "Обзор"
   },
   "costTracking.comp.info": {
-    "incidentDate": "ru_Incident Date",
-    "priority": "ru_Priority",
-    "assignedTo": "ru_Assigned To",
-    "subjectType": "ru_Subject Type",
-    "state": "ru_State"
+    "title": "Информация",
+    "incidentDate": "Дата инцидента",
+    "priority": "Приоритет",
+    "assignedTo": "Назначено",
+    "subjectType": "Тип объекта",
+    "state": "Состояние"
   },
   "costTracking.comp.actions": {
-    "new.button": "ru_New Costsheet",
-    "edit.button": "ru_Edit Costsheet"
+    "title": "Действия",
+    "new.button": "Новый cтоимость лист",
+    "edit.button": "Редактировать cтоимость лист"
   },
   "costTracking.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Costsheet details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -31,15 +34,15 @@
       "modifier": "ru_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "ru_Person",
+  "costTracking.comp.person": {
+    "title": "Люди",
     "table.columns": {
       "fullName": "ru_Full Name",
       "userId": "ru_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "ru_Cost Summary",
+    "title": "Сводка расходов",
     "table.columns": {
       "parentId": "ru_ID",
       "parentNumber": "ru_Parent ID",
@@ -50,7 +53,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -71,6 +74,22 @@
         "success": "ru_Tag deleted successfully",
         "error": "ru_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "person.label": "Люди",
+      "summary.label": "расходы",
+      "tags.label": "Теги"
+    },
+    "sorters": {
+      "dateAsc": "Сортировка даты Asc",
+      "dateDesc": "Сортировка даты Desc",
+      "idAsc": "Сортировка Стоимость Asc",
+      "idDesc": "Сортировка Стоимость Desc",
+      "nameDesc": "Сортировать по имени",
+      "noSort": "(Нет Сортировать)"
     }
   }
 }

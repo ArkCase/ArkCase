@@ -4,11 +4,8 @@ angular.module('cases').controller('Cases.AssigneePickerController', ['$scope', 
     '$translate', 'UtilService', 'ConfigService', '$q', 'owningGroup',
     function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, $q, owningGroup) {
 
-        var promiseConfig = ConfigService.getModuleConfig("cases");
-
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
         $scope.onClickOk = function () {

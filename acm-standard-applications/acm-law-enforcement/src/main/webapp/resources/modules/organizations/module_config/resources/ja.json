@@ -1,33 +1,40 @@
 {
   "organizations": {
     "title": "組織",
-    "progressNoComplaint": "ja_[ No organizations data ]",
-    "progressLoading": "ja_Loading organization ",
-    "progressError": "ja_Failed to load organization "
+    "progressNoComplaint": "[ 組織のデータはありません ]",
+    "progressLoading": "組織の読み込み",
+    "progressError": "組織の読み込みに失敗しました",
+    "noDataMessage": "データはありません"
   },
   "organizations.menus": {
     "leftnav.item": "組織",
     "topbar.item": "組織"
   },
+  "organizations.comp.main": {
+    "title": "概観"
+  },
   "organizations.comp.info": {
-    "phone.label": "ja_Phone",
-    "email.label": "ja_Email",
-    "status.label": "ja_Status",
-    "identification.label": "ja_ID",
-    "primary.label": "ja_Primary Contact",
-    "parent.label": "ja_Parent Organization",
-    "parent.placeholder": "ja_Enter Parent Organization"
+    "title": "情報",
+    "phone.label": "電話",
+    "email.label": "電子メール",
+    "status.label": "状態",
+    "organization.label": "組織",
+    "identification.label": "識別番号",
+    "primary.label": "プライマリ連絡先",
+    "parent.label": "トップの組織",
+    "parent.placeholder": "トップの組織を入力"
   },
   "organizations.comp.actions": {
-    "export.button": "ja_Export",
-    "import.button": "ja_Import",
-    "delete.button": "ja_Delete",
-    "activate.button": "ja_Activate",
-    "deactivate.button": "ja_Deactivate",
-    "merge.button": "ja_Merge"
+    "title": "操作",
+    "export.button": "出力",
+    "import.button": "入力",
+    "delete.button": "削除",
+    "activate.button": "アクティブ化",
+    "deactivate.button": "無効化",
+    "merge.button": "結合"
   },
   "organizations.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Organization details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -36,7 +43,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "ja_Locations",
+    "title": "場所",
     "table.columns": {
       "type": "ja_Type",
       "streetAddress": "ja_Address 1",
@@ -82,7 +89,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "ja_Phone Numbers",
+    "title": "電話番号",
     "table.columns": {
       "type": "ja_Phone Type",
       "value": "ja_Phone Number",
@@ -114,7 +121,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "ja_Fax Numbers",
+    "title": "ファックス番号",
     "table.columns": {
       "type": "ja_Fax Type",
       "value": "ja_Fax Number",
@@ -146,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "ja_Email Addresses",
+    "title": "電子メール",
     "table.columns": {
       "type": "ja_Email Address Type",
       "value": "ja_Email Address",
@@ -178,7 +185,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "ja_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "ja_Type",
       "value": "ja_Url",
@@ -210,7 +217,7 @@
     }
   },
   "organizations.comp.dbas": {
-    "title": "ja_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "ja_Delete",
       "setPrimary": "ja_Set as Primary",
@@ -242,7 +249,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "ja_IDs",
+    "title": "組織識別番号",
     "table.columns": {
       "type": "ja_Type",
       "id": "ja_ID",
@@ -282,7 +289,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "ja_People",
+    "title": "人員",
     "table.columns": {
       "type": "ja_Role",
       "firstName": "ja_FirstName",
@@ -299,7 +306,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "ja_Cases",
+    "title": "案件",
     "table.columns": {
       "priority": "ja_Priority",
       "id": "ja_ID",
@@ -310,7 +317,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "ja_Complaints",
+    "title": "訴状",
     "table.columns": {
       "priority": "ja_Priority",
       "id": "ja_ID",
@@ -321,7 +328,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "ja_Related Organizations",
+    "title": "関連組織",
     "table.columns": {
       "associationType": "ja_Relationship",
       "type": "ja_Type",
@@ -342,7 +349,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "ja_History",
+    "title": "歴史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -414,5 +421,34 @@
     },
     "informCreated": "ja_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "ja_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "addresses.label": "場所",
+      "phones.label": "電話番号",
+      "faxes.label": "ファックス番号",
+      "emails.label": "電子メール",
+      "urls.label": "URL",
+      "dbas.label": "DBA",
+      "people.label": "人員",
+      "ids.label": "組織識別番号",
+      "complaints.label": "訴状",
+      "cases.label": "案件",
+      "related.label": "関連組織",
+      "history.label": "歴史"
+    },
+    "filters": {
+      "iHaveCreated": "私が作成しました",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "idAsc": "組織番号で並べ替え",
+      "idDesc": "組織番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
+      "nameDesc": "名で並べ替え降順",
+      "noSort": "(注文しません)"
+    }
+  }
 }

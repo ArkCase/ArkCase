@@ -325,7 +325,7 @@
       "incidentDateDesc": "Sort Incident Date Desc",
       "createdDateAsc": "Sort Created Date Asc",
       "createdDateDesc": "Sort Created Date Desc",
-      "byNameAsc": "Sort By Name Asc",
+      "nameAsc": "Sort By Name Asc",
       "noSort": "(No Sort)"
     }
   }
