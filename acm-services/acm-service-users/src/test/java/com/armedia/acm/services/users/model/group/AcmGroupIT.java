@@ -5,7 +5,10 @@ package com.armedia.acm.services.users.model.group;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.service.group.GroupService;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -39,6 +45,9 @@ public class AcmGroupIT
 
     @Autowired
     private AcmGroupDao groupDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @PersistenceContext
     private EntityManager entityManager;
