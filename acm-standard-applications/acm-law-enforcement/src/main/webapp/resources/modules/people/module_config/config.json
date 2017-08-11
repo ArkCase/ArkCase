@@ -1154,7 +1154,7 @@
           "field": "parent_object.object_id_s",
           "displayName": "people.comp.complaints.table.columns.id",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
@@ -1163,7 +1163,7 @@
           "sortField": "title_parseable_lcs",
           "displayName": "people.comp.complaints.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
@@ -1185,7 +1185,7 @@
           "field": "parent_object.modified_date_tdt",
           "displayName": "people.comp.complaints.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },
