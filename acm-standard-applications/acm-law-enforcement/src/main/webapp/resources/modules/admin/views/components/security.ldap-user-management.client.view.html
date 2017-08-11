@@ -2,12 +2,16 @@
     <panel-view header="{{'admin.security.ldap.user.management.title' | translate}}" collapsible="false">
         <div class="row">
             <object-authorization-roles data="appUsers" object-display-name="name" on-object-selected="onObjSelect"
-                                        role-display-name="name"
-                                        on-auth-role-change="onAuthRoleSelected"
+                                        role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                                         object-title="{{'admin.security.ldap.user.management.user' | translate}}"/>
         </div>
-        <button class="btn btn-sm btn-success" ng-click="cloneUser({}, selectedUser)">
-            <span translate>admin.security.ldap.user.management.cloneButton</span>
-        </button>
+        <div class="panel-body">
+            <button class="btn btn-sm btn-success" ng-click="cloneUser()">
+                <span translate>admin.security.ldap.user.management.cloneButton</span>
+            </button>
+            <button class="btn btn-sm btn-danger" ng-click="deleteUser()">
+                <span translate>admin.security.ldap.user.management.deleteUserBtn</span>
+            </button>
+        </div>
     </panel-view>
 </div>
