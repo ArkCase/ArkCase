@@ -100,7 +100,7 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         if (StringUtils.isEmpty(getType()))
         {
-            setType(AcmGroupType.ADHOC.name());
+            setType(AcmGroupType.ADHOC_GROUP.name());
         }
 
         if (StringUtils.isEmpty(getStatus()))
@@ -114,7 +114,7 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         if (StringUtils.isEmpty(getType()))
         {
-            setType(AcmGroupType.ADHOC.name());
+            setType(AcmGroupType.ADHOC_GROUP.name());
         }
 
         if (StringUtils.isEmpty(getStatus()))
