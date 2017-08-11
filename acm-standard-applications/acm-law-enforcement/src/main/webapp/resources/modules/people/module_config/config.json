@@ -1088,7 +1088,7 @@
           "field": "parent_object.object_id_s",
           "displayName": "people.comp.cases.table.columns.id",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
@@ -1096,7 +1096,7 @@
           "field": "parent_object.title_parseable",
           "displayName": "people.comp.cases.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
