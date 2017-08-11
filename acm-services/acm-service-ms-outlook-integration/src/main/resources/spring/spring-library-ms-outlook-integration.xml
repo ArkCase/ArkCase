@@ -89,6 +89,10 @@
     <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
         <property name="extendedService" ref="propertyFileCalendarAdminService"/>
     </bean>
+    
+    <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+    </bean>
 
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
