@@ -43,7 +43,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setCreate_date_tdt(in.getCreated());
         solr.setModified_date_tdt(in.getModified());
 
-        solr.setStatus_lcs(in.getUserState());
+        solr.setStatus_lcs(in.getUserState().name());
 
         // Add groups
         solr.setGroups_id_ss(new ArrayList<>(in.getGroupIds(in)));
@@ -76,7 +76,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setCreate_tdt(in.getCreated());
         solr.setLast_modified_tdt(in.getModified());
 
-        solr.setStatus_s(in.getUserState());
+        solr.setStatus_s(in.getUserState().name());
 
         return solr;
     }

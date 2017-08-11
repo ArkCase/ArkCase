@@ -59,38 +59,6 @@ public class LdapSyncService
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    public static Map<String, List<String>> reverseRoleToGroupMap(Map<String, String> roleToGroupsString)
-    {
-        Map<String, Set<String>> roleToGroups = roleToGroups(roleToGroupsString);
-
-        // generate all value-key pairs from the original map and then group the keys by these values
-        return roleToGroups.entrySet().stream()
-                .flatMap(entry -> entry.getValue().stream()
-                        .map(it -> new AbstractMap.SimpleEntry<>(it, entry.getKey())))
-                .collect(Collectors.groupingBy(AbstractMap.SimpleEntry::getKey,
-                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
-    }
-
-    public static Map<String, Set<String>> roleToGroups(Map<String, String> roleToGroupsString)
-    {
-        Function<String, Set<String>> groupsStringToSet = s -> {
-            String[] groupsPerRole = s.split(",");
-            return Arrays.stream(groupsPerRole)
-                    .filter(StringUtils::isNotEmpty)
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toSet());
-        };
-
-        return roleToGroupsString.entrySet()
-                .stream()
-                .filter(entry -> StringUtils.isNotEmpty(entry.getKey()))
-                .filter(entry -> StringUtils.isNotEmpty(entry.getValue()))
-                .collect(
-                        Collectors.toMap(entry -> entry.getKey().toUpperCase(),
-                                entry -> groupsStringToSet.apply(entry.getValue()))
-                );
-    }
-
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
     @Transactional
     public void ldapSync()
@@ -339,8 +307,7 @@ public class LdapSyncService
         Map<String, Set<LdapUser>> usersByApplicationRole = new TreeMap<>();
         Set<String> ldapGroups = usersByLdapGroup.keySet();
 
-        Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
-        Map<String, List<String>> groupToRoleMap = reverseRoleToGroupMap(roleToGroup);
+        Map<String, List<String>> groupToRoleMap = getLdapSyncConfig().getGroupToRolesMap();
 
         // for each role in group find all users in that group, than connect users to role
         ldapGroups.stream().filter(groupToRoleMap::containsKey).forEach(group ->
