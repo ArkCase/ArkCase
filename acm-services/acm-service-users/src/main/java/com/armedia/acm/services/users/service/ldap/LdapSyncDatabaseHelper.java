@@ -151,7 +151,7 @@ public class LdapSyncDatabaseHelper
         if (existing != null)
         {
             existing.getGroups().stream()
-                    .filter(g -> AcmGroupType.ADHOC.name().equalsIgnoreCase(g.getType()))
+                    .filter(g -> AcmGroupType.ADHOC_GROUP.name().equalsIgnoreCase(g.getType()))
                     .forEach(user::addGroup);
 
             Date deletedAt = existing.getDeletedAt();
