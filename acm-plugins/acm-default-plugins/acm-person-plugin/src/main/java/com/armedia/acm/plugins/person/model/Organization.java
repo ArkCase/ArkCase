@@ -126,6 +126,9 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
+    @Column(name = "cm_status", insertable = true, updatable = false)
+    private String status;
+
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
@@ -214,6 +217,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     @PrePersist
     protected void beforeInsert()
     {
+        if (getStatus() == null || getStatus().trim().isEmpty())
+        {
+            setStatus("ACTIVE");
+        }
         updateChildObjectsWithParentObjectReference();
     }
 
@@ -544,5 +551,16 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     public void setPersonAssociations(List<PersonOrganizationAssociation> personAssociations)
     {
         this.personAssociations = personAssociations;
+    }
+
+    @XmlTransient
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 }

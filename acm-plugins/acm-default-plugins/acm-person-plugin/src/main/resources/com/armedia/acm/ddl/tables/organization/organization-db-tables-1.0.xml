@@ -368,5 +368,12 @@
         <dropColumn tableName="acm_organization" columnName="cm_primary_contact"/>
     </changeSet>
 
+    <changeSet id="55-add-organization-status-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_organization">
+            <column name="cm_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
