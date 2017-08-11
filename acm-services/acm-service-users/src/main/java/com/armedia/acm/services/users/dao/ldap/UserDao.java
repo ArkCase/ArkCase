@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.AcmUserState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -129,7 +130,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
                 + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
                 + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", "VALID");
+        usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleNames", roles);
         usersWithRole.setParameter("userRoleState", "VALID");
 
@@ -143,7 +144,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
                 + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
                 + "AND role.roleName = :roleName " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", "VALID");
+        usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleName", role);
         usersWithRole.setParameter("userRoleState", "VALID");
 
@@ -161,7 +162,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         query.select(user);
 
         query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String>get("userState"), "VALID")));
+                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -175,7 +176,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query markInvalid = getEntityManager()
                 .createQuery("UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName");
-        markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("state", AcmUserState.INVALID);
         markInvalid.setParameter("now", new Date());
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
@@ -220,19 +221,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     }
 
     @Transactional
-    public AcmUser markUserAsDeleted(String name)
+    public AcmUser markUserInvalid(String id)
     {
-        String jpql = "SELECT user FROM AcmUser user WHERE user.userId = :userId";
-        TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
-
-        query.setParameter("userId", name);
-
-        AcmUser markedUser = query.getSingleResult();
-        markedUser.setUserState("INVALID");
-        markedUser.setDeletedAt(new Date());
-        getEntityManager().persist(markedUser);
-
-        return markedUser;
+        AcmUser user = findByUserId(id);
+        if (user != null)
+        {
+            user.setUserState(AcmUserState.INVALID);
+            user.setDeletedAt(new Date());
+        }
+        return user;
     }
 
     public boolean isUserPasswordExpired(String principal)

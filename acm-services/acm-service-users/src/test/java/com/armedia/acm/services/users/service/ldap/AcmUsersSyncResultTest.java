@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.LdapUser;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,12 +29,15 @@ public class AcmUsersSyncResultTest
     {
         LdapUser ldapUser1 = new LdapUser();
         ldapUser1.setUserId("1");
+        ldapUser1.setState("VALID");
         LdapUser ldapUser2 = new LdapUser();
         ldapUser2.setUserId("2");
+        ldapUser2.setState("VALID");
         List<LdapUser> ldapUsers = Arrays.asList(ldapUser1, ldapUser2);
 
         AcmUser user1 = new AcmUser();
         user1.setUserId("1");
+        user1.setUserState(AcmUserState.VALID);
         List<AcmUser> currentUsers = Arrays.asList(user1);
 
         Map<String, AcmUser> actual = unit.sync(ldapUsers, currentUsers);
@@ -52,14 +56,18 @@ public class AcmUsersSyncResultTest
     {
         LdapUser ldapUser1 = new LdapUser();
         ldapUser1.setUserId("1");
+        ldapUser1.setState("VALID");
         LdapUser ldapUser2 = new LdapUser();
         ldapUser2.setUserId("2");
+        ldapUser2.setState("VALID");
         List<LdapUser> ldapUsers = Arrays.asList(ldapUser1, ldapUser2);
 
         AcmUser user1 = new AcmUser();
         user1.setUserId("1");
+        user1.setUserState(AcmUserState.VALID);
         AcmUser user2 = new AcmUser();
         user2.setUserId("2");
+        user2.setUserState(AcmUserState.VALID);
         List<AcmUser> currentUsers = Arrays.asList(user1, user2);
 
         Map<String, AcmUser> actual = unit.sync(ldapUsers, currentUsers);
@@ -77,8 +85,10 @@ public class AcmUsersSyncResultTest
     {
         LdapUser ldapUser1 = new LdapUser();
         ldapUser1.setUserId("1");
+        ldapUser1.setState("VALID");
         LdapUser ldapUser2 = new LdapUser();
         ldapUser2.setUserId("2");
+        ldapUser2.setState("VALID");
         List<LdapUser> ldapUsers = Arrays.asList(ldapUser1, ldapUser2);
 
         List<AcmUser> currentUsers = new ArrayList<>();
@@ -98,16 +108,20 @@ public class AcmUsersSyncResultTest
     {
         LdapUser ldapUser1 = new LdapUser();
         ldapUser1.setUserId("1");
+        ldapUser1.setState("VALID");
         ldapUser1.setMail("email_changed");
         LdapUser ldapUser2 = new LdapUser();
         ldapUser2.setUserId("2");
+        ldapUser2.setState("VALID");
         List<LdapUser> ldapUsers = Arrays.asList(ldapUser1, ldapUser2);
 
         AcmUser user1 = new AcmUser();
         user1.setUserId("1");
         user1.setMail("email");
+        user1.setUserState(AcmUserState.VALID);
         AcmUser user2 = new AcmUser();
         user2.setUserId("2");
+        user2.setUserState(AcmUserState.VALID);
         List<AcmUser> currentUsers = Arrays.asList(user1, user2);
 
         Map<String, AcmUser> actual = unit.sync(ldapUsers, currentUsers);

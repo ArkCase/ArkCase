@@ -6,9 +6,8 @@ package com.armedia.acm.services.users.model.group;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.group.GroupService;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,10 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author riste.tutureski
@@ -239,7 +237,7 @@ public class AcmGroupIT
         AcmUser supervisor = new AcmUser();
         supervisor.setUserId("test-user");
         supervisor.setUserDirectoryName("Test Directory Name");
-        supervisor.setUserState("TEST");
+        supervisor.setUserState(AcmUserState.VALID);
         supervisor.setFirstName("First Name");
         supervisor.setLastName("Last Name");
 
