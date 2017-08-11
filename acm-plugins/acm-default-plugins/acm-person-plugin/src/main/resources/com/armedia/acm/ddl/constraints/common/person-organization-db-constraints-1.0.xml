@@ -20,4 +20,10 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+    <changeSet id="02-unique_person-organization-association_type" author="bojan.milenkoski">
+        <addUniqueConstraint tableName="acm_person_org_assoc"
+                             columnNames="cm_person_id, cm_organization_id, cm_person_to_org_assoc_type(767)"/>
+        <addUniqueConstraint tableName="acm_person_org_assoc"
+                             columnNames="cm_person_id, cm_organization_id, cm_org_to_person_assoc_type(767)"/>
+    </changeSet>
 </databaseChangeLog>
