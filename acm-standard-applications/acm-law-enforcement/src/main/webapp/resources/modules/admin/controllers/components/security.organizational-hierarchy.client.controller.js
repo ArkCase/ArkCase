@@ -146,7 +146,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function (result) {
                 //button cancel, nothing to do.
-                deferred.reject("cancel");
             });
             return deferred.promise;
         };
@@ -168,7 +167,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 //cancel btn
-                deferred.reject("cancel");
             });
             return deferred.promise;
         };
@@ -248,8 +246,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 // Cancel button was clicked
-                deferred.reject("cancel");
-                return [];
             });
             return deferred.promise;
         };
@@ -402,7 +398,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             });
             return deferred.promise;
         };
-
 
         $scope.onDeleteLdapMember = function (data) {
             var deferred = $q.defer();
@@ -770,8 +765,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 // Cancel button was clicked
-                deferred.reject();
-                return [];
             });
             return deferred.promise;
         };
