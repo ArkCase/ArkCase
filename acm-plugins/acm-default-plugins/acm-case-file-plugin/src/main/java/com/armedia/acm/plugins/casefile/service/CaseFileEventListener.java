@@ -23,6 +23,7 @@ import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -114,9 +115,14 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                             {
 
                                 // delete shared calendar if case closed
-                                AcmOutlookUser user = calendarAdminService.getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE);
-                                getCalendarService().deleteFolder(user, updatedCaseFile.getContainer().getContainerObjectId(), calId,
-                                        DeleteMode.MoveToDeletedItems);
+                                Optional<AcmOutlookUser> user = calendarAdminService
+                                        .getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE);
+                                // if integration is not enabled the user will be null.
+                                if (user.isPresent())
+                                {
+                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer().getContainerObjectId(),
+                                            calId, DeleteMode.MoveToDeletedItems);
+                                }
                             }
                             getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
                         }
