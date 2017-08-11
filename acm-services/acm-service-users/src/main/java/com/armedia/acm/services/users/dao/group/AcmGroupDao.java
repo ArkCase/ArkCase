@@ -6,6 +6,7 @@ package com.armedia.acm.services.users.dao.group;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
@@ -180,7 +181,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         query.setParameter("groupStatus", AcmGroupStatus.DELETE.name());
         query.setParameter("userRoleState", "VALID");
         query.setParameter("directoryName", directoryName);
-        query.setParameter("userState", "VALID");
+        query.setParameter("userState", AcmUserState.VALID);
 
         List<AcmGroup> groups = query.getResultList();
 

@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
@@ -17,7 +20,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -69,7 +71,8 @@ public class AcmUser implements Serializable
     private Date deletedAt;
 
     @Column(name = "cm_user_state")
-    private String userState;
+    @Enumerated(EnumType.STRING)
+    private AcmUserState userState;
 
     @Column(name = "cm_mail")
     private String mail;
@@ -105,9 +108,6 @@ public class AcmUser implements Serializable
 
     @Embedded
     private PasswordResetToken passwordResetToken;
-
-    @Transient
-    private Set<String> ldapGroups = new HashSet<>();
 
     @PrePersist
     public void preInsert()
@@ -202,12 +202,12 @@ public class AcmUser implements Serializable
         this.deletedAt = deletedAt;
     }
 
-    public String getUserState()
+    public AcmUserState getUserState()
     {
         return userState;
     }
 
-    public void setUserState(String userState)
+    public void setUserState(AcmUserState userState)
     {
         this.userState = userState;
     }
@@ -245,6 +245,15 @@ public class AcmUser implements Serializable
     public Set<AcmGroup> getGroups()
     {
         return groups;
+    }
+
+    @JsonIgnore
+    public Set<AcmGroup> getLdapGroups()
+    {
+        return groups == null ? new HashSet<>() :
+                groups.stream()
+                        .filter(group -> group.getType().equals(AcmGroupType.LDAP_GROUP.name()))
+                        .collect(Collectors.toSet());
     }
 
     @JsonIgnore
@@ -359,17 +368,6 @@ public class AcmUser implements Serializable
         }
 
         return user.getUserId().equals(getUserId());
-    }
-
-    @JsonIgnore
-    public Set<String> getLdapGroups()
-    {
-        return ldapGroups;
-    }
-
-    public void setLdapGroups(Set<String> ldapGroups)
-    {
-        this.ldapGroups = ldapGroups;
     }
 
     @JsonIgnore

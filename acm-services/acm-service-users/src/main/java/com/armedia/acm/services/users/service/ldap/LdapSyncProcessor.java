@@ -35,9 +35,8 @@ public class LdapSyncProcessor
 
         Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.getGroupsByUserIdMap(allGroupsByIdMap);
 
-        Map<String, String> roleToGroupsString = ldapSyncConfig.getRoleToGroupMap();
-        Map<String, Set<String>> roleToGroup = LdapSyncService.roleToGroups(roleToGroupsString);
-        Map<String, List<String>> groupToRoleMap = LdapSyncService.reverseRoleToGroupMap(roleToGroupsString);
+        Map<String, Set<String>> roleToGroup = ldapSyncConfig.getRoleToGroupsMap();
+        Map<String, List<String>> groupToRoleMap = ldapSyncConfig.getGroupToRolesMap();
 
         AcmUserRolesSyncResult acmUserRolesSyncResult = new AcmUserRolesSyncResult(acmGroupsSyncResult.getUserNewGroups(),
                 acmGroupsSyncResult.getUserRemovedGroups(), groupToRoleMap, userGroupsMap);
