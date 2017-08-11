@@ -7,6 +7,7 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
         , Util, ObjectService, PersonInfoService, Authentication
         , HelperUiGridService, HelperObjectBrowserService, PersonAssociationService, ObjectLookupService) {
 
+        const typeInitiator = 'Initiator';
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -46,8 +47,8 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+            gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -58,7 +59,7 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
             $scope.objectInfo = objectInfo;
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
-                PersonAssociationService.getPersonAssociations(currentObjectId, "COMPLAINT").then(function (data) {
+                PersonAssociationService.getPersonAssociations(currentObjectId, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
                     $scope.gridOptions.data = data.response.docs;
                     $scope.gridOptions.totalItems = data.response.numFound;
                     return data;
@@ -92,7 +93,7 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
             var params = {};
             params.types = $scope.personTypes;
             params.showDescription = true;
-            params.customFilter = '"Object Type": COMPLAINT';
+            params.customFilter = '"Object Type": ' + ObjectService.ObjectTypes.COMPLAINT;
             params.objectTypeLabel = $translate.instant("people.comp.complaints.objectType.label");
 
             if (rowEntity) {
@@ -164,6 +165,13 @@ angular.module('people').controller('People.ComplaintsController', ['$scope', '$
             };
         };
 
+        $scope.isEditDisabled = function (rowEntity) {
+            return rowEntity.type_lcs == typeInitiator;
+        };
+
+        $scope.isDeleteDisabled = function (rowEntity) {
+            return rowEntity.type_lcs == typeInitiator;
+        };
 
     }
 ]);
