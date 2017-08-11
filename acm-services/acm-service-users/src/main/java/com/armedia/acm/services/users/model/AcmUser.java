@@ -23,10 +23,11 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_user")
-public class AcmUser implements Serializable, AcmLdapUser
+public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -104,9 +105,6 @@ public class AcmUser implements Serializable, AcmLdapUser
 
     @Embedded
     private PasswordResetToken passwordResetToken;
-
-    @Transient
-    private String sortableValue;
 
     @Transient
     private Set<String> ldapGroups = new HashSet<>();
@@ -249,6 +247,18 @@ public class AcmUser implements Serializable, AcmLdapUser
         return groups;
     }
 
+    @JsonIgnore
+    public Set<String> getGroupIds(AcmUser in)
+    {
+        if (in.getGroups() != null)
+        {
+            return in.getGroups().stream()
+                    .map(AcmGroup::getName)
+                    .collect(Collectors.toSet());
+        }
+        return new HashSet<>();
+    }
+
     public void setGroups(Set<AcmGroup> groups)
     {
         // Bidirectional ManyToMany relation
@@ -351,7 +361,6 @@ public class AcmUser implements Serializable, AcmLdapUser
         return user.getUserId().equals(getUserId());
     }
 
-    @Override
     @JsonIgnore
     public Set<String> getLdapGroups()
     {
@@ -363,14 +372,12 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.ldapGroups = ldapGroups;
     }
 
-    @Override
     @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
     }
 
-    @Override
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
@@ -384,17 +391,6 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setUid(String uid)
     {
         this.uid = uid;
-    }
-
-    @JsonIgnore
-    public String getSortableValue()
-    {
-        return sortableValue;
-    }
-
-    public void setSortableValue(String sortableValue)
-    {
-        this.sortableValue = sortableValue;
     }
 
     public String getCountry()

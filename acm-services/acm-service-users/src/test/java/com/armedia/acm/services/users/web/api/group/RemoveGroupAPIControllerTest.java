@@ -66,7 +66,7 @@ public class RemoveGroupAPIControllerTest extends EasyMockSupport
         AcmGroup group = new AcmGroup();
 
         group.setName("Name");
-        group.setStatus(AcmGroupStatus.DELETE);
+        group.setStatus(AcmGroupStatus.DELETE.name());
 
         expect(getMockGroupDao().markGroupDelete(group.getName())).andReturn(group);
         expect(getMockAuthentication().getName()).andReturn("user");
@@ -87,7 +87,7 @@ public class RemoveGroupAPIControllerTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         AcmGroup resultGroup = objectMapper.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 
-        assertEquals(AcmGroupStatus.DELETE, resultGroup.getStatus());
+        assertEquals(AcmGroupStatus.DELETE.name(), resultGroup.getStatus());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 

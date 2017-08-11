@@ -12,11 +12,15 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     private String userSearchBase;
     private String userSearchFilter;
     private String allUsersFilter;
+    private String allChangedUsersFilter;
     private String allUsersSortingAttribute;
     private String groupSearchFilterForUser;
     private int syncPageSize = 500;
     private String allUsersPageFilter;
+    private String allChangedUsersPageFilter;
     private String groupSearchPageFilter;
+    private String changedGroupSearchPageFilter;
+    private String changedGroupSearchFilter;
     private String groupsSortingAttribute;
     private String[] userSyncAttributes;
 
@@ -110,6 +114,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
         this.allUsersFilter = allUsersFilter;
     }
 
+    public String getAllChangedUsersFilter()
+    {
+        return allChangedUsersFilter;
+    }
+
+    public void setAllChangedUsersFilter(String allChangedUsersFilter)
+    {
+        this.allChangedUsersFilter = allChangedUsersFilter;
+    }
+
     public String getAllUsersSortingAttribute()
     {
         return allUsersSortingAttribute;
@@ -140,6 +154,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
         this.allUsersPageFilter = allUsersPageFilter;
     }
 
+    public String getAllChangedUsersPageFilter()
+    {
+        return allChangedUsersPageFilter;
+    }
+
+    public void setAllChangedUsersPageFilter(String allChangedUsersPageFilter)
+    {
+        this.allChangedUsersPageFilter = allChangedUsersPageFilter;
+    }
+
     public String getGroupSearchPageFilter()
     {
         return groupSearchPageFilter;
@@ -148,6 +172,26 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupSearchPageFilter(String groupSearchPageFilter)
     {
         this.groupSearchPageFilter = groupSearchPageFilter;
+    }
+
+    public String getChangedGroupSearchPageFilter()
+    {
+        return changedGroupSearchPageFilter;
+    }
+
+    public void setChangedGroupSearchPageFilter(String changedGroupSearchPageFilter)
+    {
+        this.changedGroupSearchPageFilter = changedGroupSearchPageFilter;
+    }
+
+    public String getChangedGroupSearchFilter()
+    {
+        return changedGroupSearchFilter;
+    }
+
+    public void setChangedGroupSearchFilter(String changedGroupSearchFilter)
+    {
+        this.changedGroupSearchFilter = changedGroupSearchFilter;
     }
 
     public String getGroupsSortingAttribute()

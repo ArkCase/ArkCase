@@ -5,7 +5,6 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,7 +46,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setStatus_lcs(in.getUserState());
 
         // Add groups
-        solr.setGroups_id_ss(getGroupIds(in));
+        solr.setGroups_id_ss(new ArrayList<>(in.getGroupIds(in)));
 
         solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
         solr.setAdditionalProperty("country_s", in.getCountry());
@@ -93,23 +92,6 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmUser.class.equals(acmObjectType);
-    }
-
-    private List<String> getGroupIds(AcmUser in)
-    {
-        List<String> retval = null;
-
-        if (in != null && in.getGroups() != null && in.getGroups().size() > 0)
-        {
-            retval = new ArrayList<String>();
-
-            for (AcmGroup group : in.getGroups())
-            {
-                retval.add(group.getName());
-            }
-        }
-
-        return retval;
     }
 
     public UserDao getUserDao()
