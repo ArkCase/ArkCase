@@ -13,6 +13,8 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 1, 2017
  *
@@ -70,13 +72,11 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#getOutlookUser(java.lang.String)
      */
     @Override
-    public AcmOutlookUser getEventListenerOutlookUser(String objectType) throws AcmOutlookItemNotFoundException
+    public Optional<AcmOutlookUser> getEventListenerOutlookUser(String objectType) throws AcmOutlookItemNotFoundException
     {
         try
         {
-            CalendarConfigurationsByObjectType configurations = extendedService.readConfiguration(true);
-            CalendarConfiguration configuration = configurations.getConfiguration(objectType);
-            return new AcmOutlookUser(null, configuration.getSystemEmail(), configuration.getPassword());
+            return Optional.ofNullable(getOutlookUser(null, objectType));
         } catch (CalendarConfigurationException e)
         {
             log.warn("Could not read calendar configuration.", e);
@@ -92,18 +92,27 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * java.lang.String)
      */
     @Override
-    public AcmOutlookUser getHandlerOutlookUser(String userName, String objectType) throws PipelineProcessException
+    public Optional<AcmOutlookUser> getHandlerOutlookUser(String userName, String objectType) throws PipelineProcessException
     {
         try
         {
-            CalendarConfigurationsByObjectType configurations = extendedService.readConfiguration(true);
-            CalendarConfiguration configuration = configurations.getConfiguration(objectType);
-            return new AcmOutlookUser(userName, configuration.getSystemEmail(), configuration.getPassword());
+            return Optional.ofNullable(getOutlookUser(userName, objectType));
         } catch (CalendarConfigurationException e)
         {
             log.warn("Could not read calendar configuration.", e);
             throw new PipelineProcessException(e);
         }
+    }
+
+    private AcmOutlookUser getOutlookUser(String userName, String objectType) throws CalendarConfigurationException
+    {
+        CalendarConfigurationsByObjectType configurations = extendedService.readConfiguration(true);
+        CalendarConfiguration configuration = configurations.getConfiguration(objectType);
+        if (configuration != null && configuration.isIntegrationEnabled())
+        {
+            return new AcmOutlookUser(userName, configuration.getSystemEmail(), configuration.getPassword());
+        }
+        return null;
     }
 
     /**

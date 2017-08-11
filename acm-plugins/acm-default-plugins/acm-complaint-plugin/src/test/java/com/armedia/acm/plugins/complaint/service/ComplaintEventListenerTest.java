@@ -7,8 +7,6 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -36,6 +34,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -57,8 +56,6 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     private AcmAssignmentDao mockAcmAssignmentDao;
     private OutlookContainerCalendarService mockCalendarService;
     private OutlookCalendarAdminServiceExtension mockedCalendarAdminService;
-    private CalendarConfigurationsByObjectType mockedCalendarConfigurations;
-    private CalendarConfiguration mockedCalendarConfiguration;
     private AcmOutlookUser mockedOutlookUser;
     private ComplaintEventListener complaintEventListener;
 
@@ -71,8 +68,6 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         mockAcmAssignmentDao = createMock(AcmAssignmentDao.class);
         mockCalendarService = createMock(OutlookContainerCalendarService.class);
         mockedCalendarAdminService = createMock(OutlookCalendarAdminService.class);
-        mockedCalendarConfigurations = createMock(CalendarConfigurationsByObjectType.class);
-        mockedCalendarConfiguration = createMock(CalendarConfiguration.class);
         mockedOutlookUser = createMock(AcmOutlookUser.class);
 
         complaintEventListener = new ComplaintEventListener();
@@ -491,7 +486,8 @@ public class ComplaintEventListenerTest extends EasyMockSupport
                 capture(eventStatusCapture));
         expectLastCall().once();
 
-        expect(mockedCalendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE)).andReturn(mockedOutlookUser);
+        expect(mockedCalendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE))
+                .andReturn(Optional.of(mockedOutlookUser));
 
         replayAll();
         complaintEventListener.onApplicationEvent(event);
