@@ -59,7 +59,7 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
             $scope.objectInfo = objectInfo;
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
             if (Util.goodPositive(currentObjectId, false)) {
-                PersonAssociationService.getPersonAssociations(currentObjectId, "CASE_FILE").then(function (data) {
+                PersonAssociationService.getPersonAssociations(currentObjectId, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
                     $scope.gridOptions.data = data.response.docs;
                     $scope.gridOptions.totalItems = data.response.numFound;
                     return data;
@@ -93,7 +93,7 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
             var params = {};
             params.types = $scope.personTypes;
             params.showDescription = true;
-            params.customFilter = '"Object Type": CASE_FILE';
+            params.customFilter = '"Object Type": ' + ObjectService.ObjectTypes.CASE_FILE;
             params.objectTypeLabel = $translate.instant("people.comp.cases.objectType.label");
 
             if (rowEntity) {
