@@ -15,5 +15,36 @@
             <column name="cm_outlook_password" type="VARCHAR(1024)"/>
         </createTable>
     </changeSet>
+    <changeSet id="02-create-outlook-folder-tables" author="lazo.lazarev">
+        <createTable tableName="acm_outlook_folder_creator">
+            <column name="cm_outlook_folder_creator_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_outlook_folder_creator" primaryKey="true"/>
+            </column>
+            <column name="cm_creator_hash" type="VARCHAR(1024)">
+                <constraints unique="true" uniqueConstraintName="uk_folder_creator_hash"
+                             nullable="false"/>
+            </column>
+            <column name="cm_system_email_address" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_system_password" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="acm_outlook_object_reference">
+            <column name="cm_outlook_object_reference_id" type="${idType}">
+                <constraints primaryKeyName="pk_acm_outlook_object_reference" primaryKey="true"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_outlook_folder_creator_id" type="${idType}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
 </databaseChangeLog>
