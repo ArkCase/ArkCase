@@ -43,13 +43,12 @@ public class LdapUser
     {
         acmUser.setFirstName(getFirstName());
         acmUser.setLastName(getLastName());
-        acmUser.setUserState(getState());
+        acmUser.setUserState(AcmUserState.valueOf(getState()));
         acmUser.setMail(getMail());
         acmUser.setFullName(getFullName());
         acmUser.setCompany(getCompany());
         acmUser.setCountry(getCountry());
         acmUser.setCountryAbbreviation(getCountryAbbreviation());
-        acmUser.setUserState(getState());
         acmUser.setPasswordExpirationDate(getPasswordExpirationDate());
         return acmUser;
     }
@@ -57,7 +56,7 @@ public class LdapUser
     public boolean isChanged(AcmUser acmUser)
     {
         return !(Objects.equals(getDirectoryName(), acmUser.getUserDirectoryName()) &&
-                Objects.equals(getState(), acmUser.getUserState()) &&
+                Objects.equals(getState(), acmUser.getUserState().name()) &&
                 Objects.equals(getTitle(), acmUser.getTitle()) &&
                 Objects.equals(getMail(), acmUser.getMail()) &&
                 Objects.equals(getFirstName(), acmUser.getFirstName()) &&

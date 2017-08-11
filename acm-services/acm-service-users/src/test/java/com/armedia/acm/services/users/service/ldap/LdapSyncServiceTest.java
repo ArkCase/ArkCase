@@ -3,7 +3,6 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.LdapGroup;
 import com.armedia.acm.services.users.model.LdapUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,15 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.everyItem;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.isIn;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 public class LdapSyncServiceTest extends EasyMockSupport
@@ -52,79 +45,6 @@ public class LdapSyncServiceTest extends EasyMockSupport
 
         unit = new LdapSyncService();
         unit.setLdapDao(mockLdapDao);
-    }
-
-    @Test
-    public void testRoleToGroupsMap()
-    {
-        Map<String, String> roleToGroupMap = new HashMap<>();
-        roleToGroupMap.put("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR");
-        roleToGroupMap.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
-                + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
-                + "ARKCASE_ADMINISTRATOR");
-
-        Map<String, Set<String>> roleToGroups = unit.roleToGroups(roleToGroupMap);
-
-        assertThat("Key set should be the same", roleToGroups.keySet(), everyItem(isIn(roleToGroupMap.keySet())));
-
-        Set<String> expectedGroups = roleToGroupMap.entrySet()
-                .stream()
-                .flatMap(entry -> {
-                    String[] parts = entry.getValue().split(",");
-                    return Arrays.stream(parts);
-                })
-                .collect(Collectors.toSet());
-
-        Set<String> actualGroups = roleToGroups.values()
-                .stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-
-        assertThat("Value set should match", actualGroups, everyItem(isIn(expectedGroups)));
-
-        roleToGroupMap.forEach((role, groupsString) ->
-                roleToGroups.get(role).forEach(group ->
-                        assertThat("String with group list should contain mapped groups",
-                                groupsString, containsString(group))
-                )
-        );
-    }
-
-    @Test
-    public void reverseRoleToGroupsMap()
-    {
-        Map<String, String> roleToGroupArray = new HashMap<>();
-        roleToGroupArray.put("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR");
-        roleToGroupArray.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
-                + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
-                + "ARKCASE_ADMINISTRATOR");
-
-        Map<String, List<String>> groupToRoles = unit.reverseRoleToGroupMap(roleToGroupArray);
-
-        Set<String> expectedValues = groupToRoles.values()
-                .stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-
-        Set<String> actualValues = roleToGroupArray.values()
-                .stream()
-                .flatMap(it -> {
-                    String[] parts = it.split(",");
-                    return Arrays.stream(parts);
-                })
-                .collect(Collectors.toSet());
-
-        assertThat("Key set from actual should be expected's values", roleToGroupArray.keySet(),
-                everyItem(isIn(expectedValues)));
-        assertThat("Values from actual should be expected's key set", actualValues,
-                everyItem(isIn(groupToRoles.keySet())));
-
-        groupToRoles.forEach((key, value) -> {
-            value.forEach(role -> {
-                String groups = roleToGroupArray.get(role);
-                assertThat("Comma separated groups string should contain key", groups, containsString(key));
-            });
-        });
     }
 
     @Test
@@ -226,8 +146,7 @@ public class LdapSyncServiceTest extends EasyMockSupport
         List<LdapUser> ldapUsers = new ArrayList<>();
         Map<String, Set<LdapUser>> ldapGroupUsers = setupTestLdapUsersGroups(ldapGroups, ldapUsers);
 
-        AcmLdapSyncConfig mockLdapSyncConfig = createMock(AcmLdapSyncConfig.class);
-        unit.setLdapSyncConfig(mockLdapSyncConfig);
+        AcmLdapSyncConfig acmLdapSyncConfig = new AcmLdapSyncConfig();
 
         Map<String, String> roleToGroupMap = new HashMap<>();
         List<String> groups = new ArrayList<>(ldapGroupUsers.keySet());
@@ -246,20 +165,14 @@ public class LdapSyncServiceTest extends EasyMockSupport
             }
             expected.put(role, usersSet);
         }
-
-        expect(mockLdapSyncConfig.getRoleToGroupMap()).andReturn(roleToGroupMap);
-
-        replayAll();
+        acmLdapSyncConfig.setRoleToGroupMap(roleToGroupMap);
+        unit.setLdapSyncConfig(acmLdapSyncConfig);
 
         Map<String, Set<LdapUser>> actual = unit.getUsersByApplicationRole(ldapGroupUsers);
 
-        verifyAll();
-
         printMap(expected);
         printMap(actual);
-
         assertThat("Map should be equal", actual.entrySet(), everyItem(isIn(expected.entrySet())));
-
     }
 
     private Map<String, Set<LdapUser>> setupTestLdapUsersGroups(List<LdapGroup> ldapGroups, List<LdapUser> ldapUsers)
