@@ -502,7 +502,7 @@ public class ExchangeCalendarService
                 service = outlookDao.connect(outlookUser);
             } catch (AcmOutlookConnectionFailedException | CalendarServiceException e)
             {
-                // TODO add logging here
+                log.warn("Could not retrieve 'AcmOutlookUser' for object with [{}} id of type [{}]", objectId, objectType);
             }
             return Optional.ofNullable(service);
         };
@@ -523,7 +523,7 @@ public class ExchangeCalendarService
     /**
      * @param auth
      * @param objectId
-     *            TODO
+     *            id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException
@@ -536,7 +536,7 @@ public class ExchangeCalendarService
     /**
      * @param userId
      * @param objectId
-     *            TODO
+     *            id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException

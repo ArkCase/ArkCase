@@ -46,7 +46,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     @Override
     public AcmOutlookObjectReference getOutlookObjectReference(Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException
     {
-        // TODO add debug messages.
+        log.debug("Retrieving outlook object reference for object with id [{}] of [{}] type.", objectId, objectType);
+
         TypedQuery<AcmOutlookObjectReference> query = em.createQuery(
                 "SELECT oor FROM AcmOutlookObjectReference oor WHERE oor.objectId = :objectId AND oor.objectType = :objectType",
                 AcmOutlookObjectReference.class);
@@ -76,7 +77,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     public AcmOutlookFolderCreator getFolderCreator(String systemEmailAddress, String systemPassword)
             throws AcmOutlookFolderCreatorDaoException
     {
-        // TODO add debug messages.
+        log.debug("Retrieving outlook folder creator for system email address [{}].", systemEmailAddress);
+
         try
         {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -93,11 +95,14 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
             if (!resultList.isEmpty())
             {
+                log.debug("Outlook folder creator for system email address [{}] retrieved.", systemEmailAddress);
                 AcmOutlookFolderCreator outlookFolderCreator = resultList.get(0);
                 outlookFolderCreator.setSystemPassword(decryptValue(outlookFolderCreator.getSystemPassword()));
                 return outlookFolderCreator;
             } else
             {
+                log.debug("Retrieving outlook folder creator for system email address [{}] does not exist, creating one.",
+                        systemEmailAddress);
                 AcmOutlookFolderCreator folderCreator = new AcmOutlookFolderCreator(hash, systemEmailAddress, encryptValue(systemPassword));
                 AcmOutlookFolderCreator outlookFolderCreator = em.merge(folderCreator);
                 // the instance must be detached otherwise setting the system password will overwrite the encrypted
@@ -127,7 +132,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     @Override
     public AcmOutlookFolderCreator getFolderCreatorForObject(Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException
     {
-        // TODO add debug messages.
+        log.debug("Retrieving outlook folder creator for object with id [{}] of [{}] type.", objectId, objectType);
+
         TypedQuery<AcmOutlookFolderCreator> query = em.createQuery(
                 "SELECT ofc FROM AcmOutlookFolderCreator ofc JOIN ofc.outlookObjectReferences oor WHERE oor.objectId = :objectId AND oor.objectType = :objectType",
                 AcmOutlookFolderCreator.class);
@@ -135,7 +141,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         query.setParameter("objectType", objectType);
         try
         {
-            // TODO: an instance of AcmOutlookFolderCreator with decrypted systemPassword should be returned.
             AcmOutlookFolderCreator outlookFolderCreator = query.getSingleResult();
             outlookFolderCreator.setSystemPassword(decryptValue(outlookFolderCreator.getSystemPassword()));
             return outlookFolderCreator;
@@ -160,7 +165,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     public void recordFolderCreator(AcmOutlookFolderCreator creator, Long objectId, String objectType)
             throws AcmOutlookFolderCreatorDaoException
     {
-        // TODO add debug messages.
+        log.debug("Storing outlook folder creator for object with id [{}] of [{}] type.", objectId, objectType);
+
         AcmOutlookObjectReference objectReference = new AcmOutlookObjectReference();
         objectReference.setObjectId(objectId);
         objectReference.setObjectType(objectType);

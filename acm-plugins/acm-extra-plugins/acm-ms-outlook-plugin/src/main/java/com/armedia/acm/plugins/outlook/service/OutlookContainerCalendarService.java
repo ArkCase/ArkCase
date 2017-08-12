@@ -20,7 +20,7 @@ public interface OutlookContainerCalendarService
     OutlookFolder createFolder(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
             List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
 
-    void deleteFolder(AcmOutlookUser outlookUser, Long containerId, String folderId, DeleteMode deleteMode)
+    void deleteFolder(AcmOutlookUser outlookUser, AcmContainer container, String folderId, DeleteMode deleteMode)
             throws AcmOutlookItemNotFoundException;
 
     void updateFolderParticipants(AcmOutlookUser outlookUser, String folderId, List<AcmParticipant> participants)

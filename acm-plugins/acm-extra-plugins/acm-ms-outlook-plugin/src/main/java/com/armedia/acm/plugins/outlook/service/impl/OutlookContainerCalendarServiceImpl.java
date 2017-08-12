@@ -74,11 +74,10 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     @Override
     @Transactional
-    public void deleteFolder(AcmOutlookUser outlookUser, Long containerId, String folderId, DeleteMode deleteMode)
+    public void deleteFolder(AcmOutlookUser outlookUser, AcmContainer container, String folderId, DeleteMode deleteMode)
             throws AcmOutlookItemNotFoundException
     {
         outlookFolderService.deleteFolder(outlookUser, folderId, deleteMode);
-        AcmContainer container = acmContainerDao.find(containerId);
         container.setCalendarFolderId(null);
         acmContainerDao.save(container);
     }

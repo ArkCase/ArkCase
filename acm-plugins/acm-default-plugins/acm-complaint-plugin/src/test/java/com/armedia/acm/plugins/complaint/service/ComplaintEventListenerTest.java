@@ -474,11 +474,11 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         Capture<Complaint> complaintCapture = Capture.newInstance();
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
-        Capture<Long> containerIdCapture = Capture.newInstance();
+        Capture<AcmContainer> containerCapture = Capture.newInstance();
         Capture<String> calendarIdCapture = Capture.newInstance();
         Capture<AcmOutlookUser> calendarOutlookUser = Capture.newInstance();
 
-        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerIdCapture), capture(calendarIdCapture),
+        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerCapture), capture(calendarIdCapture),
                 eq(DeleteMode.MoveToDeletedItems));
         expectLastCall().once();
 
@@ -495,7 +495,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         verifyAll();
         assertEquals(statusToCheck, eventStatusCapture.getValue());
         verifyEvent(ipAddressCapture.getValue(), complaintCapture.getValue(), complaint);
-        assertEquals(complaint.getContainer().getContainerObjectId(), containerIdCapture.getValue());
+        assertEquals(complaint.getContainer(), containerCapture.getValue());
         assertEquals(complaint.getContainer().getCalendarFolderId(), calendarIdCapture.getValue());
     }
 }
