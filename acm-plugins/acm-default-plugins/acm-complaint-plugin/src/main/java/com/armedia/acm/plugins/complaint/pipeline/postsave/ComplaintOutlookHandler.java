@@ -73,8 +73,8 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
         {
             return;
         }
-        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer().getContainerObjectId(),
-                entity.getContainer().getCalendarFolderId(), DeleteMode.HardDelete);
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer(), entity.getContainer().getCalendarFolderId(),
+                DeleteMode.HardDelete);
     }
 
     /**

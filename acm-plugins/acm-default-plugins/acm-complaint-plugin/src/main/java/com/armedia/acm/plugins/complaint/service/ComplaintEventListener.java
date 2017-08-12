@@ -99,7 +99,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                             // if integration is not enabled the user will be null.
                             if (user.isPresent())
                             {
-                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer().getContainerObjectId(), calId,
+                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(), calId,
                                         DeleteMode.MoveToDeletedItems);
                             }
                         }
