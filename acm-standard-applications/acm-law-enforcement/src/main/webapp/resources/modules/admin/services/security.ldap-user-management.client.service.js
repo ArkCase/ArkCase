@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource', '$http', '$q', 'Acm.StoreService',
-    function ($resource, $http, $q, Store) {
+angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource', '$http'
+    , function ($resource, $http) {
         return ({
             queryGroupsByDirectory: queryGroupsByDirectory,
             queryAdhocGroups: queryAdhocGroups,
             addGroupsToUser: addGroupsToUser,
             removeGroupsFromUser: removeGroupsFromUser,
-            cloneUser: cloneUser
+            cloneUser: cloneUser,
+            deleteUser: deleteUser
         });
 
         function queryGroupsByDirectory(directory) {
@@ -18,7 +19,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
                     n: 1000
                 }
             });
-        };
+        }
 
         function queryAdhocGroups() {
             return $http({
@@ -28,27 +29,27 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
                     n: 1000
                 }
             });
-        };
+        }
 
         function addGroupsToUser(user, groups, directory) {
-            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups';
+            var url = 'api/latest/ldap/' + directory + '/manage/' + user + '/groups';
             return $http({
                 method: 'PUT',
                 url: url,
                 data: groups
             });
-        };
+        }
 
         function removeGroupsFromUser(user, groups, directory) {
             var groupNames = {};
             groupNames['groupNames'] = groups;
-            var url = 'api/latest/ldap/' + directory + '/manage/' + user +'/groups';
+            var url = 'api/latest/ldap/' + directory + '/manage/' + user + '/groups';
             return $http({
                 method: 'DELETE',
                 url: url,
                 params: groupNames
             });
-        };
+        }
 
         function cloneUser(user) {
             var url = 'api/latest/ldap/' + user.selectedUser.directory + '/users/' + user.selectedUser.key;
@@ -60,6 +61,14 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
                     password: user.password
                 }
             });
-        };
+        }
+
+        function deleteUser(user) {
+            var url = 'api/latest/ldap/' + user.directory + '/users/' + user.key;
+            return $http({
+                method: 'DELETE',
+                url: url
+            });
+        }
     }
 ]);

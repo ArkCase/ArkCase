@@ -36,9 +36,16 @@
 	
 	<bean id="timesheetEventPublisher" class="com.armedia.acm.services.timesheet.service.TimesheetEventPublisher" />
 	
+	<bean id="timesheetAssociatedEventPublisher" class="com.armedia.acm.services.timesheet.service.TimesheetAssociatedEventPublisher" />
+	
 	<bean id="timesheetWorkflowListener" class="com.armedia.acm.services.timesheet.service.TimesheetWorkflowListener">
 		<property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
 		<property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+	</bean>
+	
+	<bean id="timesheetHistoryEventListener" class="com.armedia.acm.services.timesheet.service.TimesheetHistoryEventListener">
+		<property name="acmDataService" ref="acmDataService"/>
+		<property name="timesheetAssociatedEventPublisher" ref="timesheetAssociatedEventPublisher"/>
 	</bean>
 	
 	<bean id="timesheetToSolrTransformer" class="com.armedia.acm.services.timesheet.service.TimesheetToSolrTransformer">

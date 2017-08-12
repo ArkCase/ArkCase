@@ -26,7 +26,7 @@ public class AcmUserRole
     @PrePersist
     public void preInsert()
     {
-        setUserRoleState("VALID");
+        setUserRoleState(AcmUserRoleState.VALID.name());
     }
 
     public String getRoleName()

@@ -36,9 +36,16 @@
     
     <bean id="costsheetEventPublisher" class="com.armedia.acm.services.costsheet.service.CostsheetEventPublisher" />
     
+    <bean id="costsheetAssociatedEventPublisher" class="com.armedia.acm.services.costsheet.service.CostsheetAssociatedEventPublisher" />
+    
     <bean id="costsheetWorkflowListener" class="com.armedia.acm.services.costsheet.service.CostsheetWorkflowListener">
 		<property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
 		<property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+	</bean>
+	
+	<bean id="costsheetHistoryEventListener" class="com.armedia.acm.services.costsheet.service.CostsheetHistoryEventListener">		
+        <property name="acmDataService" ref="acmDataService"/>
+		<property name="costsheetAssociatedEventPublisher" ref="costsheetAssociatedEventPublisher" />
 	</bean>
     
     <bean id="costsheetToSolrTransformer" class="com.armedia.acm.services.costsheet.service.CostsheetToSolrTransformer">

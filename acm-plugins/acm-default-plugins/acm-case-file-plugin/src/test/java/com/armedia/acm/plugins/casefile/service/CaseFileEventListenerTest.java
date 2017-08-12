@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -474,7 +475,8 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture), capture(eventStatusCapture));
         expectLastCall().once();
 
-        expect(mockedCalendarAdminService.getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE)).andReturn(mockedOutlookUser);
+        expect(mockedCalendarAdminService.getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE))
+                .andReturn(Optional.of(mockedOutlookUser));
 
         replayAll();
         caseFileEventListener.onApplicationEvent(event);

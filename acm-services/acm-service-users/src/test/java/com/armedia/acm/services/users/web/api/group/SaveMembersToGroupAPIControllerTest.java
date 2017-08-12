@@ -6,6 +6,7 @@ package com.armedia.acm.services.users.web.api.group;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -88,7 +89,7 @@ public class SaveMembersToGroupAPIControllerTest extends EasyMockSupport
         AcmUser user = new AcmUser();
         user.setUserId("test-user");
         user.setUserDirectoryName("Test Directory Name");
-        user.setUserState("TEST");
+        user.setUserState(AcmUserState.VALID);
         user.setFirstName("First Name");
         user.setLastName("Last Name");
 
