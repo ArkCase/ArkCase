@@ -23,6 +23,7 @@ import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -93,9 +94,14 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                         {
 
                             // delete shared calendar if complaint closed
-                            AcmOutlookUser user = calendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE);
-                            getCalendarService().deleteFolder(user, updatedComplaint.getContainer().getContainerObjectId(), calId,
-                                    DeleteMode.MoveToDeletedItems);
+                            Optional<AcmOutlookUser> user = calendarAdminService
+                                    .getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE);
+                            // if integration is not enabled the user will be null.
+                            if (user.isPresent())
+                            {
+                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer().getContainerObjectId(), calId,
+                                        DeleteMode.MoveToDeletedItems);
+                            }
                         }
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
                     }

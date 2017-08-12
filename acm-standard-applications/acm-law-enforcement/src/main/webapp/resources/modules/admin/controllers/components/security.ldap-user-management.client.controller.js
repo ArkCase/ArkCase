@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LdapUserManagementController', ['$scope', 'Admin.FunctionalAccessControlService', 'Admin.LdapUserManagementService', '$q', '$modal', 'LookupService', 'MessageService',
-    function ($scope, functionalAccessControlService, ldapUserManagementService, $q, $modal, LookupService, messageService) {
+angular.module('admin').controller('Admin.LdapUserManagementController', ['$scope', '$q', '$modal', '$timeout'
+    , 'Admin.LdapUserManagementService', 'LookupService', 'MessageService'
+    , function ($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService) {
 
         $scope.cloneUser = cloneUser;
-        $scope.selectedUser = null;
         $scope.onObjSelect = onObjSelect;
         $scope.onAuthRoleSelected = onAuthRoleSelected;
 
@@ -13,7 +13,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
 
         LookupService.getUsers().then(function (data) {
             _.forEach(data, function (user) {
-                var element = new Object;
+                var element = {};
                 element.name = user.name;
                 element.key = user.object_id_s;
                 element.directory = user.directory_name_s;
@@ -21,13 +21,16 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             });
         });
 
+        var selectedUser;
+        var currentAuthGroups;
+
         //callback function when user is selected
         function onObjSelect(selectedObject, authorized, notAuthorized) {
-            $scope.currentAuthGroups = [];
-            $scope.selectedUser = selectedObject;
+            selectedUser = selectedObject;
+            currentAuthGroups = [];
 
-            var ldapGroupsPromise = ldapUserManagementService.queryGroupsByDirectory(selectedObject.directory);
-            var adHocGroupsPromise = ldapUserManagementService.queryAdhocGroups();
+            var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);
+            var adHocGroupsPromise = LdapUserManagementService.queryAdhocGroups();
 
             $q.all([ldapGroupsPromise, adHocGroupsPromise]).then(function (result) {
                 // merge LDAP and Ad-hoc groups into a single structure
@@ -40,10 +43,10 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                             authObject.key = group.name;
                             authObject.name = group.name;
                             authorized.push(authObject);
-                            $scope.currentAuthGroups.push(authObject.key);
+                            currentAuthGroups.push(authObject.key);
                         }
                     });
-                    if ($scope.currentAuthGroups.indexOf(group.name) == -1) {
+                    if (currentAuthGroups.indexOf(group.name) === -1) {
                         //we need to create wrapper to provide a name property
                         var notAuthorizedRole = {};
                         notAuthorizedRole.key = group.name;
@@ -62,46 +65,44 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
 
             //get roles which needs to be added
             _.forEach(authorized, function (group) {
-                if ($scope.currentAuthGroups.indexOf(group.key) == -1) {
+                if (currentAuthGroups.indexOf(group.key) === -1) {
                     toBeAdded.push(group.key);
                 }
             });
             _.forEach(notAuthorized, function (group) {
-                if ($scope.currentAuthGroups.indexOf(group.key) != -1) {
+                if (currentAuthGroups.indexOf(group.key) !== -1) {
                     toBeRemoved.push(group.key);
                 }
             });
             //perform adding on server
             if (toBeAdded.length > 0) {
-                $scope.currentAuthGroups = $scope.currentAuthGroups.concat(toBeAdded);
+                currentAuthGroups = currentAuthGroups.concat(toBeAdded);
 
-                ldapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(function (data) {
-                    messageService.succsessAction();
+                LdapUserManagementService.addGroupsToUser(selectedObject.key, toBeAdded, selectedObject.directory).then(function (data) {
+                    MessageService.succsessAction();
                 }, function () {
                     //error adding group
-                    messageService.errorAction();
+                    MessageService.errorAction();
                 });
                 return deferred.promise;
             }
 
             if (toBeRemoved.length > 0) {
-
-
                 _.forEach(toBeRemoved, function (element) {
-                    $scope.currentAuthGroups.splice($scope.currentAuthGroups.indexOf(element), 1);
+                    currentAuthGroups.splice(currentAuthGroups.indexOf(element), 1);
                 });
 
-                ldapUserManagementService.removeGroupsFromUser(selectedObject.key, toBeRemoved, selectedObject.directory).then(function (data) {
-                    messageService.succsessAction();
+                LdapUserManagementService.removeGroupsFromUser(selectedObject.key, toBeRemoved, selectedObject.directory).then(function (data) {
+                    MessageService.succsessAction();
                 }, function () {
                     //error adding group
-                    messageService.errorAction();
+                    MessageService.errorAction();
                 });
                 return deferred.promise;
             }
-        };
+        }
 
-        function cloneUser(user, selectedUser) {
+        function cloneUser() {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
@@ -110,11 +111,10 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                     $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
-                    $scope.user = user;
-                    $scope.selectedUser = selectedUser;
+                    $scope.user = {};
                     $scope.data = {
                         "acmUser": $scope.user,
-                        "selectedUser": $scope.selectedUser
+                        "selectedUser": selectedUser
                     };
                     $scope.ok = function () {
                         $modalInstance.close($scope.data);
@@ -124,20 +124,31 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             });
 
             modalInstance.result.then(function (user) {
-                ldapUserManagementService.cloneUser(user).then(function (response) {
+                LdapUserManagementService.cloneUser(user).then(function (response) {
                     // add the new user to the list
-                    var element = new Object;
+                    var element = {};
                     element.name = response.data.fullName;
                     element.key = response.data.userId;
                     element.directory = response.data.userDirectoryName;
                     $scope.appUsers.push(element);
-                    messageService.succsessAction();
+                    MessageService.succsessAction();
                 }, function () {
-                    //error adding group
-                    messageService.errorAction();
+                    //error adding user
+                    MessageService.errorAction();
                 });
             }, function () {
                 // Cancel button was clicked
+            });
+        }
+
+        $scope.deleteUser = function () {
+            LdapUserManagementService.deleteUser(selectedUser).then(function () {
+                $scope.appUsers = _.reject($scope.appUsers, function (element) {
+                    return element.key === selectedUser.key;
+                });
+                MessageService.succsessAction();
+            }, function () {
+                MessageService.errorAction();
             });
         }
     }

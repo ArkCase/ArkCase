@@ -86,8 +86,9 @@
 
     <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
         <property name="batchUpdateBasedOnLastModifiedEnabled" value="${solr.enableBatchUpdateBasedOnLastModified}"/>
-        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="lastBatchUpdatePropertyFileLocation"
+                  value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="batchSize" value="${solr.batchUpdateBatchSize}"/>
         <property name="objectsToSearchService" ref="jpaObjectsToSearchService"/>
@@ -119,5 +120,8 @@
         <property name="pluginSearch" ref="pluginSearch"/>
     </bean>
 
+    <bean id="solrJoinDocumentsService" class="com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl">
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
 
 </beans>

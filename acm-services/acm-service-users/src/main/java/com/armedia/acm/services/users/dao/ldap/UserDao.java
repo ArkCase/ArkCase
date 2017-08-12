@@ -2,10 +2,11 @@ package com.armedia.acm.services.users.dao.ldap;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
-import com.armedia.acm.services.users.model.RoleType;
+import com.armedia.acm.services.users.model.AcmUserState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -93,10 +94,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByRoleType(RoleType roleType)
+    public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role WHERE role.roleType= :roleType");
-        roleQuery.setParameter("roleType", roleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -112,13 +113,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, RoleType roleType)
+    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, AcmRoleType acmRoleType)
     {
         Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " + "WHERE acmRole.roleName IN "
                 + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
                 + "AND userRole.userRoleState = :userRoleState) " + "AND acmRole.roleType = :roleType");
         roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("roleType", roleType.getRoleName());
+        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
         roleQuery.setParameter("userRoleState", "VALID");
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
@@ -129,7 +130,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
                 + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
                 + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", "VALID");
+        usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleNames", roles);
         usersWithRole.setParameter("userRoleState", "VALID");
 
@@ -143,7 +144,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
                 + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
                 + "AND role.roleName = :roleName " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", "VALID");
+        usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleName", role);
         usersWithRole.setParameter("userRoleState", "VALID");
 
@@ -161,7 +162,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         query.select(user);
 
         query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String>get("userState"), "VALID")));
+                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -175,7 +176,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query markInvalid = getEntityManager()
                 .createQuery("UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName");
-        markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("state", AcmUserState.INVALID);
         markInvalid.setParameter("now", new Date());
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
@@ -192,11 +193,9 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmRole saveAcmRole(AcmRole in)
     {
-
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
-
             getEntityManager().persist(in);
             getEntityManager().flush();
         }
@@ -217,31 +216,25 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             return userRole;
         }
 
-        existing.setUserRoleState("VALID");
-        getEntityManager().persist(existing);
-
-        return existing;
+        existing.setUserRoleState(userRole.getUserRoleState());
+        return userRole;
     }
 
     @Transactional
-    public AcmUser markUserAsDeleted(String name)
+    public AcmUser markUserInvalid(String id)
     {
-        String jpql = "SELECT user FROM AcmUser user WHERE user.userId = :userId";
-        TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
-
-        query.setParameter("userId", name);
-
-        AcmUser markedUser = query.getSingleResult();
-        markedUser.setUserState("INVALID");
-        markedUser.setDeletedAt(new Date());
-        getEntityManager().persist(markedUser);
-
-        return markedUser;
+        AcmUser user = findByUserId(id);
+        if (user != null)
+        {
+            user.setUserState(AcmUserState.INVALID);
+            user.setDeletedAt(new Date());
+        }
+        return user;
     }
 
     public boolean isUserPasswordExpired(String principal)
     {
-        log.debug("Check password expiration for user: {}", principal);
+        log.debug("Check password expiration for user [{}]", principal);
         try
         {
             AcmUser user = findByUserIdAnyCase(principal);
@@ -250,10 +243,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             {
                 return userPasswordExpirationDate.isBefore(LocalDate.now());
             }
-            log.info("Expiration date not set for user : {}", user.getUserId());
+            log.info("Password expiration date is not set for user [{}]", principal);
         } catch (NoResultException | NonUniqueResultException e)
         {
-            log.debug("User: {} not found!", principal);
+            log.debug("User [{}] not found!", principal);
         }
         return false;
     }
@@ -268,9 +261,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             return query.getSingleResult();
         } catch (NoResultException | NonUniqueResultException e)
         {
-            log.error("User with password reset token: {} not found!", token, e.getMessage());
+            log.error("User with password reset token: [{}] not found!", token, e.getMessage());
             return null;
         }
+    }
+
+    public List<AcmUser> findByDirectory(String directoryName)
+    {
+        TypedQuery<AcmUser> allUsersInDirectory = getEm()
+                .createQuery("SELECT DISTINCT acmUser FROM AcmUser acmUser LEFT JOIN FETCH acmUser.groups "
+                        + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
+        allUsersInDirectory.setParameter("directoryName", directoryName);
+        return allUsersInDirectory.getResultList();
     }
 
     public EntityManager getEntityManager()

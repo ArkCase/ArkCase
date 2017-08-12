@@ -16,6 +16,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 /**
@@ -43,19 +45,24 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.trace("CaseFile entrering CaseFileOutlookHandler : [{}]", entity);
-        AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
+        Optional<AcmOutlookUser> user = getConfiguredCalendarUser(pipelineContext);
+        // if integration is not enabled the user will be null.
+        if (!user.isPresent())
+        {
+            return;
+        }
 
         // create calendar folder
         if (autoCreateFolderForCaseFile && pipelineContext.isNewCase())
         {
-            createOutlookFolder(user, entity, pipelineContext);
+            createOutlookFolder(user.get(), entity, pipelineContext);
         }
         log.info("CaseFile entity post - autoCreateFolderForCaseFile  CaseFileOutlookHandler : [{}]", entity);
 
         if (!pipelineContext.isNewCase() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
         {
             // update folder participants
-            updateOutlookFolderParticipants(user, entity, pipelineContext);
+            updateOutlookFolderParticipants(user.get(), entity, pipelineContext);
         }
         log.trace("CaseFile exiting CaseFileOutlookHandler : [{}]", entity);
 
@@ -65,8 +72,13 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
     public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         log.info("Delete created calendar folder for '{}'", entity.getCaseNumber());
-        AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
-        getOutlookContainerCalendarService().deleteFolder(user, entity.getContainer().getContainerObjectId(),
+        Optional<AcmOutlookUser> user = getConfiguredCalendarUser(pipelineContext);
+        // if integration is not enabled the user will be null.
+        if (!user.isPresent())
+        {
+            return;
+        }
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer().getContainerObjectId(),
                 entity.getContainer().getCalendarFolderId(), DeleteMode.MoveToDeletedItems);
     }
 
@@ -75,7 +87,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
      * @return
      * @throws PipelineProcessException
      */
-    private AcmOutlookUser getConfiguredCalendarUser(CaseFilePipelineContext pipelineContext) throws PipelineProcessException
+    private Optional<AcmOutlookUser> getConfiguredCalendarUser(CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         return calendarAdminService.getHandlerOutlookUser(pipelineContext.getAuthentication().getName(), CaseFileConstants.OBJECT_TYPE);
     }

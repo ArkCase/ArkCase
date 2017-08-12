@@ -85,7 +85,7 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
                 scope.selectedAuthorized = "";
                 scope.authorized = [];
                 scope.notAuthorized = [];
-                
+
                 //authorize button is clicked
                 scope.authorize = function () {
                     //don't do anything if array null or empty
@@ -117,19 +117,21 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
                 scope.selectObject = function () {
                     scope.authorized = [];
                     scope.notAuthorized = [];
-                    scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
+                    if (scope.selectedObject) {
+                        scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
+                    }
                 };
 
                 //roles has been changed, call callback function with changed values
                 scope.authRoleChange = function () {
                     scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
                         //success save
-                    	messageService.succsessAction();    	
+                        messageService.succsessAction();
                     }, function () {
                         //error save
-                    	messageService.errorAction();
+                        messageService.errorAction();
                     });
-                    
+
                     var allMenuObj = [];
                     angular.forEach(Menus.allMenuObjects, function (menuO) {
                         allMenuObj.push(menuO);
@@ -150,18 +152,18 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
     }
 ]);
 
-angular.module('directives').filter('orderObjectBy', function(){
-    return function(input) {
+angular.module('directives').filter('orderObjectBy', function () {
+    return function (input) {
         if (!angular.isObject(input)) return input;
 
         var array = [];
-        for(var objectKey in input) {
+        for (var objectKey in input) {
             array.push(input[objectKey]);
         }
 
-        array.sort(function(a, b){
-            a=a["name"];
-            b=b["name"];
+        array.sort(function (a, b) {
+            a = a["name"];
+            b = b["name"];
             return a > b ? 1 : a < b ? -1 : 0;
         });
         return array;
