@@ -12,7 +12,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
@@ -30,7 +29,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -92,9 +90,6 @@ public class CalendarEntityHandlerTest
     private CalendarEntityHandler entityHandler;
 
     @Mock
-    private ConfigurationFileAddedEvent mockedConfigurationEvent;
-
-    @Mock
     private AcmContainerEntity mockedContainerEntity;
 
     @Mock
@@ -127,9 +122,7 @@ public class CalendarEntityHandlerTest
     {
         entityHandler.setEntityType("CASE_FILE");
         entityHandler.setEntityTypeForQuery("CaseFile");
-        File purgerSettings = new File(getClass().getClassLoader().getResource("calendarPurgersSettings.properties").getFile());
-        when(mockedConfigurationEvent.getConfigFile()).thenReturn(purgerSettings);
-        entityHandler.onApplicationEvent(mockedConfigurationEvent);
+        entityHandler.setClosedStates("CLOSED");
     }
 
     /**

@@ -77,6 +77,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         caseFileEventListener.setAcmAssignmentDao(mockAcmAssignmentDao);
         caseFileEventListener.setCalendarService(mockCalendarService);
         caseFileEventListener.setCalendarAdminService(mockedCalendarAdminService);
+        caseFileEventListener.setCaseFileStatusClosed("CLOSED");
     }
 
     public CaseFile getCase()
