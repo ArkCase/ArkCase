@@ -68,12 +68,12 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
             for (Throwable t : suppressed)
             {
-                if (!CalendarConfigurationValidationExcpetion.class.equals(t.getClass()))
+                if (!CalendarConfigurationValidationException.class.equals(t.getClass()))
                 {
                     continue;
                 }
 
-                CalendarConfigurationValidationExcpetion cce = CalendarConfigurationValidationExcpetion.class.cast(t);
+                CalendarConfigurationValidationException cce = CalendarConfigurationValidationException.class.cast(t);
                 String objectType = cce.getObjectType();
                 Map<String, String> validationfaiulureByType = validationFailures.computeIfAbsent(objectType, k -> new HashMap<>());
 
@@ -284,7 +284,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 {
                     cce = new CalendarConfigurationException("Exception during writing calendar configuration properties.");
                 }
-                cce.addSuppressed(new CalendarConfigurationValidationExcpetion(
+                cce.addSuppressed(new CalendarConfigurationValidationException(
                         String.format("System email and password must be provided for object type %s.", objectType), objectType));
             }
             else
@@ -343,7 +343,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 {
                     cce = new CalendarConfigurationException("Exception during writing calendar configuration properties.");
                 }
-                cce.addSuppressed(new CalendarConfigurationValidationExcpetion(
+                cce.addSuppressed(new CalendarConfigurationValidationException(
                         String.format("Number of days has to be provided for purge option for object type %s.", objectType), objectType));
             }
             else

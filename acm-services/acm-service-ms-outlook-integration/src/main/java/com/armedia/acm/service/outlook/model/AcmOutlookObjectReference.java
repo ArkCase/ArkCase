@@ -21,7 +21,7 @@ public class AcmOutlookObjectReference
 {
 
     @Id
-    @TableGenerator(name = "outlook_object_reference_gen", table = "acm_outlook_object_referencer_id", pkColumnName = "cm_seq_name",
+    @TableGenerator(name = "outlook_object_reference_gen", table = "acm_outlook_object_reference_id", pkColumnName = "cm_seq_name",
             valueColumnName = "cm_seq_num", pkColumnValue = "acm_outlook_object_reference", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "outlook_object_reference_gen")
     @Column(name = "cm_outlook_object_reference_id")

@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
@@ -69,6 +70,12 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     public static enum PermissionType
     {
         READ, WRITE, DELETE;
+    }
+
+    @FunctionalInterface
+    public static interface ServiceConnector
+    {
+        Optional<ExchangeService> connect(Long objectId);
     }
 
     private static final Object CALENDAR_PURGERS_CONFIGUTATION_FILENAME = "calendarPurgersSettings.properties";
@@ -218,7 +225,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         }
     }
 
-    public List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String sort,
+    public List<AcmCalendarInfo> listCalendars(ServiceConnector connector, AcmUser user, Authentication auth, String sort,
             String sortDirection, int start, int maxItems)
     {
         throw new UnsupportedOperationException("This operation is not supported by Exchnage.");
@@ -362,11 +369,11 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
 
     /**
      *
-     * @param service
+     * @param connector
      * @param purgeOptions
      * @param daysClosed
      */
-    public void purgeCalendars(ExchangeService service, PurgeOptions purgeOptions, Integer daysClosed)
+    public void purgeCalendars(ServiceConnector connector, PurgeOptions purgeOptions, Integer daysClosed)
     {
         switch (purgeOptions)
         {
@@ -375,7 +382,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         case CLOSED:
         case CLOSED_X_DAYS:
             List<AcmContainerEntity> purgeCandidates = getEntities(daysClosed);
-            purgeCalendars(service, purgeCandidates);
+            purgeCalendars(connector, purgeCandidates);
             break;
         }
 
@@ -416,7 +423,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     /**
      * @param purgeCandidates
      */
-    private void purgeCalendars(ExchangeService service, List<AcmContainerEntity> purgeCandidates)
+    private void purgeCalendars(ServiceConnector connector, List<AcmContainerEntity> purgeCandidates)
     {
         for (AcmContainerEntity entity : purgeCandidates)
         {
@@ -430,6 +437,13 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
                 Date startDate = container.getCreated();
                 Date endDate = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
                 CalendarView calendarView = new CalendarView(startDate, endDate);
+
+                Optional<ExchangeService> potentialService = connector.connect(container.getContainerObjectId());
+                if (!potentialService.isPresent())
+                {
+                    continue;
+                }
+                ExchangeService service = potentialService.get();
                 CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(container.getCalendarFolderId()));
 
                 FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);

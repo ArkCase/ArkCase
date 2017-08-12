@@ -40,6 +40,7 @@
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
         <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -88,6 +89,10 @@
     
     <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
         <property name="extendedService" ref="propertyFileCalendarAdminService"/>
+    </bean>
+    
+    <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
     </bean>
 
     <util:constant id="propertyDefinitionSubject"
