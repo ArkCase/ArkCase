@@ -10,6 +10,7 @@
             <property name="containerEntityDao" ref="acmContainerFolderDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="entityIdForQuery" value="id"/>
+            <property name="closedStates" value="${casefile.status.closed}"/>
         </bean>
         <bean id="complaintEntityHandler" class="com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler">
             <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
@@ -18,6 +19,7 @@
             <property name="containerEntityDao" ref="acmContainerFolderDao"/>
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="entityIdForQuery" value="complaintId"/>
+            <property name="closedStates" value="${complaint.status.closed}"/>
         </bean>
 
         <bean id="calendarServiceProvider" class="com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService">
