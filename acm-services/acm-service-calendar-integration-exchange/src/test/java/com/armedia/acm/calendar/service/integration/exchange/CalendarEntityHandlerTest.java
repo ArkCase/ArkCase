@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
@@ -51,8 +53,8 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.management.*", "javax.net.ssl.*"})
-@PrepareForTest({CalendarFolder.class, FindItemsResults.class, Appointment.class})
+@PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
+@PrepareForTest({ CalendarFolder.class, FindItemsResults.class, Appointment.class })
 public class CalendarEntityHandlerTest
 {
 
@@ -61,6 +63,9 @@ public class CalendarEntityHandlerTest
     private static final String UNIQUE_ITEM_ID = "UNIQUE_ITEM_ID";
 
     private static final String ENTITY_TYPE_FOR_QUERY = "CaseFile";
+
+    @Mock
+    private ServiceConnector mockedServiceConnector;
 
     @Mock
     private ExchangeService mockedService;
@@ -135,7 +140,7 @@ public class CalendarEntityHandlerTest
     public void testPurgeCalendars_retainIndefinitely()
     {
         // when
-        entityHandler.purgeCalendars(mockedService, PurgeOptions.RETAIN_INDEFINITELY, null);
+        entityHandler.purgeCalendars(mockedServiceConnector, PurgeOptions.RETAIN_INDEFINITELY, null);
         // then
         verifyZeroInteractions(mockedService, mockedEm, mockedAuditPropertyEntityAdapter, mockedOutlookDao, mockedContainerEntityDao);
 
@@ -167,9 +172,10 @@ public class CalendarEntityHandlerTest
         when(Appointment.bindToRecurringMaster(eq(mockedService), any(ItemId.class))).thenReturn(mockedMasterAppointment);
         when(mockedMasterAppointment.getId()).thenReturn(mockedMasterItemId);
         when(mockedMasterItemId.getUniqueId()).thenReturn(UNIQUE_MASTER_ITEM_ID);
+        when(mockedServiceConnector.connect(any(Long.class))).thenReturn(Optional.of(mockedService));
 
         // when
-        entityHandler.purgeCalendars(mockedService, PurgeOptions.CLOSED, null);
+        entityHandler.purgeCalendars(mockedServiceConnector, PurgeOptions.CLOSED, null);
 
         // then
         verify(mockedEm).createQuery(
@@ -208,9 +214,10 @@ public class CalendarEntityHandlerTest
         when(mockedAppointment.getId()).thenReturn(mockedItemId);
         when(mockedItemId.getUniqueId()).thenReturn(UNIQUE_ITEM_ID);
         when(mockedAppointment.getIsRecurring()).thenReturn(false);
+        when(mockedServiceConnector.connect(any(Long.class))).thenReturn(Optional.of(mockedService));
 
         // when
-        entityHandler.purgeCalendars(mockedService, PurgeOptions.CLOSED, null);
+        entityHandler.purgeCalendars(mockedServiceConnector, PurgeOptions.CLOSED, null);
 
         // then
         verify(mockedEm).createQuery(
@@ -252,9 +259,10 @@ public class CalendarEntityHandlerTest
         when(Appointment.bindToRecurringMaster(eq(mockedService), any(ItemId.class))).thenReturn(mockedMasterAppointment);
         when(mockedMasterAppointment.getId()).thenReturn(mockedMasterItemId);
         when(mockedMasterItemId.getUniqueId()).thenReturn(UNIQUE_MASTER_ITEM_ID);
+        when(mockedServiceConnector.connect(any(Long.class))).thenReturn(Optional.of(mockedService));
 
         // when
-        entityHandler.purgeCalendars(mockedService, PurgeOptions.CLOSED_X_DAYS, daysClosed);
+        entityHandler.purgeCalendars(mockedServiceConnector, PurgeOptions.CLOSED_X_DAYS, daysClosed);
 
         // then
         verify(mockedEm).createQuery(String.format(
@@ -293,9 +301,10 @@ public class CalendarEntityHandlerTest
         when(mockedAppointment.getId()).thenReturn(mockedItemId);
         when(mockedItemId.getUniqueId()).thenReturn(UNIQUE_ITEM_ID);
         when(mockedAppointment.getIsRecurring()).thenReturn(false);
+        when(mockedServiceConnector.connect(any(Long.class))).thenReturn(Optional.of(mockedService));
 
         // when
-        entityHandler.purgeCalendars(mockedService, PurgeOptions.CLOSED_X_DAYS, daysClosed);
+        entityHandler.purgeCalendars(mockedServiceConnector, PurgeOptions.CLOSED_X_DAYS, daysClosed);
 
         // then
         verify(mockedEm).createQuery(String.format(
