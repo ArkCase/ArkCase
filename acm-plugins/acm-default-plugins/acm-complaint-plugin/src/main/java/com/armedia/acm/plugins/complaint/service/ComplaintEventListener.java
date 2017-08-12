@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
-    private String complaintStatusClosed;
+    private List<String> complaintStatusClosed;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
@@ -89,8 +90,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (Objects.equals(updatedComplaint.getStatus(), complaintStatusClosed) && shouldDeleteCalendarFolder
-                                && calId != null)
+                        if (complaintStatusClosed.contains(updatedComplaint.getStatus()) && shouldDeleteCalendarFolder && calId != null)
                         {
 
                             // delete shared calendar if complaint closed
@@ -270,14 +270,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
-    public String getComplaintStatusClosed()
-    {
-        return complaintStatusClosed;
-    }
-
     public void setComplaintStatusClosed(String complaintStatusClosed)
     {
-        this.complaintStatusClosed = complaintStatusClosed;
+        this.complaintStatusClosed = Arrays.asList(complaintStatusClosed.split(","));
     }
 
     /**
