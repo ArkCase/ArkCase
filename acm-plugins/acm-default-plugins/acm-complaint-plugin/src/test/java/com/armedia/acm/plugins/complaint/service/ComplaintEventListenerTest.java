@@ -77,6 +77,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setAcmAssignmentDao(mockAcmAssignmentDao);
         complaintEventListener.setCalendarService(mockCalendarService);
         complaintEventListener.setCalendarAdminService(mockedCalendarAdminService);
+        complaintEventListener.setComplaintStatusClosed("CLOSED");
     }
 
     public Complaint getComplaint()
