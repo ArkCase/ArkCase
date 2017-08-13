@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "hi_Application Role",
     "security.ldapConfig": "hi_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "hi_Add New Directory",
+    "security.ldapConfig.addNewMember": "hi_Add New Member",
+    "security.ldapConfig.addMembers": "hi_Add Members",
+    "security.ldapConfig.addSubgroup": "hi_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "hi_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "hi_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "hi_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "hi_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "hi_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "hi_Edit Member",
+    "security.ldapConfig.removeMember": "hi_Remove Member",
     "security.ldapConfig.table.ldapUrl": "hi_LDAP Url",
     "security.ldapConfig.table.directoryName": "hi_Directory Name",
     "security.ldapConfig.data": {
@@ -39,7 +49,7 @@
       "ok": "hi_OK"
     },
     "menus": {
-      "leftnav.item": "प्रशासन"
+      "leftnav.item": "hi_Admin"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "hi_Enter directory name",
@@ -68,7 +78,9 @@
       "insert.success": "hi_Successfully inserted new row.",
       "insert.error": "hi_Error inserting new row.",
       "update.success": "hi_Successfully updated row.",
-      "update.error": "hi_Error updating row."
+      "update.error": "hi_Error updating row.",
+      "insert.template.success": "hi_Successfully created template",
+      "insert.template.error": "hi_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "hi_Cancel",
@@ -100,7 +112,7 @@
         "description": "hi_Description",
         "descriptionPlaceholder": "hi_Enter Description",
         "btn": {
-          "ok": "hi_Add Ad-Hoc Group",
+          "ok": "hi_Add Group",
           "cancel": "hi_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "hi_Enter last name",
           "email": "hi_Enter email",
           "password": "hi_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "hi_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "hi_7",
           "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -145,6 +157,13 @@
           "btn": {
             "cancel": "hi_Cancel",
             "ok": "hi_Edit Ldap User"
+          }
+        },
+        "deleteLdapMember": {
+          "title": "hi_Delete Ldap Member",
+          "btn": {
+            "cancel": "hi_Cancel",
+            "ok": "hi_Delete Ldap User"
           }
         },
         "username": "hi_UserName",
@@ -217,6 +236,143 @@
     "security.selectPrivileges.name": "hi_Name",
     "security.modules": "hi_Modules",
     "security.modules.module": "hi_Module",
+    "security.ldap.user.management": {
+      "title": "hi_LDAP User Management",
+      "cloneButton": "hi_Clone User",
+      "user": "hi_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "hi_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "hi_Enter System Email Address",
+        "password.placeholder": "hi_Enter System Password",
+        "purge.placeholder": "hi_Choose Purge Option",
+        "purgeDays.placeholder": "hi_Enter Days",
+        "save.button": "hi_Save",
+        "validate.button": "hi_Validate",
+        "purge.label": "hi_Purge",
+        "email.label": "hi_System Email Address",
+        "password.label": "hi_System Password",
+        "purgeDays.label": "hi_Days",
+        "emailValid": "hi_System Email Address is valid",
+        "emailNotValid": "hi_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "hi_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "hi_Retain Indefinitely",
+          "objectClosed": "hi_Object = 'Closed'",
+          "objectClosedXDays": "hi_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "hi_Cases",
+          "complaints.label": "hi_Complaints",
+          "tasks.label": "hi_Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "hi_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "hi_Save",
+        "deliveryMethods.label": "hi_Delivery Methods",
+        "enableDocumentEmail.checkbox": "hi_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "hi_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "hi_Documents can be sent as hyperlinks",
+        "serverSettings.label": "hi_Server Settings",
+        "serverType.label": "hi_Server Type",
+        "serverType.placeholder": "hi_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "hi_SMTP",
+          "outlook": "hi_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "hi_For details refer to Microsoft Exchange Configuration",
+        "server.label": "hi_Server Address",
+        "server.placeholder": "hi_Enter Server Address",
+        "port.label": "hi_Port",
+        "port.placeholder": "hi_Enter Port",
+        "encryption.label": "hi_Encryption",
+        "encryption.placeholder": "hi_Choose Encryption",
+        "encryptionOptions": {
+          "off": "hi_OFF",
+          "ssl-tls": "hi_SSL/TLS",
+          "starttls": "hi_STARTTLS"
+        },
+        "username.label": "hi_Username",
+        "username.placeholder": "hi_Enter Username",
+        "password.label": "hi_Password",
+        "password.placeholder": "hi_Enter Password",
+        "userFrom.label": "hi_From",
+        "userFrom.placeholder": "hi_Enter Email From field",
+        "validate.label": "hi_SMTP Validation",
+        "validate.button": "hi_Validate",
+        "smtpValid": "hi_SMTP settings are valid",
+        "smtpNotValid": "hi_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "hi_Email Templates",
+      "table.columns": {
+        "templateName": "hi_Template Name",
+        "emailPattern": "hi_Email Pattern",
+        "source": "hi_Source",
+        "objectTypes": "hi_Object Types",
+        "actions": "hi_Actions",
+        "modified": "hi_Modified Date",
+        "modifier": "hi_Modified By"
+      },
+      "modal": {
+        "title": "hi_Email Template",
+        "templateName.label": "hi_Template Name",
+        "templateName.placeholder": "hi_Enter Template Name",
+        "emailPattern.label": "hi_Email Pattern",
+        "emailPattern.placeholder": "hi_Enter Email Pattern",
+        "source.label": "hi_Source",
+        "objectTypes.label": "hi_Object Types",
+        "actions.label": "hi_Actions",
+        "manual.label": "hi_Manual",
+        "automated.label": "hi_Automated",
+        "browse": "hi_Browse",
+        "save": "hi_Save",
+        "cancel": "hi_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "hi_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "hi_Save",
+        "enableExchangeIntegration.checkbox": "hi_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "hi_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "hi_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "hi_Exchange2007",
+          "Exchange2007_SP1": "hi_Exchange2007_SP1",
+          "Exchange2010": "hi_Exchange2010",
+          "Exchange2010_SP1": "hi_Exchange2010_SP1",
+          "Exchange2010_SP2": "hi_Exchange2010_SP2",
+          "Exchange2013": "hi_Exchange2013",
+          "Exchange2013_SP1": "hi_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "hi_Enable Autodiscovery",
+        "clientAccessServer.label": "hi_Client Access Server",
+        "clientAccessServer.description": "hi_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "hi_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "hi_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "hi_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "hi_None",
+          "Owner": "hi_Owner",
+          "PublishingEditor": "hi_PublishingEditor",
+          "Editor": "hi_Editor",
+          "PublishingAuthor": "hi_PublishingAuthor",
+          "Author": "hi_Author",
+          "NoneditingAuthor": "hi_NoneditingAuthor",
+          "Reviewer": "hi_Reviewer",
+          "Contributor": "hi_Contributor",
+          "FreeBusyTimeOnly": "hi_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "hi_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "hi_Custom"
+        }
+      }
+    },
     "dashboard.title": "hi_Dashboard",
     "dashboard.config": "hi_Dashboard Configuration",
     "dashboard.widgets": "hi_Widgets",
@@ -226,6 +382,14 @@
     "forms.config": "hi_Form Configuration",
     "workflows.title": "hi_Workflows",
     "workflows.config": "hi_Workflow Configuration",
+    "workflows.config.bpmn.upload": "hi_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "hi_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "hi_Description",
+      "label.noFileSelected": "hi_No File Selected",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "hi_Cant make this process active!",
       "success": "hi_Process succesfully activated."
@@ -245,7 +409,7 @@
     },
     "workflows.config.btn": {
       "createNew": "hi_Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
+      "createNewUrl": "hi_https://activiti.alfresco.com",
       "uploadNew": "hi_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -273,25 +437,33 @@
     "formWorkflows.link.editRole.save.error": "hi_Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "hi_Application",
+      "locale.config": {
+        "title": "hi_Locale Configuration",
+        "defaultLabel": "hi_Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "hi_Default",
-        "applyBtn": "hi_Apply",
-        "resetModule": "hi_Reset Module",
-        "resetModule.confirm": "hi_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "hi_Reset current module (delete custom resources)",
-        "resetAll": "hi_Reset All",
-        "resetAll.confirm": "hi_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "hi_Reset all resources (delete all custom resources)",
-        "refreshAll": "hi_Refresh All",
-        "refreshAll.title": "hi_Refresh all resources (keep custom resources)",
         "title": "hi_Label Configuration",
-        "filterBy": "hi_Filter By Id",
-        "filterByValue": "hi_Filter By Value",
+        "progressMessage": "hi_Updating labels...",
         "data": {
           "description": "hi_Description",
           "defaultValue": "hi_Default Value",
           "id": "hi_ID",
           "value": "hi_Value"
+        },
+        "btnReset": {
+          "label": "hi_Reset...",
+          "title": "hi_Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "hi_Reset labels to default",
+          "chkResetCustom.label": "hi_Clear customized labels as well?",
+          "btnCancel.label": "hi_Cancel",
+          "btnCancel.title": "hi_Close the dialog with no action",
+          "btnReset.label": "hi_Reset",
+          "btnReset.title": "hi_Clear customized labels and reset them to default values",
+          "btnRefresh.label": "hi_Reset",
+          "btnRefresh.title": "hi_Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "hi_Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {
@@ -355,11 +527,11 @@
         "created": "hi_Created",
         "modified": "hi_Modified",
         "creator": "hi_Creator",
-        "modifier": "hi_Modifier",
+        "modifier": "hi_Modified By",
         "activated": "hi_Status",
         "objectType": "hi_Object Type",
         "version": "hi_Version",
-        "templateVersionActive" : "hi_Active"
+        "templateVersionActive": "hi_Active"
       },
       "templates.fieldNames.label": "hi_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +541,7 @@
         "table.columns": {
           "beanId": "hi_Bean ID",
           "jpaQuery": "hi_JPA Query",
-          "queryType": "hi_Query Type"
+          "objectType": "hi_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +558,14 @@
       "mergefields.saveMergeFields": "hi_Save",
       "mergefields.versionMergeFields": "hi_Versions",
       "mergefields.grid": {
-      "fieldId": "hi_ID",
-      "fieldValue": "hi_Value",
-      "fieldDescription": "hi_Description"
+        "fieldId": "hi_ID",
+        "fieldValue": "hi_Value",
+        "fieldDescription": "hi_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "hi_Version",
         "modified": "hi_Modified",
-        "modifier": "hi_Modifier",
+        "modifier": "hi_Modified By",
         "mergingActiveVersion": "hi_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +582,100 @@
       "target": "hi_Target"
     },
     "forms.message.delete.success": "hi_Successfully deleted row.",
-    "forms.message.delete.error": "hi_Error deleting row."
+    "forms.message.delete.error": "hi_Error deleting row.",
+    "documentManagement": {
+      "title": "hi_Document Management",
+      "cmisConfiguration": "hi_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "hi_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "hi_New CMIS Configuration",
+          "edit": "hi_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "hi_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "hi_CMIS ID",
+          "placeholder": "hi_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "hi_Base URL",
+          "placeholder": "hi_Base URL"
+        },
+        "username": {
+          "label": "hi_Username",
+          "placeholder": "hi_Username"
+        },
+        "password": {
+          "label": "hi_Password",
+          "placeholder": "hi_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "hi_Use Alfresco Extension",
+          "placeholder": "hi_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "hi_Endpoint",
+          "placeholder": "hi_Endpoint"
+        },
+        "maxIdle": {
+          "label": "hi_Maximum Idle",
+          "placeholder": "hi_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "hi_Maximum Active",
+          "placeholder": "hi_Maximum Active"
+        },
+        "maxWait": {
+          "label": "hi_Maximum Wait",
+          "placeholder": "hi_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "hi_Minimum Eviction Milliseconds",
+          "placeholder": "hi_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "hi_Eviction Check Interval Milliseconds",
+          "placeholder": "hi_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "hi_Reconnect Count",
+          "placeholder": "hi_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "hi_Reconnect Frequency",
+          "placeholder": "hi_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "hi_Repository Id",
+          "placeholder": "hi_Repository Id"
+        },
+        "versioningState": {
+          "label": "hi_Versioning State",
+          "placeholder": "hi_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "hi_Cancel",
+        "deleteBtn": "hi_Cofirm Delete",
+        "headerText": "hi_You are about to delete CMIS Configuration:",
+        "bodyText": "hi_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "hi_Successfully deleted configuration.",
+        "delete.error": "hi_Error deleting configuration.",
+        "insert.success": "hi_Successfully created new configuration row.",
+        "insert.error": "hi_Error creating new configuration row.",
+        "update.success": "hi_Successfully updated configuration row.",
+        "update.error": "hi_Error updating configuration row."
+      }
+    }
   }
 }

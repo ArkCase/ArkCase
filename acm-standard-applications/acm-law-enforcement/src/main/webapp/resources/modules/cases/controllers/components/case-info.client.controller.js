@@ -6,8 +6,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
     , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
-        , SearchService, SearchQueryBuilder) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
+        , ObjectParticipantService, $q, $filter, SearchService, SearchQueryBuilder) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
