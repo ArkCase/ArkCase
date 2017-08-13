@@ -49,7 +49,7 @@
       "ok": "ru_OK"
     },
     "menus": {
-      "leftnav.item": "ru_Admin"
+      "leftnav.item": "Отслеживание"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "ru_Enter directory name",
@@ -148,7 +148,7 @@
           "lastName": "ru_Enter last name",
           "email": "ru_Enter email",
           "password": "ru_Enter password",
-          "rulePattern": "ru_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "ru_7",
           "passwordRuleText": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "ru_Create New Model",
-      "createNewUrl": "ru_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "ru_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "ru_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "ru_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "ru_Application",
+      "title": "Приложение",
       "locale.config": {
-        "title": "ru_Locale Configuration",
-        "defaultLabel": "ru_Default Locale:"
+        "title": "Конфигурация локали",
+        "defaultLabel": "локали по умолчанию:"
       },
       "labels.config": {
-        "title": "ru_Label Configuration",
-        "progressMessage": "ru_Updating labels...",
+        "title": "Конфигурация метки",
+        "progressMessage": "Обновление меток...",
         "data": {
-          "description": "ru_Description",
-          "defaultValue": "ru_Default Value",
-          "id": "ru_ID",
-          "value": "ru_Value"
+          "description": "Описание",
+          "defaultValue": "Значение по умолчанию",
+          "id": "Идентификация",
+          "value": "Стоимость"
         },
         "btnReset": {
-          "label": "ru_Reset...",
-          "title": "ru_Reset label resources to default"
+          "label": "Сброс...",
+          "title": "Сбросить ресурсы ярлыков по умолчанию"
         },
         "setToDefault": {
-          "dialog.title": "ru_Reset labels to default",
-          "chkResetCustom.label": "ru_Clear customized labels as well?",
-          "btnCancel.label": "ru_Cancel",
-          "btnCancel.title": "ru_Close the dialog with no action",
-          "btnReset.label": "ru_Reset",
-          "btnReset.title": "ru_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "ru_Reset",
-          "btnRefresh.title": "ru_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "ru_Are you sure you want remove selected custom resources?"
+          "dialog.title": "Сбросить метки по умолчанию",
+          "chkResetCustom.label": "Очистить индивидуальные метки?",
+          "btnCancel.label": "Отменить",
+          "btnCancel.title": "Закройте диалог без каких-либо действий",
+          "btnReset.label": "Сброс",
+          "btnReset.title": "Очистить индивидуальные метки и сбросить их до значений по умолчанию",
+          "btnRefresh.label": "Сброс",
+          "btnRefresh.title": "Сбросить метки до значений по умолчанию, но не менять индивидуальные метки",
+          "resetCustom.confirm": "Вы действительно хотите удалить выбранные пользовательские ресурсы?"
         }
       },
       "module.config": {

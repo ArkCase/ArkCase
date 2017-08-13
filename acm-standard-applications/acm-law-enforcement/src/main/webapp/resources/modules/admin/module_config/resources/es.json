@@ -49,7 +49,7 @@
       "ok": "es_OK"
     },
     "menus": {
-      "leftnav.item": "es_Admin"
+      "leftnav.item": "Administración"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "es_Enter directory name",
@@ -148,7 +148,7 @@
           "lastName": "es_Enter last name",
           "email": "es_Enter email",
           "password": "es_Enter password",
-          "rulePattern": "es_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "es_7",
           "passwordRuleText": "es_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "es_Create New Model",
-      "createNewUrl": "es_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "es_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "es_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "es_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "es_Application",
+      "title": "Aplicación",
       "locale.config": {
-        "title": "es_Locale Configuration",
-        "defaultLabel": "es_Default Locale:"
+        "title": "Configuración de regional",
+        "defaultLabel": "Configuración regional predeterminada:"
       },
       "labels.config": {
-        "title": "es_Label Configuration",
-        "progressMessage": "es_Updating labels...",
+        "title": "Configuración de la etiqueta",
+        "progressMessage": "Actualización de etiquetas...",
         "data": {
-          "description": "es_Description",
-          "defaultValue": "es_Default Value",
-          "id": "es_ID",
-          "value": "es_Value"
+          "description": "Descripción",
+          "defaultValue": "Valor predeterminado",
+          "id": "ID",
+          "value": "Valor"
         },
         "btnReset": {
-          "label": "es_Reset...",
-          "title": "es_Reset label resources to default"
+          "label": "Reiniciar...",
+          "title": "Restablecer los recursos de etiquetas a valores predeterminados"
         },
         "setToDefault": {
-          "dialog.title": "es_Reset labels to default",
-          "chkResetCustom.label": "es_Clear customized labels as well?",
-          "btnCancel.label": "es_Cancel",
-          "btnCancel.title": "es_Close the dialog with no action",
-          "btnReset.label": "es_Reset",
-          "btnReset.title": "es_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "es_Reset",
-          "btnRefresh.title": "es_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "es_Are you sure you want remove selected custom resources?"
+          "dialog.title": "Restablecer etiquetas predeterminadas",
+          "chkResetCustom.label": "¿Borrar etiquetas personalizadas también?",
+          "btnCancel.label": "Cancelar",
+          "btnCancel.title": "Cerrar el cuadro de diálogo sin acción",
+          "btnReset.label": "Restablecer",
+          "btnReset.title": "Borrar etiquetas personalizadas y restablecerlas a valores predeterminados",
+          "btnRefresh.label": "Restablecer",
+          "btnRefresh.title": "Restablecer las etiquetas a los valores predeterminados pero mantener las etiquetas personalizadas sin cambios",
+          "resetCustom.confirm": "¿Seguro que quieres eliminar los recursos personalizados seleccionados?"
         }
       },
       "module.config": {

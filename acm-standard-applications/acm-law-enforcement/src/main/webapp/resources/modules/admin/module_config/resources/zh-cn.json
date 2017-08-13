@@ -49,7 +49,7 @@
       "ok": "zh-cn_OK"
     },
     "menus": {
-      "leftnav.item": "zh-cn_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "zh-cn_Enter directory name",
@@ -148,7 +148,7 @@
           "lastName": "zh-cn_Enter last name",
           "email": "zh-cn_Enter email",
           "password": "zh-cn_Enter password",
-          "rulePattern": "zh-cn_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "zh-cn_7",
           "passwordRuleText": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-cn_Create New Model",
-      "createNewUrl": "zh-cn_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "zh-cn_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "zh-cn_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "zh-cn_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "zh-cn_Application",
+      "title": "应用",
       "locale.config": {
-        "title": "zh-cn_Locale Configuration",
-        "defaultLabel": "zh-cn_Default Locale:"
+        "title": "区域设置",
+        "defaultLabel": "默认区域环境:"
       },
       "labels.config": {
-        "title": "zh-cn_Label Configuration",
-        "progressMessage": "zh-cn_Updating labels...",
+        "title": "标签设置",
+        "progressMessage": "更新标签...",
         "data": {
-          "description": "zh-cn_Description",
-          "defaultValue": "zh-cn_Default Value",
-          "id": "zh-cn_ID",
-          "value": "zh-cn_Value"
+          "description": "描述",
+          "defaultValue": "默认值",
+          "id": "号码",
+          "value": "数值"
         },
         "btnReset": {
-          "label": "zh-cn_Reset...",
-          "title": "zh-cn_Reset label resources to default"
+          "label": "重置...",
+          "title": "将标签资源重置为默认值"
         },
         "setToDefault": {
-          "dialog.title": "zh-cn_Reset labels to default",
-          "chkResetCustom.label": "zh-cn_Clear customized labels as well?",
-          "btnCancel.label": "zh-cn_Cancel",
-          "btnCancel.title": "zh-cn_Close the dialog with no action",
-          "btnReset.label": "zh-cn_Reset",
-          "btnReset.title": "zh-cn_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "zh-cn_Reset",
-          "btnRefresh.title": "zh-cn_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "zh-cn_Are you sure you want remove selected custom resources?"
+          "dialog.title": "将标签资源重置为默认值",
+          "chkResetCustom.label": "清除自定义标签?",
+          "btnCancel.label": "取消",
+          "btnCancel.title": "关闭对话框,不改变任何标签",
+          "btnReset.label": "重置",
+          "btnReset.title": "将标签重置为默认值，并清除自定义值",
+          "btnRefresh.label": "重置",
+          "btnRefresh.title": "将标签重置为默认值，但保持自定义值不变",
+          "resetCustom.confirm": "您确定要删除所选的自定义资源吗?"
         }
       },
       "module.config": {

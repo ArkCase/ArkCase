@@ -49,7 +49,7 @@
       "ok": "zh-tw_OK"
     },
     "menus": {
-      "leftnav.item": "zh-tw_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "zh-tw_Enter directory name",
@@ -148,7 +148,7 @@
           "lastName": "zh-tw_Enter last name",
           "email": "zh-tw_Enter email",
           "password": "zh-tw_Enter password",
-          "rulePattern": "zh-tw_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "zh-tw_7",
           "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-tw_Create New Model",
-      "createNewUrl": "zh-tw_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "zh-tw_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "zh-tw_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "zh-tw_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "zh-tw_Application",
+      "title": "應用",
       "locale.config": {
-        "title": "zh-tw_Locale Configuration",
-        "defaultLabel": "zh-tw_Default Locale:"
+        "title": "區域設置",
+        "defaultLabel": "默認區域環境:"
       },
       "labels.config": {
-        "title": "zh-tw_Label Configuration",
-        "progressMessage": "zh-tw_Updating labels...",
+        "title": "標籤設置",
+        "progressMessage": "更新標籤...",
         "data": {
-          "description": "zh-tw_Description",
-          "defaultValue": "zh-tw_Default Value",
-          "id": "zh-tw_ID",
-          "value": "zh-tw_Value"
+          "description": "描述",
+          "defaultValue": "默認值",
+          "id": "號碼",
+          "value": "數值"
         },
         "btnReset": {
-          "label": "zh-tw_Reset...",
-          "title": "zh-tw_Reset label resources to default"
+          "label": "重置...",
+          "title": "將標籤資源重置為默認值"
         },
         "setToDefault": {
-          "dialog.title": "zh-tw_Reset labels to default",
-          "chkResetCustom.label": "zh-tw_Clear customized labels as well?",
-          "btnCancel.label": "zh-tw_Cancel",
-          "btnCancel.title": "zh-tw_Close the dialog with no action",
-          "btnReset.label": "zh-tw_Reset",
-          "btnReset.title": "zh-tw_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "zh-tw_Reset",
-          "btnRefresh.title": "zh-tw_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "zh-tw_Are you sure you want remove selected custom resources?"
+          "dialog.title": "將標籤資源重置為默認值",
+          "chkResetCustom.label": "清除自定義標籤?",
+          "btnCancel.label": "取消",
+          "btnCancel.title": "關閉對話框,不改變任何標籤",
+          "btnReset.label": "重置",
+          "btnReset.title": "將標籤重置為默認值，並清除自定義值",
+          "btnRefresh.label": "重置",
+          "btnRefresh.title": "將標籤重置為默認值，但保持自定義值不變",
+          "resetCustom.confirm": "您確定要刪除所選的自定義資源嗎?"
         }
       },
       "module.config": {
