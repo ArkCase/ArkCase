@@ -68,6 +68,11 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 url: 'api/latest/ldap/:directoryName/users/:userId'
             },
 
+            _deleteLdapUserMember: {
+                method: 'DELETE',
+                url: 'api/latest/ldap/:directoryName/manage/:userId/groups'
+            },
+
             _addExistingMembersToLdapGroup: {
                 method: 'POST',
                 url: 'api/latest/ldap/:directoryName/groups/:groupName/users',
@@ -112,7 +117,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             addExistingMembersToLdapGroup: addExistingMembersToLdapGroup,
             createLdapGroup: createLdapGroup,
             createLdapSubgroup: createLdapSubgroup,
-            deleteGroupMember: deleteGroupMember,
+            deleteLdapUserMember: deleteLdapUserMember,
             deleteLdapGroup: deleteLdapGroup
         });
 
@@ -426,14 +431,14 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             });
         }
 
-        function deleteGroupMember(ldapUser) {
+        function deleteLdapUserMember(params) {
             return Util.serviceCall({
-                service: Service._deleteLdapUser
+                service: Service._deleteLdapUserMember
                 , param: {
-                    directoryName: ldapUser.directory_name_s,
-                    userId: ldapUser.object_id_s
+                    directoryName: params.user.directory_name_s,
+                    userId: params.user.object_id_s,
+                    groupNames: params.groups
                 }
-                , data: ldapUser
                 , onSuccess: function (data) {
                     return data;
                 }

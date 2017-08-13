@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
@@ -30,12 +31,15 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LdapUserAPIControllerTest extends EasyMockSupport
+public class AcmUserAPIControllerTest extends EasyMockSupport
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -55,13 +59,13 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
 
     @InjectMocks
     @Spy
-    LdapUserAPIController ldapUserAPIController;
+    AcmUserAPIController acmUserAPIController;
 
 
     @Before
     public void setUp()
     {
-        mockMvc = MockMvcBuilders.standaloneSetup(ldapUserAPIController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(acmUserAPIController).build();
         mockLdapUserService.setUserDao(mockUserDao);
         mockLdapUserService.setGroupDao(mockGroupDao);
     }
@@ -73,7 +77,7 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         AcmUser user = new AcmUser();
 
         user.setUserId("test-user");
-        user.setUserState("TEST");
+        user.setUserState(AcmUserState.VALID);
         user.setFirstName("First Name");
         user.setLastName("Last Name");
 
@@ -92,7 +96,7 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         LOG.info("Results: " + result.getResponse().getContentAsString());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        verify(mockLdapUserService, times(1)).removeLdapUser(anyString(), anyString());
+        verify(mockLdapUserService, times(1)).deleteAcmUser(anyString(), anyString());
         verifyAll();
 
     }
@@ -104,14 +108,14 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         AcmUser user1 = new AcmUser();
 
         user1.setUserId("add-user");
-        user1.setUserState("TEST");
+        user1.setUserState(AcmUserState.VALID);
         user1.setFirstName("First");
         user1.setLastName("Last");
 
         AcmUser user2 = new AcmUser();
 
         user2.setUserId("delete-user");
-        user2.setUserState("TEST");
+        user2.setUserState(AcmUserState.VALID);
         user2.setFirstName("First");
         user2.setLastName("Last");
 
@@ -146,8 +150,8 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
         LOG.info("Results: " + resultDeleting.getResponse().getContentAsString());
         assertEquals(HttpStatus.OK.value(), resultDeleting.getResponse().getStatus());
 
-        verify(mockLdapUserService, times(1)).addUserMembersInLdapGroup(user1.getUserId(), groupsToBeAdded, directory);
-        verify(mockLdapUserService, times(1)).removeUserMembersInLdapGroup(user2.getUserId(), groupsToBeAdded, directory);
+        verify(mockLdapUserService, times(1)).addUserInGroups(user1.getUserId(), groupsToBeAdded, directory);
+        verify(mockLdapUserService, times(1)).removeUserFromGroups(user2.getUserId(), groupsToBeAdded, directory);
         verifyAll();
     }
 
@@ -159,7 +163,7 @@ public class LdapUserAPIControllerTest extends EasyMockSupport
 
         when(mockLdapUserService.getGroupDao()).thenReturn(mockGroupDao);
         when(mockGroupDao.findByUserMember(user)).thenReturn(groups);
-        when(mockLdapUserService.removeLdapUser(anyString(), anyString())).thenReturn(user);
-        doNothing().when(ldapUserAPIController).checkIfLdapManagementIsAllowed(anyString());
+        when(mockLdapUserService.deleteAcmUser(anyString(), anyString())).thenReturn(user);
+        doNothing().when(acmUserAPIController).checkIfLdapManagementIsAllowed(anyString());
     }
 }

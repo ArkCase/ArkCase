@@ -16,6 +16,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 public class ComplaintOutlookHandler implements PipelineHandler<Complaint, ComplaintPipelineContext>
@@ -39,19 +41,24 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
     public void execute(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException
     {
         logger.trace("Complaint entering ComplaintOutlookHandler : [{}]", entity);
-        AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
+        Optional<AcmOutlookUser> user = getConfiguredCalendarUser(pipelineContext);
+        // if integration is not enabled the user will be null.
+        if (!user.isPresent())
+        {
+            return;
+        }
 
         // create calendar folder
         if (autoCreateFolderForComplaint && pipelineContext.isNewComplaint())
         {
-            createOutlookFolder(user, entity);
+            createOutlookFolder(user.get(), entity);
         }
         logger.info("Complaint entity post - autoCreateFolderForComplaint  ComplaintOutlookHandler : [{}]", entity);
 
         if (!pipelineContext.isNewComplaint() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
         {
             // update folder participants
-            updateOutlookFolderParticipants(user, entity);
+            updateOutlookFolderParticipants(user.get(), entity);
         }
         logger.trace("Complaint exiting ComplaintOutlookHandler : [{}]", entity);
     }
@@ -60,8 +67,13 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
     public void rollback(Complaint entity, ComplaintPipelineContext pipelineContext) throws PipelineProcessException
     {
         logger.info("Delete created calendar folder for '{}'", entity.getComplaintNumber());
-        AcmOutlookUser user = getConfiguredCalendarUser(pipelineContext);
-        getOutlookContainerCalendarService().deleteFolder(user, entity.getContainer().getContainerObjectId(),
+        Optional<AcmOutlookUser> user = getConfiguredCalendarUser(pipelineContext);
+        // if integration is not enabled the user will be null.
+        if (!user.isPresent())
+        {
+            return;
+        }
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer().getContainerObjectId(),
                 entity.getContainer().getCalendarFolderId(), DeleteMode.HardDelete);
     }
 
@@ -70,7 +82,7 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
      * @return
      * @throws PipelineProcessException
      */
-    private AcmOutlookUser getConfiguredCalendarUser(ComplaintPipelineContext pipelineContext) throws PipelineProcessException
+    private Optional<AcmOutlookUser> getConfiguredCalendarUser(ComplaintPipelineContext pipelineContext) throws PipelineProcessException
     {
         return calendarAdminService.getHandlerOutlookUser(pipelineContext.getAuthentication().getName(), ComplaintConstants.OBJECT_TYPE);
     }

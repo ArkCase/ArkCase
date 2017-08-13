@@ -1,11 +1,12 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapGroup;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.control.PagedResultsCookie;
@@ -34,10 +35,10 @@ public class SpringLdapPagedDao implements SpringLdapDao
         {
             PagedResultsDirContextProcessor pagedResultsDirContextProcessor =
                     builder.build(pageSize, resultsCookie);
-            log.debug("Start fetching '{}' items from LDAP", pageSize);
+            log.debug("Start fetching [{}] items from LDAP", pageSize);
             List<T> items = template.search(searchBase, searchFilter,
                     searchControls, contextMapper, pagedResultsDirContextProcessor);
-            log.debug("Items fetched: {}", items.size());
+            log.debug("Items fetched: [{}]", items.size());
             result.addAll(items);
 
             // pass the cookie in the next calls so the server keeps track of where he left of previous time
@@ -53,12 +54,19 @@ public class SpringLdapPagedDao implements SpringLdapDao
     }
 
     @Override
-    public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    public List<LdapUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String ldapLastSyncDate)
     {
-        return findUsersPaged(template, syncConfig, syncConfig.getUserSyncAttributes());
+        return findUsers(template, syncConfig, syncConfig.getUserSyncAttributes(), ldapLastSyncDate);
     }
 
-    public List<AcmUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String[] attributes)
+    @Override
+    public List<LdapGroup> findGroupsPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String ldapLastSyncDate)
+    {
+        return findGroups(template, syncConfig, ldapLastSyncDate);
+    }
+
+    public List<LdapUser> findUsers(LdapTemplate template, AcmLdapSyncConfig syncConfig,
+                                    String[] attributes, String ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -69,7 +77,12 @@ public class SpringLdapPagedDao implements SpringLdapDao
             searchControls.setReturningAttributes(allAttributes);
         }
 
-        AcmUserGroupsContextMapper userGroupsContextMapper = new AcmUserGroupsContextMapper(syncConfig);
+        AcmUserContextMapper userGroupsContextMapper = new AcmUserContextMapper(syncConfig);
+
+        if (StringUtils.isNotBlank(ldapLastSyncDate))
+        {
+            ldapLastSyncDate = convertToDirectorySpecificTimestamp(ldapLastSyncDate, syncConfig.getDirectoryType());
+        }
 
         String searchBase = syncConfig.getUserSearchBase();
 
@@ -80,44 +93,50 @@ public class SpringLdapPagedDao implements SpringLdapDao
         // able to log in
         // Multiple search bases is supported in some of the upper spring security versions
         String[] bases = searchBase.split("\\|");
-        List<AcmUser> acmUsers = new ArrayList<>();
+        List<LdapUser> ldapUsers = new ArrayList<>();
         for (String base : bases)
         {
-            List<AcmUser> users = fetchLdapPaged(template, base, syncConfig.getAllUsersFilter(), searchControls,
-                    syncConfig.getSyncPageSize(), userGroupsContextMapper);
-            log.info("Fetched total '{}' users for search base '{}'", users.size(), base);
-            acmUsers.addAll(users);
+            List<LdapUser> users = fetchLdapPaged(template, base, buildUsersSearchFilter(syncConfig, ldapLastSyncDate),
+                    searchControls, syncConfig.getSyncPageSize(), userGroupsContextMapper);
+            log.info("Fetched total [{}] users for search base [{}]", users.size(), base);
+            ldapUsers.addAll(users);
         }
 
         // filter out the DISABLED users
-        acmUsers = acmUsers.stream().filter(u -> !("DISABLED".equals(u.getUserState()))).collect(Collectors.toList());
+        ldapUsers = ldapUsers.stream().filter(u -> !("DISABLED".equals(u.getState()))).collect(Collectors.toList());
 
         // do we need to append the domain?
         String userDomain = syncConfig.getUserDomain();
         if (userDomain != null && !userDomain.trim().isEmpty())
         {
             String userDomainSuffix = "@" + userDomain;
-            acmUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
+            ldapUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
         }
 
-        log.info("LDAP sync number of enabled users: {}", acmUsers.size());
-        return acmUsers;
+        log.info("LDAP sync number of enabled users: [{}]", ldapUsers.size());
+        return ldapUsers;
     }
 
-    @Override
-    public List<LdapGroup> findGroupsPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig)
+    public List<LdapGroup> findGroups(LdapTemplate template, AcmLdapSyncConfig syncConfig, String ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-        searchControls.setReturningAttributes(new String[]{"cn", "memberOf"});
+        searchControls.setReturningAttributes(new String[] { "cn", "memberOf", "member" });
 
         AcmGroupContextMapper acmGroupContextMapper = new AcmGroupContextMapper(syncConfig);
+
+        if (StringUtils.isNotBlank(ldapLastSyncDate))
+        {
+            ldapLastSyncDate = convertToDirectorySpecificTimestamp(ldapLastSyncDate, syncConfig.getDirectoryType());
+        }
+
         String searchBase = syncConfig.getGroupSearchBase();
-        List<LdapGroup> acmGroups = fetchLdapPaged(template, searchBase, syncConfig.getGroupSearchFilter(),
+
+        List<LdapGroup> ldapGroups = fetchLdapPaged(template, searchBase, buildGroupSearchFilter(syncConfig, ldapLastSyncDate),
                 searchControls, syncConfig.getSyncPageSize(), acmGroupContextMapper);
 
-        log.info("LDAP sync number of groups: {}", acmGroups.size());
-        return acmGroups;
+        log.info("LDAP sync number of groups: [{}]", ldapGroups.size());
+        return ldapGroups;
     }
 
     public PagedResultsDirContextProcessorBuilder getBuilder()

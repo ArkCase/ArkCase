@@ -38,7 +38,7 @@
         "name": "id ASC"
       },
       {
-        "desc": "timeTracking.tree.sorters.idAsc",
+        "desc": "timeTracking.tree.sorters.idDesc",
         "name": "id DESC"
       },
       {

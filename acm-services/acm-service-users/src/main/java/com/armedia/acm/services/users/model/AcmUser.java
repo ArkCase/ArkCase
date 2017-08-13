@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
@@ -17,16 +20,16 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "acm_user")
-public class AcmUser implements Serializable, AcmLdapUser
+public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -68,7 +71,8 @@ public class AcmUser implements Serializable, AcmLdapUser
     private Date deletedAt;
 
     @Column(name = "cm_user_state")
-    private String userState;
+    @Enumerated(EnumType.STRING)
+    private AcmUserState userState;
 
     @Column(name = "cm_mail")
     private String mail;
@@ -104,12 +108,6 @@ public class AcmUser implements Serializable, AcmLdapUser
 
     @Embedded
     private PasswordResetToken passwordResetToken;
-
-    @Transient
-    private String sortableValue;
-
-    @Transient
-    private Set<String> ldapGroups = new HashSet<>();
 
     @PrePersist
     public void preInsert()
@@ -204,12 +202,12 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.deletedAt = deletedAt;
     }
 
-    public String getUserState()
+    public AcmUserState getUserState()
     {
         return userState;
     }
 
-    public void setUserState(String userState)
+    public void setUserState(AcmUserState userState)
     {
         this.userState = userState;
     }
@@ -247,6 +245,27 @@ public class AcmUser implements Serializable, AcmLdapUser
     public Set<AcmGroup> getGroups()
     {
         return groups;
+    }
+
+    @JsonIgnore
+    public Set<AcmGroup> getLdapGroups()
+    {
+        return groups == null ? new HashSet<>() :
+                groups.stream()
+                        .filter(group -> group.getType().equals(AcmGroupType.LDAP_GROUP.name()))
+                        .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    public Set<String> getGroupIds(AcmUser in)
+    {
+        if (in.getGroups() != null)
+        {
+            return in.getGroups().stream()
+                    .map(AcmGroup::getName)
+                    .collect(Collectors.toSet());
+        }
+        return new HashSet<>();
     }
 
     public void setGroups(Set<AcmGroup> groups)
@@ -351,26 +370,12 @@ public class AcmUser implements Serializable, AcmLdapUser
         return user.getUserId().equals(getUserId());
     }
 
-    @Override
-    @JsonIgnore
-    public Set<String> getLdapGroups()
-    {
-        return ldapGroups;
-    }
-
-    public void setLdapGroups(Set<String> ldapGroups)
-    {
-        this.ldapGroups = ldapGroups;
-    }
-
-    @Override
     @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
     }
 
-    @Override
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
@@ -384,17 +389,6 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setUid(String uid)
     {
         this.uid = uid;
-    }
-
-    @JsonIgnore
-    public String getSortableValue()
-    {
-        return sortableValue;
-    }
-
-    public void setSortableValue(String sortableValue)
-    {
-        this.sortableValue = sortableValue;
     }
 
     public String getCountry()
