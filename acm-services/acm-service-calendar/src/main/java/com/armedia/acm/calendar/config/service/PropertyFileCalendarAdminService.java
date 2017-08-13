@@ -9,6 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 
@@ -31,8 +33,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
  */
-public class PropertyFileCalendarAdminService implements CalendarAdminService, InitializingBean
+public class PropertyFileCalendarAdminService implements CalendarAdminService, InitializingBean, ApplicationEventPublisherAware
 {
+
+    private static final String CALENDAR_CONFIG_SERVICE_USER_ID = "CALENDAR_CONFIG_SERVICE";
 
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 22, 2017
@@ -117,6 +121,20 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     private List<String> objectTypes;
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     /*
      * (non-Javadoc)
@@ -249,6 +267,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         try (OutputStream propertyOutputStream = new FileOutputStream(calendarPropertiesResource.getFile()))
         {
             calendarProperties.store(propertyOutputStream, String.format("Updated from ", getClass().getName()));
+            applicationEventPublisher.publishEvent(new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID));
         } catch (IOException e)
         {
             log.error("Could not write properties to [{}] file.", calendarPropertiesResource.getFilename());
