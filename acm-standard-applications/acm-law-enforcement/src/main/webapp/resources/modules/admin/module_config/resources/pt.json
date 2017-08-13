@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "pt_Application Role",
     "security.ldapConfig": "pt_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "pt_Add New Directory",
+    "security.ldapConfig.addNewMember": "pt_Add New Member",
+    "security.ldapConfig.addMembers": "pt_Add Members",
+    "security.ldapConfig.addSubgroup": "pt_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "pt_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "pt_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "pt_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "pt_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "pt_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "pt_Edit Member",
+    "security.ldapConfig.removeMember": "pt_Remove Member",
     "security.ldapConfig.table.ldapUrl": "pt_LDAP Url",
     "security.ldapConfig.table.directoryName": "pt_Directory Name",
     "security.ldapConfig.data": {
@@ -39,7 +49,7 @@
       "ok": "pt_OK"
     },
     "menus": {
-      "leftnav.item": "Administração"
+      "leftnav.item": "pt_Admin"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "pt_Enter directory name",
@@ -68,7 +78,9 @@
       "insert.success": "pt_Successfully inserted new row.",
       "insert.error": "pt_Error inserting new row.",
       "update.success": "pt_Successfully updated row.",
-      "update.error": "pt_Error updating row."
+      "update.error": "pt_Error updating row.",
+      "insert.template.success": "pt_Successfully created template",
+      "insert.template.error": "pt_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "pt_Cancel",
@@ -100,7 +112,7 @@
         "description": "pt_Description",
         "descriptionPlaceholder": "pt_Enter Description",
         "btn": {
-          "ok": "pt_Add Ad-Hoc Group",
+          "ok": "pt_Add Group",
           "cancel": "pt_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "pt_Enter last name",
           "email": "pt_Enter email",
           "password": "pt_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "pt_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "pt_7",
           "passwordRuleText": "pt_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -217,6 +229,143 @@
     "security.selectPrivileges.name": "pt_Name",
     "security.modules": "pt_Modules",
     "security.modules.module": "pt_Module",
+    "security.ldap.user.management": {
+      "title": "pt_LDAP User Management",
+      "cloneButton": "pt_Clone User",
+      "user": "pt_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "pt_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "pt_Enter System Email Address",
+        "password.placeholder": "pt_Enter System Password",
+        "purge.placeholder": "pt_Choose Purge Option",
+        "purgeDays.placeholder": "pt_Enter Days",
+        "save.button": "pt_Save",
+        "validate.button": "pt_Validate",
+        "purge.label": "pt_Purge",
+        "email.label": "pt_System Email Address",
+        "password.label": "pt_System Password",
+        "purgeDays.label": "pt_Days",
+        "emailValid": "pt_System Email Address is valid",
+        "emailNotValid": "pt_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "pt_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "pt_Retain Indefinitely",
+          "objectClosed": "pt_Object = 'Closed'",
+          "objectClosedXDays": "pt_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "pt_Cases",
+          "complaints.label": "pt_Complaints",
+          "tasks.label": "pt_Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "pt_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "pt_Save",
+        "deliveryMethods.label": "pt_Delivery Methods",
+        "enableDocumentEmail.checkbox": "pt_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "pt_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "pt_Documents can be sent as hyperlinks",
+        "serverSettings.label": "pt_Server Settings",
+        "serverType.label": "pt_Server Type",
+        "serverType.placeholder": "pt_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "pt_SMTP",
+          "outlook": "pt_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "pt_For details refer to Microsoft Exchange Configuration",
+        "server.label": "pt_Server Address",
+        "server.placeholder": "pt_Enter Server Address",
+        "port.label": "pt_Port",
+        "port.placeholder": "pt_Enter Port",
+        "encryption.label": "pt_Encryption",
+        "encryption.placeholder": "pt_Choose Encryption",
+        "encryptionOptions": {
+          "off": "pt_OFF",
+          "ssl-tls": "pt_SSL/TLS",
+          "starttls": "pt_STARTTLS"
+        },
+        "username.label": "pt_Username",
+        "username.placeholder": "pt_Enter Username",
+        "password.label": "pt_Password",
+        "password.placeholder": "pt_Enter Password",
+        "userFrom.label": "pt_From",
+        "userFrom.placeholder": "pt_Enter Email From field",
+        "validate.label": "pt_SMTP Validation",
+        "validate.button": "pt_Validate",
+        "smtpValid": "pt_SMTP settings are valid",
+        "smtpNotValid": "pt_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "pt_Email Templates",
+      "table.columns": {
+        "templateName": "pt_Template Name",
+        "emailPattern": "pt_Email Pattern",
+        "source": "pt_Source",
+        "objectTypes": "pt_Object Types",
+        "actions": "pt_Actions",
+        "modified": "pt_Modified Date",
+        "modifier": "pt_Modified By"
+      },
+      "modal": {
+        "title": "pt_Email Template",
+        "templateName.label": "pt_Template Name",
+        "templateName.placeholder": "pt_Enter Template Name",
+        "emailPattern.label": "pt_Email Pattern",
+        "emailPattern.placeholder": "pt_Enter Email Pattern",
+        "source.label": "pt_Source",
+        "objectTypes.label": "pt_Object Types",
+        "actions.label": "pt_Actions",
+        "manual.label": "pt_Manual",
+        "automated.label": "pt_Automated",
+        "browse": "pt_Browse",
+        "save": "pt_Save",
+        "cancel": "pt_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "pt_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "pt_Save",
+        "enableExchangeIntegration.checkbox": "pt_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "pt_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "pt_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "pt_Exchange2007",
+          "Exchange2007_SP1": "pt_Exchange2007_SP1",
+          "Exchange2010": "pt_Exchange2010",
+          "Exchange2010_SP1": "pt_Exchange2010_SP1",
+          "Exchange2010_SP2": "pt_Exchange2010_SP2",
+          "Exchange2013": "pt_Exchange2013",
+          "Exchange2013_SP1": "pt_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "pt_Enable Autodiscovery",
+        "clientAccessServer.label": "pt_Client Access Server",
+        "clientAccessServer.description": "pt_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "pt_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "pt_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "pt_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "pt_None",
+          "Owner": "pt_Owner",
+          "PublishingEditor": "pt_PublishingEditor",
+          "Editor": "pt_Editor",
+          "PublishingAuthor": "pt_PublishingAuthor",
+          "Author": "pt_Author",
+          "NoneditingAuthor": "pt_NoneditingAuthor",
+          "Reviewer": "pt_Reviewer",
+          "Contributor": "pt_Contributor",
+          "FreeBusyTimeOnly": "pt_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "pt_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "pt_Custom"
+        }
+      }
+    },
     "dashboard.title": "pt_Dashboard",
     "dashboard.config": "pt_Dashboard Configuration",
     "dashboard.widgets": "pt_Widgets",
@@ -226,6 +375,14 @@
     "forms.config": "pt_Form Configuration",
     "workflows.title": "pt_Workflows",
     "workflows.config": "pt_Workflow Configuration",
+    "workflows.config.bpmn.upload": "pt_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "pt_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "pt_Description",
+      "label.noFileSelected": "pt_No File Selected",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "pt_Cant make this process active!",
       "success": "pt_Process succesfully activated."
@@ -245,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "pt_Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
+      "createNewUrl": "pt_https://activiti.alfresco.com",
       "uploadNew": "pt_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -273,25 +430,33 @@
     "formWorkflows.link.editRole.save.error": "pt_Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "pt_Application",
+      "locale.config": {
+        "title": "pt_Locale Configuration",
+        "defaultLabel": "pt_Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "pt_Default",
-        "applyBtn": "pt_Apply",
-        "resetModule": "pt_Reset Module",
-        "resetModule.confirm": "pt_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "pt_Reset current module (delete custom resources)",
-        "resetAll": "pt_Reset All",
-        "resetAll.confirm": "pt_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "pt_Reset all resources (delete all custom resources)",
-        "refreshAll": "pt_Refresh All",
-        "refreshAll.title": "pt_Refresh all resources (keep custom resources)",
         "title": "pt_Label Configuration",
-        "filterBy": "pt_Filter By Id",
-        "filterByValue": "pt_Filter By Value",
+        "progressMessage": "pt_Updating labels...",
         "data": {
           "description": "pt_Description",
           "defaultValue": "pt_Default Value",
           "id": "pt_ID",
           "value": "pt_Value"
+        },
+        "btnReset": {
+          "label": "pt_Reset...",
+          "title": "pt_Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "pt_Reset labels to default",
+          "chkResetCustom.label": "pt_Clear customized labels as well?",
+          "btnCancel.label": "pt_Cancel",
+          "btnCancel.title": "pt_Close the dialog with no action",
+          "btnReset.label": "pt_Reset",
+          "btnReset.title": "pt_Clear customized labels and reset them to default values",
+          "btnRefresh.label": "pt_Reset",
+          "btnRefresh.title": "pt_Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "pt_Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {
@@ -355,11 +520,11 @@
         "created": "pt_Created",
         "modified": "pt_Modified",
         "creator": "pt_Creator",
-        "modifier": "pt_Modifier",
+        "modifier": "pt_Modified By",
         "activated": "pt_Status",
         "objectType": "pt_Object Type",
         "version": "pt_Version",
-        "templateVersionActive" : "pt_Active"
+        "templateVersionActive": "pt_Active"
       },
       "templates.fieldNames.label": "pt_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +534,7 @@
         "table.columns": {
           "beanId": "pt_Bean ID",
           "jpaQuery": "pt_JPA Query",
-          "queryType": "pt_Query Type"
+          "objectType": "pt_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +551,14 @@
       "mergefields.saveMergeFields": "pt_Save",
       "mergefields.versionMergeFields": "pt_Versions",
       "mergefields.grid": {
-      "fieldId": "pt_ID",
-      "fieldValue": "pt_Value",
-      "fieldDescription": "pt_Description"
+        "fieldId": "pt_ID",
+        "fieldValue": "pt_Value",
+        "fieldDescription": "pt_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "pt_Version",
         "modified": "pt_Modified",
-        "modifier": "pt_Modifier",
+        "modifier": "pt_Modified By",
         "mergingActiveVersion": "pt_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +575,103 @@
       "target": "pt_Target"
     },
     "forms.message.delete.success": "pt_Successfully deleted row.",
-    "forms.message.delete.error": "pt_Error deleting row."
+    "forms.message.delete.error": "pt_Error deleting row.",
+    "documentManagement": {
+      "title": "pt_Document Management",
+      "cmisConfiguration": "pt_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "pt_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "pt_New CMIS Configuration",
+          "edit": "pt_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "pt_Cancel",
+          "ok": "pt_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "pt_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "pt_CMIS ID",
+          "placeholder": "pt_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "pt_Base URL",
+          "placeholder": "pt_Base URL"
+        },
+        "username": {
+          "label": "pt_Username",
+          "placeholder": "pt_Username"
+        },
+        "password": {
+          "label": "pt_Password",
+          "placeholder": "pt_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "pt_Use Alfresco Extension",
+          "placeholder": "pt_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "pt_Endpoint",
+          "placeholder": "pt_Endpoint"
+        },
+        "maxIdle": {
+          "label": "pt_Maximum Idle",
+          "placeholder": "pt_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "pt_Maximum Active",
+          "placeholder": "pt_Maximum Active"
+        },
+        "maxWait": {
+          "label": "pt_Maximum Wait",
+          "placeholder": "pt_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "pt_Minimum Eviction Milliseconds",
+          "placeholder": "pt_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "pt_Eviction Check Interval Milliseconds",
+          "placeholder": "pt_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "pt_Reconnect Count",
+          "placeholder": "pt_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "pt_Reconnect Frequency",
+          "placeholder": "pt_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "pt_Repository Id",
+          "placeholder": "pt_Repository Id"
+        },
+        "versioningState": {
+          "label": "pt_Versioning State",
+          "placeholder": "pt_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "pt_Cancel",
+        "deleteBtn": "pt_Cofirm Delete",
+        "headerText": "pt_You are about to delete CMIS Configuration:",
+        "bodyText": "pt_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "pt_Successfully deleted configuration.",
+        "delete.error": "pt_Error deleting configuration.",
+        "insert.success": "pt_Successfully created new configuration row.",
+        "insert.error": "pt_Error creating new configuration row.",
+        "update.success": "pt_Successfully updated configuration row.",
+        "update.error": "pt_Error updating configuration row."
+      }
+    }
   }
 }
+
+
+    
