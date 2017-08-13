@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
@@ -69,7 +70,7 @@ import java.util.Set;
 @JsonPropertyOrder(value = {"complaintId", "personAssociations", "originator"})
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
-        AcmLegacySystemEntity, AcmNotifiableEntity, AcmTitleEntity
+        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());

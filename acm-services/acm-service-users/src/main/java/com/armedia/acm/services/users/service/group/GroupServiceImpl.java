@@ -9,7 +9,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.GroupConstants;
+import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import org.mule.api.MuleException;
 import org.mule.util.UUID;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
 
-    private Pattern pattern = Pattern.compile(GroupConstants.UUID_REGEX_STRING);
+    private Pattern pattern = Pattern.compile(AcmGroupConstants.UUID_REGEX_STRING);
 
     @Override
     public AcmGroup updateGroupWithMembers(AcmGroup group, Set<AcmUser> members)
