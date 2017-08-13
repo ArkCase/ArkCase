@@ -159,13 +159,6 @@
             "ok": "ru_Edit Ldap User"
           }
         },
-        "deleteLdapMember": {
-          "title": "ru_Delete Ldap Member",
-          "btn": {
-            "cancel": "ru_Cancel",
-            "ok": "ru_Delete Ldap User"
-          }
-        },
         "username": "ru_UserName",
         "firstName": "ru_FirstName",
         "lastName": "ru_LastName",

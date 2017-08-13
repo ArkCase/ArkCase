@@ -159,13 +159,6 @@
             "ok": "zh-tw_Edit Ldap User"
           }
         },
-        "deleteLdapMember": {
-          "title": "zh-tw_Delete Ldap Member",
-          "btn": {
-            "cancel": "zh-tw_Cancel",
-            "ok": "zh-tw_Delete Ldap User"
-          }
-        },
         "username": "zh-tw_UserName",
         "firstName": "zh-tw_FirstName",
         "lastName": "zh-tw_LastName",

@@ -159,13 +159,6 @@
             "ok": "hi_Edit Ldap User"
           }
         },
-        "deleteLdapMember": {
-          "title": "hi_Delete Ldap Member",
-          "btn": {
-            "cancel": "hi_Cancel",
-            "ok": "hi_Delete Ldap User"
-          }
-        },
         "username": "hi_UserName",
         "firstName": "hi_FirstName",
         "lastName": "hi_LastName",
