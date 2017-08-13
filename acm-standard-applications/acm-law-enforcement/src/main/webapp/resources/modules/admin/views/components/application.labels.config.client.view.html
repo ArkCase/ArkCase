@@ -43,6 +43,7 @@
                             </select>
                         </div>
                     </form>
+
                     <span translate ng-show="disabledInputs">admin.application.labels.config.progressMessage</span>
 
                     <form class="navbar-form navbar-right ">
@@ -53,34 +54,6 @@
                             <i class="fa fa-refresh"></i>
                             <span translate>admin.application.labels.config.btnReset.label</span>
                         </button>
-
-                        <!-- Refresh resources button --
-                        <button class="btn btn-sm btn-info"
-                                ng-click="refreshAllResources()"
-                                ng-disabled="disabledInputs"
-                                title="{{'admin.application.labels.config.refreshAll.title' | translate}}">
-                            <i class="fa fa-refresh"></i>
-                            <span translate>admin.application.labels.config.refreshAll</span>
-                        </button>
-
-                        <!-- Current module reset button --
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetCurrentModuleResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetModule.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetModule</span>
-                        </button>
-
-                        <!-- All modules reset button --
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetAllResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetAll.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetAll</span>
-                        </button>
-                        -->
                     </form>
                 </div>
             </div>

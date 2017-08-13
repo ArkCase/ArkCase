@@ -148,7 +148,7 @@
           "lastName": "ja_Enter last name",
           "email": "ja_Enter email",
           "password": "ja_Enter password",
-          "rulePattern": "ja_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "ja_7",
           "passwordRuleText": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "ja_Create New Model",
-      "createNewUrl": "ja_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "ja_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "ja_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "ja_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "ja_Application",
+      "title": "応用",
       "locale.config": {
-        "title": "ja_Locale Configuration",
-        "defaultLabel": "ja_Default Locale:"
+        "title": "ロケールの設定",
+        "defaultLabel": "デフォルトのロケール:"
       },
       "labels.config": {
-        "title": "ja_Label Configuration",
-        "progressMessage": "ja_Updating labels...",
+        "title": "ラベル設定",
+        "progressMessage": "ラベルを更新しています...",
         "data": {
-          "description": "ja_Description",
-          "defaultValue": "ja_Default Value",
-          "id": "ja_ID",
-          "value": "ja_Value"
+          "description": "説明",
+          "defaultValue": "デフォルト値",
+          "id": "番号",
+          "value": "値"
         },
         "btnReset": {
-          "label": "ja_Reset...",
-          "title": "ja_Reset label resources to default"
+          "label": "リセット...",
+          "title": "ラベルリソースがデフォルト値にリセット"
         },
         "setToDefault": {
-          "dialog.title": "ja_Reset labels to default",
-          "chkResetCustom.label": "ja_Clear customized labels as well?",
-          "btnCancel.label": "ja_Cancel",
-          "btnCancel.title": "ja_Close the dialog with no action",
-          "btnReset.label": "ja_Reset",
-          "btnReset.title": "ja_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "ja_Reset",
-          "btnRefresh.title": "ja_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "ja_Are you sure you want remove selected custom resources?"
+          "dialog.title": "ラベルリソースがデフォルト値にリセット",
+          "chkResetCustom.label": "カスタマイズされたラベルもクリアしますか?",
+          "btnCancel.label": "キャンセル",
+          "btnCancel.title": "アクションなしのダイアログを閉じる",
+          "btnReset.label": "リセット",
+          "btnReset.title": "カスタマイズされたラベルを消去してデフォルト値にリセットする",
+          "btnRefresh.label": "リセット",
+          "btnRefresh.title": "ラベルをデフォルト値にリセットしますが、カスタマイズしたラベルは変更しないでください",
+          "resetCustom.confirm": "選択したカスタムリソースを削除してもよろしいですか?"
         }
       },
       "module.config": {

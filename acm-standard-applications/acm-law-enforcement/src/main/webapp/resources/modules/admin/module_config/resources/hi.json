@@ -49,7 +49,7 @@
       "ok": "hi_OK"
     },
     "menus": {
-      "leftnav.item": "hi_Admin"
+      "leftnav.item": "प्रशासन"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "hi_Enter directory name",
@@ -148,7 +148,7 @@
           "lastName": "hi_Enter last name",
           "email": "hi_Enter email",
           "password": "hi_Enter password",
-          "rulePattern": "hi_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "hi_7",
           "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -402,7 +402,7 @@
     },
     "workflows.config.btn": {
       "createNew": "hi_Create New Model",
-      "createNewUrl": "hi_https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "hi_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -429,34 +429,34 @@
     "formWorkflows.link.editRole.save.success": "hi_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "hi_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "hi_Application",
+      "title": "एप्लिकेशन",
       "locale.config": {
-        "title": "hi_Locale Configuration",
-        "defaultLabel": "hi_Default Locale:"
+        "title": "लोकेल कॉन्फ़िगरेशन",
+        "defaultLabel": "डिफ़ॉल्ट लोकेल:"
       },
       "labels.config": {
-        "title": "hi_Label Configuration",
-        "progressMessage": "hi_Updating labels...",
+        "title": "लेबल कॉन्फ़िगरेशन",
+        "progressMessage": "लेबल अपडेट कर रहा है...",
         "data": {
-          "description": "hi_Description",
-          "defaultValue": "hi_Default Value",
-          "id": "hi_ID",
-          "value": "hi_Value"
+          "description": "विवरण",
+          "defaultValue": "डिफ़ॉल्ट मान",
+          "id": "किया",
+          "value": "मूल्य"
         },
         "btnReset": {
-          "label": "hi_Reset...",
-          "title": "hi_Reset label resources to default"
+          "label": "रीसेट करें...",
+          "title": "लेबल संसाधनों को डिफ़ॉल्ट पर रीसेट करें"
         },
         "setToDefault": {
-          "dialog.title": "hi_Reset labels to default",
-          "chkResetCustom.label": "hi_Clear customized labels as well?",
-          "btnCancel.label": "hi_Cancel",
-          "btnCancel.title": "hi_Close the dialog with no action",
-          "btnReset.label": "hi_Reset",
-          "btnReset.title": "hi_Clear customized labels and reset them to default values",
-          "btnRefresh.label": "hi_Reset",
-          "btnRefresh.title": "hi_Reset labels to default values but keep customized labels unchanged",
-          "resetCustom.confirm": "hi_Are you sure you want remove selected custom resources?"
+          "dialog.title": "लेबल को डिफ़ॉल्ट पर रीसेट करें",
+          "chkResetCustom.label": "कस्टमाइज़्ड लेबल को भी साफ़ करें?",
+          "btnCancel.label": "रद्द करें",
+          "btnCancel.title": "कोई क्रिया नहीं के साथ संवाद को बंद करें",
+          "btnReset.label": "रीसेट करें",
+          "btnReset.title": "स्वनिर्धारित लेबल साफ़ करें और उन्हें डिफ़ॉल्ट मानों पर रीसेट करें",
+          "btnRefresh.label": "रीसेट करें",
+          "btnRefresh.title": "लेबल्स को डिफ़ॉल्ट मानों पर रीसेट करें, लेकिन अपरिचित लेबल्स अपरिवर्तित रखें",
+          "resetCustom.confirm": "क्या आप वाकई चयनित कस्टम संसाधनों को हटाना चाहते हैं?"
         }
       },
       "module.config": {

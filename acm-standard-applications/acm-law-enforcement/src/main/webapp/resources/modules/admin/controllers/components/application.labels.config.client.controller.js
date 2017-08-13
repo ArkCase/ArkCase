@@ -146,65 +146,11 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                     });
                 }
 
-
             }, function(error) {
             });
 
         };
 
-/*
-        //reset all values to default for selected module from dropdown
-        $scope.resetCurrentModuleResources = function () {
-            $scope.disabledInputs = true;
-            LabelsConfigService.resetResource({
-                lng: [$scope.selectedLocale.code],
-                ns: [$scope.selectedNamespace.id]
-            }, function () {
-            	//success
-            	reloadGrid();
-                messageService.succsessAction();
-            }, function () {
-            	//error
-            	$scope.disabledInputs = false;
-            	messageService.errorAction();
-            });
-        };
-
-        //reset all values to default for all modules
-        $scope.resetAllResources = function () {
-            var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
-            $scope.disabledInputs = true;
-            LabelsConfigService.resetResource({
-                lng: [$scope.selectedLocale.code],
-                ns: allNamespaces
-            }, function () {
-            	//success
-            	reloadGrid();
-                messageService.succsessAction();
-            }, function () {
-            	//error
-            	$scope.disabledInputs = false;
-                messageService.errorAction();
-            });
-        };
-
-        $scope.refreshAllResources = function () {
-            var allNamespaces = _.pluck($scope.namespacesDropdownOptions, 'id');
-            $scope.disabledInputs = true;
-            LabelsConfigService.refreshResource({
-                lng: [$scope.selectedLocale.code],
-                ns: allNamespaces
-            }, function () {
-            	//success
-            	reloadGrid();
-                messageService.succsessAction();
-            }, function () {
-            	//error
-            	$scope.disabledInputs = false;
-                messageService.errorAction();
-            });
-        };
-*/
         //updating value for Description for selected record in grid
         $scope.updateLabelDesc = function (desc, rowEntity) {
             LabelsConfigService.updateResource({
