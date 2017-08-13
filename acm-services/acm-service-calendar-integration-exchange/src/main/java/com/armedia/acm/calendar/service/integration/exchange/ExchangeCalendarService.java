@@ -2,6 +2,7 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationEvent;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.calendar.config.service.EmailCredentials;
@@ -16,9 +17,6 @@ import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
@@ -59,13 +57,8 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
  *
  */
 public class ExchangeCalendarService
-        implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<AbstractConfigurationFileEvent>
+        implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<CalendarConfigurationEvent>
 {
-
-    /**
-     * The scheduler task name.
-     */
-    private static final String CONFIGURATION_FILENAME = "calendarService.properties";
 
     static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
 
@@ -138,37 +131,17 @@ public class ExchangeCalendarService
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
     @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
+    public void onApplicationEvent(CalendarConfigurationEvent event)
     {
-        // TODO: TECHNICAL DEBT, should not depend on an implementation of configuration service that writes to file
-        // system, as there might be different implementations of configuration service. Maybe it would be better if the
-        // configuration service emits an event that would trigger action?
-        if (isConfigurationFileChange(event))
+        try
         {
-            try
-            {
-                CalendarConfigurationsByObjectType calendarConfiguration = calendarAdminService.readConfiguration(true);
-                configurationsByType = calendarConfiguration.getConfigurationsByType();
-            } catch (CalendarConfigurationException e)
-            {
-                log.error("Could not load calendar configuration.", e);
-            }
+            CalendarConfigurationsByObjectType calendarConfiguration = calendarAdminService.readConfiguration(true);
+            configurationsByType = calendarConfiguration.getConfigurationsByType();
+        } catch (CalendarConfigurationException e)
+        {
+            log.error("Could not load calendar configuration.", e);
         }
 
-    }
-
-    /**
-     * Checks if the event was triggered by a change of the scheduler configuration file.
-     *
-     * @param abstractConfigurationFileEvent
-     *            the event encapsulating a reference to the modified file.
-     * @return <code>true</code> if the event was triggered by the calendar configuration <code>false</code> otherwise.
-     */
-    private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
-                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
-                && abstractConfigurationFileEvent.getConfigFile().getName().equals(CONFIGURATION_FILENAME);
     }
 
     /*
