@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "zh-tw_Application Role",
     "security.ldapConfig": "zh-tw_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "zh-tw_Add New Directory",
+    "security.ldapConfig.addNewMember": "zh-tw_Add New Member",
+    "security.ldapConfig.addMembers": "zh-tw_Add Members",
+    "security.ldapConfig.addSubgroup": "zh-tw_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "zh-tw_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "zh-tw_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "zh-tw_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "zh-tw_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "zh-tw_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "zh-tw_Edit Member",
+    "security.ldapConfig.removeMember": "zh-tw_Remove Member",
     "security.ldapConfig.table.ldapUrl": "zh-tw_LDAP Url",
     "security.ldapConfig.table.directoryName": "zh-tw_Directory Name",
     "security.ldapConfig.data": {
@@ -39,7 +49,7 @@
       "ok": "zh-tw_OK"
     },
     "menus": {
-      "leftnav.item": "管理"
+      "leftnav.item": "zh-tw_Admin"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "zh-tw_Enter directory name",
@@ -68,7 +78,9 @@
       "insert.success": "zh-tw_Successfully inserted new row.",
       "insert.error": "zh-tw_Error inserting new row.",
       "update.success": "zh-tw_Successfully updated row.",
-      "update.error": "zh-tw_Error updating row."
+      "update.error": "zh-tw_Error updating row.",
+      "insert.template.success": "zh-tw_Successfully created template",
+      "insert.template.error": "zh-tw_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "zh-tw_Cancel",
@@ -100,7 +112,7 @@
         "description": "zh-tw_Description",
         "descriptionPlaceholder": "zh-tw_Enter Description",
         "btn": {
-          "ok": "zh-tw_Add Ad-Hoc Group",
+          "ok": "zh-tw_Add Group",
           "cancel": "zh-tw_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "zh-tw_Enter last name",
           "email": "zh-tw_Enter email",
           "password": "zh-tw_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "zh-tw_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "zh-tw_7",
           "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -145,6 +157,13 @@
           "btn": {
             "cancel": "zh-tw_Cancel",
             "ok": "zh-tw_Edit Ldap User"
+          }
+        },
+        "deleteLdapMember": {
+          "title": "zh-tw_Delete Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Delete Ldap User"
           }
         },
         "username": "zh-tw_UserName",
@@ -217,6 +236,143 @@
     "security.selectPrivileges.name": "zh-tw_Name",
     "security.modules": "zh-tw_Modules",
     "security.modules.module": "zh-tw_Module",
+    "security.ldap.user.management": {
+      "title": "zh-tw_LDAP User Management",
+      "cloneButton": "zh-tw_Clone User",
+      "user": "zh-tw_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "zh-tw_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "zh-tw_Enter System Email Address",
+        "password.placeholder": "zh-tw_Enter System Password",
+        "purge.placeholder": "zh-tw_Choose Purge Option",
+        "purgeDays.placeholder": "zh-tw_Enter Days",
+        "save.button": "zh-tw_Save",
+        "validate.button": "zh-tw_Validate",
+        "purge.label": "zh-tw_Purge",
+        "email.label": "zh-tw_System Email Address",
+        "password.label": "zh-tw_System Password",
+        "purgeDays.label": "zh-tw_Days",
+        "emailValid": "zh-tw_System Email Address is valid",
+        "emailNotValid": "zh-tw_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "zh-tw_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "zh-tw_Retain Indefinitely",
+          "objectClosed": "zh-tw_Object = 'Closed'",
+          "objectClosedXDays": "zh-tw_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "zh-tw_Cases",
+          "complaints.label": "zh-tw_Complaints",
+          "tasks.label": "zh-tw_Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "zh-tw_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "zh-tw_Save",
+        "deliveryMethods.label": "zh-tw_Delivery Methods",
+        "enableDocumentEmail.checkbox": "zh-tw_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "zh-tw_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "zh-tw_Documents can be sent as hyperlinks",
+        "serverSettings.label": "zh-tw_Server Settings",
+        "serverType.label": "zh-tw_Server Type",
+        "serverType.placeholder": "zh-tw_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "zh-tw_SMTP",
+          "outlook": "zh-tw_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "zh-tw_For details refer to Microsoft Exchange Configuration",
+        "server.label": "zh-tw_Server Address",
+        "server.placeholder": "zh-tw_Enter Server Address",
+        "port.label": "zh-tw_Port",
+        "port.placeholder": "zh-tw_Enter Port",
+        "encryption.label": "zh-tw_Encryption",
+        "encryption.placeholder": "zh-tw_Choose Encryption",
+        "encryptionOptions": {
+          "off": "zh-tw_OFF",
+          "ssl-tls": "zh-tw_SSL/TLS",
+          "starttls": "zh-tw_STARTTLS"
+        },
+        "username.label": "zh-tw_Username",
+        "username.placeholder": "zh-tw_Enter Username",
+        "password.label": "zh-tw_Password",
+        "password.placeholder": "zh-tw_Enter Password",
+        "userFrom.label": "zh-tw_From",
+        "userFrom.placeholder": "zh-tw_Enter Email From field",
+        "validate.label": "zh-tw_SMTP Validation",
+        "validate.button": "zh-tw_Validate",
+        "smtpValid": "zh-tw_SMTP settings are valid",
+        "smtpNotValid": "zh-tw_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "zh-tw_Email Templates",
+      "table.columns": {
+        "templateName": "zh-tw_Template Name",
+        "emailPattern": "zh-tw_Email Pattern",
+        "source": "zh-tw_Source",
+        "objectTypes": "zh-tw_Object Types",
+        "actions": "zh-tw_Actions",
+        "modified": "zh-tw_Modified Date",
+        "modifier": "zh-tw_Modified By"
+      },
+      "modal": {
+        "title": "zh-tw_Email Template",
+        "templateName.label": "zh-tw_Template Name",
+        "templateName.placeholder": "zh-tw_Enter Template Name",
+        "emailPattern.label": "zh-tw_Email Pattern",
+        "emailPattern.placeholder": "zh-tw_Enter Email Pattern",
+        "source.label": "zh-tw_Source",
+        "objectTypes.label": "zh-tw_Object Types",
+        "actions.label": "zh-tw_Actions",
+        "manual.label": "zh-tw_Manual",
+        "automated.label": "zh-tw_Automated",
+        "browse": "zh-tw_Browse",
+        "save": "zh-tw_Save",
+        "cancel": "zh-tw_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "zh-tw_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "zh-tw_Save",
+        "enableExchangeIntegration.checkbox": "zh-tw_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "zh-tw_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "zh-tw_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "zh-tw_Exchange2007",
+          "Exchange2007_SP1": "zh-tw_Exchange2007_SP1",
+          "Exchange2010": "zh-tw_Exchange2010",
+          "Exchange2010_SP1": "zh-tw_Exchange2010_SP1",
+          "Exchange2010_SP2": "zh-tw_Exchange2010_SP2",
+          "Exchange2013": "zh-tw_Exchange2013",
+          "Exchange2013_SP1": "zh-tw_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "zh-tw_Enable Autodiscovery",
+        "clientAccessServer.label": "zh-tw_Client Access Server",
+        "clientAccessServer.description": "zh-tw_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "zh-tw_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "zh-tw_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "zh-tw_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "zh-tw_None",
+          "Owner": "zh-tw_Owner",
+          "PublishingEditor": "zh-tw_PublishingEditor",
+          "Editor": "zh-tw_Editor",
+          "PublishingAuthor": "zh-tw_PublishingAuthor",
+          "Author": "zh-tw_Author",
+          "NoneditingAuthor": "zh-tw_NoneditingAuthor",
+          "Reviewer": "zh-tw_Reviewer",
+          "Contributor": "zh-tw_Contributor",
+          "FreeBusyTimeOnly": "zh-tw_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "zh-tw_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "zh-tw_Custom"
+        }
+      }
+    },
     "dashboard.title": "zh-tw_Dashboard",
     "dashboard.config": "zh-tw_Dashboard Configuration",
     "dashboard.widgets": "zh-tw_Widgets",
@@ -226,6 +382,14 @@
     "forms.config": "zh-tw_Form Configuration",
     "workflows.title": "zh-tw_Workflows",
     "workflows.config": "zh-tw_Workflow Configuration",
+    "workflows.config.bpmn.upload": "zh-tw_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "zh-tw_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "zh-tw_Description",
+      "label.noFileSelected": "zh-tw_No File Selected",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "zh-tw_Cant make this process active!",
       "success": "zh-tw_Process succesfully activated."
@@ -245,7 +409,7 @@
     },
     "workflows.config.btn": {
       "createNew": "zh-tw_Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
+      "createNewUrl": "zh-tw_https://activiti.alfresco.com",
       "uploadNew": "zh-tw_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -273,25 +437,33 @@
     "formWorkflows.link.editRole.save.error": "zh-tw_Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "zh-tw_Application",
+      "locale.config": {
+        "title": "zh-tw_Locale Configuration",
+        "defaultLabel": "zh-tw_Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "zh-tw_Default",
-        "applyBtn": "zh-tw_Apply",
-        "resetModule": "zh-tw_Reset Module",
-        "resetModule.confirm": "zh-tw_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "zh-tw_Reset current module (delete custom resources)",
-        "resetAll": "zh-tw_Reset All",
-        "resetAll.confirm": "zh-tw_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "zh-tw_Reset all resources (delete all custom resources)",
-        "refreshAll": "zh-tw_Refresh All",
-        "refreshAll.title": "zh-tw_Refresh all resources (keep custom resources)",
         "title": "zh-tw_Label Configuration",
-        "filterBy": "zh-tw_Filter By Id",
-        "filterByValue": "zh-tw_Filter By Value",
+        "progressMessage": "zh-tw_Updating labels...",
         "data": {
           "description": "zh-tw_Description",
           "defaultValue": "zh-tw_Default Value",
           "id": "zh-tw_ID",
           "value": "zh-tw_Value"
+        },
+        "btnReset": {
+          "label": "zh-tw_Reset...",
+          "title": "zh-tw_Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "zh-tw_Reset labels to default",
+          "chkResetCustom.label": "zh-tw_Clear customized labels as well?",
+          "btnCancel.label": "zh-tw_Cancel",
+          "btnCancel.title": "zh-tw_Close the dialog with no action",
+          "btnReset.label": "zh-tw_Reset",
+          "btnReset.title": "zh-tw_Clear customized labels and reset them to default values",
+          "btnRefresh.label": "zh-tw_Reset",
+          "btnRefresh.title": "zh-tw_Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "zh-tw_Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {
@@ -355,11 +527,11 @@
         "created": "zh-tw_Created",
         "modified": "zh-tw_Modified",
         "creator": "zh-tw_Creator",
-        "modifier": "zh-tw_Modifier",
+        "modifier": "zh-tw_Modified By",
         "activated": "zh-tw_Status",
         "objectType": "zh-tw_Object Type",
         "version": "zh-tw_Version",
-        "templateVersionActive" : "zh-tw_Active"
+        "templateVersionActive": "zh-tw_Active"
       },
       "templates.fieldNames.label": "zh-tw_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +541,7 @@
         "table.columns": {
           "beanId": "zh-tw_Bean ID",
           "jpaQuery": "zh-tw_JPA Query",
-          "queryType": "zh-tw_Query Type"
+          "objectType": "zh-tw_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +558,14 @@
       "mergefields.saveMergeFields": "zh-tw_Save",
       "mergefields.versionMergeFields": "zh-tw_Versions",
       "mergefields.grid": {
-      "fieldId": "zh-tw_ID",
-      "fieldValue": "zh-tw_Value",
-      "fieldDescription": "zh-tw_Description"
+        "fieldId": "zh-tw_ID",
+        "fieldValue": "zh-tw_Value",
+        "fieldDescription": "zh-tw_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "zh-tw_Version",
         "modified": "zh-tw_Modified",
-        "modifier": "zh-tw_Modifier",
+        "modifier": "zh-tw_Modified By",
         "mergingActiveVersion": "zh-tw_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +582,100 @@
       "target": "zh-tw_Target"
     },
     "forms.message.delete.success": "zh-tw_Successfully deleted row.",
-    "forms.message.delete.error": "zh-tw_Error deleting row."
+    "forms.message.delete.error": "zh-tw_Error deleting row.",
+    "documentManagement": {
+      "title": "zh-tw_Document Management",
+      "cmisConfiguration": "zh-tw_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "zh-tw_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "zh-tw_New CMIS Configuration",
+          "edit": "zh-tw_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "zh-tw_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "zh-tw_CMIS ID",
+          "placeholder": "zh-tw_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "zh-tw_Base URL",
+          "placeholder": "zh-tw_Base URL"
+        },
+        "username": {
+          "label": "zh-tw_Username",
+          "placeholder": "zh-tw_Username"
+        },
+        "password": {
+          "label": "zh-tw_Password",
+          "placeholder": "zh-tw_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "zh-tw_Use Alfresco Extension",
+          "placeholder": "zh-tw_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "zh-tw_Endpoint",
+          "placeholder": "zh-tw_Endpoint"
+        },
+        "maxIdle": {
+          "label": "zh-tw_Maximum Idle",
+          "placeholder": "zh-tw_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "zh-tw_Maximum Active",
+          "placeholder": "zh-tw_Maximum Active"
+        },
+        "maxWait": {
+          "label": "zh-tw_Maximum Wait",
+          "placeholder": "zh-tw_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "zh-tw_Minimum Eviction Milliseconds",
+          "placeholder": "zh-tw_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "zh-tw_Eviction Check Interval Milliseconds",
+          "placeholder": "zh-tw_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "zh-tw_Reconnect Count",
+          "placeholder": "zh-tw_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "zh-tw_Reconnect Frequency",
+          "placeholder": "zh-tw_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "zh-tw_Repository Id",
+          "placeholder": "zh-tw_Repository Id"
+        },
+        "versioningState": {
+          "label": "zh-tw_Versioning State",
+          "placeholder": "zh-tw_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "zh-tw_Cancel",
+        "deleteBtn": "zh-tw_Cofirm Delete",
+        "headerText": "zh-tw_You are about to delete CMIS Configuration:",
+        "bodyText": "zh-tw_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "zh-tw_Successfully deleted configuration.",
+        "delete.error": "zh-tw_Error deleting configuration.",
+        "insert.success": "zh-tw_Successfully created new configuration row.",
+        "insert.error": "zh-tw_Error creating new configuration row.",
+        "update.success": "zh-tw_Successfully updated configuration row.",
+        "update.error": "zh-tw_Error updating configuration row."
+      }
+    }
   }
 }

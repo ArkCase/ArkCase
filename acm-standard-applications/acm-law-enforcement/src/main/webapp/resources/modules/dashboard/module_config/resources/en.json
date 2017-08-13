@@ -1,7 +1,7 @@
 {
   "dashboard": {
-    "ADF_COMMON_CLOSE": "Schließen",
-    "ADF_COMMON_DELETE": "Löschen",
+    "ADF_COMMON_CLOSE": "Close",
+    "ADF_COMMON_DELETE": "Delete",
     "ADF_COMMON_TITLE": "Title",
     "ADF_COMMON_CANCEL": "Cancel",
     "ADF_COMMON_APPLY": "Apply",

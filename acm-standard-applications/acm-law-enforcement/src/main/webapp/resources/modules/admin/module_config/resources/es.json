@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "es_Application Role",
     "security.ldapConfig": "es_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "es_Add New Directory",
+    "security.ldapConfig.addNewMember": "es_Add New Member",
+    "security.ldapConfig.addMembers": "es_Add Members",
+    "security.ldapConfig.addSubgroup": "es_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "es_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "es_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "es_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "es_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "es_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "es_Edit Member",
+    "security.ldapConfig.removeMember": "es_Remove Member",
     "security.ldapConfig.table.ldapUrl": "es_LDAP Url",
     "security.ldapConfig.table.directoryName": "es_Directory Name",
     "security.ldapConfig.data": {
@@ -39,7 +49,7 @@
       "ok": "es_OK"
     },
     "menus": {
-      "leftnav.item": "Administración"
+      "leftnav.item": "es_Admin"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "es_Enter directory name",
@@ -68,7 +78,9 @@
       "insert.success": "es_Successfully inserted new row.",
       "insert.error": "es_Error inserting new row.",
       "update.success": "es_Successfully updated row.",
-      "update.error": "es_Error updating row."
+      "update.error": "es_Error updating row.",
+      "insert.template.success": "es_Successfully created template",
+      "insert.template.error": "es_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "es_Cancel",
@@ -100,7 +112,7 @@
         "description": "es_Description",
         "descriptionPlaceholder": "es_Enter Description",
         "btn": {
-          "ok": "es_Add Ad-Hoc Group",
+          "ok": "es_Add Group",
           "cancel": "es_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "es_Enter last name",
           "email": "es_Enter email",
           "password": "es_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "es_^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "es_7",
           "passwordRuleText": "es_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -145,6 +157,13 @@
           "btn": {
             "cancel": "es_Cancel",
             "ok": "es_Edit Ldap User"
+          }
+        },
+        "deleteLdapMember": {
+          "title": "es_Delete Ldap Member",
+          "btn": {
+            "cancel": "es_Cancel",
+            "ok": "es_Delete Ldap User"
           }
         },
         "username": "es_UserName",
@@ -217,6 +236,143 @@
     "security.selectPrivileges.name": "es_Name",
     "security.modules": "es_Modules",
     "security.modules.module": "es_Module",
+    "security.ldap.user.management": {
+      "title": "es_LDAP User Management",
+      "cloneButton": "es_Clone User",
+      "user": "es_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "es_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "es_Enter System Email Address",
+        "password.placeholder": "es_Enter System Password",
+        "purge.placeholder": "es_Choose Purge Option",
+        "purgeDays.placeholder": "es_Enter Days",
+        "save.button": "es_Save",
+        "validate.button": "es_Validate",
+        "purge.label": "es_Purge",
+        "email.label": "es_System Email Address",
+        "password.label": "es_System Password",
+        "purgeDays.label": "es_Days",
+        "emailValid": "es_System Email Address is valid",
+        "emailNotValid": "es_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "es_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "es_Retain Indefinitely",
+          "objectClosed": "es_Object = 'Closed'",
+          "objectClosedXDays": "es_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "es_Cases",
+          "complaints.label": "es_Complaints",
+          "tasks.label": "es_Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "es_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "es_Save",
+        "deliveryMethods.label": "es_Delivery Methods",
+        "enableDocumentEmail.checkbox": "es_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "es_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "es_Documents can be sent as hyperlinks",
+        "serverSettings.label": "es_Server Settings",
+        "serverType.label": "es_Server Type",
+        "serverType.placeholder": "es_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "es_SMTP",
+          "outlook": "es_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "es_For details refer to Microsoft Exchange Configuration",
+        "server.label": "es_Server Address",
+        "server.placeholder": "es_Enter Server Address",
+        "port.label": "es_Port",
+        "port.placeholder": "es_Enter Port",
+        "encryption.label": "es_Encryption",
+        "encryption.placeholder": "es_Choose Encryption",
+        "encryptionOptions": {
+          "off": "es_OFF",
+          "ssl-tls": "es_SSL/TLS",
+          "starttls": "es_STARTTLS"
+        },
+        "username.label": "es_Username",
+        "username.placeholder": "es_Enter Username",
+        "password.label": "es_Password",
+        "password.placeholder": "es_Enter Password",
+        "userFrom.label": "es_From",
+        "userFrom.placeholder": "es_Enter Email From field",
+        "validate.label": "es_SMTP Validation",
+        "validate.button": "es_Validate",
+        "smtpValid": "es_SMTP settings are valid",
+        "smtpNotValid": "es_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "es_Email Templates",
+      "table.columns": {
+        "templateName": "es_Template Name",
+        "emailPattern": "es_Email Pattern",
+        "source": "es_Source",
+        "objectTypes": "es_Object Types",
+        "actions": "es_Actions",
+        "modified": "es_Modified Date",
+        "modifier": "es_Modified By"
+      },
+      "modal": {
+        "title": "es_Email Template",
+        "templateName.label": "es_Template Name",
+        "templateName.placeholder": "es_Enter Template Name",
+        "emailPattern.label": "es_Email Pattern",
+        "emailPattern.placeholder": "es_Enter Email Pattern",
+        "source.label": "es_Source",
+        "objectTypes.label": "es_Object Types",
+        "actions.label": "es_Actions",
+        "manual.label": "es_Manual",
+        "automated.label": "es_Automated",
+        "browse": "es_Browse",
+        "save": "es_Save",
+        "cancel": "es_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "es_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "es_Save",
+        "enableExchangeIntegration.checkbox": "es_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "es_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "es_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "es_Exchange2007",
+          "Exchange2007_SP1": "es_Exchange2007_SP1",
+          "Exchange2010": "es_Exchange2010",
+          "Exchange2010_SP1": "es_Exchange2010_SP1",
+          "Exchange2010_SP2": "es_Exchange2010_SP2",
+          "Exchange2013": "es_Exchange2013",
+          "Exchange2013_SP1": "es_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "es_Enable Autodiscovery",
+        "clientAccessServer.label": "es_Client Access Server",
+        "clientAccessServer.description": "es_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "es_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "es_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "es_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "es_None",
+          "Owner": "es_Owner",
+          "PublishingEditor": "es_PublishingEditor",
+          "Editor": "es_Editor",
+          "PublishingAuthor": "es_PublishingAuthor",
+          "Author": "es_Author",
+          "NoneditingAuthor": "es_NoneditingAuthor",
+          "Reviewer": "es_Reviewer",
+          "Contributor": "es_Contributor",
+          "FreeBusyTimeOnly": "es_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "es_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "es_Custom"
+        }
+      }
+    },
     "dashboard.title": "es_Dashboard",
     "dashboard.config": "es_Dashboard Configuration",
     "dashboard.widgets": "es_Widgets",
@@ -226,6 +382,14 @@
     "forms.config": "es_Form Configuration",
     "workflows.title": "es_Workflows",
     "workflows.config": "es_Workflow Configuration",
+    "workflows.config.bpmn.upload": "es_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "es_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "es_Description",
+      "label.noFileSelected": "es_No File Selected",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "es_Cant make this process active!",
       "success": "es_Process succesfully activated."
@@ -245,7 +409,7 @@
     },
     "workflows.config.btn": {
       "createNew": "es_Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
+      "createNewUrl": "es_https://activiti.alfresco.com",
       "uploadNew": "es_Upload New BPMN"
     },
     "workflows.config.links": {
@@ -273,25 +437,33 @@
     "formWorkflows.link.editRole.save.error": "es_Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "es_Application",
+      "locale.config": {
+        "title": "es_Locale Configuration",
+        "defaultLabel": "es_Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "es_Default",
-        "applyBtn": "es_Apply",
-        "resetModule": "es_Reset Module",
-        "resetModule.confirm": "es_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "es_Reset current module (delete custom resources)",
-        "resetAll": "es_Reset All",
-        "resetAll.confirm": "es_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "es_Reset all resources (delete all custom resources)",
-        "refreshAll": "es_Refresh All",
-        "refreshAll.title": "es_Refresh all resources (keep custom resources)",
         "title": "es_Label Configuration",
-        "filterBy": "es_Filter By Id",
-        "filterByValue": "es_Filter By Value",
+        "progressMessage": "es_Updating labels...",
         "data": {
           "description": "es_Description",
           "defaultValue": "es_Default Value",
           "id": "es_ID",
           "value": "es_Value"
+        },
+        "btnReset": {
+          "label": "es_Reset...",
+          "title": "es_Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "es_Reset labels to default",
+          "chkResetCustom.label": "es_Clear customized labels as well?",
+          "btnCancel.label": "es_Cancel",
+          "btnCancel.title": "es_Close the dialog with no action",
+          "btnReset.label": "es_Reset",
+          "btnReset.title": "es_Clear customized labels and reset them to default values",
+          "btnRefresh.label": "es_Reset",
+          "btnRefresh.title": "es_Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "es_Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {
@@ -355,11 +527,11 @@
         "created": "es_Created",
         "modified": "es_Modified",
         "creator": "es_Creator",
-        "modifier": "es_Modifier",
+        "modifier": "es_Modified By",
         "activated": "es_Status",
         "objectType": "es_Object Type",
         "version": "es_Version",
-        "templateVersionActive" : "es_Active"
+        "templateVersionActive": "es_Active"
       },
       "templates.fieldNames.label": "es_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +541,7 @@
         "table.columns": {
           "beanId": "es_Bean ID",
           "jpaQuery": "es_JPA Query",
-          "queryType": "es_Query Type"
+          "objectType": "es_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +558,14 @@
       "mergefields.saveMergeFields": "es_Save",
       "mergefields.versionMergeFields": "es_Versions",
       "mergefields.grid": {
-      "fieldId": "es_ID",
-      "fieldValue": "es_Value",
-      "fieldDescription": "es_Description"
+        "fieldId": "es_ID",
+        "fieldValue": "es_Value",
+        "fieldDescription": "es_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "es_Version",
         "modified": "es_Modified",
-        "modifier": "es_Modifier",
+        "modifier": "es_Modified By",
         "mergingActiveVersion": "es_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +582,100 @@
       "target": "es_Target"
     },
     "forms.message.delete.success": "es_Successfully deleted row.",
-    "forms.message.delete.error": "es_Error deleting row."
+    "forms.message.delete.error": "es_Error deleting row.",
+    "documentManagement": {
+      "title": "es_Document Management",
+      "cmisConfiguration": "es_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "es_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "es_New CMIS Configuration",
+          "edit": "es_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "es_Cancel",
+          "ok": "es_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "es_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "es_CMIS ID",
+          "placeholder": "es_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "es_Base URL",
+          "placeholder": "es_Base URL"
+        },
+        "username": {
+          "label": "es_Username",
+          "placeholder": "es_Username"
+        },
+        "password": {
+          "label": "es_Password",
+          "placeholder": "es_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "es_Use Alfresco Extension",
+          "placeholder": "es_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "es_Endpoint",
+          "placeholder": "es_Endpoint"
+        },
+        "maxIdle": {
+          "label": "es_Maximum Idle",
+          "placeholder": "es_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "es_Maximum Active",
+          "placeholder": "es_Maximum Active"
+        },
+        "maxWait": {
+          "label": "es_Maximum Wait",
+          "placeholder": "es_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "es_Minimum Eviction Milliseconds",
+          "placeholder": "es_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "es_Eviction Check Interval Milliseconds",
+          "placeholder": "es_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "es_Reconnect Count",
+          "placeholder": "es_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "es_Reconnect Frequency",
+          "placeholder": "es_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "es_Repository Id",
+          "placeholder": "es_Repository Id"
+        },
+        "versioningState": {
+          "label": "es_Versioning State",
+          "placeholder": "es_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "es_Cancel",
+        "deleteBtn": "es_Cofirm Delete",
+        "headerText": "es_You are about to delete CMIS Configuration:",
+        "bodyText": "es_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "es_Successfully deleted configuration.",
+        "delete.error": "es_Error deleting configuration.",
+        "insert.success": "es_Successfully created new configuration row.",
+        "insert.error": "es_Error creating new configuration row.",
+        "update.success": "es_Successfully updated configuration row.",
+        "update.error": "es_Error updating configuration row."
+      }
+    }
   }
 }

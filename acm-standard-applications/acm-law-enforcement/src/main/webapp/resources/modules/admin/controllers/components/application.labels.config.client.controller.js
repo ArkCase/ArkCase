@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q'
+angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$q', '$modal', '$timeout'
     , 'UtilService', 'Admin.LabelsConfigService', 'MessageService', 'Config.LocaleService'
-    , function ($scope, $q
+    , function ($scope, $q, $modal, $timeout
         , Util, LabelsConfigService, messageService, LocaleService) {
 
         $scope.settings = {};
-        $scope.disabledInputs = false;
+        $scope.disabledInputs = true;
         $scope.reloadGrid = reloadGrid;
 
         $scope.gridOptions = {
@@ -24,34 +24,31 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }
         };
 
-        $scope.config.$promise.then(function (config) {
+        var nsPromise = LabelsConfigService.retrieveNamespaces().$promise;
+        var settingsPromise = LabelsConfigService.retrieveSettings().$promise;
+        var localSettingsPromise = LocaleService.getSettings();
+
+        $q.all([$scope.config.$promise, nsPromise, settingsPromise, localSettingsPromise]).then(function (result) {
+            var config = result[0];
             var labelsConfig = _.find(config.components, {id: 'labelsConfig'});
-            var columnDefs = labelsConfig.columnDefs;
+            $scope.gridOptions.columnDefs = labelsConfig.columnDefs;
 
-            $scope.gridOptions.columnDefs = columnDefs;
-            var nsPromise = LabelsConfigService.retrieveNamespaces().$promise;
-            var settingsPromise = LabelsConfigService.retrieveSettings().$promise;
-            var localSettingsPromise = LocaleService.getSettings();
+            var namespaces = result[1];
+            $scope.namespacesDropdownOptions = _.sortBy(namespaces, 'name');
+            $scope.selectedNamespace = $scope.namespacesDropdownOptions[0];
 
-            $q.all([nsPromise, settingsPromise, localSettingsPromise]).then(function (result) {
-                var namespaces = result[0];
-                $scope.namespacesDropdownOptions = _.sortBy(namespaces, 'name');
-                $scope.selectedNamespace = $scope.namespacesDropdownOptions[0];
+            $scope.settings = result[2];
+            var localeCode = Util.goodMapValue($scope.settings, "localeCode", LocaleService.DEFAULT_CODE);
 
-                var settings = result[1];
-                $scope.settings = settings;
-                var localeCode = Util.goodMapValue($scope.settings, "localeCode", LocaleService.DEFAULT_CODE);
+            $scope.localSettings = result[3];
+            var locales = Util.goodMapValue($scope.localSettings, "locales", LocaleService.DEFAULT_LOCALES);
 
-                $scope.localSettings = result[2];
-                var locales = Util.goodMapValue($scope.localSettings, "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.languagesDropdownOptions = locales;
+            $scope.selectedLocale = _.find(locales, {code: localeCode});
 
-                $scope.languagesDropdownOptions = locales;
-                $scope.selectedLocale = _.find(locales, {code: localeCode});
-                $scope.defaultLocale = _.find(locales, {code: localeCode});
-
-                reloadGrid();
-            });
+            reloadGrid();
         });
+
 
         function reloadGrid() {
             if ($scope.selectedNamespace && $scope.selectedLocale.code) {
@@ -63,7 +60,12 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                     function (data) {
                     	//success
                     	$scope.gridOptions.data = data;
-                        $scope.disabledInputs = false;
+
+                    	// Ideally, the flag should be set when ui-grid data is completed. Since this event is not
+                        // given, estimated 5 second timeout for grid data to load is the best we can think of for now
+                        $timeout(function () {
+                            $scope.disabledInputs = false;
+                        }, 5000);
                     },
                     function () {
                     	//error
@@ -72,18 +74,85 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
             }
         }
 
+        //reset all values to default
+        var params = {};
+        $scope.resetToDefault = function () {
+            params.namespacesDropdownOptions = $scope.namespacesDropdownOptions;
+            params.languagesDropdownOptions = $scope.languagesDropdownOptions;
+            params.selectedNamespaces = [$scope.selectedNamespace];
+            params.selectedLocales = [$scope.selectedLocale];
 
-        //changing default language
-        $scope.changeDefaultLocale = function ($event, newLocale) {
-            $event.preventDefault();
-            var locales = Util.goodMapValue($scope.localSettings, "locales", LocaleService.DEFAULT_LOCALES);
-            $scope.defaultLocale = _.find(locales, {code: newLocale});
-            $scope.settings.localeCode = newLocale;
-            LabelsConfigService.updateSettings(
-                $scope.settings
-            )
+            var modalInstance = $modal.open({
+                animation: true,
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                },
+                templateUrl: "modules/admin/views/components/application.labels.config.setToDefault.dialog.view.html",
+                controller: ['$scope', '$modal', '$modalInstance', '$q', 'params'
+                    , function ($scope, $modal, $modalInstance, $q, params) {
+
+                        $scope.namespacesDropdownOptions = params.namespacesDropdownOptions;
+                        $scope.languagesDropdownOptions = params.languagesDropdownOptions;
+                        $scope.selectedNamespaces = params.selectedNamespaces;
+                        $scope.selectedLocales = params.selectedLocales;
+                        $scope.toResetCustom = false;
+
+                        $scope.onClickOk = function () {
+                            $modalInstance.close({
+                                selectedNamespaces: $scope.selectedNamespaces,
+                                selectedLocales: $scope.selectedLocales,
+                                toResetCustom: $scope.toResetCustom
+                            });
+                        };
+                        $scope.onClickCancel = function () {
+                            $modalInstance.dismiss();
+                        };
+
+                    }
+                ]
+            });
+
+            modalInstance.result.then(function (result) {
+                $scope.disabledInputs = true;
+                var languages = _.pluck(result.selectedLocales, 'code');
+                var namespaces = _.pluck(result.selectedNamespaces, 'id');
+
+                if (result.toResetCustom) {
+                    LabelsConfigService.resetResource({
+                        lng: languages,
+                        ns: namespaces
+                    }, function () {
+                        reloadGrid();
+                        messageService.succsessAction();
+                    }, function () {
+                        $scope.disabledInputs = false;
+                        messageService.errorAction();
+                    });
+
+                } else {
+                    LabelsConfigService.refreshResource({
+                        lng: languages,
+                        ns: namespaces
+                    }, function () {
+                        reloadGrid();
+                        messageService.succsessAction();
+                    }, function () {
+                        $scope.disabledInputs = false;
+                        messageService.errorAction();
+                    });
+                }
+
+
+            }, function(error) {
+            });
+
         };
 
+/*
         //reset all values to default for selected module from dropdown
         $scope.resetCurrentModuleResources = function () {
             $scope.disabledInputs = true;
@@ -135,7 +204,7 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
                 messageService.errorAction();
             });
         };
-
+*/
         //updating value for Description for selected record in grid
         $scope.updateLabelDesc = function (desc, rowEntity) {
             LabelsConfigService.updateResource({
