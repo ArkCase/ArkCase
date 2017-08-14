@@ -22,11 +22,11 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -57,7 +57,7 @@ import microsoft.exchange.webservices.data.property.complex.ItemId;
  *
  */
 public class ExchangeCalendarService
-        implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<CalendarConfigurationEvent>
+        implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<CalendarConfigurationEvent>, InitializingBean
 {
 
     static final String PROCESS_USER = "CALENDAR_SERVICE_PURGER";
@@ -133,6 +133,11 @@ public class ExchangeCalendarService
     @Override
     public void onApplicationEvent(CalendarConfigurationEvent event)
     {
+        loadConfiguration();
+    }
+
+    private void loadConfiguration()
+    {
         try
         {
             CalendarConfigurationsByObjectType calendarConfiguration = calendarAdminService.readConfiguration(true);
@@ -141,7 +146,6 @@ public class ExchangeCalendarService
         {
             log.error("Could not load calendar configuration.", e);
         }
-
     }
 
     /*
@@ -519,7 +523,7 @@ public class ExchangeCalendarService
         try
         {
             AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreatorForObject(objectId, objectType);
-            return new AcmOutlookUser(userId, folderCreator.getSystemEmailAddress(), folderCreator.getSystemEmailAddress());
+            return new AcmOutlookUser(userId, folderCreator.getSystemEmailAddress(), folderCreator.getSystemPassword());
         } catch (AcmOutlookFolderCreatorDaoException e)
         {
             throw new CalendarServiceException(e);
@@ -570,14 +574,6 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param outlookService
-     *            the outlookService to set
-     */
-    public void setOutlookService(OutlookService outlookService)
-    {
-    }
-
-    /**
      * @param outlookDao
      *            the outlookDao to set
      */
@@ -593,6 +589,17 @@ public class ExchangeCalendarService
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        loadConfiguration();
     }
 
 }
