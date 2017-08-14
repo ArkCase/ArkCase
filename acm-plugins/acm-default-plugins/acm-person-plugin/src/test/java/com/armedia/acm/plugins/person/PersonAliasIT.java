@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.person;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonAliasDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-data-source.xml",
@@ -31,13 +32,13 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml"
-})
+        "/spring/spring-library-object-history.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAliasIT
 {
@@ -81,4 +82,3 @@ public class PersonAliasIT
         log.info("Person ID: " + saved.getId());
     }
 }
-
