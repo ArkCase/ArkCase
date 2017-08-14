@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
 
         $scope.relationshipTypes = [];
         ObjectLookupService.getPersonRelationTypes().then(
@@ -46,8 +46,12 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.PERSON}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

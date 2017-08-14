@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.service;
 
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
@@ -9,10 +10,13 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
+import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.PipelineManager.PipelineManagerOperation;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -27,23 +31,21 @@ import java.util.List;
 public class PersonServiceImplTest extends EasyMockSupport
 {
     PersonServiceImpl personService;
-    PersonDao mockPersonDao;
-    PersonEventPublisher mockPersonEventPublisher;
+    PipelineManager<Person, PersonPipelineContext> mockPersonPipelineManager;
 
+    @SuppressWarnings("unchecked")
     @Before
     public void setUp()
     {
         personService = new PersonServiceImpl();
-        mockPersonDao = createMock(PersonDao.class);
-        mockPersonEventPublisher = createMock(PersonEventPublisher.class);
-        personService.setPersonDao(mockPersonDao);
-        personService.setPersonEventPublisher(mockPersonEventPublisher);
-
+        mockPersonPipelineManager = createMock(PipelineManager.class);
+        personService.setPersonPipelineManager(mockPersonPipelineManager);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void testSuccessfullySavePersonWithValidOrganizationAssociations()
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException
+    public void testSuccessfullySavePersonWithValidOrganizationAssociations() throws AcmObjectNotFoundException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         // given
         Person person = new Person();
@@ -76,9 +78,8 @@ public class PersonServiceImplTest extends EasyMockSupport
 
         person.setOrganizationAssociations(organizationAssociations);
 
-        expect(mockPersonDao.save(person)).andReturn(person);
-        mockPersonEventPublisher.publishPersonUpsertEvent(person, true, true);
-        expectLastCall();
+        expect(mockPersonPipelineManager.executeOperation(anyObject(Person.class), anyObject(PersonPipelineContext.class),
+                anyObject(PipelineManagerOperation.class))).andReturn(person);
 
         replayAll();
 
@@ -91,8 +92,8 @@ public class PersonServiceImplTest extends EasyMockSupport
     }
 
     @Test(expected = AcmCreateObjectFailedException.class)
-    public void testFailSavePersonWithMissingOrganizationAssociationTypes()
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException
+    public void testFailSavePersonWithMissingOrganizationAssociationTypes() throws AcmObjectNotFoundException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         // given
         Person person = new Person();
@@ -124,8 +125,8 @@ public class PersonServiceImplTest extends EasyMockSupport
     }
 
     @Test(expected = AcmCreateObjectFailedException.class)
-    public void testFailSavePersonWithDuplicateOrganizationAssociations()
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException
+    public void testFailSavePersonWithDuplicateOrganizationAssociations() throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         // given
         Person person = new Person();

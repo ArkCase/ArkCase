@@ -62,6 +62,11 @@ angular.module('organizations').config(['$stateProvider',
                 templateUrl: 'modules/organizations/views/components/organization-urls.client.view.html'
             })
 
+            .state('organizations.participants', {
+                url: '/:id/participants',
+                templateUrl: 'modules/organizations/views/components/organization-participants.client.view.html'
+            })
+            
             .state('organizations.dbas', {
                 url: '/:id/dbas',
                 templateUrl: 'modules/organizations/views/components/organization-dbas.client.view.html'
