@@ -966,7 +966,7 @@
           "field": "person.personToOrganizationAssociationType",
           "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "lookup": "personAssociationTypes"
+          "cellTemplate": "<span>{{row.entity.personToOrganizationAssociationType}}</span>"
         },
         {
           "name": "phone",
