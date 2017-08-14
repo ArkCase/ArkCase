@@ -9,11 +9,11 @@
                 <i class="fa fa-download"></i>
                 <span translate>organizations.comp.actions.import.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="activate()">
+            <button class="btn btn-sm btn-default" ng-click="activate()" ng-hide="objectInfo.status == 'ACTIVE'">
                 <i class="fa fa-play-circle"></i>
                 <span translate>organizations.comp.actions.activate.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="deactivate()">
+            <button class="btn btn-sm btn-default" ng-click="deactivate()" ng-hide="objectInfo.status != 'ACTIVE'">
                 <i class="fa fa-stop"></i>
                 <span translate>organizations.comp.actions.deactivate.button</span>
             </button>

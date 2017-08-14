@@ -107,7 +107,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 if (data.organization) {
                     if (!data.organization.organizationId) {
                         OrganizationInfoService.saveOrganizationInfo(data.organization).then(function (response) {
-                            data['organization'] = response.data;
+                            data['organization'] = response;
                             updateAssociation(association, $scope.objectInfo, data.organization, data, rowEntity);
                         });
                     } else {

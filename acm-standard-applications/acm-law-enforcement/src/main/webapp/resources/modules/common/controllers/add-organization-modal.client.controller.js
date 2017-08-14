@@ -55,7 +55,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
 
                 var params = {};
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
-                params.filter = '"Object Type": ORGANIZATION';
+                params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
 
                 var modalInstance = $modal.open({

@@ -126,7 +126,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
-    @Column(name = "cm_status", insertable = true, updatable = false)
+    @Column(name = "cm_status")
     private String status;
 
     @Column(name = "cm_class_name")
