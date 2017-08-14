@@ -4,7 +4,7 @@
             <div class="col-xs-6">
                 <h4><a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable">
+                       permission-action="disable" e-required>
                     {{objectInfo.complaintTitle || "Unknown" }}</a> ({{objectInfo.status}})</h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.complaintNumber}}</h4>
