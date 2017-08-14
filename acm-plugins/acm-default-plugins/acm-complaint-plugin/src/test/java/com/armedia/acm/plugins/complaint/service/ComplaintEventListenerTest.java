@@ -1,5 +1,12 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -14,9 +21,12 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
+import com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,10 +34,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 public class ComplaintEventListenerTest extends EasyMockSupport
 {
@@ -46,6 +55,8 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     private ComplaintEventPublisher mockComplaintEventPublisher;
     private AcmAssignmentDao mockAcmAssignmentDao;
     private OutlookContainerCalendarService mockCalendarService;
+    private OutlookCalendarAdminServiceExtension mockedCalendarAdminService;
+    private AcmOutlookUser mockedOutlookUser;
     private ComplaintEventListener complaintEventListener;
 
     @Before
@@ -56,6 +67,8 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         mockComplaintEventPublisher = createMock(ComplaintEventPublisher.class);
         mockAcmAssignmentDao = createMock(AcmAssignmentDao.class);
         mockCalendarService = createMock(OutlookContainerCalendarService.class);
+        mockedCalendarAdminService = createMock(OutlookCalendarAdminService.class);
+        mockedOutlookUser = createMock(AcmOutlookUser.class);
 
         complaintEventListener = new ComplaintEventListener();
         complaintEventListener.setAcmObjectHistoryService(mockAcmObjectHistoryService);
@@ -63,6 +76,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setComplaintEventPublisher(mockComplaintEventPublisher);
         complaintEventListener.setAcmAssignmentDao(mockAcmAssignmentDao);
         complaintEventListener.setCalendarService(mockCalendarService);
+        complaintEventListener.setCalendarAdminService(mockedCalendarAdminService);
     }
 
     public Complaint getComplaint()
@@ -131,7 +145,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
-        //change assignee
+        // change assignee
         jsonComplaint.getParticipants().get(0).setParticipantLdapId(NEW_ASSIGNEE);
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
@@ -296,7 +310,6 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-
         runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint);
     }
 
@@ -335,7 +348,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
-        //set different status
+        // set different status
         jsonComplaint.setStatus("ACTIVE");
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
@@ -344,7 +357,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void testCalendarFolderDeleted()
+    public void testCalendarFolderDeleted() throws Exception
     {
         // allow calendar deleting
         complaintEventListener.setShouldDeleteCalendarFolder(true);
@@ -424,8 +437,8 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         assertEquals(jsonComplaint.getComplaintNumber(), complaintCapture.getComplaintNumber());
     }
 
-    public void runAndTestComplaintModifiedEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory,
-                                                 String statusToCheck, Complaint complaint)
+    public void runAndTestComplaintModifiedEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck,
+            Complaint complaint)
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -450,7 +463,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     public void runAndTestComplaintModifiedEventStatusClosed(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory,
-                                                             String statusToCheck, Complaint complaint)
+            String statusToCheck, Complaint complaint) throws Exception
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -458,19 +471,23 @@ public class ComplaintEventListenerTest extends EasyMockSupport
 
         expect(mockAcmObjectHistoryService.getAcmObjectHistory(OBJECT_ID, ComplaintConstants.OBJECT_TYPE)).andReturn(previousHistory);
 
-
         Capture<Complaint> complaintCapture = Capture.newInstance();
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
         Capture<Long> containerIdCapture = Capture.newInstance();
         Capture<String> calendarIdCapture = Capture.newInstance();
+        Capture<AcmOutlookUser> calendarOutlookUser = Capture.newInstance();
 
-        mockCalendarService.deleteFolder(capture(containerIdCapture), capture(calendarIdCapture), eq(DeleteMode.MoveToDeletedItems));
+        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerIdCapture), capture(calendarIdCapture),
+                eq(DeleteMode.MoveToDeletedItems));
         expectLastCall().once();
 
         mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
                 capture(eventStatusCapture));
         expectLastCall().once();
+
+        expect(mockedCalendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE))
+                .andReturn(Optional.of(mockedOutlookUser));
 
         replayAll();
         complaintEventListener.onApplicationEvent(event);

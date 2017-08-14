@@ -244,6 +244,7 @@ body {
     background-color: #2d343e;
     z-index: 2;
     overflow: none;
+    -webkit-transform: translateZ(0);
 }
 
 .leftnav-menu footer small, .leftnav-menu footer small a {

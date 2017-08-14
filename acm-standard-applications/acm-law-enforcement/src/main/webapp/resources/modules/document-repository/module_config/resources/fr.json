@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "Information",
-    "docRepoId": "fr_Repository ID:",
-    "docRepoName": "fr_Document Repository Name:",
-    "modified.label": "fr_Modified Date",
-    "assignee.label": "fr_Assigned To",
-    "owningGroup.label": "fr_Owning Group",
-    "description.label": "fr_Description"
+    "docRepoId": "Identificateur du Référentiel:",
+    "docRepoName": "prénom du Référentiel:",
+    "modified.label": "Date modifiée",
+    "assignee.label": "Assigné à",
+    "owningGroup.label": "Appartenant au groupe",
+    "description.label": "La description"
   },
   "document-repository.comp.actions": {
     "title": "Actions",
-    "restrict": "fr_Restrict?",
-    "subscribe.button": "fr_Subscribe",
-    "unsubscribe.button": "fr_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "fr_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "Restreindre?",
+    "subscribe.button": "S'abonner",
+    "unsubscribe.button": "Désabonner",
+    "delete.button": "Supprimer le référentiel",
+    "confirm.delete.documentRepository.msg": "Cette action supprime tout le dépôt. Êtes-vous sûr de vouloir continuer?"
   },
   "document-repository.comp.details": {
     "title": "Détails",

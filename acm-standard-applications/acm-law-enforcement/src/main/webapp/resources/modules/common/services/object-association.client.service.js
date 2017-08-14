@@ -207,8 +207,8 @@ angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$
          */
         Service.deleteAssociationInfo = function (id) {
             return Util.serviceCall({
-                service: Service.delete
-                , param: {
+                service: Service.delete,
+                param: {
                     id: id
                 }
             });

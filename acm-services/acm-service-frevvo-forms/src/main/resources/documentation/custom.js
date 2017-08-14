@@ -106,6 +106,18 @@ var CustomEventHandlers = {
                                 var pickedObject = e.data.data;
                                 // update charge code element
                                 updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
+                                
+                                if(pickedObject.title_parseable) {
+                                	var objectTitleHiddenField = document.getElementsByName("objectTitle");
+                                	
+                                	if(objectTitleHiddenField.length === 1) {
+                                		updateElementValue(pickedObject.title_parseable, 'input', objectTitleHiddenField[0].id, null); 
+                                	}
+                                	else if(objectTitleHiddenField.length > 1) {
+                                		var rowIndex = getParentByTagName(document.getElementById(e.data.elementId), "tr").rowIndex - 1;
+                                		updateElementValue(pickedObject.title_parseable, 'input', objectTitleHiddenField[rowIndex].id, null);
+                                	}                               	
+                                }
                             }
                         }
                     }
@@ -448,6 +460,28 @@ function updateElementValue(value, elementType, elementId, cssClass, property) {
         htmlElement[property] = value;
         dispatchChangeEvent(htmlElement);
     }
+}
+
+/**
+ * Get parent node for given tagname
+ * @param  {Object} node    DOM node
+ * @param  {String} tagname HTML tagName
+ * @return {Object}         Parent node
+ */
+function getParentByTagName(node, tagname) {
+	var parent;
+	if (node === null || tagname === '') return;
+	parent  = node.parentNode;
+	tagname = tagname.toUpperCase();
+
+	while (parent.tagName !== "HTML") {
+		if (parent.tagName === tagname) {
+			return parent;
+		}
+		parent = parent.parentNode;
+	}
+	
+	return parent;
 }
 
 /* Rich Text Area properties - START */

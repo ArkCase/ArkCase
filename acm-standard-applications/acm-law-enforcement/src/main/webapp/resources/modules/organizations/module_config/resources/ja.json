@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "組織",
-    "progressNoComplaint": "ja_[ No organizations data ]",
-    "progressLoading": "ja_Loading organization ",
-    "progressError": "ja_Failed to load organization "
+    "progressNoComplaint": "[ 組織のデータはありません ]",
+    "progressLoading": "組織の読み込み",
+    "progressError": "組織の読み込みに失敗しました",
+    "noDataMessage": "データはありません"
   },
   "organizations.menus": {
     "leftnav.item": "組織",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "情報",
-    "phone.label": "ja_Phone",
-    "email.label": "ja_Email",
-    "status.label": "ja_Status",
-    "identification.label": "ja_ID",
-    "primary.label": "ja_Primary Contact",
-    "parent.label": "ja_Parent Organization",
-    "parent.placeholder": "ja_Enter Parent Organization"
+    "phone.label": "電話",
+    "email.label": "電子メール",
+    "status.label": "状態",
+    "organization.label": "組織",
+    "identification.label": "識別番号",
+    "primary.label": "プライマリ連絡先",
+    "parent.label": "トップの組織",
+    "parent.placeholder": "トップの組織を入力"
   },
   "organizations.comp.actions": {
     "title": "操作",
-    "export.button": "ja_Export",
-    "import.button": "ja_Import",
-    "delete.button": "ja_Delete",
-    "activate.button": "ja_Activate",
-    "deactivate.button": "ja_Deactivate",
-    "merge.button": "ja_Merge"
+    "export.button": "出力",
+    "import.button": "入力",
+    "delete.button": "削除",
+    "activate.button": "アクティブ化",
+    "deactivate.button": "無効化",
+    "merge.button": "結合"
   },
   "organizations.comp.details": {
     "title": "詳細",

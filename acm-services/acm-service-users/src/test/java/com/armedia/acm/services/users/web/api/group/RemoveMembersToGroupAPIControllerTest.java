@@ -6,6 +6,7 @@ package com.armedia.acm.services.users.web.api.group;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -86,14 +87,14 @@ public class RemoveMembersToGroupAPIControllerTest extends EasyMockSupport
         AcmUser user1 = new AcmUser();
         user1.setUserId("test-user-1");
         user1.setUserDirectoryName("Test Directory Name 1");
-        user1.setUserState("TEST");
+        user1.setUserState(AcmUserState.VALID);
         user1.setFirstName("First Name 1");
         user1.setLastName("Last Name 1");
 
         AcmUser user2 = new AcmUser();
         user2.setUserId("test-user-2");
         user2.setUserDirectoryName("Test Directory Name 2");
-        user2.setUserState("TEST");
+        user2.setUserState(AcmUserState.VALID);
         user2.setFirstName("First Name 2");
         user2.setLastName("Last Name 2");
 

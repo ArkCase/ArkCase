@@ -554,31 +554,37 @@
           "type": "component",
           "columnDefs": [
             {
+              "name": "type",
+              "field": "type_lcs",
+              "displayName": "organizations.comp.cases.table.columns.role",
+              "headerCellFilter": "translate"
+            },
+            {
               "name": "id",
-              "field": "object_id_s",
+              "field": "parent_object.object_id_s",
               "displayName": "organizations.comp.cases.table.columns.id",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
               "width": 130
             },
             {
               "name": "title",
-              "field": "title_parseable",
+              "field": "parent_object.title_parseable",
               "sortField": "title_parseable_lcs",
               "displayName": "organizations.comp.cases.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+              "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "status",
-              "field": "status_lcs",
+              "field": "parent_object.status_lcs",
               "displayName": "organizations.comp.cases.table.columns.status",
               "headerCellFilter": "translate"
             },
             {
               "width": 150,
               "name": "assignee",
-              "field": "assignee_id_lcs",
+              "field": "parent_object.assignee_id_lcs",
               "displayName": "organizations.comp.cases.table.columns.assignee",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
@@ -586,7 +592,7 @@
             {
               "width": 150,
               "name": "modified",
-              "field": "modified_date_tdt",
+              "field": "parent_object.modified_date_tdt",
               "displayName": "organizations.comp.cases.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
@@ -1070,9 +1076,10 @@
         },
         {
           "name": "person.personToOrganizationAssociationType",
+          "field": "person.personToOrganizationAssociationType",
           "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span ng-bind=\"(row.entity.person.organizationAssociations | filter :{organization : {organizationId : grid.appScope.currentObjectId}})[0].personToOrganizationAssociationType\"></span>"
+          "lookup": "personAssociationTypes"
         },
         {
           "name": "phone",
@@ -1162,37 +1169,43 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
+          "name": "type",
+          "field": "type_lcs",
+          "displayName": "organizations.comp.cases.table.columns.role",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "priority",
-          "field": "priority_lcs",
+          "field": "parent_object.priority_lcs",
           "displayName": "organizations.comp.cases.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
           "name": "id",
-          "field": "object_id_s",
+          "field": "parent_object.object_id_s",
           "displayName": "organizations.comp.cases.table.columns.id",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
           "name": "title",
-          "field": "title_parseable",
+          "field": "parent_object.title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "organizations.comp.cases.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
-          "field": "status_lcs",
+          "field": "parent_object.status_lcs",
           "displayName": "organizations.comp.cases.table.columns.status",
           "headerCellFilter": "translate"
         },
         {
           "width": 150,
           "name": "assignee",
-          "field": "assignee_id_lcs",
+          "field": "parent_object.assignee_id_lcs",
           "displayName": "organizations.comp.cases.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
@@ -1200,7 +1213,7 @@
         {
           "width": 150,
           "name": "modified",
-          "field": "modified_date_tdt",
+          "field": "parent_object.modified_date_tdt",
           "displayName": "organizations.comp.cases.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
@@ -1223,37 +1236,43 @@
       "paginationPageSize": 10,
       "columnDefs": [
         {
+          "name": "type",
+          "field": "type_lcs",
+          "displayName": "organizations.comp.complaints.table.columns.role",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "priority",
-          "field": "priority_lcs",
+          "field": "parent_object.priority_lcs",
           "displayName": "organizations.comp.complaints.table.columns.priority",
           "headerCellFilter": "translate"
         },
         {
           "name": "id",
-          "field": "object_id_s",
+          "field": "parent_object.object_id_s",
           "displayName": "organizations.comp.complaints.table.columns.id",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
           "width": 130
         },
         {
           "name": "title",
-          "field": "title_parseable",
+          "field": "parent_object.title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "organizations.comp.complaints.table.columns.title",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "status",
-          "field": "status_lcs",
+          "field": "parent_object.status_lcs",
           "displayName": "organizations.comp.complaints.table.columns.status",
           "headerCellFilter": "translate"
         },
         {
           "width": 150,
           "name": "assignee",
-          "field": "assignee_id_lcs",
+          "field": "parent_object.assignee_id_lcs",
           "displayName": "organizations.comp.complaints.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
@@ -1261,7 +1280,7 @@
         {
           "width": 150,
           "name": "modified",
-          "field": "modified_date_tdt",
+          "field": "parent_object.modified_date_tdt",
           "displayName": "organizations.comp.complaints.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
@@ -1300,7 +1319,7 @@
           "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "organizations.comp.related.table.columns.identification",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification.identificationNumber}} [{{row.entity.organization.defaultIdentification.identificationType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
         },
         {
           "name": "organization.organizationType",
@@ -1312,19 +1331,19 @@
           "name": "organization.defaultPerson.givenName",
           "displayName": "organizations.comp.related.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName + ' ' + row.entity.defaultPerson.organization.familyName}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
           "displayName": "organizations.comp.related.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone.value}} [{{row.entity.organization.defaultPhone.subType}}]</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.subType + ']' : ''}}</div>"
         },
         {
           "name": "organization.defaultAddress.city",
           "displayName": "organizations.comp.related.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress.city}}, {{row.entity.organization.defaultAddress.state}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
         }
       ]
     },

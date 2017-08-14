@@ -14,7 +14,7 @@
   },
   "complaints.comp.info": {
     "title": "信息",
-    "complaintId": "投诉号码:",
+    "complaintId": "投诉识别号:",
     "complaintNumber": "投诉编号:",
     "courtRoomName": "法庭名称:",
     "type.label": "种类",
@@ -31,7 +31,7 @@
     "close.button": "关闭投诉",
     "subscribe.button": "订阅",
     "unsubscribe.button": "取消订阅",
-    "claim.button": "申称权益",
+    "claim.button": "申明权益",
     "unclaim.button": "取消申权"
   },
   "complaints.comp.details": {

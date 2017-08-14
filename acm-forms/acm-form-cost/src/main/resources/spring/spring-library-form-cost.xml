@@ -10,6 +10,7 @@
     	<property name="acmCostsheetDao" ref="acmCostsheetDao" />
     	<property name="userDao" ref="userJpaDao" />
     	<property name="acmParticipantDao" ref="acmParticipantDao" />
+    	<property name="springContextHolder" ref="acmContextHolder" />
     </bean>
 
     <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" scope="prototype">

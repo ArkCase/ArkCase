@@ -92,6 +92,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
 
     private String entityTypeForQuery;
 
+    private String entityIdForQuery;
+
     public CalendarEntityHandler()
     {
         sortFields = new HashMap<>();
@@ -298,12 +300,12 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         TypedQuery<AcmContainerEntity> query;
         if (restrictedOnly)
         {
-            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId AND ot.restricted = :restricted",
-                    entityTypeForQuery), AcmContainerEntity.class);
+            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId AND ot.restricted = :restricted",
+                    entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
             query.setParameter("restricted", true);
         } else
         {
-            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.complaintId = :objectId", entityTypeForQuery),
+            query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId", entityTypeForQuery, entityIdForQuery),
                     AcmContainerEntity.class);
         }
         query.setParameter("objectId", Long.valueOf(objectId));
@@ -457,7 +459,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     }
 
     /**
-     * @param outlookDao the outlookDao to set
+     * @param outlookDao
+     *            the outlookDao to set
      */
     public void setOutlookDao(OutlookDao outlookDao)
     {
@@ -465,7 +468,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     }
 
     /**
-     * @param containerEntityDao the containerEntityDao to set
+     * @param containerEntityDao
+     *            the containerEntityDao to set
      */
     public void setContainerEntityDao(AcmContainerDao containerEntityDao)
     {
@@ -473,7 +477,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     }
 
     /**
-     * @param auditPropertyEntityAdapter the auditPropertyEntityAdapter to set
+     * @param auditPropertyEntityAdapter
+     *            the auditPropertyEntityAdapter to set
      */
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
@@ -481,7 +486,8 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     }
 
     /**
-     * @param entityType the entityType to set
+     * @param entityType
+     *            the entityType to set
      */
     public void setEntityType(String entityType)
     {
@@ -489,11 +495,21 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     }
 
     /**
-     * @param entityTypeForQuery the entityTypeForQuery to set
+     * @param entityTypeForQuery
+     *            the entityTypeForQuery to set
      */
     public void setEntityTypeForQuery(String entityTypeForQuery)
     {
         this.entityTypeForQuery = entityTypeForQuery;
+    }
+
+    /**
+     * @param entityIdForQuery
+     *            the entityIdForQuery to set
+     */
+    public void setEntityIdForQuery(String entityIdForQuery)
+    {
+        this.entityIdForQuery = entityIdForQuery;
     }
 
 }

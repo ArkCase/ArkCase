@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "情報",
-    "docRepoId": "ja_Repository ID:",
-    "docRepoName": "ja_Document Repository Name:",
-    "modified.label": "ja_Modified Date",
-    "assignee.label": "ja_Assigned To",
-    "owningGroup.label": "ja_Owning Group",
+    "docRepoId": "文書保存番号:",
+    "docRepoName": "文書保存名:",
+    "modified.label": "変更日",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "グループに所属",
     "description.label": "ja_Description"
   },
   "document-repository.comp.actions": {
-    "title": "行动",
-    "restrict": "ja_Restrict?",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "ja_This action will delete the entire repository. Are you sure you want to proceed?"
+    "title": "操作",
+    "restrict": "制限する?",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "delete.button": "文書を削除",
+    "confirm.delete.documentRepository.msg": "このアクションはリポジトリ全体を削除します。続行してもよろしいですか?"
   },
   "document-repository.comp.details": {
     "title": "詳細",

@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "任务",
-    "progressNoTask": "zh-cn_[ No task data ]",
-    "progressLoading": "zh-cn_Loading task ",
-    "progressError": "zh-cn_Failed to load task"
+    "progressNoTask": "[ 无任务数据 ]",
+    "progressLoading": "加载任务数据",
+    "progressError": "加载任务数据失败"
   },
   "tasks.menus": {
     "leftnav.item": "任务",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "信息",
-    "taskId": "zh-cn_Task id:",
-    "percentage.label": "zh-cn_% of Completion",
-    "assignee.label": "zh-cn_Assignee",
-    "Priority.label": "zh-cn_Priority",
-    "startDate.label": "zh-cn_Start Date",
-    "dueDate.label": "zh-cn_Due Date",
-    "state.label": "zh-cn_State",
-    "overdue.tooltip": "zh-cn_Task is Overdue",
-    "deadline.tooltip": "zh-cn_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "任务识别号:",
+    "percentage.label": "完成百分比",
+    "assignee.label": "指定人员",
+    "priority.label": "优先级别",
+    "startDate.label": "开始日期",
+    "dueDate.label": "到期日期",
+    "state.label": "状态",
+    "overdue.tooltip": "任务已逾期",
+    "deadline.tooltip": "截止日期正在接近",
+    "owningGroup.label": "所属群体"
   },
   "tasks.comp.parentinfo": {
     "title": "原属信息",
-    "taskId": "zh-cn_Task id:",
+    "taskId": "任务识别号:",
     "case": {
-      "subjectType.label": "zh-cn_Subject Type",
-      "incidentDate.label": "zh-cn_Incident Date",
-      "priority.label": "zh-cn_Priority",
-      "assignee.label": "zh-cn_Assigned To",
-      "owningGroup.label": "zh-cn_Owning Group"
+      "subjectType.label": "对象类型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "优先级别",
+      "assignee.label": "指定人员",
+      "owningGroup.label": "所属群体"
     },
     "complaint": {
-      "subjectType.label": "zh-cn_Subject Type",
-      "incidentDate.label": "zh-cn_Incident Date",
-      "priority.label": "zh-cn_Priority",
-      "assignee.label": "zh-cn_Assigned To",
-      "owningGroup.label": "zh-cn_Owning Group"
+      "subjectType.label": "对象类型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "优先级别",
+      "assignee.label": "指定人员",
+      "owningGroup.label": "所属群体"
     },
     "costsheet": {
-      "approver.label": "zh-cn_Approver"
+      "approver.label": "审批者"
     },
     "timesheet": {
-      "approver.label": "zh-cn_Approver"
-    },
-    "_xxx_courtRoomName": "zh-cn_Court Room Name:"
+      "approver.label": "审批者"
+    }
   },
   "tasks.comp.actions": {
     "title": "行动",
-    "diagram.button": "zh-cn_Process Diagram",
-    "eSignature.button": "zh-cn_Sign",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "reject.button": "zh-cn_Reject",
-    "delete.button": "zh-cn_Delete",
-    "complete.button": "zh-cn_Complete",
-    "approve.button": "zh-cn_Approve Document",
-    "rework.button": "zh-cn_Send for Rework",
-    "claim.button": "zh-cn_Claim",
-    "unclaim.button": "zh-cn_Unclaim",
-    "error.outcomeFieldMissing": "zh-cn_Cannot complete task because of missing required value",
+    "diagram.button": "图标处理",
+    "eSignature.button": "签名",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "reject.button": "回绝",
+    "delete.button": "删除",
+    "complete.button": "完成",
+    "approve.button": "文件审批",
+    "rework.button": "遣返重做",
+    "claim.button": "申明权益",
+    "unclaim.button": "取消申权",
+    "error.outcomeFieldMissing": "由于缺少必需的值而无法完成任务",
     "modal": {
-      "errorHeaderText": "zh-cn_Error",
-      "btnOk.text": "zh-cn_OK",
-      "btnClose.text": "zh-cn_Close"
+      "errorHeaderText": "错误",
+      "btnOk.text": "确定",
+      "btnClose.text": "关闭"
     }
   },
   "tasks.comp.details": {
