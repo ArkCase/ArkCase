@@ -5,6 +5,7 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -16,6 +17,7 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
@@ -35,8 +37,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -206,8 +211,8 @@ public class PersonServiceImpl implements PersonService
 
     @Override
     public EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
-            PipelineProcessException
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            AcmObjectNotFoundException, PipelineProcessException
     {
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
@@ -237,8 +242,8 @@ public class PersonServiceImpl implements PersonService
     @Override
     @Transactional
     public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
-            PipelineProcessException
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            AcmObjectNotFoundException, PipelineProcessException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
@@ -309,9 +314,10 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public Person savePerson(Person in, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
+    public Person savePerson(Person in, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
+        validateOrganizationAssociations(in);
         PersonPipelineContext pipelineContext = new PersonPipelineContext();
         // populate the context
         pipelineContext.setNewPerson(in.getId() == null);
@@ -323,6 +329,56 @@ public class PersonServiceImpl implements PersonService
             personEventPublisher.publishPersonUpsertEvent(person, isNew, true);
             return person;
         });
+    }
+
+    /**
+     * Validates the {@link PersonOrganizationAssociation}.
+     *
+     * @param person
+     *            the {@link Person} to validate
+     * @throws AcmCreateObjectFailedException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @throws AcmDuplicatePersonAssociationException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     */
+    private void validateOrganizationAssociations(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
+    {
+        List<PersonOrganizationAssociation> missingAssocTypes = person.getOrganizationAssociations().stream().filter(
+                assoc -> assoc.getPersonToOrganizationAssociationType() == null || assoc.getOrganizationToPersonAssociationType() == null)
+                .collect(Collectors.toList());
+
+        if (missingAssocTypes.size() > 0)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Missing person to organization relation type!");
+            missingAssocTypes.forEach(assoc -> {
+                errorMessage.append(" [OrganizationId: " + assoc.getPerson().getId() + "]");
+            });
+            throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
+        }
+
+        Map<Long, List<String>> mapped = person.getOrganizationAssociations().stream()
+                .collect(Collectors.toMap(d -> d.getOrganization().getId(), d -> {
+                    List<String> value = new ArrayList<>();
+                    value.add(d.getOrganizationToPersonAssociationType());
+                    return value;
+                }, (oldValue, newValue) -> {
+                    oldValue.addAll(newValue);
+                    return oldValue;
+                }));
+
+        List<Map.Entry<Long, List<String>>> withDupes = mapped.entrySet().stream()
+                .filter(ds -> ds.getValue().size() != ((new HashSet<>(ds.getValue())).size())).collect(Collectors.toList());
+
+        if (withDupes.size() > 0)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Duplicate organizations to person relations!");
+            withDupes.forEach(duplicate -> {
+                errorMessage.append(" [OrganizationId: " + duplicate.getKey() + " Relation: " + duplicate.getValue() + "]");
+            });
+            throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
+        }
     }
 
     /**
@@ -339,14 +395,15 @@ public class PersonServiceImpl implements PersonService
      */
     @Override
     public Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException,
+            PipelineProcessException
     {
         Person savedPerson = savePerson(person, authentication);
         return uploadPicturesForPerson(savedPerson, pictures, authentication);
     }
 
     private Person uploadPicturesForPerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         if (pictures != null)
         {

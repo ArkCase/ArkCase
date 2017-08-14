@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.person.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.UploadImageRequest;
@@ -48,7 +49,7 @@ public class PeopleAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person upsertPerson(@RequestBody Person in, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         try
         {
@@ -66,7 +67,7 @@ public class PeopleAPIController
     @ResponseBody
     public Person insertPersonMultipart(@RequestPart(name = "person") Person in,
             @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         try
         {
@@ -142,8 +143,8 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
-            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
-            throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
+            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth) throws AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         Person person = personService.get(personId);
         try
@@ -164,8 +165,8 @@ public class PeopleAPIController
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity saveImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
-            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth)
-            throws AcmCreateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
+            @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth) throws AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         try
         {
