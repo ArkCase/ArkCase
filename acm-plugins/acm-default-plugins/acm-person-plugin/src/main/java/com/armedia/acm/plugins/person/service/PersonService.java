@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Identification;
@@ -92,8 +93,8 @@ public interface PersonService
      */
     @Transactional
     EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
-            PipelineProcessException;
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            AcmObjectNotFoundException, PipelineProcessException;
 
     /**
      * save image for a person with new file and metadata
@@ -112,8 +113,8 @@ public interface PersonService
      */
     @Transactional
     EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
-            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException,
-            PipelineProcessException;
+            throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
+            AcmObjectNotFoundException, PipelineProcessException;
 
     /**
      * save person data
@@ -125,8 +126,8 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException;
+    Person savePerson(Person person, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException;
 
     /**
      * save person data
@@ -140,6 +141,6 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException;
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException;
 }

@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.web.api;
 import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
@@ -46,7 +47,7 @@ public class OrganizationAPIController
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Organization upsertOrganization(@RequestBody Organization in, Authentication auth, HttpSession httpSession)
-            throws AcmCreateObjectFailedException
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
 
         log.debug("Persist a Organization: [{}];", in);

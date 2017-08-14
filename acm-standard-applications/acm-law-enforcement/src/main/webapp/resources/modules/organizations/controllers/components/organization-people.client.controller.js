@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.PeopleController', ['$scope', '$q', '$stateParams'
-    , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService'
+    , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'MessageService'
     , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService', 'PermissionsService'
-    , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService
+    , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, MessageService
         , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService, PermissionsService) {
-
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -57,6 +56,25 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             $scope.gridOptions.data = objectInfo.personAssociations;
         };
 
+        var validatePersonAssociation = function(data, rowEntity) {
+            var validationResult = { valid : true };
+            
+            $scope.objectInfo.personAssociations
+                .filter(function(association) {
+                    return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
+                })
+                .forEach(function(association) {
+                    if (association.person.id == data.personId) {
+                        if (data.type === association.organizationToPersonAssociationType) {
+                            validationResult.valid = false;
+                            validationResult.duplicatePersonRoleError = true;
+                        }
+                    }
+                });
+                
+            return validationResult;
+        }
+        
         ObjectLookupService.getOrganizationPersonRelationTypes().then(
             function (types) {
                 $scope.personAssociationTypes = types;
@@ -64,6 +82,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             });
 
         $scope.editRow = function (rowEntity) {
+            var validateEditRow = function(data) {
+                return validatePersonAssociation(data, rowEntity);
+            };
+
             var params = {
                 showSetPrimary: true,
                 types: $scope.personAssociationTypes,
@@ -71,7 +93,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 person: rowEntity.person,
                 personName: rowEntity.person.givenName + ' ' + rowEntity.person.familyName,
                 type: rowEntity.organizationToPersonAssociationType,
-                isDefault: $scope.isDefault(rowEntity)
+                isDefault: $scope.isDefault(rowEntity),
+                returnValueValidationFunction : validateEditRow
             };
 
             var modalInstance = $modal.open({
@@ -111,7 +134,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.personAssociationTypes
+                types: $scope.personAssociationTypes,
+                returnValueValidationFunction : validatePersonAssociation
             };
 
             var modalInstance = $modal.open({
@@ -192,7 +216,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                         return objectInfo;
                     }
                     , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
+                        MessageService.errorAction();
+                        $scope.$emit('report-object-refreshed', $scope.objectInfo.organizationId);
                         return error;
                     }
                 );

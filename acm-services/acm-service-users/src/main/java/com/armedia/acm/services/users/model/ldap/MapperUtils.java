@@ -86,20 +86,24 @@ public class MapperUtils
     public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter ->
     {
         String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
-        // FILETIME - representing the number of 100-nanosecond intervals since January 1, 1601 (UTC).
-        long fileTimeTimestamp = Long.parseLong(expirationTimePasswordAttr);
-        // 116444736000000000 100ns between 1601 and 1970
-        // https://stackoverflow.com/questions/5200192/convert-64-bit-windows-number-to-time-java
-        long mmSecTimestamp = (fileTimeTimestamp - 116444736000000000L) / 10000;
-        Instant instant = Instant.ofEpochMilli(mmSecTimestamp);
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
-        LocalDate localDate = localDateTime.toLocalDate();
-        // prevent "Data truncation: Incorrect date value" on mysql when date exceeds valid range
-        if (localDate.isAfter(LocalDate.now().plusYears(100L)))
+        if (expirationTimePasswordAttr != null)
         {
-            return null;
+            // FILETIME - representing the number of 100-nanosecond intervals since January 1, 1601 (UTC).
+            long fileTimeTimestamp = Long.parseLong(expirationTimePasswordAttr);
+            // 116444736000000000 100ns between 1601 and 1970
+            // https://stackoverflow.com/questions/5200192/convert-64-bit-windows-number-to-time-java
+            long mmSecTimestamp = (fileTimeTimestamp - 116444736000000000L) / 10000;
+            Instant instant = Instant.ofEpochMilli(mmSecTimestamp);
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            LocalDate localDate = localDateTime.toLocalDate();
+            // prevent "Data truncation: Incorrect date value" on mysql when date exceeds valid range
+            if (localDate.isAfter(LocalDate.now().plusYears(100L)))
+            {
+                return null;
+            }
+            return localDate;
         }
-        return localDate;
+        return null;
     };
 
     public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShaddowAccount = adapter ->
