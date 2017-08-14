@@ -46,6 +46,15 @@
                         required></select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <span class="text-danger" ng-if="duplicateOrganizationRoleError">
+                    <span translate>
+                        common.addOrganization.duplicateOrganizationRoleErrorMessage
+                    </span>
+                </span>
+            </div>
+        </div>
         <div class="row" ng-show="showDescription">
             <div class="col-sm-12 form-group">
                 <label for="description" translate>common.addOrganization.description</label>
