@@ -432,25 +432,33 @@
     "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "Application",
+      "locale.config": {
+        "title": "Locale Configuration",
+        "defaultLabel": "Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "Default",
-        "applyBtn": "Apply",
-        "resetModule": "Reset Module",
-        "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "Reset current module (delete custom resources)",
-        "resetAll": "Reset All",
-        "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "Reset all resources (delete all custom resources)",
-        "refreshAll": "Refresh All",
-        "refreshAll.title": "Refresh all resources (keep custom resources)",
         "title": "Label Configuration",
-        "filterBy": "Filter By Id",
-        "filterByValue": "Filter By Value",
+        "progressMessage": "Updating labels...",
         "data": {
           "description": "Description",
           "defaultValue": "Default Value",
           "id": "ID",
           "value": "Value"
+        },
+        "btnReset": {
+          "label": "Reset...",
+          "title": "Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "Reset labels to default",
+          "chkResetCustom.label": "Clear customized labels as well?",
+          "btnCancel.label": "Cancel",
+          "btnCancel.title": "Close the dialog with no action",
+          "btnReset.label": "Reset",
+          "btnReset.title": "Clear customized labels and reset them to default values",
+          "btnRefresh.label": "Reset",
+          "btnRefresh.title": "Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {

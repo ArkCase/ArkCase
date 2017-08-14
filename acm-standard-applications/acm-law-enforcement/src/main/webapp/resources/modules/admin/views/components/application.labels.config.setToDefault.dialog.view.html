@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h3>
+        <span translate>admin.application.labels.config.setToDefault.dialog.title</span>
+    </h3>
+</div>
+
+<div class="modal-body">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div id="labelSetting" class="navbar-collapse collapse">
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <select multiple ng-model="selectedNamespaces" class="form-control input-sm"
+                                ng-options="option.name for option in namespacesDropdownOptions">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select multiple ng-model="selectedLocales" class="form-control input-sm"
+                                ng-options="item as item.native for item in languagesDropdownOptions track by item.code">
+                        </select>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="toResetCustom" ng-click="onClickResetCustom($event)">
+                            <span translate>admin.application.labels.config.setToDefault.chkResetCustom.label</span>
+                        </label>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </nav>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()"
+            title="{{'admin.application.labels.config.setToDefault.btnCancel.title' | translate}}">
+        <span translate>admin.application.labels.config.setToDefault.btnCancel.label</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()"
+            title="{{'admin.application.labels.config.setToDefault.btnRefresh.title' | translate}}"
+            ng-hide="toResetCustom">
+        <span translate>admin.application.labels.config.setToDefault.btnRefresh.label</span>
+    </button>
+    <button class="btn btn-danger"
+            ng-bootbox-confirm-action="onClickOk()"
+            ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.setToDefault.resetCustom.confirm' | translate}}"
+            title="{{'admin.application.labels.config.setToDefault.btnReset.title' | translate}}"
+            ng-show="toResetCustom">
+        <i class="fa fa-trash-o"></i>
+        <span translate>admin.application.labels.config.setToDefault.btnReset.label</span>
+    </button>
+</div>
