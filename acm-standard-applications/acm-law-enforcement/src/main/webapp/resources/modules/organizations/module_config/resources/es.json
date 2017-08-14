@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "Organizaciones",
-    "progressNoComplaint": "es_[ No organizations data ]",
-    "progressLoading": "es_Loading organization ",
-    "progressError": "es_Failed to load organization "
+    "progressNoComplaint": "[ Sin datos de organizaciones ]",
+    "progressLoading": "Organización de carga",
+    "progressError": "Error al cargar la organización",
+    "NoDataMessage": "Sin Datos"
   },
   "organizations.menus": {
     "leftnav.item": "Organizaciones",
@@ -14,22 +15,23 @@
   },
   "organizations.comp.info": {
     "title": "Información",
-    "phone.label": "es_Phone",
-    "email.label": "es_Email",
-    "status.label": "es_Status",
-    "identification.label": "es_ID",
-    "primary.label": "es_Primary Contact",
-    "parent.label": "es_Parent Organization",
-    "parent.placeholder": "es_Enter Parent Organization"
+    "phone.label": "Teléfono",
+    "email.label": "Email",
+    "status.label": "Estado",
+    "organization.label": "Organización",
+    "identification.label": "ID",
+    "primary.label": "Contacto principal",
+    "parent.label": "Organización principal",
+    "parent.placeholder": "Ingresar a la organización principal"
   },
   "organizations.comp.actions": {
     "title": "Acciones",
-    "export.button": "es_Export",
-    "import.button": "es_Import",
-    "delete.button": "es_Delete",
-    "activate.button": "es_Activate",
-    "deactivate.button": "es_Deactivate",
-    "merge.button": "es_Merge"
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Borrar",
+    "activate.button": "Activar",
+    "deactivate.button": "Desactivar",
+    "merge.button": "Combinar"
   },
   "organizations.comp.details": {
     "title": "Detalles",
@@ -436,17 +438,17 @@
       "history.label": "Historia"
     },
     "filters": {
-      "IHaveCreated": "Todo lo que he creado",
-      "NoFilter": "(Sin Filtro)"
+      "iHaveCreated": "Todo lo que he creado",
+      "noFilter": "(Sin Filtro)"
     },
     "sorters": {
-      "CreatedDateAsc": "Ordenar Fecha Creciente",
-      "CreatedDateDesc": "Sort Date Created Descending",
-      "IdAsc": "Clasificar ID de organización ascendente",
-      "IdDesc": "Clasificar ID de organización Descending",
-      "NameAsc": "Ordenar por nombre de organización A-Z",
-      "NameDesc": "Ordenar por nombre de organización Z-A",
-      "NoSort": "(Sin clasificación)"
+      "createdDateAsc": "Ordenar Fecha Creciente",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Clasificar ID de organización ascendente",
+      "idDesc": "Clasificar ID de organización Descending",
+      "nameAsc": "Ordenar por nombre de organización A-Z",
+      "nameDesc": "Ordenar por nombre de organización Z-A",
+      "noSort": "(Sin clasificación)"
     }
   }
 }

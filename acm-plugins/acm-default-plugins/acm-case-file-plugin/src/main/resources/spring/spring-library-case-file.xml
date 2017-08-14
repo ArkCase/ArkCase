@@ -37,6 +37,7 @@
         <property name="shouldDeleteCalendarFolder"
                   value="${casefile.delete_calendar_folder_after_case_closed}"/>
         <property name="caseFileStatusClosed" value="${casefile.status.closed}"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
 
     <bean id="changeCaseFileStateService"

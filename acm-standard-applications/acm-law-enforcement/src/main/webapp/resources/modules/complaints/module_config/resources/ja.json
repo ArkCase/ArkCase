@@ -3,7 +3,7 @@
     "title": "訴状",
     "progressNoComplaint": "[ 訴状のデータはありません ]",
     "progressLoading": "訴状の読み込み",
-    "progressError": "不満を読み込めませんでした"
+    "progressError": "訴状の読み込みに失敗しました"
   },
   "complaints.menus": {
     "leftnav.item": "訴状",
@@ -22,7 +22,7 @@
     "priority.label": "優先",
     "assignee.label": "割り当て先",
     "owningGroup.label": "グループに所属",
-    "dueDate.label": "期日"
+    "dueDate.label": "期限日"
   },
   "complaints.comp.actions": {
     "title": "操作",
@@ -190,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "仕事",
+    "title": "タスク",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -358,7 +358,7 @@
       "documents.label": "ファイル",
       "participants.label": "参加者",
       "notes.label": "ノート",
-      "tasks.label": "仕事",
+      "tasks.label": "タスク",
       "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",

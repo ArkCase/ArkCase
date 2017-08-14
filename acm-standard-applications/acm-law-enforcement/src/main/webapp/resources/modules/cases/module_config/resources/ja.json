@@ -1,9 +1,9 @@
 {
   "cases": {
     "title": "案件",
-    "progressNoCase": "ja_[ No case file data ]",
-    "progressLoading": "ja_Loading case file ",
-    "progressError": "ja_Failed to load case file"
+    "progressNoComplaint": "[ 案件のデータはありません ]",
+    "progressLoading": "案件の読み込み",
+    "progressError": "案件の読み込みに失敗しました"
   },
   "cases.menus": {
     "leftnav.item": "案件文書",
@@ -17,29 +17,29 @@
   },
   "cases.comp.info": {
     "title": "情報",
-    "caseId": "ja_Case id:",
-    "caseNumber": "ja_Case Number:",
-    "courtRoomName": "ja_Court Room Name:",
-    "type.label": "ja_Type",
-    "created.label": "ja_Created Date",
-    "priority.label": "ja_Priority",
-    "assignee.label": "ja_Assigned To",
-    "owningGroup.label": "ja_Owning Group",
-    "dueDate.label": "ja_Due Date"
+    "caseId": "案件識別番号:",
+    "caseNumber": "案件番号:",
+    "courtRoomName": "裁判所名:",
+    "type.label": "種類",
+    "created.label": "作成日",
+    "priority.label": "優先",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "グループに所属",
+    "dueDate.label": "期限日"
   },
   "cases.comp.actions": {
     "title": "操作",
-    "restrict": "ja_Restrict?",
-    "new.button": "ja_New",
-    "edit.button": "ja_Edit",
-    "status.button": "ja_Change Case Status",
-    "reinvestigate.button": "ja_Reinvestigate",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "merge.button": "ja_Merge",
-    "claim.button": "ja_Claim",
-    "unclaim.button": "ja_Unclaim",
-    "split.button": "ja_Split"
+    "restrict": "制限する?",
+    "new.button": "新しい案件",
+    "edit.button": "変更",
+    "status.button": "状態の変更",
+    "reinvestigate.button": "再調査",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "claim.button": "申し立て",
+    "unclaim.button": "申し立て中止",
+    "merge.button": "合併",
+    "split.button": "分开"
   },
   "cases.comp.details": {
     "title": "詳細",
@@ -168,7 +168,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "仕事",
+    "title": "タスク",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -357,7 +357,7 @@
       "documents.label": "ファイル",
       "participants.label": "参加者",
       "notes.label": "ノート",
-      "tasks.label": "仕事",
+      "tasks.label": "タスク",
       "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",

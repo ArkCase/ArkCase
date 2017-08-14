@@ -1,25 +1,25 @@
 {
   "timeTracking": {
     "title": "Suivi du temps",
-    "progressNoTimesheet": "fr_[ No timesheet is selected ]",
-    "progressLoading": "fr_Loading timesheet ",
-    "progressError": "fr_Failed to load timesheet"
+    "progressNoTimesheet": "[ Aucune feuille de temps n'est sélectionnée ]",
+    "progressLoading": "Feuille de temps de chargement",
+    "progressError": "Impossible de charger la feuille de temps"
   },
   "timeTracking.menus": {
     "leftnav.item": "Suivi du temps",
-    "topbar.item": "Temp"
+    "topbar.item": "Feuille de temp"
   },
   "timeTracking.comp.main": {
     "title": "Vue d'ensemble"
   },
   "timeTracking.comp.info": {
     "title": "Information",
-    "lastModified.label": "fr_Last Modified"
+    "lastModified.label": "Dernière modification"
   },
   "timeTracking.comp.actions": {
-    "title": "Actions",
-    "new.button": "fr_New Timesheet",
-    "edit.button": "fr_Edit Timesheet"
+    "title": "Actes",
+    "new.button": "Nouvelle feuille",
+    "edit.button": "Modifier la feuille"
   },
   "timeTracking.comp.details": {
     "title": "Détails",
@@ -82,7 +82,7 @@
       "dateAsc": "Trier Date Asc",
       "dateDesc": "Trier Date Déc",
       "idAsc": "Trier ID de Temps Asc",
-      "idAsc": "Trier ID de Temps Déc",
+      "idDesc": "Trier ID de Temps Déc",
       "nameDesc": "Trier par nom Déc",
       "noSort": "(Non Trier)"
     }

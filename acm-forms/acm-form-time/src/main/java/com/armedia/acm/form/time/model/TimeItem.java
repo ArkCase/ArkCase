@@ -16,6 +16,8 @@ public class TimeItem {
 	private Long objectId;
 	
 	private String code;
+	
+	private String title;
 
 	private Long sundayId;
 	private Double sunday;
@@ -74,7 +76,18 @@ public class TimeItem {
 		this.code = code;
 	}
 
-	@XmlElement(name="sundayId")
+	@XmlElement(name="objectTitle")
+	public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    @XmlElement(name="sundayId")
 	public Long getSundayId() {
 		return sundayId;
 	}

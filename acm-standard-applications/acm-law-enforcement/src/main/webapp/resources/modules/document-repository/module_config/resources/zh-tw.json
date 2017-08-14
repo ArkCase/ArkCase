@@ -14,19 +14,20 @@
   },
   "document-repository.comp.info": {
     "title": "信息",
-    "docRepoId": "zh-tw_Repository ID:",
-    "docRepoName": "zh-tw_Document Repository Name:",
-    "modified.label": "zh-tw_Modified Date",
-    "assignee.label": "zh-tw_Assigned To",
-    "owningGroup.label": "zh-tw_Owning Group",
-    "description.label": "zh-tw_Description"
+    "docRepoId": "文件存儲號:",
+    "docRepoName": "文件存儲名稱:",
+    "modified.label": "修改日期",
+    "assignee.label": "指定人員",
+    "owningGroup.label": "所屬群體",
+    "description.label": "說明"
   },
   "document-repository.comp.actions": {
     "title": "行動",
-    "restrict": "zh-tw_Restrict?",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "zh-tw_This action will delete the entire repository. Are you sure you want to proceed?"
+    "restrict": "受限制?",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "delete.button": "刪除",
+    "confirm.delete.documentRepository.msg": "此操作將刪除整個文件存儲，確定要繼續嗎?"
   },
   "document-repository.comp.details": {
     "title": "詳情",

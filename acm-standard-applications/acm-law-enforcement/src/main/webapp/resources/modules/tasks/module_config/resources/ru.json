@@ -1,9 +1,9 @@
 {
   "tasks": {
     "title": "Задачи",
-    "progressNoTask": "ru_[ No task data ]",
-    "progressLoading": "ru_Loading task ",
-    "progressError": "ru_Failed to load task"
+    "progressNoTask": "[ Нет данных задачи ]",
+    "progressLoading": "Загрузка задачи",
+    "progressError": "Не удалось загрузить задачу"
   },
   "tasks.menus": {
     "leftnav.item": "Задачи",
@@ -14,60 +14,59 @@
   },
   "tasks.comp.info": {
     "title": "Информация",
-    "taskId": "ru_Task id:",
-    "percentage.label": "ru_% of Completion",
-    "assignee.label": "ru_Assignee",
-    "Priority.label": "ru_Priority",
-    "startDate.label": "ru_Start Date",
-    "dueDate.label": "ru_Due Date",
-    "state.label": "ru_State",
-    "overdue.tooltip": "ru_Task is Overdue",
-    "deadline.tooltip": "ru_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "taskId": "Идентификатор задачи:",
+    "percentage.label": "% от завершения",
+    "assignee.label": "Правообладатель",
+    "priority.label": "Приоритет",
+    "startDate.label": "rДата начала",
+    "dueDate.label": "Дата погашения",
+    "state.label": "Состояние",
+    "overdue.tooltip": "Задача просрочена",
+    "deadline.tooltip": "Крайний срок приближается",
+    "owningGroup.label": "Собственная группа"
   },
   "tasks.comp.parentinfo": {
     "title": "Родительская информация",
-    "taskId": "ru_Task id:",
+    "taskId": "Идентификатор задачи:",
     "case": {
-      "subjectType.label": "ru_Subject Type",
-      "incidentDate.label": "ru_Incident Date",
-      "priority.label": "ru_Priority",
-      "assignee.label": "ru_Assigned To",
-      "owningGroup.label": "ru_Owning Group"
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
     },
     "complaint": {
-      "subjectType.label": "ru_Subject Type",
-      "incidentDate.label": "ru_Incident Date",
-      "priority.label": "ru_Priority",
-      "assignee.label": "ru_Assigned To",
-      "owningGroup.label": "ru_Owning Group"
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
     },
     "costsheet": {
-      "approver.label": "ru_Approver"
+      "approver.label": "Приверженец"
     },
     "timesheet": {
-      "approver.label": "ru_Approver"
-    },
-    "_xxx_courtRoomName": "ru_Court Room Name:"
+      "approver.label": "Приверженец"
+    }
   },
   "tasks.comp.actions": {
     "title": "Действия",
-    "diagram.button": "ru_Process Diagram",
-    "eSignature.button": "ru_Sign",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "reject.button": "ru_Reject",
-    "delete.button": "ru_Delete",
-    "complete.button": "ru_Complete",
-    "approve.button": "ru_Approve Document",
-    "rework.button": "ru_Send for Rework",
-    "claim.button": "ru_Claim",
-    "unclaim.button": "ru_Unclaim",
-    "error.outcomeFieldMissing": "ru_Cannot complete task because of missing required value",
+    "diagram.button": "Технологическая схема",
+    "eSignature.button": "Подписать",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "reject.button": "Отклонить",
+    "delete.button": "Удалить",
+    "complete.button": "Полный",
+    "approve.button": "Утвердить документ",
+    "rework.button": "Отправить для исправления",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование",
+    "error.outcomeFieldMissing": "Не удается выполнить задачу из-за отсутствия требуемого значения",
     "modal": {
-      "errorHeaderText": "ru_Error",
-      "btnOk.text": "ru_OK",
-      "btnClose.text": "ru_Close"
+      "errorHeaderText": "Ошибка",
+      "btnOk.text": "Хорошо",
+      "btnClose.text": "Закрыть"
     }
   },
   "tasks.comp.details": {

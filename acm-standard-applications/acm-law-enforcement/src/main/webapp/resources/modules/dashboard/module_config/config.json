@@ -338,7 +338,8 @@
     "complaints",
     "cases",
     "relOrganizations",
-    "tags"
+    "tags",
+    "related"
   ],
   "structures": [
     {

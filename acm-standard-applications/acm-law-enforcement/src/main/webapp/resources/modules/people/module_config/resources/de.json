@@ -1,9 +1,9 @@
 {
   "people": {
     "title": "Menschen",
-    "progressNoComplaint": "de_[ No people data ]",
-    "progressLoading": "de_Loading people ",
-    "progressError": "de_Failed to load people "
+    "progressNoComplaint": "[ Keine Personen Daten ]",
+    "progressLoading": "Leute laden",
+    "progressError": "Personen konnten nicht geladen werden"
   },
   "people.menus": {
     "leftnav.item": "Menschen",
@@ -14,20 +14,20 @@
   },
   "people.comp.info": {
     "title": "Informationen",
-    "phone.label": "de_Phone",
-    "email.label": "de_Email",
-    "status.label": "de_Status",
-    "organization.label": "de_Organization",
-    "identification.label": "de_ID"
+    "phone.label": "Telefon",
+    "email.label": "E-Mail Adressen",
+    "status.label": "Status",
+    "organization.label": "Organisation",
+    "identification.label": "Identifizierung"
   },
   "people.comp.actions": {
     "title": "Aktionen",
-    "export.button": "de_Export",
-    "import.button": "de_Import",
-    "delete.button": "de_Delete",
-    "activate.button": "de_Activate",
-    "deactivate.button": "de_Deactivate",
-    "merge.button": "de_Merge"
+    "export.button": "Exportieren",
+    "import.button": "importieren",
+    "delete.button": "Löschen",
+    "activate.button": "Aktivieren",
+    "deactivate.button": "Deaktivieren",
+    "merge.button": "Zusammenführen"
   },
   "people.comp.details": {
     "title": "Details",

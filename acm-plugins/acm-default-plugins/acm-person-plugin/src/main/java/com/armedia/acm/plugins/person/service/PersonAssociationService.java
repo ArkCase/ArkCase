@@ -23,4 +23,21 @@ public interface PersonAssociationService
      * @return JSON String of solr response
      */
     String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException;
+
+    /**
+     * Get Person association
+     *
+     * @param id   person association id
+     * @param auth Authentication
+     * @return PersonAssociation
+     */
+    PersonAssociation getPersonAssociation(Long id, Authentication auth);
+
+    /**
+     * Delete Person association
+     *
+     * @param id   person association id
+     * @param auth Authentication
+     */
+    void deletePersonAssociation(Long id, Authentication auth);
 }

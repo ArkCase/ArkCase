@@ -153,7 +153,8 @@ public class ExchangeCalendarService
     /**
      * Checks if the event was triggered by a change of the scheduler configuration file.
      *
-     * @param abstractConfigurationFileEvent the event encapsulating a reference to the modified file.
+     * @param abstractConfigurationFileEvent
+     *            the event encapsulating a reference to the modified file.
      * @return <code>true</code> if the event was triggered by the calendar configuration <code>false</code> otherwise.
      */
     private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
@@ -471,6 +472,11 @@ public class ExchangeCalendarService
     @Override
     public void purgeEvents(String objectType, CalendarConfiguration config) throws CalendarServiceException
     {
+        if (!config.isIntegrationEnabled())
+        {
+            return;
+        }
+
         CalendarEntityHandler handler = Optional.ofNullable(entityHandlers.get(objectType))
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for %s object type.", objectType)));
@@ -548,7 +554,8 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param calendarAdminService the calendarAdminService to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
@@ -556,7 +563,8 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param entityHandlers the entityHandlers to set
+     * @param entityHandlers
+     *            the entityHandlers to set
      */
     public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
     {
@@ -564,14 +572,16 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param outlookService the outlookService to set
+     * @param outlookService
+     *            the outlookService to set
      */
     public void setOutlookService(OutlookService outlookService)
     {
     }
 
     /**
-     * @param outlookDao the outlookDao to set
+     * @param outlookDao
+     *            the outlookDao to set
      */
     public void setOutlookDao(OutlookDao outlookDao)
     {

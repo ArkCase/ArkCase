@@ -46,8 +46,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit", null, null, "isEditable");
-            gridHelper.addButton(config, "delete", null, null, "isDeletable");
+            gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+            gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -64,7 +64,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 id: null
                 , personType: ""
                 , parentId: $scope.objectInfo.complaintId
-                , parentType: 'COMPLAINT'
+                , parentType: ObjectService.ObjectTypes.COMPLAINT
                 , parentTitle: $scope.objectInfo.complaintNumber
                 , personDescription: ""
                 , notes: ""

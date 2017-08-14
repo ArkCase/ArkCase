@@ -334,7 +334,9 @@
   },
   "people.comp.cases": {
     "title": "Cases",
+    "objectType.label": "Case File",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -345,7 +347,9 @@
   },
   "people.comp.complaints": {
     "title": "Complaints",
+    "objectType.label": "Complaint",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",

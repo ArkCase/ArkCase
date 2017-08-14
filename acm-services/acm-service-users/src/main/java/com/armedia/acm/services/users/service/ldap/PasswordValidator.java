@@ -4,7 +4,7 @@ package com.armedia.acm.services.users.service.ldap;
  * Created by sharmilee.sivakumaran on 6/8/17.
  */
 
-import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.model.ldap.PasswordValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
-public class PasswordValidator implements ConstraintValidator<PasswordValidation, LdapUser>
+public class PasswordValidator implements ConstraintValidator<PasswordValidation, UserDTO>
 {
     @Autowired
     PasswordValidationService passwordValidationService;
@@ -24,7 +24,7 @@ public class PasswordValidator implements ConstraintValidator<PasswordValidation
     }
 
     @Override
-    public boolean isValid(LdapUser user, ConstraintValidatorContext context)
+    public boolean isValid(UserDTO user, ConstraintValidatorContext context)
     {
         if (user == null || user.getAcmUser() == null) return false;
         String userId = user.getAcmUser().getUserId();

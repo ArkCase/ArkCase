@@ -6,8 +6,8 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
-import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
@@ -44,7 +44,7 @@ public class LdapGroupService
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
 
         group.setName(group.getName().toUpperCase());
-        group.setType(AcmLdapConstants.GROUP_OBJECT_TYPE);
+        group.setType(AcmGroupType.LDAP_GROUP.name());
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
         group.setDirectoryName(directoryName);
@@ -90,7 +90,7 @@ public class LdapGroupService
         log.debug("Found parent-group:{} for new LDAP sub-group:{}", parentGroup.getName(), group.getName());
 
         group.setName(group.getName().toUpperCase());
-        group.setType(AcmLdapConstants.GROUP_OBJECT_TYPE);
+        group.setType(AcmGroupType.LDAP_GROUP.name());
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
         group.setParentGroup(parentGroup);
