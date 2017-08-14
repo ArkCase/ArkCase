@@ -126,7 +126,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
      * context.ApplicationEventPublisher)
      */
@@ -267,7 +267,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         try (OutputStream propertyOutputStream = new FileOutputStream(calendarPropertiesResource.getFile()))
         {
             calendarProperties.store(propertyOutputStream, String.format("Updated from ", getClass().getName()));
-            applicationEventPublisher.publishEvent(new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID));
         } catch (IOException e)
         {
             log.error("Could not write properties to [{}] file.", calendarPropertiesResource.getFilename());
@@ -277,6 +276,7 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
         {
             writeLock.unlock();
         }
+        applicationEventPublisher.publishEvent(new CalendarConfigurationEvent(configurations, CALENDAR_CONFIG_SERVICE_USER_ID));
     }
 
     /*
