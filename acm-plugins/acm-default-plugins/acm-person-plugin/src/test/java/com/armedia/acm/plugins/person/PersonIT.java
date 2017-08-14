@@ -38,7 +38,9 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml" })
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonIT
 {
@@ -68,6 +70,7 @@ public class PersonIT
         p.setFamilyName("Person");
         p.setGivenName("ACM");
         p.setStatus("testStatus");
+        p.setCreator("creator");
 
         Person saved = personDao.save(p);
 

@@ -245,7 +245,6 @@ GO
             'PERSON' AS cm_object_type,
             cm_person_id AS cm_object_id,
             'owning group' AS cm_participant_type,
-            /* On other environments this group might be wrong */
             'ACM_ADMINISTRATOR_DEV' AS cm_participant_ldap_id,
             cm_person_created AS cm_participant_created,
             cm_person_creator AS cm_participant_creator,
@@ -298,7 +297,6 @@ GO
             'ORGANIZATION' AS cm_object_type,
             cm_organization_id AS cm_object_id,
             'owning group' AS cm_participant_type,
-            /* On other environments this group might be wrong */
             'ACM_ADMINISTRATOR_DEV' AS cm_participant_ldap_id,
             cm_organization_created AS cm_participant_created,
             cm_organization_creator AS cm_participant_creator,
@@ -307,6 +305,119 @@ GO
             'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
             FROM acm_organization
             , (SELECT @rownum:= (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1)) AS s
+GO
+            ]]>  
+        </sql>
+    </changeSet>
+    <changeSet id="11-update-participants-for-person-and-organization" author="bojan.milenkoski" dbms="postgresql">
+        <preConditions onFail="WARN">
+            <and>
+                <dbms type="mysql"/>
+                <tableExists tableName="acm_person"/>
+                <tableExists tableName="acm_organization"/>
+            </and>
+        </preConditions>
+        <sql endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">
+            <comment>Insert participants for persons and organizations</comment>
+            <![CDATA[
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_person) * 3
+GO
+
+            insert into acm_participant
+            SELECT 
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_person_creator AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            'owning group' AS cm_participant_type,
+            'ACM_ADMINISTRATOR_DEV' AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+GO
+
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_organization) * 3
+GO
+
+            insert into acm_participant
+            SELECT 
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_organization_creator AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            'owning group' AS cm_participant_type,
+            'ACM_ADMINISTRATOR_DEV' AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
 GO
             ]]>  
         </sql>
