@@ -41,7 +41,9 @@ import java.util.List;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml" })
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT
 {
@@ -82,6 +84,7 @@ public class SavePersonAliasIT
         personAlias.add(pa);
 
         person.setPersonAliases(personAlias);
+        person.setCreator("creator");
 
         Person saved = personDao.save(person);
 

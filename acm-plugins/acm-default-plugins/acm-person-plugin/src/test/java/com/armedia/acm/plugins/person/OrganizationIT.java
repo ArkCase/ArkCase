@@ -43,7 +43,9 @@ import java.util.Date;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml" })
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class OrganizationIT
 {
@@ -103,6 +105,7 @@ public class OrganizationIT
         org.getContactMethods().add(cm2);
         org.getAddresses().add(pa1);
         org.getAddresses().add(pa2);
+        org.setCreator("creator");
 
         Long savedId = organizationDao.save(org).getOrganizationId();
 
