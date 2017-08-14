@@ -20,13 +20,30 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    <changeSet id="02-unique_person-organization-association_type" author="bojan.milenkoski" dbms="mysql">
+    <changeSet id="02-unique_person-organization-association_type_cleanup" author="bojan.milenkoski">
+        <sql endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">
+            <comment>Cleanup duplicate and null person to ogranization assoc type</comment>
+            <![CDATA[
+            delete from acm_person_org_assoc
+            where cm_person_to_org_assoc_type is NULL or cm_org_to_person_assoc_type is NULL
+GO
+
+            DELETE poa1 FROM acm_person_org_assoc poa1, acm_person_org_assoc poa2 WHERE poa1.cm_id > poa2.cm_id 
+            AND poa1.cm_person_id = poa2.cm_person_id AND poa1.cm_organization_id = poa2.cm_organization_id 
+            AND poa1.cm_person_to_org_assoc_type = poa2.cm_person_to_org_assoc_type
+GO
+            ]]>  
+        </sql>
+    </changeSet>
+    <changeSet id="03-unique_person-organization-association_type" author="bojan.milenkoski" dbms="mysql">
         <addUniqueConstraint tableName="acm_person_org_assoc"
                              columnNames="cm_person_id, cm_organization_id, cm_person_to_org_assoc_type(767)"/>
         <addUniqueConstraint tableName="acm_person_org_assoc"
                              columnNames="cm_person_id, cm_organization_id, cm_org_to_person_assoc_type(767)"/>
     </changeSet>
-    <changeSet id="02-unique_person-organization-association_type" author="bojan.milenkoski" dbms="oracle,postgresql,mssql">
+    <changeSet id="03-unique_person-organization-association_type" author="bojan.milenkoski" dbms="oracle,postgresql,mssql">
         <addUniqueConstraint tableName="acm_person_org_assoc"
                              columnNames="cm_person_id, cm_organization_id, cm_person_to_org_assoc_type"/>
         <addUniqueConstraint tableName="acm_person_org_assoc"
