@@ -118,8 +118,8 @@ angular.module('admin').controller('Admin.LabelsConfigController', ['$scope', '$
 
             modalInstance.result.then(function (result) {
                 $scope.disabledInputs = true;
-                var languages = _.pluck(result.selectedLocales, 'code');
-                var namespaces = _.pluck(result.selectedNamespaces, 'id');
+                var languages = _.map(result.selectedLocales, 'code');
+                var namespaces = _.map(result.selectedNamespaces, 'id');
 
                 if (result.toResetCustom) {
                     LabelsConfigService.resetResource({
