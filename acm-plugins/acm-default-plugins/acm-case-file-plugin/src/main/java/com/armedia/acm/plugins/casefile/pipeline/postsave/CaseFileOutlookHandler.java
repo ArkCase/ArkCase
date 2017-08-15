@@ -78,8 +78,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         {
             return;
         }
-        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer(), entity.getContainer().getCalendarFolderId(),
-                DeleteMode.MoveToDeletedItems);
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer(), DeleteMode.MoveToDeletedItems);
     }
 
     /**

@@ -466,11 +466,9 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
         Capture<AcmContainer> containerCapture = Capture.newInstance();
-        Capture<String> calendarIdCapture = Capture.newInstance();
         Capture<AcmOutlookUser> calendarOutlookUser = Capture.newInstance();
 
-        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerCapture), capture(calendarIdCapture),
-                eq(DeleteMode.MoveToDeletedItems));
+        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerCapture), eq(DeleteMode.MoveToDeletedItems));
         expectLastCall().once();
 
         mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture), capture(eventStatusCapture));
@@ -493,7 +491,6 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         assertEquals(caseFile.getDetails(), caseCapture.getValue().getDetails());
         assertEquals(caseFile.getCaseNumber(), caseCapture.getValue().getCaseNumber());
         assertEquals(caseFile.getContainer(), containerCapture.getValue());
-        assertEquals(caseFile.getContainer().getCalendarFolderId(), calendarIdCapture.getValue());
     }
 
 }

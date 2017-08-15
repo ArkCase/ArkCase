@@ -1,6 +1,7 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
@@ -10,6 +11,7 @@ import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,8 +19,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -34,6 +34,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     @PersistenceContext
     private EntityManager em;
+
+    private AcmCryptoUtils cryptoUtils;
 
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
 
@@ -74,6 +76,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      * java.lang.String)
      */
     @Override
+    @Transactional
     public AcmOutlookFolderCreator getFolderCreator(String systemEmailAddress, String systemPassword)
             throws AcmOutlookFolderCreatorDaoException
     {
@@ -81,15 +84,10 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
         try
         {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] dataBytes = String.format("%s-%s", systemEmailAddress, systemPassword).getBytes(UTF8_CHARSET);
-            md.update(dataBytes);
-            byte[] mdBytes = md.digest();
-            String hash = Base64.encodeBase64String(mdBytes);
-
             TypedQuery<AcmOutlookFolderCreator> query = em.createQuery(
-                    "SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.creatorHash = :creatorHash", AcmOutlookFolderCreator.class);
-            query.setParameter("creatorHash", hash);
+                    "SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.systemEmailAddress = :systemEmailAddress",
+                    AcmOutlookFolderCreator.class);
+            query.setParameter("systemEmailAddress", systemEmailAddress);
 
             List<AcmOutlookFolderCreator> resultList = query.getResultList();
 
@@ -103,7 +101,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             {
                 log.debug("Retrieving outlook folder creator for system email address [{}] does not exist, creating one.",
                         systemEmailAddress);
-                AcmOutlookFolderCreator folderCreator = new AcmOutlookFolderCreator(hash, systemEmailAddress, encryptValue(systemPassword));
+                AcmOutlookFolderCreator folderCreator = new AcmOutlookFolderCreator(systemEmailAddress, encryptValue(systemPassword));
                 AcmOutlookFolderCreator outlookFolderCreator = em.merge(folderCreator);
                 // the instance must be detached otherwise setting the system password will overwrite the encrypted
                 // password value.
@@ -112,7 +110,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
                 return outlookFolderCreator;
             }
 
-        } catch (NoSuchAlgorithmException | AcmEncryptionException | PersistenceException e)
+        } catch (AcmEncryptionException | PersistenceException e)
         {
             log.warn("Error while retrieving 'AcmOutlookFolderCreator' instance for user with [{}] system email address.",
                     systemEmailAddress, e);
@@ -142,6 +140,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             AcmOutlookFolderCreator outlookFolderCreator = query.getSingleResult();
+            em.detach(outlookFolderCreator);
             outlookFolderCreator.setSystemPassword(decryptValue(outlookFolderCreator.getSystemPassword()));
             return outlookFolderCreator;
         } catch (PersistenceException | AcmEncryptionException e)
@@ -162,6 +161,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      * outlook.model.AcmOutlookFolderCreator, java.lang.Long, java.lang.String)
      */
     @Override
+    @Transactional
     public void recordFolderCreator(AcmOutlookFolderCreator creator, Long objectId, String objectType)
             throws AcmOutlookFolderCreatorDaoException
     {
@@ -187,10 +187,10 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     private String decryptValue(String encrypted) throws AcmEncryptionException
     {
-        String decryptedValue = new String(encryptionProperties.getCryptoUtils().decryptData(encryptionProperties.getSymmetricKey(),
-                Base64.decodeBase64(encrypted), encryptionProperties.getPropertiesEncryptionKeySize(),
-                encryptionProperties.getPropertiesEncryptionIVSize(), encryptionProperties.getPropertiesEncryptionMagicSize(),
-                encryptionProperties.getPropertiesEncryptionSaltSize(), encryptionProperties.getPropertiesEncryptionPassPhraseIterations(),
+        String decryptedValue = new String(cryptoUtils.decryptData(encryptionProperties.getSymmetricKey(), Base64.decodeBase64(encrypted),
+                encryptionProperties.getPropertiesEncryptionKeySize(), encryptionProperties.getPropertiesEncryptionIVSize(),
+                encryptionProperties.getPropertiesEncryptionMagicSize(), encryptionProperties.getPropertiesEncryptionSaltSize(),
+                encryptionProperties.getPropertiesEncryptionPassPhraseIterations(),
                 encryptionProperties.getPropertiesEncryptionPassPhraseHashAlgorithm(),
                 encryptionProperties.getPropertiesEncryptionAlgorithm(), encryptionProperties.getPropertiesEncryptionBlockCipherMode(),
                 encryptionProperties.getPropertiesEncryptionPadding()), UTF8_CHARSET);
@@ -199,15 +199,23 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     private String encryptValue(String plainText) throws AcmEncryptionException
     {
-        String encryptedValue = Base64.encodeBase64String(encryptionProperties.getCryptoUtils().encryptData(
-                encryptionProperties.getSymmetricKey(), plainText.getBytes(UTF8_CHARSET),
-                encryptionProperties.getPropertiesEncryptionKeySize(), encryptionProperties.getPropertiesEncryptionIVSize(),
-                encryptionProperties.getPropertiesEncryptionMagicSize(), encryptionProperties.getPropertiesEncryptionSaltSize(),
-                encryptionProperties.getPropertiesEncryptionPassPhraseIterations(),
+        String encryptedValue = Base64.encodeBase64String(cryptoUtils.encryptData(encryptionProperties.getSymmetricKey(),
+                plainText.getBytes(UTF8_CHARSET), encryptionProperties.getPropertiesEncryptionKeySize(),
+                encryptionProperties.getPropertiesEncryptionIVSize(), encryptionProperties.getPropertiesEncryptionMagicSize(),
+                encryptionProperties.getPropertiesEncryptionSaltSize(), encryptionProperties.getPropertiesEncryptionPassPhraseIterations(),
                 encryptionProperties.getPropertiesEncryptionPassPhraseHashAlgorithm(),
                 encryptionProperties.getPropertiesEncryptionAlgorithm(), encryptionProperties.getPropertiesEncryptionBlockCipherMode(),
                 encryptionProperties.getPropertiesEncryptionPadding()));
         return encryptedValue;
+    }
+
+    /**
+     * @param cryptoUtils
+     *            the cryptoUtils to set
+     */
+    public void setCryptoUtils(AcmCryptoUtils cryptoUtils)
+    {
+        this.cryptoUtils = cryptoUtils;
     }
 
     /**

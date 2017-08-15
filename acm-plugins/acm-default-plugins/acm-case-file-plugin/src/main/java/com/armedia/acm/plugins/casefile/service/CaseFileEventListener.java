@@ -120,8 +120,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                 // if integration is not enabled the user will be null.
                                 if (user.isPresent())
                                 {
-                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer(), calId,
-                                            DeleteMode.MoveToDeletedItems);
+                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer(), DeleteMode.MoveToDeletedItems);
                                 }
                             }
                             getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
