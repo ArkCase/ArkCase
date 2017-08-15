@@ -73,8 +73,7 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
         {
             return;
         }
-        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer().getContainerObjectId(),
-                entity.getContainer().getCalendarFolderId(), DeleteMode.HardDelete);
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer(), DeleteMode.HardDelete);
     }
 
     /**
@@ -92,11 +91,9 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
         try
         {
             String folderName = String.format("%s(%s)", complaint.getComplaintTitle(), complaint.getComplaintNumber());
-            outlookContainerCalendarService.createFolder(outlookUser, folderName, complaint.getContainer(), complaint.getParticipants());
-        } catch (AcmOutlookItemNotFoundException e)
-        {
-            logger.error("Error creating calendar folder for '{}'", complaint.getComplaintNumber(), e);
-        } catch (AcmOutlookCreateItemFailedException e)
+            outlookContainerCalendarService.createFolder(outlookUser, complaint.getId(), ComplaintConstants.OBJECT_TYPE, folderName,
+                    complaint.getContainer(), complaint.getParticipants());
+        } catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
         {
             logger.error("Error creating calendar folder for '{}'", complaint.getComplaintNumber(), e);
         }

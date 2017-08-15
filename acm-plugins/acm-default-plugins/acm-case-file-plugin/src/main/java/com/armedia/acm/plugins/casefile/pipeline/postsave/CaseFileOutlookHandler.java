@@ -78,8 +78,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         {
             return;
         }
-        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer().getContainerObjectId(),
-                entity.getContainer().getCalendarFolderId(), DeleteMode.MoveToDeletedItems);
+        getOutlookContainerCalendarService().deleteFolder(user.get(), entity.getContainer(), DeleteMode.MoveToDeletedItems);
     }
 
     /**
@@ -96,12 +95,9 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
     {
         try
         {
-            outlookContainerCalendarService.createFolder(outlookUser, caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")",
-                    caseFile.getContainer(), caseFile.getParticipants());
-        } catch (AcmOutlookItemNotFoundException e)
-        {
-            log.error("Error creating calendar folder for '{}'", caseFile.getCaseNumber(), e);
-        } catch (AcmOutlookCreateItemFailedException e)
+            outlookContainerCalendarService.createFolder(outlookUser, caseFile.getId(), CaseFileConstants.OBJECT_TYPE,
+                    caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")", caseFile.getContainer(), caseFile.getParticipants());
+        } catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
         {
             log.error("Error creating calendar folder for '{}'", caseFile.getCaseNumber(), e);
         }

@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -40,7 +41,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
-    private String caseFileStatusClosed;
+    private List<String> caseFileStatusClosed;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
@@ -110,8 +111,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         if (isStatusChanged(existing, updatedCaseFile))
                         {
                             String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                            if (Objects.equals(updatedCaseFile.getStatus(), caseFileStatusClosed) && shouldDeleteCalendarFolder
-                                    && calId != null)
+                            if (caseFileStatusClosed.contains(updatedCaseFile.getStatus()) && shouldDeleteCalendarFolder && calId != null)
                             {
 
                                 // delete shared calendar if case closed
@@ -120,8 +120,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                 // if integration is not enabled the user will be null.
                                 if (user.isPresent())
                                 {
-                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer().getContainerObjectId(),
-                                            calId, DeleteMode.MoveToDeletedItems);
+                                    getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer(), DeleteMode.MoveToDeletedItems);
                                 }
                             }
                             getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
@@ -295,14 +294,9 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
-    public String getCaseFileStatusClosed()
-    {
-        return caseFileStatusClosed;
-    }
-
     public void setCaseFileStatusClosed(String caseFileStatusClosed)
     {
-        this.caseFileStatusClosed = caseFileStatusClosed;
+        this.caseFileStatusClosed = Arrays.asList(caseFileStatusClosed.split(","));
     }
 
     /**

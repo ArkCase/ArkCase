@@ -84,10 +84,7 @@ public class LdapEntryTransformer
             } else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
             {
                 context.setAttributeValue(attr, String.format("/home/%s", user.getUserId()));
-            } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_OF_ATTR))
-            {
-                user.getGroups().forEach(group -> context.addAttributeValue(attr, group.getDistinguishedName()));
-            } else
+            }  else
             {
                 context.setAttributeValue(attr, value);
             }
@@ -154,10 +151,7 @@ public class LdapEntryTransformer
             } else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
             {
                 context.setAttributeValue(attr, group.getName());
-            } else if (AcmLdapConstants.LDAP_MEMBER_OF_ATTR.equals(key))
-            {
-                context.setAttributeValue(attr, parentGroupName);
-            } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
+            }  else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
             {
                 // set member attribute which is required to create a group entry
                 context.setAttributeValue(attr, "");

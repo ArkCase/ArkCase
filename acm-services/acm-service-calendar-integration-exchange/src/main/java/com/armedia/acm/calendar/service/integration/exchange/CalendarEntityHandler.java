@@ -8,9 +8,6 @@ import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.files.AbstractConfigurationFileEvent;
-import com.armedia.acm.files.ConfigurationFileAddedEvent;
-import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
@@ -19,16 +16,12 @@ import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -38,7 +31,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -63,7 +56,7 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 11, 2017
  *
  */
-public class CalendarEntityHandler implements ApplicationListener<AbstractConfigurationFileEvent>
+public class CalendarEntityHandler
 {
 
     public static enum PermissionType
@@ -71,7 +64,11 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         READ, WRITE, DELETE;
     }
 
-    private static final Object CALENDAR_PURGERS_CONFIGUTATION_FILENAME = "calendarPurgersSettings.properties";
+    @FunctionalInterface
+    public static interface ServiceConnector
+    {
+        Optional<ExchangeService> connect(Long objectId);
+    }
 
     @PersistenceContext
     private EntityManager em;
@@ -105,47 +102,6 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         sortFields.put("displayTo", ItemSchema.DisplayTo);
         sortFields.put("size", ItemSchema.Size);
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
-    }
-
-    @Override
-    public void onApplicationEvent(AbstractConfigurationFileEvent event)
-    {
-
-        if (isConfigurationFileChange(event))
-        {
-            File configFile = event.getConfigFile();
-            Properties properties = new Properties();
-            try
-            {
-                properties.load(new FileInputStream(configFile));
-                processProperties(properties);
-            } catch (IOException e)
-            {
-                log.error("Could not read properties from {} file.", configFile.getName());
-            }
-        }
-    }
-
-    /**
-     * @param properties
-     */
-    private void processProperties(Properties properties)
-    {
-        String closedStateKey = String.format("%s.CLOSED_STATES", entityType);
-        if (properties.containsKey(closedStateKey))
-        {
-            closedStates = Arrays.asList(properties.getProperty(closedStateKey).split(","));
-        } else
-        {
-            closedStates = Arrays.asList("CLOSED");
-        }
-    }
-
-    private boolean isConfigurationFileChange(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
-    {
-        return (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent
-                || abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
-                && abstractConfigurationFileEvent.getConfigFile().getName().equals(CALENDAR_PURGERS_CONFIGUTATION_FILENAME);
     }
 
     public boolean isRestricted(String objectId)
@@ -218,7 +174,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         }
     }
 
-    public List<AcmCalendarInfo> listCalendars(ExchangeService service, AcmUser user, Authentication auth, String sort,
+    public List<AcmCalendarInfo> listCalendars(ServiceConnector connector, AcmUser user, Authentication auth, String sort,
             String sortDirection, int start, int maxItems)
     {
         throw new UnsupportedOperationException("This operation is not supported by Exchnage.");
@@ -362,11 +318,11 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
 
     /**
      *
-     * @param service
+     * @param connector
      * @param purgeOptions
      * @param daysClosed
      */
-    public void purgeCalendars(ExchangeService service, PurgeOptions purgeOptions, Integer daysClosed)
+    public void purgeCalendars(ServiceConnector connector, PurgeOptions purgeOptions, Integer daysClosed)
     {
         switch (purgeOptions)
         {
@@ -375,7 +331,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
         case CLOSED:
         case CLOSED_X_DAYS:
             List<AcmContainerEntity> purgeCandidates = getEntities(daysClosed);
-            purgeCalendars(service, purgeCandidates);
+            purgeCalendars(connector, purgeCandidates);
             break;
         }
 
@@ -416,7 +372,7 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     /**
      * @param purgeCandidates
      */
-    private void purgeCalendars(ExchangeService service, List<AcmContainerEntity> purgeCandidates)
+    private void purgeCalendars(ServiceConnector connector, List<AcmContainerEntity> purgeCandidates)
     {
         for (AcmContainerEntity entity : purgeCandidates)
         {
@@ -430,6 +386,13 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
                 Date startDate = container.getCreated();
                 Date endDate = Date.from(LocalDate.now().plusYears(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
                 CalendarView calendarView = new CalendarView(startDate, endDate);
+
+                Optional<ExchangeService> potentialService = connector.connect(container.getContainerObjectId());
+                if (!potentialService.isPresent())
+                {
+                    continue;
+                }
+                ExchangeService service = potentialService.get();
                 CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(container.getCalendarFolderId()));
 
                 FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
@@ -483,6 +446,15 @@ public class CalendarEntityHandler implements ApplicationListener<AbstractConfig
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    /**
+     * @param closedStates
+     *            the closedStates to set
+     */
+    public void setClosedStates(String closedStates)
+    {
+        this.closedStates = Arrays.asList(closedStates.split(","));
     }
 
     /**
