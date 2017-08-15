@@ -6,11 +6,14 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +29,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     private final Logger log = LoggerFactory.getLogger(getClass());
     private PersonDao personDao;
     private UserDao userDao;
+    private SearchAccessControlFields searchAccessControlFields;
 
     @Override
     public List<Person> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -37,6 +41,9 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, person);
+
         solrDoc.setId(person.getId() + "-PERSON");
         solrDoc.setObject_type_s("PERSON");
         solrDoc.setObject_id_s(person.getId() + "");
@@ -77,9 +84,13 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
             solrDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        solrDoc.setAdditionalProperty("default_organization_s", person.getDefaultOrganization() != null ? person.getDefaultOrganization().getOrganization().getOrganizationValue() : null);
+        solrDoc.setAdditionalProperty("default_organization_s",
+                person.getDefaultOrganization() != null ? person.getDefaultOrganization().getOrganization().getOrganizationValue() : null);
         solrDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(person));
         solrDoc.setAdditionalProperty("default_location_s", getDefaultAddress(person));
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(person.getParticipants());
+        solrDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
         return solrDoc;
     }
@@ -131,7 +142,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
     private void addAddresses(Person person, SolrAdvancedSearchDocument solrDoc)
     {
-        List<String> addressIds = new ArrayList<String>();
+        List<String> addressIds = new ArrayList<>();
         if (person.getAddresses() != null)
         {
             for (PostalAddress address : person.getAddresses())
@@ -186,6 +197,9 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     public SolrDocument toSolrQuickSearch(Person in)
     {
         SolrDocument solrDoc = new SolrDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(solrDoc, in);
+
         solrDoc.setId(in.getId() + "-PERSON");
         solrDoc.setObject_type_s("PERSON");
         solrDoc.setName(in.getGivenName() + " " + in.getFamilyName());
@@ -232,5 +246,15 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     public Class<?> getAcmObjectTypeSupported()
     {
         return Person.class;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }

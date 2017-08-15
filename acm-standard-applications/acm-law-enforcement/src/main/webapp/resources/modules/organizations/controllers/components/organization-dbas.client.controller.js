@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('organizations').controller('Organization.DBAsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal'
+    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService'
     , function ($scope, $stateParams, $translate
-        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal) {
+        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -33,8 +33,12 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.ORGANIZATION}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

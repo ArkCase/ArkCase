@@ -15,6 +15,7 @@ import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ public class OrganizationAPIController
     private ExecuteSolrQuery executeSolrQuery;
     private OrganizationEventPublisher organizationEventPublisher;
 
+    @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Organization upsertOrganization(@RequestBody Organization in, Authentication auth, HttpSession httpSession)
@@ -90,6 +92,7 @@ public class OrganizationAPIController
 
     }
 
+    @PreAuthorize("hasPermission(#organizationId, 'ORGANIZATION', 'viewOrganizationPage')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Organization getOrganization(@PathVariable("id") Long organizationId) throws AcmObjectNotFoundException

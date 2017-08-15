@@ -368,5 +368,11 @@
         <dropColumn tableName="acm_organization" columnName="cm_primary_contact"/>
     </changeSet>
 
-
+    <changeSet id="55-add-organization-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_organization">
+            <column name="cm_organization_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

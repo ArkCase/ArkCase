@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.AddressesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -36,8 +36,12 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.PERSON}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

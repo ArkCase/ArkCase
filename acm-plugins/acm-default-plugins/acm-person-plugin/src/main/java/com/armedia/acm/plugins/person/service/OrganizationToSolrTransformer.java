@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
@@ -19,6 +21,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     private OrganizationDao organizationDao;
     private UserDao userDao;
+    private SearchAccessControlFields searchAccessControlFields;
 
     @Override
     public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -30,6 +33,9 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
     {
         SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(orgDoc, org);
+
         orgDoc.setId(org.getOrganizationId() + "-ORGANIZATION");
         orgDoc.setObject_type_s("ORGANIZATION");
         orgDoc.setObject_id_s(org.getOrganizationId() + "");
@@ -64,6 +70,9 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
         orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
 
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(org.getParticipants());
+        orgDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
         return orgDoc;
     }
 
@@ -73,7 +82,8 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         {
             return null;
         }
-        return org.getDefaultIdentification().getIdentificationNumber() + " [" + org.getDefaultIdentification().getIdentificationType() + "]";
+        return org.getDefaultIdentification().getIdentificationNumber() + " [" + org.getDefaultIdentification().getIdentificationType()
+                + "]";
     }
 
     private String getDefaultPhone(Organization organization)
@@ -117,12 +127,13 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     @Override
     public SolrDocument toSolrQuickSearch(Organization in)
     {
-
         SolrDocument orgDoc = new SolrDocument();
+
+        getSearchAccessControlFields().setAccessControlFields(orgDoc, in);
+
         orgDoc.setId(in.getOrganizationId() + "-ORGANIZATION");
         orgDoc.setObject_type_s("ORGANIZATION");
         orgDoc.setObject_id_s(in.getOrganizationId() + "");
-
 
         orgDoc.setCreate_tdt(in.getCreated());
         orgDoc.setAuthor_s(in.getCreator());
@@ -189,5 +200,15 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     public Class<?> getAcmObjectTypeSupported()
     {
         return Organization.class;
+    }
+
+    public SearchAccessControlFields getSearchAccessControlFields()
+    {
+        return searchAccessControlFields;
+    }
+
+    public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
+    {
+        this.searchAccessControlFields = searchAccessControlFields;
     }
 }
