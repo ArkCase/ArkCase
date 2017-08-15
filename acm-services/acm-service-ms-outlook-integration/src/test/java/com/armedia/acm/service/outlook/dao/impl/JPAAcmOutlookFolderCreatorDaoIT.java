@@ -1,19 +1,11 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
-
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,17 +21,22 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
-
 import java.nio.charset.Charset;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-acm-encryption.xml", "/spring/spring-properties-encryption.xml" })
-public class JPAAcmOutlookFolderCreatorDaoTest
+@ContextConfiguration(locations = {"/spring/spring-library-acm-encryption.xml", "/spring/spring-properties-encryption.xml"})
+public class JPAAcmOutlookFolderCreatorDaoIT
 {
 
     private static final String SYSTEM_PASSWORD = "password";
