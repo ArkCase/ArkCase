@@ -27,9 +27,6 @@ public class AcmOutlookFolderCreator
     @Column(name = "cm_outlook_folder_creator_id")
     private Long id;
 
-    @Column(name = "cm_creator_hash", unique = true)
-    private String creatorHash;
-
     @Column(name = "cm_system_email_address", unique = true)
     private String systemEmailAddress;
 
@@ -43,9 +40,8 @@ public class AcmOutlookFolderCreator
     {
     }
 
-    public AcmOutlookFolderCreator(String creatorHash, String systemEmailAddress, String systemPassword)
+    public AcmOutlookFolderCreator(String systemEmailAddress, String systemPassword)
     {
-        this.creatorHash = creatorHash;
         this.systemEmailAddress = systemEmailAddress;
         this.systemPassword = systemPassword;
     }
@@ -65,23 +61,6 @@ public class AcmOutlookFolderCreator
     public void setId(Long id)
     {
         this.id = id;
-    }
-
-    /**
-     * @return the creatorHash
-     */
-    public String getCreatorHash()
-    {
-        return creatorHash;
-    }
-
-    /**
-     * @param creatorHash
-     *            the creatorHash to set
-     */
-    public void setCreatorHash(String creatorHash)
-    {
-        this.creatorHash = creatorHash;
     }
 
     /**

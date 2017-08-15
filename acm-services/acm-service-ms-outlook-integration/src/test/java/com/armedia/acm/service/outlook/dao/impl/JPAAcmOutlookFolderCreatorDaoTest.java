@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
@@ -30,8 +31,6 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -66,6 +65,9 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     private List<AcmOutlookFolderCreator> mockedResultList;
 
     @Autowired
+    private AcmCryptoUtils cryptoUtils;
+
+    @Autowired
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
 
     @InjectMocks
@@ -75,6 +77,7 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void setup()
     {
         MockitoAnnotations.initMocks(this);
+        outlookFolderCreatorDao.setCryptoUtils(cryptoUtils);
         outlookFolderCreatorDao.setEncryptionProperties(encryptionProperties);
     }
 
@@ -143,11 +146,10 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void testGetFolderCreator_existingUser() throws Exception
     {
         // given
-        String hash = computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD);
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
         when(mockedFolderCreatorQuery.getResultList()).thenReturn(mockedResultList);
         when(mockedResultList.isEmpty()).thenReturn(false);
-        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(hash, SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
         when(mockedResultList.get(0)).thenReturn(folderCreatorStub);
 
         // when
@@ -156,11 +158,10 @@ public class JPAAcmOutlookFolderCreatorDaoTest
         // then
         assertThat(folderCreator.getSystemEmailAddress(), is(SYSTEM_EMAIL));
         assertThat(folderCreator.getSystemPassword(), is(SYSTEM_PASSWORD));
-        assertThat(folderCreator.getCreatorHash(), is(hash));
 
-        verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.creatorHash = :creatorHash",
+        verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.systemEmailAddress = :systemEmailAddress",
                 AcmOutlookFolderCreator.class);
-        verify(mockedFolderCreatorQuery).setParameter("creatorHash", hash);
+        verify(mockedFolderCreatorQuery).setParameter("systemEmailAddress", SYSTEM_EMAIL);
         verify(mockedFolderCreatorQuery).getResultList();
         verify(mockedResultList).isEmpty();
         verify(mockedResultList).get(0);
@@ -171,11 +172,10 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void testGetFolderCreator_nonExistingUser() throws Exception
     {
         // given
-        String hash = computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD);
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
         when(mockedFolderCreatorQuery.getResultList()).thenReturn(mockedResultList);
         when(mockedResultList.isEmpty()).thenReturn(true);
-        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(hash, SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
         when(mockedEm.merge(any(AcmOutlookFolderCreator.class))).thenReturn(folderCreatorStub);
 
         // when
@@ -184,11 +184,10 @@ public class JPAAcmOutlookFolderCreatorDaoTest
         // then
         assertThat(folderCreator.getSystemEmailAddress(), is(SYSTEM_EMAIL));
         assertThat(folderCreator.getSystemPassword(), is(SYSTEM_PASSWORD));
-        assertThat(folderCreator.getCreatorHash(), is(hash));
 
-        verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.creatorHash = :creatorHash",
+        verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.systemEmailAddress = :systemEmailAddress",
                 AcmOutlookFolderCreator.class);
-        verify(mockedFolderCreatorQuery).setParameter("creatorHash", hash);
+        verify(mockedFolderCreatorQuery).setParameter("systemEmailAddress", SYSTEM_EMAIL);
         verify(mockedFolderCreatorQuery).getResultList();
         verify(mockedResultList).isEmpty();
         verify(mockedEm).merge(any(AcmOutlookFolderCreator.class));
@@ -200,9 +199,8 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void testGetFolderCreatorForObject() throws Exception
     {
         // given
-        String hash = computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD);
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
-        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(hash, SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        AcmOutlookFolderCreator folderCreatorStub = new AcmOutlookFolderCreator(SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
         when(mockedFolderCreatorQuery.getSingleResult()).thenReturn(folderCreatorStub);
 
         // when
@@ -211,7 +209,6 @@ public class JPAAcmOutlookFolderCreatorDaoTest
         // then
         assertThat(folderCreator.getSystemEmailAddress(), is(SYSTEM_EMAIL));
         assertThat(folderCreator.getSystemPassword(), is(SYSTEM_PASSWORD));
-        assertThat(folderCreator.getCreatorHash(), is(hash));
 
         verify(mockedEm).createQuery(
                 "SELECT ofc FROM AcmOutlookFolderCreator ofc JOIN ofc.outlookObjectReferences oor WHERE oor.objectId = :objectId AND oor.objectType = :objectType",
@@ -226,9 +223,8 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void testGetFolderCreatorForObject_throwsException() throws Exception
     {
         // given
-        String hash = computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD);
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
-        new AcmOutlookFolderCreator(hash, SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        new AcmOutlookFolderCreator(SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
         when(mockedFolderCreatorQuery.getSingleResult()).thenThrow(new PersistenceException());
 
         // when
@@ -261,8 +257,7 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     public void testRecordFolderCreator() throws Exception
     {
         // given
-        AcmOutlookFolderCreator creator = new AcmOutlookFolderCreator(computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD), SYSTEM_EMAIL,
-                SYSTEM_PASSWORD);
+        AcmOutlookFolderCreator creator = new AcmOutlookFolderCreator(SYSTEM_EMAIL, SYSTEM_PASSWORD);
         ArgumentCaptor<AcmOutlookObjectReference> captor = ArgumentCaptor.forClass(AcmOutlookObjectReference.class);
 
         // when
@@ -276,19 +271,7 @@ public class JPAAcmOutlookFolderCreatorDaoTest
         assertThat(captured.getObjectType(), is(CASE_FILE));
         assertThat(captured.getFolderCreator().getSystemEmailAddress(), is(SYSTEM_EMAIL));
         assertThat(decryptValue(captured.getFolderCreator().getSystemPassword()), is(SYSTEM_PASSWORD));
-        assertThat(captured.getFolderCreator().getCreatorHash(), is(computeHash(SYSTEM_EMAIL, SYSTEM_PASSWORD)));
 
-    }
-
-    private String computeHash(String systemEmailAddress, String systemPassword) throws NoSuchAlgorithmException
-    {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] dataBytes = String.format("%s-%s", systemEmailAddress, systemPassword).getBytes(UTF8_CHARSET);
-        md.update(dataBytes);
-        byte[] mdBytes = md.digest();
-        String hash = Base64.encodeBase64String(mdBytes);
-
-        return hash;
     }
 
     private String encryptValue(String plainText) throws AcmEncryptionException

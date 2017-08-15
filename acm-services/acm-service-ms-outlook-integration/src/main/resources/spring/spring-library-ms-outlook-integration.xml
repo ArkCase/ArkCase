@@ -92,6 +92,7 @@
     </bean>
     
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
         <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
     </bean>
 
