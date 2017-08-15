@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -39,14 +40,13 @@ import java.util.Set;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmGroup implements Serializable, AcmEntity
 {
-
     private static final long serialVersionUID = -2729731595684630823L;
 
     @Id
     @Column(name = "cm_group_name")
     private String name;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
+    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
     @JoinColumn(name = "cm_group_parent_name")
     @JsonIgnore
     private AcmGroup parentGroup;
@@ -91,8 +91,8 @@ public class AcmGroup implements Serializable, AcmEntity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "acm_group_member",
-            joinColumns = {@JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id")})
+            joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
+            inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
     private Set<AcmUser> members;
 
     @PrePersist
@@ -100,12 +100,12 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         if (StringUtils.isEmpty(getType()))
         {
-            setType(AcmGroupType.ADHOC_GROUP);
+            setType(AcmGroupType.ADHOC_GROUP.name());
         }
 
         if (StringUtils.isEmpty(getStatus()))
         {
-            setStatus(AcmGroupStatus.ACTIVE);
+            setStatus(AcmGroupStatus.ACTIVE.name());
         }
     }
 
@@ -114,12 +114,12 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         if (StringUtils.isEmpty(getType()))
         {
-            setType(AcmGroupType.ADHOC_GROUP);
+            setType(AcmGroupType.ADHOC_GROUP.name());
         }
 
         if (StringUtils.isEmpty(getStatus()))
         {
-            setStatus(AcmGroupStatus.ACTIVE);
+            setStatus(AcmGroupStatus.ACTIVE.name());
         }
     }
 
@@ -265,6 +265,14 @@ public class AcmGroup implements Serializable, AcmEntity
         return childGroups;
     }
 
+    @JsonIgnore
+    public Set<String> getChildGroupNames()
+    {
+        return childGroups.stream()
+                .map(AcmGroup::getName)
+                .collect(Collectors.toSet());
+    }
+
     public void setChildGroups(List<AcmGroup> childGroups)
     {
         if (childGroups != null)
@@ -291,6 +299,14 @@ public class AcmGroup implements Serializable, AcmEntity
     public Set<AcmUser> getMembers()
     {
         return members;
+    }
+
+    @JsonIgnore
+    public Set<String> getMembersDns()
+    {
+        return members.stream()
+                .map(AcmUser::getDistinguishedName)
+                .collect(Collectors.toSet());
     }
 
     public void setMembers(Set<AcmUser> members)

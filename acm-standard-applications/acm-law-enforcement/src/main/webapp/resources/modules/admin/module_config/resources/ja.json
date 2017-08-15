@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "ja_Application Role",
     "security.ldapConfig": "ja_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "ja_Add New Directory",
+    "security.ldapConfig.addNewMember": "ja_Add New Member",
+    "security.ldapConfig.addMembers": "ja_Add Members",
+    "security.ldapConfig.addSubgroup": "ja_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "ja_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "ja_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "ja_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "ja_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "ja_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "ja_Edit Member",
+    "security.ldapConfig.removeMember": "ja_Remove Member",
     "security.ldapConfig.table.ldapUrl": "ja_LDAP Url",
     "security.ldapConfig.table.directoryName": "ja_Directory Name",
     "security.ldapConfig.data": {
@@ -39,7 +49,7 @@
       "ok": "ja_OK"
     },
     "menus": {
-      "leftnav.item": "管理"
+      "leftnav.item": "ja_Admin"
     },
     "security.ldapConfig.data.placeholders": {
       "id": "ja_Enter directory name",
@@ -68,7 +78,9 @@
       "insert.success": "ja_Successfully inserted new row.",
       "insert.error": "ja_Error inserting new row.",
       "update.success": "ja_Successfully updated row.",
-      "update.error": "ja_Error updating row."
+      "update.error": "ja_Error updating row.",
+      "insert.template.success": "ja_Successfully created template",
+      "insert.template.error": "ja_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "ja_Cancel",
@@ -100,7 +112,7 @@
         "description": "ja_Description",
         "descriptionPlaceholder": "ja_Enter Description",
         "btn": {
-          "ok": "ja_Add Ad-Hoc Group",
+          "ok": "ja_Add Group",
           "cancel": "ja_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "ja_Enter last name",
           "email": "ja_Enter email",
           "password": "ja_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "ja_7",
           "passwordRuleText": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -217,6 +229,143 @@
     "security.selectPrivileges.name": "ja_Name",
     "security.modules": "ja_Modules",
     "security.modules.module": "ja_Module",
+    "security.ldap.user.management": {
+      "title": "ja_LDAP User Management",
+      "cloneButton": "ja_Clone User",
+      "user": "ja_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "ja_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "ja_Enter System Email Address",
+        "password.placeholder": "ja_Enter System Password",
+        "purge.placeholder": "ja_Choose Purge Option",
+        "purgeDays.placeholder": "ja_Enter Days",
+        "save.button": "ja_Save",
+        "validate.button": "ja_Validate",
+        "purge.label": "ja_Purge",
+        "email.label": "ja_System Email Address",
+        "password.label": "ja_System Password",
+        "purgeDays.label": "ja_Days",
+        "emailValid": "ja_System Email Address is valid",
+        "emailNotValid": "ja_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "ja_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "ja_Retain Indefinitely",
+          "objectClosed": "ja_Object = 'Closed'",
+          "objectClosedXDays": "ja_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "ja_Cases",
+          "complaints.label": "ja_Complaints",
+          "tasks.label": "ja_Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "ja_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "ja_Save",
+        "deliveryMethods.label": "ja_Delivery Methods",
+        "enableDocumentEmail.checkbox": "ja_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "ja_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "ja_Documents can be sent as hyperlinks",
+        "serverSettings.label": "ja_Server Settings",
+        "serverType.label": "ja_Server Type",
+        "serverType.placeholder": "ja_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "ja_SMTP",
+          "outlook": "ja_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "ja_For details refer to Microsoft Exchange Configuration",
+        "server.label": "ja_Server Address",
+        "server.placeholder": "ja_Enter Server Address",
+        "port.label": "ja_Port",
+        "port.placeholder": "ja_Enter Port",
+        "encryption.label": "ja_Encryption",
+        "encryption.placeholder": "ja_Choose Encryption",
+        "encryptionOptions": {
+          "off": "ja_OFF",
+          "ssl-tls": "ja_SSL/TLS",
+          "starttls": "ja_STARTTLS"
+        },
+        "username.label": "ja_Username",
+        "username.placeholder": "ja_Enter Username",
+        "password.label": "ja_Password",
+        "password.placeholder": "ja_Enter Password",
+        "userFrom.label": "ja_From",
+        "userFrom.placeholder": "ja_Enter Email From field",
+        "validate.label": "ja_SMTP Validation",
+        "validate.button": "ja_Validate",
+        "smtpValid": "ja_SMTP settings are valid",
+        "smtpNotValid": "ja_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "ja_Email Templates",
+      "table.columns": {
+        "templateName": "ja_Template Name",
+        "emailPattern": "ja_Email Pattern",
+        "source": "ja_Source",
+        "objectTypes": "ja_Object Types",
+        "actions": "ja_Actions",
+        "modified": "ja_Modified Date",
+        "modifier": "ja_Modified By"
+      },
+      "modal": {
+        "title": "ja_Email Template",
+        "templateName.label": "ja_Template Name",
+        "templateName.placeholder": "ja_Enter Template Name",
+        "emailPattern.label": "ja_Email Pattern",
+        "emailPattern.placeholder": "ja_Enter Email Pattern",
+        "source.label": "ja_Source",
+        "objectTypes.label": "ja_Object Types",
+        "actions.label": "ja_Actions",
+        "manual.label": "ja_Manual",
+        "automated.label": "ja_Automated",
+        "browse": "ja_Browse",
+        "save": "ja_Save",
+        "cancel": "ja_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "ja_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "ja_Save",
+        "enableExchangeIntegration.checkbox": "ja_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "ja_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "ja_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "ja_Exchange2007",
+          "Exchange2007_SP1": "ja_Exchange2007_SP1",
+          "Exchange2010": "ja_Exchange2010",
+          "Exchange2010_SP1": "ja_Exchange2010_SP1",
+          "Exchange2010_SP2": "ja_Exchange2010_SP2",
+          "Exchange2013": "ja_Exchange2013",
+          "Exchange2013_SP1": "ja_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "ja_Enable Autodiscovery",
+        "clientAccessServer.label": "ja_Client Access Server",
+        "clientAccessServer.description": "ja_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "ja_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "ja_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "ja_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "ja_None",
+          "Owner": "ja_Owner",
+          "PublishingEditor": "ja_PublishingEditor",
+          "Editor": "ja_Editor",
+          "PublishingAuthor": "ja_PublishingAuthor",
+          "Author": "ja_Author",
+          "NoneditingAuthor": "ja_NoneditingAuthor",
+          "Reviewer": "ja_Reviewer",
+          "Contributor": "ja_Contributor",
+          "FreeBusyTimeOnly": "ja_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "ja_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "ja_Custom"
+        }
+      }
+    },
     "dashboard.title": "ja_Dashboard",
     "dashboard.config": "ja_Dashboard Configuration",
     "dashboard.widgets": "ja_Widgets",
@@ -226,6 +375,14 @@
     "forms.config": "ja_Form Configuration",
     "workflows.title": "ja_Workflows",
     "workflows.config": "ja_Workflow Configuration",
+    "workflows.config.bpmn.upload": "ja_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "ja_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "ja_Description",
+      "label.noFileSelected": "ja_No File Selected",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "ja_Cant make this process active!",
       "success": "ja_Process succesfully activated."
@@ -272,26 +429,34 @@
     "formWorkflows.link.editRole.save.success": "ja_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "ja_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "ja_Application",
+      "title": "応用",
+      "locale.config": {
+        "title": "ロケールの設定",
+        "defaultLabel": "デフォルトのロケール:"
+      },
       "labels.config": {
-        "defaultLabel": "ja_Default",
-        "applyBtn": "ja_Apply",
-        "resetModule": "ja_Reset Module",
-        "resetModule.confirm": "ja_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "ja_Reset current module (delete custom resources)",
-        "resetAll": "ja_Reset All",
-        "resetAll.confirm": "ja_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "ja_Reset all resources (delete all custom resources)",
-        "refreshAll": "ja_Refresh All",
-        "refreshAll.title": "ja_Refresh all resources (keep custom resources)",
-        "title": "ja_Label Configuration",
-        "filterBy": "ja_Filter By Id",
-        "filterByValue": "ja_Filter By Value",
+        "title": "ラベル設定",
+        "progressMessage": "ラベルを更新しています...",
         "data": {
-          "description": "ja_Description",
-          "defaultValue": "ja_Default Value",
-          "id": "ja_ID",
-          "value": "ja_Value"
+          "description": "説明",
+          "defaultValue": "デフォルト値",
+          "id": "番号",
+          "value": "値"
+        },
+        "btnReset": {
+          "label": "リセット...",
+          "title": "ラベルリソースがデフォルト値にリセット"
+        },
+        "setToDefault": {
+          "dialog.title": "ラベルリソースがデフォルト値にリセット",
+          "chkResetCustom.label": "カスタマイズされたラベルもクリアしますか?",
+          "btnCancel.label": "キャンセル",
+          "btnCancel.title": "アクションなしのダイアログを閉じる",
+          "btnReset.label": "リセット",
+          "btnReset.title": "カスタマイズされたラベルを消去してデフォルト値にリセットする",
+          "btnRefresh.label": "リセット",
+          "btnRefresh.title": "ラベルをデフォルト値にリセットしますが、カスタマイズしたラベルは変更しないでください",
+          "resetCustom.confirm": "選択したカスタムリソースを削除してもよろしいですか?"
         }
       },
       "module.config": {
@@ -355,11 +520,11 @@
         "created": "ja_Created",
         "modified": "ja_Modified",
         "creator": "ja_Creator",
-        "modifier": "ja_Modifier",
+        "modifier": "ja_Modified By",
         "activated": "ja_Status",
         "objectType": "ja_Object Type",
         "version": "ja_Version",
-        "templateVersionActive" : "ja_Active"
+        "templateVersionActive": "ja_Active"
       },
       "templates.fieldNames.label": "ja_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +534,7 @@
         "table.columns": {
           "beanId": "ja_Bean ID",
           "jpaQuery": "ja_JPA Query",
-          "queryType": "ja_Query Type"
+          "objectType": "ja_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +551,14 @@
       "mergefields.saveMergeFields": "ja_Save",
       "mergefields.versionMergeFields": "ja_Versions",
       "mergefields.grid": {
-      "fieldId": "ja_ID",
-      "fieldValue": "ja_Value",
-      "fieldDescription": "ja_Description"
+        "fieldId": "ja_ID",
+        "fieldValue": "ja_Value",
+        "fieldDescription": "ja_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "ja_Version",
         "modified": "ja_Modified",
-        "modifier": "ja_Modifier",
+        "modifier": "ja_Modified By",
         "mergingActiveVersion": "ja_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +575,100 @@
       "target": "ja_Target"
     },
     "forms.message.delete.success": "ja_Successfully deleted row.",
-    "forms.message.delete.error": "ja_Error deleting row."
+    "forms.message.delete.error": "ja_Error deleting row.",
+    "documentManagement": {
+      "title": "ja_Document Management",
+      "cmisConfiguration": "ja_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "ja_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "ja_New CMIS Configuration",
+          "edit": "ja_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "ja_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "ja_CMIS ID",
+          "placeholder": "ja_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "ja_Base URL",
+          "placeholder": "ja_Base URL"
+        },
+        "username": {
+          "label": "ja_Username",
+          "placeholder": "ja_Username"
+        },
+        "password": {
+          "label": "ja_Password",
+          "placeholder": "ja_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "ja_Use Alfresco Extension",
+          "placeholder": "ja_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "ja_Endpoint",
+          "placeholder": "ja_Endpoint"
+        },
+        "maxIdle": {
+          "label": "ja_Maximum Idle",
+          "placeholder": "ja_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "ja_Maximum Active",
+          "placeholder": "ja_Maximum Active"
+        },
+        "maxWait": {
+          "label": "ja_Maximum Wait",
+          "placeholder": "ja_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "ja_Minimum Eviction Milliseconds",
+          "placeholder": "ja_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "ja_Eviction Check Interval Milliseconds",
+          "placeholder": "ja_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "ja_Reconnect Count",
+          "placeholder": "ja_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "ja_Reconnect Frequency",
+          "placeholder": "ja_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "ja_Repository Id",
+          "placeholder": "ja_Repository Id"
+        },
+        "versioningState": {
+          "label": "ja_Versioning State",
+          "placeholder": "ja_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "ja_Cancel",
+        "deleteBtn": "ja_Cofirm Delete",
+        "headerText": "ja_You are about to delete CMIS Configuration:",
+        "bodyText": "ja_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "ja_Successfully deleted configuration.",
+        "delete.error": "ja_Error deleting configuration.",
+        "insert.success": "ja_Successfully created new configuration row.",
+        "insert.error": "ja_Error creating new configuration row.",
+        "update.success": "ja_Successfully updated configuration row.",
+        "update.error": "ja_Error updating configuration row."
+      }
+    }
   }
 }

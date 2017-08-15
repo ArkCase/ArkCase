@@ -1,6 +1,6 @@
 package com.armedia.acm.services.users.model.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -8,9 +8,9 @@ import org.springframework.ldap.core.DirContextAdapter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class AcmUserGroupsContextMapperTest extends EasyMockSupport
+public class AcmUserContextMapperTest extends EasyMockSupport
 {
-    private AcmUserGroupsContextMapper unit;
+    private AcmUserContextMapper unit;
 
     @Test
     public void setLdapUser_test()
@@ -20,7 +20,8 @@ public class AcmUserGroupsContextMapperTest extends EasyMockSupport
         acmLdapSyncConfig.setMailAttributeName("mail");
         acmLdapSyncConfig.setBaseDC("dc=armedia");
         acmLdapSyncConfig.setAllUsersSortingAttribute("cn");
-        unit = new AcmUserGroupsContextMapper(acmLdapSyncConfig);
+        acmLdapSyncConfig.setDirectoryType("openldap");
+        unit = new AcmUserContextMapper(acmLdapSyncConfig);
 
         DirContextAdapter dirContextAdapter = new DirContextAdapter();
         dirContextAdapter.setAttributeValue("cn", "common");
@@ -37,7 +38,7 @@ public class AcmUserGroupsContextMapperTest extends EasyMockSupport
         dirContextAdapter.setAttributeValue("uid", null);
         dirContextAdapter.setAttributeValue("memberOf", "arkcase");
 
-        AcmUser user = unit.setLdapUser(new AcmUser(), dirContextAdapter);
+        LdapUser user = unit.mapToLdapUser(dirContextAdapter);
 
         assertNotNull(user);
         assertNotNull(user.getUserId());

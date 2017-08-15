@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.person;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -33,13 +35,15 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml"
-})
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT
 {
@@ -66,14 +70,13 @@ public class PersonAssociationIT
     public void savePersonAssociation() throws Exception
     {
 
-
         Person person = new Person();
 
         person.setId(952L);
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
-
+        person.setCreator("creator");
 
         Person per = new Person();
 
@@ -81,7 +84,7 @@ public class PersonAssociationIT
         per.setFamilyName("Person");
         per.setGivenName("ACM");
         per.setStatus("testStatus");
-
+        per.setCreator("creator");
 
         PersonAssociation perAssoc = new PersonAssociation();
 
