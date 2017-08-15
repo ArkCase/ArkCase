@@ -1,8 +1,8 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,12 +14,15 @@ import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SpringLdapPagedDaoTest extends EasyMockSupport
 {
-    // TODO: will rework
 
     private LdapTemplate mockLdapTemplate;
     private SpringLdapPagedDao.PagedResultsDirContextProcessorBuilder mockBuilder;
@@ -29,7 +32,6 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
     private AcmLdapSyncConfig syncConfig;
 
     private SpringLdapPagedDao unit;
-
 
     @Before
     public void setUp()
@@ -61,9 +63,9 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
         expect(mockPagedResultsCookie.getCookie()).andReturn(null);
 
-        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+        ArrayList<LdapUser> acmUsers = new ArrayList<>();
 
-        AcmUser jgarcia = new AcmUser();
+        LdapUser jgarcia = new LdapUser();
         jgarcia.setUserId("jgarcia");
         acmUsers.add(jgarcia);
 
@@ -71,18 +73,18 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
                 eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
+                anyObject(AcmUserContextMapper.class),
                 anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
 
         replayAll();
 
-        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
 
         verifyAll();
 
         assertEquals(acmUsers.size(), found.size());
 
-        for (AcmUser user : found)
+        for (LdapUser user : found)
         {
             assertTrue(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
         }
@@ -98,28 +100,28 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
         expect(mockPagedResultsDirContextProcessor.getCookie()).andReturn(mockPagedResultsCookie);
         expect(mockPagedResultsCookie.getCookie()).andReturn(null);
 
-        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+        ArrayList<LdapUser> ldapUsers = new ArrayList<>();
 
-        AcmUser jgarcia = new AcmUser();
+        LdapUser jgarcia = new LdapUser();
         jgarcia.setUserId("jgarcia");
-        acmUsers.add(jgarcia);
+        ldapUsers.add(jgarcia);
 
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
-                anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
+                anyObject(AcmUserContextMapper.class),
+                anyObject(PagedResultsDirContextProcessor.class))).andReturn(ldapUsers);
 
         replayAll();
 
-        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
 
         verifyAll();
 
-        assertEquals(acmUsers.size(), found.size());
+        assertEquals(ldapUsers.size(), found.size());
 
-        for (AcmUser user : found)
+        for (LdapUser user : found)
         {
             assertFalse(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
         }

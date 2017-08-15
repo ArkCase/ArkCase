@@ -65,7 +65,7 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
                 id: null
                 , associationType: ""
                 , parentId: $scope.objectInfo.id
-                , parentType: $scope.objectInfo.objectType
+                , parentType: ObjectService.ObjectTypes.CASE_FILE
                 , parentTitle: $scope.objectInfo.caseNumber
                 , organization: null
                 , className: "com.armedia.acm.plugins.person.model.OrganizationAssociation"

@@ -8,7 +8,7 @@ import java.util.List;
  * Ldap User POST JSON request
  */
 @PasswordValidation(message = "Password pattern rule validations")
-public class LdapUser
+public class UserDTO
 {
     private AcmUser acmUser;
     private String password;

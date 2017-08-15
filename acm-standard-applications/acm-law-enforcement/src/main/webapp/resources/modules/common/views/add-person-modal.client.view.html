@@ -48,6 +48,15 @@
                         required></select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <span class="text-danger" ng-if="duplicatePersonRoleError">
+                    <span translate>
+                        common.addPerson.duplicatePersonRoleErrorMessage
+                    </span>
+                </span>
+            </div>
+        </div>
         <div class="row" ng-show="showDescription">
             <div class="col-sm-12">
                 <textarea id="description" class="form-control" ng-model="description"></textarea>

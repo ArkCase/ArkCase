@@ -20,9 +20,23 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
         });
 
         var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
         };
 
+        $scope.onClickRestrict = function ($event) {
+            if ($scope.restricted != $scope.objectInfo.restricted) {
+                $scope.objectInfo.restricted = $scope.restricted;
+
+                var organizationInfo = Util.omitNg($scope.objectInfo);
+                OrganizationInfoService.saveOrganizationInfo(organizationInfo).then(function () {
+
+                }, function () {
+                    $scope.restricted = !$scope.restricted;
+                });
+            }
+        };
+        
         $scope.export = function () {
             console.log('button export clicked');
         };

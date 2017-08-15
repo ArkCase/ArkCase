@@ -237,6 +237,9 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             if (Util.isEmpty(data)) {
                 return false;
             }
+            if (data.id && !Util.isArray(data.participants)) {
+                return false;
+            }
             return true;
         };
 

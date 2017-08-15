@@ -12,6 +12,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
             $scope.showSetPrimary = params.showSetPrimary;
+            $scope.returnValueValidationFunction = params.returnValueValidationFunction;
+            $scope.duplicateOrganizationRoleError = false;
 
             $scope.organizationId = params.organizationId;
             $scope.editMode = !!params.organizationId;
@@ -44,7 +46,16 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 if ($scope.showDescription) {
                     retValue.description = $scope.description;
                 }
-                $modalInstance.close(retValue);
+                if ($scope.returnValueValidationFunction) {
+                    var validationResult = $scope.returnValueValidationFunction(retValue);
+                    if (validationResult.valid) {
+                        $modalInstance.close(retValue);
+                    } else {
+                        $scope.duplicateOrganizationRoleError = validationResult.duplicateOrganizationRoleError;
+                    }
+                } else {
+                    $modalInstance.close(retValue);
+                }
             };
 
             $scope.pickOrganization = function () {
