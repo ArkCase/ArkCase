@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 
 import java.util.HashSet;
@@ -24,7 +25,7 @@ public class LdapGroup
     {
         AcmGroup acmGroup = new AcmGroup();
         acmGroup.setName(getName());
-        acmGroup.setType(AcmGroupType.LDAP_GROUP.name());
+        acmGroup.setType(AcmGroupType.LDAP_GROUP);
         acmGroup.setDirectoryName(getDirectoryName());
         acmGroup.setDistinguishedName(getDistinguishedName());
         setAcmGroupEditableFields(acmGroup);
@@ -34,7 +35,7 @@ public class LdapGroup
     public AcmGroup setAcmGroupEditableFields(AcmGroup acmGroup)
     {
         acmGroup.setDescription(getDescription());
-        acmGroup.setStatus("ACTIVE"); // TODO: fix status
+        acmGroup.setStatus(AcmGroupStatus.ACTIVE); // TODO: fix status
         return acmGroup;
     }
 

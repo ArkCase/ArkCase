@@ -151,7 +151,7 @@ public class LdapSyncDatabaseHelper
         if (existing != null)
         {
             existing.getGroups().stream()
-                    .filter(g -> AcmGroupType.ADHOC_GROUP.name().equalsIgnoreCase(g.getType()))
+                    .filter(g -> AcmGroupType.ADHOC_GROUP == g.getType())
                     .forEach(user::addGroup);
 
             Date deletedAt = existing.getDeletedAt();
@@ -195,16 +195,16 @@ public class LdapSyncDatabaseHelper
                     }
 
                     parentGroup.setName(parentName);
-                    parentGroup.setType(AcmRoleType.LDAP_GROUP.getRoleName());
+                    parentGroup.setType(AcmGroupType.LDAP_GROUP);
                     if (groupDNPairs != null)
                     {
                         String parentGroupDN = groupDNPairs.get(parentName);
                         parentGroup.setDistinguishedName(parentGroupDN);
                     }
 
-                    if (!AcmGroupStatus.DELETE.name().equals(parentGroup.getStatus()))
+                    if (AcmGroupStatus.DELETE != parentGroup.getStatus())
                     {
-                        parentGroup.setStatus(AcmGroupStatus.ACTIVE.name());
+                        parentGroup.setStatus(AcmGroupStatus.ACTIVE);
                     }
                 }
 
@@ -218,16 +218,16 @@ public class LdapSyncDatabaseHelper
 
                 }
                 group.setName(role);
-                group.setType(roleType);
+                group.setType(AcmGroupType.valueOf(roleType));
                 group.setParentGroup(parentGroup);
                 if (groupDNPairs != null)
                 {
                     String groupDN = groupDNPairs.get(role);
                     group.setDistinguishedName(groupDN);
                 }
-                if (!AcmGroupStatus.DELETE.name().equals(group.getStatus()))
+                if (AcmGroupStatus.DELETE != group.getStatus())
                 {
-                    group.setStatus(AcmGroupStatus.ACTIVE.name());
+                    group.setStatus(AcmGroupStatus.ACTIVE);
                 }
 
                 getGroupDao().save(group);

@@ -97,7 +97,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         if (group != null)
         {
-            group.setStatus(AcmGroupStatus.DELETE.name());
+            group.setStatus(AcmGroupStatus.DELETE);
             group.setParentGroup(null);
             if (group.getChildGroups() != null)
             {
@@ -189,7 +189,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         {
             for (AcmGroup group : groups)
             {
-                group.setStatus(AcmGroupStatus.INACTIVE.name());
+                group.setStatus(AcmGroupStatus.INACTIVE);
                 save(group);
             }
         }

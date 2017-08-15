@@ -66,7 +66,7 @@ public class RemoveGroupAPIControllerTest extends EasyMockSupport
         AcmGroup group = new AcmGroup();
 
         group.setName("Name");
-        group.setStatus(AcmGroupStatus.DELETE.name());
+        group.setStatus(AcmGroupStatus.DELETE);
 
         expect(getMockGroupDao().markGroupDelete(group.getName())).andReturn(group);
         expect(getMockAuthentication().getName()).andReturn("user");

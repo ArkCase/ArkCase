@@ -8,6 +8,8 @@ import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -78,8 +80,8 @@ public class SaveSupervisorToGroupAPIControllerTest extends EasyMockSupport
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         AcmUser supervisor = new AcmUser();
         supervisor.setUserId("test-user");
