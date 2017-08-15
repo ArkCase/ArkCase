@@ -38,7 +38,7 @@
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Hours Summary",
+    "title": "Hours",
     "table.columns": {
       "code": "Parent ID",
       "type": "Parent Type",
@@ -75,7 +75,7 @@
     "nodeTypes": {
       "details.label": "Details",
       "person.label": "Person",
-      "summary.label": "Hours Summary",
+      "summary.label": "Hours",
       "tags.label": "Tags"
     },
     "sorters": {
