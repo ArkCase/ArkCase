@@ -1107,6 +1107,7 @@ div.tabbed-footer .overview-tabs li:hover span {
 	font-weight: bold;
 	color: #2d343e;
 	margin-left: -20px;
+	font-size: 12px;
 }
 
 div.tabbed-footer .overview-tabs li:hover:last-child span {
