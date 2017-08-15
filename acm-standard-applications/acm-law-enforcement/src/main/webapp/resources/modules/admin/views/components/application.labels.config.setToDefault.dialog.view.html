@@ -5,31 +5,33 @@
 </div>
 
 <div class="modal-body">
-    <nav class="navbar navbar-default">
         <div class="container-fluid">
-            <div id="labelSetting" class="navbar-collapse collapse">
-                <form class="navbar-form navbar-left">
-                    <div class="form-group">
-                        <select multiple ng-model="selectedNamespaces" class="form-control input-sm"
-                                ng-options="option.name for option in namespacesDropdownOptions">
-                        </select>
+            <div id="labelSetting">
+                <form>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <select multiple size="20" ng-model="selectedNamespaces" class="form-control"
+                                    ng-options="option.name for option in namespacesDropdownOptions">
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <select multiple size="20" ng-model="selectedLocales" class="form-control"
+                                    ng-options="item as item.native for item in languagesDropdownOptions track by item.code">
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <select multiple ng-model="selectedLocales" class="form-control input-sm"
-                                ng-options="item as item.native for item in languagesDropdownOptions track by item.code">
-                        </select>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="toResetCustom" ng-click="onClickResetCustom($event)">
-                            <span translate>admin.application.labels.config.setToDefault.chkResetCustom.label</span>
-                        </label>
+                    <div class="row">
+                        <div class="col-sm-12 checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="toResetCustom" ng-click="onClickResetCustom($event)">
+                                <span translate>admin.application.labels.config.setToDefault.chkResetCustom.label</span>
+                            </label>
+                        </div>
                     </div>
                 </form>
 
             </div>
         </div>
-    </nav>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()"
