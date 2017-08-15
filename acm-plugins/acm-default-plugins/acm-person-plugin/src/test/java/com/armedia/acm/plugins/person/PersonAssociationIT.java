@@ -41,7 +41,9 @@ import java.util.List;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml" })
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAssociationIT
 {
@@ -74,6 +76,7 @@ public class PersonAssociationIT
         person.setFamilyName("Person");
         person.setGivenName("ACM");
         person.setStatus("testStatus");
+        person.setCreator("creator");
 
         Person per = new Person();
 
@@ -81,6 +84,7 @@ public class PersonAssociationIT
         per.setFamilyName("Person");
         per.setGivenName("ACM");
         per.setStatus("testStatus");
+        per.setCreator("creator");
 
         PersonAssociation perAssoc = new PersonAssociation();
 

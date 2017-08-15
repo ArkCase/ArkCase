@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- pre-save handlers -->
+    <bean id="organizationParticipantRulesHandler"
+          class="com.armedia.acm.plugins.person.pipeline.presave.OrganizationParticipantRulesHandler">
+        <property name="participantsRule" ref="participantsBusinessRule"/>
+    </bean>
+    
+    <!-- pre-save handlers -->
+    <bean id="organizationSetCreatorHandler"
+          class="com.armedia.acm.plugins.person.pipeline.presave.OrganizationSetCreatorHandler"/>
+</beans>

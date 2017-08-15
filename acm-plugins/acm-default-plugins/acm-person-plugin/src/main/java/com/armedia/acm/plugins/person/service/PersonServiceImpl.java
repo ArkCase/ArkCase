@@ -20,6 +20,9 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
+import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
+import com.armedia.acm.services.pipeline.PipelineManager;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +50,8 @@ import java.util.stream.Collectors;
 public class PersonServiceImpl implements PersonService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private PipelineManager<Person, PersonPipelineContext> personPipelineManager;
 
     private PersonDao personDao;
     /**
@@ -207,7 +212,7 @@ public class PersonServiceImpl implements PersonService
     @Override
     public EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException
+            AcmObjectNotFoundException, PipelineProcessException
     {
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
@@ -238,7 +243,7 @@ public class PersonServiceImpl implements PersonService
     @Transactional
     public EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException
+            AcmObjectNotFoundException, PipelineProcessException
     {
         Person person = personDao.find(personId);
         Objects.requireNonNull(person, "Person not found.");
@@ -309,14 +314,21 @@ public class PersonServiceImpl implements PersonService
     }
 
     @Override
-    public Person savePerson(Person in, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException
+    public Person savePerson(Person in, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         validateOrganizationAssociations(in);
-        boolean isNew = in.getId() == null;
-        Person person = personDao.save(in);
-        getPersonEventPublisher().publishPersonUpsertEvent(person, isNew, true);
-        return person;
+        PersonPipelineContext pipelineContext = new PersonPipelineContext();
+        // populate the context
+        pipelineContext.setNewPerson(in.getId() == null);
+        pipelineContext.setAuthentication(authentication);
+
+        return personPipelineManager.executeOperation(in, pipelineContext, () -> {
+            boolean isNew = in.getId() == null;
+            Person person = personDao.save(in);
+            personEventPublisher.publishPersonUpsertEvent(person, isNew, true);
+            return person;
+        });
     }
 
     /**
@@ -379,17 +391,19 @@ public class PersonServiceImpl implements PersonService
      * @param authentication
      *            authentication
      * @return Person saved person
+     * @throws PipelineProcessException
      */
     @Override
     public Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException,
+            PipelineProcessException
     {
         Person savedPerson = savePerson(person, authentication);
         return uploadPicturesForPerson(savedPerson, pictures, authentication);
     }
 
     private Person uploadPicturesForPerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException
+            throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         if (pictures != null)
         {
@@ -475,5 +489,15 @@ public class PersonServiceImpl implements PersonService
     public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
     {
         this.personEventPublisher = personEventPublisher;
+    }
+
+    public PipelineManager<Person, PersonPipelineContext> getPersonPipelineManager()
+    {
+        return personPipelineManager;
+    }
+
+    public void setPersonPipelineManager(PipelineManager<Person, PersonPipelineContext> personPipelineManager)
+    {
+        this.personPipelineManager = personPipelineManager;
     }
 }

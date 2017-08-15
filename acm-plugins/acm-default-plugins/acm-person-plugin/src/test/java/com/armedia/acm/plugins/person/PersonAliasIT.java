@@ -38,7 +38,9 @@ import javax.persistence.PersistenceContext;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml" })
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAliasIT
 {
@@ -72,6 +74,7 @@ public class PersonAliasIT
 
         Person p = pa.getPerson();
         p.setId(500L);
+        p.setCreator("creator");
 
         PersonAlias saved = personAliasDao.save(pa);
 

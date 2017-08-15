@@ -1,4 +1,14 @@
 <div ng-controller="Organizations.ActionsController">
+    <div class="col-xs-4">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
+                       permission="restrictOrganization" permission-object-type="ORGANIZATION"
+                       permission-properties="objectInfo" permission-action="disabled">
+                <span translate>organizations.comp.actions.restrict</span>
+            </label>
+        </div>
+    </div>
     <div class="pull-right">
         <div class="btn-group">
             <button class="btn btn-sm btn-default" ng-click="export()">
@@ -9,15 +19,15 @@
                 <i class="fa fa-download"></i>
                 <span translate>organizations.comp.actions.import.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="activate()">
+            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="activate()">
                 <i class="fa fa-play-circle"></i>
                 <span translate>organizations.comp.actions.activate.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="deactivate()">
+            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="deactivate()">
                 <i class="fa fa-stop"></i>
                 <span translate>organizations.comp.actions.deactivate.button</span>
             </button>
-            <button class="btn btn-sm btn-default" ng-click="merge()">
+            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="merge()">
                 <i class="fa fa-code-fork"></i>
                 <span translate>organizations.comp.actions.merge.button</span>
             </button>

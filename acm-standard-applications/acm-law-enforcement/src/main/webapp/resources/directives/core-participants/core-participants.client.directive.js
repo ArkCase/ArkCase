@@ -74,7 +74,9 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 var promiseTypes = ObjectLookupService.getParticipantTypes().then(
                     function (participantTypes) {
-                        scope.participantTypes = participantTypes;
+                        scope.participantTypes = participantTypes.filter(function (el) {
+                            return (el.objectTypes.indexOf(scope.participantsInit.objectType) > -1);
+                        });
                         return participantTypes;
                     }
                 );

@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -42,8 +42,12 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.ORGANIZATION}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);

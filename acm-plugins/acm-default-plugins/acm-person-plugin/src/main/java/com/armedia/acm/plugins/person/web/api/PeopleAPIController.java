@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,13 +45,22 @@ public class PeopleAPIController
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
 
+    @PreAuthorize("#in.id == null or hasPermission(#in.id, 'PERSON', 'editPerson')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person upsertPerson(@RequestBody Person in, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        log.debug("Persist a Person: [{}];", in);
-        return personService.savePerson(in, auth);
+        try
+        {
+            log.debug("Persist a Person: [{}];", in);
+            return personService.savePerson(in, auth);
+        }
+        catch (PipelineProcessException | PersistenceException e)
+        {
+            log.error("Error while saving Person: [{}]", in, e);
+            throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,8 +69,16 @@ public class PeopleAPIController
             @RequestPart(name = "pictures") List<MultipartFile> pictures, Authentication auth)
             throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
-        log.debug("Persist a Person: [{}];", in);
-        return personService.savePerson(in, pictures, auth);
+        try
+        {
+            log.debug("Persist a Person: [{}];", in);
+            return personService.savePerson(in, pictures, auth);
+        }
+        catch (PipelineProcessException | PersistenceException e)
+        {
+            log.error("Error while saving Person: [{}]", in, e);
+            throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,6 +100,7 @@ public class PeopleAPIController
         }
     }
 
+    @PreAuthorize("hasPermission(#personId, 'PERSON', 'viewPersonPage')")
     @RequestMapping(value = "/{personId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Person getPerson(Authentication auth, @PathVariable("personId") Long personId) throws AcmObjectNotFoundException
@@ -117,32 +139,50 @@ public class PeopleAPIController
         }
     }
 
+    @PreAuthorize("hasPermission(#personId, 'PERSON', 'editPerson')")
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
             @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth) throws AcmCreateObjectFailedException,
             AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
-
-        log.debug("Insert Image for a Person: [{}];", personId);
         Person person = personService.get(personId);
-        personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try
+        {
+            log.debug("Insert Image for a Person: [{}];", personId);
+
+            personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (PipelineProcessException | PersistenceException e)
+        {
+            log.error("Error while saving Person: [{}]", person, e);
+            throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
+        }
     }
 
+    @PreAuthorize("hasPermission(#personId, 'PERSON', 'editPerson')")
     @RequestMapping(value = "/{personId}/images", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ResponseEntity saveImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
             @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth) throws AcmCreateObjectFailedException,
             AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
+        try
+        {
+            log.debug("Save Image for a Person: [{}];", personId);
 
-        log.debug("Save Image for a Person: [{}];", personId);
-
-        personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
-        return new ResponseEntity<>(HttpStatus.OK);
+            personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (PipelineProcessException | PersistenceException e)
+        {
+            log.error("Error while saving Person with id: [{}]", personId, e);
+            throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
+        }
     }
 
+    @PreAuthorize("hasPermission(#personId, 'PERSON', 'editPerson')")
     @RequestMapping(value = "/{personId}/images/{imageId}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity deleteImage(@PathVariable("personId") Long personId, @PathVariable("imageId") Long imageId, Authentication auth)

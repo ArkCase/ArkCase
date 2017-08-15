@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,7 +94,7 @@ public interface PersonService
     @Transactional
     EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException;
+            AcmObjectNotFoundException, PipelineProcessException;
 
     /**
      * save image for a person with new file and metadata
@@ -113,7 +114,7 @@ public interface PersonService
     @Transactional
     EcmFile saveImageForPerson(Long personId, MultipartFile image, boolean isDefault, EcmFile metadata, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException;
+            AcmObjectNotFoundException, PipelineProcessException;
 
     /**
      * save person data
@@ -125,8 +126,8 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, Authentication authentication)
-            throws AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmUserActionFailedException;
+    Person savePerson(Person person, Authentication authentication) throws AcmObjectNotFoundException, AcmCreateObjectFailedException,
+            AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException;
 
     /**
      * save person data
@@ -140,6 +141,6 @@ public interface PersonService
      * @return Person saved person
      */
     @Transactional
-    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException;
+    Person savePerson(Person person, List<MultipartFile> pictures, Authentication authentication) throws AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmUpdateObjectFailedException, AcmObjectNotFoundException, PipelineProcessException;
 }
