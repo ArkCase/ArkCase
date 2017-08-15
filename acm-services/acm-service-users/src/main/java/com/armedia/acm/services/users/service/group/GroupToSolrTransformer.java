@@ -52,14 +52,14 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         }
 
         solr.setDescription_parseable(in.getDescription());
-        solr.setObject_sub_type_s(in.getType());
+        solr.setObject_sub_type_s(in.getType().name());
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
-        solr.setStatus_lcs(in.getStatus());
+        solr.setStatus_lcs(in.getStatus().name());
 
         if (in.getParentGroup() != null)
         {
@@ -120,7 +120,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setLast_modified_tdt(in.getModified());
 
         solr.setTitle_parseable(in.getName());
-        solr.setStatus_s(in.getStatus());
+        solr.setStatus_s(in.getStatus().name());
 
         return solr;
     }

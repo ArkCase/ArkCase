@@ -8,11 +8,12 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -55,10 +56,12 @@ public class AcmGroup implements Serializable, AcmEntity
     private String description;
 
     @Column(name = "cm_group_type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private AcmGroupType type;
 
     @Column(name = "cm_group_status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AcmGroupStatus status;
 
     @Column(name = "cm_group_created")
     @Temporal(TemporalType.TIMESTAMP)
@@ -98,28 +101,28 @@ public class AcmGroup implements Serializable, AcmEntity
     @PrePersist
     protected void beforeInsert()
     {
-        if (StringUtils.isEmpty(getType()))
+        if (type == null)
         {
-            setType(AcmGroupType.ADHOC_GROUP.name());
+            type = AcmGroupType.ADHOC_GROUP;
         }
 
-        if (StringUtils.isEmpty(getStatus()))
+        if (status == null)
         {
-            setStatus(AcmGroupStatus.ACTIVE.name());
+            status = AcmGroupStatus.ACTIVE;
         }
     }
 
     @PreUpdate
     public void beforeUpdate()
     {
-        if (StringUtils.isEmpty(getType()))
+        if (type == null)
         {
-            setType(AcmGroupType.ADHOC_GROUP.name());
+            type = AcmGroupType.ADHOC_GROUP;
         }
 
-        if (StringUtils.isEmpty(getStatus()))
+        if (status == null)
         {
-            setStatus(AcmGroupStatus.ACTIVE.name());
+            status = AcmGroupStatus.ACTIVE;
         }
     }
 
@@ -172,22 +175,22 @@ public class AcmGroup implements Serializable, AcmEntity
         this.description = description;
     }
 
-    public String getType()
+    public AcmGroupType getType()
     {
         return type;
     }
 
-    public void setType(String type)
+    public void setType(AcmGroupType type)
     {
         this.type = type;
     }
 
-    public String getStatus()
+    public AcmGroupStatus getStatus()
     {
         return status;
     }
 
-    public void setStatus(String status)
+    public void setStatus(AcmGroupStatus status)
     {
         this.status = status;
     }

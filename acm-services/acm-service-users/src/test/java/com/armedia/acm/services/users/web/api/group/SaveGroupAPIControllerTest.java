@@ -5,6 +5,8 @@ package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
@@ -73,8 +75,8 @@ public class SaveGroupAPIControllerTest extends EasyMockSupport
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String groupAsJson = objectMapper.writeValueAsString(group);
@@ -110,15 +112,15 @@ public class SaveGroupAPIControllerTest extends EasyMockSupport
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         AcmGroup subGroup = new AcmGroup();
 
         subGroup.setName("Sub Group Name");
         subGroup.setDescription("Sub Group Description");
-        subGroup.setType("Sub Group Type");
-        subGroup.setStatus("Sub Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String groupAsJson = objectMapper.writeValueAsString(subGroup);

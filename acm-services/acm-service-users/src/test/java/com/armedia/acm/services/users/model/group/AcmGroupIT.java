@@ -70,8 +70,8 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         AcmGroup saved = getGroupDao().save(group);
         getEntityManager().flush();
@@ -94,8 +94,8 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
 
         // Subgroup
@@ -103,8 +103,8 @@ public class AcmGroupIT
 
         subGroup.setName("SubGroup Name");
         subGroup.setDescription("SubGroup Description");
-        subGroup.setType("SubGroup Type");
-        subGroup.setStatus("SubGroup Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
         subGroup.setParentGroup(group);
 
         AcmGroup savedGroup = getGroupDao().save(subGroup);
@@ -130,8 +130,8 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         AcmGroup saved = getGroupDao().save(group);
         getEntityManager().flush();
@@ -157,16 +157,16 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         // Subgroup
         AcmGroup subGroup = new AcmGroup();
 
         subGroup.setName("SubGroup Name");
         subGroup.setDescription("SubGroup Description");
-        subGroup.setType("SubGroup Type");
-        subGroup.setStatus("SubGroup Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
         subGroup.setParentGroup(group);
 
         AcmGroup savedGroup = getGroupDao().save(subGroup);
@@ -193,8 +193,8 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
 
         // Subgroup
@@ -202,8 +202,8 @@ public class AcmGroupIT
 
         subGroup.setName("SubGroup Name");
         subGroup.setDescription("SubGroup Description");
-        subGroup.setType("SubGroup Type");
-        subGroup.setStatus("SubGroup Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
         subGroup.setParentGroup(group);
 
         getGroupDao().save(group);
@@ -231,8 +231,8 @@ public class AcmGroupIT
 
         group.setName("Group Name");
         group.setDescription("Group Description");
-        group.setType("Group Type");
-        group.setStatus("Group Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
 
         AcmUser supervisor = new AcmUser();
         supervisor.setUserId("test-user");
@@ -249,8 +249,8 @@ public class AcmGroupIT
 
         subGroup.setName("SubGroup Name");
         subGroup.setDescription("SubGroup Description");
-        subGroup.setType("SubGroup Type");
-        subGroup.setStatus("SubGroup Status");
+        group.setType(AcmGroupType.ADHOC_GROUP);
+        group.setStatus(AcmGroupStatus.ACTIVE);
         subGroup.setParentGroup(group);
         subGroup.setSupervisor(group.getSupervisor());
 
