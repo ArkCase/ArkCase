@@ -19,11 +19,11 @@
                 <i class="fa fa-download"></i>
                 <span translate>organizations.comp.actions.import.button</span>
             </button>
-            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="activate()">
+            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="activate()" ng-hide="objectInfo.status == 'ACTIVE'">
                 <i class="fa fa-play-circle"></i>
                 <span translate>organizations.comp.actions.activate.button</span>
             </button>
-            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="deactivate()">
+            <button permission="editOrganization" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="deactivate()" ng-hide="objectInfo.status != 'ACTIVE'">
                 <i class="fa fa-stop"></i>
                 <span translate>organizations.comp.actions.deactivate.button</span>
             </button>
