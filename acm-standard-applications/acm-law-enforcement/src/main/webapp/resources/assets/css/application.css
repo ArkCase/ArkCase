@@ -456,6 +456,10 @@ span.fancytree-title {
     padding-top: 10px;
 }
 
+.dropdown-menu .btn-group{
+    padding-top: 0px;
+}
+
 /* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
 .module-content .content-body .well-sm .navbar .btn-group {
     padding-top: 0px;
