@@ -94,6 +94,7 @@
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
         <property name="cryptoUtils" ref="acmCryptoUtils"/>
         <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+        <property name="verifierService" ref="calendarServiceProvider"/>
     </bean>
 
     <util:constant id="propertyDefinitionSubject"

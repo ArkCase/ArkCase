@@ -1,12 +1,15 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.armedia.acm.calendar.config.service.EmailCredentials;
+import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
@@ -31,6 +34,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,6 +45,10 @@ import java.util.List;
 @ContextConfiguration(locations = { "/spring/spring-library-acm-encryption.xml", "/spring/spring-properties-encryption.xml" })
 public class JPAAcmOutlookFolderCreatorDaoTest
 {
+
+    private static final String USER_ID = "FOLDER_CREATOR_DAO";
+
+    private static final String SYSTEM_EMAIL_ADDRESS_FIELD = "systemEmailAddress";
 
     private static final String SYSTEM_PASSWORD = "password";
 
@@ -62,7 +70,13 @@ public class JPAAcmOutlookFolderCreatorDaoTest
     private TypedQuery<AcmOutlookFolderCreator> mockedFolderCreatorQuery;
 
     @Mock
+    private TypedQuery<AcmOutlookFolderCreator> mockedCheckCredentialsQuery;
+
+    @Mock
     private List<AcmOutlookFolderCreator> mockedResultList;
+
+    @Mock
+    private EmailCredentialsVerifierService mockedVerifierService;
 
     @Autowired
     private AcmCryptoUtils cryptoUtils;
@@ -161,7 +175,7 @@ public class JPAAcmOutlookFolderCreatorDaoTest
 
         verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.systemEmailAddress = :systemEmailAddress",
                 AcmOutlookFolderCreator.class);
-        verify(mockedFolderCreatorQuery).setParameter("systemEmailAddress", SYSTEM_EMAIL);
+        verify(mockedFolderCreatorQuery).setParameter(SYSTEM_EMAIL_ADDRESS_FIELD, SYSTEM_EMAIL);
         verify(mockedFolderCreatorQuery).getResultList();
         verify(mockedResultList).isEmpty();
         verify(mockedResultList).get(0);
@@ -187,7 +201,7 @@ public class JPAAcmOutlookFolderCreatorDaoTest
 
         verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.systemEmailAddress = :systemEmailAddress",
                 AcmOutlookFolderCreator.class);
-        verify(mockedFolderCreatorQuery).setParameter("systemEmailAddress", SYSTEM_EMAIL);
+        verify(mockedFolderCreatorQuery).setParameter(SYSTEM_EMAIL_ADDRESS_FIELD, SYSTEM_EMAIL);
         verify(mockedFolderCreatorQuery).getResultList();
         verify(mockedResultList).isEmpty();
         verify(mockedEm).merge(any(AcmOutlookFolderCreator.class));
@@ -271,6 +285,36 @@ public class JPAAcmOutlookFolderCreatorDaoTest
         assertThat(captured.getObjectType(), is(CASE_FILE));
         assertThat(captured.getFolderCreator().getSystemEmailAddress(), is(SYSTEM_EMAIL));
         assertThat(decryptValue(captured.getFolderCreator().getSystemPassword()), is(SYSTEM_PASSWORD));
+
+    }
+
+    @Test
+    public void testCheckFolderCreatorsCredentials() throws Exception
+    {
+        // given
+        when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedCheckCredentialsQuery);
+        AcmOutlookFolderCreator creator1 = new AcmOutlookFolderCreator("a." + SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        creator1.setId(1L);
+        AcmOutlookFolderCreator creator2 = new AcmOutlookFolderCreator("b." + SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        creator2.setId(2L);
+        AcmOutlookFolderCreator creator3 = new AcmOutlookFolderCreator("c." + SYSTEM_EMAIL, encryptValue(SYSTEM_PASSWORD));
+        creator3.setId(3L);
+        when(mockedCheckCredentialsQuery.getResultList()).thenReturn(Arrays.asList(creator1, creator2, creator3));
+        when(mockedVerifierService.verifyEmailCredentials(USER_ID, new EmailCredentials("a." + SYSTEM_EMAIL, SYSTEM_PASSWORD)))
+                .thenReturn(false);
+        when(mockedVerifierService.verifyEmailCredentials(USER_ID, new EmailCredentials("b." + SYSTEM_EMAIL, SYSTEM_PASSWORD)))
+                .thenReturn(true);
+        when(mockedVerifierService.verifyEmailCredentials(USER_ID, new EmailCredentials("c." + SYSTEM_EMAIL, SYSTEM_PASSWORD)))
+                .thenReturn(false);
+
+        // when
+        List<AcmOutlookFolderCreator> folderCreators = outlookFolderCreatorDao.checkFolderCreatorCredentials();
+
+        // then
+        verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc", AcmOutlookFolderCreator.class);
+        verify(mockedCheckCredentialsQuery).getResultList();
+
+        assertThat(folderCreators, containsInAnyOrder(creator1, creator3));
 
     }
 
