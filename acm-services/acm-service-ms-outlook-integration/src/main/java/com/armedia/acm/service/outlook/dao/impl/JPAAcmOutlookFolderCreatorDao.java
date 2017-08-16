@@ -1,5 +1,7 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
+import com.armedia.acm.calendar.config.service.EmailCredentials;
+import com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
@@ -20,6 +22,7 @@ import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
@@ -27,6 +30,8 @@ import java.util.List;
  */
 public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 {
+
+    private static final String USER_ID = "FOLDER_CREATOR_DAO";
 
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
@@ -38,6 +43,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     private AcmCryptoUtils cryptoUtils;
 
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
+
+    private EmailCredentialsVerifierService verifierService;
 
     /*
      * (non-Javadoc)
@@ -185,6 +192,47 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         em.merge(objectReference);
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#checkFolderCreatorCredentials()
+     */
+    @Override
+    public List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
+    {
+        log.debug("Checking calendar folder creators with invalid credentials.");
+
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc",
+                AcmOutlookFolderCreator.class);
+
+        List<AcmOutlookFolderCreator> allCreators = query.getResultList();
+        allCreators.stream().forEach(c -> em.detach(c));
+
+        return allCreators.stream().map(c -> {
+            try
+            {
+                // set decrypted password so it can be used to verify credentials against exchange server
+                c.setSystemPassword(decryptValue(c.getSystemPassword()));
+                return c;
+            } catch (AcmEncryptionException e)
+            {
+                log.warn(
+                        "Error while decrypting password for 'AcmOutlookFolderCreator' instance for user with [{}] system email address. Cannot check its' validity.",
+                        c.getSystemEmailAddress(), e);
+                return null;
+            }
+            // filter any potential null values that might be present due to decryption exception, and all instances
+            // that doesn't have valid credentials
+        }).filter(c -> c != null).filter(c -> !verifierService.verifyEmailCredentials(USER_ID,
+                new EmailCredentials(c.getSystemEmailAddress(), c.getSystemPassword()))).map(c -> {
+                    // remove the password, we don't want to send decrypted password over the wire back to the user
+                    c.setSystemPassword(null);
+                    c.setOutlookObjectReferences(null);
+                    return c;
+                }).collect(Collectors.toList());
+
+    }
+
     private String decryptValue(String encrypted) throws AcmEncryptionException
     {
         String decryptedValue = new String(cryptoUtils.decryptData(encryptionProperties.getSymmetricKey(), Base64.decodeBase64(encrypted),
@@ -225,6 +273,15 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     public void setEncryptionProperties(AcmEncryptablePropertyEncryptionProperties encryptionProperties)
     {
         this.encryptionProperties = encryptionProperties;
+    }
+
+    /**
+     * @param verifierService
+     *            the verifierService to set
+     */
+    public void setVerifierService(EmailCredentialsVerifierService verifierService)
+    {
+        this.verifierService = verifierService;
     }
 
 }

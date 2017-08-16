@@ -13,6 +13,7 @@ import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.DayOfWeek;
@@ -26,6 +27,7 @@ import java.util.List;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 3, 2017
  *
  */
+@Ignore
 public class AcmCalendarEventTest
 {
 
