@@ -9,10 +9,12 @@ import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
-
+import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +60,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     {
         return leaveCurrentQueueBusinessRule;
     }
+
+
+    private AcmObjectLockService acmObjectLockService;
 
     public void setLeaveCurrentQueueBusinessRule(LeaveCurrentQueueBusinessRule leaveCurrentQueueBusinessRule)
     {
@@ -158,7 +163,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             if (nextPossibleQueues.isEmpty())
             {
                 errorList = Arrays.asList(String.format("From the %s queue, it is not possible to move to any other queue.", nextQueue));
-            } else if (!nextPossibleQueues.contains(nextQueue))
+            }
+            else if (!nextPossibleQueues.contains(nextQueue))
             {
                 errorList = Arrays.asList(
                         String.format("From the %s queue, it is not possible to move to the %s queue.", nextQueue, nextPossibleQueues));
@@ -174,6 +180,11 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
+
+
+        getAcmObjectLockService().removeLock(caseId, CaseFileConstants.OBJECT_TYPE, AcmObjectLockConstants.OBJECT_LOCK,
+                context.getAuthentication());
+
 
         // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
@@ -242,6 +253,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
             processVariables.put("TASK_NAME", onEnterModel.getTaskName());
             processVariables.put("TASK_OWNING_GROUP", onEnterModel.getTaskOwningGroup());
             getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
+
+            getCaseFileDao().getEm().flush();
+            caseFile = getCaseFileDao().find(caseFile.getId());
             getSaveCaseFileBusinessRule().applyRules(caseFile);
         }
     }
@@ -252,6 +266,17 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", caseFile.getId());
         return processVariables;
+    }
+
+
+    public AcmObjectLockService getAcmObjectLockService()
+    {
+        return acmObjectLockService;
+    }
+
+    public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
+    {
+        this.acmObjectLockService = acmObjectLockService;
     }
 
 }
