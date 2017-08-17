@@ -22,4 +22,6 @@ public interface AcmOutlookFolderCreatorDao
 
     List<AcmOutlookFolderCreator> checkFolderCreatorCredentials();
 
+    void updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException;
+
 }
