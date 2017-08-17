@@ -154,4 +154,18 @@ public class AcmQueue implements Serializable, AcmEntity
     {
         this.modifier = modifier;
     }
+
+    @Override
+    public String toString()
+    {
+        return "AcmQueue{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", displayOrder=" + displayOrder +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                '}';
+    }
 }
