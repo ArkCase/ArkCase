@@ -4,7 +4,7 @@ import com.armedia.acm.auth.LoginEvent;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import org.slf4j.Logger;

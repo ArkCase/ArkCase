@@ -1,4 +1,4 @@
-package com.armedia.acm.services.users.dao.ldap;
+package com.armedia.acm.services.users.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -79,7 +79,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         } catch (PersistenceException pe)
         {
-            log.error("Could not find user record: " + pe.getMessage(), pe);
+            log.error("Could not find user record: {}", pe.getMessage(), pe);
         }
 
         return null;

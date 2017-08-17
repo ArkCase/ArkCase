@@ -3,7 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
