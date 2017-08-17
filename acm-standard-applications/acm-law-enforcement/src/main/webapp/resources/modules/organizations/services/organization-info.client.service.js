@@ -184,6 +184,9 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             if (Util.isEmpty(data)) {
                 return false;
             }
+            if (data.organizationId && !Util.isArray(data.participants)) {
+                return false;
+            }
             return true;
         };
 

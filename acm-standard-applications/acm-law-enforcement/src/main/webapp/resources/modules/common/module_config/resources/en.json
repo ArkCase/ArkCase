@@ -540,10 +540,11 @@
     "person.label": "Person",
     "type.label": "Person Association Type",
     "btnCancel.text": "Cancel",
-    "btnOk.text": "Add Person",
+    "btnOk.text": "Save Person",
     "setPrimary.label": "Set As Primary?",
     "radioYes.text": "Yes",
-    "radioNo.text": "No"
+    "radioNo.text": "No",
+    "duplicatePersonRoleErrorMessage": "Person already has the selected association" 
   },
   "common.editPerson": {
     "title": "Edit person"
@@ -588,7 +589,8 @@
     "btnOk.text": "Save Organization",
     "setPrimary.label": "Set As Primary?",
     "radioYes.text": "Yes",
-    "radioNo.text": "No"
+    "radioNo.text": "No",
+    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
   },
   "common.addObjectAssociation": {
     "title.add": "Add {{objectLabel}} Association",

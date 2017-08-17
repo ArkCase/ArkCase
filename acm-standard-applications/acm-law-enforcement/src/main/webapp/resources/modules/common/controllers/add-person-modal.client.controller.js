@@ -11,6 +11,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
+            $scope.returnValueValidationFunction = params.returnValueValidationFunction;
+            $scope.duplicatePersonRoleError = false;
 
             $scope.showSetPrimary = params.showSetPrimary;
 
@@ -44,7 +46,16 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 if ($scope.showDescription) {
                     retValue['description'] = $scope.description;
                 }
-                $modalInstance.close(retValue);
+                if ($scope.returnValueValidationFunction) {
+                    var validationResult = $scope.returnValueValidationFunction(retValue);
+                    if (validationResult.valid) {
+                        $modalInstance.close(retValue);
+                    } else {
+                        $scope.duplicatePersonRoleError = validationResult.duplicatePersonRoleError;
+                    }
+                } else {
+                    $modalInstance.close(retValue);
+                }
             };
 
             $scope.pickPerson = function () {
@@ -55,7 +66,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
 
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
-                params.filter = '"Object Type": PERSON';
+                params.filter = '"Object Type": PERSON &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
                 var modalInstance = $modal.open({
