@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "Application Role",
     "security.ldapConfig": "LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "Add New Directory",
+    "security.ldapConfig.addNewMember": "Add New Member",
+    "security.ldapConfig.addMembers": "Add Members",
+    "security.ldapConfig.addSubgroup": "Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "Delete LDAP group",
+    "security.ldapConfig.removeGroup": "Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "Edit Member",
+    "security.ldapConfig.removeMember": "Remove Member",
     "security.ldapConfig.table.ldapUrl": "LDAP Url",
     "security.ldapConfig.table.directoryName": "Directory Name",
     "security.ldapConfig.data": {
@@ -68,7 +78,9 @@
       "insert.success": "Successfully inserted new row.",
       "insert.error": "Error inserting new row.",
       "update.success": "Successfully updated row.",
-      "update.error": "Error updating row."
+      "update.error": "Error updating row.",
+      "insert.template.success": "Successfully created template",
+      "insert.template.error": "Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "Cancel",
@@ -100,7 +112,7 @@
         "description": "Description",
         "descriptionPlaceholder": "Enter Description",
         "btn": {
-          "ok": "Add Ad-Hoc Group",
+          "ok": "Add Group",
           "cancel": "Cancel"
         }
       },
@@ -136,7 +148,7 @@
           "lastName": "Enter last name",
           "email": "Enter email",
           "password": "Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "7",
           "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -217,6 +229,143 @@
     "security.selectPrivileges.name": "Name",
     "security.modules": "Modules",
     "security.modules.module": "Module",
+    "security.ldap.user.management": {
+      "title": "LDAP User Management",
+      "cloneButton": "Clone User",
+      "user": "User"
+    },
+    "security.calendarConfiguration": {
+      "title": "Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "Enter System Email Address",
+        "password.placeholder": "Enter System Password",
+        "purge.placeholder": "Choose Purge Option",
+        "purgeDays.placeholder": "Enter Days",
+        "save.button": "Save",
+        "validate.button": "Validate",
+        "purge.label": "Purge",
+        "email.label": "System Email Address",
+        "password.label": "System Password",
+        "purgeDays.label": "Days",
+        "emailValid": "System Email Address is valid",
+        "emailNotValid": "System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "Retain Indefinitely",
+          "objectClosed": "Object = 'Closed'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "Cases",
+          "complaints.label": "Complaints",
+          "tasks.label": "Tasks"
+        }
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "Save",
+        "deliveryMethods.label": "Delivery Methods",
+        "enableDocumentEmail.checkbox": "Documents can be emailed",
+        "enableDocumentAttach.checkbox": "Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "Documents can be sent as hyperlinks",
+        "serverSettings.label": "Server Settings",
+        "serverType.label": "Server Type",
+        "serverType.placeholder": "Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "For details refer to Microsoft Exchange Configuration",
+        "server.label": "Server Address",
+        "server.placeholder": "Enter Server Address",
+        "port.label": "Port",
+        "port.placeholder": "Enter Port",
+        "encryption.label": "Encryption",
+        "encryption.placeholder": "Choose Encryption",
+        "encryptionOptions": {
+          "off": "OFF",
+          "ssl-tls": "SSL/TLS",
+          "starttls": "STARTTLS"
+        },
+        "username.label": "Username",
+        "username.placeholder": "Enter Username",
+        "password.label": "Password",
+        "password.placeholder": "Enter Password",
+        "userFrom.label": "From",
+        "userFrom.placeholder": "Enter Email From field",
+        "validate.label": "SMTP Validation",
+        "validate.button": "Validate",
+        "smtpValid": "SMTP settings are valid",
+        "smtpNotValid": "SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "Email Templates",
+      "table.columns": {
+        "templateName": "Template Name",
+        "emailPattern": "Email Pattern",
+        "source": "Source",
+        "objectTypes": "Object Types",
+        "actions": "Actions",
+        "modified": "Modified Date",
+        "modifier": "Modified By"
+      },
+      "modal": {
+        "title": "Email Template",
+        "templateName.label": "Template Name",
+        "templateName.placeholder": "Enter Template Name",
+        "emailPattern.label": "Email Pattern",
+        "emailPattern.placeholder": "Enter Email Pattern",
+        "source.label": "Source",
+        "objectTypes.label": "Object Types",
+        "actions.label": "Actions",
+        "manual.label": "Manual",
+        "automated.label": "Automated",
+        "browse": "Browse",
+        "save": "Save",
+        "cancel": "Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "Save",
+        "enableExchangeIntegration.checkbox": "Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "Exchange Server Version",
+        "exchangeServerVersion.placeholder": "Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "Enable Autodiscovery",
+        "clientAccessServer.label": "Client Access Server",
+        "clientAccessServer.description": "Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "Enter Client Access Server",
+        "exchangeDefaultAccess.label": "Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "None",
+          "Owner": "Owner",
+          "PublishingEditor": "PublishingEditor",
+          "Editor": "Editor",
+          "PublishingAuthor": "PublishingAuthor",
+          "Author": "Author",
+          "NoneditingAuthor": "NoneditingAuthor",
+          "Reviewer": "Reviewer",
+          "Contributor": "Contributor",
+          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "Custom"
+        }
+      }
+    },
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
@@ -227,12 +376,12 @@
     "workflows.title": "Workflows",
     "workflows.config": "Workflow Configuration",
     "workflows.config.bpmn.upload": "Upload",
-    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",    
-    "workflows.config.bpmn.modal": {        
-        "label.description": "Description",
-        "label.noFileSelected": "No File Selected",
-        "btnCancel.text": "Cancel",
-        "btnOk.text": "Upload Workflow"
+    "workflows.config.bpmn.addNewWorkflow": "Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "Description",
+      "label.noFileSelected": "No File Selected",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Upload Workflow"
     },
     "workflows.config.activate": {
       "error": "Cant make this process active!",
@@ -260,17 +409,17 @@
       "download": "Download",
       "replaceFile": "Replace File",
       "versionHistory": "Version History",
-      "diagram": "en-in_Process Diagram"
+      "diagram": "Process Diagram"
     },
     "workflows.config.upload": {
       "success": "Successfully uploaded new process definition",
       "error": "Error uploading new process definition"
     },
     "workflows.config.diagram": {
-      "title": "en-in_Process Diagram",
-      "error.loading": "en-in_Diagram can't be loaded",
+      "title": "Process Diagram",
+      "error.loading": "Diagram can't be loaded",
       "modal": {
-        "btnClose.text": "en-in_Close"
+        "btnClose.text": "Close"
       }
     },
     "formWorkflows.title": "Form/Workflow Link",
@@ -281,25 +430,33 @@
     "formWorkflows.link.editRole.save.error": "Can't save Link Forms/Workflows configuration",
     "application": {
       "title": "Application",
+      "locale.config": {
+        "title": "Locale Configuration",
+        "defaultLabel": "Default Locale:"
+      },
       "labels.config": {
-        "defaultLabel": "Default",
-        "applyBtn": "Apply",
-        "resetModule": "Reset Module",
-        "resetModule.confirm": "Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "Reset current module (delete custom resources)",
-        "resetAll": "Reset All",
-        "resetAll.confirm": "Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "Reset all resources (delete all custom resources)",
-        "refreshAll": "Refresh All",
-        "refreshAll.title": "Refresh all resources (keep custom resources)",
         "title": "Label Configuration",
-        "filterBy": "Filter By Id",
-        "filterByValue": "Filter By Value",
+        "progressMessage": "Updating labels...",
         "data": {
           "description": "Description",
           "defaultValue": "Default Value",
           "id": "ID",
           "value": "Value"
+        },
+        "btnReset": {
+          "label": "Reset...",
+          "title": "Reset label resources to default"
+        },
+        "setToDefault": {
+          "dialog.title": "Reset labels to default",
+          "chkResetCustom.label": "Clear customized labels as well?",
+          "btnCancel.label": "Cancel",
+          "btnCancel.title": "Close the dialog with no action",
+          "btnReset.label": "Reset",
+          "btnReset.title": "Clear customized labels and reset them to default values",
+          "btnRefresh.label": "Reset",
+          "btnRefresh.title": "Reset labels to default values but keep customized labels unchanged",
+          "resetCustom.confirm": "Are you sure you want remove selected custom resources?"
         }
       },
       "module.config": {
@@ -363,11 +520,11 @@
         "created": "Created",
         "modified": "Modified",
         "creator": "Creator",
-        "modifier": "Modifier",
+        "modifier": "Modified By",
         "activated": "Status",
         "objectType": "Object Type",
         "version": "Version",
-        "templateVersionActive" : "Active"
+        "templateVersionActive": "Active"
       },
       "templates.fieldNames.label": "Map fields to values from the template",
       "templates.querySelect": {
@@ -377,7 +534,7 @@
         "table.columns": {
           "beanId": "Bean ID",
           "jpaQuery": "JPA Query",
-          "queryType": "Query Type"
+          "objectType": "Query Type"
         }
       },
       "templates.modal": {
@@ -401,7 +558,7 @@
       "mergefields.version.grid": {
         "mergingVersion": "Version",
         "modified": "Modified",
-        "modifier": "Modifier",
+        "modifier": "Modified By",
         "mergingActiveVersion": "Active"
       },
       "mergefields.version.modal": {
@@ -418,6 +575,100 @@
       "target": "Target"
     },
     "forms.message.delete.success": "Successfully deleted row.",
-    "forms.message.delete.error": "Error deleting row."
+    "forms.message.delete.error": "Error deleting row.",
+    "documentManagement": {
+      "title": "Document Management",
+      "cmisConfiguration": "CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "New CMIS Configuration",
+          "edit": "Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "Cancel",
+          "ok": "OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "CMIS ID",
+          "placeholder": "CMIS ID"
+        },
+        "baseUrl": {
+          "label": "Base URL",
+          "placeholder": "Base URL"
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "Use Alfresco Extension",
+          "placeholder": "Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "Endpoint",
+          "placeholder": "Endpoint"
+        },
+        "maxIdle": {
+          "label": "Maximum Idle",
+          "placeholder": "Maximum Idle"
+        },
+        "maxActive": {
+          "label": "Maximum Active",
+          "placeholder": "Maximum Active"
+        },
+        "maxWait": {
+          "label": "Maximum Wait",
+          "placeholder": "Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "Minimum Eviction Milliseconds",
+          "placeholder": "Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "Eviction Check Interval Milliseconds",
+          "placeholder": "Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "Reconnect Count",
+          "placeholder": "Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "Reconnect Frequency",
+          "placeholder": "Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "Repository Id",
+          "placeholder": "Repository Id"
+        },
+        "versioningState": {
+          "label": "Versioning State",
+          "placeholder": "Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "Cancel",
+        "deleteBtn": "Cofirm Delete",
+        "headerText": "You are about to delete CMIS Configuration:",
+        "bodyText": "Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "Successfully deleted configuration.",
+        "delete.error": "Error deleting configuration.",
+        "insert.success": "Successfully created new configuration row.",
+        "insert.error": "Error creating new configuration row.",
+        "update.success": "Successfully updated configuration row.",
+        "update.error": "Error updating configuration row."
+      }
+    }
   }
 }

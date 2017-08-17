@@ -39,11 +39,10 @@ import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
- *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-acm-encryption.xml", "/spring/spring-properties-encryption.xml" })
-public class JPAAcmOutlookFolderCreatorDaoTest
+public class JPAAcmOutlookFolderCreatorDaoIT
 {
 
     private static final String USER_ID = "FOLDER_CREATOR_DAO";

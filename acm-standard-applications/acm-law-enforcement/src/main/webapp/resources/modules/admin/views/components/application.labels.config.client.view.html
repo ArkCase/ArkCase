@@ -1,3 +1,27 @@
+<panel-view header="{{'admin.application.locale.config.title' | translate}}" collapsible="false">
+    <div ng-controller="Admin.LocaleConfigController">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div id="navbarLocale" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span translate>admin.application.locale.config.defaultLabel</span>
+                                ({{defaultLocale.native}})
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-repeat="x in languagesDropdownOptions">
+                                    <a href="#" ng-click="changeDefaultLocale($event, x.code)">{{x.native}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</panel-view>
 <panel-view header="{{'admin.application.labels.config.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.LabelsConfigController">
         <nav class="navbar navbar-default">
@@ -20,46 +44,15 @@
                         </div>
                     </form>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span translate>admin.application.labels.config.defaultLabel</span>
-                                ({{defaultLocale.native}})
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li ng-repeat="x in languagesDropdownOptions">
-                                    <a href="#" ng-click="changeDefaultLocale($event, x.code)">{{x.native}}</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <span class="navbar-form navbar-left" translate ng-show="disabledInputs">admin.application.labels.config.progressMessage</span>
+
                     <form class="navbar-form navbar-right ">
-                        <!-- Refresh resources button -->
-                        <button class="btn btn-sm btn-info"
-                                ng-click="refreshAllResources()"
+                        <button class="btn btn-sm btn-danger"
+                                ng-click="resetToDefault()"
                                 ng-disabled="disabledInputs"
-                                title="{{'admin.application.labels.config.refreshAll.title' | translate}}">
+                                title="{{'admin.application.labels.config.btnReset.title' | translate}}">
                             <i class="fa fa-refresh"></i>
-                            <span translate>admin.application.labels.config.refreshAll</span>
-                        </button>
-
-                        <!-- Current module reset button -->
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetCurrentModuleResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetModule.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetModule</span>
-                        </button>
-
-                        <!-- All modules reset button -->
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetAllResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetAll.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetAll</span>
+                            <span translate>admin.application.labels.config.btnReset.label</span>
                         </button>
                     </form>
                 </div>

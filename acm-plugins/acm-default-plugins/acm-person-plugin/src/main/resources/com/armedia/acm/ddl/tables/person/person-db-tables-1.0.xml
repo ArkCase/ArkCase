@@ -794,4 +794,13 @@
         </preConditions>
         <dropColumn tableName="acm_person" columnName="cm_default_organization"/>
     </changeSet>
+    
+    <changeSet id="47-add-person-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_person">
+            <column name="cm_person_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    
 </databaseChangeLog>

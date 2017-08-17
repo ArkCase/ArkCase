@@ -6,220 +6,322 @@
     },
     "widgets": {
       "casesByQueue": {
-        "title": "de_Active Case Files by Queue",
-        "description": "de_Displays active case files by queue",
-        "xAxis": "de_Queues",
-        "yAxis": "de_Number of Case Files",
-        "noDataMessage": "de_Currently there are no cases info"
+        "title": "Aktive Falldateien nach Warteschlange",
+        "description": "Anzeige aktiver Falldateien nach Warteschlange",
+        "xAxis": "Warteschlangen",
+        "yAxis": "Anzahl der Falldateien",
+        "noDataMessage": "Derzeit gibt es keine Fälle Info"
       },
       "casesByStatus": {
-        "title": "de_Cases By Status",
-        "description": "de_Displays cases by status",
+        "title": "Fälle nach Status",
+        "description": "Anzeigen von Fällen nach Status",
         "timePeriod": {
-          "label": "de_Select Time Period",
-          "lastWeek": "de_Last Week",
-          "lastMonth": "de_Last Month",
-          "lastYear": "de_Last Year",
-          "all": "de_All"
+          "label": "Zeitperiode auswählen",
+          "lastWeek": "Letzte Woche",
+          "lastMonth": "Letzter Monat",
+          "lastYear": "Letztes Jahr",
+          "all": "Alles"
         },
-        "noDataMessage": "de_Currently there are no cases info"
+        "noDataMessage": "Derzeit gibt es keine Fälle Info"
       },
       "myCases": {
-        "title": "de_My Cases",
-        "description": "de_Displays my cases",
-        "noDataMessage": "de_Currently there are no cases info",
+        "title": "Meine Fälle",
+        "description": "Zeigt meine Fälle",
+        "noDataMessage": "Derzeit gibt es keine Fälle Info",
         "table": {
           "header": {
-            "caseId": "de_ID",
-            "title": "de_Title",
-            "priority": "de_Priority",
-            "status": "de_Status"
-          }
+            "caseId": "ID",
+            "title": "Titel",
+            "priority": "Priorität",
+            "created": "Erstellt",
+            "modified": "Modifiziert",
+            "status": "Status"
+          },
+          "overdue.tooltip": "Fall ist überfällig",
+          "deadline.tooltip": "Deadline nähert sich"
         }
       },
       "myComplaints": {
-        "title": "de_My Complaints",
-        "description": "de_Displays my complaints",
+        "title": "Meine Beschwerden",
+        "description": "Zeigt meine Beschwerden",
         "table": {
           "header": {
-            "number": "de_ID",
-            "title": "de_Title",
-            "priority": "de_Priority",
-            "created": "de_Created",
-            "status": "de_Status"
+            "nummer": "ID",
+            "title": "Titel",
+            "priority": "Priorität",
+            "created": "Erstellt",
+            "modified": "Modifiziert",
+            "status": "Status"
           },
-          "noDataMessage": "de_Currently there are no complaints info"
+          "overdue.tooltip": "Beschwerde ist überfällig",
+          "deadline.tooltip": "Deadline ist Annäherung",
+          "noDataMessage": "Derzeit gibt es keine Beschwerden info"
         }
       },
       "myTasks": {
-        "title": "de_My Tasks",
-        "description": "de_Displays my tasks",
-        "rowNumbers.label": "de_Default Row Numbers",
-        "rowNumbers.placeholder": "de_Enter Default Row Numbers",
+        "title": "Meine Aufgaben",
+        "description": "Zeigt meine Aufgaben",
+        "rowNumbers.label": "Standard Row Numbers",
+        "rowNumbers.placeholder": "Default Row Numbers eingeben",
         "table": {
           "header": {
-            "taskId": "de_ID",
-            "title": "de_Title",
-            "priority": "de_Priority",
-            "dueDate": "de_Due",
-            "status": "de_Status",
-            "objectId": "de_Object ID"
+            "taskId": "ID",
+            "title": "Titel",
+            "priority": "Priorität",
+            "dueDate": "Due",
+            "status": "Status",
+            "objectId": "Objekt-ID"
           },
-          "overdue.tooltip": "de_Task is Overdue",
-          "deadline.tooltip": "de_Deadline is Approaching"
+          "overdue.tooltip": "Aufgabe ist überfällig",
+          "deadline.tooltip": "Deadline nähert sich"
         },
-        "noDataMessage": "de_Currently there are no tasks info"
+        "noDataMessage": "Derzeit gibt es keine Aufgaben info"
       },
       "newComplaints": {
-        "title": "de_New Complaints",
-        "description": "de_Displays new complaints",
+        "title": "Neue Beschwerden",
+        "description": "Zeigt neue Beschwerden",
         "dueDate": {
-          "label": "de_Select Due Date Period",
-          "pastDue": "de_Past Due",
-          "dueTomorrow": "de_Due Tomorrow",
-          "dueWeek": "de_Due in 7 Days",
-          "dueMonth": "de_Due in Month",
-          "all": "de_All"
+          "label": "Fälligkeitsdatum auswählen",
+          "pastDue": "Vergangenheit",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Fällig in 7 Tagen",
+          "DueMonth": "Fällig im Monat",
+          "all": "Alles"
         },
-        "noDataMessage": "de_Currently there are no complaints info"
+        "noDataMessage": "Derzeit gibt es keine Beschwerden info"
       },
       "newCases": {
-        "title": "de_New Cases",
-        "description": "de_Displays new cases",
-        "noDataMessage": "de_Currently there are no cases info"
+        "title": "Neue Fälle",
+        "description": "Zeigt neue Fälle",
+        "noDataMessage": "Derzeit gibt es keine Fälle Info"
       },
       "teamWorkload": {
-        "title": "de_Team Workload",
-        "description": "de_Displays team workload",
+        "title": "Team Workload",
+        "description": "Anzeige der Teamarbeit",
         "dueDate": {
-          "label": "de_Select Due Date Period",
-          "pastDue": "de_Past Due",
-          "dueTomorrow": "de_Due Tomorrow",
-          "dueWeek": "de_Due in 7 Days",
-          "dueMonth": "de_Due in Month",
-          "all": "de_All"
+          "label": "Fälligkeitsdatum auswählen",
+          "pastDue": "Vergangenheit",
+          "dueTomorrow": "Bis morgen",
+          "dueWeek": "Fällig in 7 Tagen",
+          "dueMonth": "Fällig im Monat",
+          "all": "Alles"
         },
-        "noDataMessage": "de_Currently there are no team tasks info"
+        "noDataMessage": "Derzeit gibt es keine Teamaufgaben info"
+      },
+      "workflowReport": {
+        "title": "Arbeitsablauf-Bericht",
+        "description": "Arbeitsablauf-Bericht anzeigen",
+        "rowNumbers.label": "Standard-Reihennummern",
+        "rowNumbers.placeholder": "Standard-Zeilennummern: Eintragen",
+        "table": {
+          "header": {
+            "taskId": "Aufgaben-ID",
+            "taskParentType": "Übergeordneter Typ",
+            "taskParentName": "Elternname",
+            "processName": "Geschäftsprozessname",
+            "taskName": "Aufgabennname"
+          }
+        },
+        "noDataMessage": "Derzeit gibt es keinen Workflow-Report-Info"
       },
       "weather": {
-        "description": "de_Displays weather",
+        "description": "Zeigt Wetter",
         "label": {
-          "current": "de_Current:",
-          "enterLocation": "de_Enter Location",
-          "description": "de_Display the current temperature of a city",
-          "location": "de_Location",
-          "insertLocationInConfiguration": "de_Please insert a location in the widget configuration"
+          "current": "Aktuell:",
+          "enterLocation": "Ort eingeben",
+          "description": "Anzeige der aktuellen Temperatur einer Stadt",
+          "location": "Ort",
+          "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen"
         },
-        "title": "de_Weather",
-        "noDataMessage": "de_Currently there are no weather info"
+        "title": "Wetter",
+        "noDataMessage": "Derzeit gibt es keine Wetterinfo"
       },
       "news": {
-        "description": "de_Displays news",
+        "description": "Zeigt Nachrichten",
         "label": {
-          "enterFeedUrl": "de_Enter Feed url",
-          "description": "de_Displays a RSS/Atom feed",
-          "feedUrl": "de_Feed Url",
-          "insertUrl": "de_Please insert a feed url in the widget configuration"
+          "enterFeedUrl": "Feed-URL eingeben",
+          "description": "Zeigt einen RSS / Atom-Feed",
+          "feedUrl": "Feed Url",
+          "InsertUrl": "Bitte fügst du eine Feed-URL in die Widget-Konfiguration ein"
         },
-        "title": "de_News",
-        "noDataMessage": "de_Currently there is no RSS/info"
+        "title": "Nachrichten",
+        "noDataMessage": "Derzeit gibt es kein RSS / info"
       },
       "details": {
-        "title": "de_Details",
-        "description": "de_Displays case details",
-        "noDataMessage": "de_Currently there are no details"
+        "title": "Details",
+        "description": "Zeigt Falldetails",
+        "noDataMessage": "Derzeit gibt es keine Details"
       },
       "people": {
-        "title": "de_People",
-        "description": "de_Displays people details",
-        "noDataMessage": "de_Currently there are no people to display"
+        "title": "Menschen",
+        "description": "Zeigt Personen Details",
+        "noDataMessage": "Derzeit gibt es keine Personen zum Anzeigen"
+      },
+      "ids": {
+        "title": "ID",
+        "description": "Zeigt die Identifikationsnummer an",
+        "noDataMessage": "Derzeit sind keine IDs anzuzeigen"
+      },
+      "complaints": {
+        "title": "Beschwerden",
+        "description": "Zeigt Beschwerdedetails",
+        "noDataMessage": "Derzeit gibt es keine Beschwerden zur Anzeige"
+      },
+      "cases": {
+        "title": "Fälle",
+        "description": "Zeigt Falldetails",
+        "noDataMessage": "Momentan gibt es keine Fälle"
       },
       "documents": {
-        "title": "de_Documents",
-        "description": "de_Displays chart of documents by folder",
-        "noDataMessage": "de_Currently there are no documents to display"
+        "title": "Dokumente",
+        "description": "Zeigt das Diagramm der Dokumente nach Ordner",
+        "noDataMessage": "Derzeit sind keine Dokumente vorhanden"
       },
       "locations": {
-        "title": "de_Locations",
-        "description": "de_Displays location details",
-        "noDataMessage": "de_Currently there are no locations to display"
+        "title": "Standorte",
+        "description": "Zeigt Standortdetails",
+        "noDataMessage": "Momentan gibt es keine Standorte"
+      },
+      "phones": {
+        "title": "Telefonnummern",
+        "description": "Zeigt Telefonnummern",
+        "noDataMessage": "Momentan gibt es keine Telefonnummern"
+      },
+      "faxes": {
+        "title": "Faxnummern",
+        "description": "Zeigt Faxe Details",
+        "noDataMessage": "Momentan gibt es keine Faxe zur Anzeige"
+      },
+      "emails": {
+        "title": "E-Mail-Adresse",
+        "description": "Anzeigen von E-Mail-Details",
+        "noDataMessage": "Momentan gibt es keine E-Mail-Adressen zum Anzeigen"
+      },
+      "urls": {
+        "title": "URLs",
+        "description": "Zeigt URLs Details",
+        "noDataMessage": "Momentan gibt es keine URLs"
+      },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Zeigt DBA-Details",
+        "noDataMessage": "Derzeit sind keine DBAs anzuzeigen"
       },
       "tasks": {
-        "title": "de_Tasks",
-        "description": "de_Displays task details",
-        "noDataMessage": "de_Currently there are no tasks to display"
+        "title": "Aufgaben",
+        "description": "Zeigt Task-Details",
+        "noDataMessage": "Momentan gibt es keine anzuzeigenden Aufgaben"
       },
       "participants": {
-        "title": "de_Participants",
-        "description": "de_Displays participant details",
-        "noDataMessage": "de_Currently there are no participant to display"
+        "title": "Teilnehmer",
+        "description": "Zeigt Teilnehmerdetails an",
+        "noDataMessage": "Derzeit gibt es keinen Teilnehmer zum Anzeigen"
       },
       "references": {
-        "title": "de_References",
-        "description": "de_Displays reference details",
-        "noDataMessage": "de_Currently there are no references to display"
+        "title": "Referenzen",
+        "description": "Zeigt Referenzdetails",
+        "noDataMessage": "Derzeit gibt es keine Referenzen zur Anzeige"
+      },
+      "relOrganizations": {
+        "title": "Verwandte Organisationen",
+        "description": "Anzeigen von verwandten Organisationen Details",
+        "noDataMessage": "Derzeit gibt es keine verwandten Organisationen zu anzeigen"
       },
       "history": {
-        "title": "de_History",
-        "description": "de_Displays chart of history events",
-        "noDataMessage": "de_Currently there are no events to display"
+        "title": "Geschichte",
+        "description": "Zeigt Diagramm der Geschichtsereignisse",
+        "noDataMessage": "Momentan gibt es keine Veranstaltungen zum Anzeigen"
       },
       "notes": {
-        "title": "de_Notes",
-        "description": "de_Displays note details",
-        "noDataMessage": "de_Currently there are no notes to display"
+        "title": "Notizen",
+        "description": "Zeigt Notizdetails",
+        "noDataMessage": "Derzeit sind keine Notizen vorhanden"
       },
       "time": {
-        "title": "de_Time",
-        "description": "de_Displays chart for hours per user",
-        "noDataMessage": "de_Currently there is no time information to display"
+        "title": "Zeit",
+        "description": "Zeigt das Diagramm für Stunden pro Benutzer",
+        "noDataMessage": "Derzeit gibt es keine Zeitinformationen zur Anzeige"
       },
       "cost": {
-        "title": "de_Cost",
-        "description": "de_Displays chart for cost per user",
-        "noDataMessage": "de_Currently there is no cost information to display"
+        "title": "Kosten",
+        "description": "Zeigt Diagramm für Kosten pro Benutzer",
+        "noDataMessage": "Derzeit gibt es keine Kosteninformationen zur Anzeige"
       },
       "calendar": {
-        "title": "de_Calendar",
-        "description": "de_Displays chart of scheduled events per day",
-        "noDataMessage": "de_Currently there are no events to display"
+        "title": "Kalender",
+        "description": "Zeigt das Diagramm der geplanten Ereignisse pro Tag",
+        "noDataMessage": "Momentan gibt es keine Veranstaltungen zum Anzeigen"
       },
       "reworkDetails": {
-        "title": "de_Rework Details",
-        "description": "de_Shows most recent rework details",
-        "noDataMessage": "de_Currently there no are no rework details to display"
+        "title": "Nacharbeit Details",
+        "description": "Zeigt die letzten Rework-Details",
+        "noDataMessage": "Derzeit gibt es keine Rework-Details zum Anzeigen"
       },
       "docReview": {
-        "title": "de_Documents Under Review",
-        "description": "de_Shows documents under review",
-        "noDataMessage": "de_Currently there no are no documents under review to display"
+        "title": "Dokumente unter Überprüfung",
+        "description": "Zeigt Dokumente zur Überprüfung",
+        "noDataMessage": "Derzeit gibt es keine Unterlagen zur Überprüfung"
+      },
+      "parentDocs": {
+        "title": "Elterndokumente",
+        "description": "Zeigt übergeordnete Dokumente",
+        "noDataMessage": "Derzeit gibt es keine keine übergeordneten Dokumente zum Anzeigen"
       },
       "workflow": {
-        "title": "de_Workflow Overview",
-        "description": "de_Overview of pending workflows",
-        "noDataMessage": "de_Currently there are no workflows to display"
+        "title": "Workflow-Übersicht",
+        "description": "Überblick über anstehende Workflows",
+        "noDataMessage": "Momentan gibt es keine Workflows zum Anzeigen"
       },
       "signature": {
-        "title": "de_eSignature",
-        "description": "de_eSignature widget",
-        "noDataMessage": "de_Currently there are no eSignatures to display"
+        "title": "e-Unterschrift",
+        "description": "Widget für elektronische Signatur",
+        "noDataMessage": "Derzeit sind keine eSignatures anzuzeigen"
       },
       "person": {
-        "title": "de_Person",
-        "description": "de_Person widget for Cost and Time modules",
-        "noDataMessage": "de_Currently there are no persons to display"
+        "title": "Person",
+        "description": "Person Widget für Kosten- und Zeitmodule",
+        "noDataMessage": "Derzeit sind keine Personen zu sehen"
       },
       "hoursSummary": {
-        "title": "de_Hours Summary",
-        "description": "de_Displays a summary of hours worked",
-        "noDataMessage": "de_Currently there is no summary to display"
+        "title": "Stunden Zusammenfassung",
+        "description": "Zeigt eine Zusammenfassung der geleisteten Stunden",
+        "noDataMessage": "Derzeit gibt es keine Zusammenfassung zum Anzeigen"
       },
       "expenses": {
-        "title": "de_Expenses",
-        "description": "de_Displays a cost-to-user graph",
-        "noDataMessage": "de_Currently no expense data to display"
+        "title": "Aufwendungen",
+        "description": "Zeigt eine Cost-to-User-Grafik",
+        "noDataMessage": "Momentan keine Kostendaten zur Anzeige"
+      },
+      "organisationen": {
+        "title": "Organisationen",
+        "description": "Zeigt Organisation",
+        "noDataMessage": "Derzeit gibt es keine Organisationen zum Anzeigen"
+      },
+      "tags": {
+        "title": "Etiketten",
+        "description": "Zeigt Etiketten",
+        "noDataMessage": "Derzeit sind keine Etiketten vorhanden"
+      },
+      "approvalRouting": {
+        "title": "Genehmigungs-Routing",
+        "description": "Zeigt Genehmigungsroutinen",
+        "noDataMessage": "Zurzeit keine Genehmiger zur Anzeige"
+      },
+      "pictures": {
+        "title": "Bilder",
+        "description": "Bilder anzeigen",
+        "noDataMessage": "Zur Zeit keine Bilder zum Anzeigen"
+      },
+      "aliases": {
+        "title": "Aliase",
+        "description": "Aliase anzeigen",
+        "noDataMessage": "Zurzeit keine Aliase zur Anzeige"
+      },
+      "related": {
+        "title": "Verwandte Menschen",
+        "description": "Zeigt verwandte Personen",
+        "noDataMessage": "Derzeit keine verwandten Personen zum Anzeigen"
       }
     }
   }
 }
-

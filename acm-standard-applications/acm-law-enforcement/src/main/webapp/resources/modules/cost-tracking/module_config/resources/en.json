@@ -42,7 +42,7 @@
     }
   },
   "costTracking.comp.summary": {
-    "title": "Cost Summary",
+    "title": "Cost",
     "table.columns": {
       "parentId": "ID",
       "parentNumber": "Parent ID",
