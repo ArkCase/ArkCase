@@ -142,6 +142,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     deferred.resolve(newGroup);
                 }, function () {
                     //error adding group
+                    messageService.error("Group name already exists.");
                     deferred.reject();
                 });
             }, function (result) {
@@ -534,21 +535,27 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             modalInstance.result.then(function (adHocGroup) {
                 //button ok
                 organizationalHierarchyService.addAdHocGroup(adHocGroup).then(function (payload) {
-                    //added successfully
-                    var newGroup = payload.data;
-                    newGroup.object_sub_type_s = 'ADHOC_GROUP';
-                    newGroup.object_id_s = payload.data.name;
-                    if (payload.data.supervisor)
-                        newGroup.supervisor = payload.data.supervisor.fullName;
+                    if(payload.data!="") {
+                        //added successfully
+                        var newGroup = payload.data;
+                        newGroup.object_sub_type_s = 'ADHOC_GROUP';
+                        newGroup.object_id_s = payload.data.name;
+                        if (payload.data.supervisor)
+                            newGroup.supervisor = payload.data.supervisor.fullName;
 
-                    //name that should be displayed in UI should not be unique across different tree levels,
-                    // so the UUID part is removed!
+                        //name that should be displayed in UI should not be unique across different tree levels,
+                        // so the UUID part is removed!
 
-                    newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
+                        newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
 
-                    groupsMap[payload.data.name] = newGroup;
-                    addToTree(newGroup, true);
-                    messageService.succsessAction();
+                        groupsMap[payload.data.name] = newGroup;
+                        addToTree(newGroup, true);
+                        messageService.succsessAction();
+                    }
+                    else {
+                        messageService.error("Ad-hoc group name already exists.");
+                        messageService.errorAction();
+                    }
                 }, function () {
                     //error adding group
                     messageService.errorAction();
@@ -699,6 +706,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     addToTree(newGroup, true);
                     messageService.succsessAction();
                 }, function (error) {
+                    if (groupsMap[data.group.name]) {
+                       messageService.error("Group name already exists.");
+                    }
                     if (error.data.extra) {
                         var onAdd = function (data) {
                             onLdapGroupAdd(data, deferred);
