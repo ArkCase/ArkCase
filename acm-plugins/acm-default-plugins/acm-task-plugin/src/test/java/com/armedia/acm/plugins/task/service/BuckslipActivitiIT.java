@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.service;
 
 import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
@@ -11,10 +11,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.easymock.IAnswer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

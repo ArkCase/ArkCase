@@ -1,4 +1,4 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
@@ -17,52 +17,55 @@ public class LdapGroup
     private String description;
     private String directoryName;
     private Set<String> members = new HashSet<>();
-    private Set<String> memberGroups = new HashSet<>();
     private Set<String> memberUsers = new HashSet<>();
-    private Set<String> parentGroups = new HashSet<>();
+    private Set<LdapGroup> memberGroups = new HashSet<>();
+    private Set<LdapGroup> descendants = new HashSet<>();
+    private Set<LdapGroup> ascendants = new HashSet<>();
 
     public AcmGroup toAcmGroup()
     {
         AcmGroup acmGroup = new AcmGroup();
-        acmGroup.setName(getName());
+        acmGroup.setName(name);
         acmGroup.setType(AcmGroupType.LDAP_GROUP);
-        acmGroup.setDirectoryName(getDirectoryName());
-        acmGroup.setDistinguishedName(getDistinguishedName());
+        acmGroup.setDirectoryName(directoryName);
+        acmGroup.setDistinguishedName(distinguishedName);
         setAcmGroupEditableFields(acmGroup);
         return acmGroup;
     }
 
     public AcmGroup setAcmGroupEditableFields(AcmGroup acmGroup)
     {
-        acmGroup.setDescription(getDescription());
+        acmGroup.setDescription(description);
         acmGroup.setStatus(AcmGroupStatus.ACTIVE); // TODO: fix status
+        acmGroup.setAscendantsList(getAscendantsAsString());
         return acmGroup;
     }
 
     public boolean isChanged(AcmGroup acmGroup)
     {
-        return !(Objects.equals(getDirectoryName(), acmGroup.getDirectoryName()) &&
-                Objects.equals(getDescription(), acmGroup.getDescription()));
+        return !(Objects.equals(directoryName, acmGroup.getDirectoryName()) &&
+                Objects.equals(description, acmGroup.getDescription())) &&
+                Objects.equals(getAscendantsAsString(), acmGroup.getAscendantsList());
     }
 
-     public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
+    public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
     {
-        return getMemberUsers().stream()
+        return memberUsers.stream()
                 .filter(it -> !existingMembersDns.contains(it))
                 .collect(Collectors.toSet());
     }
 
     public Set<String> groupAddedGroupMembers(Set<String> existingMembers)
     {
-        return getMemberGroups().stream()
-                .filter(it -> !existingMembers.contains(it))
+        return getMemberGroupNames().stream()
+                .filter(groupName -> !existingMembers.contains(groupName))
                 .collect(Collectors.toSet());
     }
 
     public Set<String> groupRemovedGroupMembers(Set<String> existingMembers)
     {
         return existingMembers.stream()
-                .filter(it -> !getMemberGroups().contains(it))
+                .filter(groupName -> !getMemberGroupNames().contains(groupName))
                 .collect(Collectors.toSet());
     }
 
@@ -71,6 +74,18 @@ public class LdapGroup
         return existingMembersDns.stream()
                 .filter(it -> !getMemberUsers().contains(it))
                 .collect(Collectors.toSet());
+    }
+
+    public Set<String> getMemberGroupNames()
+    {
+        return memberGroups.stream()
+                .map(LdapGroup::getName)
+                .collect(Collectors.toSet());
+    }
+
+    public boolean hasUserMember(String userId)
+    {
+        return memberUsers.contains(userId);
     }
 
     public String getName()
@@ -133,14 +148,9 @@ public class LdapGroup
         this.members = members;
     }
 
-    public void addGroupMember(String groupName)
+    public void setMemberUsers(Set<String> memberUsers)
     {
-        getMemberGroups().add(groupName);
-    }
-
-    public Set<String> getMemberGroups()
-    {
-        return memberGroups;
+        this.memberUsers = memberUsers;
     }
 
     public void addUserMember(String userDn)
@@ -153,14 +163,54 @@ public class LdapGroup
         return memberUsers;
     }
 
-    public Set<String> getParentGroups()
+    public Set<LdapGroup> getMemberGroups()
     {
-        return parentGroups;
+        return memberGroups;
     }
 
-    public void setParentGroups(Set<String> parentGroups)
+    public void setMemberGroups(Set<LdapGroup> memberGroups)
     {
-        this.parentGroups = parentGroups;
+        this.memberGroups = memberGroups;
+    }
+
+    public LdapGroup memberGroups(Set<LdapGroup> members)
+    {
+        this.memberGroups = members;
+        return this;
+    }
+
+    public void addMemberGroup(LdapGroup group)
+    {
+        memberGroups.add(group);
+    }
+
+    public Set<LdapGroup> getDescendants()
+    {
+        return descendants;
+    }
+
+    public void setDescendants(Set<LdapGroup> descendants)
+    {
+        this.descendants = descendants;
+    }
+
+    public Set<LdapGroup> getAscendants()
+    {
+        return ascendants;
+    }
+
+    public String getAscendantsAsString()
+    {
+        return ascendants.isEmpty() ? null :
+                ascendants.stream()
+                        .map(LdapGroup::getName)
+                        .sorted()
+                        .collect(Collectors.joining(","));
+    }
+
+    public void setAscendants(Set<LdapGroup> ascendants)
+    {
+        this.ascendants = ascendants;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.LdapUser;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;

@@ -27,8 +27,8 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserActionDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

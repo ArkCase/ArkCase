@@ -1,7 +1,7 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.LdapUser;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,8 +57,7 @@ public class SpringLdapDaoIT
         log.debug("Result: {}", result.size());
         result.forEach(ldapUser ->
         {
-            log.debug("AcmUser: {} : {} -> {}", ldapUser.getUserId(), ldapUser.getDistinguishedName(),
-                    ldapUser.getLdapGroups());
+            log.debug("AcmUser: {} : {}", ldapUser.getUserId(), ldapUser.getDistinguishedName());
         });
     }
 
@@ -72,7 +71,7 @@ public class SpringLdapDaoIT
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapGroup ->
-                log.trace("Ldap Group: {} -> {}", ldapGroup.getName(), ldapGroup.getParentGroups())
+                log.trace("Ldap Group: {}", ldapGroup.getName())
         );
     }
 
@@ -153,7 +152,7 @@ public class SpringLdapDaoIT
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapGroup ->
-                log.debug("Ldap Group: {} -> {}", ldapGroup.getName(), ldapGroup.getParentGroups())
+                log.debug("Ldap Group: {}", ldapGroup.getName())
         );
     }
 

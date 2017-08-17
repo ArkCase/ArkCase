@@ -23,7 +23,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
+import com.armedia.acm.services.users.dao.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 
 /**

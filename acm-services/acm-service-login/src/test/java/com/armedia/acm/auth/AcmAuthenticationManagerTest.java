@@ -1,6 +1,6 @@
 package com.armedia.acm.auth;
 
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -101,9 +101,9 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockFirstProvider.authenticate(mockAuthentication)).andReturn(successAuthentication);
         expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
         expect(mockUserDao.findByUserIdAnyCase(user.getUserId())).andReturn(user);
-        expect(mockGroupService.findByUserMember(user)).andReturn(groups);
+     /*   expect(mockGroupService.findByUserMember(user)).andReturn(groups);
         expect(mockGroupService.isUUIDPresentInTheGroupName(ldapGroup.getName())).andReturn(false);
-        expect(mockGroupService.isUUIDPresentInTheGroupName(adhocGroup.getName())).andReturn(false);
+        expect(mockGroupService.isUUIDPresentInTheGroupName(adhocGroup.getName())).andReturn(false);*/
         expect(mockAuthoritiesMapper.mapAuthorities(authsGroups)).andReturn(authsGroups);
 
         replayAll();
