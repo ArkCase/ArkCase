@@ -1,9 +1,9 @@
-<div ng-controller="Complaints.LocationsController">
+<div ng-controller="Complaint.LocationsController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{"complaints.comp.locations.title" | translate}}
+            <div class="panel-title">{{"complaints.comp.addresses.title" | translate}}
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-hide="objectInfo.location" ng-click="addNew()"><i
+                    <button class="btn btn-default btn-xs" permission="editComplaint" permission-properties="objectInfo" permission-action="hide" ng-click="addNew()"><i
                             class="fa fa-lg fa-plus"></i></button>
                     <!--<span class=""><i class='fa fa-save' ng-click='saveRow(row)'></i></span>-->
                     <!--<span class=""><i class='fa fa-pencil' ng-click='addRow()'></i></span>-->
