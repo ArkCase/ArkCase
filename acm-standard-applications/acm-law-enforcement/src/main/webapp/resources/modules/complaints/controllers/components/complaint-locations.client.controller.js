@@ -18,7 +18,7 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
-            , moduleId: "complaint"
+            , moduleId: "complaints"
             , componentId: "addresses"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
@@ -127,6 +127,7 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
 
             modalInstance.result.then(function (data) {
                 var address;
+                $scope.objectInfo.addresses=[];
                 if (!data.isEdit)
                     address = $scope.address;
                 else {
