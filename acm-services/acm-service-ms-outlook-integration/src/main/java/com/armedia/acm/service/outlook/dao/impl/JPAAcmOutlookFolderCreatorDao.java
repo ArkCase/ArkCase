@@ -233,6 +233,37 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#updateFolderCreator(com.armedia.acm.service.
+     * outlook.model.AcmOutlookFolderCreator)
+     */
+    @Override
+    @Transactional
+    public void updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException
+    {
+        log.debug("Updating folder creator with id [{}].", updatedCreator.getId());
+
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
+                AcmOutlookFolderCreator.class);
+        query.setParameter("creatorId", updatedCreator.getId());
+
+        try
+        {
+            AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
+            retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemPassword());
+            retrievedCreator.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
+        } catch (AcmEncryptionException e)
+        {
+            log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
+                    updatedCreator.getId(), e);
+            throw new AcmOutlookFolderCreatorDaoException(String.format(
+                    "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
+                    updatedCreator.getId()), e);
+        }
+    }
+
     private String decryptValue(String encrypted) throws AcmEncryptionException
     {
         String decryptedValue = new String(cryptoUtils.decryptData(encryptionProperties.getSymmetricKey(), Base64.decodeBase64(encrypted),

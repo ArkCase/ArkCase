@@ -84,16 +84,16 @@ public class ExchangeCalendarService
             Map<String, Object> errorDetails = new HashMap<>();
             if (exception instanceof CalendarServiceAccessDeniedException)
             {
-                errorDetails.put("error_cause", "ACCESS_DENIED.");
+                errorDetails.put("error_cause", "ACCESS_DENIED");
             } else if (exception instanceof CalendarServiceConfigurationException)
             {
-                errorDetails.put("error_cause", "SERVICE_CONFIGURATION.");
+                errorDetails.put("error_cause", "SERVICE_CONFIGURATION");
             } else if (exception instanceof CalendarServiceBindToRemoteException)
             {
-                errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS.");
+                errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
             } else
             {
-                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
+                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR");
             }
             errorDetails.put("error_message", ce.getMessage());
             return errorDetails;
