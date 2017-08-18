@@ -47,7 +47,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                    $scope.participant.participantLdapId = selected.object_id_s;
+                	$scope.participant.participantLdapId = ($scope.participant.participantType === "owning group") ? selected.name : selected.object_id_s;
                     $scope.selectedType = selected.object_type_s;
                 }
             });
