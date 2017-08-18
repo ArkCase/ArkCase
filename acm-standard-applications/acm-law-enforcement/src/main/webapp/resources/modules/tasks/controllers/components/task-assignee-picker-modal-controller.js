@@ -23,7 +23,9 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
 
             params.header = $translate.instant("tasks.comp.assigneePickerModal.searchAssigneeHeader");
             params.filter = 'fq="object_type_s":(GROUP OR USER)';
-            params.extraFilter = '&fq="name": ';
+            if(owningGroup!="Unknown")
+                params.extraFilter = '&fq="Group": ' + $scope.owningGroup;
+            params.extraFilter+=' &fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
