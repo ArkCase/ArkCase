@@ -73,9 +73,15 @@ public class ComplaintFactory extends FrevvoFormFactory
         retval.setTag(formComplaint.getComplaintTag());
         retval.setFrequency(formComplaint.getFrequency());
 
-        if (formComplaint.getLocation() != null)
+        if (formComplaint.getAddresses() != null)
         {
-            retval.setLocation(formComplaint.getLocation().returnBase());
+            List<PostalAddress> addresses = new ArrayList<PostalAddress>();
+            for (PostalAddress postalAddress : formComplaint.getAddresses())
+            {
+                InitiatorPostalAddress a = new InitiatorPostalAddress(postalAddress);
+                addresses.add(a);
+            }
+            retval.setAddresses(addresses);
         }
 
         if (formComplaint.getInitiator() != null)
@@ -135,10 +141,17 @@ public class ComplaintFactory extends FrevvoFormFactory
             complaintForm.setComplaintTag(complaint.getTag());
             complaintForm.setFrequency(complaint.getFrequency());
 
-            if (complaint.getLocation() != null)
+            if (complaint.getAddresses() != null)
             {
-                complaintForm.setLocation(new GeneralPostalAddress(complaint.getLocation()));
+                List<PostalAddress> addresses = new ArrayList<PostalAddress>();
+                for (PostalAddress postalAddress : complaint.getAddresses())
+                {
+                    InitiatorPostalAddress a = new InitiatorPostalAddress(postalAddress);
+                    addresses.add(a);
+                }
+                complaintForm.setAddresses(addresses);
             }
+
 
             if (complaint.getOriginator() != null && complaint.getOriginator().getPerson() != null)
             {
