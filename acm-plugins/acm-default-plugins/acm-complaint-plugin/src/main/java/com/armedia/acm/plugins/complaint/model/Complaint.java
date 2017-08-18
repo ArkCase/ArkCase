@@ -50,6 +50,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -177,9 +179,11 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Column(name = "cm_frequency")
     private String frequency;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cm_address_id")
-    private PostalAddress location;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "acm_complaint_postal_address", joinColumns = {
+            @JoinColumn(name = "cm_complaint_id", referencedColumnName = "cm_complaint_id") }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
+    private List<PostalAddress> addresses = new ArrayList<>();
 
     /**
      * Complaint disposition is set only when the close complaint request is approved. Until then, the requested
@@ -198,6 +202,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
 
     @Column(name = "cm_legacy_system_id")
     private String legacySystemId;
+
+    /**
+     * PostalAddress which is default
+     */
+    @OneToOne
+    @JoinColumn(name = "cm_default_address")
+    private PostalAddress defaultAddress;
 
     @PrePersist
     protected void beforeInsert()
@@ -327,6 +338,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setIncidentDate(Date incidentDate)
     {
         this.incidentDate = incidentDate;
+    }
+
+    public PostalAddress getDefaultAddress()
+    {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(PostalAddress defaultAddress)
+    {
+        this.defaultAddress = defaultAddress;
     }
 
     @Override
@@ -531,14 +552,15 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         this.frequency = frequency;
     }
 
-    public PostalAddress getLocation()
+    @JsonIgnore
+    public List<PostalAddress> getAddresses()
     {
-        return location;
+        return addresses;
     }
 
-    public void setLocation(PostalAddress location)
+    public void setAddresses(List<PostalAddress> addresses)
     {
-        this.location = location;
+        this.addresses = addresses;
     }
 
     @Override
@@ -606,7 +628,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
                 + ", complaintTitle='" + complaintTitle + '\'' + ", details='" + details + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\''
                 + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", status='" + status + '\'' + ", originator=" + originator + ", ecmFolderPath='" + ecmFolderPath + '\''
                 + ", container=" + container + ", childObjects=" + childObjects + ", approvers=" + approvers + ", personAssociations=" + personAssociations + ", participants=" + participants
-                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location + ", disposition=" + disposition + ", restricted=" + restricted + ", legacySystemId='" + legacySystemId + "'}";
+                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", addresses=" + addresses + ", disposition=" + disposition + ", restricted=" + restricted + ", legacySystemId='" + legacySystemId + "'}";
     }
 
     @Override
