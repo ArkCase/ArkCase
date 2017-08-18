@@ -252,7 +252,9 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
-            retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemPassword());
+            // TODO: updating system password, should actually trigger folder recreation! Should be addressed with
+            // AFDP-4017
+            retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
             retrievedCreator.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
         } catch (AcmEncryptionException e)
         {
