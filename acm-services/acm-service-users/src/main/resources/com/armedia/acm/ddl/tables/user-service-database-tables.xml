@@ -494,5 +494,17 @@
             </column>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="28-add-group-display-name-column" author="marko.stojanoski" dbms="mssql,oracle,postgresql">
+        <addColumn tableName="acm_group">
+            <column name="cm_group_display_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    
+    <changeSet id="28-add-group-display-name-column" author="marko.stojanoski" dbms="mysql">
+        <addColumn tableName="acm_group">
+            <column name="cm_group_display_name" type="TEXT"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
