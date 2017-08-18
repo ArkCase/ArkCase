@@ -44,6 +44,7 @@ public class LdapGroupService
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
 
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP.name());
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -90,6 +91,7 @@ public class LdapGroupService
         log.debug("Found parent-group:{} for new LDAP sub-group:{}", parentGroup.getName(), group.getName());
 
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP.name());
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);

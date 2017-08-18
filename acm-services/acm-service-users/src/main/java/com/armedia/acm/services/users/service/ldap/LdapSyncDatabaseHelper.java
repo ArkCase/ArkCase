@@ -195,6 +195,7 @@ public class LdapSyncDatabaseHelper
                     }
 
                     parentGroup.setName(parentName);
+                    parentGroup.setDisplayName(parentName);
                     parentGroup.setType(AcmRoleType.LDAP_GROUP.getRoleName());
                     if (groupDNPairs != null)
                     {
@@ -218,6 +219,7 @@ public class LdapSyncDatabaseHelper
 
                 }
                 group.setName(role);
+                group.setDisplayName(role);
                 group.setType(roleType);
                 group.setParentGroup(parentGroup);
                 if (groupDNPairs != null)
