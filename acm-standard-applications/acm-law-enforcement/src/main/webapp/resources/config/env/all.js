@@ -65,6 +65,7 @@ module.exports = {
                 'lib/angular-summernote/dist/angular-summernote.min.js',
                 'lib/angular-translate/angular-translate.min.js',
                 'lib/angular-translate-loader-partial/angular-translate-loader-partial.min.js',
+                'lib/angular-dynamic-locale/dist/tmhDynamicLocale.min.js',
                 'lib/angular-xeditable/dist/js/xeditable.min.js',
                 'lib/angular-dashboard-framework/dist/angular-dashboard-framework.min.js',
                 'lib/Sortable/Sortable.min.js',
