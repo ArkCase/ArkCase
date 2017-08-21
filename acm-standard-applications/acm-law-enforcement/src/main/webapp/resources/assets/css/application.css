@@ -54,6 +54,10 @@ h6 {
     box-shadow: none;
 }
 
+.pull-right.well {
+	margin-bottom: 0px;
+}
+
 .well {
     background: 0px;
     border: 0px;
@@ -555,18 +559,18 @@ span.fancytree-title {
 }
 
 .ui-grid-row, .ui-grid-cell {
-    height: auto!important;
+    //height: auto !important;
 }
 
 .ui-grid-cell {
-    float: none;
+    //float: none;
     display: table-cell;
 }
 
-.ui-grid-header-cell, .ui-grid-cell-contents {
+/*.ui-grid-header-cell, .ui-grid-cell-contents {
     white-space: normal;
     padding: 2px;
-}
+}*/
 
 .ui-grid-top-panel {
     width: 100%
@@ -688,6 +692,7 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
+	display: inherit;
 }
 
 /* Dates Padding Issues */
@@ -707,7 +712,7 @@ thead {
 }
 
 .ui-grid .ui-grid-cell div {
-	padding: 5px;
+	//padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -719,10 +724,10 @@ thead {
 	position: relative;
 }
 
-.ui-grid .ui-grid-cell div:hover {
+/*.ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
 	overflow: normal;
-}
+}*/
 
 .widget .ui-grid-cell:hover {
 	white-space: normal;
@@ -1315,11 +1320,11 @@ a.no-outline:hover, a.no-outline:focus {
     outline: none;
 }
 
-/* Fix selection */
+/* Fix selection
 .ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
     padding: 0;
-}
+} */
 
 .ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
     pointer-events: all !important;
