@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -84,6 +85,10 @@ public class CSVReportGenerator extends ReportGenerator
                     } else if (value instanceof Boolean)
                     {
                         sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
+                    } else if (value instanceof JSONArray)
+                    {
+                        JSONArray jsonArray = data.getJSONArray(field);
+                        sb.append(purifyForCSV(jsonArray.toString()));
                     }
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);
