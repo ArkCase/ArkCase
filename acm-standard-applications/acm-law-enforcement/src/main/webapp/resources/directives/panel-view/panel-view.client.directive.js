@@ -48,6 +48,9 @@ angular.module('directives').directive('panelView', ['$q',
                     if (collapsedVal == 'true') {
                         scope.isCollapsed = true;
                     }
+                    else {
+                        scope.isCollapsed = false;
+                    }
                 });
 
                 scope.onCollapseIconClick = function($event) {
