@@ -33,7 +33,7 @@ public class AcmExchangeCalendarManagementAPIController
     @ResponseBody
     List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
     {
-        List<AcmOutlookFolderCreator> invalidUsers = folderCreatorDao.checkFolderCreatorCredentials();
+        List<AcmOutlookFolderCreator> invalidUsers = folderCreatorDao.getFolderCreatorsWithInvalidCredentials();
         return invalidUsers;
     }
 
@@ -50,7 +50,7 @@ public class AcmExchangeCalendarManagementAPIController
     public ResponseEntity<?> handleConfigurationException(CalendarServiceException ce)
     {
         Map<String, Object> errorDetails = new HashMap<>();
-        errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR");
+        errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
         errorDetails.put("error_message", ce.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorDetails);
     }

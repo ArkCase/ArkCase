@@ -20,7 +20,7 @@ public interface AcmOutlookFolderCreatorDao
 
     void recordFolderCreator(AcmOutlookFolderCreator creator, Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException;
 
-    List<AcmOutlookFolderCreator> checkFolderCreatorCredentials();
+    List<AcmOutlookFolderCreator> getFolderCreatorsWithInvalidCredentials();
 
     void updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException;
 

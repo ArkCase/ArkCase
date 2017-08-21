@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -288,7 +289,7 @@ public class JPAAcmOutlookFolderCreatorDaoIT
     }
 
     @Test
-    public void testCheckFolderCreatorsCredentials() throws Exception
+    public void testGetFolderCreatorsWithInvalidCredentials() throws Exception
     {
         // given
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
@@ -307,11 +308,12 @@ public class JPAAcmOutlookFolderCreatorDaoIT
                 .thenReturn(false);
 
         // when
-        List<AcmOutlookFolderCreator> folderCreators = outlookFolderCreatorDao.checkFolderCreatorCredentials();
+        List<AcmOutlookFolderCreator> folderCreators = outlookFolderCreatorDao.getFolderCreatorsWithInvalidCredentials();
 
         // then
         verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc", AcmOutlookFolderCreator.class);
         verify(mockedFolderCreatorQuery).getResultList();
+        verify(mockedVerifierService, times(3)).verifyEmailCredentials(any(String.class), any(EmailCredentials.class));
 
         assertThat(folderCreators, containsInAnyOrder(creator1, creator3));
 
