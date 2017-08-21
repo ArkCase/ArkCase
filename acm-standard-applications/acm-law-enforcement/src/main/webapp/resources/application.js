@@ -12,10 +12,12 @@ angular
             '$locationProvider',
             '$translateProvider',
             '$translatePartialLoaderProvider',
+            'tmh.dynamicLocale',
             '$httpProvider',
             'AnalyticsProvider',
-            function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider, AnalyticsProvider) {
+            function ($locationProvider, $translateProvider, $translatePartialLoaderProvider,
+                      dynamicLocaleProvider,
+                      $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
