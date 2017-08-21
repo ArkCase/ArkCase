@@ -198,7 +198,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#checkFolderCreatorCredentials()
      */
     @Override
-    public List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
+    public List<AcmOutlookFolderCreator> getFolderCreatorsWithInvalidCredentials()
     {
         log.debug("Checking calendar folder creators with invalid credentials.");
 
