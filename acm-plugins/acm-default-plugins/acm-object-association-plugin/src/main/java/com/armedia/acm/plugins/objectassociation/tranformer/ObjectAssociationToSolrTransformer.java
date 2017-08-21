@@ -32,8 +32,8 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
-        solrDoc.setId(in.getAssociationId() + "-" + ObjectAssociationConstants.OBJECT_TYPE);
-        solrDoc.setObject_type_s(ObjectAssociationConstants.OBJECT_TYPE);
+        solrDoc.setId(in.getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
+        solrDoc.setObject_type_s(ObjectAssociationConstants.REFFERENCE_TYPE);
         solrDoc.setObject_id_s(in.getAssociationId() + "");
 
         solrDoc.setCreate_date_tdt(in.getCreated());
@@ -58,8 +58,8 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public SolrDocument toSolrQuickSearch(ObjectAssociation in)
     {
         SolrDocument solrDoc = new SolrDocument();
-        solrDoc.setId(in.getAssociationId() + "-" + ObjectAssociationConstants.OBJECT_TYPE);
-        solrDoc.setObject_type_s(ObjectAssociationConstants.OBJECT_TYPE);
+        solrDoc.setId(in.getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
+        solrDoc.setObject_type_s(ObjectAssociationConstants.REFFERENCE_TYPE);
         solrDoc.setObject_id_s(in.getAssociationId() + "");
 
         solrDoc.setCreate_tdt(in.getCreated());
@@ -78,7 +78,7 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         if (objectAssociation.getInverseAssociation() != null)
         {
             additionalProperties.put("inverse_association_type_s", objectAssociation.getInverseAssociation().getAssociationType());
-            additionalProperties.put("inverse_association_id_s", objectAssociation.getInverseAssociation().getAssociationId() + "-" + ObjectAssociationConstants.OBJECT_TYPE);
+            additionalProperties.put("inverse_association_id_s", objectAssociation.getInverseAssociation().getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
         } else
         {
             additionalProperties.put("inverse_association_type_s", null);

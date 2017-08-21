@@ -104,20 +104,23 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         {
             orderBy = "id asc";
         }
-        StringBuilder targetQuery = new StringBuilder();
-        StringBuilder associationsQuery = new StringBuilder();
 
-        String associationsQueryString = String.format("object_type_s:REFERENCE AND parent_ref_s:%s AND target_type_s:%s", parentId + "-" + parentType, targetType);
+        String associationsQueryString = String.format("object_type_s:REFERENCE AND parent_ref_s:%s", parentId + "-" + parentType);
+        if (StringUtils.isNotEmpty(targetType))
+        {
+            associationsQueryString += String.format(" AND target_type_s:%s", targetType);
+        }
 
-        targetQuery.append("{!join from=target_ref_s to=id}");
-        targetQuery.append(associationsQueryString);
-        associationsQuery.append(associationsQueryString);
+        String targetQuery = "{!join from=target_ref_s to=id}";
+        targetQuery += associationsQueryString;
 
+        log.debug("object associations query [{}]", associationsQueryString);
+        log.debug("target objects query [{}]", targetQuery);
         try
         {
             //Execute all request in parallel to minimize chances for wrong responses
             CompletableFuture<String> targetResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, targetQuery.toString(), start, limit, orderBy);
-            CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, associationsQuery.toString(), start, limit, orderBy);
+            CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, associationsQueryString, start, limit, orderBy);
             //wait all completable features to finish
             CompletableFuture.allOf(targetResponse, associationsResponse);
 
@@ -175,7 +178,8 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         } else
         {
             log.error("Responses doesn't match: associations response = {}, targets response {}", associationsResult, targetResult);
-            throw new AcmObjectNotFoundException("ObjectAssociation", null, String.format("Could not find document in solr with id %s .", targetIdString), null);
+            //TODO handle in another way, instead of creating new empty object
+            ((ObjectNode) associationDoc).set("target_object", om.createObjectNode());
         }
     }
 
@@ -190,7 +194,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         oa.setTargetType(type);
         oa.setTargetTitle(title);
         oa.setStatus(status);
-        oa.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
+        oa.setAssociationType(ObjectAssociationConstants.REFFERENCE_TYPE);
         return oa;
     }
 
