@@ -161,7 +161,11 @@
     "showMore.button.text": "Show More Values",
     "showLess.button.text": "Show Less Values",
     "results.text": "Results",
-    "noResults.text": "No Results"
+    "noResults.text": "No Results",
+    "tooltip": {
+      "collapseFacetList": "Collapse Facet List",
+      "expandFacetList": "Expand Facet List"
+    }
   },
   "common.directive.coreNotes": {
     "title": "Notes",
