@@ -1,12 +1,10 @@
-/**
- *
- */
 package com.armedia.acm.services.users.model.group;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
@@ -19,19 +17,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
@@ -46,11 +43,6 @@ public class AcmGroup implements Serializable, AcmEntity
     @Id
     @Column(name = "cm_group_name")
     private String name;
-
-    @ManyToOne(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
-    @JoinColumn(name = "cm_group_parent_name")
-    @JsonIgnore
-    private AcmGroup parentGroup;
 
     @Column(name = "cm_group_description")
     private String description;
@@ -83,20 +75,32 @@ public class AcmGroup implements Serializable, AcmEntity
     @Column(name = "cm_directory_name")
     private String directoryName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentGroup")
-    @JsonIgnore
-    private List<AcmGroup> childGroups;
-
     @ManyToOne
     @JoinColumn(name = "cm_group_supervisor_id")
     private AcmUser supervisor;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
-            name = "acm_group_member",
+            name = "acm_user_membership",
             joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
             inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
-    private Set<AcmUser> members;
+    private Set<AcmUser> userMembers = new HashSet<>();
+
+    @JoinTable(name = "acm_group_membership",
+            joinColumns = {
+                    @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
+            })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<AcmGroup> memberGroups = new HashSet<>();
+
+    @ManyToMany(mappedBy = "memberGroups")
+    private Set<AcmGroup> memberOfGroups = new HashSet<>();
+
+    @Column(name = "cm_ascendants")
+    private String ascendantsList;
 
     @PrePersist
     protected void beforeInsert()
@@ -126,33 +130,74 @@ public class AcmGroup implements Serializable, AcmEntity
         }
     }
 
-    public AcmGroup getParentGroup()
+    @JsonIgnore
+    public Stream<String> getUserMemberDns()
     {
-        return parentGroup;
+        return userMembers.stream()
+                .map(AcmUser::getDistinguishedName);
     }
 
-    public void setParentGroup(AcmGroup parentGroup)
+    @JsonIgnore
+    public Stream<String> getUserMemberIds()
     {
-        if (parentGroup != null)
-        {
-            if (parentGroup.getChildGroups() == null)
-            {
-                parentGroup.setChildGroups(new ArrayList<>());
-            }
+        return userMembers.stream()
+                .map(AcmUser::getUserId);
+    }
 
-            parentGroup.getChildGroups().add(this);
+    @JsonIgnore
+    public Stream<String> getGroupMemberIds()
+    {
+        return memberGroups.stream()
+                .map(AcmGroup::getName);
+    }
 
-        } else
-        {
-            if (getParentGroup() != null &&
-                    getParentGroup().getChildGroups() != null &&
-                    getParentGroup().getChildGroups().contains(this))
-            {
-                getParentGroup().getChildGroups().remove(this);
-            }
-        }
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for adding
+     * userMembers to the group. Don't use getUserMembers().add(..) or getUserMembers().addAll(..)
+     *
+     * @param user
+     */
+    public void addUserMember(AcmUser user)
+    {
+        if (user == null) return;
 
-        this.parentGroup = parentGroup;
+        userMembers.add(user);
+
+        user.addGroup(this);
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for removing
+     * userMembers from the group.
+     *
+     * @param user
+     */
+    public void removeUserMember(AcmUser user)
+    {
+        if (user == null) return;
+
+        user.getGroups().remove(this);
+
+        userMembers.remove(user);
+    }
+
+    public void addGroupMember(AcmGroup group)
+    {
+        if (group == null) return;
+
+        memberGroups.add(group);
+
+        group.getMemberOfGroups().add(group);
+
+    }
+
+    public void removeGroupMember(AcmGroup group)
+    {
+        if (group == null) return;
+
+        memberGroups.remove(group);
+
+        group.getMemberOfGroups().remove(group);
     }
 
     public String getName()
@@ -196,30 +241,6 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     @Override
-    public String getCreator()
-    {
-        return creator;
-    }
-
-    @Override
-    public void setCreator(String creator)
-    {
-        this.creator = creator;
-    }
-
-    @Override
-    public String getModifier()
-    {
-        return modifier;
-    }
-
-    @Override
-    public void setModifier(String modifier)
-    {
-        this.modifier = modifier;
-    }
-
-    @Override
     public Date getCreated()
     {
         return created;
@@ -229,6 +250,18 @@ public class AcmGroup implements Serializable, AcmEntity
     public void setCreated(Date created)
     {
         this.created = created;
+    }
+
+    @Override
+    public String getCreator()
+    {
+        return creator;
+    }
+
+    @Override
+    public void setCreator(String creator)
+    {
+        this.creator = creator;
     }
 
     @Override
@@ -243,6 +276,19 @@ public class AcmGroup implements Serializable, AcmEntity
         this.modified = modified;
     }
 
+    @Override
+    public String getModifier()
+    {
+        return modifier;
+    }
+
+    @Override
+    public void setModifier(String modifier)
+    {
+        this.modifier = modifier;
+    }
+
+    @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
@@ -263,32 +309,6 @@ public class AcmGroup implements Serializable, AcmEntity
         this.directoryName = directoryName;
     }
 
-    public List<AcmGroup> getChildGroups()
-    {
-        return childGroups;
-    }
-
-    @JsonIgnore
-    public Set<String> getChildGroupNames()
-    {
-        return childGroups.stream()
-                .map(AcmGroup::getName)
-                .collect(Collectors.toSet());
-    }
-
-    public void setChildGroups(List<AcmGroup> childGroups)
-    {
-        if (childGroups != null)
-        {
-            for (AcmGroup child : childGroups)
-            {
-                child.setParentGroup(this);
-            }
-        }
-
-        this.childGroups = childGroups;
-    }
-
     public AcmUser getSupervisor()
     {
         return supervisor;
@@ -299,120 +319,80 @@ public class AcmGroup implements Serializable, AcmEntity
         this.supervisor = supervisor;
     }
 
-    public Set<AcmUser> getMembers()
+    public Set<AcmUser> getUserMembers()
     {
-        return members;
+        return userMembers;
+    }
+
+    public void setUserMembers(Set<AcmUser> userMembers)
+    {
+        this.userMembers = userMembers;
     }
 
     @JsonIgnore
-    public Set<String> getMembersDns()
+    public boolean hasUserMember(AcmUser user)
     {
-        return members.stream()
-                .map(AcmUser::getDistinguishedName)
-                .collect(Collectors.toSet());
+        if (userMembers == null) return false;
+        return userMembers.contains(user);
     }
 
-    public void setMembers(Set<AcmUser> members)
+    public Set<AcmGroup> getMemberGroups()
     {
-        // Bidirectional ManyToMany relation
-        if (members != null)
-        {
-            for (AcmUser member : members)
-            {
-                if (member.getGroups() != null && !member.getGroups().contains(this))
-                {
-                    member.getGroups().add(this);
-                }
-            }
-        }
-
-        this.members = members;
+        return memberGroups;
     }
 
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding
-     * members to the group. Don't use getMembers().add(..) or getMembers().addAll(..)
-     *
-     * @param member
-     */
-    public void addMember(AcmUser member)
+    public void setMemberGroups(Set<AcmGroup> memberGroups)
     {
-        if (member != null)
-        {
-            if (getMembers() == null)
-            {
-                setMembers(new HashSet<>());
-            }
-
-            getMembers().add(member);
-
-            if (member.getGroups() != null && !member.getGroups().contains(this))
-            {
-                member.addGroup(this);
-            }
-        }
+        this.memberGroups = memberGroups;
     }
 
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for removing
-     * members from the group.
-     *
-     * @param member
-     */
-    public void removeMember(AcmUser member)
+    public Set<AcmGroup> getMemberOfGroups()
     {
-        if (member != null)
-        {
-            if (getMembers() != null)
-            {
-                if (member.getGroups().contains(this))
-                {
-                    member.getGroups().remove(this);
-                }
+        return memberOfGroups;
+    }
 
-                if (getMembers().contains(member))
-                {
-                    getMembers().remove(member);
-                }
+    public void setMemberOfGroups(Set<AcmGroup> memberOfGroups)
+    {
+        this.memberOfGroups = memberOfGroups;
+    }
 
-            }
-        }
+    public String getAscendantsList()
+    {
+        return ascendantsList;
+    }
+
+    @JsonIgnore
+    public Stream<String> getAscendants()
+    {
+        if (ascendantsList == null) return Stream.empty();
+        return Arrays.stream(ascendantsList.split(","));
+    }
+
+    public void setAscendantsList(String ascendantsList)
+    {
+        this.ascendantsList = ascendantsList;
     }
 
     @Override
-    @JsonIgnore
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcmGroup acmGroup = (AcmGroup) o;
+        return Objects.equals(name, acmGroup.name);
+    }
+
+    @Override
     public int hashCode()
     {
-        if (getName() == null)
-        {
-            return 0;
-        } else
-        {
-            return getName().hashCode();
-        }
+        return Objects.hash(name);
     }
 
     @Override
-    @JsonIgnore
-    public boolean equals(Object obj)
+    public String toString()
     {
-        if (!(obj instanceof AcmGroup))
-        {
-            return false;
-        }
-
-        AcmGroup group = (AcmGroup) obj;
-
-        if (group.getName() == null && getName() == null)
-        {
-            return true;
-        }
-
-        if (group.getName() == null && getName() != null)
-        {
-            return false;
-        }
-
-        return group.getName().equals(getName());
+        return MoreObjects.toStringHelper(this)
+                .add("description", description)
+                .toString();
     }
 }

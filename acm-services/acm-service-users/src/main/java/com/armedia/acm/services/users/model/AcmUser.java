@@ -24,8 +24,11 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "acm_user")
@@ -77,10 +80,6 @@ public class AcmUser implements Serializable
     @Column(name = "cm_mail")
     private String mail;
 
-    @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<AcmGroup> groups;
-
     @Column(name = "cm_distinguished_name")
     private String distinguishedName;
 
@@ -108,6 +107,54 @@ public class AcmUser implements Serializable
 
     @Embedded
     private PasswordResetToken passwordResetToken;
+
+    @ManyToMany(mappedBy = "userMembers", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JsonIgnore
+    private Set<AcmGroup> groups = new HashSet<>();
+
+    @JsonIgnore
+    public Stream<String> getGroupIds()
+    {
+        return groups.stream()
+                .map(AcmGroup::getName);
+    }
+
+    @JsonIgnore
+    public List<AcmGroup> getLdapGroups()
+    {
+        return groups.stream()
+                .filter(group -> group.getType() == AcmGroupType.LDAP_GROUP)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
+     * or getGroups().addAll(..)
+     *
+     * @param group
+     */
+    public void addGroup(AcmGroup group)
+    {
+        if (group == null) return;
+
+        groups.add(group);
+
+        group.getUserMembers().add(this);
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for removing groups from the user.
+     *
+     * @param group
+     */
+    public void removeGroup(AcmGroup group)
+    {
+        if (group == null) return;
+
+        groups.remove(group);
+
+        group.getUserMembers().remove(this);
+    }
 
     @PrePersist
     public void preInsert()
@@ -152,6 +199,7 @@ public class AcmUser implements Serializable
         this.userDirectoryName = userDirectoryName;
     }
 
+    @JsonIgnore
     public String getsAMAccountName()
     {
         return sAMAccountName;
@@ -162,6 +210,7 @@ public class AcmUser implements Serializable
         this.sAMAccountName = sAMAccountName;
     }
 
+    @JsonIgnore
     public String getUserPrincipalName()
     {
         return userPrincipalName;
@@ -248,129 +297,6 @@ public class AcmUser implements Serializable
     }
 
     @JsonIgnore
-    public Set<AcmGroup> getLdapGroups()
-    {
-        return groups == null ? new HashSet<>() :
-                groups.stream()
-                        .filter(group -> group.getType().equals(AcmGroupType.LDAP_GROUP.name()))
-                        .collect(Collectors.toSet());
-    }
-
-    @JsonIgnore
-    public Set<String> getGroupIds(AcmUser in)
-    {
-        if (in.getGroups() != null)
-        {
-            return in.getGroups().stream()
-                    .map(AcmGroup::getName)
-                    .collect(Collectors.toSet());
-        }
-        return new HashSet<>();
-    }
-
-    public void setGroups(Set<AcmGroup> groups)
-    {
-        // Bidirectional ManyToMany relation
-        if (groups != null)
-        {
-            for (AcmGroup group : groups)
-            {
-                if (group.getMembers() != null && !group.getMembers().contains(this))
-                {
-                    group.getMembers().add(this);
-                }
-            }
-        }
-
-        this.groups = groups;
-    }
-
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
-     * or getGroups().addAll(..)
-     *
-     * @param group
-     */
-    public void addGroup(AcmGroup group)
-    {
-        if (group != null)
-        {
-            if (getGroups() == null)
-            {
-                setGroups(new HashSet<>());
-            }
-
-            getGroups().add(group);
-
-            if (group.getMembers() != null && !group.getMembers().contains(this))
-            {
-                group.getMembers().add(this);
-            }
-        }
-    }
-
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for removing groups from the user.
-     *
-     * @param group
-     */
-    public void removeGroup(AcmGroup group)
-    {
-        if (group != null)
-        {
-            if (getGroups() != null)
-            {
-                if (getGroups().contains(group))
-                {
-                    getGroups().remove(group);
-                }
-
-                if (group.getMembers() != null && group.getMembers().contains(this))
-                {
-                    group.getMembers().remove(this);
-                }
-            }
-        }
-    }
-
-    @Override
-    @JsonIgnore
-    public int hashCode()
-    {
-        if (getUserId() == null)
-        {
-            return 0;
-        } else
-        {
-            return getUserId().hashCode();
-        }
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof AcmUser))
-        {
-            return false;
-        }
-
-        AcmUser user = (AcmUser) obj;
-
-        if (user.getUserId() == null && getUserId() == null)
-        {
-            return true;
-        }
-
-        if (user.getUserId() == null && getUserId() != null)
-        {
-            return false;
-        }
-
-        return user.getUserId().equals(getUserId());
-    }
-
-    @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
@@ -381,6 +307,7 @@ public class AcmUser implements Serializable
         this.distinguishedName = distinguishedName;
     }
 
+    @JsonIgnore
     public String getUid()
     {
         return uid;
@@ -459,5 +386,25 @@ public class AcmUser implements Serializable
     public void setPasswordResetToken(PasswordResetToken passwordResetToken)
     {
         this.passwordResetToken = passwordResetToken;
+    }
+
+    public void setGroups(Set<AcmGroup> groups)
+    {
+        this.groups = groups;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcmUser acmUser = (AcmUser) o;
+        return Objects.equals(userId, acmUser.userId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(userId);
     }
 }
