@@ -370,6 +370,10 @@ body {
     width: 200px;
 }
 
+.module-content .left-sidebar-sm.collapsed {
+    width: 75px;
+}
+
 .module-content .left-sidebar-lg {
     width: 50%;
 }
