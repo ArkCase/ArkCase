@@ -699,6 +699,10 @@ thead {
 	display: inherit;
 }
 
+.ui-grid a.btn {
+    display: initial;
+}
+
 /* Dates Padding Issues */
 
 .ui-grid .ui-grid-cell {
