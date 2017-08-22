@@ -3,8 +3,10 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-
-  <!-- This is empty changelog because Liquibase will complain if folder is empty-->
+<!--
+    <changeSet id="01-acm-group-drop-column" author="ncuculova">
+        <dropForeignKeyConstraint baseTableName="acm_group" constraintName="fk_group_parent_name"/>
+        <dropColumn tableName="acm_group" columnName="cm_group_parent_name"/>
+    </changeSet>-->
 
 </databaseChangeLog>
-

@@ -495,4 +495,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="28-add-group-membership-table" author="ncuculova">
+        <createTable tableName="acm_group_membership">
+            <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_member_group_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="29-rename_acm_group_member_table" author="ncuculova">
+        <renameTable oldTableName="acm_group_member" newTableName="acm_user_membership"/>
+    </changeSet>
+
+    <changeSet id="30-add-group-ascendants-column" author="ncuculova">
+        <addColumn tableName="acm_group">
+            <column name="cm_ascendants" type="VARCHAR(4000)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
