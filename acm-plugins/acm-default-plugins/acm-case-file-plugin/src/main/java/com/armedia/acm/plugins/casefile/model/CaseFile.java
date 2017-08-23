@@ -27,11 +27,43 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "acm_case_file")
@@ -507,7 +539,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         {
             for (ObjectAssociation child : childObjects)
             {
-                if (ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+                if (ObjectAssociationConstants.REFFERENCE_TYPE.equals(child.getAssociationType()))
                 {
                     retval.add(child);
                 }
@@ -657,12 +689,45 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Override
     public String toString()
     {
-        return "CaseFile{" + "id=" + id + ", caseNumber='" + caseNumber + '\'' + ", caseType='" + caseType + '\'' + ", title='" + title + '\'' + ", status='" + status + '\'' + ", details='" + details
-                + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\'' + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", closed=" + closed
-                + ", disposition='" + disposition + '\'' + ", priority='" + priority + '\'' + ", objectType='" + objectType + '\'' + ", participants=" + participants + ", dueDate=" + dueDate
-                + ", changeCaseStatus=" + changeCaseStatus + ", approvers=" + approvers + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", personAssociations=" + personAssociations + ", milestones="
-                + milestones + ", restricted=" + restricted + ", childObjects=" + childObjects + ", container=" + container + ", courtroomName='" + courtroomName + '\''
-                + ", responsibleOrganization='" + responsibleOrganization + '\'' + ", nextCourtDate=" + nextCourtDate + '\'' + ", className='" + className + ", legacySystemId='" + legacySystemId + "'}";
+        return "CaseFile{" +
+                "id=" + id +
+                ", caseNumber='" + caseNumber + '\'' +
+                ", caseType='" + caseType + '\'' +
+                ", title='" + title + '\'' +
+                ", status='" + status + '\'' +
+                ", details='" + details + '\'' +
+                ", incidentDate=" + incidentDate +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                ", closed=" + closed +
+                ", disposition='" + disposition + '\'' +
+                ", priority='" + priority + '\'' +
+                ", objectType='" + objectType + '\'' +
+                ", className='" + className + '\'' +
+                ", participants=" + participants +
+                ", dueDate=" + dueDate +
+                ", changeCaseStatus=" + changeCaseStatus +
+                ", approvers=" + approvers +
+                ", ecmFolderPath='" + ecmFolderPath + '\'' +
+                ", personAssociations=" + personAssociations +
+                ", organizationAssociations=" + organizationAssociations +
+                ", milestones=" + milestones +
+                ", restricted=" + restricted +
+                ", childObjects=" + childObjects +
+                ", container=" + container +
+                ", courtroomName='" + courtroomName + '\'' +
+                ", responsibleOrganization='" + responsibleOrganization + '\'' +
+                ", nextCourtDate=" + nextCourtDate +
+                ", lock=" + lock +
+                ", queue=" + queue +
+                ", queueEnterDate=" + queueEnterDate +
+                ", responseDueDate=" + responseDueDate +
+                ", previousQueue=" + previousQueue +
+                ", securityField='" + securityField + '\'' +
+                ", legacySystemId='" + legacySystemId + '\'' +
+                '}';
     }
 
     @Override

@@ -6,218 +6,321 @@
     },
     "widgets": {
       "casesByQueue": {
-        "title": "ja_Active Case Files by Queue",
-        "description": "ja_Displays active case files by queue",
-        "xAxis": "ja_Queues",
-        "yAxis": "ja_Number of Case Files",
-        "noDataMessage": "ja_Currently there are no cases info"
+        "title": "キューによるアクティブ案件ファイル",
+        "description": "アクティブな案件ファイルをキューで表示する",
+        "xAxis": "キュー",
+        "yAxis": "案件ファイルの数",
+        "noDataMessage": "現在、案件情報はありません"
       },
       "casesByStatus": {
-        "title": "ja_Cases By Status",
-        "description": "ja_Displays cases by status",
+        "title": "ステータス別の案件",
+        "description": "ステータス別に案件を表示する",
         "timePeriod": {
-          "label": "ja_Select Time Period",
-          "lastWeek": "ja_Last Week",
-          "lastMonth": "ja_Last Month",
-          "lastYear": "ja_Last Year",
-          "all": "ja_All"
+          "label": "期間の選択",
+          "lastWeek": "先週",
+          "lastMonth": "先月",
+          "lastYear": "昨年",
+          "all": "すべて"
         },
-        "noDataMessage": "ja_Currently there are no cases info"
+        "noDataMessage": "現在、案件情報はありません"
       },
       "myCases": {
-        "title": "ja_My Cases",
-        "description": "ja_Displays my cases",
-        "noDataMessage": "ja_Currently there are no cases info",
+        "title": "私の案件",
+        "description": "私の案件を表示する",
+        "noDataMessage": "現在案件情報はありません",
         "table": {
           "header": {
-            "caseId": "ja_ID",
-            "title": "ja_Title",
-            "priority": "ja_Priority",
-            "status": "ja_Status"
-          }
+            "caseId": "識別番号",
+            "title": "タイトル",
+            "priority": "優先度",
+            "created": "作成日",
+            "modified": "変更日",
+            "status": "ステータス"
+          },
+          "overdue.tooltip": "案件が期限切れです",
+          "deadline.tooltip": "締め切りに近づいています"
         }
       },
       "myComplaints": {
-        "title": "ja_My Complaints",
-        "description": "ja_Displays my complaints",
+        "title": "私の訴状",
+        "description": "私の訴状を表示する",
         "table": {
           "header": {
-            "number": "ja_ID",
-            "title": "ja_Title",
-            "priority": "ja_Priority",
-            "created": "ja_Created",
-            "status": "ja_Status"
+            "number": "識別番号",
+            "title": "タイトル",
+            "priority": "優先度",
+            "created": "作成日",
+            "modified": "変更日",
+            "status": "ステータス"
           },
-          "noDataMessage": "ja_Currently there are no complaints info"
+          "overdue.tooltip": "クレームが期限切れです",
+          "deadline.tooltip": "期限が近づいています",
+          "noDataMessage": "現在、訴状情報はありません"
         }
       },
       "myTasks": {
-        "title": "ja_My Tasks",
-        "description": "ja_Displays my tasks",
-        "rowNumbers.label": "ja_Default Row Numbers",
-        "rowNumbers.placeholder": "ja_Enter Default Row Numbers",
+        "title": "私のタスク",
+        "description": "自分のタスクを表示する",
+        "rowNumbers.label": "デフォルトの行番号",
+        "rowNumbers.placeholder": "デフォルトの行番号を入力してください",
         "table": {
           "header": {
-            "taskId": "ja_ID",
-            "title": "ja_Title",
-            "priority": "ja_Priority",
-            "dueDate": "ja_Due",
-            "status": "ja_Status",
-            "objectId": "ja_Object ID"
+            "taskId": "識別番号",
+            "title": "タイトル",
+            "priority": "優先度",
+            "dueDate": "期限日",
+            "status": "ステータス",
+            "objectId": "オブジェクト識別番号"
           },
-          "overdue.tooltip": "ja_Task is Overdue",
-          "deadline.tooltip": "ja_Deadline is Approaching"
+          "overdue.tooltip": "タスクが期限切れです",
+          "deadline.tooltip": "締め切りに近づいています"
         },
-        "noDataMessage": "ja_Currently there are no tasks info"
+        "noDataMessage": "現在、タスク情報はありません"
       },
       "newComplaints": {
-        "title": "ja_New Complaints",
-        "description": "ja_Displays new complaints",
+        "title": "新しい訴状",
+        "description": "新しい訴状を表示する",
         "dueDate": {
-          "label": "ja_Select Due Date Period",
-          "pastDue": "ja_Past Due",
-          "dueTomorrow": "ja_Due Tomorrow",
-          "dueWeek": "ja_Due in 7 Days",
-          "dueMonth": "ja_Due in Month",
-          "all": "ja_All"
+          "label": "期限日を選択",
+          "pastDue": "過去の延滞",
+          "dueTomorrow": "明日の期限",
+          "dueWeek": "七日後の期限",
+          "dueMonth": "月後の期限",
+          "all": "すべて"
         },
-        "noDataMessage": "ja_Currently there are no complaints info"
+        "noDataMessage": "現在、訴状情報はありません"
       },
       "newCases": {
-        "title": "ja_New Cases",
-        "description": "ja_Displays new cases",
-        "noDataMessage": "ja_Currently there are no cases info"
+        "title": "新しい案件",
+        "description": "新しい案件を表示する",
+        "noDataMessage": "現在、案件情報はありません"
       },
       "teamWorkload": {
-        "title": "ja_Team Workload",
-        "description": "ja_Displays team workload",
+        "title": "チームワークロード",
+        "description": "チームワークロードを表示する",
         "dueDate": {
-          "label": "ja_Select Due Date Period",
-          "pastDue": "ja_Past Due",
-          "dueTomorrow": "ja_Due Tomorrow",
-          "dueWeek": "ja_Due in 7 Days",
-          "dueMonth": "ja_Due in Month",
-          "all": "ja_All"
+          "label": "期日を選択",
+          "pastDue": "過去の延滞",
+          "dueTomorrow": "明日の期限",
+          "dueWeek": "七日後の期限",
+          "dueMonth": "月後の期限",
+          "all": "すべて"
         },
-        "noDataMessage": "ja_Currently there are no team tasks info"
+        "noDataMessage": "現在チームタスク情報はありません"
+      },
+      "workflowReport": {
+        "title": "ワークフローレポート",
+        "description": "ワークフローレポートを表示する",
+        "rowNumbers.label": "デフォルトの行番号",
+        "rowNumbers.placeholder": "デフォルトの行番号を入力してください",
+        "table": {
+          "header": {
+            "taskId": "タスク識別番号",
+            "taskParentType": "親タイプ",
+            "taskParentName": "親の名前",
+            "processName": "ビジネスプロセス名",
+            "taskName": "タスク名"
+          }
+        },
+        "noDataMessage": "現在、ワークフローレポート情報はありません"
       },
       "weather": {
-        "description": "ja_Displays weather",
+        "description": "天気を表示する",
         "label": {
-          "current": "ja_Current:",
-          "enterLocation": "ja_Enter Location",
-          "description": "ja_Display the current temperature of a city",
-          "location": "ja_Location",
-          "insertLocationInConfiguration": "ja_Please insert a location in the widget configuration"
+          "current": "現在：",
+          "enterLocation": "場所を入力",
+          "description": "都市の現在の温度を表示する",
+          "location": "場所",
+          "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください"
         },
-        "title": "ja_Weather",
-        "noDataMessage": "ja_Currently there are no weather info"
+        "title": "天気",
+        "noDataMessage": "現在、天気情報はありません"
       },
       "news": {
-        "description": "ja_Displays news",
+        "description": "ニュースを表示する",
         "label": {
-          "enterFeedUrl": "ja_Enter Feed url",
-          "description": "ja_Displays a RSS/Atom feed",
-          "feedUrl": "ja_Feed Url",
-          "insertUrl": "ja_Please insert a feed url in the widget configuration"
+          "enterFeedUrl": "フィードURLを入力してください",
+          "description": "RSS / Atomフィードを表示する",
+          "feedUrl": "フィードURL",
+          "insertUrl": "フィードURLをウィジェット設定に挿入してください"
         },
-        "title": "ja_News",
-        "noDataMessage": "ja_Currently there is no RSS/info"
+        "title": "ニュース",
+        "noDataMessage": "現在RSS /情報はありません"
       },
       "details": {
-        "title": "ja_Details",
-        "description": "ja_Displays case details",
-        "noDataMessage": "ja_Currently there are no details"
+        "title": "詳細",
+        "description": "案件の詳細を表示する",
+        "noDataMessage": "現在詳細はありません"
       },
       "people": {
-        "title": "ja_People",
-        "description": "ja_Displays people details",
-        "noDataMessage": "ja_Currently there are no people to display"
+        "title": "人員",
+        "description": "人員々の詳細を表示する",
+        "noDataMessage": "現在、表示する人員がいません"
+      },
+      "ids": {
+        "title": "識別番号",
+        "description": "識別番号の詳細を表示する",
+        "noDataMessage": "現在、表示する識別番号はありません"
+      },
+      "complaints": {
+        "title": "訴状",
+        "description": "クレームの詳細を表示する",
+        "noDataMessage": "現在、表示するクレームはありません"
+      },
+      "cases": {
+        "title": "案件",
+        "description": "案件の詳細を表示する",
+        "noDataMessage": "現在、表示する案件はありません"
       },
       "documents": {
-        "title": "ja_Documents",
-        "description": "ja_Displays chart of documents by folder",
-        "noDataMessage": "ja_Currently there are no documents to display"
+        "title": "ドキュメント",
+        "description": "フォルダごとのドキュメントのチャートを表示する",
+        "noDataMessage": "現在表示するドキュメントがありません"
       },
       "locations": {
-        "title": "ja_Locations",
-        "description": "ja_Displays location details",
-        "noDataMessage": "ja_Currently there are no locations to display"
+        "title": "場所",
+        "description": "場所の詳細を表示する",
+        "noDataMessage": "現在、表示する場所がありません"
+      },
+      "phones": {
+        "title": "電話番号",
+        "description": "電話番号を表示する",
+        "noDataMessage": "現在、表示する電話番号がありません"
+      },
+      "faxes": {
+        "title": "ファックス番号",
+        "description": "ファックスの詳細を表示する",
+        "noDataMessage": "現在、表示するファックスはありません"
+      },
+      "emails": {
+        "title": "メールアドレス",
+        "description": "メールの詳細を表示する",
+        "noDataMessage": "現在、表示する電子メールアドレスがありません"
+      },
+      "urls": {
+        "title": "URL",
+        "description": "URLの詳細を表示する",
+        "noDataMessage": "現在、表示するURLはありません"
+      },
+      "dbas": {
+        "title": "DBA",
+        "description": "DBAの詳細を表示する",
+        "noDataMessage": "現在、表示するDBAはありません"
       },
       "tasks": {
-        "title": "ja_Tasks",
-        "description": "ja_Displays task details",
-        "noDataMessage": "ja_Currently there are no tasks to display"
+        "title": "タスク",
+        "description": "タスクの詳細を表示する",
+        "noDataMessage": "現在、表示するタスクはありません"
       },
       "participants": {
-        "title": "ja_Participants",
-        "description": "ja_Displays participant details",
-        "noDataMessage": "ja_Currently there are no participant to display"
+        "title": "参加者",
+        "description": "参加者の詳細を表示する",
+        "noDataMessage": "現在、表示する参加者がいません"
       },
       "references": {
-        "title": "ja_References",
-        "description": "ja_Displays reference details",
-        "noDataMessage": "ja_Currently there are no references to display"
+        "title": "参照",
+        "description": "参照の詳細を表示する",
+        "noDataMessage": "現在、表示する参照はありません"
+      },
+      "relOrganizations": {
+        "title": "関連団体",
+        "description": "関連組織の詳細を表示する",
+        "noDataMessage": "現在、関連する組織は表示されていません"
       },
       "history": {
-        "title": "ja_History",
-        "description": "ja_Displays chart of history events",
-        "noDataMessage": "ja_Currently there are no events to display"
+        "title": "履歴",
+        "description": "履歴イベントのグラフを表示する",
+        "noDataMessage": "現在、表示するイベントはありません"
       },
       "notes": {
-        "title": "ja_Notes",
-        "description": "ja_Displays note details",
-        "noDataMessage": "ja_Currently there are no notes to display"
+        "title": "メモ",
+        "description": "メモの詳細を表示する",
+        "noDataMessage": "現在表示するメモがありません"
       },
       "time": {
-        "title": "ja_Time",
-        "description": "ja_Displays chart for hours per user",
-        "noDataMessage": "ja_Currently there is no time information to display"
+        "title": "時間",
+        "description": "ユーザー1人あたりの時間のグラフを表示",
+        "noDataMessage": "現在、表示する時間情報はありません"
       },
       "cost": {
-        "title": "ja_Cost",
-        "description": "ja_Displays chart for cost per user",
-        "noDataMessage": "ja_Currently there is no cost information to display"
+        "title": "コスト",
+        "description": "ユーザー1人あたりの費用のグラフを表示",
+        "noDataMessage": "現在、表示する費用情報はありません"
       },
       "calendar": {
-        "title": "ja_Calendar",
-        "description": "ja_Displays chart of scheduled events per day",
-        "noDataMessage": "ja_Currently there are no events to display"
+        "title": "カレンダー",
+        "description": "1日にスケジュールされたイベントのチャートを表示する",
+        "noDataMessage": "現在、表示するイベントはありません"
       },
       "reworkDetails": {
-        "title": "ja_Rework Details",
-        "description": "ja_Shows most recent rework details",
-        "noDataMessage": "ja_Currently there no are no rework details to display"
+        "title": "リワークの詳細",
+        "description": "最新のリワークの詳細を表示",
+        "noDataMessage": "現在、表示するリワークの詳細はありません"
       },
       "docReview": {
-        "title": "ja_Documents Under Review",
-        "description": "ja_Shows documents under review",
-        "noDataMessage": "ja_Currently there no are no documents under review to display"
+        "title": "レビュー中のドキュメント",
+        "description": "レビュー中の文書を表示する",
+        "noDataMessage": "現在、表示するレビュー中のドキュメントはありません"
+      },
+      "parentDocs": {
+        "title": "起源の文書",
+        "description": "起源の文書を表示する",
+        "noDataMessage": "現在、表示する親ドキュメントはありません"
       },
       "workflow": {
-        "title": "ja_Workflow Overview",
-        "description": "ja_Overview of pending workflows",
-        "noDataMessage": "ja_Currently there are no workflows to display"
+        "title": "ワークフローの概要",
+        "description": "保留中のワークフローの概要",
+        "noDataMessage": "現在、表示するワークフローはありません"
       },
       "signature": {
-        "title": "ja_eSignature",
-        "description": "ja_eSignature widget",
-        "noDataMessage": "ja_Currently there are no eSignatures to display"
+        "title": "電子署名",
+        "description": "電子署名ウィジェット",
+        "noDataMessage": "現在、表示する電子署名がありません"
       },
       "person": {
-        "title": "ja_Person",
-        "description": "ja_Person widget for Cost and Time modules",
-        "noDataMessage": "ja_Currently there are no persons to display"
+        "title": "人員",
+        "description": "コストと時間モジュールの人員ウィジェット",
+        "noDataMessage": "現在表示する人員がいません"
       },
       "hoursSummary": {
-        "title": "ja_Hours Summary",
-        "description": "ja_Displays a summary of hours worked",
-        "noDataMessage": "ja_Currently there is no summary to display"
+        "title": "時間の要約",
+        "description": "作業時間の要約を表示する",
+        "noDataMessage": "現在、表示する要約はありません"
       },
       "expenses": {
-        "title": "ja_Expenses",
-        "description": "ja_Displays a cost-to-user graph",
-        "noDataMessage": "ja_Currently no expense data to display"
+        "title": "費用",
+        "description": "費用対ユーザーグラフを表示する",
+        "noDataMessage": "現在、表示する経費データはありません"
+      },
+      "organizations": {
+        "title": "組織",
+        "description": "組織を表示する",
+        "noDataMessage": "現在、表示する組織はありません"
+      },
+      "tags": {
+        "title": "タグ",
+        "description": "タグを表示する",
+        "noDataMessage": "現在、表示するタグはありません"
+      },
+      "approvalRouting": {
+        "title": "承認ルーティング",
+        "description": "承認ルーティングを表示する",
+        "noDataMessage": "現在、承認者は表示されません"
+      },
+      "pictures": {
+        "title": "写真",
+        "description": "写真を表示する",
+        "noDataMessage": "現在表示する画像がありません"
+      },
+      "aliases": {
+        "title": "エイリアス",
+        "description": "エイリアスを表示する",
+        "noDataMessage": "現在、表示するエイリアスはありません"
+      },
+      "related": {
+        "title": "関連する人物",
+        "description": "関連する人々を表示する",
+        "noDataMessage": "現在表示する関連人はいません"
       }
     }
   }

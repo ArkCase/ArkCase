@@ -132,7 +132,7 @@
       "parentName": "Parent",
       "targetTitle": "Title",
       "modified": "Modified",
-      "targetType": "Reference Type",
+      "targetType": "Type",
       "status": "Status"
     }
   },
@@ -250,7 +250,7 @@
     "searchGroupHeader": "Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "Future Approvers",
+    "title": "Approvers",
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {

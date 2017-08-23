@@ -62,6 +62,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         solrDoc.setTitle_parseable(person.getFamilyName() + " " + person.getGivenName());
         solrDoc.setTitle_parseable_lcs(person.getFamilyName() + " " + person.getGivenName());
+        solrDoc.setStatus_lcs(person.getStatus());
 
         addContactMethods(person, solrDoc);
 

@@ -10,7 +10,6 @@ public interface AcmLdapConstants
     String LDAP_LAST_NAME_ATTR = "lastName";
     String LDAP_USER_ID_ATTR = "userId";
     String LDAP_MAIL_ATTR = "mail";
-    String LDAP_MEMBER_OF_ATTR = "memberOf";
     String LDAP_MEMBER_ATTR = "member";
     String LDAP_PASSWORD_ATTR = "password";
     String LDAP_UNICODE_PASSWORD_ATTR = "unicodePassword";

@@ -81,7 +81,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @Column(name = "cm_person_company_name")
     private String company;
 
-    @Column(name = "cm_person_status", insertable = true, updatable = false)
+    @Column(name = "cm_person_status")
     private String status;
 
     @Column(name = "cm_given_name")
