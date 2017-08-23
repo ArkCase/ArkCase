@@ -1,13 +1,13 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -31,9 +31,7 @@ public class LdapSyncProcessor
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
-        Map<String, AcmGroup> allGroupsByIdMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, allUsersByIdMap);
-
-        Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.getGroupsByUserIdMap(allGroupsByIdMap);
+        Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, allUsersByIdMap);
 
         Map<String, Set<String>> roleToGroup = ldapSyncConfig.getRoleToGroupsMap();
         Map<String, List<String>> groupToRoleMap = ldapSyncConfig.getGroupToRolesMap();
