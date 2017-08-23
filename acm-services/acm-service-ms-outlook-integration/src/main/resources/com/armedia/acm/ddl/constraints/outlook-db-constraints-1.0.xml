@@ -1,0 +1,24 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-constraint-outlook-folder-foreign_key" author="lazo.lazarev">
+        <addForeignKeyConstraint
+                baseTableName="acm_outlook_object_reference"
+                baseColumnNames="cm_outlook_folder_creator_id"
+                constraintName="fk_outlook_folder_creator"
+                referencedTableName="acm_outlook_folder_creator"
+                referencedColumnNames="cm_outlook_folder_creator_id"
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
+        <addUniqueConstraint
+                tableName="acm_outlook_object_reference"
+                columnNames="cm_object_type, cm_object_id"
+                constraintName="uq_cons_cm_object_type_object_id"
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+</databaseChangeLog>

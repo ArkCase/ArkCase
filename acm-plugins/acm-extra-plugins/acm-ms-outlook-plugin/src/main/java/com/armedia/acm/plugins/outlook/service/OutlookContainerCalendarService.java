@@ -6,10 +6,10 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 import java.util.List;
 
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 /**
  * Created by nebojsha on 25.05.2015.
@@ -17,14 +17,15 @@ import java.util.List;
 public interface OutlookContainerCalendarService
 {
 
-    OutlookFolder createFolder(AcmOutlookUser outlookUser,
-                               String folderName, AcmContainer container, List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
+    OutlookFolder createFolder(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
+            List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
 
-    void deleteFolder(AcmOutlookUser outlookUser,
-                      Long containerId,
-                      String folderId, DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
+    @Deprecated
+    void deleteFolder(AcmOutlookUser outlookUser, Long containerId, String folderId, DeleteMode deleteMode)
+            throws AcmOutlookItemNotFoundException;
 
-    void updateFolderParticipants(AcmOutlookUser outlookUser,
-                                  String folderId, List<AcmParticipant> participants)
+    void deleteFolder(AcmOutlookUser outlookUser, AcmContainer container, DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
+
+    void updateFolderParticipants(AcmOutlookUser outlookUser, String folderId, List<AcmParticipant> participants)
             throws AcmOutlookItemNotFoundException;
 }

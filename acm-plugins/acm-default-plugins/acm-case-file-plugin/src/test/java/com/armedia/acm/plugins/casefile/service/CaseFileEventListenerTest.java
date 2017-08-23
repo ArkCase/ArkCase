@@ -77,6 +77,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         caseFileEventListener.setAcmAssignmentDao(mockAcmAssignmentDao);
         caseFileEventListener.setCalendarService(mockCalendarService);
         caseFileEventListener.setCalendarAdminService(mockedCalendarAdminService);
+        caseFileEventListener.setCaseFileStatusClosed("CLOSED");
     }
 
     public CaseFile getCase()
@@ -464,12 +465,10 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         Capture<CaseFile> caseCapture = Capture.newInstance();
         Capture<String> ipAddressCapture = Capture.newInstance();
         Capture<String> eventStatusCapture = Capture.newInstance();
-        Capture<Long> containerIdCapture = Capture.newInstance();
-        Capture<String> calendarIdCapture = Capture.newInstance();
+        Capture<AcmContainer> containerCapture = Capture.newInstance();
         Capture<AcmOutlookUser> calendarOutlookUser = Capture.newInstance();
 
-        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerIdCapture), capture(calendarIdCapture),
-                eq(DeleteMode.MoveToDeletedItems));
+        mockCalendarService.deleteFolder(capture(calendarOutlookUser), capture(containerCapture), eq(DeleteMode.MoveToDeletedItems));
         expectLastCall().once();
 
         mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture), capture(eventStatusCapture));
@@ -491,8 +490,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         assertEquals(caseFile.getPriority(), caseCapture.getValue().getPriority());
         assertEquals(caseFile.getDetails(), caseCapture.getValue().getDetails());
         assertEquals(caseFile.getCaseNumber(), caseCapture.getValue().getCaseNumber());
-        assertEquals(caseFile.getContainer().getContainerObjectId(), containerIdCapture.getValue());
-        assertEquals(caseFile.getContainer().getCalendarFolderId(), calendarIdCapture.getValue());
+        assertEquals(caseFile.getContainer(), containerCapture.getValue());
     }
 
 }
