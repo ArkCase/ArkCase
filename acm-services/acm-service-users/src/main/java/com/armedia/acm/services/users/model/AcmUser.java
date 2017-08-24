@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -119,11 +118,11 @@ public class AcmUser implements Serializable
     }
 
     @JsonIgnore
-    public List<AcmGroup> getLdapGroups()
+    public Set<AcmGroup> getLdapGroups()
     {
         return groups.stream()
                 .filter(AcmGroup::isLdapGroup)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     /**
