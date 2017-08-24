@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
@@ -79,6 +80,7 @@ public class AcmGroup implements Serializable, AcmEntity
     @JoinColumn(name = "cm_group_supervisor_id")
     private AcmUser supervisor;
 
+    @JsonProperty("members")
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "acm_user_membership",
@@ -159,10 +161,7 @@ public class AcmGroup implements Serializable, AcmEntity
      */
     public void addUserMember(AcmUser user)
     {
-        if (user == null) return;
-
         userMembers.add(user);
-
         user.addGroup(this);
     }
 
@@ -174,10 +173,7 @@ public class AcmGroup implements Serializable, AcmEntity
      */
     public void removeUserMember(AcmUser user)
     {
-        if (user == null) return;
-
         user.getGroups().remove(this);
-
         userMembers.remove(user);
     }
 
