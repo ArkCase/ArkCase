@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('directives').controller('Directives.CoreParticipantsModalController', ['$scope', '$modal', '$modalInstance',
-    '$translate', 'UtilService',
-    function ($scope, $modal, $modalInstance, $translate, Util) {
+    '$translate', 'UtilService', 'params',
+    function ($scope, $modal, $modalInstance, $translate, Util, paramsOwn) {
 
         $scope.onClickOk = function () {
             $modalInstance.close({
@@ -16,17 +16,26 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
         };
         $scope.pickParticipant = function () {
 
-            var params = {};
+            var params={};
+            $scope.owningGroup=paramsOwn.owningGroup;
 
+            if($scope.participant.participantType == "assignee") {
+                params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
+                params.filter = 'fq="object_type_s": USER &fq="groups_id_ss": '+$scope.owningGroup;
+                params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
+            } else
             if ($scope.participant.participantType != "owning group") {
                 params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
                 params.filter = '"Object Type": USER';
                 params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
-            } else {
-                params.header = $translate.instant("common.directive.coreParticipants.modal.dialogGroupPicker.header");
-                params.filter = '"Object Type": GROUP';
-                params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
             }
+            else{
+                    params.header = $translate.instant("common.directive.coreParticipants.modal.dialogGroupPicker.header");
+                    params.filter = '"Object Type": GROUP';
+                    params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
+            }
+
+            console.log(params.filter);
 
             var modalInstance = $modal.open({
                 templateUrl: "directives/core-participants/core-participants-picker-modal.client.view.html",
