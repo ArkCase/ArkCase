@@ -119,7 +119,6 @@
                 <prop key="sn">lastName</prop>
                 <prop key="uid">userId</prop>
                 <prop key="mail">mail</prop>
-                <prop key="memberOf">memberOf</prop>
                 <prop key="userAccountControl">userAccountControl</prop>
                 <prop key="userPassword">userPassword</prop>
                 <prop key="unicodePwd">unicodePwd</prop>

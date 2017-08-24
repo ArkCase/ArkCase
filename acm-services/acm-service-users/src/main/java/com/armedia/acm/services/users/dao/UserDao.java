@@ -26,6 +26,7 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -197,7 +198,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         if (existing == null)
         {
             getEntityManager().persist(in);
-            getEntityManager().flush();
         }
         return in;
     }
@@ -212,11 +212,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         if (existing == null)
         {
             getEntityManager().persist(userRole);
-            getEntityManager().flush();
             return userRole;
         }
 
-        existing.setUserRoleState(userRole.getUserRoleState());
+        if (!Objects.equals(existing.getUserRoleState(), userRole.getUserRoleState()))
+        {
+            existing.setUserRoleState(userRole.getUserRoleState());
+        }
+
         return userRole;
     }
 
@@ -273,6 +276,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                         + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
         allUsersInDirectory.setParameter("directoryName", directoryName);
         return allUsersInDirectory.getResultList();
+    }
+
+    @Transactional
+    public AcmUser persistUser(AcmUser acmUser)
+    {
+        getEm().persist(acmUser);
+        return acmUser;
     }
 
     public EntityManager getEntityManager()

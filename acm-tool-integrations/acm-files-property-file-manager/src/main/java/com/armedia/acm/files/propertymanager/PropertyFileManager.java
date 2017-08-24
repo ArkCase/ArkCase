@@ -43,13 +43,14 @@ public class PropertyFileManager
         }
     }
 
-    public void store(String key, String value, String filename)
+    public void store(String key, String value, String fileName)
     {
         Properties p = new Properties();
         p.setProperty(key, value);
 
-        try (OutputStream fos = new FileOutputStream(filename))
+        try (OutputStream fos = new FileOutputStream(fileName))
         {
+            log.info("Saving property file [{}]", fileName);
             p.store(fos, "last updated");
         } catch (IOException e)
         {
@@ -76,6 +77,7 @@ public class PropertyFileManager
         try (OutputStream out = new FileOutputStream(fileName))
         {
             p.setProperty(key, value);
+            log.info("Saving property file [{}]", fileName);
             p.store(out, null);
         } catch (IOException e)
         {
@@ -104,6 +106,7 @@ public class PropertyFileManager
         try (OutputStream out = new FileOutputStream(fileName))
         {
             propertiesMap.forEach(p::setProperty);
+            log.info("Saving property file [{}]", fileName);
             p.store(out, null);
         } catch (IOException e)
         {
@@ -132,6 +135,7 @@ public class PropertyFileManager
 
             try (FileOutputStream out = new FileOutputStream(fileName))
             {
+                log.info("Saving property file [{}]", fileName);
                 p.store(out, null);
             } catch (IOException e)
             {

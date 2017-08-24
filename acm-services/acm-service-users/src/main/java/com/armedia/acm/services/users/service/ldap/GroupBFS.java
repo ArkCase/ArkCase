@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GroupBFS
 {
@@ -33,7 +34,14 @@ public class GroupBFS
         return visitedNodes;
     }
 
-    // the idea is to go only through group's member groups and avoid use of "memberOf" attribute
+    /**
+     * To find ascendants to LdapGroup we need to traverse from all groups in their descendants and
+     * search for the target node. We want to avoid using `memberOf` attribute.
+     *
+     * @param targetNode The node we are finding ascendants
+     * @param ldapGroups All the ldap groups
+     * @return Set of ascendants
+     */
     public Set<LdapGroup> findAscendantsForLdapGroupNode(LdapGroupNode targetNode, Set<LdapGroup> ldapGroups)
     {
         Set<LdapGroupNode> allNodes = ldapGroups.stream()
@@ -41,35 +49,38 @@ public class GroupBFS
                 .collect(Collectors.toSet());
 
         return allNodes.stream()
-                .flatMap(node -> {
-                    Set<LdapGroup> visitedNodes = new HashSet<>();
-                    Queue<Set<LdapGroupNode>> pathToTargetNode = new LinkedList<>();
-                    Queue<LdapGroupNode> queue = new LinkedList<>();
-                    queue.add(node);
-                    pathToTargetNode.add(new HashSet<>(Arrays.asList(node)));
-                    while (!queue.isEmpty())
-                    {
-                        node = queue.poll();
-                        Set<LdapGroupNode> path = pathToTargetNode.poll();
-                        if (node.equals(targetNode))
-                        {
-                            path.remove(node);
-                            return path.stream();
-                        }
-                        visitedNodes.add(node.getLdapGroup());
-
-                        node.getNodes().stream()
-                                .filter(it -> !visitedNodes.contains(it.getLdapGroup()))
-                                .forEach(it -> {
-                                    queue.add(it);
-                                    Set<LdapGroupNode> extendPath = new HashSet<>(path);
-                                    extendPath.add(it);
-                                    pathToTargetNode.add(extendPath);
-                                });
-                    }
-                    return new HashSet<LdapGroupNode>().stream();
-                })
+                .flatMap(node -> findAscendantsStream(targetNode, node))
                 .map(LdapGroupNode::getLdapGroup)
                 .collect(Collectors.toSet());
+    }
+
+    private Stream<? extends LdapGroupNode> findAscendantsStream(LdapGroupNode targetNode, LdapGroupNode startNode)
+    {
+        Set<LdapGroup> visitedNodes = new HashSet<>();
+        Queue<Set<LdapGroupNode>> pathToTargetNode = new LinkedList<>();
+        Queue<LdapGroupNode> queue = new LinkedList<>();
+        queue.add(startNode);
+        pathToTargetNode.add(new HashSet<>(Arrays.asList(startNode)));
+        while (!queue.isEmpty())
+        {
+            startNode = queue.poll();
+            Set<LdapGroupNode> path = pathToTargetNode.poll();
+            if (startNode.equals(targetNode))
+            {
+                path.remove(startNode);
+                return path.stream();
+            }
+            visitedNodes.add(startNode.getLdapGroup());
+
+            startNode.getNodes().stream()
+                    .filter(it -> !visitedNodes.contains(it.getLdapGroup()))
+                    .forEach(it -> {
+                        queue.add(it);
+                        Set<LdapGroupNode> extendPath = new HashSet<>(path);
+                        extendPath.add(it);
+                        pathToTargetNode.add(extendPath);
+                    });
+        }
+        return new HashSet<LdapGroupNode>().stream();
     }
 }

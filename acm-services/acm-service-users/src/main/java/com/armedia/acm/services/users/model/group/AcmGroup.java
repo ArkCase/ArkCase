@@ -183,20 +183,14 @@ public class AcmGroup implements Serializable, AcmEntity
 
     public void addGroupMember(AcmGroup group)
     {
-        if (group == null) return;
-
         memberGroups.add(group);
-
         group.getMemberOfGroups().add(group);
 
     }
 
     public void removeGroupMember(AcmGroup group)
     {
-        if (group == null) return;
-
         memberGroups.remove(group);
-
         group.getMemberOfGroups().remove(group);
     }
 
@@ -228,6 +222,12 @@ public class AcmGroup implements Serializable, AcmEntity
     public void setType(AcmGroupType type)
     {
         this.type = type;
+    }
+
+    @JsonIgnore
+    public boolean isLdapGroup()
+    {
+        return type == AcmGroupType.LDAP_GROUP;
     }
 
     public AcmGroupStatus getStatus()
@@ -392,7 +392,7 @@ public class AcmGroup implements Serializable, AcmEntity
     public String toString()
     {
         return MoreObjects.toStringHelper(this)
-                .add("description", description)
+                .add("name", name)
                 .toString();
     }
 }
