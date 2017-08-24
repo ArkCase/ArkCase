@@ -12,6 +12,8 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface SpringLdapDao
 {
@@ -47,35 +49,36 @@ public interface SpringLdapDao
         return Directory.valueOf(directoryType).convertToDirectorySpecificTimestamp(ldapLastSyncTimestamp);
     }
 
-    default String buildGroupSearchFilter(AcmLdapSyncConfig syncConfig, String lastSyncDate)
+    default String buildGroupSearchFilter(AcmLdapSyncConfig syncConfig, Optional<String> lastSyncDate)
     {
-        return StringUtils.isBlank(lastSyncDate) ? syncConfig.getGroupSearchFilter()
-                : String.format(syncConfig.getChangedGroupSearchFilter(), lastSyncDate);
+        return lastSyncDate.map(it -> String.format(syncConfig.getChangedGroupSearchFilter(), lastSyncDate))
+                .orElse(syncConfig.getGroupSearchFilter());
     }
 
-    default String buildUsersSearchFilter(AcmLdapSyncConfig syncConfig, String lastSyncDate)
+    default String buildUsersSearchFilter(AcmLdapSyncConfig syncConfig, Optional<String> lastSyncDate)
     {
         // eg. allUsersFilter = (objectClass=person )
         // allChangedUsersFilter = (&(objectClass=person)(modifyTimestamp>=%s))
-        return StringUtils.isBlank(lastSyncDate) ? syncConfig.getAllUsersFilter()
-                : String.format(syncConfig.getAllChangedUsersFilter(), lastSyncDate);
+        return lastSyncDate.map(it ->String.format(syncConfig.getAllChangedUsersFilter(), it))
+                .orElse(syncConfig.getAllUsersFilter());
     }
 
-    default String buildPagedGroupsSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, String lastSyncDate)
+    default String buildPagedGroupsSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, Optional<String> lastSyncDate)
     {
-        return StringUtils.isBlank(lastSyncDate) ? String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue)
-                : String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue, lastSyncDate);
+        return lastSyncDate.map(it -> String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue, lastSyncDate))
+                .orElse(String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue));
+
     }
 
-    default String buildPagedUsersSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, String lastSyncDate)
+    default String buildPagedUsersSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, Optional<String> lastSyncDate)
     {
         // eg. allUsersPageFilter = (&(objectClass=person)(uidNumber>=%s))
         // allChangedUsersPageFilter = (&(objectClass=person)(uidNumber>=%s)(modifyTimestamp>=%s))
-        return StringUtils.isNotBlank(lastSyncDate) ? String.format(syncConfig.getAllChangedUsersPageFilter(),
-                sortAttributeValue, lastSyncDate) : String.format(syncConfig.getAllUsersPageFilter(), sortAttributeValue);
+        return lastSyncDate.map(it -> String.format(syncConfig.getAllChangedUsersPageFilter(), sortAttributeValue, lastSyncDate))
+                .orElse(String.format(syncConfig.getAllUsersPageFilter(), sortAttributeValue));
     }
 
-    List<LdapUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, String ldapLastSyncDate);
+    List<LdapUser> findUsersPaged(LdapTemplate template, final AcmLdapSyncConfig syncConfig, Optional<String> ldapLastSyncDate);
 
-    List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config, String ldapLastSyncDate);
+    List<LdapGroup> findGroupsPaged(LdapTemplate template, AcmLdapSyncConfig config, Optional<String> ldapLastSyncDate);
 }

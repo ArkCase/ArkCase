@@ -2,7 +2,6 @@ package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -123,7 +122,7 @@ public class AcmUser implements Serializable
     public List<AcmGroup> getLdapGroups()
     {
         return groups.stream()
-                .filter(group -> group.getType() == AcmGroupType.LDAP_GROUP)
+                .filter(AcmGroup::isLdapGroup)
                 .collect(Collectors.toList());
     }
 
@@ -135,10 +134,7 @@ public class AcmUser implements Serializable
      */
     public void addGroup(AcmGroup group)
     {
-        if (group == null) return;
-
         groups.add(group);
-
         group.getUserMembers().add(this);
     }
 
@@ -149,10 +145,7 @@ public class AcmUser implements Serializable
      */
     public void removeGroup(AcmGroup group)
     {
-        if (group == null) return;
-
         groups.remove(group);
-
         group.getUserMembers().remove(this);
     }
 

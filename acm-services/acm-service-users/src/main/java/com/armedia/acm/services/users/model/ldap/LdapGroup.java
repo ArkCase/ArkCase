@@ -48,31 +48,32 @@ public class LdapGroup
                 Objects.equals(getAscendantsAsString(), acmGroup.getAscendantsList());
     }
 
-    public Set<String> groupAddedUserDns(Set<String> existingMembersDns)
+    public Set<String> groupNewUsers(Set<String> existingUsersDns)
     {
         return memberUsers.stream()
-                .filter(it -> !existingMembersDns.contains(it))
+                .filter(it -> !existingUsersDns.contains(it))
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> groupAddedGroupMembers(Set<String> existingMembers)
+    public Set<String> groupNewGroups(Set<String> existingGroups)
     {
         return getMemberGroupNames().stream()
-                .filter(groupName -> !existingMembers.contains(groupName))
+                .filter(groupName -> !existingGroups.contains(groupName))
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> groupRemovedGroupMembers(Set<String> existingMembers)
+    public Set<String> groupRemovedGroups(Set<String> existingGroups)
     {
-        return existingMembers.stream()
-                .filter(groupName -> !getMemberGroupNames().contains(groupName))
+        final Set<String> memberGroupNames = getMemberGroupNames();
+        return existingGroups.stream()
+                .filter(groupName -> !memberGroupNames.contains(groupName))
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> groupRemovedUserDns(Set<String> existingMembersDns)
+    public Set<String> groupRemovedUsers(Set<String> existingUsersDns)
     {
-        return existingMembersDns.stream()
-                .filter(it -> !getMemberUsers().contains(it))
+        return existingUsersDns.stream()
+                .filter(it -> !memberUsers.contains(it))
                 .collect(Collectors.toSet());
     }
 

@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create multiple Spring beans, each
@@ -87,7 +88,7 @@ public class LdapSyncService
 
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
-        String ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
+        Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
@@ -141,19 +142,19 @@ public class LdapSyncService
         return user;
     }
 
-    public String readLastLdapSyncDate(String directoryName)
+    public Optional<String> readLastLdapSyncDate(String directoryName)
     {
-        String lastSyncDate = null;
+        String date = null;
         try
         {
-            lastSyncDate = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
+            date = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
                     String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY), null);
         } catch (AcmEncryptionException e)
         {
             log.warn("Failed to read [{}] date property. All users will be synced ", AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY,
                     e.getMessage());
         }
-        return lastSyncDate;
+        return Optional.ofNullable(date);
     }
 
     public void writeLastLdapSync(String directoryName)

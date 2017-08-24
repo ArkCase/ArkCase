@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LdapDatabaseSyncService
 {
@@ -23,8 +25,13 @@ public class LdapDatabaseSyncService
     public List<AcmUser> saveUsers(AcmUsersSyncResult acmUsersSyncResult)
     {
         List<AcmUser> savedUsers = new ArrayList<>();
+
+        //filter out users that are not members to any AcmGroup
+        Set<AcmUser> newUsers = acmUsersSyncResult.getNewUsers().stream()
+                .filter(user -> !user.getGroups().isEmpty())
+                .collect(Collectors.toSet());
         log.info("Saving new users [{}]", acmUsersSyncResult.getNewUsers().size());
-        acmUsersSyncResult.getNewUsers().forEach(acmUser -> {
+        newUsers.forEach(acmUser -> {
             log.info("Saving AcmUser [{}]", acmUser.getUserId());
             userDao.persistUser(acmUser);
             savedUsers.add(acmUser);
