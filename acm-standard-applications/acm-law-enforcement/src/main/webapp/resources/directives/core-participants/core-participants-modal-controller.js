@@ -35,8 +35,6 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
                     params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
             }
 
-            console.log(params.filter);
-
             var modalInstance = $modal.open({
                 templateUrl: "directives/core-participants/core-participants-picker-modal.client.view.html",
                 controller: ['$scope', '$modalInstance', 'params', function ($scope, $modalInstance, params) {
