@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,7 @@ public class AcmGroupsSyncResult
     {
         ldapGroups.forEach(ldapGroup -> {
             Set<LdapGroup> ascendants = new GroupBFS()
-                    .findAscendantsForLdapGroupNode(new LdapGroupNode(ldapGroup), new TreeSet<>(ldapGroups));
+                    .findAscendantsForLdapGroupNode(new LdapGroupNode(ldapGroup), new HashSet<>(ldapGroups));
             ldapGroup.setAscendants(ascendants);
         });
     }

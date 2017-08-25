@@ -1,17 +1,13 @@
-/**
- *
- */
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import org.mule.api.MuleException;
-import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,12 +18,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-/**
- * @author riste.tutureski
- */
 public class GroupServiceImpl implements GroupService
 {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private UserDao userDao;
     private AcmGroupDao groupDao;
@@ -36,15 +29,26 @@ public class GroupServiceImpl implements GroupService
     private Pattern pattern = Pattern.compile(AcmGroupConstants.UUID_REGEX_STRING);
 
     @Override
+    public AcmGroup findByName(String name)
+    {
+        return groupDao.findByName(name);
+    }
+
+    @Override
+    public AcmGroup save(AcmGroup groupToSave)
+    {
+        return groupDao.save(groupToSave);
+    }
+
+    @Override
     public AcmGroup updateGroupWithMembers(AcmGroup group, Set<AcmUser> members)
     {
-        if (members != null)
+        for (AcmUser member : members)
         {
-            for (AcmUser member : members)
-            {
-                group.addMember(member);
-            }
+            group.addUserMember(member);
         }
+
+        groupDao.save(group);
 
         return group;
     }
@@ -74,19 +78,18 @@ public class GroupServiceImpl implements GroupService
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
 
-        logger.info("Taking all groups and subgroups from Solr. Authenticated user is {}", usernamePasswordAuthenticationToken.getName());
+        log.info("Taking all groups and subgroups from Solr. Authenticated user is {}", usernamePasswordAuthenticationToken.getName());
 
-        String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        String queryResults = getExecuteSolrQuery().getResultsByPredefinedQuery(usernamePasswordAuthenticationToken,
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(usernamePasswordAuthenticationToken,
                 SolrCore.ADVANCED_SEARCH, query, 0, 1000, "name asc");
-
-        return queryResults;
 
     }
 
 
-    @Override
+   /* @Override
     public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
     {
         boolean isGroupNameTaken = isGroupUINameTakenOnASameTreeLevel(group);
@@ -105,7 +108,8 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup g = group.getParentGroup() != null ? groupDao.subGroupByUIName(group) : groupDao.groupByUIName(group);
         return g != null && isUUIDPresentInTheGroupName(g.getName()) ? true : false;
-    }
+        return false;
+    } */
 
     @Override
     public boolean isUUIDPresentInTheGroupName(String str)
@@ -116,10 +120,10 @@ public class GroupServiceImpl implements GroupService
     /**
      * Creates or updates ad-hoc group based on the client info coming in from CRM
      *
-     * @param acmGroup group we want to rename
-     * @param newName  group new name
+     * @param //acmGroup group we want to rename
+     * @param //         newName  group new name
      */
-    @Override
+    /*@Override
     @Transactional
     public void renameGroup(AcmGroup acmGroup, String newName)
     {
@@ -131,24 +135,30 @@ public class GroupServiceImpl implements GroupService
         newGroup.setType(acmGroup.getType());
         newGroup.setStatus(acmGroup.getStatus());
         newGroup.setDescription(acmGroup.getDescription());
-        newGroup.setChildGroups(acmGroup.getChildGroups());
+       // newGroup.setChildGroups(acmGroup.getChildGroups());
         newGroup.setCreator(acmGroup.getCreator());
-        newGroup.setMembers(acmGroup.getMembers());
-        newGroup.setParentGroup(acmGroup.getParentGroup());
+        newGroup.setUserMembers(acmGroup.getUserMembers());
+      //  newGroup.setParentGroup(acmGroup.getParentGroup());
 
         AcmGroup saved = getGroupDao().save(newGroup);
 
         // after saving the group, remove the members and delete the original group
         // new set is created to avoid ConcurrentModificationException
-        getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getMembers()));
-        getGroupDao().markGroupDelete(acmGroup.getName());
-    }
-
+        getGroupDao().removeMembersFromGroup(acmGroup.getName(), new HashSet<>(acmGroup.getUserMembers()));
+        getGroupDao().markGroupDeleted(acmGroup.getName());
+    }*/
     @Override
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
         return getGroupDao().findByUserMember(user);
+    }
+
+    @Override
+    public AcmGroup markGroupDeleted(String groupName)
+    {
+        AcmGroup acmGroup = groupDao.findByName(groupName);
+        return acmGroup == null ? null : groupDao.markGroupDelete(acmGroup);
     }
 
     public UserDao getUserDao()

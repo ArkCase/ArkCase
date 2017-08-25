@@ -328,8 +328,7 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public boolean hasUserMember(AcmUser user)
     {
-        if (userMembers == null) return false;
-        return userMembers.contains(user);
+        return userMembers != null && userMembers.contains(user);
     }
 
     public Set<AcmGroup> getMemberGroups()
@@ -357,6 +356,12 @@ public class AcmGroup implements Serializable, AcmEntity
         return ascendantsList;
     }
 
+    /**
+     * We will use this as pre-computed list of all ascendants found by traversing
+     * the full graph of groups and their member groups trying to find path to this group.
+     * // TODO: find better separator then `,`, maybe `;` or `:`
+     * @return `,` separated list of all ascendants of group
+     */
     @JsonIgnore
     public Stream<String> getAscendants()
     {
