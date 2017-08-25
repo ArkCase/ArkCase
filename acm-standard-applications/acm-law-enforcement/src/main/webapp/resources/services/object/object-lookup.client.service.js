@@ -629,6 +629,250 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return LookupService.getLookup("organizationPersonRelationTypes");
         };
 
+        Service.getLookupsDefs = function () {
+            var lookupsDefs = [];
+            for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
+                lookupsDefs.push({'name' : Object.keys(lookups.standardLookup[i])[0], 'lookupType' : 'standardLookup'});
+            }
+            for (var i = 0, len = lookups.subLookup.length; i < len; i++) {
+                lookupsDefs.push({'name' : Object.keys(lookups.subLookup[i])[0], 'lookupType' : 'subLookup'});
+            }
+            for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
+                lookupsDefs.push({'name' : Object.keys(lookups.inverseValuesLookup[i])[0], 'lookupType' : 'inverseValuesLookup'});
+            }
+            // TODO: get from server or cache
+            return lookupsDefs;
+        };
+        
+        var lookups = {
+            "standardLookup" : [{
+                  "addressTypes" : [{
+                      "key" : "Business",
+                      "value" : "some.translation.key"
+                    }, {
+                      "key" : "Home",
+                      "value" : "some.other.translation.key"
+                    }
+                  ]
+             }, {
+             "aliasTypes" : [{
+                  "key" : "FKA",
+                  "value" : "fka.translation.key"
+                }, {
+                  "key" : "maried",
+                  "value" : "maried.translation.key"
+                }
+              ]
+            }
+            ],
+            "subLookup" : [{
+              "contactMethodTypes" : [{
+                  "key" : "phone",
+                  "value" : "phone.translation.key",
+                  "subLookup" : [{
+                      "key" : "Home",
+                      "value" : "Home.translation.key"
+                    }, {
+                      "key" : "Work",
+                      "value" : "Work.translation.key"
+                    }, {
+                      "key" : "Mobile",
+                      "value" : "Mobile"
+                    }
+                  ]
+                }, {
+                  "key" : "fax",
+                  "value" : "fax",
+                  "subLookup" : [{
+                      "key" : "subFax",
+                      "value" : "subFax"
+                    }
+                  ]
+                }
+              ]
+            }
+            ],
+            "inverseValuesLookup" : [{
+              "organizationRelationTypes" : [{
+                  "key" : "Partner",
+                  "value" : "Partner.translation.key",
+                  "inverseKey" : "Partner",
+                  "inverseValue" : "Partner.translation.key"
+                }, {
+                  "key" : "SubCompany",
+                  "value" : "SubCompany.translation.key",
+                  "inverseKey" : "ParentCompany",
+                  "inverseValue" : "ParentCompany.translation.key"
+                }
+              ]
+            }
+            ]
+        }
+        
+        Service.getLookup = function (lookupDef) {
+            // TODO: get from server or cache
+            for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
+                if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
+                    // return a deep copy of the lookup not to allow clients to change the original object
+                    return _.cloneDeep(lookups[lookupDef.lookupType][i][lookupDef.name]);
+                }
+            }
+        };
+        
+        Service.validateLookup = function (lookupDef, lookup) {
+            switch(lookupDef.lookupType) {
+                case 'standardLookup' :                    
+                    return validateStandardLookup(lookup);
+                case 'subLookup' :
+                    return validateSubLookup(lookup);
+                case 'inverseValuesLookup' :
+                    return validateInverseValuesLookup(lookup);
+                default:
+                    console.error("Unknown lookup type!");
+                    return { isValid : false, errorMessage: "Unknown lookup type!" };
+            }
+        };
+        
+        function validateStandardLookup(lookup) {
+            // Check empty key or value
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                if (!lookup[i].key) {
+                    return { isValid : false, errorMessage: "Empty key found!" };
+                }
+                if (!lookup[i].value) {
+                    return { isValid : false, errorMessage: "Empty value found!" };
+                }
+            }
+            
+            // Check duplicate keys or values
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                for (var j = i + 1; j < len; j++) {
+                    if (lookup[i].key === lookup[j].key) {
+                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                    }
+                    if (lookup[i].value === lookup[j].value) {
+                        return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].value + "]" };
+                    }
+                }
+            }
+            
+            return { isValid : true };
+        };
+        
+        function validateSubLookup(lookup) {
+            // Check empty keys or values
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                if (!lookup[i].key) {
+                    return { isValid : false, errorMessage: "Empty key found!" };
+                }
+                if (!lookup[i].value) {
+                    return { isValid : false, errorMessage: "Empty value found!" };
+                }
+                // check sublookup for empty keys or values
+                if (lookup[i].subLookup) {
+                    for (var j = 0, lenSub = lookup[i].subLookup.length; j < lenSub; j++) {
+                        if (!lookup[i].subLookup[j].key) {
+                            return { isValid : false, errorMessage: "Empty key found!" };
+                        }
+                        if (!lookup[i].subLookup[j].value) {
+                            return { isValid : false, errorMessage: "Empty value found!" };
+                        }
+                    }
+                }
+            }
+            
+            // Check duplicate keys or values
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                for (var j = i + 1; j < len; j++) {
+                    if (lookup[i].key === lookup[j].key) {
+                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                    }
+                    if (lookup[i].value === lookup[j].value) {
+                        return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].value + "]" };
+                    }
+                    // check sublookup for duplicate keys or values
+                    if (lookup[i].subLookup) {
+                        for (var k = 0, lenSub = lookup[i].subLookup.length; k < lenSub; k++) {
+                            for (var l = k + 1; l < lenSub; l++) {
+                                if (lookup[i].subLookup[k].key === lookup[i].subLookup[l].key) {
+                                    return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].subLookup[k].key + "]" };
+                                }
+                                if (lookup[i].subLookup[k].value === lookup[i].subLookup[l].value) {
+                                    return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].subLookup[k].value + "]" };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return { isValid : true };
+        };
+        
+        function validateInverseValuesLookup(lookup) {
+            // Check empty key or value
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                if (!lookup[i].key) {
+                    return { isValid : false, errorMessage: "Empty key found!" };
+                }
+                if (!lookup[i].value) {
+                    return { isValid : false, errorMessage: "Empty value found!" };
+                }
+                if (!lookup[i].inverseKey) {
+                    return { isValid : false, errorMessage: "Empty inverse key found!" };
+                }
+                if (!lookup[i].inverseValue) {
+                    return { isValid : false, errorMessage: "Empty inverse value found!" };
+                }
+            }
+            
+            // Check duplicate keys or values
+            for (var i = 0, len = lookup.length; i < len; i++) {
+                for (var j = i + 1; j < len; j++) {
+                    if (lookup[i].key === lookup[j].key) {
+                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                    }
+                    if (lookup[i].inverseKey === lookup[j].inverseKey) {
+                        return { isValid : false, errorMessage: "Duplicate inverse key found! [key : " +  lookup[i].inverseKey + "]" };
+                    }
+                    if (lookup[i].value === lookup[j].value) {
+                        return { isValid : false, errorMessage: "Duplicate value found! [key : " +  lookup[i].value + "]" };
+                    }
+                    if (lookup[i].inverseValue === lookup[j].inverseValue) {
+                        return { isValid : false, errorMessage: "Duplicate inverse value found! [key : " +  lookup[i].inverseValue + "]" };
+                    }
+                }
+            }
+            
+            return { isValid : true };
+        };
+
+        Service.saveLookup = function (lookupDef, lookup) {
+            var validationResult = Service.validateLookup(lookupDef, lookup);
+            if (!validationResult.isValid) {
+                return Util.errorPromise(validationResult.errorMessage);
+            }
+            
+            // save a deep copy of the lookup not to allow clients to change the object
+            var lookupTosave = Util.omitNg(lookup);
+            // TODO: save on server
+            var lookupUpdated = false;
+            for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
+                if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
+                    lookups[lookupDef.lookupType][i][lookupDef.name] = lookupTosave;
+                    lookupUpdated = true;
+                    break;
+                }
+            }
+            if (!lookupUpdated) {
+                lookups[lookupDef.lookupType][lookupDef.name] = lookupTosave;
+            }
+            
+            var deferred = $q.defer()
+            deferred.resolve("Successfully resolved the fake $http call")
+            return deferred.promise;
+        };
+        
         return Service;
     }
 ]);
