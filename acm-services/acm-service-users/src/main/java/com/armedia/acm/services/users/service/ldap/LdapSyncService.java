@@ -68,8 +68,8 @@ public class LdapSyncService
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), null);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig);
     }

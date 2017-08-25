@@ -16,12 +16,6 @@
         <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
-    <bean id="getGroupAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
-    </bean>
-
     <bean id="getGroupSupervisorAPIController"
           class="com.armedia.acm.services.users.web.api.group.GetGroupSupervisorAPIController">
         <property name="groupDao" ref="groupDao"/>
@@ -34,13 +28,10 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
-    <bean id="saveGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
+    <bean id="acmGroupAPIController" class="com.armedia.acm.services.users.web.api.group.AcmGroupAPIController">
         <property name="groupService" ref="groupService"/>
-    </bean>
-
-    <bean id="removeGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="saveSupervisorToGroupAPIController"
@@ -51,8 +42,6 @@
 
     <bean id="saveMembersToGroupAPIController"
           class="com.armedia.acm.services.users.web.api.group.SaveMembersToGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="userDao" ref="userJpaDao"/>
         <property name="groupService" ref="groupService"/>
     </bean>
 

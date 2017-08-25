@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by dmiller on 6/28/16.
@@ -147,7 +148,7 @@ public class SpringLdapDaoIT
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
         List<LdapGroup> result = springLdapDao.findGroupsPaged(ldapTemplate, acmSyncLdapConfig,
-                ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+                Optional.of(ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString()));
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
@@ -162,7 +163,7 @@ public class SpringLdapDaoIT
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
         List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig,
-                ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+                Optional.of(ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString()));
         long time = System.currentTimeMillis() - start;
         log.debug("Result: {}", result.size());
         log.debug("Time: {}ms", time);
