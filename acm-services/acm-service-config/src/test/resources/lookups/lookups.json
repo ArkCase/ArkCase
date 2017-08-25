@@ -1,0 +1,84 @@
+{
+	"standardLookup": [
+		{
+			"colors": [
+			]
+		},
+		{
+			"addressTypes": [
+				{
+					"key": "Business",
+					"value": "some.translation.key"
+				},
+				{
+					"key": "Home",
+					"value": "some.other.translation.key"
+				}
+			]
+		},
+		{
+			"aliasTypes": [
+				{
+					"key": "FKA",
+					"value": "fka.translation.key"
+				},
+				{
+					"key": "maried",
+					"value": "maried.translation.key"
+				}
+			]
+		}
+	],
+	"subLookup": [
+		{
+			"contactMethodTypes": [
+				{
+					"key": "phone",
+					"value": "phone.translation.key",
+					"subLookup": [
+						{
+							"key": "Home",
+							"value": "Home.translation.key"
+						},
+						{
+							"key": "Work",
+							"value": "Work.translation.key"
+						},
+						{
+							"key": "Mobile",
+							"value": "Mobile"
+						}
+					]
+				},
+				{
+					"key": "fax",
+					"value": "fax",
+					"subLookup": [
+						{
+							"key": "subFax",
+							"value": "subFax"
+						}
+					]
+				}
+			]
+		}
+	],
+	"inverseValuesLookup": [
+		{
+			"organizationRelationTypes": [
+				{
+					"key": "Partner",
+					"value": "Partner.translation.key",
+					"inverseKey": "Partner",
+					"inverseValue": "Partner.translation.key"
+				},
+				{
+					"key": "SubCompany",
+					"value": "SubCompany.translation.key",
+					"inverseKey": "ParentCompany",
+					"inverseValue": "ParentCompany.translation.key"
+				}
+			]
+		}
+	]
+}

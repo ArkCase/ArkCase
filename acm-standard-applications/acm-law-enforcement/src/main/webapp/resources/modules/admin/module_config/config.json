@@ -791,6 +791,57 @@
           "id": "AUTOMATED"
         }
       ]
+    },
+    {
+      "id": "standardLookup",
+      "title": "Application - Standard lookup",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "key",
+          "displayName": "admin.application.lookups.config.data.key",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "admin.application.lookups.config.data.value",
+          "headerCellFilter": "translate",
+          "cellFilter": "translate"
+        }
+      ]
+    },
+    {
+      "id": "inverseValuesLookup",
+      "title": "Application - Inverse values lookup",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "key",
+          "displayName": "admin.application.lookups.config.data.key",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "admin.application.lookups.config.data.value",
+          "headerCellFilter": "translate",
+          "cellFilter": "translate"
+        },
+        {
+          "name": "inverseKey",
+          "displayName": "admin.application.lookups.config.data.inverseKey",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "inverseValue",
+          "displayName": "admin.application.lookups.config.data.inverseValue",
+          "headerCellFilter": "translate",
+          "cellFilter": "translate"
+        }
+      ]
     }
   ],
   "adminTree": [
@@ -904,6 +955,10 @@
         {
           "title": "admin.application.labels.config.title",
           "templateName": "application.labels.config"
+        },
+        {
+          "title": "admin.application.lookups.config.title",
+          "templateName": "application-lookups.config"
         },
         {
           "title": "admin.application.module.config.title",

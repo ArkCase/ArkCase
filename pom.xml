@@ -66,6 +66,8 @@
         <jsp.api.version>2.0</jsp.api.version>
         <jstl.version>1.2</jstl.version>
         <junit.version>4.12</junit.version>
+        <jsonassert.version>1.5.0</jsonassert.version>
+                
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
 
@@ -1787,6 +1789,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.skyscreamer</groupId>
+                <artifactId>jsonassert</artifactId>
+                <version>${jsonassert.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

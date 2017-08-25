@@ -1,0 +1,15 @@
+<div ng-controller="Admin.LookupsConfigController">
+    <panel-view header="{{'admin.application.lookups.config.title' | translate}}" collapsible="false">
+	    <div class="col-xs-12">
+		    <div class="col-xs-3 b-r">
+		    	<label>{{'admin.application.lookups.config.choose' | translate}}</label>
+		        <select ng-model="selectedLookupDef" ng-change="selectLookupDef()" class="form-control"
+		                ng-options="lookupDef.name for lookupDef in lookupsDefs | orderObjectBy:'name'" name="" size="10">
+		        </select>
+	        </div>
+		    <div class="col-xs-9 b-r">
+		    	<div ng-include="view"></ng-include>
+	        </div>
+	    </div>
+    </panel-view>
+</div>
