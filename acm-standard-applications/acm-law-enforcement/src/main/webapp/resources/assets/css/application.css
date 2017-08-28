@@ -1487,3 +1487,8 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     0% { opacity:0; }
     100% { opacity:100%; }
 }
+
+/* For [Primary] on grid cell*/
+a.primary {
+    display: inline;
+}
