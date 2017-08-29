@@ -7,7 +7,6 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -57,7 +56,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             if (existingLock.getCreator().equals(auth.getName()))
             {
                 return existingLock;
-            } else
+            }
+            else
             {
                 log.warn(
                         "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
@@ -79,7 +79,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
-        } else
+        }
+        else
         {
             return ol;
         }
@@ -90,9 +91,14 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
+
         if (ol == null)
-            throw new AcmObjectLockException(
-                    "Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
+        {
+            // it is not an exception - the caller wanted the lock to be removed - and there is no lock to remove.
+            // the object is no longer locked, so we have success.
+            log.info("[{}] with id [{}] is already unlocked, no need to unlock it.", objectType, objectId);
+            return;
+        }
 
         acmObjectLockDao.remove(ol);
 
