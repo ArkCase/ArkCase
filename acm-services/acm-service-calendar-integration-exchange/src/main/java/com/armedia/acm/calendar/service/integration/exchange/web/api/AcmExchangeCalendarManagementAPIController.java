@@ -54,6 +54,81 @@ public class AcmExchangeCalendarManagementAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * This is an interactive version for updating the folder creator for clients that support SSE (server sent events).
+     *
+     * The client should register event handlers for the 'total', 'update', 'fail' and 'finished' events sent by the
+     * back-end.
+     *
+     * The following code shows an example how the client can invoke the controller and handle the events:
+     *
+     * <code>
+     *  <!DOCTYPE html>
+     *  <html>
+     *      <head>
+     *          <title>Recreate Outlook Folders SSEs</title>
+     *          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     *          <script type="text/javascript">
+     *              function setup() {
+     *
+     *                  const eventSource = new EventSource("https://acm-arkcase/arkcase/api/latest/service/calendar/exchange/configure/{creator_id}/{system_email}/{system_password}", {withCredentials: true});
+     *
+     *                  eventSource.addEventListener('total', function(e) {
+     *                      const response = JSON.parse(e.data);
+     *                      console.log(response);
+     *                  }, false);
+     *
+     *                  eventSource.addEventListener('update', function(e) {
+     *                      const response = JSON.parse(e.data);
+     *                      console.log(response);
+     *                  }, false);
+     *
+     *                  eventSource.addEventListener('fail', function(e) {
+     *                      const response = JSON.parse(e.data);
+     *                      console.log(response);
+     *                  }, false);
+     *
+     *                  eventSource.addEventListener('finished', function(e) {
+     *                      const response = JSON.parse(e.data);
+     *                      console.log(response);
+     *                      eventSource.close();
+     *                  }, false);
+     *
+     *              }
+     *
+     *              window.onload = setup;
+     *          </script>
+     *      </head>
+     *      <body>
+     *          <h1>Hello Calendar Recreate Folders</h1>
+     *  </html>
+     * </code>
+     *
+     * where {@code creator_id} is the value of {@code acm_outlook_folder_creator.cm_outlook_folder_creator_id},
+     * {@code system_email} is the new value to be stored in {@code acm_outlook_folder_creator.cm_system_email_address}
+     * and {@code system_password} is the value to be stored in {@code acm_outlook_folder_creator.cm_system_password}.
+     *
+     * For clients that do not support SSE, the {@code updateConfiguration} API method should be invoked instead.
+     * 
+     * @see #updateConfiguration(AcmOutlookFolderCreator)
+     *
+     *      Checking if the lient supports SSE or not, the following snippet can be used:
+     *
+     *      <code>
+     *  if(typeof(EventSource) !== "undefined") {
+     *      // Yes! Server-sent events support!
+     *      // Some code.....
+     *  } else {
+     *      // Sorry! No server-sent events support..
+     *  }
+     * </code>
+     *
+     * @param id
+     * @param systemEmail
+     * @param systemPassword
+     * @return
+     * @throws AcmOutlookFolderCreatorDaoException
+     */
     @RequestMapping(path = "/{creatorId}/{systemEmail}/{systemPassword}", method = RequestMethod.GET, produces = "text/event-stream")
     public SseEmitter interactiveUpdateConfiguration(@PathVariable("creatorId") Long id, @PathVariable("systemEmail") String systemEmail,
             @PathVariable("systemPassword") String systemPassword) throws AcmOutlookFolderCreatorDaoException
