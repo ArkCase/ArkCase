@@ -22,6 +22,7 @@ import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -241,7 +242,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      */
     @Override
     @Transactional
-    public void updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException
+    public boolean updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException
     {
         log.debug("Updating folder creator with id [{}].", updatedCreator.getId());
 
@@ -252,10 +253,14 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
-            // TODO: updating system password, should actually trigger folder recreation! Should be addressed with
-            // AFDP-4017
+
+            boolean shouldRecreate = !retrievedCreator.getSystemEmailAddress().equals(updatedCreator.getSystemEmailAddress());
+
             retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
             retrievedCreator.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
+
+            return shouldRecreate;
+
         } catch (AcmEncryptionException e)
         {
             log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
@@ -264,6 +269,26 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
                     "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
                     updatedCreator.getId()), e);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getObjectReferences(com.armedia.acm.service.
+     * outlook.model.AcmOutlookFolderCreator)
+     */
+    @Override
+    public Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator)
+    {
+        log.debug("Retrieving object references for folder creator with id: [{}].", folderCreator.getId());
+
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
+                AcmOutlookFolderCreator.class);
+        query.setParameter("creatorId", folderCreator.getId());
+
+        AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
+
+        return retrievedCreator.getOutlookObjectReferences();
     }
 
     private String decryptValue(String encrypted) throws AcmEncryptionException
