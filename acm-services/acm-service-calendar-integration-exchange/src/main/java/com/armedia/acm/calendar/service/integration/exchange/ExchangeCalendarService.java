@@ -142,6 +142,17 @@ public class ExchangeCalendarService
         loadConfiguration();
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception
+    {
+        loadConfiguration();
+    }
+
     private void loadConfiguration()
     {
         try
@@ -640,17 +651,6 @@ public class ExchangeCalendarService
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception
-    {
-        loadConfiguration();
     }
 
 }

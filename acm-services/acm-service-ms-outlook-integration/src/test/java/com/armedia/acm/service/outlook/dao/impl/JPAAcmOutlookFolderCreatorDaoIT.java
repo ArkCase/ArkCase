@@ -327,10 +327,11 @@ public class JPAAcmOutlookFolderCreatorDaoIT
         updatedCreator.setId(1L);
         when(mockedEm.createQuery(any(String.class), eq(AcmOutlookFolderCreator.class))).thenReturn(mockedFolderCreatorQuery);
         when(mockedFolderCreatorQuery.getSingleResult()).thenReturn(mockedFolderCreator);
+        when(mockedFolderCreator.getSystemEmailAddress()).thenReturn("a" + SYSTEM_EMAIL);
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
 
         // when
-        outlookFolderCreatorDao.updateFolderCreator(updatedCreator);
+        boolean shouldRecreate = outlookFolderCreatorDao.updateFolderCreator(updatedCreator);
 
         // then
         verify(mockedEm).createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
@@ -340,6 +341,7 @@ public class JPAAcmOutlookFolderCreatorDaoIT
         verify(mockedFolderCreator).setSystemEmailAddress(SYSTEM_EMAIL);
         verify(mockedFolderCreator).setSystemPassword(captor.capture());
         assertThat(decryptValue(captor.getValue()), is(SYSTEM_PASSWORD));
+        assertThat(shouldRecreate, is(true));
     }
 
     private String encryptValue(String plainText) throws AcmEncryptionException
