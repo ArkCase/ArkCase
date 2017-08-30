@@ -5,6 +5,7 @@
 
     <bean id="exchangeCalendarManagementAPIController" class="com.armedia.acm.calendar.service.integration.exchange.web.api.AcmExchangeCalendarManagementAPIController">
         <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+        <property name="outlookCalendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
 
 </beans>
