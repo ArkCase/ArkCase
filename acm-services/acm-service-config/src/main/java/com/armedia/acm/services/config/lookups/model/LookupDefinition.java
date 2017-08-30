@@ -9,6 +9,8 @@ public class LookupDefinition
 
     private String name;
 
+    private String lookupEntriesAsJson;
+
     public LookupType getLookupType()
     {
         return lookupType;
@@ -27,5 +29,15 @@ public class LookupDefinition
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getLookupEntriesAsJson()
+    {
+        return lookupEntriesAsJson;
+    }
+
+    public void setLookupEntriesAsJson(String lookupEntriesAsJson)
+    {
+        this.lookupEntriesAsJson = lookupEntriesAsJson;
     }
 }

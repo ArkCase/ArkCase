@@ -59,22 +59,22 @@ public class ConfigFileLookupDaoTest
         LookupDefinition lookupDefinition = new LookupDefinition();
         lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
         lookupDefinition.setName("colors");
-
         String lookupAsJson = "[{\"key\":\"someKey\", \"value\":\"someValue\"}]";
+        lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
 
         mockStaticPartial(Files.class, "write");
         expect(Files.write(anyObject(Path.class), (byte[]) anyObject())).andReturn(null);
 
         // when
         replayAll();
-        String ret = configFileLookupDao.updateLookup(lookupDefinition, lookupAsJson);
+        String ret = configFileLookupDao.updateLookup(lookupDefinition);
 
         // then
         verifyAll();
         ArrayNode updatedValue = JsonPath.using(configuration).parse(ret).read("$." + lookupDefinition.getLookupType().getTypeName()
                 + "..[?(@." + lookupDefinition.getName() + ")]." + lookupDefinition.getName());
 
-        JSONAssert.assertEquals(updatedValue.get(0).asText(), lookupAsJson, false);
+        JSONAssert.assertEquals(updatedValue.get(0).toString(), lookupAsJson, false);
     }
 
     @Test(expected = InvalidLookupException.class)
@@ -84,16 +84,16 @@ public class ConfigFileLookupDaoTest
         LookupDefinition lookupDefinition = new LookupDefinition();
         lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
         lookupDefinition.setName("colors");
-
         String lookupAsJson = "[\"key\":\"someKey\", \"value\":\"someValue\"}]";
+        lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
 
         // when
-        configFileLookupDao.updateLookup(lookupDefinition, lookupAsJson);
+        configFileLookupDao.updateLookup(lookupDefinition);
 
         // then
         fail("Should have thrown InvalidLookupException!");
     }
-    
+
     @Test(expected = InvalidLookupException.class)
     public void testUpdateLookupThrowsExceptionOnDuplicateKeys() throws InvalidLookupException, IOException
     {
@@ -101,11 +101,11 @@ public class ConfigFileLookupDaoTest
         LookupDefinition lookupDefinition = new LookupDefinition();
         lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
         lookupDefinition.setName("colors");
-
         String lookupAsJson = "[{\"key\":\"someKey\", \"value\":\"someValue\"}, {\"key\":\"someKey\", \"value\":\"someValue1\"}]";
+        lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
 
         // when
-        configFileLookupDao.updateLookup(lookupDefinition, lookupAsJson);
+        configFileLookupDao.updateLookup(lookupDefinition);
 
         // then
         fail("Should have thrown InvalidLookupException!");

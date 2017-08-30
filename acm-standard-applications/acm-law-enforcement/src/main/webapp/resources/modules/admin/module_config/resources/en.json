@@ -1,4 +1,14 @@
 {
+  "lookups" : {
+  	"addressTypes" : {
+  	  "business" : "Business",
+  	  "home" : "Home"
+  	 },
+  	 "aliasTypes" : {
+  	 	"fka": "FKA",
+  	 	"married": "Married"
+  	 }
+  },
   "admin": {
     "title": "Admin",
     "security.title": "Security",

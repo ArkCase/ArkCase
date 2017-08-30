@@ -2,8 +2,6 @@
 
 angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '$q', '$templateCache', '$http', 'Object.LookupService',
     function ($scope, $q, $templateCache, $http, ObjectLookupService) {
-    
-        $scope.lookupsDefs = ObjectLookupService.getLookupsDefs();
         
         $scope.selectLookupDef = function (selectedLookupDef) {
             $scope.selectedLookupDef = this.selectedLookupDef;
@@ -24,9 +22,12 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
             
             $scope.$broadcast('lookup-def-selected', $scope.selectedLookupDef);
         };
-        
-        $scope.selectedLookupDef = $scope.lookupsDefs[0];
-        $scope.selectLookupDef($scope.selectedLookupDef);
+                
+        ObjectLookupService.getLookupsDefs().then(function(data) {
+            $scope.lookupsDefs = data;
+            $scope.selectedLookupDef = $scope.lookupsDefs[0];
+            $scope.selectLookupDef($scope.selectedLookupDef);
+        });
         
         // workaround for the first load of child controllers
         $scope.$on('lookup-controller-loaded', function() {

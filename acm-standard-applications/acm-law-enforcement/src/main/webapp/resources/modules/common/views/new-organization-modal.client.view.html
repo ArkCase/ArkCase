@@ -279,8 +279,8 @@
                             <label translate> common.newOrganization.locations.type</label>
                             <select class="form-control"
                                     ng-model="organization.defaultAddress.type">
-                                <option ng-repeat="option in addressTypes" value="{{option.type}}">
-                                    {{option.name}}
+                                <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                    {{option.value | translate}}
                                 </option>
                             </select>
                         </div>
