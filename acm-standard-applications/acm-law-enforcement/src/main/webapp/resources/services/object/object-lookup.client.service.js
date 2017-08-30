@@ -629,6 +629,23 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return LookupService.getLookup("organizationPersonRelationTypes");
         };
 
+        /**
+         * @ngdoc method
+         * @name getLookupsDefs
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns all lookup definitions as array with structure:
+         * [
+         *      { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' },
+         *      { 'lookupType' : 'standardLookup', 'name' : 'aliasTypes' },
+         *      { 'lookupType' : 'subLookup', 'name' : 'contactMethodTypes' },
+         *      { 'lookupType' : 'inverseValuesLookup', 'name' : 'organizationPersonRelationTypes' },
+         *      { ... }
+         * ]
+         *
+         * @returns {Object} Promise returning all lookup definitions in an array
+         */
         Service.getLookupsDefs = function () {
             return LookupService.getLookups().then(function (lookups) {
                 var lookupsDefs = [];
@@ -653,6 +670,19 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             
         };
         
+        /**
+         * @ngdoc method
+         * @name getLookup
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns lookup entries as array.
+         *
+         * @param {Object} lookupDef    The lookup definition with structure:
+         *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
+         *
+         * @returns {Object} Promise returning the lookup entries as array
+         */
         Service.getLookup = function (lookupDef) {
             return LookupService.getLookups().then(function (lookups) {
                 for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
@@ -664,6 +694,18 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             });
         };
         
+        /**
+         * @ngdoc method
+         * @name getLookupByLookupName
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns lookup entries as array.
+         *
+         * @param {String} name    The lookup name
+         *
+         * @returns {Object} Promise returning the lookup entries as array
+         */
         Service.getLookupByLookupName = function (name) {
             return LookupService.getLookups().then(function (lookups) {
                 for (lookupType in lookups) {
@@ -677,6 +719,29 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             });
         };
         
+        /**
+         * @ngdoc method
+         * @name validateLookup
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Validate lookup data
+         *
+         * @param {Object} lookupDef    the lookup definition to be validated with structure:
+         *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
+         * @parma {Array}  lookup       the lookup entries as an array. 
+         *                              For standarLookup valid structure looks like:
+         *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
+         *                              For subLookup valid structure looks like:
+         *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
+         *                              For inverseValuesLookup valid structure looks like:
+         *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
+         *
+         * @returns {Object} returns data validation object with structure:
+         *                              { isValid : false, errorMessage: "The validation error message" } 
+         *                              or
+         *                              { isValid : true }
+         */
         Service.validateLookup = function (lookupDef, lookup) {
             switch(lookupDef.lookupType) {
                 case 'standardLookup' :                    
@@ -805,6 +870,27 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return { isValid : true };
         };
 
+        /**
+         * @ngdoc method
+         * @name saveLookup
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Saves the the given lookup entries for the lookup definition.
+         * First makes a deep copy of the lookup to prevent modification by clients.
+         *
+         * @param {Object} lookupDef    the lookup definition to be saved with structure:
+         *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
+         * @parma {Array}  lookup       the lookup entries as an array. 
+         *                              For standarLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
+         *                              For subLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
+         *                              For inverseValuesLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
+         *
+         * @returns {Object} Promise returning all lookups from server. 
+         */
         Service.saveLookup = function (lookupDef, lookup) {
              // save a deep copy of the lookup not to allow clients to change the object
             var lookupTosave = Util.omitNg(lookup);

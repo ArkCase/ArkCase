@@ -118,13 +118,14 @@ angular.module('admin').controller('Admin.SubSubLookupController', ['$scope', '$
             
             promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.mainLookup);
             promiseSaveInfo.then(
-                function (lookup) {
+                function (lookup) {                    
+                    MessageService.succsessAction();
                     fetchLookup();
                     return lookup;
                 }
                 , function (error) {
-                    MessageService.error(error);
-                    fetchLookup();
+                    MessageService.error(error.data ? error.data : error);
+                    fetchLookup();                    
                     return error;
                 }
             );

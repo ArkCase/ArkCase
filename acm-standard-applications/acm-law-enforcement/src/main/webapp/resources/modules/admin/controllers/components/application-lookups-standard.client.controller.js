@@ -107,11 +107,12 @@ angular.module('admin').controller('Admin.StandardLookupController', ['$scope', 
             promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
             promiseSaveInfo.then(
                 function (lookup) {
-                    fetchLookup();
+                    MessageService.succsessAction();
+                    fetchLookup();                    
                     return lookup;
                 }
                 , function (error) {
-                    MessageService.error(error);
+                    MessageService.error(error.data ? error.data : error);
                     fetchLookup();
                     return error;
                 }
