@@ -4,6 +4,7 @@ import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,20 +30,23 @@ public class AcmExchangeCalendarManagementAPIController
 {
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
+    private OutlookCalendarAdminServiceExtension outlookCalendarAdminService;
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
     {
-        List<AcmOutlookFolderCreator> invalidUsers = folderCreatorDao.getFolderCreatorsWithInvalidCredentials();
+        List<AcmOutlookFolderCreator> invalidUsers = outlookCalendarAdminService.getFolderCreatorsWithInvalidCredentials();
         return invalidUsers;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator)
+    public ResponseEntity<AcmOutlookFolderCreator> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator)
             throws AcmOutlookFolderCreatorDaoException
     {
         folderCreatorDao.updateFolderCreator(updatedCreator);
-        return new ResponseEntity<>(HttpStatus.OK);
+        updatedCreator.setSystemPassword(null);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedCreator);
     }
 
     @ExceptionHandler(CalendarServiceException.class)
@@ -62,6 +66,15 @@ public class AcmExchangeCalendarManagementAPIController
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    /**
+     * @param outlookCalendarAdminService
+     *            the outlookCalendarAdminService to set
+     */
+    public void setOutlookCalendarAdminService(OutlookCalendarAdminServiceExtension outlookCalendarAdminService)
+    {
+        this.outlookCalendarAdminService = outlookCalendarAdminService;
     }
 
 }

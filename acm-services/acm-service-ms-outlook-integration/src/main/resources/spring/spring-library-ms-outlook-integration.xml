@@ -86,15 +86,18 @@
         <property name="exchangePropertiesResource"
                   value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
     </bean>
-    
-    <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
-        <property name="extendedService" ref="propertyFileCalendarAdminService"/>
-    </bean>
-    
+
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
         <property name="cryptoUtils" ref="acmCryptoUtils"/>
         <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+    </bean>
+
+    <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
+        <property name="extendedService" ref="propertyFileCalendarAdminService"/>
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
         <property name="verifierService" ref="calendarServiceProvider"/>
+        <property name="outlookFolderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
     <util:constant id="propertyDefinitionSubject"
