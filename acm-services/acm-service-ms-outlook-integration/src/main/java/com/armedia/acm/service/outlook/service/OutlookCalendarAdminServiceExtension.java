@@ -20,5 +20,5 @@ public interface OutlookCalendarAdminServiceExtension extends CalendarAdminServi
 
     Optional<AcmOutlookUser> getHandlerOutlookUser(String userName, String objectType) throws PipelineProcessException;
 
-    List<AcmOutlookFolderCreator> getFolderCreatorsWithInvalidCredentials();
+    List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials();
 }

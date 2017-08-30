@@ -32,11 +32,11 @@ public class AcmExchangeCalendarManagementAPIController
 
     private OutlookCalendarAdminServiceExtension outlookCalendarAdminService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/credentials/invalid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
+    List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials()
     {
-        List<AcmOutlookFolderCreator> invalidUsers = outlookCalendarAdminService.getFolderCreatorsWithInvalidCredentials();
+        List<AcmOutlookFolderCreator> invalidUsers = outlookCalendarAdminService.findFolderCreatorsWithInvalidCredentials();
         return invalidUsers;
     }
 

@@ -92,7 +92,7 @@ public class OutlookCalendarAdminServiceIT
                 .thenReturn(false);
 
         // when
-        List<AcmOutlookFolderCreator> folderCreators = outlookCalendarAdminService.getFolderCreatorsWithInvalidCredentials();
+        List<AcmOutlookFolderCreator> folderCreators = outlookCalendarAdminService.findFolderCreatorsWithInvalidCredentials();
 
         // then
         verify(mockedOutlookFolderCreatorDao).getFolderCreators();
