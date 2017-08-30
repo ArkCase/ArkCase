@@ -25,6 +25,13 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , isArray: true
                 , cache: false
             }
+            , _saveLookup: {
+                url: "api/latest/service/config/lookups"
+                , method: "POST"
+                , headers: {
+                    "Content-Type": "application/json"
+                }
+            }
 
             /**
              * @ngdoc method
@@ -296,6 +303,26 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 }
             });
         };
+        
+        Service.getLookups = function() {
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var lookups = Util.goodMapValue(configMap, 'lookups', null);
+            return Util.serviceCall({
+                service: Service._getConfig
+                , param: {name: 'lookups'}
+                , result: lookups
+                , onSuccess: function (data) {
+                    lookups = Util.omitNg(data);
+                    if (Service.validateLookups(lookups)) {                        
+                        configMap = configMap || {};
+                        configMap['lookups'] = lookups;
+                        cacheConfigMap.set(configMap);
+                        return lookups;
+                    }
+                }
+            });
+        };
 
         /**
          * @ngdoc method
@@ -316,7 +343,61 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             }
             return true;
         };
+        
+        Service.validateLookups = function (data) {
+            // check if the data contains only known lookup types
+            for (var prop in data) {
+                if (prop !== 'standardLookup' && prop !== 'subLookup' && prop !== 'inverseValuesLookup') {
+                    return false;
+                }
+            }
+            
+            // check if the lookups are array objects
+            if (data.standardLookup) {
+                for (var i = 0; i < data.standardLookup.length; i++) {
+                    if (!Util.isArray(data.standardLookup[i][Object.keys(data.standardLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            if (data.subLookup) {
+                for (var i = 0; i < data.subLookup.length; i++) {
+                    if (!Util.isArray(data.subLookup[i][Object.keys(data.subLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            if (data.inverseValuesLookup) {
+                for (var i = 0; i < data.inverseValuesLookup.length; i++) {
+                    if (!Util.isArray(data.inverseValuesLookup[i][Object.keys(data.inverseValuesLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
 
+        Service.saveLookup = function (lookupDef, lookup) {
+            lookupDef.lookupEntriesAsJson = JSON.stringify(lookup);
+            return Util.serviceCall({
+                service: Service._saveLookup
+                , data: lookupDef
+                , onSuccess: handleSaveLookupSuccess
+            });
+        };
+        
+        function handleSaveLookupSuccess(responseLookups) {
+            var lookups = Util.omitNg(responseLookups);
+            if (Service.validateLookups(lookups)) {
+                var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+                var configMap = cacheConfigMap.get();
+                configMap = configMap || {};
+                configMap['lookups'] = lookups;
+                cacheConfigMap.set(configMap);
+                return lookups;
+            }
+        };
+        
         return Service;
     }
 ]);

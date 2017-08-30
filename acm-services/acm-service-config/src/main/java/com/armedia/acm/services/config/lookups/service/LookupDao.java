@@ -15,15 +15,11 @@ public interface LookupDao
      *
      * @param lookupDefinition
      *            the {@link LookupDefinition} for the lookup to update
-     * @param lookupAsJson
-     *            the lookup to update as json. The json should be an array with the lookup entries.
-     *            <p>
-     *            Example: [{"key":"someKey", "value":"someValue"}, {"key":"someOtherKey", "value":"someOtherValue"}, ...]
      * @return all the updated lookups as json
      * @throws InvalidLookupException
      *             when the json is invalid or when null or duplicate keys or values exist
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    public String updateLookup(LookupDefinition lookupDefinition, String lookupAsJson) throws InvalidLookupException, IOException;
+    public String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
 }

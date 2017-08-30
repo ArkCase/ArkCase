@@ -630,93 +630,51 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         };
 
         Service.getLookupsDefs = function () {
-            var lookupsDefs = [];
-            for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
-                lookupsDefs.push({'name' : Object.keys(lookups.standardLookup[i])[0], 'lookupType' : 'standardLookup'});
-            }
-            for (var i = 0, len = lookups.subLookup.length; i < len; i++) {
-                lookupsDefs.push({'name' : Object.keys(lookups.subLookup[i])[0], 'lookupType' : 'subLookup'});
-            }
-            for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
-                lookupsDefs.push({'name' : Object.keys(lookups.inverseValuesLookup[i])[0], 'lookupType' : 'inverseValuesLookup'});
-            }
-            // TODO: get from server or cache
-            return lookupsDefs;
+            return LookupService.getLookups().then(function (lookups) {
+                var lookupsDefs = [];
+                if (lookups.standardLookup) {
+                    for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
+                        lookupsDefs.push({'name' : Object.keys(lookups.standardLookup[i])[0], 'lookupType' : 'standardLookup'});
+                    }
+                }
+                if (lookups.subLookup) {
+                    for (var i = 0, len = lookups.subLookup.length; i < len; i++) {
+                        lookupsDefs.push({'name' : Object.keys(lookups.subLookup[i])[0], 'lookupType' : 'subLookup'});
+                    }
+                }
+                if (lookups.inverseValuesLookup) {
+                    for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
+                        lookupsDefs.push({'name' : Object.keys(lookups.inverseValuesLookup[i])[0], 'lookupType' : 'inverseValuesLookup'});
+                    }
+                }
+
+                return lookupsDefs;
+            });            
+            
         };
         
-        var lookups = {
-            "standardLookup" : [{
-                  "addressTypes" : [{
-                      "key" : "Business",
-                      "value" : "some.translation.key"
-                    }, {
-                      "key" : "Home",
-                      "value" : "some.other.translation.key"
-                    }
-                  ]
-             }, {
-             "aliasTypes" : [{
-                  "key" : "FKA",
-                  "value" : "fka.translation.key"
-                }, {
-                  "key" : "maried",
-                  "value" : "maried.translation.key"
-                }
-              ]
-            }
-            ],
-            "subLookup" : [{
-              "contactMethodTypes" : [{
-                  "key" : "phone",
-                  "value" : "phone.translation.key",
-                  "subLookup" : [{
-                      "key" : "Home",
-                      "value" : "Home.translation.key"
-                    }, {
-                      "key" : "Work",
-                      "value" : "Work.translation.key"
-                    }, {
-                      "key" : "Mobile",
-                      "value" : "Mobile"
-                    }
-                  ]
-                }, {
-                  "key" : "fax",
-                  "value" : "fax",
-                  "subLookup" : [{
-                      "key" : "subFax",
-                      "value" : "subFax"
-                    }
-                  ]
-                }
-              ]
-            }
-            ],
-            "inverseValuesLookup" : [{
-              "organizationRelationTypes" : [{
-                  "key" : "Partner",
-                  "value" : "Partner.translation.key",
-                  "inverseKey" : "Partner",
-                  "inverseValue" : "Partner.translation.key"
-                }, {
-                  "key" : "SubCompany",
-                  "value" : "SubCompany.translation.key",
-                  "inverseKey" : "ParentCompany",
-                  "inverseValue" : "ParentCompany.translation.key"
-                }
-              ]
-            }
-            ]
-        }
-        
         Service.getLookup = function (lookupDef) {
-            // TODO: get from server or cache
-            for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
-                if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
-                    // return a deep copy of the lookup not to allow clients to change the original object
-                    return _.cloneDeep(lookups[lookupDef.lookupType][i][lookupDef.name]);
+            return LookupService.getLookups().then(function (lookups) {
+                for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
+                    if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
+                        // return a deep copy of the lookup not to allow clients to change the original object
+                        return _.cloneDeep(lookups[lookupDef.lookupType][i][lookupDef.name]);
+                    }
                 }
-            }
+            });
+        };
+        
+        Service.getLookupByLookupName = function (name) {
+            return LookupService.getLookups().then(function (lookups) {
+                for (lookupType in lookups) {
+                    for (var i = 0, len = lookupType.length; i < len; i++) {
+                        if (lookupType[i].hasOwnProperty(name)) {
+                            // return a deep copy of the lookup not to allow clients to change the original object
+                            return _.cloneDeep(lookupType[i].name);
+                        }
+                    }
+                }
+            });
         };
         
         Service.validateLookup = function (lookupDef, lookup) {
@@ -848,29 +806,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         };
 
         Service.saveLookup = function (lookupDef, lookup) {
-            var validationResult = Service.validateLookup(lookupDef, lookup);
+             // save a deep copy of the lookup not to allow clients to change the object
+            var lookupTosave = Util.omitNg(lookup);
+            
+            var validationResult = Service.validateLookup(lookupDef, lookupTosave);
             if (!validationResult.isValid) {
                 return Util.errorPromise(validationResult.errorMessage);
             }
-            
-            // save a deep copy of the lookup not to allow clients to change the object
-            var lookupTosave = Util.omitNg(lookup);
-            // TODO: save on server
-            var lookupUpdated = false;
-            for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
-                if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
-                    lookups[lookupDef.lookupType][i][lookupDef.name] = lookupTosave;
-                    lookupUpdated = true;
-                    break;
-                }
-            }
-            if (!lookupUpdated) {
-                lookups[lookupDef.lookupType][lookupDef.name] = lookupTosave;
-            }
-            
-            var deferred = $q.defer()
-            deferred.resolve("Successfully resolved the fake $http call")
-            return deferred.promise;
+
+            return LookupService.saveLookup(lookupDef, lookupTosave);
         };
         
         return Service;

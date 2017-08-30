@@ -9,7 +9,9 @@ import com.armedia.acm.services.config.web.api.ConfigApiController;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,29 +38,29 @@ public class LookupsApiController
      *
      * @param lookupDefinition
      *            the {@link LookupDefinition} for the lookup to update
-     * @param lookupAsJson
-     *            the lookup to update as json. The json should be an array with the lookup entries.
-     *            <p>
-     *            Example: [{"key":"someKey", "value":"someValue"}, {"key":"someOtherKey", "value":"someOtherValue"}, ...]
      * @return all the updated lookups as json
      * @throws InvalidLookupException
      *             when the json is invalid or when null or duplicate keys or values exist
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = {
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_XML_VALUE })
     @ResponseBody
-    public String updateLookup(LookupDefinition lookupDefinition, String lookupAsJson) throws InvalidLookupException, IOException
+    public String updateLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
+        log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}", lookupDefinition.getLookupType(),
+                lookupDefinition.getName(), lookupDefinition.getLookupEntriesAsJson());
         // validate lookup
-        String lookupsAsJson = lookupDao.updateLookup(lookupDefinition, lookupAsJson);
+        String lookupsAsJson = lookupDao.updateLookup(lookupDefinition);
 
         // replace the lookups config value in ConfigApiController
         List<AcmConfig> configList = configApiController.getConfigList();
         configList.stream().filter(config -> config.getConfigName().equals("lookups"))
                 .forEach(config -> ((JsonConfig) config).setJson(lookupsAsJson));
 
-        return lookupAsJson;
+        return lookupsAsJson;
     }
 
     public ConfigApiController getConfigApiController()
@@ -71,13 +73,13 @@ public class LookupsApiController
         this.configApiController = configApiController;
     }
 
-    public LookupDao getLookupService()
+    public LookupDao getLookupDao()
     {
         return lookupDao;
     }
 
-    public void setLookupService(LookupDao lookupService)
+    public void setLookupDao(LookupDao lookupDao)
     {
-        this.lookupDao = lookupService;
+        this.lookupDao = lookupDao;
     }
 }

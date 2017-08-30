@@ -10,6 +10,9 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,6 +22,8 @@ import java.nio.file.Paths;
  */
 public class ConfigFileLookupDao implements LookupDao
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
     private String lookupsFileLocation;
 
     private ObjectConverter converter = ObjectConverter.createJSONConverter();
@@ -27,19 +32,23 @@ public class ConfigFileLookupDao implements LookupDao
             .mappingProvider(new JacksonMappingProvider()).build();
 
     @Override
-    public String updateLookup(LookupDefinition lookupDefinition, String lookupAsJson) throws InvalidLookupException, IOException
+    public String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
         // validate lookup
-        AcmLookup<?> lookup = converter.getUnmarshaller().unmarshall("{\"entries\" : " + lookupAsJson + "}",
+        AcmLookup<?> lookup = converter.getUnmarshaller().unmarshall("{\"entries\" : " + lookupDefinition.getLookupEntriesAsJson() + "}",
                 lookupDefinition.getLookupType().getLookupClass());
         if (lookup == null)
         {
-            throw new InvalidLookupException("Invalid lookup Json: " + lookupAsJson);
+            log.error("Unmarshalling lookup entries failed. Lookup name: {}, lookupAsJson: {}", lookupDefinition.getName(),
+                    lookupDefinition.getLookupEntriesAsJson());
+            throw new InvalidLookupException("Invalid lookup Json: " + lookupDefinition.getLookupEntriesAsJson());
         }
 
         LookupValidationResult lookupValidationResult = lookup.validate();
         if (!lookupValidationResult.isValid())
         {
+            log.error("Lookup validation failed. Lookup name: {}, lookupAsJson: {}", lookupDefinition.getName(),
+                    lookupDefinition.getLookupEntriesAsJson());
             throw new InvalidLookupException(lookupValidationResult.getErrorMessage());
         }
 
@@ -49,7 +58,7 @@ public class ConfigFileLookupDao implements LookupDao
         // replace the json content of the lookup to update ..[?(@.id==7)]
         String updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsAsJson)
                 .set("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@." + lookupDefinition.getName() + ")]."
-                        + lookupDefinition.getName(), lookupAsJson)
+                        + lookupDefinition.getName(), lookup.getEntries())
                 .jsonString();
 
         // save updated lookups to file

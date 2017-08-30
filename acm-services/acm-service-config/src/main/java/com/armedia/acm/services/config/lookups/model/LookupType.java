@@ -14,9 +14,9 @@ public enum LookupType
 
     private String typeName;
 
-    private Class<? extends AcmLookup> lookupClass;
+    private Class<? extends AcmLookup<?>> lookupClass;
 
-    LookupType(String typeName, Class<? extends AcmLookup> lookupClass)
+    LookupType(String typeName, Class<? extends AcmLookup<?>> lookupClass)
     {
         this.typeName = typeName;
         this.lookupClass = lookupClass;
@@ -28,7 +28,7 @@ public enum LookupType
         return typeName;
     }
 
-    public Class<? extends AcmLookup> getLookupClass()
+    public Class<? extends AcmLookup<?>> getLookupClass()
     {
         return lookupClass;
     }
