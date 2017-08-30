@@ -460,8 +460,8 @@ span.fancytree-title {
     padding-top: 10px;
 }
 
-.dropdown-menu .btn-group{
-    padding-top: 0px;
+.dropdown-menu .btn-group {
+    padding-top: 0px !important;
 }
 
 /* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
@@ -558,18 +558,20 @@ span.fancytree-title {
 }
 
 /* Fix ui-grids to resize based on content. (Source: alangumer on https://github.com/angular-ui/ui-grid/issues/3239) */
+/* Hey guys, let's not override the default styles of these grids. I realize they look like innocent changes on the forums, but this has been causing a lot of havoc.
+
 [ui-grid-row] {
     display: table-row;
 }
 
 .ui-grid-row, .ui-grid-cell {
-    //height: auto !important;
+    height: auto !important;
 }
 
 .ui-grid-cell {
-    //float: none;
+    float: none;
     display: table-cell;
-}
+}*/
 
 /*.ui-grid-header-cell, .ui-grid-cell-contents {
     white-space: normal;
@@ -1135,7 +1137,7 @@ div.tabbed-footer .overview-tabs li:hover span:before {
     border-right: 10px solid transparent;
     border-bottom: 10px solid #2d343e;
     position: absolute;
-    top: 30px;
+    top: 20px;
     left: 15px;
 }
 
