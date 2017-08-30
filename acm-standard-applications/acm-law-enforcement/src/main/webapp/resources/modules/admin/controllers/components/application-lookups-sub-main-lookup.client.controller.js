@@ -128,11 +128,12 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
             promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
             promiseSaveInfo.then(
                 function (lookup) {
+                    MessageService.succsessAction();
                     fetchLookup();
                     return lookup;
                 }
                 , function (error) {
-                    MessageService.error(error);
+                    MessageService.error(error.data ? error.data : error);
                     fetchLookup();
                     return error;
                 }
