@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.objectassociaton.web.api;
 
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +53,8 @@ public class ObjectAssociationAPIControllerTest implements HandlerExceptionResol
     @Mock
     private ObjectAssociationDao objectAssociationDao;
 
+    @Mock
+    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
     @Mock
     private Authentication mockAuthentication;
