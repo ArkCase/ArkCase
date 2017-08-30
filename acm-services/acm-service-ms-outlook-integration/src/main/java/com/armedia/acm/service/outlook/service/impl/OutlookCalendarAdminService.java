@@ -134,7 +134,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * getFolderCreatorsWithInvalidCredentials(java.util.List)
      */
     @Override
-    public List<AcmOutlookFolderCreator> getFolderCreatorsWithInvalidCredentials()
+    public List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials()
     {
         List<AcmOutlookFolderCreator> allCreators = outlookFolderCreatorDao.getFolderCreators();
 
