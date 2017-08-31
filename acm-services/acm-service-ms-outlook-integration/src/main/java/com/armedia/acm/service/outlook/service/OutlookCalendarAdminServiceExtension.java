@@ -26,20 +26,10 @@ public interface OutlookCalendarAdminServiceExtension extends CalendarAdminServi
      */
     void recreateFolders(AcmOutlookFolderCreator updatedCreator);
 
-    /**
-     *
-     * @param updatedCreator
-     * @param totalToProcess
-     * @param updateStatus
-     * @param failStatus TODO
-     * @param finished
-     * @param noRecreation
-     * @throws AcmOutlookFolderCreatorDaoException
+    /*
+     * The following are functional interfaces to enable communication between the client of, and the provider of this
+     * interface, more precisely, clients of the 'recreateFolders' method.
      */
-    void recreateFolders(AcmOutlookFolderCreator updatedCreator, RecreateFoldersTotalToProcessCallback totalToProcess,
-            RecreateFoldersUpdateStatusCallback updateStatus, RecreateFoldersFailStatusCallback failStatus,
-            RecreateFoldersFinishedCallback finished, RecreateFoldersNoRecreationCallback noRecreation) throws AcmOutlookFolderCreatorDaoException;
-
     @FunctionalInterface
     public static interface RecreateFoldersTotalToProcessCallback
     {
@@ -70,57 +60,20 @@ public interface OutlookCalendarAdminServiceExtension extends CalendarAdminServi
         void noRecreationRequired() throws IOException;
     }
 
-    public static class RecreateFoldersCallbackPayload
-    {
-
-        private String message;
-
-        private String data;
-
-        public RecreateFoldersCallbackPayload()
-        {
-        }
-
-        public RecreateFoldersCallbackPayload(String message, String data)
-        {
-            this.message = message;
-            this.data = data;
-        }
-
-        /**
-         * @return the message
-         */
-        public String getMessage()
-        {
-            return message;
-        }
-
-        /**
-         * @param message
-         *            the message to set
-         */
-        public void setMessage(String message)
-        {
-            this.message = message;
-        }
-
-        /**
-         * @return the data
-         */
-        public String getData()
-        {
-            return data;
-        }
-
-        /**
-         * @param data
-         *            the data to set
-         */
-        public void setData(String data)
-        {
-            this.data = data;
-        }
-
-    }
+    /**
+     *
+     * @param updatedCreator
+     * @param totalToProcess
+     * @param updateStatus
+     * @param failStatus
+     *            TODO
+     * @param finished
+     * @param noRecreation
+     * @throws AcmOutlookFolderCreatorDaoException
+     */
+    void recreateFolders(AcmOutlookFolderCreator updatedCreator, RecreateFoldersTotalToProcessCallback totalToProcess,
+            RecreateFoldersUpdateStatusCallback updateStatus, RecreateFoldersFailStatusCallback failStatus,
+            RecreateFoldersFinishedCallback finished, RecreateFoldersNoRecreationCallback noRecreation)
+            throws AcmOutlookFolderCreatorDaoException;
 
 }

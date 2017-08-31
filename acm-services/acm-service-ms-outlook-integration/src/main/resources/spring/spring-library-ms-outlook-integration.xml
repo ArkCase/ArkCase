@@ -126,6 +126,10 @@
         <property name="recreateFoldersExecutor" ref="regenerateOutlookFoldersExecutor"/>
     </bean>
     
+    <bean id="outlookRecreatableCalendarService" class="com.armedia.acm.service.outlook.service.impl.OutlookRecreatableCalendarServiceImpl">
+        <property name="containerDao" ref="acmContainerFolderDao"/>
+    </bean>
+    
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
     <util:constant id="propertyDefinitionDateTimeCreated"

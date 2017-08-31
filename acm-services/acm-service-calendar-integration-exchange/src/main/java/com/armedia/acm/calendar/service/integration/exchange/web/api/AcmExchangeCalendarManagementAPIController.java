@@ -4,7 +4,6 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
-import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension.RecreateFoldersCallbackPayload;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -109,7 +108,7 @@ public class AcmExchangeCalendarManagementAPIController
      * and {@code system_password} is the value to be stored in {@code acm_outlook_folder_creator.cm_system_password}.
      *
      * For clients that do not support SSE, the {@code updateConfiguration} API method should be invoked instead.
-     * 
+     *
      * @see #updateConfiguration(AcmOutlookFolderCreator)
      *
      *      Checking if the lient supports SSE or not, the following snippet can be used:
