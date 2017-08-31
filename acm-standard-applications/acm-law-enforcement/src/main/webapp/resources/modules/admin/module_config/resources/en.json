@@ -1,13 +1,19 @@
 {
   "lookups" : {
-  	"addressTypes" : {
-  	  "business" : "Business",
-  	  "home" : "Home"
-  	 },
-  	 "aliasTypes" : {
-  	 	"fka": "FKA",
-  	 	"married": "Married"
-  	 }
+    "addressTypes" : {
+      "business" : "Business",
+      "home" : "Home"
+    },
+    "aliasTypes" : {
+      "fka": "FKA",
+      "married": "Married"
+    },
+    "titles" : {
+      "mr" : "Mr",
+      "mrs" : "Mrs",
+      "ms" : "Ms",
+      "miss" : "Miss"
+    }
   },
   "admin": {
     "title": "Admin",

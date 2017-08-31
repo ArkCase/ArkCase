@@ -35,6 +35,7 @@
         <property name="searchResults" ref="searchResults"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="caseFolderNameFormat" value="Case (%s)"/>
+        <property name="lookupDao" ref="lookupDao"/>
     </bean>
 
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">
