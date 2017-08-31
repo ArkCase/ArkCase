@@ -2,14 +2,21 @@ package com.armedia.acm.services.config.lookups.service;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.powermock.api.easymock.PowerMock.mockStaticPartial;
 import static org.powermock.api.easymock.PowerMock.replayAll;
 import static org.powermock.api.easymock.PowerMock.verifyAll;
 
 import com.armedia.acm.core.exceptions.InvalidLookupException;
+import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.model.LookupType;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.model.AcmConfig;
+import com.armedia.acm.services.config.model.JsonConfig;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -28,6 +35,8 @@ import org.springframework.core.io.Resource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by bojan.milenkoski on 25.8.2017
@@ -109,5 +118,59 @@ public class ConfigFileLookupDaoTest
 
         // then
         fail("Should have thrown InvalidLookupException!");
+    }
+
+    @Test
+    public void testGetLookupByNameReturnsCorrectAcmLookup()
+    {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        List<AcmConfig> configList = new LinkedList<>();
+        JsonConfig lookupsConfig = new JsonConfig();
+        lookupsConfig.setConfigName("lookups");
+        lookupsConfig.setJson("{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}]}]}");
+        configList.add(lookupsConfig);
+        configFileLookupDao.setConfigList(configList);
+
+        // when
+        @SuppressWarnings("unchecked")
+        AcmLookup<StandardLookupEntry> acmLookup = (AcmLookup<StandardLookupEntry>) configFileLookupDao.getLookupByName(lookupName);
+
+        // then
+        assertTrue(acmLookup.getEntries().size() == 2);
+        assertEquals(key1, acmLookup.getEntries().get(0).getKey());
+        assertEquals(value1, acmLookup.getEntries().get(0).getValue());
+        assertEquals(key2, acmLookup.getEntries().get(1).getKey());
+        assertEquals(value2, acmLookup.getEntries().get(1).getValue());
+    }
+
+    @Test
+    public void testGetLookupByNameReturnsNullForUnknownLookup()
+    {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        List<AcmConfig> configList = new LinkedList<>();
+        JsonConfig lookupsConfig = new JsonConfig();
+        lookupsConfig.setConfigName("lookups");
+        lookupsConfig.setJson("{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}]}]}");
+        configList.add(lookupsConfig);
+        configFileLookupDao.setConfigList(configList);
+
+        // when
+        @SuppressWarnings("unchecked")
+        AcmLookup<StandardLookupEntry> acmLookup = (AcmLookup<StandardLookupEntry>) configFileLookupDao.getLookupByName("unknown");
+
+        // then
+        assertNull(acmLookup);
     }
 }
