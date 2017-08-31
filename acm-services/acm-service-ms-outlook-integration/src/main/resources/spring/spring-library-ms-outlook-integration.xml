@@ -29,7 +29,6 @@
         </property>
     </bean>
 
-
     <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
@@ -88,11 +87,10 @@
         <property name="exchangePropertiesResource"
                   value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
     </bean>
-    
+
     <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
         <property name="cryptoUtils" ref="acmCryptoUtils"/>
         <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
-        <property name="verifierService" ref="calendarServiceProvider"/>
     </bean>
 
     <task:executor id="regenerateOutlookFoldersExecutor" pool-size="5"/>

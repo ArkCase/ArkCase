@@ -8,6 +8,7 @@ import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,5 +76,7 @@ public interface OutlookCalendarAdminServiceExtension extends CalendarAdminServi
             RecreateFoldersUpdateStatusCallback updateStatus, RecreateFoldersFailStatusCallback failStatus,
             RecreateFoldersFinishedCallback finished, RecreateFoldersNoRecreationCallback noRecreation)
             throws AcmOutlookFolderCreatorDaoException;
+
+    List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials();
 
 }

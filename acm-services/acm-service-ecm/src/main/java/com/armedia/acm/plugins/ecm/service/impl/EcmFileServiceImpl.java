@@ -1185,7 +1185,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
 
-        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
 
         EcmFile movedFile;
 
@@ -1193,9 +1193,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String cmisObjectId = cmisObject.getId();
 
-            file.setVersionSeriesId(cmisObjectId);
+            if (cmisObject instanceof Document)
+            {
+                Document cmisDocument = (Document) cmisObject;
+                file.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            }
             file.setContainer(container);
 
             file.setFolder(folder);
