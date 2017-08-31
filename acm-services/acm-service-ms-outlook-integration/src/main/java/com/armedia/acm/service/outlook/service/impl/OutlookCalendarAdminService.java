@@ -267,6 +267,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
         outlookFolder = outlookFolderService.createFolder(outlookUser, objectId, objectType, WellKnownFolderName.Calendar, outlookFolder);
 
         container.setCalendarFolderId(outlookFolder.getId());
+        container.setCalendarFolderRecreated(true);
     }
 
     private List<OutlookFolderPermission> mapParticipantsToFolderPermission(List<AcmParticipant> participantsForObject)
