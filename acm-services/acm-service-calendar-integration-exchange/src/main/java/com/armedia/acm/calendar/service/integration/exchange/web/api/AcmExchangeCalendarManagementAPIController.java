@@ -29,20 +29,21 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/calendar/exchange/configure", "/api/latest/service/calendar/exchange/configure" })
 public class AcmExchangeCalendarManagementAPIController
 {
+
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/credentials/invalid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmOutlookFolderCreator> checkFolderCreatorCredentials()
+    List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials()
     {
-        List<AcmOutlookFolderCreator> invalidUsers = folderCreatorDao.getFolderCreatorsWithInvalidCredentials();
+        List<AcmOutlookFolderCreator> invalidUsers = calendarAdminService.findFolderCreatorsWithInvalidCredentials();
         return invalidUsers;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<?> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator)
+    public ResponseEntity<AcmOutlookFolderCreator> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator)
             throws AcmOutlookFolderCreatorDaoException
     {
         boolean shouldRecreate = folderCreatorDao.updateFolderCreator(updatedCreator);
@@ -50,7 +51,8 @@ public class AcmExchangeCalendarManagementAPIController
         {
             calendarAdminService.recreateFolders(updatedCreator);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        updatedCreator.setSystemPassword(null);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedCreator);
     }
 
     /**

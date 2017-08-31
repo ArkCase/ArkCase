@@ -49,6 +49,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,6 +92,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String priority;
 
     @Column(name = "cm_complaint_title")
+    @Size(min=1)
     private String complaintTitle;
 
     @Lob

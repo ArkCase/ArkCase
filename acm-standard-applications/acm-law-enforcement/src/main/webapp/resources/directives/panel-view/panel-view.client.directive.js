@@ -44,6 +44,15 @@ angular.module('directives').directive('panelView', ['$q',
                     scope.isCollapsed = true;
                 }
 
+                attrs.$observe('collapsed', function (collapsedVal) {
+                    if (collapsedVal == 'true') {
+                        scope.isCollapsed = true;
+                    }
+                    else {
+                        scope.isCollapsed = false;
+                    }
+                });
+
                 scope.onCollapseIconClick = function($event) {
                     $event.preventDefault();
                     scope.isCollapsed = !scope.isCollapsed

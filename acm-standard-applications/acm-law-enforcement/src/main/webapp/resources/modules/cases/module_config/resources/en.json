@@ -132,7 +132,7 @@
       "parentName": "Parent",
       "targetTitle": "Title",
       "modified": "Modified",
-      "targetType": "Reference Type",
+      "targetType": "Type",
       "status": "Status"
     }
   },

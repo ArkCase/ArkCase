@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.EnqueueCaseFileService;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -17,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-
 import java.util.Date;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
+@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
 public class CaseFileEnqueueAPIController
 {
 
@@ -34,7 +32,7 @@ public class CaseFileEnqueueAPIController
     @RequestMapping(value = "/enqueue/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CaseFileEnqueueResponse enqueue(@PathVariable("caseId") Long caseId,
-            @RequestParam(value = "nextQueue", required = true) String nextQueue, HttpSession session, Authentication auth)
+                                           @RequestParam(value = "nextQueue", required = true) String nextQueue, HttpSession session, Authentication auth)
     {
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();
@@ -46,6 +44,7 @@ public class CaseFileEnqueueAPIController
         getUserTrackerService().trackUser(ipAddress);
 
         CaseFileEnqueueResponse response = getEnqueueCaseFileService().enqueueCaseFile(caseId, nextQueue, context);
+
 
         if (response.isSuccess())
         {
