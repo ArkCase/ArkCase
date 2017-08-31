@@ -9,10 +9,10 @@
     
     <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigFileLookupDao">
         <property name="lookupsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups.json"/>
+        <property name="configList" ref="configList"/>
     </bean>
     
     <bean id="lookupsApi" class="com.armedia.acm.services.config.lookups.web.api.LookupsApiController">
-        <property name="configApiController" ref="configApi"/>
         <property name="lookupDao" ref="lookupDao"/>
     </bean>
 </beans>

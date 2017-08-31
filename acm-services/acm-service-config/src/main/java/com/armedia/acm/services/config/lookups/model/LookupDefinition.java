@@ -11,6 +11,18 @@ public class LookupDefinition
 
     private String lookupEntriesAsJson;
 
+    public LookupDefinition()
+    {
+    }
+
+    public LookupDefinition(LookupType lookupType, String name, String lookupEntriesAsJson)
+    {
+        super();
+        this.lookupType = lookupType;
+        this.name = name;
+        this.lookupEntriesAsJson = lookupEntriesAsJson;
+    }
+
     public LookupType getLookupType()
     {
         return lookupType;
