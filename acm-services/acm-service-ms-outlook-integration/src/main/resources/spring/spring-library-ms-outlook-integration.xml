@@ -107,7 +107,6 @@
 
     <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
         <property name="extendedService" ref="propertyFileCalendarAdminService"/>
-        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="outlookFolderService" ref="outlookService"/>
         <property name="participantsTypesForOutlookFolder" value="${participants-types-as-outlook-permission}"/>
@@ -122,6 +121,10 @@
             </map>
         </property>
         <property name="recreateFoldersExecutor" ref="regenerateOutlookFoldersExecutor"/>
+        <property name="verifierService" ref="calendarServiceProvider"/>
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+        <property name="outlookFolderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
     
     <bean id="outlookRecreatableCalendarService" class="com.armedia.acm.service.outlook.service.impl.OutlookRecreatableCalendarServiceImpl">

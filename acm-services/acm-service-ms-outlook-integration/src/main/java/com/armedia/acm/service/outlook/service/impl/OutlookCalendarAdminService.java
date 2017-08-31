@@ -65,8 +65,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     private CalendarAdminService extendedService;
 
-    private AcmOutlookFolderCreatorDao folderCreatorDao;
-
     private UserDao userDao;
 
     private OutlookFolderService outlookFolderService;
@@ -181,7 +179,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     {
         recreateFoldersExecutor.execute(() -> {
 
-            Set<AcmOutlookObjectReference> objectReferences = folderCreatorDao.getObjectReferences(folderCreator);
+            Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(folderCreator);
 
             for (AcmOutlookObjectReference reference : objectReferences)
             {
@@ -231,11 +229,11 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
             try
             {
-                boolean shouldRecreate = folderCreatorDao.updateFolderCreator(updatedCreator);
+                boolean shouldRecreate = outlookFolderCreatorDao.updateFolderCreator(updatedCreator);
 
                 if (shouldRecreate)
                 {
-                    Set<AcmOutlookObjectReference> objectReferences = folderCreatorDao.getObjectReferences(updatedCreator);
+                    Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(updatedCreator);
                     totalToProcess.total(objectReferences.size());
                     int updated = 0, failed = 0;
                     for (AcmOutlookObjectReference reference : objectReferences)
@@ -431,15 +429,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     public void setExtendedService(CalendarAdminService extendedService)
     {
         this.extendedService = extendedService;
-    }
-
-    /**
-     * @param folderCreatorDao
-     *            the folderCreatorDao to set
-     */
-    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
-    {
-        this.folderCreatorDao = folderCreatorDao;
     }
 
     /**
