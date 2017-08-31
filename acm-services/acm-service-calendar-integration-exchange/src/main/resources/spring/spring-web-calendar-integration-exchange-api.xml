@@ -8,4 +8,8 @@
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
 
+    <bean id="exchangeCalendarAPIController" class="com.armedia.acm.calendar.service.integration.exchange.web.api.AcmExchangeCalendarAPIController">
+        <property name="recreatableCalendarService" ref="outlookRecreatableCalendarService"/>
+    </bean>
+
 </beans>

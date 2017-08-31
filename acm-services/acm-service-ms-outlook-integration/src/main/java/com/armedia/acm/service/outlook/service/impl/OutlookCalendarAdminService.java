@@ -206,51 +206,57 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
             RecreateFoldersFinishedCallback finished, RecreateFoldersNoRecreationCallback noRecreation)
             throws AcmOutlookFolderCreatorDaoException
     {
-        boolean shouldRecreate = folderCreatorDao.updateFolderCreator(updatedCreator);
 
-        try
-        {
-            if (shouldRecreate)
+        recreateFoldersExecutor.execute(() -> {
+
+            try
             {
-                Set<AcmOutlookObjectReference> objectReferences = folderCreatorDao.getObjectReferences(updatedCreator);
-                totalToProcess.total(objectReferences.size());
-                int updated = 0, failed = 0;
-                for (AcmOutlookObjectReference reference : objectReferences)
+                boolean shouldRecreate = folderCreatorDao.updateFolderCreator(updatedCreator);
+
+                if (shouldRecreate)
                 {
-                    try
+                    Set<AcmOutlookObjectReference> objectReferences = folderCreatorDao.getObjectReferences(updatedCreator);
+                    totalToProcess.total(objectReferences.size());
+                    int updated = 0, failed = 0;
+                    for (AcmOutlookObjectReference reference : objectReferences)
                     {
-                        Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
-                        if (!user.isPresent())
+                        try
                         {
-                            continue;
+                            Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
+                            if (!user.isPresent())
+                            {
+                                continue;
+                            }
+
+                            CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
+
+                            CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
+                                    participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
+                            String folderName = handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(),
+                                    callback);
+
+                            updateStatus.updated(++updated, folderName);
+
+                        } catch (CalendarConfigurationException | CalendarServiceException e)
+                        {
+                            failStatus.failed(++failed, reference.getObjectType(), Long.toString(reference.getObjectId()));
+                            log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
+                                    reference.getObjectType(), e);
                         }
-
-                        CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
-
-                        CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
-                                participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
-                        String folderName = handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(),
-                                callback);
-
-                        updateStatus.updated(++updated, folderName);
-
-                    } catch (CalendarConfigurationException | CalendarServiceException e)
-                    {
-                        failStatus.failed(++failed, reference.getObjectType(), Long.toString(reference.getObjectId()));
-                        log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
-                                reference.getObjectType(), e);
                     }
-                }
 
-                finished.finished(objectReferences.size(), updated, failed);
-            } else
+                    finished.finished(objectReferences.size(), updated, failed);
+                } else
+                {
+                    noRecreation.noRecreationRequired();
+                }
+            } catch (IOException | AcmOutlookFolderCreatorDaoException e)
             {
-                noRecreation.noRecreationRequired();
+                log.warn("Error while trying to recreate folders for outlook user with [{}] email address.",
+                        updatedCreator.getSystemEmailAddress(), e);
             }
-        } catch (IOException e)
-        {
-            log.warn("Error while trying to recreate folders with [{}] email address.", updatedCreator.getSystemEmailAddress(), e);
-        }
+
+        });
 
     }
 
