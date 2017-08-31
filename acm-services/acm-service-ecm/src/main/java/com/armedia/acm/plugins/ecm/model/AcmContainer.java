@@ -74,6 +74,9 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     @Column(name = "cm_outlook_folder_id", nullable = true)
     private String calendarFolderId;
 
+    @Column(name = "cm_outlook_folder_recreated", nullable = false)
+    private boolean calendarFolderRecreated;
+
     @Column(name = "cm_cmis_repository_id", nullable = false)
     private String cmisRepositoryId;
 
@@ -223,6 +226,23 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
         this.calendarFolderId = calendarFolderId;
     }
 
+    /**
+     * @return the calendarFolderRecreated
+     */
+    public boolean isCalendarFolderRecreated()
+    {
+        return calendarFolderRecreated;
+    }
+
+    /**
+     * @param calendarFolderRecreated
+     *            the calendarFolderRecreated to set
+     */
+    public void setCalendarFolderRecreated(boolean calendarFolderRecreated)
+    {
+        this.calendarFolderRecreated = calendarFolderRecreated;
+    }
+
     public String getCmisRepositoryId()
     {
         return cmisRepositoryId;
@@ -235,7 +255,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -260,7 +280,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
