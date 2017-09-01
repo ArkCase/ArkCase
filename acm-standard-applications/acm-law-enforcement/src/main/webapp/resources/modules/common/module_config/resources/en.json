@@ -407,6 +407,12 @@
       "thisOne.radio": "Just this one",
       "entireSeries.radio": "The entire series",
       "deleteWarning.text": "Are you sure you want to delete this event?"
+    },
+    "message": {
+      "error.accessDenied": "Access denied to calendar service.",
+      "error.serviceConfiguration": "Invalid calendar service configuration.",
+      "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "Internal Server Error occurred."
     }
   },
   "common.directive.coreParticipants": {
