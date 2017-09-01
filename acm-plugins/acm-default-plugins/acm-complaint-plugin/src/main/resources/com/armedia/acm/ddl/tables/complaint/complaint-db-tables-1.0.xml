@@ -345,6 +345,10 @@
     </changeSet>
 
     <changeSet id="25-add-complaint-address-table" author="sharmilee.sivakumaran">
+        <dropColumn tableName="acm_complaint" columnName="cm_default_address"/>
+        <addColumn tableName="acm_complaint">
+            <column name="cm_default_address" type="${fkIdType}"/>
+        </addColumn>
         <createTable tableName="acm_complaint_postal_address">
             <column name="cm_complaint_id" type="${fkIdType}">
                 <constraints nullable="false"/>
@@ -362,7 +366,7 @@
         <sql>INSERT INTO acm_complaint_postal_address (cm_complaint_id, cm_address_id) SELECT cm_complaint_id,
             cm_address_id FROM acm_complaint
         </sql>
-        <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_complaint_address_id"/>
+        <!--<dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_complaint_address_id"/> -->
         <dropColumn tableName="acm_complaint" columnName="cm_address_id"/>
     </changeSet>
 
