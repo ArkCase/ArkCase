@@ -154,9 +154,28 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                                 });
                             });
                             callback(events);
+                        },
+                        function(reason) {
+                            var errorCause = reason.data.error_cause;
+                            var errorMessage = "";
+
+                            switch (errorCause) {
+                                case "ACCESS_DENIED":
+                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.accessDenied');
+                                    break;
+                                case "SERVICE_CONFIGURATION":
+                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.serviceConfiguration');
+                                    break;
+                                case "INVALID_BIND_TO_SERVICE_CREDENTIALS":
+                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.serviceCredentials');
+                                    break;
+                                case "INTERNAL_SERVER_ERROR":
+                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.internalServerError');
+                                    break;
+                            }
+                            MessageService.error(errorMessage);
                         });
                 };
-
             }
         };
     }
