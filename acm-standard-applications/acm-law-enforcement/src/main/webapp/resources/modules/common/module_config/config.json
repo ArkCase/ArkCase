@@ -72,12 +72,12 @@
         "index": 6
       },
       {
-        "name": "author",
-        "field": "creator",
-        "displayName": "common.directive.docTree.table.columns.author",
-        "headTemplate": "<label id='author' class='doc-tree-header' style='cursor: pointer;'></label>",
-        "icon": "<i class='fa fa-fw' data-sort='author' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
+        "name": "modifier",
+        "field": "modifier",
+        "displayName": "common.directive.docTree.table.columns.modifier",
+        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
         "index": 7
