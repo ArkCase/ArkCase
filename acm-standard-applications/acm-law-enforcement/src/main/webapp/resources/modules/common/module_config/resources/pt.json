@@ -220,7 +220,13 @@
   "common.directive.coreCalendar": {
     "title": "pt_Calendar",
     "start.label": "pt_Start: ",
-    "end.label": "pt_End: "
+    "end.label": "pt_End: ",
+    "message": {
+      "error.accessDenied": "pt_Access denied to calendar service.",
+      "error.serviceConfiguration": "pt_Invalid calendar service configuration.",
+      "error.serviceCredentials": "pt_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "pt_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "pt_Participants",
