@@ -22,7 +22,7 @@ public class AcmExchangeCalendarAPIController
 
     private OutlookRecreateableCalendarService recreatableCalendarService;
 
-    @RequestMapping(path = "/calendarfolders/recreated", method = RequestMethod.PUT)
+    @RequestMapping(path = "/folders/recreated", method = RequestMethod.PUT)
     public ResponseEntity<AcmContainer> clearFolderRecreatedFlag(@RequestBody RecreatedEntity recreatedEntity)
             throws AcmObjectNotFoundException
     {

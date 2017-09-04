@@ -33,6 +33,6 @@ public interface AcmOutlookFolderCreatorDao
      */
     boolean updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException;
 
-    Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator);
+    Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator) throws AcmOutlookFolderCreatorDaoException;
 
 }

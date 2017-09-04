@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
@@ -238,8 +239,16 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
                     updatedCreator.getId(), e);
             throw new AcmOutlookFolderCreatorDaoException(String.format(
-                    "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
+                    "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [%s]. Cannot update it.",
                     updatedCreator.getId()), e);
+        } catch (NoResultException e)
+        {
+            log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
+                    updatedCreator.getId(), e);
+            throw new AcmOutlookFolderCreatorDaoException(
+                    String.format("There is no 'AcmOutlookFolderCreator' instance with id [%s] stored in the database. Cannot update it.",
+                            updatedCreator.getId()),
+                    e);
         }
     }
 
@@ -251,6 +260,7 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      */
     @Override
     public Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator)
+            throws AcmOutlookFolderCreatorDaoException
     {
         log.debug("Retrieving object references for folder creator with id: [{}].", folderCreator.getId());
 
@@ -258,9 +268,20 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
                 AcmOutlookFolderCreator.class);
         query.setParameter("creatorId", folderCreator.getId());
 
-        AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
+        try
+        {
+            AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
 
-        return retrievedCreator.getOutlookObjectReferences();
+            return retrievedCreator.getOutlookObjectReferences();
+        } catch (NoResultException e)
+        {
+            log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
+                    folderCreator.getId(), e);
+            throw new AcmOutlookFolderCreatorDaoException(
+                    String.format("There is no 'AcmOutlookFolderCreator' instance with id [%s] stored in the database. Cannot update it.",
+                            folderCreator.getId()),
+                    e);
+        }
     }
 
     private String decryptValue(String encrypted) throws AcmEncryptionException
