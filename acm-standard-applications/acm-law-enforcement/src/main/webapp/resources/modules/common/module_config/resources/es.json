@@ -54,7 +54,7 @@
       "type": "es_Type",
       "created": "es_Created",
       "modified": "es_Modified",
-      "author": "es_Author",
+      "modifier": "es_Modified By",
       "version": "es_Version",
       "status": "es_Status"
     },
