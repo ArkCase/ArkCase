@@ -54,7 +54,7 @@
       "type": "ru_Type",
       "created": "ru_Created",
       "modified": "ru_Modified",
-      "author": "ru_Author",
+      "modifier": "ru_Modified By",
       "version": "ru_Version",
       "status": "ru_Status"
     },
