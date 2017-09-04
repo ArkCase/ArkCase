@@ -179,30 +179,40 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     {
         recreateFoldersExecutor.execute(() -> {
 
-            Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(folderCreator);
-
-            for (AcmOutlookObjectReference reference : objectReferences)
+            try
             {
-                try
+
+                Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(folderCreator);
+
+                for (AcmOutlookObjectReference reference : objectReferences)
                 {
-                    Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
-                    if (!user.isPresent())
+                    try
                     {
-                        continue;
+                        Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
+                        if (!user.isPresent())
+                        {
+                            continue;
+                        }
+
+                        CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
+
+                        CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
+                                participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
+                        handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(), callback);
+
+                    } catch (CalendarConfigurationException | CalendarServiceException e)
+                    {
+                        log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
+                                reference.getObjectType(), e);
                     }
-
-                    CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
-
-                    CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
-                            participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
-                    handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(), callback);
-
-                } catch (CalendarConfigurationException | CalendarServiceException e)
-                {
-                    log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
-                            reference.getObjectType(), e);
                 }
+
+            } catch (AcmOutlookFolderCreatorDaoException e)
+            {
+                log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
+                        folderCreator.getId(), e);
             }
+
         });
     }
 
