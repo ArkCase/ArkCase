@@ -54,7 +54,7 @@
       "type": "hi_Type",
       "created": "hi_Created",
       "modified": "hi_Modified",
-      "author": "hi_Author",
+      "modifier": "hi_Modified By",
       "version": "hi_Version",
       "status": "hi_Status"
     },
