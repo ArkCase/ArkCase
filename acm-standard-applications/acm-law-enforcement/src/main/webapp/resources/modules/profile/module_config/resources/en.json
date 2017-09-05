@@ -43,7 +43,7 @@
     "message": "Enter your new password.",
     "confirmation": "Enter your new password again.",
     "cancel": "Cancel",
-    "outlookPassword": "Change Outlook Password",
+    "outlookPassword": "Store Outlook Password",
     "ldapPassword": "Change LDAP Password"
   },
   "profile.picture": {

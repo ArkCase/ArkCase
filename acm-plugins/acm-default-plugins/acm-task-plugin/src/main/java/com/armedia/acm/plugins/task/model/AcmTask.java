@@ -607,7 +607,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     {
         if (getChildObjects() != null)
         {
-            return getChildObjects().stream().filter(child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+            return getChildObjects().stream().filter(child -> ObjectAssociationConstants.REFFERENCE_TYPE.equals(child.getAssociationType()))
                     .collect(Collectors.toList());
         }
 

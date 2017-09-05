@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 /**
  * @author nebojsha.davidovikj
  */
@@ -62,6 +64,15 @@ public class ObjectAssociationAPIController
             Authentication auth) throws AcmUserActionFailedException
     {
         log.debug("save Object Association [{}]", objectAssociation);
+        Objects.requireNonNull(objectAssociation, "objectAssociatoin must not be null!");
+        Objects.requireNonNull(objectAssociation.getParentId(), "objectAssociation parentId must not be null!");
+        Objects.requireNonNull(objectAssociation.getParentType(), "objectAssociation parentType must not be null!");
+
+        Objects.requireNonNull(objectAssociation.getTargetId(), "objectAssociation targetId must not be null!");
+        Objects.requireNonNull(objectAssociation.getTargetType(), "objectAssociation targetType must not be null!");
+
+        Objects.requireNonNull(objectAssociation.getAssociationType(), "objectAssociation associationType must not be null!");
+
         return objectAssociationService.saveAssociation(objectAssociation, auth);
     }
 
