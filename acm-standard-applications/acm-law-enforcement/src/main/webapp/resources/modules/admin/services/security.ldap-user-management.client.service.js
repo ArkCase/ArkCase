@@ -16,7 +16,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
                 method: 'GET',
                 url: 'api/latest/users/' + directory + '/groups',
                 params: {
-                    n: 1000
+                    n: 10000
                 }
             });
         }
@@ -26,7 +26,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
                 method: 'GET',
                 url: 'api/latest/users/groups/adhoc',
                 params: {
-                    n: 1000
+                    n: 10000
                 }
             });
         }

@@ -1,5 +1,10 @@
 package com.armedia.acm.service.outlook.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +22,8 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "acm_outlook_folder_creator")
+@JsonInclude(Include.NON_NULL)
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmOutlookFolderCreator
 {
 
@@ -112,6 +119,87 @@ public class AcmOutlookFolderCreator
     public void setOutlookObjectReferences(Set<AcmOutlookObjectReference> outlookObjectReferences)
     {
         this.outlookObjectReferences = outlookObjectReferences;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((outlookObjectReferences == null) ? 0 : outlookObjectReferences.hashCode());
+        result = prime * result + ((systemEmailAddress == null) ? 0 : systemEmailAddress.hashCode());
+        result = prime * result + ((systemPassword == null) ? 0 : systemPassword.hashCode());
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        AcmOutlookFolderCreator other = (AcmOutlookFolderCreator) obj;
+        if (id == null)
+        {
+            if (other.id != null)
+            {
+                return false;
+            }
+        } else if (!id.equals(other.id))
+        {
+            return false;
+        }
+        if (outlookObjectReferences == null)
+        {
+            if (other.outlookObjectReferences != null)
+            {
+                return false;
+            }
+        } else if (!outlookObjectReferences.equals(other.outlookObjectReferences))
+        {
+            return false;
+        }
+        if (systemEmailAddress == null)
+        {
+            if (other.systemEmailAddress != null)
+            {
+                return false;
+            }
+        } else if (!systemEmailAddress.equals(other.systemEmailAddress))
+        {
+            return false;
+        }
+        if (systemPassword == null)
+        {
+            if (other.systemPassword != null)
+            {
+                return false;
+            }
+        } else if (!systemPassword.equals(other.systemPassword))
+        {
+            return false;
+        }
+        return true;
     }
 
 }

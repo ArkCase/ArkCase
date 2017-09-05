@@ -54,7 +54,7 @@
       "type": "de_Type",
       "created": "de_Created",
       "modified": "de_Modified",
-      "author": "de_Author",
+      "modifier": "de_Modified By",
       "version": "de_Version",
       "status": "de_Status"
     },
