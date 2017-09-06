@@ -13,9 +13,9 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'PersonAssociation.Service', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'PersonAssociation.Service', 'Object.PersonService', 'OrganizationAssociation.Service', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, PersonAssociationService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, PersonAssociationService, ObjectPersonService, OrganizationAssociationService, ObjectService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -60,17 +60,10 @@ angular.module('dashboard.cases', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                refreshGridData(objectInfo.id);
+                OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
+                    $scope.gridOptions.data = data.response.docs;
+                });
             };
-
-            function refreshGridData(objectId) {
-                ObjectPersonService.getPersonCases(objectId).then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-                PersonAssociationService.getPersonAssociations(currentObjectId, "CASE_FILE").then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
