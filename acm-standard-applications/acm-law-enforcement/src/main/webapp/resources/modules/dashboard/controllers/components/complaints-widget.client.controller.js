@@ -13,9 +13,9 @@ angular.module('dashboard.complaints', ['adf.provider'])
             });
     })
     .controller('Dashboard.ComplaintsController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Object.OrganizationService', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'Object.OrganizationService', 'Object.PersonService', 'OrganizationAssociation.Service', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, ObjectOrganizationService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, ObjectOrganizationService, ObjectPersonService, OrganizationAssociationService, ObjectService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -60,16 +60,8 @@ angular.module('dashboard.complaints', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                refreshGridData(objectInfo.id);
-            };
-
-            function refreshGridData(objectId) {
-                ObjectOrganizationService.getOrganizationComplaints(objectId).then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-
-                ObjectPersonService.getPersonComplaints(objectId).then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
+                OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
+                    $scope.gridOptions.data = data.response.docs;
                 });
             }
 
