@@ -12,10 +12,11 @@ angular
             '$locationProvider',
             '$translateProvider',
             '$translatePartialLoaderProvider',
+            'tmhDynamicLocaleProvider',
             '$httpProvider',
             'AnalyticsProvider',
-            function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider, AnalyticsProvider) {
+            function ($locationProvider, $translateProvider, $translatePartialLoaderProvider,
+                      dynamicLocaleProvider, $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
@@ -56,7 +57,8 @@ angular
                 $translateProvider.determinePreferredLanguage(function () {
                     var preferredLocale = "en";
 
-                    //handle incompatible old format; this code will be remove soon after user/developers use this version
+                    // handle incompatible old format; this code will be removed after locale setting implementation
+                    // is stable and long enough for all user and developers to update to this code
                     if (localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
                         if (!lastLocale) {
@@ -68,6 +70,8 @@ angular
                         } else if (lastLocale.locales[0].locale) {
                             localStorage.AcmLocale = null;
                         } else if (!lastLocale.locales[0].native) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].currencySymbol) {
                             localStorage.AcmLocale = null;
                         } else if (!lastLocale.code) {
                             localStorage.AcmLocale = null;
@@ -83,6 +87,10 @@ angular
                             preferredLocale = lastLocale.selected;
                         }
                     }
+
+                    dynamicLocaleProvider.localeLocationPattern('modules/common/angular-i18n/angular-locale_{{locale}}.js');
+                    dynamicLocaleProvider.defaultLocale('en');
+
                     return preferredLocale;
                 });
 
