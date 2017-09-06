@@ -126,7 +126,6 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
 
             modalInstance.result.then(function (data) {
                 var address;
-                $scope.objectInfo.addresses=[];
                 if (!data.isEdit)
                     address = $scope.address;
                 else {
@@ -140,6 +139,9 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
                 address.zip = data.address.zip;
                 address.country = data.address.country;
                 if (!data.isEdit) {
+                    if(!$scope.objectInfo.addresses){
+                        $scope.objectInfo.addresses=[];
+                    }
                     $scope.objectInfo.addresses.push(address);
                 }
 

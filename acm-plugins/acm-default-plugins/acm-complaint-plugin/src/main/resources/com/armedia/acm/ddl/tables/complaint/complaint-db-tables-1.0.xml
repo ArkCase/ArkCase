@@ -363,7 +363,9 @@
             <column name="cm_address_id"/>
         </createIndex>
         <sql>INSERT INTO acm_complaint_postal_address (cm_complaint_id, cm_address_id) SELECT cm_complaint_id,
-            cm_address_id FROM acm_complaint
+            cm_address_id FROM acm_complaint WHERE cm_address_id IS NOT NULL
+        </sql>
+        <sql> UPDATE acm_complaint SET cm_default_address=cm_address_id
         </sql>
         <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_complaint_address_id"/>
         <dropColumn tableName="acm_complaint" columnName="cm_address_id"/>
