@@ -1,7 +1,8 @@
 <div ng-controller="Complaint.LocationsController">
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
-            <div class="panel-title">{{"complaints.comp.addresses.title" | translate}}
+            <div class="panel-title">
+                <span translate>complaints.comp.addresses.title</span>
                 <div class="pull-right">
                     <button class="btn btn-default btn-xs" permission="editComplaint" permission-properties="objectInfo" permission-action="hide" ng-click="addNew()"><i
                             class="fa fa-lg fa-plus"></i></button>
@@ -15,6 +16,7 @@
             <div ui-grid="gridOptions"
                  ui-grid-resize-columns
                  ui-grid-auto-resize
+                 ui-grid-pagination
                  adjust-table-height="gridOptions.data.length"
                  class="grid"></div>
         </div>
