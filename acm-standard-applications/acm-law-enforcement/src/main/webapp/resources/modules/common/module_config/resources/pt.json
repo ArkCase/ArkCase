@@ -54,7 +54,7 @@
       "type": "pt_Type",
       "created": "pt_Created",
       "modified": "pt_Modified",
-      "author": "pt_Author",
+      "modifier": "pt_Modified By",
       "version": "pt_Version",
       "status": "pt_Status"
     },

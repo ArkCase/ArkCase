@@ -54,7 +54,7 @@
       "type": "fr_Type",
       "created": "fr_Created",
       "modified": "fr_Modified",
-      "author": "fr_Author",
+      "modifier": "fr_Modified By",
       "version": "fr_Version",
       "status": "fr_Status"
     },

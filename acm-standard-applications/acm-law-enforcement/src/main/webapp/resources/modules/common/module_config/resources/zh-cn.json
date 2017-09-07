@@ -54,7 +54,7 @@
       "type": "zh-cn_Type",
       "created": "zh-cn_Created",
       "modified": "zh-cn_Modified",
-      "author": "zh-cn_Author",
+      "modifier": "zh-cn_Modified By",
       "version": "zh-cn_Version",
       "status": "zh-cn_Status"
     },

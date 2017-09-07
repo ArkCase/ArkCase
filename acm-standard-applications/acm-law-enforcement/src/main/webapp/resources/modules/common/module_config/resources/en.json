@@ -51,7 +51,7 @@
       "type": "Type",
       "created": "Created",
       "modified": "Modified",
-      "author": "Author",
+      "modifier": "Modified By",
       "version": "Version",
       "status": "Status"
     },
