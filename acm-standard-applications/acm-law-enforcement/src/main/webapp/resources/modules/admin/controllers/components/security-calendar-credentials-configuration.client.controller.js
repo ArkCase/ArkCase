@@ -68,7 +68,7 @@ angular.module('admin').controller('Admin.SecurityCalendarCredentialsConfigurati
                         $scope.validateInProgress[creatorIndex] = false;
                     },
                     function failCallback () {
-                        $scope.validOutlookFolderCreatorCredentials[creatorIndex] = 'NOT_VALID';
+                        $scope.validOutlookFolderCreatorCredentials[creatorIndex] = 'ERROR';
                         $scope.validateInProgress[creatorIndex] = false;
                     });
         };
