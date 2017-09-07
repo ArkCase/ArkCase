@@ -1,42 +1,44 @@
 <div class="modal-header">
     <h3><span translate>people.comp.pictures.dialog.title</span></h3>
 </div>
-<div class="modal-body">
-    <div class="row">
-        <div class="col-sm-12 form-group">
-            <label translate>people.comp.pictures.dialog.title</label><span class="required-asterisk">*</span><br/>
-            <button ngf-select ng-model="userPicture" id="file"
-                    ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                    class="btn btn-sm btn-default" ngf-change="upload()"><span
-                    translate>people.comp.pictures.dialog.browse</span></button>
-            {{userPicture.name}}
+<form name="picturesForm">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>people.comp.pictures.dialog.title</label><span class="required-asterisk">*</span><br/>
+                <button ngf-select ng-model="userPicture" id="file"
+                        ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                        class="btn btn-sm btn-default" ngf-change="upload()" required="required"><span
+                        translate>people.comp.pictures.dialog.browse</span></button>
+                {{userPicture.name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>people.comp.pictures.dialog.setPrimary</label><span
+                    class="required-asterisk">*</span><br/>
+                <label>
+                    <translate>people.comp.pictures.dialog.yes</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                </label>
+                <label ng-hide="hideNoField">
+                    <translate>people.comp.pictures.dialog.no</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="phoneDescription" translate>people.comp.pictures.dialog.description</label>
+                <textarea id="phoneDescription" class="input-md form-control" ng-model="image.description"></textarea>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12 form-group">
-            <label translate>people.comp.pictures.dialog.setPrimary</label><span class="required-asterisk">*</span><br/>
-            <label>
-                <translate>people.comp.pictures.dialog.yes</translate>
-                <input type="radio" ng-model="isDefault" ng-value="true">
-            </label>
-            <label ng-hide="hideNoField">
-                <translate>people.comp.pictures.dialog.no</translate>
-                <input type="radio" ng-model="isDefault" ng-value="false">
-            </label>
-        </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+            people.comp.pictures.dialog.cancel
+        </button>
+        <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="picturesForm.$invalid"><span translate>people.comp.pictures.dialog.upload</span>
+        </button>
     </div>
-    <div class="row">
-        <div class="col-sm-12 form-group">
-            <label for="phoneDescription" translate>people.comp.pictures.dialog.description</label>
-            <textarea id="phoneDescription" class="input-md form-control" ng-model="image.description"></textarea>
-        </div>
-    </div>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
-        people.comp.pictures.dialog.cancel
-    </button>
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" )><span translate>people.comp.pictures.dialog.upload</span>
-    </button>
-</div>
-
+</form>
