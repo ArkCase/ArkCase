@@ -415,7 +415,7 @@
       "identificationNumber.placeholder": "zh-tw_Enter Identification Number",
       "identificationIssuer": "zh-tw_Identification Issuer",
       "identificationIssuer.placeholder": "zh-tw_Enter Identification Issuer",
-      "identificationYearIssued": "zh-tw_Identification Issued",
+      "identificationYearIssued": "zh-tw_Identification Issued Date",
       "identificationYearIssued.placeholder": "zh-tw_Select Identification Issued",
       "identificationYearIssued.close.button": "zh-tw_Close"
     },
