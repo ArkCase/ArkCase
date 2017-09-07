@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
@@ -55,6 +56,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private TagService tagService;
     private AssociatedTagService associatedTagService;
     private LookupDao lookupDao;
+    private TranslationService translationService;
 
     private ComplaintFactory complaintFactory;
 
@@ -311,7 +313,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         MainInformation mainInformation = new MainInformation();
         List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("titles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
+        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + translationService.translate(entry.getValue()))
+                .collect(Collectors.toList());
         List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
 
         if (types != null && types.size() > 0)
@@ -603,5 +606,15 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     public void setLookupDao(LookupDao lookupDao)
     {
         this.lookupDao = lookupDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }
