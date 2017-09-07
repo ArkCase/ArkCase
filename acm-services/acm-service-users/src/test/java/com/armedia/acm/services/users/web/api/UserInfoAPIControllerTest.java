@@ -1,8 +1,14 @@
 package com.armedia.acm.services.users.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserInfoDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.httpclient.HttpStatus;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -23,21 +29,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 /**
  * Created by manoj.dhungana on 5/01/17.
  */
-public class GetUserInfoAPIControllerTest extends EasyMockSupport
+public class UserInfoAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private MockHttpSession mockSession;
     private Authentication mockAuthentication;
 
-    private GetUserInfoAPIController unit;
+    private UserInfoAPIController unit;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -46,7 +47,7 @@ public class GetUserInfoAPIControllerTest extends EasyMockSupport
     {
         mockSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-        unit = new GetUserInfoAPIController();
+        unit = new UserInfoAPIController();
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
     }
 
@@ -57,13 +58,12 @@ public class GetUserInfoAPIControllerTest extends EasyMockSupport
         Map<String, Boolean> privilegeMap = new HashMap<>();
         privilegeMap.put(privilege, Boolean.TRUE);
 
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(Arrays.asList(
-                (GrantedAuthority) () -> "INVESTIGATOR",
-                (GrantedAuthority) () -> "ADMINISTRATOR"
-        ));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(
+                Arrays.asList((GrantedAuthority) () -> "INVESTIGATOR", (GrantedAuthority) () -> "ADMINISTRATOR"));
 
         AcmUser acmUser = new AcmUser();
         acmUser.setUserId("user");
+        acmUser.setLang("en");
         mockSession.setAttribute("acm_user", acmUser);
         mockSession.setAttribute("acm_privileges", privilegeMap);
         expect((List<GrantedAuthority>) mockAuthentication.getAuthorities()).andReturn(grantedAuthorities).atLeastOnce();
@@ -71,12 +71,8 @@ public class GetUserInfoAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result =
-                mockMvc.perform(get("/api/latest/users/info")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication).session(mockSession)
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
-
+        MvcResult result = mockMvc.perform(get("/api/latest/users/info").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .principal(mockAuthentication).session(mockSession).contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         verifyAll();
 
@@ -93,5 +89,6 @@ public class GetUserInfoAPIControllerTest extends EasyMockSupport
         assertEquals(retval.getPrivileges().size(), 1);
         assertNotNull(retval.getAuthorities());
         assertEquals(retval.getAuthorities().size(), 2);
+        assertEquals(retval.getLangCode(), "en");
     }
 }

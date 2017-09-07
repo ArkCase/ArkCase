@@ -1,15 +1,18 @@
-package com.armedia.acm.plugins.admin.service;
+package com.armedia.acm.services.labels.service;
 
-import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
-import com.armedia.acm.plugins.admin.model.ModuleConfig;
+import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
+import com.armedia.acm.services.labels.model.ModuleConfig;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +33,18 @@ public class LabelManagementService
     private String settingsFileLocation;
     private String defaultLocale;
     private Map<String, Object> defaultLocales;
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    private Map<String, Map<String, JSONObject>> cachedResources = new HashMap<>();
 
     private final String MODULE_CORE_ID = "core";
-
 
     /**
      * Return modules
      */
     public List<String> getModulesNames()
     {
-        List modulesNames = new ArrayList();
+        List<String> modulesNames = new ArrayList<>();
         List<ModuleConfig> modules = getModules();
         for (ModuleConfig moduleIter : modules)
         {
@@ -48,7 +53,6 @@ public class LabelManagementService
 
         return modulesNames;
     }
-
 
     /**
      * Return list of modules configuration
@@ -62,7 +66,7 @@ public class LabelManagementService
 
         File[] dirs = modulesDir.listFiles(File::isDirectory);
 
-        List modules = new ArrayList();
+        List<ModuleConfig> modules = new ArrayList<>();
 
         for (File dirIter : dirs)
         {
@@ -97,6 +101,36 @@ public class LabelManagementService
         return resource;
     }
 
+    /**
+     * Return cached module's resource. Doesn't read from the file if once read
+     *
+     * @param moduleId
+     * @param lang
+     * @param createIfAbsent
+     * @return
+     */
+    public JSONObject getCachedResource(String moduleId, String lang) throws AcmLabelManagementException
+    {
+        Map<String, JSONObject> moduleResource = cachedResources.get(moduleId);
+
+        if (moduleResource == null)
+        {
+            JSONObject jsonObject = getResource(moduleId, lang, true);
+            moduleResource = new HashMap<>();
+            moduleResource.put(lang, jsonObject);
+            cachedResources.put(moduleId, moduleResource);
+        }
+
+        JSONObject json = moduleResource.get(lang);
+
+        if (json == null)
+        {
+            json = getResource(moduleId, lang, true);
+            moduleResource.put(lang, json);
+        }
+
+        return json;
+    }
 
     /**
      * Return module's resource string that contains current value, default value and description
@@ -109,6 +143,7 @@ public class LabelManagementService
     {
         return getAdminResource(moduleId, lang, true);
     }
+
     public JSONObject getAdminResource(String moduleId, String lang, boolean loadMenu) throws AcmLabelManagementException
     {
         // 1. Load module's resource file
@@ -118,7 +153,6 @@ public class LabelManagementService
             JSONObject baseResource = normalizeResource(loadModuleResource(moduleId, defaultLocale));
             moduleResource = mergeResources(baseResource, moduleResource);
         }
-
 
         // If module is core, them inject information about menus that are stored in configuration file
         if (loadMenu && MODULE_CORE_ID.equals(moduleId))
@@ -136,7 +170,6 @@ public class LabelManagementService
 
         return adminResource;
     }
-
 
     /**
      * Return settings
@@ -158,7 +191,6 @@ public class LabelManagementService
 
         return settings;
     }
-
 
     /**
      * Create default settings object
@@ -225,7 +257,8 @@ public class LabelManagementService
             File resourceFile = new File(fileName);
             FileUtils.deleteQuietly(resourceFile);
             updateResource(moduleId, lang);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't reset resource file %s", fileName);
             log.error(msg);
@@ -253,7 +286,6 @@ public class LabelManagementService
             moduleResource = mergeResources(baseResource, moduleResource);
         }
 
-
         // If module is core, them inject information about menus that are stored in configuration file
         if (MODULE_CORE_ID.equals(moduleId))
         {
@@ -275,8 +307,8 @@ public class LabelManagementService
             File resourceFile = new File(fileName);
             FileUtils.writeStringToFile(resourceFile, resource.toString(), "UTF-8");
 
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't write resource into the file %s", fileName);
             log.error(msg);
@@ -296,11 +328,11 @@ public class LabelManagementService
      */
     public JSONObject updateCustomResource(String moduleId, String lang, JSONObject newValue) throws AcmLabelManagementException
     {
-        if (newValue == null
-                || !(newValue.has("id") && newValue.has("description") && newValue.has("value")))
+        if (newValue == null || !(newValue.has("id") && newValue.has("description") && newValue.has("value")))
         {
             throw new AcmLabelManagementException("Wrong format of custom resource");
-        } else
+        }
+        else
         {
             String fileName = String.format(customResourcesLocation + customResourceFile, moduleId, lang);
             try
@@ -319,49 +351,13 @@ public class LabelManagementService
                 updateResource(moduleId, lang);
 
                 return customRes;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 String msg = String.format("Can't write resource into the file %s", fileName);
                 log.error(msg);
                 throw new AcmLabelManagementException(msg);
             }
-        }
-    }
-
-    /**
-     * Save regular resource as cusotm resource. It extends values by adding new properties: id,  description, value
-     *
-     * @param moduleId
-     * @param lang
-     * @param resource
-     * @return
-     * @throws AcmLabelManagementException
-     */
-    private JSONObject saveAsCustomResource(String moduleId, String lang, JSONObject resource) throws AcmLabelManagementException
-    {
-        String fileName = String.format(customResourcesLocation + customResourceFile, moduleId, lang);
-        try
-        {
-            JSONObject customRes = new JSONObject();
-            Iterator<String> keys = resource.keys();
-            while (keys.hasNext())
-            {
-                String key = keys.next();
-                String value = resource.getString(key);
-                JSONObject customValue = new JSONObject();
-                customValue.put("id", key);
-                customValue.put("value", value);
-                customValue.put("description", "");
-                customRes.put(key, customValue);
-            }
-            File file = new File(fileName);
-            FileUtils.writeStringToFile(file, customRes.toString(4), "UTF-8");
-            return customRes;
-        } catch (Exception e)
-        {
-            String msg = String.format("Can't save resource as custom resource into the file  %s", fileName);
-            log.error(msg);
-            throw new AcmLabelManagementException(msg);
         }
     }
 
@@ -377,7 +373,8 @@ public class LabelManagementService
         {
             File file = FileUtils.getFile(settingsFileLocation);
             FileUtils.writeStringToFile(file, objSettings.toString(), "UTF-8");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
             throw new AcmLabelManagementException("Update settings error", e);
@@ -401,7 +398,6 @@ public class LabelManagementService
         return res;
     }
 
-
     /**
      * Recursive method to produce normalized resource string
      *
@@ -420,9 +416,10 @@ public class LabelManagementService
             if (jsonValue instanceof JSONObject)
             {
                 normalizeNode((JSONObject) jsonValue, normalized, propertyPath);
-            } else if (jsonValue instanceof String)
+            }
+            else if (jsonValue instanceof String)
             {
-                normalized.put(propertyPath, (String) jsonValue);
+                normalized.put(propertyPath, jsonValue);
             }
         }
     }
@@ -480,7 +477,8 @@ public class LabelManagementService
         if (baseRes != null)
         {
             res = new JSONObject(baseRes.toString());
-        } else
+        }
+        else
         {
             res = new JSONObject();
         }
@@ -532,7 +530,7 @@ public class LabelManagementService
             Iterator<String> keys = customRes.keys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
 
                 if (customRes.has(key))
                 {
@@ -572,7 +570,6 @@ public class LabelManagementService
         return loadResource(fileName);
     }
 
-
     /**
      * Load module's resource
      *
@@ -601,7 +598,8 @@ public class LabelManagementService
             String resource = FileUtils.readFileToString(file, "UTF-8");
             return new JSONObject(resource);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn(String.format("Can't read resource file %s", fileName));
             return null;
@@ -637,13 +635,17 @@ public class LabelManagementService
                     if (menuInfo.has("menuId") && menuInfo.has("menuItemTitle") && menuInfo.has("menuItemURL"))
                     {
                         String key = MODULE_CORE_ID + ".menus." + menuInfo.getString("menuId") + "." + menuInfo.getString("menuItemURL");
-                        String menuItemTitle = (String)menuInfo.get("menuItemTitle");
+                        String menuItemTitle = (String) menuInfo.get("menuItemTitle");
                         if (moduleResource.has(menuItemTitle))
                         {
-                            try {
-                                JSONObject titleTranslatedObj = (JSONObject)moduleResource.get(menuItemTitle);
-                                menuItemTitle = (String)titleTranslatedObj.get("value");
-                            } catch (Exception e) {}
+                            try
+                            {
+                                JSONObject titleTranslatedObj = (JSONObject) moduleResource.get(menuItemTitle);
+                                menuItemTitle = (String) titleTranslatedObj.get("value");
+                            }
+                            catch (Exception e)
+                            {
+                            }
                         }
 
                         modulesMenus.put(key, menuItemTitle);
@@ -654,7 +656,6 @@ public class LabelManagementService
 
         return modulesMenus;
     }
-
 
     public void setCustomResourcesLocation(String customResourcesLocation)
     {
@@ -696,19 +697,33 @@ public class LabelManagementService
         this.settingsFileLocation = settingsFileLocation;
     }
 
-    public String getDefaultLocale() {
+    public String getDefaultLocale()
+    {
         return defaultLocale;
     }
 
-    public void setDefaultLocale(String defaultLocale) {
+    public void setDefaultLocale(String defaultLocale)
+    {
         this.defaultLocale = defaultLocale;
     }
 
-    public Map<String, Object> getDefaultLocales() {
+    public Map<String, Object> getDefaultLocales()
+    {
         return defaultLocales;
     }
 
-    public void setDefaultLocales(Map<String, Object> defaultLocales) {
+    public void setDefaultLocales(Map<String, Object> defaultLocales)
+    {
         this.defaultLocales = defaultLocales;
+    }
+
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

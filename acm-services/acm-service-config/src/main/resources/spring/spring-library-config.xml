@@ -7,6 +7,11 @@
         <property name="pluginName" value="Config Service Plugin"/>
     </bean>
 
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigFileLookupDao">
+        <property name="lookupsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups.json"/>
+        <property name="configList" ref="configList"/>
+    </bean>
+    
     <bean id="addressTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
