@@ -10,10 +10,10 @@
  *
  *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates. It also expose dashboard provider functions to be used.
  */
-angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', '$timeout', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'Config.LocaleService', 'ArkCaseDashboard'
-    , function ($resource, $timeout, $translate
-        , Store, Util, LocaleService, ArkCaseDashboard
+angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', '$timeout', '$translate', '$q'
+    , 'Acm.StoreService', 'UtilService', 'Config.LocaleService', 'ArkCaseDashboard', 'Authentication'
+    , function ($resource, $timeout, $translate, $q
+        , Store, Util, LocaleService, ArkCaseDashboard, Authentication
     ) {
         var Service = $resource('', {}, {
             getConfig: {
@@ -117,27 +117,26 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 }, 0);
             };
 
-            var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
-            var lastLocale = cacheLocale.get();
-            if (Util.isEmpty(lastLocale)) {
-                lastLocale = {};
-                lastLocale.locales = LocaleService.DEFAULT_LOCALES;
-                lastLocale.code = LocaleService.DEFAULT_CODE;
-                lastLocale.iso = LocaleService.DEFAULT_ISO;
-                cacheLocale.set(lastLocale);
-            }
-            var locales = Util.goodMapValue(lastLocale, "locales", LocaleService.DEFAULT_LOCALES);
-            var localeCode = Util.goodMapValue(lastLocale, "code", LocaleService.DEFAULT_CODE);
-            var localeIso = Util.goodMapValue(lastLocale, "iso", LocaleService.DEFAULT_ISO);
-            $translate.use(localeCode);
-            setLocale(localeIso);
+            var localeSettingsPromise = LocaleService.getSettings()
+            var userInfoPromise = Authentication.queryUserInfo();
+            
+            $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
+                var locales = result[0].locales;
+                var userInfo = result[1];
 
+                var userLocale = _.findWhere(locales, {code: userInfo.langCode});
+
+                setLocale(userLocale.iso);
+            });
+            
             scope.$bus.subscribe('$translateChangeSuccess', function (data) {
-                var locale = _.find(locales, {code: data.language});
-                if (locale) {
-                    var iso = Util.goodMapValue(locale, "iso", LocaleService.DEFAULT_ISO);
-                    setLocale(iso);
-                }
+                localeSettingsPromise.then(function(localeSettings) {
+                    var userLocale = _.findWhere(localeSettings.locales, {code: data.language});
+                    if (userLocale) {
+                        var iso = Util.goodMapValue(userLocale, "iso", LocaleService.DEFAULT_ISO);
+                        setLocale(iso);
+                    }
+                });
             });
         };
 

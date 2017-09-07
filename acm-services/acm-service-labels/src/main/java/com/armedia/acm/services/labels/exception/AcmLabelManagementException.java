@@ -1,9 +1,12 @@
-package com.armedia.acm.plugins.admin.exception;
+package com.armedia.acm.services.labels.exception;
 
 /**
  * Created by admin on 2/14/16.
  */
-public class AcmLabelManagementException extends Exception{
+public class AcmLabelManagementException extends Exception
+{
+
+    private static final long serialVersionUID = 1L;
 
     public AcmLabelManagementException()
     {
@@ -29,5 +32,3 @@ public class AcmLabelManagementException extends Exception{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-
