@@ -208,6 +208,7 @@
         <property name="tagService" ref="tagService"/>
         <property name="associatedTagService" ref="associatedTagService"/>
         <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
     </bean>
 
     <bean id="complaintHistoryListener" class="com.armedia.acm.plugins.complaint.service.ComplaintHistoryListener">
