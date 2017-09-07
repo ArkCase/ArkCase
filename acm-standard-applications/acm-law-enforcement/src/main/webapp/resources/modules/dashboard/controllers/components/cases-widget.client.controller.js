@@ -60,14 +60,14 @@ angular.module('dashboard.cases', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                if(objectInfo.objectType == "ORGANIZATION") {
+                if(objectInfo.objectType == ObjectService.ObjectTypes.ORGANIZATION) {
                     OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
-                        $scope.gridOptions.data = data.response.docs;
+                        gridHelper.setWidgetsGridData(data.response.docs);
                     });
                 }
                 else {
                     PersonAssociationService.getPersonAssociations(objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
-                        $scope.gridOptions.data = data.response.docs;
+                        gridHelper.setWidgetsGridData(data.response.docs);
                     });
                 }
             };
