@@ -13,9 +13,9 @@ angular.module('dashboard.complaints', ['adf.provider'])
             });
     })
     .controller('Dashboard.ComplaintsController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Object.OrganizationService', 'Object.PersonService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, ObjectOrganizationService, ObjectPersonService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, ObjectService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -60,18 +60,17 @@ angular.module('dashboard.complaints', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                refreshGridData(objectInfo.id);
+                if(objectInfo.objectType == ObjectService.ObjectTypes.ORGANIZATION) {
+                    OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
+                        gridHelper.setWidgetsGridData(data.response.docs);
+                    });
+                }
+                else {
+                    PersonAssociationService.getPersonAssociations(objectInfo.id, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
+                        gridHelper.setWidgetsGridData(data.response.docs);
+                    });
+                }
             };
-
-            function refreshGridData(objectId) {
-                ObjectOrganizationService.getOrganizationComplaints(objectId).then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-
-                ObjectPersonService.getPersonComplaints(objectId).then(function (data) {
-                    gridHelper.setWidgetsGridData(data.response.docs);
-                });
-            }
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
