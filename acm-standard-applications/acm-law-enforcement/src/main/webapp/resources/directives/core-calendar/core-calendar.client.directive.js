@@ -18,8 +18,8 @@
  *
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService',
-    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService) {
+    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService', 'UtilService',
+    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService, Util) {
         return {
             restrict: 'E',
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
@@ -44,6 +44,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
 
                 ConfigService.getModuleConfig('common').then(function(moduleConfig) {
                     scope.coreCalendarConfig = moduleConfig.coreCalendar;
+                    scope.coreCalendarErrorMessageConfig = moduleConfig.coreCalendarErrorMessage;
                 });
 
                 /* Add Event Modal */
@@ -157,23 +158,11 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         },
                         function(reason) {
                             var errorCause = reason.data.error_cause;
-                            var errorMessage = "";
+                            var errorMessage = $translate.instant(scope.coreCalendarErrorMessageConfig[errorCause]);
 
-                            switch (errorCause) {
-                                case "ACCESS_DENIED":
-                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.accessDenied');
-                                    break;
-                                case "SERVICE_CONFIGURATION":
-                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.serviceConfiguration');
-                                    break;
-                                case "INVALID_BIND_TO_SERVICE_CREDENTIALS":
-                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.serviceCredentials');
-                                    break;
-                                case "INTERNAL_SERVER_ERROR":
-                                    errorMessage = $translate.instant('common.directive.coreCalendar.message.error.internalServerError');
-                                    break;
+                            if(!Util.isEmpty(errorMessage)) {
+                                MessageService.error(errorMessage);
                             }
-                            MessageService.error(errorMessage);
                         });
                 };
             }
