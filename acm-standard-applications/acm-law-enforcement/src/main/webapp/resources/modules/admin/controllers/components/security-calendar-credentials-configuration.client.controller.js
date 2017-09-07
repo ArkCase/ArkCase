@@ -39,6 +39,7 @@ angular.module('admin').controller('Admin.SecurityCalendarCredentialsConfigurati
                 .then(
                     function successfulCallback() {
                         MessageService.info($translate.instant('admin.security.calendarCredentialsConfiguration.message.save.successful'));
+                        $scope.validOutlookFolderCreatorCredentials[creatorIndex] = 'SAVED';
                         $scope.saveInProgress[creatorIndex] = false;
                     },
                     function failCallback() {
