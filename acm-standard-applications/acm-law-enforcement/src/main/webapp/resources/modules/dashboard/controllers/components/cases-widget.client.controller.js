@@ -13,9 +13,9 @@ angular.module('dashboard.cases', ['adf.provider'])
             });
     })
     .controller('Dashboard.CasesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'PersonAssociation.Service', 'Object.PersonService', 'OrganizationAssociation.Service', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, PersonAssociationService, ObjectPersonService, OrganizationAssociationService, ObjectService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, ObjectService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -60,9 +60,16 @@ angular.module('dashboard.cases', ['adf.provider'])
 
             var onObjectInfoRetrieved = function (objectInfo) {
                 $scope.objectInfo = objectInfo;
-                OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.COMPLAINT).then(function (data) {
-                    $scope.gridOptions.data = data.response.docs;
-                });
+                if(objectInfo.objectType == "ORGANIZATION") {
+                    OrganizationAssociationService.getOrganizationAssociations(objectInfo.organizationId, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
+                        $scope.gridOptions.data = data.response.docs;
+                    });
+                }
+                else {
+                    PersonAssociationService.getPersonAssociations(objectInfo.id, ObjectService.ObjectTypes.CASE_FILE).then(function (data) {
+                        $scope.gridOptions.data = data.response.docs;
+                    });
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
