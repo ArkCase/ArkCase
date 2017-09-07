@@ -280,6 +280,7 @@
       "message": {
         "credentials.valid": "zh-tw_Credentials are valid",
         "credentials.invalid": "zh-tw_Credentials are not valid",
+        "credentials.error": "zh-tw_An error has occurred while checking the credentials",
         "save.successful": "zh-tw_Outlook folder creator saved successfully",
         "save.fail": "zh-tw_Outlook folder creator not saved"
       }

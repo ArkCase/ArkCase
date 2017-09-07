@@ -280,6 +280,7 @@
       "message": {
         "credentials.valid": "zh-cn_Credentials are valid",
         "credentials.invalid": "zh-cn_Credentials are not valid",
+        "credentials.error": "zh-cn_An error has occurred while checking the credentials",
         "save.successful": "zh-cn_Outlook folder creator saved successfully",
         "save.fail": "zh-cn_Outlook folder creator not saved"
       }

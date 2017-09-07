@@ -280,6 +280,7 @@
       "message": {
         "credentials.valid": "de_Credentials are valid",
         "credentials.invalid": "de_Credentials are not valid",
+        "credentials.error": "de_An error has occurred while checking the credentials",
         "save.successful": "de_Outlook folder creator saved successfully",
         "save.fail": "de_Outlook folder creator not saved"
       }

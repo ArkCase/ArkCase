@@ -280,6 +280,7 @@
       "message": {
         "credentials.valid": "hi_Credentials are valid",
         "credentials.invalid": "hi_Credentials are not valid",
+        "credentials.error": "hi_An error has occurred while checking the credentials",
         "save.successful": "hi_Outlook folder creator saved successfully",
         "save.fail": "hi_Outlook folder creator not saved"
       }

@@ -280,6 +280,7 @@
       "message": {
         "credentials.valid": "ja_Credentials are valid",
         "credentials.invalid": "ja_Credentials are not valid",
+        "credentials.error": "ja_An error has occurred while checking the credentials",
         "save.successful": "ja_Outlook folder creator saved successfully",
         "save.fail": "ja_Outlook folder creator not saved"
       }
