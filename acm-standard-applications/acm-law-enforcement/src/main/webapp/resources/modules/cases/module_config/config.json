@@ -297,12 +297,12 @@
           "type": "component",
           "columnDefs": [
             {
-              "name": "organization.organizationRole",
-              "displayName": "cases.comp.organizations.table.columns.type",
+              "name": "associationType",
+              "displayName": "cases.comp.organizations.table.columns.associationType",
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.organizationName",
+              "name": "organization.organizationValue",
               "displayName": "cases.comp.organizations.table.columns.name",
               "headerCellFilter": "translate"
             },
