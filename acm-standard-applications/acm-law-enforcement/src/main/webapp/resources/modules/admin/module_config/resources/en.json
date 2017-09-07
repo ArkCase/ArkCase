@@ -264,6 +264,28 @@
         }
       }
     },
+    "security.calendarCredentialsConfiguration": {
+      "title": "Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "System Email Address",
+        "password": "System Password",
+        "password.placeholder": "System Password",
+        "save.button": "Save",
+        "validate.button": "Validate"
+      },
+      "modal": {
+        "title": "Outlook folder override",
+        "message": "You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "Confirm",
+        "cancel.button": "Cancel"
+      },
+      "message": {
+        "credentials.valid": "Credentials are valid",
+        "credentials.invalid": "Credentials are not valid",
+        "save.successful": "Outlook folder creator saved successfully",
+        "save.fail": "Outlook folder creator not saved"
+      }
+    },
     "security.emailConfiguration": {
       "title": "Document Delivery Policy",
       "emailConfigForm": {
