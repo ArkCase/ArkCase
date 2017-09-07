@@ -10,9 +10,9 @@
  *
  *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates. It also expose dashboard provider functions to be used.
  */
-angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', '$timeout', '$translate'
+angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', '$timeout'
     , 'Acm.StoreService', 'UtilService', 'Config.LocaleService', 'ArkCaseDashboard'
-    , function ($resource, $timeout, $translate
+    , function ($resource, $timeout
         , Store, Util, LocaleService, ArkCaseDashboard
     ) {
         var Service = $resource('', {}, {
@@ -117,28 +117,22 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 }, 0);
             };
 
-            var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
-            var lastLocale = cacheLocale.get();
-            if (Util.isEmpty(lastLocale)) {
-                lastLocale = {};
-                lastLocale.locales = LocaleService.DEFAULT_LOCALES;
-                lastLocale.code = LocaleService.DEFAULT_CODE;
-                lastLocale.iso = LocaleService.DEFAULT_ISO;
-                cacheLocale.set(lastLocale);
-            }
-            var locales = Util.goodMapValue(lastLocale, "locales", LocaleService.DEFAULT_LOCALES);
-            var localeCode = Util.goodMapValue(lastLocale, "code", LocaleService.DEFAULT_CODE);
-            var localeIso = Util.goodMapValue(lastLocale, "iso", LocaleService.DEFAULT_ISO);
-            $translate.use(localeCode);
+            var localeData = LocaleService.getLocaleData();
+            var locales = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
+            var localeCode = Util.goodMapValue(localeData, "code", LocaleService.DEFAULT_CODE);
+            var localeIso = Util.goodMapValue(localeData, "iso", LocaleService.DEFAULT_ISO);
+            LocaleService.useLocale(localeCode);
             setLocale(localeIso);
 
+            //var localeData = LocaleService.getLocaleData();
+            //var locales = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
             scope.$bus.subscribe('$translateChangeSuccess', function (data) {
-                var locale = _.find(locales, {code: data.language});
-                if (locale) {
-                    var iso = Util.goodMapValue(locale, "iso", LocaleService.DEFAULT_ISO);
-                    setLocale(iso);
-                }
+                //var locale = _.find(locales, {code: data.language});
+                var locale = LocaleService.findLocale(data.language);
+                var iso = Util.goodMapValue(locale, "iso", LocaleService.DEFAULT_ISO);
+                setLocale(iso);
             });
+
         };
 
 
@@ -172,7 +166,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         oldCode = true;
                                     }
                                     widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
-
                                 });
                             }
                         });
@@ -187,7 +180,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                         module: moduleName
                     });
                 }, 0);
-
             }
         };
         //TODO: remove fixOldCode_removeLater() and its usage in each module

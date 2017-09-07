@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
-    , function ($scope, $stateParams, $translate, $timeout
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService'
+    , 'Object.ParticipantService', 'SearchService', 'Search.QueryBuilderService'
+    , function ($scope, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
-        , ObjectParticipantService, $q, $filter, SearchService, SearchQueryBuilder) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService
+        , ObjectParticipantService, SearchService, SearchQueryBuilder
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -183,10 +184,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             });
         };
 
-        //$scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
-            //$scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
-
             $scope.dateInfo = $scope.dateInfo || {};
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.owningGroup = ObjectModelService.getGroup(data);
@@ -209,6 +207,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.onPickerClick = function () {
         	$scope.picker.opened = true;
         };
+
         /**
          * Persists the updated casefile metadata to the ArkCase database
          */
@@ -237,25 +236,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.saveCase = function () {
             saveCase();
         };
-        //$scope.updateTitle = function() {
-        //    saveCase();
-        //};
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             saveCase();
         };
-        //$scope.updatePriority = function() {
-        //    saveCase();
-        //};
-        //$scope.updateCaseType = function() {
-        //    saveCase();
-        //};
         $scope.updateAssignee = function () {
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveCase();
         };
         $scope.updateDueDate = function (dueDate) {
-            //$scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveCase();
         };
