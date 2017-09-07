@@ -1,14 +1,14 @@
-<div class="modal-header">
-    <h3 ng-hide="isEdit">
-        <span translate>people.comp.addresses.modal.addAddress</span>
-    </h3>
+<form name="addressesForm">
+    <div class="modal-header">
+        <h3 ng-hide="isEdit">
+            <span translate>people.comp.addresses.modal.addAddress</span>
+        </h3>
 
-    <h3 ng-show="isEdit">
-        <span translate>people.comp.addresses.modal.editAddress</span>
-    </h3>
-</div>
-<div class="modal-body">
-    <form name="addressesForm">
+        <h3 ng-show="isEdit">
+            <span translate>people.comp.addresses.modal.editAddress</span>
+        </h3>
+    </div>
+    <div class="modal-body">
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label for="country" translate> people.comp.addresses.modal.country.label</label><span
@@ -69,7 +69,6 @@
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-
                 <label><span translate>people.comp.addresses.modal.setPrimary</span></label>
                 <span class="required-asterisk">*</span><br/>
                 <label>
@@ -82,13 +81,13 @@
                 </label>
             </div>
         </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-secondary" ng-click="onClickCancel()">
-        <span translate>people.comp.addresses.modal.btnCancel.text</span>
-    </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addressForm.$invalid">
-        <span translate>people.comp.addresses.modal.btnOk.text</span>
-    </button>
-</div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" ng-click="onClickCancel()">
+            <span translate>people.comp.addresses.modal.btnCancel.text</span>
+        </button>
+        <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addressesForm.$invalid">
+            <span translate>people.comp.addresses.modal.btnOk.text</span>
+        </button>
+    </div>
+</form>
