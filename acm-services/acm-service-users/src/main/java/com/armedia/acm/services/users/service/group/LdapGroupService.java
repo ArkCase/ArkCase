@@ -15,7 +15,6 @@ import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -37,18 +36,11 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException,AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-
-        AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
-        if (existingGroup != null)
-        {
-            log.debug("Group with name:{} already exists!", group.getName());
-            throw new NameAlreadyBoundException(null);
-        }
 
         group.setName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP.name());
@@ -87,12 +79,6 @@ public class LdapGroupService
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
 
-        AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
-        if (existingGroup != null)
-        {
-            log.debug("Group with name:{} already exists!", group.getName());
-            throw new NameAlreadyBoundException(null);
-        }
         AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
         log.debug("Found parent-group:{} for new LDAP sub-group:{}", parentGroup.getName(), group.getName());
 

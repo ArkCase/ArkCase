@@ -8,6 +8,8 @@ import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import javax.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -35,8 +37,7 @@ public class LdapGroupAPIController extends SecureLdapController
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
-            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
-    {
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg {
 
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -50,6 +51,21 @@ public class LdapGroupAPIController extends SecureLdapController
                     AcmGroupType.LDAP_GROUP.name(), "groupName", e);
             acmAppErrorJsonMsg.putExtra("group", group);
             throw acmAppErrorJsonMsg;
+        }
+        catch (PersistenceException e)
+        {
+            Throwable t=e.getCause();
+            while((t!=null) && !(t instanceof MySQLIntegrityConstraintViolationException)) {
+                t=t.getCause();
+            }
+            if (t instanceof MySQLIntegrityConstraintViolationException) {
+                log.error("Duplicate group name: {}", group.getName(), e);
+                AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
+                        AcmGroupType.LDAP_GROUP.name(), "groupName", e);
+                acmAppErrorJsonMsg.putExtra("group", group);
+                throw acmAppErrorJsonMsg;
+            } else
+               throw e;
         }
         catch (Exception e)
         {
@@ -78,6 +94,21 @@ public class LdapGroupAPIController extends SecureLdapController
                     "LDAP_GROUP", "groupName", e);
             acmAppErrorJsonMsg.putExtra("subgroup", group);
             throw acmAppErrorJsonMsg;
+        }
+        catch (PersistenceException e)
+        {
+            Throwable t=e.getCause();
+            while((t!=null) && !(t instanceof MySQLIntegrityConstraintViolationException)) {
+                t=t.getCause();
+            }
+            if (t instanceof MySQLIntegrityConstraintViolationException) {
+                log.error("Duplicate group name: {}", group.getName(), e);
+                AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
+                        AcmGroupType.LDAP_GROUP.name(), "groupName", e);
+                acmAppErrorJsonMsg.putExtra("group", group);
+                throw acmAppErrorJsonMsg;
+            } else
+                throw e;
         }
         catch (Exception e)
         {
