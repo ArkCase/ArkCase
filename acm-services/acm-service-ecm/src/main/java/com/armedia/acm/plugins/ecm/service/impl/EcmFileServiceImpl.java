@@ -61,7 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -1149,12 +1149,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                     try
                     {
                         // This unique filename will allow the temp file to be tracked before it is saved to Alfresco
-                        long randomFileId = Math.abs(new Random().nextLong());
+                        UUID randomFileId = UUID.randomUUID();
                         String uniqueTempFileName = randomFileId + "_" + file.getOriginalFilename();
 
                         // Saves the file content to a temporary location
                         File tempFileDestination = new File(tempUploadFolderPath + File.separator + uniqueTempFileName);
-                        log.debug("Saving file {} as {} to {}", file.getOriginalFilename(), uniqueTempFileName, tempFileDestination.getCanonicalPath());
+                        log.debug("Saving file [{}] as [{}] to [{}]", file.getOriginalFilename(), uniqueTempFileName, tempFileDestination.getCanonicalPath());
                         FileUtils.copyStreamToFile(file.getInputStream(), tempFileDestination);
 
                         // The available file metadata will be returned as JSON to the caller
@@ -1167,7 +1167,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                         uploadList.add(uploadedFile);
                     } catch (IOException e)
                     {
-                        log.error("Failed to write temp file {}", e.getMessage(), e);
+                        log.error("Failed to write temp file [{}]", e.getMessage(), e);
                     }
                 }
             }
@@ -1186,8 +1186,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         File file = new File(tmpDirectory + File.separator + uniqueFileName);
         if (file.exists())
         {
-            fileDeleted = file.delete();
-            log.trace("File [{}] deleted? : {}", file.getAbsolutePath(), fileDeleted);
+            fileDeleted = FileUtils.deleteQuietly(file);
+            log.trace("File [{}] deleted? : [{}]", file.getAbsolutePath(), fileDeleted);
         }
         return fileDeleted;
     }

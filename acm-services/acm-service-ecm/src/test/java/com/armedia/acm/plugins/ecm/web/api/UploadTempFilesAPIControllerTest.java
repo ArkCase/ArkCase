@@ -1,7 +1,9 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.plugins.ecm.model.DeleteFileResult;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -96,7 +99,7 @@ public class UploadTempFilesAPIControllerTest extends EasyMockSupport
 
         EcmFile ecmFile = new EcmFile();
         ecmFile.setFileId(104L);
-        ecmFile.setFileName("json/simple.json");
+        ecmFile.setFileName("simple.json");
         ArrayList<EcmFile> ecmFileList = new ArrayList<>();
         ecmFileList.add(ecmFile);
 
@@ -113,6 +116,11 @@ public class UploadTempFilesAPIControllerTest extends EasyMockSupport
 
         verifyAll();
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+
+        log.info("Results: " + result.getResponse().getContentAsString());
+        ObjectMapper objectMapper = new ObjectMapper();
+        DeleteFileResult deleteFileResult = objectMapper.readValue(result.getResponse().getContentAsString(), DeleteFileResult.class);
+        assertTrue(deleteFileResult.isSuccess());
     }
 
 
