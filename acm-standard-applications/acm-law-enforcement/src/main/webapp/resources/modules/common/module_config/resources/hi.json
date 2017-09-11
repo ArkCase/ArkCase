@@ -219,7 +219,13 @@
   "common.directive.coreCalendar": {
     "title": "hi_Calendar",
     "start.label": "hi_Start: ",
-    "end.label": "hi_End: "
+    "end.label": "hi_End: ",
+    "message": {
+      "error.accessDenied": "hi_Access denied to calendar service.",
+      "error.serviceConfiguration": "hi_Invalid calendar service configuration.",
+      "error.serviceCredentials": "hi_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "hi_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "hi_Participants",

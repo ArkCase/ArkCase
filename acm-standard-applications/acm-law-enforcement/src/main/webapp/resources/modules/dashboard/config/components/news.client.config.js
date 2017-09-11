@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-angular.module("dashboard.news", ["adf.provider"]).config(["dashboardProvider", function (ArkCaseDashboardProvider) {
+angular.module("dashboard.news", ["adf.provider"]).config(function (ArkCaseDashboardProvider) {
     ArkCaseDashboardProvider.widget("news", {
         title: 'dashboard.widgets.news.title',
         description: 'dashboard.widgets.news.description',
@@ -17,4 +17,4 @@ angular.module("dashboard.news", ["adf.provider"]).config(["dashboardProvider", 
             templateUrl: "modules/dashboard/views/components/news-edit.client.view.html"
         }
     })
-}]);
+});
