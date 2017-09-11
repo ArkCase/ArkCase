@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.plugins.ecm.model.DeleteFileResult;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
@@ -42,16 +43,25 @@ public class UploadTempFilesAPIController
 
     @RequestMapping(value = "delete", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public void deleteTempFile(@RequestParam(value = "fileName") String fileName, HttpServletRequest request, Authentication authentication, HttpSession session)
+    public DeleteFileResult deleteTempFile(@RequestParam(value = "fileName") String fileName, HttpServletRequest request, Authentication authentication, HttpSession session)
     {
         log.debug("Deleting temp file {} by {}", fileName, authentication.getName());
+        DeleteFileResult deleteFileResult = new DeleteFileResult();
 
         // Removes the temporary attachment file from the file system
         boolean fileDeleted = getFileFolderService().deleteTempFile(fileName);
         if (!fileDeleted)
         {
+            deleteFileResult.setDeletedFileName(fileName);
+            deleteFileResult.setSuccess(false);
             log.warn("The temp file {} was not deleted. The server file system will require manual cleanup.", fileName);
+        } else
+        {
+            deleteFileResult.setDeletedFileName(fileName);
+            deleteFileResult.setSuccess(true);
         }
+
+        return deleteFileResult;
     }
 
     public EcmFileService getFileFolderService()
