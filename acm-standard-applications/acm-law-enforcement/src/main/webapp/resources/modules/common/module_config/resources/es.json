@@ -219,7 +219,13 @@
   "common.directive.coreCalendar": {
     "title": "es_Calendar",
     "start.label": "es_Start: ",
-    "end.label": "es_End: "
+    "end.label": "es_End: ",
+    "message": {
+      "error.accessDenied": "es_Access denied to calendar service.",
+      "error.serviceConfiguration": "es_Invalid calendar service configuration.",
+      "error.serviceCredentials": "es_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "es_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "es_Participants",
