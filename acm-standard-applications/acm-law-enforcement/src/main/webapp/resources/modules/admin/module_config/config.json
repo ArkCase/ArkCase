@@ -15,7 +15,7 @@
   "components": [
     {
       "id": "securityLdapConfig",
-      "title": "Security - Ldap config grid",
+      "title": "admin.comp.securityLdapConfig.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -105,7 +105,7 @@
     },
     {
       "id": "correspondenceManagementMergeFields",
-      "title": "Correspondence Management Merge Fields grid",
+      "title": "admin.comp.correspondenceManagementMergeFields.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -151,7 +151,7 @@
     },
     {
       "id": "correspondenceManagementMergeFieldsVersions",
-      "title": "Correspondence Management Merge Fields version grid",
+      "title": "admin.comp.correspondenceManagementMergeFieldsVersions.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -199,7 +199,7 @@
     },
     {
       "id": "correspondenceManagementTemplates",
-      "title": "Correspondence Management Templates grid",
+      "title": "admin.comp.correspondenceManagementTemplates.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -277,7 +277,7 @@
     },
     {
       "id": "correspondenceManagementTemplateVersions",
-      "title": "Correspondance Management Template Versions grid",
+      "title": "admin.comp.correspondenceManagementTemplateVersions.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -346,7 +346,7 @@
     },
     {
       "id": "labelsConfig",
-      "title": "Application - Labels Config grid",
+      "title": "admin.comp.labelsConfig.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -381,7 +381,7 @@
     },
     {
       "id": "plainFormsConfig",
-      "title": "Forms - Forms Config grid",
+      "title": "admin.comp.plainFormsConfig.title",
       "enabled": true,
       "type": "grid",
       "formsDropdown": [
@@ -423,7 +423,7 @@
     },
     {
       "id": "workflowsConfig",
-      "title": "Workflows - Workflows Config grid",
+      "title": "admin.comp.workflowsConfig.title",
       "enabled": true,
       "type": "grid",
       "columnDefs": [
@@ -489,7 +489,7 @@
     },
     {
       "id": "workflowsHistoryDialogConfig",
-      "title": "Workflows - Workflows Config history dialog grid",
+      "title": "admin.comp.workflowsHistoryDialogConfig.title",
       "enabled": true,
       "type": "grid",
       "columnDefs": [
@@ -545,7 +545,7 @@
     },
     {
       "id": "usersPicker",
-      "title": "Select users",
+      "title": "admin.comp.usersPicker.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
@@ -593,7 +593,7 @@
     },
     {
       "id": "orgHierarchy",
-      "title": "Organization Hierarchy",
+      "title": "admin.comp.orgHierarchy.title",
       "enabled": "true",
       "topLevelGroupTypes": [
         "LDAP_GROUP",
@@ -602,7 +602,7 @@
     },
     {
       "id": "cmisConfiguration",
-      "title": "CMIS Configuration Grid",
+      "title": "admin.comp.cmisConfiguration.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
@@ -701,7 +701,7 @@
     },
     {
       "id": "emailTemplates",
-      "title": "Email templates",
+      "title": "admin.comp.emailTemplates.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
