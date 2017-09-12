@@ -24,6 +24,7 @@
         </property>
         <property name="postSaveHandlers">
             <list>
+                <ref bean="organizationExtractParentAssociation"/>
             </list>
         </property>
     </bean>
