@@ -2,6 +2,9 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent.ObjectAssociationState;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -11,6 +14,7 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class OrganizationServiceImpl implements OrganizationService
+public class OrganizationServiceImpl implements OrganizationService, ApplicationListener<ObjectAssociationEvent>
 {
     private OrganizationDao organizationDao;
 
@@ -126,6 +130,69 @@ public class OrganizationServiceImpl implements OrganizationService
         org.setModifier(userId);
         org.setOrganizationValue(companyName);
         return org;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
+     */
+    @Override
+    public void onApplicationEvent(ObjectAssociationEvent event)
+    {
+        String associationType = ((ObjectAssociation) event.getSource()).getAssociationType();
+        ObjectAssociation oa = ((ObjectAssociation) event.getSource());
+        Organization child = null, parent = null;
+        if (ObjectAssociationState.DELETE.equals(event.getObjectAssociationState()))
+        {
+            if ("SubCompany".equals(associationType))
+            {
+                // child is the child in the context of the association, not the child company!
+                child = organizationDao.find(oa.getTargetId());
+            } else if ("ParentCompany".equals(associationType))
+            {
+                // child is the child in the context of the association, not the child company!
+                child = organizationDao.find(oa.getParentId());
+            }
+            if (child != null && child.getParentOrganization() != null)
+            {
+                child.setParentOrganization(null);
+                organizationDao.save(child);
+            }
+        } else if (ObjectAssociationState.NEW.equals(event.getObjectAssociationState())
+                || ObjectAssociationState.UPDATE.equals(event.getObjectAssociationState()))
+        {
+            if ("SubCompany".equals(associationType))
+            {
+                // child is the child in the context of the association, not the child company!
+                child = organizationDao.find(oa.getTargetId());
+                // parent is the parent in the context of the association, not the parent company!
+                parent = organizationDao.find(oa.getParentId());
+
+                if (child.getParentOrganization() != null && child.getParentOrganization().equals(parent))
+                {
+                    return;
+                }
+            } else if ("ParentCompany".equals(associationType))
+            {
+                // child is the child in the context of the association, not the child company!
+                child = organizationDao.find(oa.getParentId());
+                // parent is the parent in the context of the association, not the parent company!
+                parent = organizationDao.find(oa.getTargetId());
+                if (parent.getParentOrganization() != null && parent.getParentOrganization().equals(child))
+                {
+                    return;
+                }
+            }
+
+            if (child != null && parent != null && !parent.equals(child.getParentOrganization()))
+            {
+                child.setParentOrganization(parent);
+                organizationDao.save(child);
+            }
+        }
+
     }
 
     public OrganizationDao getOrganizationDao()
