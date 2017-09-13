@@ -15,7 +15,7 @@
   "components": [
     {
       "id": "subscriptionsFacetedSearch",
-      "title": "Subscriptions Faceted Search",
+      "title": "subscriptions.comp.subscriptionsFacetedSearch.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,

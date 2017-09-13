@@ -8,6 +8,9 @@
       "leftnav.item": "Subscriptions"
     },
     "comp":{
+      "subscriptionsFacetedSearch": {
+        "title": "Subscriptions Faceted Search"
+      },
       "grid": {
         "columns": {
           "id": "ID",

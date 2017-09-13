@@ -1250,7 +1250,7 @@
     },
     {
       "id": "referenceSearchGrid",
-      "title": "Reference Search",
+      "title": "tasks.referenceSearchGrid.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,
@@ -1431,7 +1431,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "tasks.comp.pastApprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
