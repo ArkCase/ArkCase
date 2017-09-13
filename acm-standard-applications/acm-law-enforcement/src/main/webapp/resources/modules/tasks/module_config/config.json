@@ -1212,7 +1212,7 @@
     },
     {
       "id": "objectSearch",
-      "title": "tasks.objectSearch",
+      "title": "tasks.objectSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
@@ -1386,7 +1386,7 @@
     },
     {
       "id": "approvalRouting",
-      "title": "tasks.comp.approvalRouting",
+      "title": "tasks.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
       "enabled": true,
