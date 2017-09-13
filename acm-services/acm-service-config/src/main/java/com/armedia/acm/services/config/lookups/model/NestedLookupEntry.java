@@ -3,19 +3,18 @@ package com.armedia.acm.services.config.lookups.model;
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
-public class SubLookupEntry
+public class NestedLookupEntry
 {
     private String key;
     private String value;
     private StandardLookup subLookup;
 
-    public SubLookupEntry()
+    public NestedLookupEntry()
     {
     }
 
-    public SubLookupEntry(String key, String value, StandardLookup subLookup)
+    public NestedLookupEntry(String key, String value, StandardLookup subLookup)
     {
-        super();
         this.key = key;
         this.value = value;
         this.subLookup = subLookup;

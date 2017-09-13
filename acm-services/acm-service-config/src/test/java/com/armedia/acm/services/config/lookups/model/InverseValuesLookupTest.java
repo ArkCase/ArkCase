@@ -1,8 +1,6 @@
 package com.armedia.acm.services.config.lookups.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,164 +22,100 @@ public class InverseValuesLookupTest extends EasyMockSupport
         inverseValuesLookup = new InverseValuesLookup();
     }
 
+    @SuppressWarnings("unchecked")
     @Test
-    public void testValidateValidLookup()
+    public void testValidate()
     {
         // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
+        String testLookupName = "testLookup";
 
-        inverseValuesLookup.setEntries(entries);
+        List<InverseValuesLookupEntry> validEntries = new ArrayList<>();
+        validEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        validEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
 
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
+        List<InverseValuesLookupEntry> emptyKeyEntries = new ArrayList<>();
+        emptyKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        emptyKeyEntries.add(new InverseValuesLookupEntry("", "value2", "inverseKey2", "inverseValue2"));
 
-        // then
-        assertTrue(res.isValid());
+        List<InverseValuesLookupEntry> emptyValueEntries = new ArrayList<>();
+        emptyValueEntries.add(new InverseValuesLookupEntry("key1", "", "inverseKey1", "inverseValue1"));
+        emptyValueEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> emptyInverseKeyEntries = new ArrayList<>();
+        emptyInverseKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        emptyInverseKeyEntries.add(new InverseValuesLookupEntry("key2", "value2", "", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> emptyInverseValueEntries = new ArrayList<>();
+        emptyInverseValueEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", ""));
+        emptyInverseValueEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> duplicateKeyEntries = new ArrayList<>();
+        duplicateKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        duplicateKeyEntries.add(new InverseValuesLookupEntry("key1", "value2", "inverseKey2", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> duplicateValuesEntries = new ArrayList<>();
+        duplicateValuesEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        duplicateValuesEntries.add(new InverseValuesLookupEntry("key2", "value1", "inverseKey2", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> duplicateInverseKeyEntries = new ArrayList<>();
+        duplicateInverseKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        duplicateInverseKeyEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey1", "inverseValue2"));
+
+        List<InverseValuesLookupEntry> duplicateInverseValuesEntries = new ArrayList<>();
+        duplicateInverseValuesEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
+        duplicateInverseValuesEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue1"));
+
+        Object[][] testData = {
+                {
+                        validEntries,
+                        true,
+                        null },
+                {
+                        emptyKeyEntries,
+                        false,
+                        "Empty key found in '" + testLookupName + "' lookup!" },
+                {
+                        emptyValueEntries,
+                        false,
+                        "Empty value found in '" + testLookupName + "' lookup!" },
+                {
+                        emptyInverseKeyEntries,
+                        false,
+                        "Empty inverse key found in '" + testLookupName + "' lookup!" },
+                {
+                        emptyInverseValueEntries,
+                        false,
+                        "Empty inverse value found in '" + testLookupName + "' lookup!" },
+                {
+                        duplicateKeyEntries,
+                        false,
+                        "Duplicate key found in '" + testLookupName + "' lookup! [key : key1]" },
+                {
+                        duplicateValuesEntries,
+                        false,
+                        "Duplicate value found in '" + testLookupName + "' lookup! [values : value1]" },
+                {
+                        duplicateInverseKeyEntries,
+                        false,
+                        "Duplicate inverse key found in '" + testLookupName + "' lookup! [key : inverseKey1]" },
+                {
+                        duplicateInverseValuesEntries,
+                        false,
+                        "Duplicate inverse value found in '" + testLookupName + "' lookup! [values : inverseValue1]" } };
+
+        for (Object[] testDatum : testData)
+        {
+            List<InverseValuesLookupEntry> entries = (List<InverseValuesLookupEntry>) testDatum[0];
+            inverseValuesLookup.setEntries(entries);
+            inverseValuesLookup.setName(testLookupName);
+
+            // when
+            LookupValidationResult res = inverseValuesLookup.validate();
+
+            // then
+            assertEquals(testDatum[1], res.isValid());
+            assertEquals(testDatum[2], res.getErrorMessage());
+        }
     }
 
-    @Test
-    public void testValidateLookupWithEmptyKey()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("", "value2", "inverseKey2", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithEmptyValue()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithEmptyInverseKey()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithEmptyInverseValue()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", ""));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateKeys()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key1", "value2", "inverseKey2", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateValues()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value1", "inverseKey2", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateInverseKeys()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey1", "inverseValue2"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateInversValues()
-    {
-        // given
-        List<InverseValuesLookupEntry> entries = new ArrayList<>();
-        entries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        entries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue1"));
-
-        inverseValuesLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = inverseValuesLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
 }

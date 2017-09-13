@@ -39,7 +39,7 @@ public class LookupsApiController
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = {
+    @RequestMapping(method = RequestMethod.POST, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_XML_VALUE })
     @ResponseBody

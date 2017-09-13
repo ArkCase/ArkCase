@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
+angular.module('admin').controller('Admin.NestedLookupParentController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
     function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
         
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
@@ -29,9 +29,9 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
                 onRegisterApi:  function (gridApi) {
                                     gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                                         if (row.isSelected) {
-                                            $scope.mainLookupValueSelected(row.entity);
+                                            $scope.parentLookupValueSelected(row.entity);
                                         } else {
-                                            $scope.mainLookupValueSelected(null);
+                                            $scope.parentLookupValueSelected(null);
                                         }
                                     })
                                 }
@@ -41,7 +41,7 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
         });
 
         $scope.addNew = function () {
-            var entry = {'subLookup':[]};
+            var entry = {'nestedLookup':[]};
 
             //put entry to scope, we will need it when we return from popup
             $scope.entry = entry;
@@ -49,7 +49,7 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
                 key: '',
                 value: ''
             };
-            $scope.mainLookupValueSelected(null);
+            $scope.parentLookupValueSelected(null);
             showModal(item, false);
         };
 
@@ -70,7 +70,7 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
                    return true;
                 }
             });
-            $scope.mainLookupValueSelected(null);
+            $scope.parentLookupValueSelected(null);
             $scope.lookup.splice(idx , 1);
             saveLookup();
         };
@@ -106,26 +106,24 @@ angular.module('admin').controller('Admin.SybMainLookupController', ['$scope', '
         $scope.$on('lookup-def-selected', lookupDefSelected);
         
         function lookupDefSelected(e, selectedLookupDef) {
-            if (selectedLookupDef.lookupType === 'subLookup') {
+            if (selectedLookupDef.lookupType === 'nestedLookup') {
                 $scope.selectedLookupDef = selectedLookupDef;
                 fetchLookup();
             }
         }
         
-        $scope.mainLookupValueSelected = function(selectedMainLookupValue) {
-            $scope.selectedMainLookupValue = selectedMainLookupValue;            
-            $scope.$broadcast('main-lookup-selected', $scope.selectedLookupDef, $scope.lookup, $scope.selectedMainLookupValue);
+        $scope.parentLookupValueSelected = function(selectedParentLookupValue) {
+            $scope.selectedParentLookupValue = selectedParentLookupValue;            
+            $scope.$broadcast('parent-lookup-selected', $scope.selectedLookupDef, $scope.lookup, $scope.selectedParentLookupValue);
         };
         
         // workaround for the first load of child controllers
-        $scope.$on('sub-lookup-controller-loaded', function() {
-             $scope.$broadcast('main-lookup-selected', $scope.selectedLookup);
+        $scope.$on('nested-lookup-sublookup-controller-loaded', function() {
+             $scope.$broadcast('nested-lookup-parent-selected', $scope.selectedLookup);
         });
         
         function saveLookup() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-
-            promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
+            var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
             promiseSaveInfo.then(
                 function (lookup) {
                     MessageService.succsessAction();

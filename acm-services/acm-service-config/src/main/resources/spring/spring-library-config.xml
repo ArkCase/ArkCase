@@ -7,11 +7,15 @@
         <property name="pluginName" value="Config Service Plugin"/>
     </bean>
 
-    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigFileLookupDao">
+    <bean id="configService" class="com.armedia.acm.services.config.service.ConfigService">
         <property name="lookupsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups.json"/>
-        <property name="configList" ref="configList"/>
+        <property name="configList" ref="configList"/>    
     </bean>
-    
+
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao">
+        <property name="configService" ref="configService"/>
+    </bean>
+
     <bean id="addressTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -199,7 +203,7 @@
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
     </bean>
-    
+
     <bean id="lookupsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">

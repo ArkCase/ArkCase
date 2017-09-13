@@ -7,7 +7,11 @@ import java.util.List;
  */
 abstract public class AcmLookup<Entry>
 {
+    protected String name;
+
     protected List<Entry> entries;
+
+    abstract public LookupValidationResult validate();
 
     public List<Entry> getEntries()
     {
@@ -19,5 +23,13 @@ abstract public class AcmLookup<Entry>
         this.entries = entries;
     }
 
-    abstract public LookupValidationResult validate();
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 }

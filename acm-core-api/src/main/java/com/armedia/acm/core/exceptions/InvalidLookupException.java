@@ -11,4 +11,9 @@ public class InvalidLookupException extends Exception
     {
         super(message);
     }
+
+    public InvalidLookupException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

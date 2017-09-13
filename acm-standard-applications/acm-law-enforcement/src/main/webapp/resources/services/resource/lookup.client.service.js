@@ -10,8 +10,8 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService'
-    , function ($resource, Store, Util, SearchService, MessageService) {
+angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log'
+    , function ($resource, Store, Util, SearchService, MessageService, $log) {
         var Service = $resource('api/latest/plugin', {}, {
 
             _getConfig: {
@@ -286,7 +286,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          * @deprecated Use getLookups() from lookup.client.service.js or getLookupByLookupName(name) from object-lookup.client.service.js
          */
         Service.getLookup = function (name) {
-            console.warn("Using depricated function getLookup(name) from lookup.client.service.js!");
+            $log.warn("Using deprecated function getLookup(name) from lookup.client.service.js!");
             var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
             var configMap = cacheConfigMap.get();
             var config = Util.goodMapValue(configMap, name, null);
@@ -327,7 +327,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          *             ]
          *         }
          *     ],
-         *     "subLookup" : [{
+         *     "nestedLookup" : [{
          *         "contactMethodTypes" : [
          *                 { "key" : "1", "value" : "1", "subLookup" : [
          *                         { "key" : "11", "value" : "11" }, 
@@ -408,7 +408,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
         Service.validateLookups = function (data) {
             // check if the data contains only known lookup types
             for (var prop in data) {
-                if (prop !== 'standardLookup' && prop !== 'subLookup' && prop !== 'inverseValuesLookup') {
+                if (prop !== 'standardLookup' && prop !== 'nestedLookup' && prop !== 'inverseValuesLookup') {
                     return false;
                 }
             }
@@ -421,9 +421,9 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                     }
                 }
             }
-            if (data.subLookup) {
-                for (var i = 0; i < data.subLookup.length; i++) {
-                    if (!Util.isArray(data.subLookup[i][Object.keys(data.subLookup[i])[0]])) {
+            if (data.nestedLookup) {
+                for (var i = 0; i < data.nestedLookup.length; i++) {
+                    if (!Util.isArray(data.nestedLookup[i][Object.keys(data.nestedLookup[i])[0]])) {
                         return false;
                     }
                 }
@@ -451,7 +451,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          * @parma {Array}  lookup       the lookup entries as an array. 
          *                              For standarLookup the structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
-         *                              For subLookup the structure looks like:
+         *                              For nestedLookup the structure looks like:
          *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
          *                              For inverseValuesLookup the structure looks like:
          *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]

@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('admin').controller('Admin.SubSubLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
+angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
     function ($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
         
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        $scope.mainLookup = [];
-        $scope.selectedMainLookupValue = {};
+        $scope.parentLookup = [];
+        $scope.selectedParentLookupValue = {};
         $scope.lookup = [];
         $scope.selectedLookupDef = {};
      
@@ -95,28 +95,26 @@ angular.module('admin').controller('Admin.SubSubLookupController', ['$scope', '$
             });
         }
 
-        $scope.$on('main-lookup-selected', mainLookupSelected);
+        $scope.$on('nested-lookup-parent-selected', parentLookupSelected);
         
-        function mainLookupSelected(e, selectedLookupDef, mainLookup, selectedMainLookupValue) {
-            if (selectedMainLookupValue) {
+        function parentLookupSelected(e, selectedLookupDef, parentLookup, selectedParentLookupValue) {
+            if (selectedParentLookupValue) {
                 $scope.selectedLookupDef = selectedLookupDef;
-                $scope.mainLookup = mainLookup;
-                $scope.selectedMainLookupValue = selectedMainLookupValue;
-                $scope.lookup.splice(0, $scope.lookup.length, ...selectedMainLookupValue.subLookup);
+                $scope.parentLookup = parentLookup;
+                $scope.selectedParentLookupValue = selectedParentLookupValue;
+                $scope.lookup.splice(0, $scope.lookup.length, ...selectedParentLookupValue.subLookup);
             } else {
                 $scope.selectedLookupDef = {};
-                $scope.mainLookup = [];
-                $scope.selectedMainLookupValue = {};
+                $scope.parentLookup = [];
+                $scope.selectedParentLookupValue = {};
                 $scope.lookup.splice(0, $scope.lookup.length);
             }
         }
         
         function saveLookup() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-
-            $scope.selectedMainLookupValue.subLookup = $scope.lookup;
+            $scope.selectedParentLookupValue.subLookup = $scope.lookup;
             
-            promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.mainLookup);
+            var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.parentLookup);
             promiseSaveInfo.then(
                 function (lookup) {                    
                     MessageService.succsessAction();
@@ -136,15 +134,15 @@ angular.module('admin').controller('Admin.SubSubLookupController', ['$scope', '$
         function fetchLookup() {
             ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
                 // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
-                $scope.mainLookup.splice(0, $scope.mainLookup.length, ...lookup);
-                var selectedMainLookupValue = _.find($scope.mainLookup, function(mainLookupEntry) {
-                    return mainLookupEntry.key == $scope.selectedMainLookupValue.key;
+                $scope.parentLookup.splice(0, $scope.parentLookup.length, ...lookup);
+                var selectedParentLookupValue = _.find($scope.parentLookup, function(parentLookupEntry) {
+                    return parentLookupEntry.key == $scope.selectedParentLookupValue.key;
                 });
-                $scope.selectedMainLookupValue = selectedMainLookupValue;
-                $scope.lookup.splice(0, $scope.lookup.length, ...$scope.selectedMainLookupValue.subLookup);
+                $scope.selectedParentLookupValue = selectedParentLookupValue;
+                $scope.lookup.splice(0, $scope.lookup.length, ...$scope.selectedParentLookupValue.subLookup);
             });
         }
 
-        $scope.$emit('sub-lookup-controller-loaded');
+        $scope.$emit('nested-lookup-sublookup-controller-loaded');
     }
 ]);

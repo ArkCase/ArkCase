@@ -639,7 +639,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * [
          *      { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' },
          *      { 'lookupType' : 'standardLookup', 'name' : 'aliasTypes' },
-         *      { 'lookupType' : 'subLookup', 'name' : 'contactMethodTypes' },
+         *      { 'lookupType' : 'nestedLookup', 'name' : 'contactMethodTypes' },
          *      { 'lookupType' : 'inverseValuesLookup', 'name' : 'organizationPersonRelationTypes' },
          *      { ... }
          * ]
@@ -654,9 +654,9 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                         lookupsDefs.push({'name' : Object.keys(lookups.standardLookup[i])[0], 'lookupType' : 'standardLookup'});
                     }
                 }
-                if (lookups.subLookup) {
-                    for (var i = 0, len = lookups.subLookup.length; i < len; i++) {
-                        lookupsDefs.push({'name' : Object.keys(lookups.subLookup[i])[0], 'lookupType' : 'subLookup'});
+                if (lookups.nestedLookup) {
+                    for (var i = 0, len = lookups.nestedLookup.length; i < len; i++) {
+                        lookupsDefs.push({'name' : Object.keys(lookups.nestedLookup[i])[0], 'lookupType' : 'nestedLookup'});
                     }
                 }
                 if (lookups.inverseValuesLookup) {
@@ -732,7 +732,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @parma {Array}  lookup       the lookup entries as an array. 
          *                              For standarLookup valid structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
-         *                              For subLookup valid structure looks like:
+         *                              For nestedLookup valid structure looks like:
          *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
          *                              For inverseValuesLookup valid structure looks like:
          *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
@@ -746,8 +746,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             switch(lookupDef.lookupType) {
                 case 'standardLookup' :                    
                     return validateStandardLookup(lookup);
-                case 'subLookup' :
-                    return validateSubLookup(lookup);
+                case 'nestedLookup' :
+                    return validateNestedLookup(lookup);
                 case 'inverseValuesLookup' :
                     return validateInverseValuesLookup(lookup);
                 default:
@@ -782,7 +782,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return { isValid : true };
         };
         
-        function validateSubLookup(lookup) {
+        function validateNestedLookup(lookup) {
             // Check empty keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
                 if (!lookup[i].key) {
@@ -884,7 +884,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @parma {Array}  lookup       the lookup entries as an array. 
          *                              For standarLookup the structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
-         *                              For subLookup the structure looks like:
+         *                              For nestedLookup the structure looks like:
          *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
          *                              For inverseValuesLookup the structure looks like:
          *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]

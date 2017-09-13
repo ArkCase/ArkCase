@@ -9,8 +9,8 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
                 case 'standardLookup' :                    
                     $scope.view = "modules/admin/views/components/application-lookups-standard.client.view.html";
                     break;
-                case 'subLookup' :
-                    $scope.view = "modules/admin/views/components/application-lookups-sub-main-lookup.client.view.html";
+                case 'nestedLookup' :
+                    $scope.view = "modules/admin/views/components/application-lookups-nested-lookup-parent.client.view.html";
                     break;
                 case 'inverseValuesLookup' :
                     $scope.view = "modules/admin/views/components/application-lookups-inverse-values.client.view.html";

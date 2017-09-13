@@ -29,7 +29,7 @@
 			]
 		}
 	],
-	"subLookup": [
+	"nestedLookup": [
 		{
 			"contactMethodTypes": [
 				{
