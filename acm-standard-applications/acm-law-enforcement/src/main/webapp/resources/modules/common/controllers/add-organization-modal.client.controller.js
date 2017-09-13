@@ -14,7 +14,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-
             $scope.organizationId = params.organizationId;
             $scope.editMode = !!params.organizationId;
             $scope.organizationValue = params.organizationValue;
@@ -61,7 +60,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.pickOrganization = function () {
                 $scope.isNew = false;
                 $scope.organizationId = '';
-                $scope.organizationValue = '';
                 $scope.organization = '';
 
                 var params = {};
@@ -90,6 +88,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
+                        $scope.editMode = true;
                     }
                 });
             };
@@ -97,7 +96,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.addNewOrganization = function () {
                 $scope.isNew = true;
                 $scope.organizationId = '';
-                $scope.organizationValue = '';
                 $scope.organization = '';
                 var modalInstance = $modal.open({
                     scope: $scope,
@@ -111,6 +109,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
+                    if (data.organization.organizationValue != null) {
+                        $scope.editMode = true;
+                    }
                 });
             };
         }
