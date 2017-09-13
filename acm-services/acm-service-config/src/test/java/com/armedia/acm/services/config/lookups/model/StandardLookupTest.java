@@ -1,8 +1,6 @@
 package com.armedia.acm.services.config.lookups.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -25,91 +23,66 @@ public class StandardLookupTest extends EasyMockSupport
     }
 
     @Test
-    public void testValidateValidLookup()
+    @SuppressWarnings("unchecked")
+    public void testValidate()
     {
         // given
-        List<StandardLookupEntry> entries = new ArrayList<>();
-        entries.add(new StandardLookupEntry("key1", "value1"));
-        entries.add(new StandardLookupEntry("key2", "value2"));
+        String testLookupName = "testLookup";
 
-        standardLookup.setEntries(entries);
+        List<StandardLookupEntry> validEntries = new ArrayList<>();
+        validEntries.add(new StandardLookupEntry("key1", "value1"));
+        validEntries.add(new StandardLookupEntry("key2", "value2"));
 
-        // when
-        LookupValidationResult res = standardLookup.validate();
+        List<StandardLookupEntry> emptyKeyEntries = new ArrayList<>();
+        emptyKeyEntries.add(new StandardLookupEntry("key1", "value1"));
+        emptyKeyEntries.add(new StandardLookupEntry("", "value2"));
 
-        // then
-        assertTrue(res.isValid());
-    }
+        List<StandardLookupEntry> duplicateKeyEntries = new ArrayList<>();
+        duplicateKeyEntries.add(new StandardLookupEntry("key1", "value1"));
+        duplicateKeyEntries.add(new StandardLookupEntry("key1", "value2"));
 
-    @Test
-    public void testValidateLookupWithEmptyKey()
-    {
-        // given
-        List<StandardLookupEntry> entries = new ArrayList<>();
-        entries.add(new StandardLookupEntry("key1", "value1"));
-        entries.add(new StandardLookupEntry("", "value2"));
+        List<StandardLookupEntry> emptyValueEntries = new ArrayList<>();
+        emptyValueEntries.add(new StandardLookupEntry("key1", ""));
+        emptyValueEntries.add(new StandardLookupEntry("key2", "value2"));
 
-        standardLookup.setEntries(entries);
+        List<StandardLookupEntry> duplicateValuesEntries = new ArrayList<>();
+        duplicateValuesEntries.add(new StandardLookupEntry("key1", "value1"));
+        duplicateValuesEntries.add(new StandardLookupEntry("key2", "value1"));
 
-        // when
-        LookupValidationResult res = standardLookup.validate();
+        Object[][] testData = {
+                {
+                        validEntries,
+                        true,
+                        null },
+                {
+                        emptyKeyEntries,
+                        false,
+                        "Empty key found in '" + testLookupName + "' lookup!" },
+                {
+                        duplicateKeyEntries,
+                        false,
+                        "Duplicate key found in '" + testLookupName + "' lookup! [key : key1]" },
+                {
+                        emptyValueEntries,
+                        false,
+                        "Empty value found in '" + testLookupName + "' lookup!" },
+                {
+                        duplicateValuesEntries,
+                        false,
+                        "Duplicate value found in '" + testLookupName + "' lookup! [values : value1]" } };
 
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
+        for (Object[] testDatum : testData)
+        {
+            List<StandardLookupEntry> entries = (List<StandardLookupEntry>) testDatum[0];
+            standardLookup.setEntries(entries);
+            standardLookup.setName(testLookupName);
 
-    @Test
-    public void testValidateLookupWithEmptyValue()
-    {
-        // given
-        List<StandardLookupEntry> entries = new ArrayList<>();
-        entries.add(new StandardLookupEntry("key1", ""));
-        entries.add(new StandardLookupEntry("key2", "value2"));
+            // when
+            LookupValidationResult res = standardLookup.validate();
 
-        standardLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = standardLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateKeys()
-    {
-        // given
-        List<StandardLookupEntry> entries = new ArrayList<>();
-        entries.add(new StandardLookupEntry("key1", "value1"));
-        entries.add(new StandardLookupEntry("key1", "value2"));
-
-        standardLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = standardLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
-    }
-
-    @Test
-    public void testValidateLookupWithDuplicateValues()
-    {
-        // given
-        List<StandardLookupEntry> entries = new ArrayList<>();
-        entries.add(new StandardLookupEntry("key1", "value1"));
-        entries.add(new StandardLookupEntry("key2", "value1"));
-
-        standardLookup.setEntries(entries);
-
-        // when
-        LookupValidationResult res = standardLookup.validate();
-
-        // then
-        assertFalse(res.isValid());
-        assertNotNull(res.getErrorMessage());
+            // then
+            assertEquals(testDatum[1], res.isValid());
+            assertEquals(testDatum[2], res.getErrorMessage());
+        }
     }
 }

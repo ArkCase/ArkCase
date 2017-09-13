@@ -10,7 +10,7 @@ public enum LookupType
 {
     STANDARD_LOOKUP("standardLookup", StandardLookup.class),
     INVERSE_VALUES_LOOKUP("inverseValuesLookup", InverseValuesLookup.class),
-    SUB_LOOKUP("subLookup", SubLookup.class);
+    NESTED_LOOKUP("nestedLookup", NestedLookup.class);
 
     private String typeName;
 

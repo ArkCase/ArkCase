@@ -109,9 +109,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
         }
         
         function saveLookup() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-
-            promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
+            var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
             promiseSaveInfo.then(
                 function (lookup) {
                     MessageService.succsessAction();

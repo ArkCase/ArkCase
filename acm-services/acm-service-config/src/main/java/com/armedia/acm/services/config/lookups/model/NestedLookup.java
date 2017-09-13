@@ -7,14 +7,14 @@ import java.util.Objects;
 /**
  * Created by bojan.milenkoski on 24.8.2017
  */
-public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
+public class NestedLookup extends AcmLookup<NestedLookupEntry>
 {
     @Override
     @JsonIgnore
     public LookupValidationResult validate()
     {
-        // Check empty keys or values
-        for (InverseValuesLookupEntry entry : entries)
+        // Check empty key or value
+        for (NestedLookupEntry entry : entries)
         {
             if (entry.getKey() == null || entry.getKey().isEmpty())
             {
@@ -23,14 +23,6 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
             if (entry.getValue() == null || entry.getValue().isEmpty())
             {
                 return new LookupValidationResult(false, "Empty value found in '" + getName() + "' lookup!");
-            }
-            if (entry.getInverseKey() == null || entry.getInverseKey().isEmpty())
-            {
-                return new LookupValidationResult(false, "Empty inverse key found in '" + getName() + "' lookup!");
-            }
-            if (entry.getInverseValue() == null || entry.getInverseValue().isEmpty())
-            {
-                return new LookupValidationResult(false, "Empty inverse value found in '" + getName() + "' lookup!");
             }
         }
 
@@ -49,18 +41,18 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
                     return new LookupValidationResult(false,
                             "Duplicate value found in '" + getName() + "' lookup! [values : " + entries.get(i).getValue() + "]");
                 }
-                if (Objects.equals(entries.get(i).getInverseKey(), entries.get(j).getInverseKey()))
-                {
-                    return new LookupValidationResult(false,
-                            "Duplicate inverse key found in '" + getName() + "' lookup! [key : " + entries.get(i).getInverseKey() + "]");
-                }
-                if (Objects.equals(entries.get(i).getInverseValue(), entries.get(j).getInverseValue()))
-                {
-                    return new LookupValidationResult(false, "Duplicate inverse value found in '" + getName() + "' lookup! [values : "
-                            + entries.get(i).getInverseValue() + "]");
-                }
             }
 
+        }
+
+        LookupValidationResult lookupValidationResult = null;
+        for (NestedLookupEntry nestedLookupEntry : entries)
+        {
+            lookupValidationResult = nestedLookupEntry.getSubLookup().validate(this);
+            if (!lookupValidationResult.isValid())
+            {
+                return lookupValidationResult;
+            }
         }
 
         return new LookupValidationResult(true, null);

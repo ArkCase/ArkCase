@@ -1,9 +1,9 @@
-<div ng-controller="Admin.SybMainLookupController">
+<div ng-controller="Admin.NestedLookupSubLookupController">
     <span>&nbsp;</span>
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
-                <span>{{ "Main lookup: " + selectedLookupDef.name }}</span>
+                <span>{{ selectedParentLookupValue.key ? "Sub lookup for key: " + selectedParentLookupValue.key : "&ltSelect key from the parent lookup&gt"}}</span>
                 <div class="pull-right">
                     <div class="pull-right">
                         <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
@@ -19,5 +19,4 @@
 	         class="grid">
 	    </div>
     </div>
-    <div ng-include="'modules/admin/views/components/application-lookups-sub-sub-lookup.client.view.html'"></div>
 </div>

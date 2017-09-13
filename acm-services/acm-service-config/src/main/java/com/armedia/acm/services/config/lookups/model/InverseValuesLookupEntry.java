@@ -16,7 +16,6 @@ public class InverseValuesLookupEntry
 
     public InverseValuesLookupEntry(String key, String value, String inverseKey, String inverseValue)
     {
-        super();
         this.key = key;
         this.value = value;
         this.inverseKey = inverseKey;
