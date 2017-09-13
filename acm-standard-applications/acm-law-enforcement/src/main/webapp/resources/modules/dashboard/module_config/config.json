@@ -15,7 +15,7 @@
   "components": [
     {
       "id": "news",
-      "title": "News Widget",
+      "title": "dashboard.comp.news.title",
       "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
       "query": "select * from xml where url = '$1'",
       "format": "json"

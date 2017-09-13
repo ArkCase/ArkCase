@@ -210,6 +210,9 @@
       "modified": "Modified"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "cases.comp.split": {
     "title": "Split",
     "cancel": "Cancel",

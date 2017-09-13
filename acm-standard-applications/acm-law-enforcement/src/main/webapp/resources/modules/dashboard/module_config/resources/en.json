@@ -323,5 +323,8 @@
         "noDataMessage": "Currently no related people to display"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "News Widget"
   }
 }
