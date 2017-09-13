@@ -758,6 +758,11 @@
         "name": "name",
         "displayName": "common.dialogObjectPicker.table.columns.name",
         "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName" : "common.dialogObjectPicker.table.columns.title",
+        "headerCellFilter": "translate"
       }
     ],
     "paginationPageSizes": [
