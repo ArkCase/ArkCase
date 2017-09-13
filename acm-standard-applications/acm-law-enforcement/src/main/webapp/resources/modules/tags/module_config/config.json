@@ -15,7 +15,7 @@
   "components": [
     {
       "id": "tagsFacetedSearch",
-      "title": "Tags Faceted Search",
+      "title": "tags.comp.tagsFacetedSearch.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,

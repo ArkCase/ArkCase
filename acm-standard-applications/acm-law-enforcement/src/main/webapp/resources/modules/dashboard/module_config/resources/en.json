@@ -326,5 +326,29 @@
   },
   "dashboard.comp.news": {
     "title": "News Widget"
+  },
+  "dashboard.comp.weather": {
+    "title": "Weather Widget"
+  },
+  "dashboard.comp.myCases": {
+    "title": "My Cases Widget"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "My Tasks Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "My Complaints Widget"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Workflow Report"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "New Complaints"
+  },
+  "dashboard.comp.newCases": {
+    "title": "New Cases"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Cases By Queue"
   }
 }

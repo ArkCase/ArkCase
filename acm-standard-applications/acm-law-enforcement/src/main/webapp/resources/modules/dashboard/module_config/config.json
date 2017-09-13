@@ -22,13 +22,13 @@
     },
     {
       "id": "weather",
-      "title": "Weather Widget",
+      "title": "dashboard.comp.weather.title",
       "APPID": "672e193bbf022bdc749986f7be4c0364",
       "units": "imperial"
     },
     {
       "id": "myCases",
-      "title": "My Cases Widget",
+      "title": "dashboard.comp.myCases.title",
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -86,7 +86,7 @@
     },
     {
       "id": "myTasks",
-      "title": "My Tasks Widget",
+      "title": "dashboard.comp.myTasks.title",
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -148,7 +148,7 @@
     },
     {
       "id": "myComplaints",
-      "title": "My Complaints Widget",
+      "title": "dashboard.comp.myComplaints.title",
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -201,7 +201,7 @@
     },
     {
       "id": "workflowReport",
-      "title": "Workflow Report",
+      "title": "dashboard.comp.workflowReport.title",
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -247,19 +247,19 @@
     },
     {
       "id": "newComplaints",
-      "title": "New Complaints",
+      "title": "dashboard.comp.newComplaints.title",
       "redirectSettings": {
       }
     },
     {
       "id": "newCases",
-      "title": "New Cases",
+      "title": "dashboard.comp.newCases.title",
       "redirectSettings": {
       }
     },
     {
       "id": "casesByQueue",
-      "title": "Cases By Queue",
+      "title": "dashboard.comp.casesByQueue.title",
       "redirectSettings": {
       }
     }

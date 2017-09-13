@@ -15,13 +15,13 @@
   "components": [
     {
       "id": "datepickers",
-      "title": "Datepickers",
+      "title": "reports.comp.datepickers.title",
       "enabled": true,
       "type": "empty"
     },
     {
       "id": "reportselection",
-      "title": "Reports",
+      "title": "reports.comp.reportselection.title",
       "enabled": true,
       "resetCaseStateValue": "COMPLAINT_DISPOSITION_COUNT"
     },
