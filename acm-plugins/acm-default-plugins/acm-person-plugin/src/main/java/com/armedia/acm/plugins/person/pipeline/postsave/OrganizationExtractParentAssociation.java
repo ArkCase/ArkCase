@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.person.pipeline.postsave;
 
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.PARENT_COMPANY;
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.SUB_COMPANY;
+import static com.armedia.acm.plugins.person.model.PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
+
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.model.Organization;
@@ -31,17 +35,17 @@ public class OrganizationExtractParentAssociation implements PipelineHandler<Org
 
             ObjectAssociation parentAssociation = new ObjectAssociation();
             parentAssociation.setParentId(parent.getId());
-            parentAssociation.setParentType("ORGANIZATION");
+            parentAssociation.setParentType(ORGANIZATION_OBJECT_TYPE);
             parentAssociation.setTargetId(entity.getId());
-            parentAssociation.setTargetType("ORGANIZATION");
-            parentAssociation.setAssociationType("SubCompany");
+            parentAssociation.setTargetType(ORGANIZATION_OBJECT_TYPE);
+            parentAssociation.setAssociationType(SUB_COMPANY);
 
             ObjectAssociation childAssociation = new ObjectAssociation();
             childAssociation.setParentId(entity.getId());
-            childAssociation.setParentType("ORGANIZATION");
+            childAssociation.setParentType(ORGANIZATION_OBJECT_TYPE);
             childAssociation.setTargetId(parent.getId());
-            childAssociation.setTargetType("ORGANIZATION");
-            childAssociation.setAssociationType("ParentCompany");
+            childAssociation.setTargetType(ORGANIZATION_OBJECT_TYPE);
+            childAssociation.setAssociationType(PARENT_COMPANY);
 
             parentAssociation.setInverseAssociation(childAssociation);
             childAssociation.setInverseAssociation(parentAssociation);

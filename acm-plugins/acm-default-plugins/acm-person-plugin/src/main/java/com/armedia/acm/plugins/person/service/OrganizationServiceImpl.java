@@ -1,10 +1,15 @@
 package com.armedia.acm.plugins.person.service;
 
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.PARENT_COMPANY;
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.SUB_COMPANY;
+import static com.armedia.acm.plugins.person.model.PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent.ObjectAssociationState;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -22,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrganizationServiceImpl implements OrganizationService, ApplicationListener<ObjectAssociationEvent>
@@ -29,6 +35,8 @@ public class OrganizationServiceImpl implements OrganizationService, Application
     private OrganizationDao organizationDao;
 
     private PipelineManager<Organization, OrganizationPipelineContext> organizationPipelineManager;
+
+    private ObjectAssociationService associationService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -146,16 +154,20 @@ public class OrganizationServiceImpl implements OrganizationService, Application
         Organization child = null, parent = null;
         if (ObjectAssociationState.DELETE.equals(event.getObjectAssociationState()))
         {
-            if ("SubCompany".equals(associationType))
+            if (SUB_COMPANY.equals(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getTargetId());
-            } else if ("ParentCompany".equals(associationType))
+                // parent is the parent in the context of the association, not the parent company!
+                parent = organizationDao.find(oa.getParentId());
+            } else if (PARENT_COMPANY.equals(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getParentId());
+                // parent is the parent in the context of the association, not the parent company!
+                parent = organizationDao.find(oa.getTargetId());
             }
-            if (child != null && child.getParentOrganization() != null)
+            if (child != null && child.getParentOrganization() != null && child.getParentOrganization().equals(parent))
             {
                 child.setParentOrganization(null);
                 organizationDao.save(child);
@@ -163,7 +175,7 @@ public class OrganizationServiceImpl implements OrganizationService, Application
         } else if (ObjectAssociationState.NEW.equals(event.getObjectAssociationState())
                 || ObjectAssociationState.UPDATE.equals(event.getObjectAssociationState()))
         {
-            if ("SubCompany".equals(associationType))
+            if (SUB_COMPANY.equals(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getTargetId());
@@ -174,7 +186,7 @@ public class OrganizationServiceImpl implements OrganizationService, Application
                 {
                     return;
                 }
-            } else if ("ParentCompany".equals(associationType))
+            } else if (PARENT_COMPANY.equals(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getParentId());
@@ -189,7 +201,17 @@ public class OrganizationServiceImpl implements OrganizationService, Application
             if (child != null && parent != null && !parent.equals(child.getParentOrganization()))
             {
                 child.setParentOrganization(parent);
+                Organization finalParent = parent;
                 organizationDao.save(child);
+                List<ObjectAssociation> parentAssociations = associationService.findByParentTypeAndId(ORGANIZATION_OBJECT_TYPE,
+                        child.getOrganizationId());
+                Optional<ObjectAssociation> illegalParent = parentAssociations.stream()
+                        .filter(pa -> !pa.getTargetId().equals(finalParent.getOrganizationId())).findFirst();
+                if (illegalParent.isPresent())
+                {
+                    associationService.delete(illegalParent.get().getAssociationId());
+                }
+
             }
         }
 
@@ -213,6 +235,15 @@ public class OrganizationServiceImpl implements OrganizationService, Application
     public void setOrganizationPipelineManager(PipelineManager<Organization, OrganizationPipelineContext> organizationPipelineManager)
     {
         this.organizationPipelineManager = organizationPipelineManager;
+    }
+
+    /**
+     * @param associationService
+     *            the associationService to set
+     */
+    public void setAssociationService(ObjectAssociationService associationService)
+    {
+        this.associationService = associationService;
     }
 
 }
