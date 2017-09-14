@@ -13,9 +13,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
     })
     .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
-        'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
+        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
             function ($scope, $stateParams, $translate,
-                      ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util) {
+                      ComplaintInfoService, PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util) {
 
             var modules = [
                 {
@@ -23,6 +23,12 @@ angular.module('dashboard.locations', ['adf.provider'])
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
+                },
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
                 },
                 {
                     name: "ORGANIZATION",
@@ -42,7 +48,7 @@ angular.module('dashboard.locations', ['adf.provider'])
             };
 
             var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-            var promiseUsers = gridHelper.getUsers();
+            //var promiseUsers = gridHelper.getUsers();
 
             new HelperObjectBrowserService.Component({
                 scope: $scope
@@ -60,7 +66,7 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if (!Util.isEmpty(objectInfo.location)) {
+                /*if (!Util.isEmpty(objectInfo.location)) {
                     $scope.gridOptions.data = [objectInfo];
                     var fullAddress = createFullAddress(objectInfo.location);
                     $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
@@ -74,18 +80,20 @@ angular.module('dashboard.locations', ['adf.provider'])
                     $scope.gridOptions.noData = true;
                     $scope.noDataMessage = $translate.instant('dashboard.widgets.locations.noDataMessage');
                 }
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;*/
+                $scope.objectInfo = objectInfo;
+                gridHelper.setWidgetsGridData(objectInfo.location);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "locations";
                 });
-                gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                //gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
-            var createFullAddress = function (location) {
+            /*var createFullAddress = function (location) {
                 if (location) {
                     var street = location.streetAddress;
                     //street += location.streetAddress2 ? " " + location.streetAddress2 : "";
@@ -97,6 +105,6 @@ angular.module('dashboard.locations', ['adf.provider'])
                     return _.filter([street, city, state, zip, country]).join(", ");
                 }
                 return "";
-            };
+            };*/
         }
     ]);
