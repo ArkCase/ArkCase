@@ -11,12 +11,22 @@ import com.armedia.acm.plugins.person.pipeline.OrganizationPipelineContext;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 7, 2017
  *
  */
-public class OrganizationExtractParentAssociation implements PipelineHandler<Organization, OrganizationPipelineContext>
+public class OrganizationExtractParentAssociationHandler implements PipelineHandler<Organization, OrganizationPipelineContext>
 {
+
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private ObjectAssociationService associationService;
 
@@ -29,6 +39,8 @@ public class OrganizationExtractParentAssociation implements PipelineHandler<Org
     @Override
     public void execute(Organization entity, OrganizationPipelineContext pipelineContext) throws PipelineProcessException
     {
+        log.debug("Extracting parent-child organization associations for organization with id [{}].", entity.getId());
+
         if (pipelineContext.isNewOrganization() && entity.getParentOrganization() != null)
         {
             Organization parent = entity.getParentOrganization();
@@ -65,7 +77,31 @@ public class OrganizationExtractParentAssociation implements PipelineHandler<Org
     @Override
     public void rollback(Organization entity, OrganizationPipelineContext pipelineContext) throws PipelineProcessException
     {
-        System.out.println(entity.getId());
+
+        log.debug("Rolling back organization associations for organization with id [{}].", entity.getId());
+
+        if (entity.getParentOrganization() != null)
+        {
+            Organization parent = entity.getParentOrganization();
+            List<ObjectAssociation> associations = associationService.findByParentTypeAndId(ORGANIZATION_OBJECT_TYPE, parent.getId());
+            for (ObjectAssociation association : associations)
+            {
+                if (association.getTargetId().equals(entity.getId()))
+                {
+                    associationService.delete(association.getAssociationId());
+                    break;
+                }
+            }
+            associations = associationService.findByParentTypeAndId(ORGANIZATION_OBJECT_TYPE, entity.getId());
+            for (ObjectAssociation association : associations)
+            {
+                if (association.getTargetId().equals(parent.getId()))
+                {
+                    associationService.delete(association.getAssociationId());
+                    break;
+                }
+            }
+        }
     }
 
     /**
