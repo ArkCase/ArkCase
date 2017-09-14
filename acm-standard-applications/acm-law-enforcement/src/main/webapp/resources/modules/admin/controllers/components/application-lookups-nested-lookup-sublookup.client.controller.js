@@ -142,7 +142,5 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
                 $scope.lookup.splice(0, $scope.lookup.length, ...$scope.selectedParentLookupValue.subLookup);
             });
         }
-
-        $scope.$emit('nested-lookup-sublookup-controller-loaded');
     }
 ]);

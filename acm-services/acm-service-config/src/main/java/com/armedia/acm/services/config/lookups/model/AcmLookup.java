@@ -1,5 +1,6 @@
 package com.armedia.acm.services.config.lookups.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ abstract public class AcmLookup<Entry>
 {
     protected String name;
 
-    protected List<Entry> entries;
+    protected List<Entry> entries = new ArrayList<>();
 
     abstract public LookupValidationResult validate();
 

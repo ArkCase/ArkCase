@@ -336,7 +336,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getFileTypes = function () {
-            return LookupService.getLookup("fileTypes");
+            return Service.getLookupByLookupName("fileTypes");
         };
 
         /**
@@ -364,7 +364,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getPersonTitles = function () {
-            return LookupService.getLookup("personTitles");
+            return Service.getLookupByLookupName("personTitles");
         };
 
         /**
@@ -378,7 +378,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getContactMethodTypes = function () {
-            return LookupService.getLookup("contactMethodTypes");
+            return Service.getLookupByLookupName("contactMethodTypes");
         };
 
         /**
@@ -392,7 +392,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationTypes = function () {
-            return LookupService.getLookup("organizationTypes");
+            return Service.getLookupByLookupName("organizationTypes");
         };
 
         /**
@@ -406,7 +406,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getAddressTypes = function () {
-            return LookupService.getLookup("addressTypes");
+            return Service.getLookupByLookupName("addressTypes");
         };
 
         /**
@@ -420,7 +420,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getAliasTypes = function () {
-            return LookupService.getLookup("aliasTypes");
+            return Service.getLookupByLookupName("aliasTypes");
         };
 
         /**
@@ -448,7 +448,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getPersonRelationTypes = function () {
-            return LookupService.getLookup("personRelationTypes");
+            return Service.getLookupByLookupName("personRelationTypes");
         };
 
         /**
@@ -462,7 +462,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationRelationTypes = function () {
-            return LookupService.getLookup("organizationRelationTypes");
+            //return LookupService.getLookup("organizationRelationTypes");
+            return Service.getLookupByLookupName("organizationRelationTypes");
         };
 
         /**
@@ -555,7 +556,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getIdentificationTypes = function () {
-            return LookupService.getLookup("identificationTypes");
+            //return LookupService.getLookup("identificationTypes");
+            return Service.getLookupByLookupName("identificationTypes");
         };
 
         /**
@@ -569,7 +571,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationIdTypes = function () {
-            return LookupService.getLookup("organizationIdTypes");
+            return Service.getLookupByLookupName("organizationIdTypes");
         };
 
 
@@ -584,7 +586,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getDBAsTypes = function () {
-            return LookupService.getLookup("dbasTypes");
+            return Service.getLookupByLookupName("dbasTypes");
         };
 
         /**
@@ -598,7 +600,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getCountries = function () {
-            return LookupService.getLookup("countries");
+            return Service.getLookupByLookupName("countries");
         };
 
         /**
@@ -612,7 +614,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getPersonOrganizationRelationTypes = function () {
-            return LookupService.getLookup("personOrganizationRelationTypes");
+            return Service.getLookupByLookupName("personOrganizationRelationTypes");
         };
 
         /**
@@ -626,7 +628,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationPersonRelationTypes = function () {
-            return LookupService.getLookup("organizationPersonRelationTypes");
+            return Service.getLookupByLookupName("organizationPersonRelationTypes");
         };
 
         /**
@@ -666,10 +668,10 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 }
 
                 return lookupsDefs;
-            });            
-            
+            });
+
         };
-        
+
         /**
          * @ngdoc method
          * @name getLookup
@@ -693,7 +695,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 }
             });
         };
-        
+
         /**
          * @ngdoc method
          * @name getLookupByLookupName
@@ -708,17 +710,19 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          */
         Service.getLookupByLookupName = function (name) {
             return LookupService.getLookups().then(function (lookups) {
-                for (lookupType in lookups) {
-                    for (var i = 0, len = lookupType.length; i < len; i++) {
-                        if (lookupType[i].hasOwnProperty(name)) {
-                            // return a deep copy of the lookup not to allow clients to change the original object
-                            return _.cloneDeep(lookupType[i].name);
+                for (var lookupType in lookups) {
+                    if (lookups.hasOwnProperty(lookupType)) {
+                        for (var i = 0, len = lookups[lookupType].length; i < len; i++) {
+                            if (lookups[lookupType][i].hasOwnProperty(name)) {
+                                // return a deep copy of the lookup not to allow clients to change the original object
+                                return _.cloneDeep(lookups[lookupType][i][name]);
+                            }
                         }
                     }
                 }
             });
         };
-        
+
         /**
          * @ngdoc method
          * @name validateLookup
@@ -729,7 +733,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @param {Object} lookupDef    the lookup definition to be validated with structure:
          *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
-         * @parma {Array}  lookup       the lookup entries as an array. 
+         * @parma {Array}  lookup       the lookup entries as an array.
          *                              For standarLookup valid structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
          *                              For nestedLookup valid structure looks like:
@@ -738,13 +742,13 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
          *
          * @returns {Object} returns data validation object with structure:
-         *                              { isValid : false, errorMessage: "The validation error message" } 
+         *                              { isValid : false, errorMessage: "The validation error message" }
          *                              or
          *                              { isValid : true }
          */
         Service.validateLookup = function (lookupDef, lookup) {
             switch(lookupDef.lookupType) {
-                case 'standardLookup' :                    
+                case 'standardLookup' :
                     return validateStandardLookup(lookup);
                 case 'nestedLookup' :
                     return validateNestedLookup(lookup);
@@ -755,7 +759,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     return { isValid : false, errorMessage: "Unknown lookup type!" };
             }
         };
-        
+
         function validateStandardLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
@@ -766,7 +770,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
             }
-            
+
             // Check duplicate keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
@@ -778,10 +782,10 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     }
                 }
             }
-            
+
             return { isValid : true };
         };
-        
+
         function validateNestedLookup(lookup) {
             // Check empty keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
@@ -803,7 +807,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     }
                 }
             }
-            
+
             // Check duplicate keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
@@ -828,10 +832,10 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     }
                 }
             }
-            
+
             return { isValid : true };
         };
-        
+
         function validateInverseValuesLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
@@ -848,7 +852,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     return { isValid : false, errorMessage: "Empty inverse value found!" };
                 }
             }
-            
+
             // Check duplicate keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
@@ -866,7 +870,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     }
                 }
             }
-            
+
             return { isValid : true };
         };
 
@@ -881,7 +885,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @param {Object} lookupDef    the lookup definition to be saved with structure:
          *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
-         * @parma {Array}  lookup       the lookup entries as an array. 
+         * @parma {Array}  lookup       the lookup entries as an array.
          *                              For standarLookup the structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
          *                              For nestedLookup the structure looks like:
@@ -889,12 +893,12 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *                              For inverseValuesLookup the structure looks like:
          *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
          *
-         * @returns {Object} Promise returning all lookups from server. 
+         * @returns {Object} Promise returning all lookups from server.
          */
         Service.saveLookup = function (lookupDef, lookup) {
-             // save a deep copy of the lookup not to allow clients to change the object
+            // save a deep copy of the lookup not to allow clients to change the object
             var lookupTosave = Util.omitNg(lookup);
-            
+
             var validationResult = Service.validateLookup(lookupDef, lookupTosave);
             if (!validationResult.isValid) {
                 return Util.errorPromise(validationResult.errorMessage);
@@ -902,7 +906,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
             return LookupService.saveLookup(lookupDef, lookupTosave);
         };
-        
+
         return Service;
     }
 ]);

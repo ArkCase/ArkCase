@@ -23,7 +23,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
             $scope.type = _.find($scope.types, function (type) {
-                return type.type == params.type;
+                return type.key == params.type;
             });
             $scope.isNew = params.isNew;
 
@@ -34,8 +34,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.onClickOk = function () {
                 var retValue = {
                     personId: $scope.personId,
-                    type: $scope.type.type,
-                    inverseType: $scope.type.inverseType,
+                    type: $scope.type.key,
+                    inverseType: $scope.type.inverseKey,
                     person: $scope.person,
                     personImages: $scope.personImages,
                     isNew: $scope.isNew
