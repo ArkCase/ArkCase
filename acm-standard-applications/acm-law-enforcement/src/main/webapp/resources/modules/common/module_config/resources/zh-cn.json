@@ -157,6 +157,25 @@
         "btnOk.text": "zh-cn_Save"
       }
     },
+    "common.addOrganization": {
+      "title": "zh-cn_Add Parent Organization",
+      "addNew.label": "zh-cn_Add new Organization",
+      "selectExisting.label": "zh-cn_Select existing organization",
+      "organization.label": "zh-cn_Organization",
+      "description": "zh-cn_Description",
+      "type.label": "zh-cn_Organization Association Type",
+      "type.label.default.text": "zh-cn_No parent Organization",
+      "type.label.text": "zh-cn_Parent Organization",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Organization",
+      "setPrimary.label": "zh-cn_Set As Primary?",
+      "radioYes.text": "zh-cn_Yes",
+      "radioNo.text": "zh-cn_No",
+      "duplicateOrganizationRoleErrorMessage": "zh-cn_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "zh-cn_Edit Parent Organization"
+    },
     "organizations": {
       "title": "zh-cn_Organizations",
       "modal": {
