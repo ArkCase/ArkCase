@@ -1,6 +1,12 @@
 angular.module('people').controller('Person.PictureUploadDialogController', ['$scope', '$modalInstance', 'params',
     function ($scope, $modalInstance, params) {
-        $scope.userPicture = null;
+        $scope.userPicture = {};
+        $scope.userPicture.title = false;
+
+        if (params.userPicture != undefined) {
+            $scope.userPicture.title = true;
+            $scope.userPicture.name = params.userPicture;
+        }
         $scope.isEdit = params.isEdit;
         $scope.isDefault = params.isDefault;
         $scope.hideNoField = params.isDefault;
