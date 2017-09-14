@@ -72,6 +72,13 @@
       "noPictureSelected": "de_No Files Selected.",
       "browse": "de_Browse",
       "description": "de_Description"
+    },
+    "dialog.edit": {
+      "title": "de_Edit Picture",
+      "setPrimary": "de_Set as Primary?",
+      "yes": "de_Yes",
+      "change": "de_Change Picture",
+      "save": "de_Save changes"
     }
   },
   "people.comp.addresses": {

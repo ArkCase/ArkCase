@@ -72,6 +72,13 @@
       "noPictureSelected": "zh-tw_No Files Selected.",
       "browse": "zh-tw_Browse",
       "description": "zh-tw_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-tw_Edit Picture",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "change": "zh-tw_Change Picture",
+      "save": "zh-tw_Save changes"
     }
   },
   "people.comp.addresses": {
