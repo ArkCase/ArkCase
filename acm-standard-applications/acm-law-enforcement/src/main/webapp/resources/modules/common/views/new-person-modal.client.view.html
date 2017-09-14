@@ -82,8 +82,8 @@
                                         ng-required="person.defaultIdentification.identificationNumber"
                                         ng-disabled="!person.defaultIdentification.identificationNumber"
                                         ng-model="person.defaultIdentification.identificationType">
-                                    <option ng-repeat="option in identificationTypes" value="{{option.type}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in identificationTypes" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
@@ -147,8 +147,8 @@
                                             required="required"
                                             ng-disabled="!identification.identificationNumber"
                                             ng-model="identification.identificationType">
-                                        <option ng-repeat="option in identificationTypes" value="{{option.type}}">
-                                            {{option.name}}
+                                        <option ng-repeat="option in identificationTypes" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -315,8 +315,8 @@
                             <label translate> common.newPerson.locations.country</label>
                             <select class="form-control"
                                     ng-model="person.defaultAddress.country">
-                                <option ng-repeat="option in countries" value="{{option.code}}">
-                                    {{option.name}}
+                                <option ng-repeat="option in countries" value="{{option.key}}">
+                                    {{option.value | translate}}
                                 </option>
                             </select>
                         </div>
@@ -324,8 +324,8 @@
                             <label translate> common.newPerson.locations.type</label>
                             <select class="form-control"
                                     ng-model="person.defaultAddress.type">
-                                <option ng-repeat="option in addressTypes" value="{{option.type}}">
-                                    {{option.name}}
+                                <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                    {{option.value | translate}}
                                 </option>
                             </select>
                         </div>
@@ -387,16 +387,16 @@
                                 <label translate> common.newPerson.locations.country</label>
                                 <select class="form-control"
                                         ng-model="address.country">
-                                    <option ng-repeat="option in countries" value="{{option.code}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in countries" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate> common.newPerson.locations.type</label>
                                 <select class="form-control" ng-model="address.type">
-                                    <option ng-repeat="option in addressTypes" value="{{option.type}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
@@ -492,8 +492,8 @@
                                         ng-required="person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
-                                    <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
@@ -527,8 +527,8 @@
                                         required="required"
                                         ng-disabled="!contactMethod.value"
                                         class="form-control">
-                                    <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>

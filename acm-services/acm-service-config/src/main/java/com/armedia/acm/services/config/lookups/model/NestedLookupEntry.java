@@ -1,5 +1,8 @@
 package com.armedia.acm.services.config.lookups.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
@@ -7,25 +10,25 @@ public class NestedLookupEntry
 {
     private String key;
     private String value;
-    private StandardLookup subLookup;
+    private List<StandardLookupEntry> subLookup = new ArrayList<>();
 
     public NestedLookupEntry()
     {
     }
 
-    public NestedLookupEntry(String key, String value, StandardLookup subLookup)
+    public NestedLookupEntry(String key, String value, List<StandardLookupEntry> subLookup)
     {
         this.key = key;
         this.value = value;
         this.subLookup = subLookup;
     }
 
-    public StandardLookup getSubLookup()
+    public List<StandardLookupEntry> getSubLookup()
     {
         return subLookup;
     }
 
-    public void setSubLookup(StandardLookup subLookup)
+    public void setSubLookup(List<StandardLookupEntry> subLookup)
     {
         this.subLookup = subLookup;
     }

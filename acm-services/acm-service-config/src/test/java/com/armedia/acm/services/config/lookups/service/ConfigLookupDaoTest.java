@@ -71,6 +71,32 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         JSONAssert.assertEquals(updatedValue.get(0).toString(), lookupAsJson, false);
     }
 
+    @Test
+    public void testUpdateNestedLookupSuccess() throws InvalidLookupException, IOException
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.NESTED_LOOKUP);
+        lookupDefinition.setName("contactMethodTypes");
+        String lookupAsJson = "[{\"key\":\"phone\",\"value\":\"lookups.contactMethodTypes.phone\",\"subLookup\":[{\"key\":\"Home1\",\"value\":\"lookups.common.home\"},{\"key\":\"Work\",\"value\":\"lookups.contactMethodTypes.work\"},{\"key\":\"Mobile\",\"value\":\"lookups.contactMethodTypes.mobile\"}]},{\"key\":\"Fax\",\"value\":\"lookups.contactMethodTypes.fax\",\"subLookup\":[]},{\"key\":\"email\",\"value\":\"lookups.contactMethodTypes.email\",\"subLookup\":[{\"key\":\"Personal\",\"value\":\"Personal\"},{\"key\":\"Business\",\"value\":\"Business\"}]},{\"key\":\"url\",\"value\":\"Url\",\"subLookup\":[{\"key\":\"Web Site\",\"value\":\"Web Site\"},{\"key\":\"Facebook\",\"value\":\"Facebook\"},{\"key\":\"LinkedIn\",\"value\":\"LinkedIn\"},{\"key\":\"Twitter\",\"value\":\"Twitter\"},{\"key\":\"Other\",\"value\":\"Other\"}]}]";
+        lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn("{\"nestedLookup\" : [{\"contactMethodTypes\" : []}]}");
+        mockConfigService.saveLookups("{\"nestedLookup\":[{\"contactMethodTypes\":" + lookupAsJson + "}]}");
+        expectLastCall().once();
+
+        // when
+        replayAll();
+        String ret = configLookupDao.updateLookup(lookupDefinition);
+
+        // then
+        verifyAll();
+        ArrayNode updatedValue = JsonPath.using(configuration).parse(ret).read("$." + lookupDefinition.getLookupType().getTypeName()
+                + "..[?(@." + lookupDefinition.getName() + ")]." + lookupDefinition.getName());
+
+        JSONAssert.assertEquals(updatedValue.get(0).toString(), lookupAsJson, false);
+    }
+
     @Test(expected = InvalidLookupException.class)
     public void testUpdateLookupThrowsExceptionOnInvalidLookupJson() throws InvalidLookupException, IOException
     {

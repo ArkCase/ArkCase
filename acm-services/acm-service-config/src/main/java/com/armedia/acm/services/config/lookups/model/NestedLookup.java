@@ -48,7 +48,9 @@ public class NestedLookup extends AcmLookup<NestedLookupEntry>
         LookupValidationResult lookupValidationResult = null;
         for (NestedLookupEntry nestedLookupEntry : entries)
         {
-            lookupValidationResult = nestedLookupEntry.getSubLookup().validate(this);
+            StandardLookup standardLookup = new StandardLookup();
+            standardLookup.setEntries(nestedLookupEntry.getSubLookup());
+            lookupValidationResult = standardLookup.validate(this);
             if (!lookupValidationResult.isValid())
             {
                 return lookupValidationResult;

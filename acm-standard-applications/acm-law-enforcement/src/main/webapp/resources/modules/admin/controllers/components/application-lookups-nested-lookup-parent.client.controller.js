@@ -114,13 +114,8 @@ angular.module('admin').controller('Admin.NestedLookupParentController', ['$scop
         
         $scope.parentLookupValueSelected = function(selectedParentLookupValue) {
             $scope.selectedParentLookupValue = selectedParentLookupValue;            
-            $scope.$broadcast('parent-lookup-selected', $scope.selectedLookupDef, $scope.lookup, $scope.selectedParentLookupValue);
+            $scope.$broadcast('nested-lookup-parent-selected', $scope.selectedLookupDef, $scope.lookup, $scope.selectedParentLookupValue);
         };
-        
-        // workaround for the first load of child controllers
-        $scope.$on('nested-lookup-sublookup-controller-loaded', function() {
-             $scope.$broadcast('nested-lookup-parent-selected', $scope.selectedLookup);
-        });
         
         function saveLookup() {
             var promiseSaveInfo = ObjectLookupService.saveLookup($scope.selectedLookupDef, $scope.lookup);
