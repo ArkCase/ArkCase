@@ -72,6 +72,13 @@
       "noPictureSelected": "ja_No Files Selected.",
       "browse": "ja_Browse",
       "description": "ja_Description"
+    },
+    "dialog.edit": {
+      "title": "ja_Edit Picture",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "change": "ja_Change Picture",
+      "save": "ja_Save changes"
     }
   },
   "people.comp.addresses": {

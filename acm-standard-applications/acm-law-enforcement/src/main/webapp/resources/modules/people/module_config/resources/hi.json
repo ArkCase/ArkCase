@@ -72,6 +72,13 @@
       "noPictureSelected": "hi_No Files Selected.",
       "browse": "hi_Browse",
       "description": "hi_Description"
+    },
+    "dialog.edit": {
+      "title": "hi_Edit Picture",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "change": "hi_Change Picture",
+      "save": "hi_Save changes"
     }
   },
   "people.comp.addresses": {

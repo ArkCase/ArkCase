@@ -72,6 +72,13 @@
       "noPictureSelected": "ru_No Files Selected.",
       "browse": "ru_Browse",
       "description": "ru_Description"
+    },
+    "dialog.edit": {
+      "title": "ru_Edit Picture",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "change": "ru_Change Picture",
+      "save": "ru_Save changes"
     }
   },
   "people.comp.addresses": {
