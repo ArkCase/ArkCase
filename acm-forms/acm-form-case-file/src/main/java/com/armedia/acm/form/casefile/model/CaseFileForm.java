@@ -37,7 +37,9 @@ public class CaseFileForm {
 	private Map<String, String> participantsPrivilegeTypes;
 	private OwningGroupItem owningGroup;
 	private List<String> owningGroupOptions;
-	private Person initiator;
+	private Long initiatorId;
+	private String initiatorFullName;
+	private String personType;
 	private List<Person> people;
 	
 	@XmlElement(name="caseId")
@@ -149,13 +151,37 @@ public class CaseFileForm {
 		this.owningGroupOptions = owningGroupOptions;
 	}
 
-	@XmlElement(name="initiator", type=InitiatorPerson.class)
-	public Person getInitiator() {
-		return initiator;
+	@XmlElement(name="initiatorId")
+	public Long getInitiatorId()
+	{
+		return initiatorId;
 	}
 
-	public void setInitiator(Person initiator) {
-		this.initiator = initiator;
+	public void setInitiatorId(Long initiatorId)
+	{
+		this.initiatorId = initiatorId;
+	}
+
+	@XmlElement(name="initiatorFullName")
+	public String getInitiatorFullName()
+	{
+		return initiatorFullName;
+	}
+
+	public void setInitiatorFullName(String initiatorFullName)
+	{
+		this.initiatorFullName = initiatorFullName;
+	}
+
+	@XmlElement(name="personType")
+	public String getPersonType()
+	{
+		return personType;
+	}
+
+	public void setPersonType(String personType)
+	{
+		this.personType = personType;
 	}
 
 	@XmlElement(name="people", type=PeoplePerson.class)

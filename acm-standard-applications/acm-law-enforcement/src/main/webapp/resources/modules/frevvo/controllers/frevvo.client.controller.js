@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope', '$stateParams', '$sce', '$q', '$modal', '$translate', '$interval'
-    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService'
+    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService', 'Person.InfoService', 'Object.LookupService'
     , function ($rootScope, $scope, $stateParams, $sce, $q, $modal, $translate, $interval
-        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService) {
+        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService, PersonInfoService, ObjectLookupService) {
 
         var promiseConfig = ConfigService.getModuleConfig("frevvo");
         var promiseTicket = TicketService.getArkCaseTicket();
@@ -21,6 +21,20 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
 
                 ServCommService.request($scope, "frevvo", $stateParams.name, found);
             }
+        });
+
+        ObjectLookupService.getPersonTypes().then(
+            function (personTypes) {
+                var options = [];
+                _.forEach(personTypes, function (v, k) {
+                    options.push({type: v, name: v});
+                });
+                $scope.personTypes = options;
+                return personTypes;
+            });
+
+        ConfigService.getModuleConfig('frevvo').then(function(moduleConfig) {
+            $scope.frevvoPersonTypes = moduleConfig.dialogPersonPicker.personTypes;
         });
 
         $scope.iframeLoaded = function () {
@@ -59,6 +73,9 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                             }
                             if (e.data.action == "open-object-picker") {
                                 pickObject(e.data);
+                            }
+                            if (e.data.action == "open-person-picker") {
+                                pickPerson(e.data);
                             }
                         }
                     };
@@ -232,5 +249,70 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 }
             });
         }
+
+        function pickPerson(data) {
+            var params = {};
+            var message = {};
+
+            message.source = "arkcase";
+            message.action = "fill-person-picker-data";
+            message.elementId = data.elementId;
+            message.pickerType = data.pickerType;
+
+            if(message.pickerType === "initiator") {
+                $scope.personTypes.push($scope.frevvoPersonTypes.initiatorType);
+                params.type = $scope.frevvoPersonTypes.initiatorType.type;
+                params.typeDisabled = true;
+            }
+            else {
+                params.typeDisabled = false;
+            }
+
+            params.pickerType = message.pickerType;
+            params.types = $scope.personTypes;
+
+            var modalInstance = $modal.open({
+                scope: $scope,
+                animation: true,
+                templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                controller: 'Common.AddPersonModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                var returnMessage = {};
+
+                 if (data.isNew) {
+                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                        data.personId = response.data.id;
+                        data.person = response.data;
+
+                        returnMessage.personId = data.personId;
+                        returnMessage.fullName = (data.person.givenName + " " + data.person.familyName).trim();
+                        returnMessage.personType = data.type;
+
+                        message.data = returnMessage;
+                        $scope.frevvoMessaging.send(message);
+                    });
+                } else {
+                    PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+
+                        returnMessage.personId = person.id;
+                        returnMessage.fullName = (person.givenName + " " + person.familyName).trim();
+                        returnMessage.personType = data.type;
+
+                        message.data = returnMessage;
+                        $scope.frevvoMessaging.send(message);
+                    })
+                }
+            });
+        }
+
     }
 ]);

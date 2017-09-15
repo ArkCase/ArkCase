@@ -214,7 +214,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         caseFileForm.setCaseTypes(convertToList((String) getProperties().get(getFormName() + ".types"), ","));
 
         // Init Initiator information
-        caseFileForm.setInitiator(initInitiator());
+        caseFileForm.setInitiatorId(initInitiator());
 
         // Init People information
         caseFileForm.setPeople(initPeople());
@@ -234,7 +234,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         this.identificationDao = personIdentificationDao;
     }
 
-    protected InitiatorPerson initInitiator()
+    protected Long initInitiator()
     {
         InitiatorPerson initiator = new InitiatorPerson();
 
@@ -246,7 +246,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         initiator.setType(CaseFileFormConstants.PERSON_TYPE_INITIATOR);
         initiator.setTypes(convertToList((String) getProperties().get(getFormName() + ".personTypes"), ","));
 
-        return initiator;
+        return initiator.getId();
     }
 
     protected List<Person> initPeople()

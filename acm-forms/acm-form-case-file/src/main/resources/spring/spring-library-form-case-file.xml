@@ -10,6 +10,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="personDao" ref="acmPersonDao" />
     </bean>
 
     <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" scope="prototype">
