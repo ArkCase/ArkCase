@@ -66,7 +66,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
 
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
-                params.filter = '"Object Type": PERSON';
+                params.filter = '"Object Type": PERSON &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
                 var modalInstance = $modal.open({

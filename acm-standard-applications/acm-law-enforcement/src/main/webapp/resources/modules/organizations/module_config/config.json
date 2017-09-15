@@ -1066,7 +1066,7 @@
           "name": "person.givenName",
           "displayName": "organizations.comp.people.table.columns.firstName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a class='primary' data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary </span>"
         },
         {
           "name": "person.familyName",

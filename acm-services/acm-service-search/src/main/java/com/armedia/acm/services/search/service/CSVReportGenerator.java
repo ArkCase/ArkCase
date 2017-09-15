@@ -84,6 +84,10 @@ public class CSVReportGenerator extends ReportGenerator
                     } else if (value instanceof Boolean)
                     {
                         sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
+                    } else if (value instanceof JSONArray)
+                    {
+                        JSONArray jsonArray = data.getJSONArray(field);
+                        sb.append(purifyForCSV(jsonArray.toString()));
                     }
                 }
                 sb.append(SearchConstants.SEPARATOR_COMMA);

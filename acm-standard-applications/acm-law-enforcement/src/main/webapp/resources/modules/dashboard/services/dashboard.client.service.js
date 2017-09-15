@@ -125,7 +125,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 var userInfo = result[1];
 
                 var userLocale = _.findWhere(locales, {code: userInfo.langCode});
-
+                LocaleService.useLocale(userLocale.iso);
                 setLocale(userLocale.iso);
             });
             
@@ -138,6 +138,7 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                     }
                 });
             });
+
         };
 
 
@@ -171,7 +172,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                                         oldCode = true;
                                     }
                                     widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
-
                                 });
                             }
                         });
@@ -186,7 +186,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                         module: moduleName
                     });
                 }, 0);
-
             }
         };
         //TODO: remove fixOldCode_removeLater() and its usage in each module

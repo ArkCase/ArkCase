@@ -58,6 +58,7 @@ public class ExchangeCalendar implements AcmCalendar
     @Override
     public AcmCalendarInfo getInfo() throws CalendarServiceException
     {
+        log.debug("Getting calendar info for object with id: [{}] of [{}] type.", objectId, objectType);
         try
         {
             CalendarFolder folder = CalendarFolder.bind(service, new FolderId(handler.getCalendarId(objectId)));
@@ -65,8 +66,8 @@ public class ExchangeCalendar implements AcmCalendar
             return new AcmCalendarInfo(folder.getId().getUniqueId(), objectType, objectId, folder.getDisplayName(), "");
         } catch (Exception e)
         {
-            log.debug("Error while trying to get calendar info for object with id: {} of {} type.", objectId, objectType, e);
-            throw new CalendarServiceException(e);
+            log.warn("Error while trying to get calendar info for object with id: [{}] of [{}] type.", objectId, objectType, e);
+            throw new CalendarServiceBindToRemoteException(e);
         }
     }
 
@@ -104,9 +105,21 @@ public class ExchangeCalendar implements AcmCalendar
     @Override
     public AcmCalendarEvent getEvent(String eventId, boolean retrieveMaster) throws CalendarServiceException
     {
+
+        log.debug("Getting calendar item for event id [{}] for object with id: [{}] of [{}] type.", eventId, objectId, objectType);
+
+        Appointment appointment;
         try
         {
-            Appointment appointment = Appointment.bind(service, new ItemId(eventId));
+            appointment = Appointment.bind(service, new ItemId(eventId));
+        } catch (Exception e)
+        {
+            log.warn("Error while trying to bind to calendar folder for object with id: [{}] of [{}] type.", objectId, objectType, e);
+            throw new CalendarServiceBindToRemoteException(e);
+        }
+
+        try
+        {
             PropertySet allProperties = new PropertySet();
             allProperties.addRange(PropertyDefinitionHolder.standardProperties);
             appointment.load(allProperties);
@@ -128,7 +141,7 @@ public class ExchangeCalendar implements AcmCalendar
             return event;
         } catch (Exception e)
         {
-            log.debug("Error while trying to get event with {} id for object with id: {} of {} type.", eventId, objectId, objectType, e);
+            log.warn("Error while trying to get event with {} id for object with id: {} of {} type.", eventId, objectId, objectType, e);
             throw new CalendarServiceException(e);
         }
     }

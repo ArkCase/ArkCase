@@ -54,7 +54,7 @@
       "type": "ja_Type",
       "created": "ja_Created",
       "modified": "ja_Modified",
-      "author": "ja_Author",
+      "modifier": "ja_Modified By",
       "version": "ja_Version",
       "status": "ja_Status"
     },
@@ -219,7 +219,13 @@
   "common.directive.coreCalendar": {
     "title": "ja_Calendar",
     "start.label": "ja_Start: ",
-    "end.label": "ja_End: "
+    "end.label": "ja_End: ",
+    "message": {
+      "error.accessDenied": "ja_Access denied to calendar service.",
+      "error.serviceConfiguration": "ja_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ja_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ja_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ja_Participants",

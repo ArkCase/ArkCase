@@ -55,8 +55,9 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public OutlookFolder createFolder(AcmOutlookUser outlookUser, String folderName, AcmContainer container,
-            List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+    public OutlookFolder createFolder(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName,
+            AcmContainer container, List<AcmParticipant> participants)
+            throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
 
         OutlookFolder outlookFolder = new OutlookFolder();
@@ -64,7 +65,7 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
 
         List<OutlookFolderPermission> permissions = mapParticipantsToFolderPermission(participants);
         outlookFolder.setPermissions(permissions);
-        outlookFolder = outlookFolderService.createFolder(outlookUser, WellKnownFolderName.Calendar, outlookFolder);
+        outlookFolder = outlookFolderService.createFolder(outlookUser, objectId, objectType, WellKnownFolderName.Calendar, outlookFolder);
 
         container.setCalendarFolderId(outlookFolder.getId());
 
@@ -76,8 +77,16 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void deleteFolder(AcmOutlookUser outlookUser, Long containerId, String folderId, DeleteMode deleteMode)
             throws AcmOutlookItemNotFoundException
     {
-        outlookFolderService.deleteFolder(outlookUser, folderId, deleteMode);
         AcmContainer container = acmContainerDao.find(containerId);
+        deleteFolder(outlookUser, container, deleteMode);
+    }
+
+    @Override
+    @Transactional
+    public void deleteFolder(AcmOutlookUser outlookUser, AcmContainer container, DeleteMode deleteMode)
+            throws AcmOutlookItemNotFoundException
+    {
+        outlookFolderService.deleteFolder(outlookUser, container.getCalendarFolderId(), deleteMode);
         container.setCalendarFolderId(null);
         acmContainerDao.save(container);
     }
