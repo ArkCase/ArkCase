@@ -109,9 +109,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
-                    if (data.organization.organizationValue != null) {
-                        $scope.editMode = true;
-                    }
+                    $scope.editMode = true;
                 });
             };
         }
