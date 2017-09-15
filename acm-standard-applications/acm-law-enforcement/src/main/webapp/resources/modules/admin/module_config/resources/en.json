@@ -1,4 +1,5 @@
 {
+  "admin": {
   "lookups": {
     "common":{
       "home": "Home",
@@ -15,7 +16,7 @@
       "fka": "FKA",
       "married": "Married"
     },
-    "titles" : {
+    "personTitles" : {
       "mr" : "Mr",
       "mrs" : "Mrs",
       "ms" : "Ms",
@@ -343,7 +344,6 @@
       "ZW":  "Zimbabwe"
     }
   },
-  "admin": {
     "title": "Admin",
     "security.title": "Security",
     "security.functionalAccessControl": "Functional Access Control",

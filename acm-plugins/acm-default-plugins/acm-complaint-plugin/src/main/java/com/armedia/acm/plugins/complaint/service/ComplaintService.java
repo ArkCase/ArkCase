@@ -250,8 +250,9 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact initiator = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("titles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
+        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
+        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + translationService.translate(entry.getValue()))
+                .collect(Collectors.toList());
         List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
 
         mainInformation.setTitles(titles);
@@ -312,7 +313,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact people = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("titles").getEntries();
+        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
         List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + translationService.translate(entry.getValue()))
                 .collect(Collectors.toList());
         List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
