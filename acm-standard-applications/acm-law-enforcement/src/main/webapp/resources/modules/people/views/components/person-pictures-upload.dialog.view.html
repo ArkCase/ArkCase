@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <ng-switch on="userPicture.title">
+    <ng-switch on="userPicture.modalViewProperties">
         <h3><span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.title</span></h3>
         <h3><span ng-switch-default translate>people.comp.pictures.dialog.title</span></h3>
     </ng-switch>
@@ -8,7 +8,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-12 form-group">
-                <ng-switch on="userPicture.title">
+                <ng-switch on="userPicture.modalViewProperties">
                     <label ng-switch-default translate>people.comp.pictures.dialog.title</label>
                     <label ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</label>
                 </ng-switch>
@@ -16,7 +16,7 @@
                 <button ngf-select ng-model="userPicture" id="file"
                         ngf-pattern="'image/*'" ngf-accept="'image/*'"
                         class="btn btn-sm btn-default" ngf-change="upload()" required="required">
-                    <ng-switch on="userPicture.title">
+                    <ng-switch on="userPicture.modalViewProperties">
                         <span ng-switch-default translate>people.comp.pictures.dialog.browse</span>
                         <span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</span>
                     </ng-switch>
@@ -49,7 +49,7 @@
         <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
             people.comp.pictures.dialog.cancel
         </button>
-        <ng-switch on="userPicture.title">
+        <ng-switch on="userPicture.modalViewProperties">
             <button class="btn btn-primary" ng-switch-default ng-click="onClickOk()" ng-disabled="picturesForm.$invalid">
                 <span translate>people.comp.pictures.dialog.upload</span>
             </button>
