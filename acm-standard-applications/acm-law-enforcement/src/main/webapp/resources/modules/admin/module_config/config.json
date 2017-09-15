@@ -879,6 +879,10 @@
           "templateName": "security-calendar-configuration"
         },
         {
+          "title": "admin.security.calendarCredentialsConfiguration.title",
+          "templateName": "security-calendar-credentials-configuration"
+        },
+        {
           "title": "admin.security.emailConfiguration.title",
           "templateName": "security-email-sender-configuration"
         },

@@ -98,7 +98,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);;
             $scope.localeSelected = userLocale;
 
-            $translate.use($scope.localeSelected.code);
+            LocaleService.useLocale($scope.localeSelected.code);
         });
 
         $scope.changeLocale = function ($event, localeNew) {
@@ -107,7 +107,8 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                 Authentication.updateUserLang(localeNew.code).then(function () {
                     userInfo.langCode = localeNew.code;
                     $scope.localeSelected = localeNew;
-                    $translate.use(localeNew.code);
+                    LocaleService.setLocaleData(localeData);
+                    LocaleService.useLocale(localeNew.code);
                 }
                 , function (error) {
                     MessageService.error(error.data ? error.data : error);
@@ -116,7 +117,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             });
         };
 
-        // TODO delete UPDATE button and this fubction if not needed
+        // TODO delete UPDATE button and this function if not needed
         $scope.updateLocales = function($event) {
             $event.preventDefault();
             localeSettingsPromise.then(function(data) {

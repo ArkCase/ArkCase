@@ -72,12 +72,12 @@
         "index": 6
       },
       {
-        "name": "author",
-        "field": "creator",
-        "displayName": "common.directive.docTree.table.columns.author",
-        "headTemplate": "<label id='author' class='doc-tree-header' style='cursor: pointer;'></label>",
-        "icon": "<i class='fa fa-fw' data-sort='author' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
+        "name": "modifier",
+        "field": "modifier",
+        "displayName": "common.directive.docTree.table.columns.modifier",
+        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
         "index": 7
@@ -648,6 +648,12 @@
       }
     }
   },
+  "coreCalendarErrorMessage": {
+    "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
+    "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
+    "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
+  },
   "dialogPersonPicker": {
     "enableFiltering": false,
     "multiSelect": false,
@@ -751,6 +757,11 @@
       {
         "name": "name",
         "displayName": "common.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName" : "common.dialogObjectPicker.table.columns.title",
         "headerCellFilter": "translate"
       }
     ],

@@ -54,7 +54,7 @@
       "type": "ru_Type",
       "created": "ru_Created",
       "modified": "ru_Modified",
-      "author": "ru_Author",
+      "modifier": "ru_Modified By",
       "version": "ru_Version",
       "status": "ru_Status"
     },
@@ -219,7 +219,13 @@
   "common.directive.coreCalendar": {
     "title": "ru_Calendar",
     "start.label": "ru_Start: ",
-    "end.label": "ru_End: "
+    "end.label": "ru_End: ",
+    "message": {
+      "error.accessDenied": "ru_Access denied to calendar service.",
+      "error.serviceConfiguration": "ru_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ru_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ru_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ru_Participants",

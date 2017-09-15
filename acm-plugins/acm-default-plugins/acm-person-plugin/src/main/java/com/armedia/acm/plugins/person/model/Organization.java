@@ -126,6 +126,9 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
             CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
 
+    @Column(name = "cm_status")
+    private String status;
+
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
@@ -223,6 +226,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     @PrePersist
     protected void beforeInsert()
     {
+        if (getStatus() == null || getStatus().trim().isEmpty())
+        {
+            setStatus("ACTIVE");
+        }
         updateChildObjectsWithParentObjectReference();
     }
 
@@ -572,12 +579,15 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         this.participants = participants;
     }
 
-    @Override
-    @JsonIgnore
+    @XmlTransient
     public String getStatus()
     {
-        // Not used
-        return null;
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 
     public Boolean getRestricted()

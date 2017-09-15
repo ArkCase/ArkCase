@@ -310,17 +310,17 @@ public class AcmTaskServiceImpl implements AcmTaskService
         objectAssociation.setTargetName(reference.getReferenceNumber());
         objectAssociation.setTargetTitle(reference.getReferenceTitle());
         objectAssociation.setStatus(reference.getReferenceStatus());
-        objectAssociation.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
+        objectAssociation.setAssociationType(ObjectAssociationConstants.REFFERENCE_TYPE);
 
         Long parentId = reference.getParentId();
 
         if (reference.getReferenceId().equals(parentId) && reference.getReferenceType().equals(reference.getParentType()))
         {
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.OBJECT_TYPE, "Cannot reference the task itself.", null);
+            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE, "Cannot reference the task itself.", null);
         }
         if (findChildObjects(parentId).stream().filter(o -> (o.getTargetId().equals(reference.getReferenceId()) && o.getTargetType().equals(reference.getReferenceType()))).findAny().isPresent())
         {
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.OBJECT_TYPE, "Selected object is already referenced.", null);
+            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE, "Selected object is already referenced.", null);
         }
 
         log.info("Saving reference to Task with id=[{}]", reference.getParentId());
@@ -341,7 +341,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         {
             log.error("Task with id=[{}] not found!", parentId, e);
             objectAssociationEventPublisher.publishAddReferenceEvent(reference, authentication, false);
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.OBJECT_TYPE,
+            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE,
                     String.format("Reference for task with id:[%d] was not added", parentId), e);
         }
     }

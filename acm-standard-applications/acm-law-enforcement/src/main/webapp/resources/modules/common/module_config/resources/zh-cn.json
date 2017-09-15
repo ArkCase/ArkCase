@@ -54,7 +54,7 @@
       "type": "zh-cn_Type",
       "created": "zh-cn_Created",
       "modified": "zh-cn_Modified",
-      "author": "zh-cn_Author",
+      "modifier": "zh-cn_Modified By",
       "version": "zh-cn_Version",
       "status": "zh-cn_Status"
     },
@@ -219,7 +219,13 @@
   "common.directive.coreCalendar": {
     "title": "zh-cn_Calendar",
     "start.label": "zh-cn_Start: ",
-    "end.label": "zh-cn_End: "
+    "end.label": "zh-cn_End: ",
+    "message": {
+      "error.accessDenied": "zh-cn_Access denied to calendar service.",
+      "error.serviceConfiguration": "zh-cn_Invalid calendar service configuration.",
+      "error.serviceCredentials": "zh-cn_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "zh-cn_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "zh-cn_Participants",

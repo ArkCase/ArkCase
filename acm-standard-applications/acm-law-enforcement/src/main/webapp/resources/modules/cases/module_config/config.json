@@ -297,12 +297,12 @@
           "type": "component",
           "columnDefs": [
             {
-              "name": "organization.organizationRole",
-              "displayName": "cases.comp.organizations.table.columns.type",
+              "name": "associationType",
+              "displayName": "cases.comp.organizations.table.columns.associationType",
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.organizationName",
+              "name": "organization.organizationValue",
               "displayName": "cases.comp.organizations.table.columns.name",
               "headerCellFilter": "translate"
             },
@@ -859,35 +859,41 @@
       "columnDefs": [
         {
           "name": "targetName",
+          "field": "target_object.name",
           "displayName": "cases.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.target_object.name}}</a>"
         },
         {
           "name": "targetTitle",
+          "field": "target_object.title_parseable",
           "displayName": "cases.comp.references.table.columns.targetTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
         },
         {
           "name": "parentName",
+          "field": "target_object.parent_name",
           "displayName": "cases.comp.references.table.columns.parentName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parentName}}>{{row.entity.parentName}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parentName}}>{{row.entity.target_object.parent_name}}</a>"
         },
         {
           "name": "modified",
+          "field": "target_object.modified_date_tdt",
           "displayName": "cases.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "targetType",
+          "field": "target_object.object_type_s",
           "displayName": "cases.comp.references.table.columns.targetType",
           "headerCellFilter": "translate"
         },
         {
           "name": "status",
+          "field": "target_object.status_lcs",
           "displayName": "cases.comp.references.table.columns.status",
           "headerCellFilter": "translate"
         }
