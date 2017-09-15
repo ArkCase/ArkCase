@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
@@ -147,14 +146,6 @@ public class OrganizationServiceImpl implements OrganizationService
     public void setOrganizationPipelineManager(PipelineManager<Organization, OrganizationPipelineContext> organizationPipelineManager)
     {
         this.organizationPipelineManager = organizationPipelineManager;
-    }
-
-    /**
-     * @param associationService
-     *            the associationService to set
-     */
-    public void setAssociationService(ObjectAssociationService associationService)
-    {
     }
 
 }

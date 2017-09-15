@@ -14,7 +14,6 @@
     <bean id="organizationService" class="com.armedia.acm.plugins.person.service.OrganizationServiceImpl">
         <property name="organizationDao" ref="acmOrganizationDao"/>
         <property name="organizationPipelineManager" ref="organizationPipelineManager"/>
-        <property name="associationService" ref="objectAssociationService"/>
     </bean>
     <bean id="organizationPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
         <property name="preSaveHandlers">
