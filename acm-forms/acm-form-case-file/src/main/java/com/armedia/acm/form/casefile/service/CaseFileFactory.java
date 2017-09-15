@@ -12,6 +12,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
@@ -43,6 +44,7 @@ public class CaseFileFactory extends FrevvoFormFactory
     private ObjectAssociationDao objectAssociationDao;
     private EcmFileDao ecmFileDao;
     private AcmHistoryDao acmHistoryDao;
+    private PersonDao personDao;
     private EcmFileService ecmFileService;
 
     public CaseFile asAcmCaseFile(CaseFileForm form, CaseFile caseFile)
@@ -69,19 +71,19 @@ public class CaseFileFactory extends FrevvoFormFactory
 
     private void buildInitiator(CaseFileForm form, CaseFile caseFile)
     {
-        if (form.getInitiator() != null)
+        if (form.getInitiatorId() != null)
         {
             PersonAssociation personAssociation = caseFile.getOriginator();
             if (personAssociation == null)
             {
                 personAssociation = new PersonAssociation();
             }
-            Person person = form.getInitiator();
+            Person person = getPersonDao().find(form.getInitiatorId());
             if (person.getId() != null)
             {
                 // Update Person Association
-                saveInformation(personAssociation, person);
-                personAssociation.setPersonType(((InitiatorPerson) person).getType());
+                personAssociation.setPerson(person);
+                personAssociation.setPersonType(form.getPersonType());
                 saveCommunicationDevice(personAssociation, person);
                 saveOrganizationInformation(personAssociation, person);
                 saveLocationInformation(personAssociation, person);
@@ -323,10 +325,9 @@ public class CaseFileFactory extends FrevvoFormFactory
 
                 if (caseFile.getOriginator() != null && caseFile.getOriginator().getPerson() != null)
                 {
-                    InitiatorPerson initiator = new InitiatorPerson(caseFile.getOriginator().getPerson());
-                    initiator.setType(caseFile.getOriginator().getPersonType());
-
-                    form.setInitiator(initiator);
+                    form.setInitiatorId(caseFile.getOriginator().getPerson().getId());
+                    form.setInitiatorFullName(caseFile.getOriginator().getPerson().getFullName());
+                    form.setPersonType(caseFile.getOriginator().getPersonType());
                 }
 
                 if (caseFile.getPersonAssociations() != null)
@@ -382,6 +383,16 @@ public class CaseFileFactory extends FrevvoFormFactory
     public void setAcmHistoryDao(AcmHistoryDao acmHistoryDao)
     {
         this.acmHistoryDao = acmHistoryDao;
+    }
+
+    public PersonDao getPersonDao()
+    {
+        return personDao;
+    }
+
+    public void setPersonDao(PersonDao personDao)
+    {
+        this.personDao = personDao;
     }
 
     public EcmFileService getEcmFileService()
