@@ -91,7 +91,6 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
             params.image = image || {};
             params.isEdit = isEdit || false;
             params.isDefault = $scope.isDefault(image);
-            console.log(params.isDefault);
 
             var modalInstance = $modal.open({
                 animation: true,
