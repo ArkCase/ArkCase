@@ -1,10 +1,10 @@
 angular.module('people').controller('Person.PictureUploadDialogController', ['$scope', '$modalInstance', 'params',
     function ($scope, $modalInstance, params) {
         $scope.userPicture = {};
-        $scope.userPicture.title = false;
+        $scope.userPicture.modalViewProperties = false;
 
         if (params.userPicture != undefined) {
-            $scope.userPicture.title = true;
+            $scope.userPicture.modalViewProperties = true;
             $scope.userPicture.name = params.userPicture;
         }
         $scope.isEdit = params.isEdit;
