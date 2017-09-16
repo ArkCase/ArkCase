@@ -25,7 +25,42 @@
     "priority.label": "Prioridad",
     "assignee.label": "Asignado a",
     "owningGroup.label": "Grupo propietario",
-    "dueDate.label": "Fecha de vencimiento"
+    "dueDate.label": "Fecha de vencimiento",
+    "priorities": {
+      "low%": "Bajo",
+      "medium%": "Medio",
+      "high%": "Alta",
+      "expedite%": "Acelerar",
+      "unknown%": "Desconocido"
+    },
+    "caseTypes": {
+      "agricultural%": "Agrícola",
+      "arson%": "Incendio provocado",
+      "backgroundInvestigation%": "Investigación de Antecedentes",
+      "benefitsAppeal%": "Recurso de beneficios",
+      "businessDispute%": "Mejor disputa comercial",
+      "clinicalFraud%": "Fraude de Investigador Clínico",
+      "congressional%": "Respuesta del Congreso",
+      "disabilityWaiver%": "Solicitud de Exención de Discapacidad",
+      "domesticDispute%": "Disputa doméstica",
+      "drugTrafficking%": "Tráfico de drogas",
+      "educationWaiver%": "Solicitud de Exención de Educación",
+      "eeoHarassment%": "OEO/Acoso",
+      "embezzlement%": "Malversación",
+      "extortion%": "Extorsión",
+      "fraud%": "Fraude",
+      "government%": "Gobierno",
+      "investorComplaint%": "Queja del inversionista",
+      "laborRacketeering%": "Crimen de trabajo",
+      "local%": "Local",
+      "murder%": "Asesinato",
+      "newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+      "payoff%": "Ganancia",
+      "pensionWaiver%": "Solicitud de Exención de Pensiones",
+      "pollution%": "Contaminación",
+      "productTampering%": "Alteración del producto",
+      "assetTheftMisuse%": "Robo o mal uso del activo"
+    }
   },
   "cases.comp.actions": {
     "title": "Acciones",
