@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "zh-cn_(Select One)",
+    "select.option.none": "（选择一个）",
+    "value.unknown": "未知",
+
     "defaultDateFormat": "zh-cn_MM/DD/YYYY",
     "defaultTimeFormat": "zh-cn_hh:mm:ss",
     "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "zh-cn_Invalid data"
+    "error.invalidData": "不正确数据"
   },
   "common.objects": {
-    "progressNoData": "zh-cn_[ No data ]",
-    "progressLoading": "zh-cn_Loading data ",
-    "progressError": "zh-cn_Failed to load data "
+    "progressNoData": "[ 无数据 ]",
+    "progressLoading": "加载数据 ",
+    "progressError": "无法加载数据 "
   },
   "common.frevvo": {
     "defaultDateFormat": "zh-cn_YYYY-MM-DD"

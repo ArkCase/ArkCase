@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "es_(Select One)",
+    "select.option.none": "(Seleccionar uno)",
+    "value.unknown": "Desconocido",
+
     "defaultDateFormat": "es_MM/DD/YYYY",
     "defaultTimeFormat": "es_hh:mm:ss",
     "defaultDateTimeFormat": "es_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "es_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "es_Invalid data"
+    "error.invalidData": "Datos no válidos"
   },
   "common.objects": {
-    "progressNoData": "es_[ No data ]",
-    "progressLoading": "es_Loading data ",
-    "progressError": "es_Failed to load data "
+    "progressNoData": "[ Sin datos ]",
+    "progressLoading": "Cargando datos ",
+    "progressError": "Error al cargar datos "
   },
   "common.frevvo": {
     "defaultDateFormat": "es_YYYY-MM-DD"
