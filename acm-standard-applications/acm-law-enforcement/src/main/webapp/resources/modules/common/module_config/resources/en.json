@@ -587,7 +587,8 @@
     "header": "Search {{objectLabel}}",
     "table.columns": {
       "name": "Name",
-      "id": "ID"
+      "id": "ID",
+      "title": "Title"
     }
   },
   "common.addOrganization": {
