@@ -213,6 +213,28 @@
       "value.placeholder": "pt_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "pt_Type",
+      "name": "pt_Name"
+    },
+    "dialogUserPicker": {
+      "header": "pt_Choose User",
+      "table.columns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "id": "pt_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "pt_Choose Group",
+      "table.columns": {
+        "name": "pt_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "Alias",
     "actions": {
@@ -426,6 +448,7 @@
       "phones.label": "Números de telefone",
       "emails.label": "E-mail",
       "urls.label": "URL",
+      "participants.label": "Participantes",
       "aliases.label": "Alias",
       "organizations.label": "Organizações",
       "ids.label": "Identidade",

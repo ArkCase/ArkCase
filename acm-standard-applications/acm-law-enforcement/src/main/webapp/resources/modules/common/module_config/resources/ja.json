@@ -136,6 +136,16 @@
     "edtPlaceholder": "ja_Type in to search",
     "noData.text": "ja_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "もっと表示",
+    "showLess.button.text": "少ない表示",
+    "results.text": "結果",
+    "noResults.text": "結果なし",
+    "tooltip": {
+      "collapseFacetList": "縮小分類テーブル",
+      "expandFacetList": "分類テーブルを展開する"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "ja_Notes",
     "modal.addNote": "ja_Add Note",

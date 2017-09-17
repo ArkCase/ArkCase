@@ -136,6 +136,16 @@
     "edtPlaceholder": "zh-cn_Type in to search",
     "noData.text": "zh-cn_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "显示更多",
+    "showLess.button.text": "显示更少",
+    "results.text": "结果",
+    "noResults.text": "无结果",
+    "tooltip": {
+      "collapseFacetList": "缩减分类表",
+      "expandFacetList": "展开分类表"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "注释",
     "modal.addNote": "zh-cn_Add Note",

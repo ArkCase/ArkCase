@@ -213,6 +213,28 @@
       "value.placeholder": "ja_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "参加者",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "別名",
     "actions": {
@@ -426,6 +448,7 @@
       "phones.label": "電話番号",
       "emails.label": "電子メール",
       "urls.label": "URL",
+      "participants.label": "参加者",
       "aliases.label": "別名",
       "organizations.label": "組織",
       "ids.label": "人員識番号",

@@ -137,6 +137,16 @@
     "edtPlaceholder": "pt_Type in to search",
     "noData.text": "pt_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Mostrar mais valores",
+    "showLess.button.text": "Mostrar Menos Valores",
+    "results.text": "Resultados",
+    "noResults.text": "Sem resultados",
+    "tooltip": {
+      "collapseFacetList": "Colapso Lista de facetas",
+      "expandFacetList": "Expandir Lista de facetas"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "pt_Notes",
     "modal.addNote": "pt_Add Note",

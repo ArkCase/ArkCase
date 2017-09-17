@@ -213,6 +213,28 @@
       "value.placeholder": "hi_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "प्रतिभागियों",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "उपनाम",
     "actions": {
@@ -426,6 +448,7 @@
       "phones.label": "फ़ोन नंबर",
       "emails.label": "ईमेल पते",
       "urls.label": "यूआरएल",
+      "participants.label": "प्रतिभागियों को",
       "aliases.label": "उपनाम",
       "organizations.label": "संगठन",
       "ids.label": "आईडी",

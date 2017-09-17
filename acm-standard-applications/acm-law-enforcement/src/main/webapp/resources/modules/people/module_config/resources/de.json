@@ -213,6 +213,28 @@
       "value.placeholder": "de_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "Teilnehmer",
+    "table.columns": {
+      "type": "de_Type",
+      "name": "de_Name"
+    },
+    "dialogUserPicker": {
+      "header": "de_Choose User",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "id": "de_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "de_Choose Group",
+      "table.columns": {
+        "name": "de_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "Aliase",
     "actions": {
@@ -426,6 +448,7 @@
       "phones.label": "Telefonnummern",
       "emails.label": "E-Mail-Adressen",
       "urls.label": "URL",
+      "participants.label": "Teilnehmer",
       "aliases.label": "Aliase",
       "organizations.label": "Organisationen",
       "ids.label": "Menschen ID",

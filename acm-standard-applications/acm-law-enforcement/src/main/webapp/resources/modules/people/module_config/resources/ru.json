@@ -213,6 +213,28 @@
       "value.placeholder": "ru_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "Участники",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "Псевдонимы",
     "actions": {
@@ -426,6 +448,7 @@
       "phones.label": "телефонные номера",
       "emails.label": "электронная почта",
       "urls.label": "URL-адреса",
+      "participants.label": "Участники",
       "aliases.label": "Псевдонимы",
       "organizations.label": "Организации",
       "ids.label": "Идентификатор людей",
