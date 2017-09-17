@@ -18,7 +18,7 @@ angular.module('services').config(function ($provide) {
             getLabelResource.then(function(translationMap) {
                 if (translationMap) {
                     var picked = _.pick (translationMap, function(value, key) {
-                        return key.endsWith("%");
+                        return _.endsWith(key, "%");
                     });
                     _.each(picked, function(value, key) {
                         var lastIndex = key.lastIndexOf(".");
