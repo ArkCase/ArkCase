@@ -123,7 +123,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     var newGroup = payload.data;
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
                     newGroup.object_id_s = newGroup.name;
-                    newGroup.parent_id_s = parent.object_id_s;
+                    newGroup.parent_id_s = parent.name;
                     if (newGroup.supervisor) {
                         newGroup.supervisor = newGroup.supervisor.fullName;
                     }

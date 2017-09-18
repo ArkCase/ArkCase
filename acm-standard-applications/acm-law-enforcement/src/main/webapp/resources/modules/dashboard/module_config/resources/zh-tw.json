@@ -35,7 +35,9 @@
             "priority": "優先",
             "created": "創建時間",
             "modified": "更改時間",
-            "status": "狀態"
+            "dueDate": "截止日期",
+            "status": "狀態",
+            "assignee": "代理人"
           },
           "overdue.tooltip": "案件逾期",
           "deadline.tooltip": "截止日期正在接近"
@@ -51,7 +53,9 @@
             "priority": "優先",
             "created": "創建時間",
             "modified": "更改時間",
-            "status": "狀態"
+            "dueDate": "截止日期",
+            "status": "狀態",
+            "assignee": "代理人"
           },
           "overdue.tooltip": "投訴已逾期",
           "deadline.tooltip": "截止日期正在接近",

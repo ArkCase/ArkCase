@@ -33,6 +33,9 @@
     },
     "btn": {
       "generateReport": "zh-cn_Generate report"
+    },
+    "checkBox":{
+      "xmlReport": "显示为XML"
     }
   }
 }

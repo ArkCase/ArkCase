@@ -54,7 +54,7 @@
       "type": "pt_Type",
       "created": "pt_Created",
       "modified": "pt_Modified",
-      "author": "pt_Author",
+      "modifier": "pt_Modified By",
       "version": "pt_Version",
       "status": "pt_Status"
     },
@@ -137,6 +137,16 @@
     "edtPlaceholder": "pt_Type in to search",
     "noData.text": "pt_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Mostrar mais valores",
+    "showLess.button.text": "Mostrar Menos Valores",
+    "results.text": "Resultados",
+    "noResults.text": "Sem resultados",
+    "tooltip": {
+      "collapseFacetList": "Colapso Lista de facetas",
+      "expandFacetList": "Expandir Lista de facetas"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "pt_Notes",
     "modal.addNote": "pt_Add Note",
@@ -157,6 +167,25 @@
         "btnCancel.text": "pt_Cancel",
         "btnOk.text": "pt_Save"
       }
+    },
+    "common.addOrganization": {
+      "title": "pt_Add Parent Organization",
+      "addNew.label": "pt_Add new Organization",
+      "selectExisting.label": "pt_Select existing organization",
+      "organization.label": "pt_Organization",
+      "description": "pt_Description",
+      "type.label": "pt_Organization Association Type",
+      "type.label.default.text": "pt_No parent Organization",
+      "type.label.text": "pt_Parent Organization",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Organization",
+      "setPrimary.label": "pt_Set As Primary?",
+      "radioYes.text": "pt_Yes",
+      "radioNo.text": "pt_No",
+      "duplicateOrganizationRoleErrorMessage": "pt_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "pt_Edit Parent Organization"
     },
     "organizations": {
       "title": "pt_Organizations",
@@ -220,7 +249,13 @@
   "common.directive.coreCalendar": {
     "title": "pt_Calendar",
     "start.label": "pt_Start: ",
-    "end.label": "pt_End: "
+    "end.label": "pt_End: ",
+    "message": {
+      "error.accessDenied": "pt_Access denied to calendar service.",
+      "error.serviceConfiguration": "pt_Invalid calendar service configuration.",
+      "error.serviceCredentials": "pt_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "pt_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "pt_Participants",

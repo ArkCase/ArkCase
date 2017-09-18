@@ -72,6 +72,13 @@
       "noPictureSelected": "No Files Selected.",
       "browse": "Browse",
       "description": "Description"
+    },
+    "dialog.edit": {
+      "title": "Edit Picture",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "change": "Change Picture",
+      "save": "Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "Enter Type",
       "value.label": "URL",
       "value.placeholder": "Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -430,6 +459,7 @@
       "phones.label": "Phone Numbers",
       "emails.label": "Email Addresses",
       "urls.label": "URLs",
+      "participants.label": "Participants",
       "aliases.label": "Aliases",
       "organizations.label": "Organizations",
       "ids.label": "IDs",
