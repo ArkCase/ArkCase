@@ -11,7 +11,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         ObjectLookupService.getPersonRelationTypes().then(
             function (relationshipTypes) {
                 for (var i = 0; i < relationshipTypes.length; i++) {
-                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue});
+                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
                 }
 
                 return relationshipTypes;
