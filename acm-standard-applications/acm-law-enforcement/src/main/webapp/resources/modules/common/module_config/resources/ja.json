@@ -167,6 +167,25 @@
         "btnOk.text": "ja_Save"
       }
     },
+    "common.addOrganization": {
+      "title": "ja_Add Parent Organization",
+      "addNew.label": "ja_Add new Organization",
+      "selectExisting.label": "ja_Select existing organization",
+      "organization.label": "ja_Organization",
+      "description": "ja_Description",
+      "type.label": "ja_Organization Association Type",
+      "type.label.default.text": "ja_No parent Organization",
+      "type.label.text": "ja_Parent Organization",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Organization",
+      "setPrimary.label": "ja_Set As Primary?",
+      "radioYes.text": "ja_Yes",
+      "radioNo.text": "ja_No",
+      "duplicateOrganizationRoleErrorMessage": "ja_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "ja_Edit Parent Organization"
+    },
     "organizations": {
       "title": "ja_Organizations",
       "modal": {
