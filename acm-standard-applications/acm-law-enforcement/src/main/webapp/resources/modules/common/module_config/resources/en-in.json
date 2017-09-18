@@ -1,6 +1,8 @@
 {
   "common": {
     "select.option.none": "(Select One)",
+    "value.unknown": "Unknown",
+
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
