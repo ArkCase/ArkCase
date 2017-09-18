@@ -349,8 +349,16 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-        Service.getParticipantTypes = function () {
-            return LookupService.getLookup("participantTypes");
+        Service.getParticipantTypes = function (objectType) {
+            switch(objectType){
+                case "PERSON":
+                case "ORGANIZATION":
+                    return Service.getLookupByLookupName("organizationalParticipantTypes");
+                    break;
+                case "COMPLAINT":
+                case "CASE_FILE":
+                    return Service.getLookupByLookupName("entitiesParticipantTypes");
+            }
         };
 
         /**
