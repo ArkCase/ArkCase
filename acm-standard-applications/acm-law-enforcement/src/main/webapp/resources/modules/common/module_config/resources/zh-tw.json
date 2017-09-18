@@ -134,7 +134,17 @@
     "btnOk.text": "zh-tw_OK",
     "btnCancel.text": "zh-tw_Cancel",
     "edtPlaceholder": "zh-tw_Type in to search",
-    "noData.text": "zh-tw_No Results"
+    "noData.text": "沒有結果"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "顯示更多",
+    "showLess.button.text": "顯示更少",
+    "results.text": "結果",
+    "noResults.text": "無結果",
+    "tooltip": {
+      "collapseFacetList": "縮減分類表",
+      "expandFacetList": "展開分類表"
+    }
   },
   "common.directive.coreNotes": {
     "title": "註釋",
