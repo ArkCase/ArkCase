@@ -54,7 +54,7 @@
       "type": "ja_Type",
       "created": "ja_Created",
       "modified": "ja_Modified",
-      "author": "ja_Author",
+      "modifier": "ja_Modified By",
       "version": "ja_Version",
       "status": "ja_Status"
     },
@@ -136,6 +136,16 @@
     "edtPlaceholder": "ja_Type in to search",
     "noData.text": "ja_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "もっと表示",
+    "showLess.button.text": "少ない表示",
+    "results.text": "結果",
+    "noResults.text": "結果なし",
+    "tooltip": {
+      "collapseFacetList": "縮小分類テーブル",
+      "expandFacetList": "分類テーブルを展開する"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "ja_Notes",
     "modal.addNote": "ja_Add Note",
@@ -156,6 +166,25 @@
         "btnCancel.text": "ja_Cancel",
         "btnOk.text": "ja_Save"
       }
+    },
+    "common.addOrganization": {
+      "title": "ja_Add Parent Organization",
+      "addNew.label": "ja_Add new Organization",
+      "selectExisting.label": "ja_Select existing organization",
+      "organization.label": "ja_Organization",
+      "description": "ja_Description",
+      "type.label": "ja_Organization Association Type",
+      "type.label.default.text": "ja_No parent Organization",
+      "type.label.text": "ja_Parent Organization",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Organization",
+      "setPrimary.label": "ja_Set As Primary?",
+      "radioYes.text": "ja_Yes",
+      "radioNo.text": "ja_No",
+      "duplicateOrganizationRoleErrorMessage": "ja_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "ja_Edit Parent Organization"
     },
     "organizations": {
       "title": "ja_Organizations",
@@ -219,7 +248,13 @@
   "common.directive.coreCalendar": {
     "title": "ja_Calendar",
     "start.label": "ja_Start: ",
-    "end.label": "ja_End: "
+    "end.label": "ja_End: ",
+    "message": {
+      "error.accessDenied": "ja_Access denied to calendar service.",
+      "error.serviceConfiguration": "ja_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ja_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ja_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ja_Participants",

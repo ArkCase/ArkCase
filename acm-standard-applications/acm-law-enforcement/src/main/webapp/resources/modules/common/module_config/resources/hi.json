@@ -54,7 +54,7 @@
       "type": "hi_Type",
       "created": "hi_Created",
       "modified": "hi_Modified",
-      "author": "hi_Author",
+      "modifier": "hi_Modified By",
       "version": "hi_Version",
       "status": "hi_Status"
     },
@@ -136,6 +136,16 @@
     "edtPlaceholder": "hi_Type in to search",
     "noData.text": "hi_No Results"
   },
+  "common.directive.search": {
+    "showmore.button.text": "अधिक मान दिखाएँ",
+    "showLess.button.text": "कम मूल्य दिखाएं",
+    "results.text": "परिणाम",
+    "noResults.text": "कोई परिणाम नहीं",
+    "tooltip": {
+      "collapseFacetList": "संकुचित फ़ैकेट सूची",
+      "expandFacetList": "वैपेट सूची का विस्तार करें"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "hi_Notes",
     "modal.addNote": "hi_Add Note",
@@ -156,6 +166,25 @@
         "btnCancel.text": "hi_Cancel",
         "btnOk.text": "hi_Save"
       }
+    },
+    "common.addOrganization": {
+      "title": "hi_Add Parent Organization",
+      "addNew.label": "hi_Add new Organization",
+      "selectExisting.label": "hi_Select existing organization",
+      "organization.label": "hi_Organization",
+      "description": "hi_Description",
+      "type.label": "hi_Organization Association Type",
+      "type.label.default.text": "hi_No parent Organization",
+      "type.label.text": "hi_Parent Organization",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Organization",
+      "setPrimary.label": "hi_Set As Primary?",
+      "radioYes.text": "hi_Yes",
+      "radioNo.text": "hi_No",
+      "duplicateOrganizationRoleErrorMessage": "hi_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "hi_Edit Parent Organization"
     },
     "organizations": {
       "title": "hi_Organizations",
@@ -219,7 +248,13 @@
   "common.directive.coreCalendar": {
     "title": "hi_Calendar",
     "start.label": "hi_Start: ",
-    "end.label": "hi_End: "
+    "end.label": "hi_End: ",
+    "message": {
+      "error.accessDenied": "hi_Access denied to calendar service.",
+      "error.serviceConfiguration": "hi_Invalid calendar service configuration.",
+      "error.serviceCredentials": "hi_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "hi_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "hi_Participants",

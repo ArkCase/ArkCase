@@ -14,9 +14,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-
             $scope.organizationId = params.organizationId;
             $scope.editMode = !!params.organizationId;
+            $scope.haveParent = !!params.organizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
@@ -24,10 +24,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 return type.type == params.type;
             });
             $scope.isNew = params.isNew;
-
-            $scope.onClickCancel = function () {
-                $modalInstance.dismiss('Cancel');
-            };
 
             $scope.onClickOk = function () {
                 var retValue = {
@@ -58,11 +54,12 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 }
             };
 
+            $scope.onClickCancel = function () {
+                $modalInstance.dismiss('Cancel');
+            };
+
             $scope.pickOrganization = function () {
                 $scope.isNew = false;
-                $scope.organizationId = '';
-                $scope.organizationValue = '';
-                $scope.organization = '';
 
                 var params = {};
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
@@ -96,9 +93,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
 
             $scope.addNewOrganization = function () {
                 $scope.isNew = true;
-                $scope.organizationId = '';
-                $scope.organizationValue = '';
-                $scope.organization = '';
+
                 var modalInstance = $modal.open({
                     scope: $scope,
                     animation: true,
@@ -111,6 +106,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
+                    $scope.haveParent = true;
                 });
             };
         }

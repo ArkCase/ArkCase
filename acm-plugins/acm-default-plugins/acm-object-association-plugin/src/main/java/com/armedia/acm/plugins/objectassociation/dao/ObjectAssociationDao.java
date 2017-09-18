@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.List;
 
@@ -27,12 +28,12 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
     @Transactional
     public List<ObjectAssociation> findByParentTypeAndId(String parentType, Long parentId)
     {
-        Query findByParentTypeAndId = getEm().createQuery(
+        TypedQuery<ObjectAssociation> findByParentTypeAndId = getEm().createQuery(
                 "SELECT e " +
                 "FROM ObjectAssociation e " +
                 "WHERE e.parentType = :parentType " +
                 "AND e.parentId = :parentId " +
-                "ORDER BY e.targetName");
+                "ORDER BY e.targetName", ObjectAssociation.class);
 
         findByParentTypeAndId.setParameter("parentId", parentId);
         findByParentTypeAndId.setParameter("parentType", parentType);
@@ -46,7 +47,7 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
     public ObjectAssociation findChildOfType(String parentType, Long parentId, String targetSubtype)
     {
-        Query selectQuery = getEm().createQuery(
+        TypedQuery<ObjectAssociation> selectQuery = getEm().createQuery(
                 "SELECT e " +
                 "FROM ObjectAssociation e " +
                 "WHERE e.parentType = :parentType " +
@@ -54,7 +55,7 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
                 "AND e.targetType = :targetType " +
                 "AND e.category = :targetCategory " +
                 "AND e.targetSubtype = :targetSubtype " +
-                "ORDER BY e.targetName");
+                "ORDER BY e.targetName", ObjectAssociation.class);
 
         selectQuery.setParameter("parentId", parentId);
         selectQuery.setParameter("parentType", parentType);
@@ -66,11 +67,12 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
         try
         {
-        	retval = (ObjectAssociation) selectQuery.getSingleResult();
+        	retval = selectQuery.getSingleResult();
         }
         catch(Exception e)
         {
-        	LOG.error("Cannot find Object Association for parentId=" + parentId + ", parentType=" + parentType + " and targetSubtype=" + targetSubtype, e);
+            LOG.error("Cannot find Object Association for parentId=[{}], parentType=[{}] and targetSubtype=[{}].", parentId, parentType,
+                    targetSubtype, e);
         }
 
         return retval;

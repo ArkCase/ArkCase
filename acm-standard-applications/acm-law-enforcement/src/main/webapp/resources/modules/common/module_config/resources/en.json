@@ -51,7 +51,7 @@
       "type": "Type",
       "created": "Created",
       "modified": "Modified",
-      "author": "Author",
+      "modifier": "Modified By",
       "version": "Version",
       "status": "Status"
     },
@@ -407,6 +407,12 @@
       "thisOne.radio": "Just this one",
       "entireSeries.radio": "The entire series",
       "deleteWarning.text": "Are you sure you want to delete this event?"
+    },
+    "message": {
+      "error.accessDenied": "Access denied to calendar service.",
+      "error.serviceConfiguration": "Invalid calendar service configuration.",
+      "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "Internal Server Error occurred."
     }
   },
   "common.directive.coreParticipants": {
@@ -579,16 +585,19 @@
     "header": "Search {{objectLabel}}",
     "table.columns": {
       "name": "Name",
-      "id": "ID"
+      "id": "ID",
+      "title": "Title"
     }
   },
   "common.addOrganization": {
-    "title": "Add Organization",
+    "title": "Add Parent Organization",
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
     "description": "Description",
     "type.label": "Organization Association Type",
+    "type.label.default.text": "No parent Organization",
+    "type.label.text": "Parent Organization",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Organization",
     "setPrimary.label": "Set As Primary?",
@@ -610,7 +619,7 @@
     "radioNo.text": "No"
   },
   "common.editOrganization": {
-    "title": "Edit Organization"
+    "title": "Edit Parent Organization"
   },
   "common.newOrganization": {
     "title": "Organization",

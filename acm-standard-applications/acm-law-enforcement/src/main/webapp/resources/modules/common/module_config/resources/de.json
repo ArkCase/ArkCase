@@ -54,7 +54,7 @@
       "type": "de_Type",
       "created": "de_Created",
       "modified": "de_Modified",
-      "author": "de_Author",
+      "modifier": "de_Modified By",
       "version": "de_Version",
       "status": "de_Status"
     },
@@ -136,6 +136,16 @@
     "edtPlaceholder": "de_Type in to search",
     "noData.text": "de_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Mehr Werte anzeigen",
+    "showLess.button.text": "Weniger Werte anzeigen",
+    "results.text": "Ergebnisse",
+    "noResults.text": "Keine Ergebnisse",
+    "tooltip": {
+      "collapseFacetList": "Zusammenbruch Facettenliste",
+      "expandFacetList": "Erweitern Facettenliste"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "de_Notes",
     "modal.addNote": "de_Add Note",
@@ -156,6 +166,25 @@
         "btnCancel.text": "de_Cancel",
         "btnOk.text": "de_Save"
       }
+    },
+    "common.addOrganization": {
+      "title": "de_Add Parent Organization",
+      "addNew.label": "de_Add new Organization",
+      "selectExisting.label": "de_Select existing organization",
+      "organization.label": "de_Organization",
+      "description": "de_Description",
+      "type.label": "de_Organization Association Type",
+      "type.label.default.text": "de_No parent Organization",
+      "type.label.text": "de_Parent Organization",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Save Organization",
+      "setPrimary.label": "de_Set As Primary?",
+      "radioYes.text": "de_Yes",
+      "radioNo.text": "de_No",
+      "duplicateOrganizationRoleErrorMessage": "de_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "de_Edit Parent Organization"
     },
     "organizations": {
       "title": "de_Organizations",
@@ -219,7 +248,13 @@
   "common.directive.coreCalendar": {
     "title": "de_Calendar",
     "start.label": "de_Start: ",
-    "end.label": "de_End: "
+    "end.label": "de_End: ",
+    "message": {
+      "error.accessDenied": "de_Access denied to calendar service.",
+      "error.serviceConfiguration": "de_Invalid calendar service configuration.",
+      "error.serviceCredentials": "de_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "de_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "de_Participants",

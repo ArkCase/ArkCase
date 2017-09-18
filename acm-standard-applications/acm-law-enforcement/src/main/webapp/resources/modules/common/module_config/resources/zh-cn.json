@@ -54,7 +54,7 @@
       "type": "zh-cn_Type",
       "created": "zh-cn_Created",
       "modified": "zh-cn_Modified",
-      "author": "zh-cn_Author",
+      "modifier": "zh-cn_Modified By",
       "version": "zh-cn_Version",
       "status": "zh-cn_Status"
     },
@@ -136,6 +136,16 @@
     "edtPlaceholder": "zh-cn_Type in to search",
     "noData.text": "zh-cn_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "显示更多",
+    "showLess.button.text": "显示更少",
+    "results.text": "结果",
+    "noResults.text": "无结果",
+    "tooltip": {
+      "collapseFacetList": "缩减分类表",
+      "expandFacetList": "展开分类表"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "注释",
     "modal.addNote": "zh-cn_Add Note",
@@ -156,6 +166,25 @@
         "btnCancel.text": "zh-cn_Cancel",
         "btnOk.text": "zh-cn_Save"
       }
+    },
+    "common.addOrganization": {
+      "title": "zh-cn_Add Parent Organization",
+      "addNew.label": "zh-cn_Add new Organization",
+      "selectExisting.label": "zh-cn_Select existing organization",
+      "organization.label": "zh-cn_Organization",
+      "description": "zh-cn_Description",
+      "type.label": "zh-cn_Organization Association Type",
+      "type.label.default.text": "zh-cn_No parent Organization",
+      "type.label.text": "zh-cn_Parent Organization",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Organization",
+      "setPrimary.label": "zh-cn_Set As Primary?",
+      "radioYes.text": "zh-cn_Yes",
+      "radioNo.text": "zh-cn_No",
+      "duplicateOrganizationRoleErrorMessage": "zh-cn_Organization already has the selected association"
+    },
+    "common.editOrganization": {
+      "title": "zh-cn_Edit Parent Organization"
     },
     "organizations": {
       "title": "zh-cn_Organizations",
@@ -219,7 +248,13 @@
   "common.directive.coreCalendar": {
     "title": "zh-cn_Calendar",
     "start.label": "zh-cn_Start: ",
-    "end.label": "zh-cn_End: "
+    "end.label": "zh-cn_End: ",
+    "message": {
+      "error.accessDenied": "zh-cn_Access denied to calendar service.",
+      "error.serviceConfiguration": "zh-cn_Invalid calendar service configuration.",
+      "error.serviceCredentials": "zh-cn_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "zh-cn_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "zh-cn_Participants",
