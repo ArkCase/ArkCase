@@ -260,7 +260,13 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             message.pickerType = data.pickerType;
 
             if(message.pickerType === "initiator") {
-                $scope.personTypes.push($scope.frevvoPersonTypes.initiatorType);
+                var initiatorTypeExists = $scope.personTypes.find(function(el) {
+                    return el.type === $scope.frevvoPersonTypes.initiatorType.type && el.name === $scope.frevvoPersonTypes.initiatorType.name;
+                });
+
+                if(initiatorTypeExists === undefined) {
+                    $scope.personTypes.push($scope.frevvoPersonTypes.initiatorType);
+                }
                 params.type = $scope.frevvoPersonTypes.initiatorType.type;
                 params.typeDisabled = true;
             }
@@ -272,7 +278,6 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             params.types = $scope.personTypes;
 
             var modalInstance = $modal.open({
-                scope: $scope,
                 animation: true,
                 templateUrl: 'modules/common/views/add-person-modal.client.view.html',
                 controller: 'Common.AddPersonModalController',
