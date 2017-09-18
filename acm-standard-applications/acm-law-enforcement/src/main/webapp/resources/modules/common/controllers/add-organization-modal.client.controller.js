@@ -16,7 +16,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.duplicateOrganizationRoleError = false;
             $scope.organizationId = params.organizationId;
             $scope.editMode = !!params.organizationId;
-            $scope.haveParent = params.organizationId;
+            $scope.haveParent = !!params.organizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
