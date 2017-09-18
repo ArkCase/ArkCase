@@ -136,6 +136,16 @@
     "edtPlaceholder": "ru_Type in to search",
     "noData.text": "ru_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Показать больше значений",
+    "showLess.button.text": "Показать меньше значений",
+    "results.text": "Результаты",
+    "noResults.text": "Нет результатов",
+    "tooltip": {
+      "collapseFacetList": "Свернуть список фасетов",
+      "expandFacetList": "Расширять список фасетов"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "ru_Notes",
     "modal.addNote": "ru_Add Note",

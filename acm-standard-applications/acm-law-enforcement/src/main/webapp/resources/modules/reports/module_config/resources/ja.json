@@ -33,6 +33,9 @@
     },
     "btn": {
       "generateReport": "ja_Generate report"
+    },
+    "checkBox": {
+      "xmlReport": "XMLとして表示"
     }
   }
 }

@@ -136,6 +136,16 @@
     "edtPlaceholder": "de_Type in to search",
     "noData.text": "de_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Mehr Werte anzeigen",
+    "showLess.button.text": "Weniger Werte anzeigen",
+    "results.text": "Ergebnisse",
+    "noResults.text": "Keine Ergebnisse",
+    "tooltip": {
+      "collapseFacetList": "Zusammenbruch Facettenliste",
+      "expandFacetList": "Erweitern Facettenliste"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "de_Notes",
     "modal.addNote": "de_Add Note",

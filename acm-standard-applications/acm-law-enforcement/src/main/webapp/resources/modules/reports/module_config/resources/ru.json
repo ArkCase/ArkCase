@@ -33,6 +33,9 @@
     },
     "btn": {
       "generateReport": "ru_Generate report"
+    },
+    "checkBox": {
+      "xmlReport": "Показать как XML"
     }
   }
 }
