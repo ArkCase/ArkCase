@@ -72,6 +72,13 @@
       "noPictureSelected": "pt_No Files Selected.",
       "browse": "pt_Browse",
       "description": "pt_Description"
+    },
+    "dialog.edit": {
+      "title": "pt_Edit Picture",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "change": "pt_Change Picture",
+      "save": "pt_Save changes"
     }
   },
   "people.comp.addresses": {

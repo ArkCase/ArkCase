@@ -72,6 +72,13 @@
       "noPictureSelected": "zh-cn_No Files Selected.",
       "browse": "zh-cn_Browse",
       "description": "zh-cn_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-cn_Edit Picture",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "change": "zh-cn_Change Picture",
+      "save": "zh-cn_Save changes"
     }
   },
   "people.comp.addresses": {
