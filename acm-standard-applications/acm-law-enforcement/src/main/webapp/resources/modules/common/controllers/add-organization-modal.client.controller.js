@@ -87,7 +87,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
-                        $scope.editMode = true;
                     }
                 });
             };
