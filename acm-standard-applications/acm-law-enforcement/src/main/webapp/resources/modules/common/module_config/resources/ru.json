@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "ru_(Select One)",
+    "select.option.none": "(Выбрать один)",
+    "value.unknown": "Неизвестно",
+
     "defaultDateFormat": "ru_MM/DD/YYYY",
     "defaultTimeFormat": "ru_hh:mm:ss",
     "defaultDateTimeFormat": "ru_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "ru_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "ru_Invalid data"
+    "error.invalidData": "Недопустимые данные"
   },
   "common.objects": {
-    "progressNoData": "ru_[ No data ]",
-    "progressLoading": "ru_Loading data ",
-    "progressError": "ru_Failed to load data "
+    "progressNoData": "[ Нет данных ]",
+    "progressLoading": "Загрузка данных ",
+    "progressError": "Не удалось загрузить данные "
   },
   "common.frevvo": {
     "defaultDateFormat": "ru_YYYY-MM-DD"
