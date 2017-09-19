@@ -169,25 +169,6 @@
         "btnOk.text": "fr_Save"
       }
     },
-    "common.addOrganization": {
-      "title": "fr_Add Parent Organization",
-      "addNew.label": "fr_Add new Organization",
-      "selectExisting.label": "fr_Select existing organization",
-      "organization.label": "fr_Organization",
-      "description": "fr_Description",
-      "type.label": "fr_Organization Association Type",
-      "type.label.default.text": "fr_No parent Organization",
-      "type.label.text": "fr_Parent Organization",
-      "btnCancel.text": "fr_Cancel",
-      "btnOk.text": "fr_Save Organization",
-      "setPrimary.label": "fr_Set As Primary?",
-      "radioYes.text": "fr_Yes",
-      "radioNo.text": "fr_No",
-      "duplicateOrganizationRoleErrorMessage": "fr_Organization already has the selected association"
-    },
-    "common.editOrganization": {
-      "title": "fr_Edit Parent Organization"
-    },
     "organizations": {
       "title": "fr_Organizations",
       "modal": {
