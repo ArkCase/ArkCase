@@ -55,9 +55,33 @@ public class LdapSyncDatabaseHelper
         persistUsers(directoryName, users);
 
         storeRoles(directoryName, usersByRole);
-        storeRoles(directoryName, usersByLdapGroup);
+
+        if (singleUser)
+        {
+            addUserInGroups(usersByLdapGroup);
+        } else
+        {
+            storeRoles(directoryName, usersByLdapGroup);
+        }
     }
 
+    private void addUserInGroups(Map<String, Set<LdapUser>> groupUsersMap)
+    {
+        groupUsersMap.forEach((groupName, userMembers) -> {
+            if (userMembers.size() == 1)
+            {
+                String userId = userMembers.iterator().next().getUserId();
+                AcmUser user = getUserDao().findByUserId(userId);
+                AcmGroup group = getGroupDao().findByName(groupName);
+
+                if (user != null && group != null)
+                {
+                    group.addMember(user);
+                    persistUserRole(user.getUserId(), groupName);
+                }
+            }
+        });
+    }
 
     private AcmUserRole persistUserRole(String userId, String roleName)
     {
