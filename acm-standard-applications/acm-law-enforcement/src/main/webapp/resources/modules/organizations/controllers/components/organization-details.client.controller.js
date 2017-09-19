@@ -25,7 +25,7 @@ angular.module('organizations').controller('Organizations.DetailsController', ['
             var personInfo = Util.omitNg($scope.objectInfo);
             OrganizationInfoService.saveOrganizationInfo(personInfo).then(
                 function (personInfo) {
-                    MessageService.info($translate.instant("people.comp.details.informSaved"));
+                    MessageService.info($translate.instant("organizations.comp.details.informSaved"));
                     return personInfo;
                 }
             );

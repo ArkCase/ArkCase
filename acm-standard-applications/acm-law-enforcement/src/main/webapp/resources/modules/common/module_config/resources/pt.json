@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "pt_(Select One)",
+    "select.option.none": "(Selecione um)",
+    "value.unknown": "Desconhecido",
+
     "defaultDateFormat": "pt_MM/DD/YYYY",
     "defaultTimeFormat": "pt_hh:mm:ss",
     "defaultDateTimeFormat": "pt_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "pt_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "pt_Invalid data"
+    "error.invalidData": "Dados inválidos"
   },
   "common.objects": {
-    "progressNoData": "pt_[ No data ]",
-    "progressLoading": "pt_Loading data ",
-    "progressError": "pt_Failed to load data "
+    "progressNoData": "[Sem dados]",
+    "progressLoading": "Carregando dados ",
+    "progressError": "Falha ao carregar dados "
   },
   "common.frevvo": {
     "defaultDateFormat": "pt_YYYY-MM-DD"
@@ -136,6 +138,16 @@
     "btnCancel.text": "pt_Cancel",
     "edtPlaceholder": "pt_Type in to search",
     "noData.text": "pt_No Results"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Mostrar mais valores",
+    "showLess.button.text": "Mostrar Menos Valores",
+    "results.text": "Resultados",
+    "noResults.text": "Sem resultados",
+    "tooltip": {
+      "collapseFacetList": "Colapso Lista de facetas",
+      "expandFacetList": "Expandir Lista de facetas"
+    }
   },
   "common.directive.coreNotes": {
     "title": "pt_Notes",
