@@ -72,8 +72,8 @@ angular.module('dashboard.locations', ['adf.provider'])
                     var location = Util.goodMapValue($scope.objectInfo, "location", null);
                     if(location != null){
                         var locationArrayTransformer = [location];
+                        gridHelper.setWidgetsGridData(locationArrayTransformer);
                     }
-                    gridHelper.setWidgetsGridData(locationArrayTransformer);
                 }
                 else {
                     gridHelper.setWidgetsGridData(objectInfo.addresses);
