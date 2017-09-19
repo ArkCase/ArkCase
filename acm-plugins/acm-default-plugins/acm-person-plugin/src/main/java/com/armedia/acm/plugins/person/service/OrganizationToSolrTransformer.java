@@ -66,7 +66,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        orgDoc.setAdditionalProperty("primary_contact_s", org.getPrimaryContact());
+        orgDoc.setAdditionalProperty("primary_contact_s", org.getPrimaryContact() != null? org.getPrimaryContact().getPerson().getFullName() : null);
         orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
         orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
         orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
