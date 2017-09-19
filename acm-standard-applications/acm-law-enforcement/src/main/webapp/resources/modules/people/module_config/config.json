@@ -915,7 +915,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.urls.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
