@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "de_(Select One)",
+    "select.option.none": "(Wähle Eins)",
+    "value.unknown": "Unbekannt",
+
     "defaultDateFormat": "de_MM/DD/YYYY",
     "defaultTimeFormat": "de_hh:mm:ss",
     "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "de_Invalid data"
+    "error.invalidData": "Ungültige Daten"
   },
   "common.objects": {
-    "progressNoData": "de_[ No data ]",
-    "progressLoading": "de_Loading data ",
-    "progressError": "de_Failed to load data "
+    "progressNoData": "[ Keine Daten ]",
+    "progressLoading": "Daten laden ",
+    "progressError": "Daten konnten nicht geladen werden "
   },
   "common.frevvo": {
     "defaultDateFormat": "de_YYYY-MM-DD"
@@ -166,25 +168,6 @@
         "btnCancel.text": "de_Cancel",
         "btnOk.text": "de_Save"
       }
-    },
-    "common.addOrganization": {
-      "title": "de_Add Parent Organization",
-      "addNew.label": "de_Add new Organization",
-      "selectExisting.label": "de_Select existing organization",
-      "organization.label": "de_Organization",
-      "description": "de_Description",
-      "type.label": "de_Organization Association Type",
-      "type.label.default.text": "de_No parent Organization",
-      "type.label.text": "de_Parent Organization",
-      "btnCancel.text": "de_Cancel",
-      "btnOk.text": "de_Save Organization",
-      "setPrimary.label": "de_Set As Primary?",
-      "radioYes.text": "de_Yes",
-      "radioNo.text": "de_No",
-      "duplicateOrganizationRoleErrorMessage": "de_Organization already has the selected association"
-    },
-    "common.editOrganization": {
-      "title": "de_Edit Parent Organization"
     },
     "organizations": {
       "title": "de_Organizations",
