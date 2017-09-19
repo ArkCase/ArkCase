@@ -65,6 +65,13 @@ public class LdapSyncDatabaseHelper
         }
     }
 
+    /**
+     * Used when single user sync is performed. The user is added in groups where it is found as member.
+     * Also roles are added per group membership.
+     * @param groupUsersMap Map where key set is all LDAP groups and values is set with
+     *                      one element when the user we sync is member in the particular group or zero elements when it is not.
+     */
+
     private void addUserInGroups(Map<String, Set<LdapUser>> groupUsersMap)
     {
         groupUsersMap.forEach((groupName, userMembers) -> {
