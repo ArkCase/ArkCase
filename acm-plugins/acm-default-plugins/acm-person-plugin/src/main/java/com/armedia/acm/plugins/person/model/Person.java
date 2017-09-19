@@ -65,7 +65,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     private String middleName;
 
     @Column(name = "cm_family_name")
-    @NotNull
+    @Size(min=1)
     private String familyName;
 
     @Column(name = "cm_person_hair_color")
