@@ -25,7 +25,42 @@
     "priority.label": "Priorität",
     "assignee.label": "Zugewiesen",
     "owningGroup.label": "Besitzgruppe",
-    "dueDate.label": "Fälligkeitsdatum"
+    "dueDate.label": "Fälligkeitsdatum",
+    "priorities": {
+      "low%": "Niedrig",
+      "medium%": "Mittel",
+      "high%": "Hoch",
+      "expedite%": "Expedite",
+      "unknown%": "Unbekannt"
+    },
+    "caseTypes": {
+      "agricultural%": "Landwirtschaftliche",
+      "arson%": "Brandstiftung",
+      "backgroundInvestigation%": "Hintergrunduntersuchung",
+      "benefitsAppeal%": "Vorteile Appell",
+      "businessDispute%": "Bessere Geschäftsstreitigkeiten",
+      "clinicalFraud%": "Klinischer Forscherbetrug",
+      "congressional%": "Kongressreaktion",
+      "disabilityWaiver%": "Behinderung Verzichtserklärung",
+      "domesticDispute%": "Häuslicher Streit",
+      "drugTrafficking%": "Drogenhandel",
+      "educationWaiver%": "Ausbildungsberatung",
+      "eeoHarassment%": "EEO/Belästigung",
+      "embezzlement%": "Unterschlagung",
+      "extortion%": "Erpressung",
+      "fraud%": "Betrug",
+      "government%": "Regierung",
+      "investorComplaint%": "Investorbeschwerde",
+      "laborRacketeering%": "Arbeit Racketeering",
+      "local%": "Lokal",
+      "murder%": "Mord",
+      "newDrugFraud%": "Neue Drogenanwendung Betrug",
+      "payoff%": "Auszahlung",
+      "pensionWaiver%": "Pension Verzichtserklärung",
+      "pollution%": "Pollution",
+      "productTampering%": "Produkt-Manipulation",
+      "assetTheftMisuse%": "Diebstahl oder Missbrauch von Vermögenswert"
+    }
   },
   "cases.comp.actions": {
     "title": "Aktionen",

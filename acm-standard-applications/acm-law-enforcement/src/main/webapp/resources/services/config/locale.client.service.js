@@ -10,17 +10,109 @@
 
  * LocaleService contains functions relate to locale.
  */
-angular.module('services').factory('Config.LocaleService', ['$resource', 'Acm.StoreService', 'UtilService'
+angular.module('services').config(function ($provide) {
+    $provide.decorator('$translate', function ($delegate) {
+        $delegate.dataLookups = {};
+        $delegate.buildDataLookups = function(getLabelResource) {
+            $delegate.dataLookups = {};
+            getLabelResource.then(function(translationMap) {
+                if (translationMap) {
+                    var picked = _.pick (translationMap, function(value, key) {
+                        return _.endsWith(key, "%");
+                    });
+                    _.each(picked, function(value, key) {
+                        var lastIndex = key.lastIndexOf(".");
+                        var category = key.substring(0, lastIndex);
+                        $delegate.dataLookups[category + "." + value] = key;
+                    });
+                }
+            });
+        };
+        $delegate.data = function(data, category, interpolateParams, interpolationId, forceLanguage, sanitizeStrategy) {
+            var key = (category)? category + "." + data : data;
+            var translationId = $delegate.dataLookups[key];
+            if (translationId) {
+                return $delegate.instant(translationId, interpolateParams, interpolationId, forceLanguage, sanitizeStrategy);
+            } else {
+                return data;
+            }
+        };
+
+        return $delegate;
+    });
+
+}).factory('Config.LocaleService', ['$resource', 'Acm.StoreService', 'UtilService'
     , 'LookupService', '$translate', 'tmhDynamicLocale'
     , function ($resource, Store, Util
         , LookupService, $translate, dynamicLocale
     ) {
         var Service = $resource('api/latest/plugin', {}, {
+            _getLabelResource: {
+                url: "api/latest/plugin/admin/labelmanagement/resource?ns=:part&lang=:lang"
+                    , method: "GET"
+                    , cache: false
+            }
         });
+
+        Service.SessionCacheNames = {
+            LABEL_RESOURCE: "AcmLabelResource"
+        };
+
+        /**
+         * @ngdoc method
+         * @name getLabelResource
+         * @methodOf services.service:Config.LocaleService
+         *
+         * @description
+         * Get label resources of given part and language
+         *
+         * @param {String} part  Resource part. Often it is the ArkCase module name
+         * @param {String} lang  Language ID (Locale code).
+         *
+         * @returns {Object} Promise
+         */
+        Service.getLabelResource = function (part, lang) {
+            var cacheLabelResource = new Store.SessionData(Service.SessionCacheNames.LABEL_RESOURCE);
+            var labelResource = Util.goodValue(cacheLabelResource.get(), {});
+            var labelResourcePartLang = labelResource[part + "." + lang];
+            return Util.serviceCall({
+                service: Service._getLabelResource
+                , param: {part: part, lang: lang}
+                , result: labelResourcePartLang
+                , onSuccess: function (data) {
+                    if (Service.validateLabelResource(data)) {
+                        labelResourcePartLang = data;
+                        labelResource[part + "." + lang] = labelResourcePartLang;
+                        cacheLabelResource.set(labelResource);
+                        return labelResourcePartLang;
+                    }
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateLabelResource
+         * @methodOf services.service:Config.LocaleService
+         *
+         * @description
+         * Validate label resource data.
+         *
+         * @param {Object} data  Data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateLabelResource = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        };
 
         Service.DEFAULT_LOCALES = [{"code": "en", "iso": "en", "desc": "English", "native": "English", "currencySymbol": "$"}];
         Service.DEFAULT_CODE = "en";
         Service.DEFAULT_ISO = "en";
+
 
         /**
          * @ngdoc method

@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "ja_(Select One)",
+    "select.option.none": "（選択する）",
+    "value.unknown": "不明",
+
     "defaultDateFormat": "ja_MM/DD/YYYY",
     "defaultTimeFormat": "ja_hh:mm:ss",
     "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "ja_Invalid data"
+    "error.invalidData": "無効なデータ"
   },
   "common.objects": {
-    "progressNoData": "ja_[ No data ]",
-    "progressLoading": "ja_Loading data ",
-    "progressError": "ja_Failed to load data "
+    "progressNoData": "[ データなし]",
+    "progressLoading": "データの読み込み中 ",
+    "progressError": "データの読み込みに失敗しました "
   },
   "common.frevvo": {
     "defaultDateFormat": "ja_YYYY-MM-DD"
@@ -166,25 +168,6 @@
         "btnCancel.text": "ja_Cancel",
         "btnOk.text": "ja_Save"
       }
-    },
-    "common.addOrganization": {
-      "title": "ja_Add Parent Organization",
-      "addNew.label": "ja_Add new Organization",
-      "selectExisting.label": "ja_Select existing organization",
-      "organization.label": "ja_Organization",
-      "description": "ja_Description",
-      "type.label": "ja_Organization Association Type",
-      "type.label.default.text": "ja_No parent Organization",
-      "type.label.text": "ja_Parent Organization",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Organization",
-      "setPrimary.label": "ja_Set As Primary?",
-      "radioYes.text": "ja_Yes",
-      "radioNo.text": "ja_No",
-      "duplicateOrganizationRoleErrorMessage": "ja_Organization already has the selected association"
-    },
-    "common.editOrganization": {
-      "title": "ja_Edit Parent Organization"
     },
     "organizations": {
       "title": "ja_Organizations",
