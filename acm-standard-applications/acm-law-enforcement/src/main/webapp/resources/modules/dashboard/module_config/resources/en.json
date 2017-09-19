@@ -35,7 +35,9 @@
             "priority": "Priority",
             "created": "Created",
             "modified": "Modified",
-            "status": "Status"
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "Case is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
@@ -51,7 +53,9 @@
             "priority": "Priority",
             "created": "Created",
             "modified": "Modified",
-            "status": "Status"
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "Complaint is Overdue",
           "deadline.tooltip": "Deadline is Approaching",

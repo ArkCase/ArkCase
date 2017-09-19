@@ -46,19 +46,11 @@
           "enableColumnMenu": false
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myCases.table.header.priority",
-          "headerCellFilter": "translate",
-          "enableSorting": true,
-          "width": 70
-        },
-        {
           "name": "name",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
-          "width": 130
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "title_parseable",
@@ -69,18 +61,34 @@
           "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.priority",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
           "name": "status_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.status",
           "headerCellFilter": "translate",
-          "enableSorting": true,
-          "width": 100
+          "enableSorting": true
+        },
+        {
+          "name": "assignee_id_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.assignee",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "dueDate_tdt",
+          "displayName": "dashboard.widgets.myCases.table.header.dueDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myCases.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "width": 70
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },
@@ -166,17 +174,10 @@
           "enableColumnMenu": false
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
-          "headerCellFilter": "translate",
-          "width": 70
-        },
-        {
           "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
-          "width": 130
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "title_parseable",
@@ -185,17 +186,32 @@
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "status_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.status",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee_id_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.assignee",
           "headerCellFilter": "translate",
-          "width": 100
+          "enableSorting": true
+        },
+        {
+          "name": "dueDate_tdt",
+          "displayName": "dashboard.widgets.myComplaints.table.header.dueDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "width": 70
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },

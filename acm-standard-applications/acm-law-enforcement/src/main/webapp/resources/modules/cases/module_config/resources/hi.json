@@ -25,7 +25,42 @@
     "priority.label": "प्राथमिकता",
     "assignee.label": "असाइन करने के लिए",
     "owningGroup.label": "स्वामी समूह",
-    "dueDate.label": "नियत दिनांक"
+    "dueDate.label": "नियत दिनांक",
+    "priorities": {
+      "low%": "निचे",
+      "medium%": "मध्यम",
+      "high%": "ऊँचा",
+      "expedite%": "एक्साइडिट",
+      "unknown%": "अज्ञात"
+    },
+    "caseTypes": {
+      "agricultural%": "कृषि",
+      "arson%": "आगजनी",
+      "backgroundInvestigation%": "पृष्ठभूमि जांच",
+      "benefitsAppeal%": "लाभ अपील",
+      "businessDispute%": "बेहतर व्यवसाय विवाद",
+      "clinicalFraud%": "क्लिनिकल अन्वेषिगेटर फ्रॉड",
+      "congressional%": "कांग्रेस प्रतिक्रिया",
+      "disabilityWaiver%": "विकलांगता छूट अनुरोध",
+      "domesticDispute%": "घरेलू विवाद",
+      "drugTrafficking%": "ड्रग ट्रैफिकिंग",
+      "educationWaiver%": "शिक्षा छूट अनुरोध",
+      "eeoHarassment%": "EEO/उत्पीड़न",
+      "embezzlement%": "एम्बज़ेलमेंट",
+      "extortion%": "जबरन",
+      "fraud%": "धोखाधड़ी",
+      "government%": "सरकार",
+      "investorComplaint%": "निवेशक शिकायत",
+      "laborRacketeering%": "लेबर रैकेटिटरिंग",
+      "local%": "स्थानीय",
+      "murder%": "मर्डर",
+      "newDrugFraud%": "न्यू ड्रग एप्लिकेशन धोखाधड़ी",
+      "payoff%": "घूस",
+      "pensionWaiver%": "नपेंशन छूट अनुरोध",
+      "pollution%": "प्रदूषण",
+      "productTampering%": "उत्पाद छेड़छाड़",
+      "assetTheftMisuse%": "संपत्ति की चोरी या दुरुपयोग"
+    }
   },
   "cases.comp.actions": {
     "title": "क्रियाएं",
