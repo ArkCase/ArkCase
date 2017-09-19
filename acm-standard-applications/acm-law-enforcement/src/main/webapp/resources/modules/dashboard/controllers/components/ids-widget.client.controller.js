@@ -13,11 +13,17 @@ angular.module('dashboard.ids', ['adf.provider'])
             });
     })
     .controller('Dashboard.IdsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
                 {
                     name: "ORGANIZATION",
                     configName: "organizations",

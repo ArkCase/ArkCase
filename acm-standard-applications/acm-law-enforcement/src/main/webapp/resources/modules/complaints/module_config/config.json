@@ -292,7 +292,7 @@
           "columnDefs": [
             {
               "name": "streetAddress",
-              "displayName": "complaints.comp.addresses.table.columns.streetAddress",
+              "displayName": "complaints.comp.locations.table.columns.address",
               "headerCellFilter": "translate"
             },
             {
@@ -339,12 +339,12 @@
           "type": "component",
           "columnDefs": [
             {
-              "name": "organization.organizationRole",
+              "name": "associationType",
               "displayName": "complaints.comp.organizations.table.columns.associationType",
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.organizationName",
+              "name": "organization.organizationValue",
               "displayName": "complaints.comp.organizations.table.columns.name",
               "headerCellFilter": "translate"
             },

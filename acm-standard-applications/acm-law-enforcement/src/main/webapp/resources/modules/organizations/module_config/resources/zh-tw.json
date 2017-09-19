@@ -216,6 +216,28 @@
       "value.placeholder": "zh-tw_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "參與成員",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "name": "zh-tw_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-tw_Choose User",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "id": "zh-tw_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-tw_Choose Group",
+      "table.columns": {
+        "name": "zh-tw_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -415,7 +437,7 @@
       "identificationNumber.placeholder": "zh-tw_Enter Identification Number",
       "identificationIssuer": "zh-tw_Identification Issuer",
       "identificationIssuer.placeholder": "zh-tw_Enter Identification Issuer",
-      "identificationYearIssued": "zh-tw_Identification Issued",
+      "identificationYearIssued": "zh-tw_Identification Issued Date",
       "identificationYearIssued.placeholder": "zh-tw_Select Identification Issued",
       "identificationYearIssued.close.button": "zh-tw_Close"
     },
@@ -429,6 +451,7 @@
       "faxes.label": "傳真號碼",
       "emails.label": "電子郵箱",
       "urls.label": "網址",
+      "participants.label": "參與成員",
       "dbas.label": "DBA",
       "people.label": "成員",
       "ids.label": "組織號碼",

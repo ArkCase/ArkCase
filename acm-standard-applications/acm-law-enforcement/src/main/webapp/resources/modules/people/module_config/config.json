@@ -502,30 +502,30 @@
           "columnDefs": [
             {
               "name": "id",
-              "field": "object_id_s",
+              "field": "parent_object.object_id_s",
               "displayName": "people.comp.complaints.table.columns.id",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
               "width": 130
             },
             {
               "name": "title",
-              "field": "title_parseable",
+              "field": "parent_object.title_parseable",
               "sortField": "title_parseable_lcs",
               "displayName": "people.comp.complaints.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "status",
-              "field": "status_lcs",
+              "field": "parent_object.status_lcs",
               "displayName": "people.comp.complaints.table.columns.status",
               "headerCellFilter": "translate"
             },
             {
               "width": 150,
               "name": "assignee",
-              "field": "assignee_id_lcs",
+              "field": "parent_object.assignee_id_lcs",
               "displayName": "people.comp.complaints.table.columns.assignee",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
@@ -533,10 +533,10 @@
             {
               "width": 150,
               "name": "modified",
-              "field": "modified_date_tdt",
+              "field": "parent_object.modified_date_tdt",
               "displayName": "people.comp.complaints.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             }
           ]
         },
@@ -915,7 +915,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.urls.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150

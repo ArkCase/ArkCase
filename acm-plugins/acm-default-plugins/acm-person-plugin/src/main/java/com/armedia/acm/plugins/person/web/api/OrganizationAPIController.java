@@ -28,12 +28,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = {
-        "/api/v1/plugin/organizations",
-        "/api/latest/plugin/organizations" })
+@RequestMapping(value = { "/api/v1/plugin/organizations", "/api/latest/plugin/organizations" })
 public class OrganizationAPIController
 {
 
@@ -42,6 +45,7 @@ public class OrganizationAPIController
     private OrganizationService organizationService;
     private ExecuteSolrQuery executeSolrQuery;
     private OrganizationEventPublisher organizationEventPublisher;
+    private String facetedSearchPath;
 
     @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,8 +68,7 @@ public class OrganizationAPIController
             saved = organizationService.saveOrganization(in, auth, ipAddress);
             organizationEventPublisher.publishOrganizationUpsertEvent(saved, isNew, true);
             return saved;
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Organization: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Organization", e.getMessage(), e);
@@ -83,8 +86,7 @@ public class OrganizationAPIController
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organizations.", e);
@@ -100,10 +102,9 @@ public class OrganizationAPIController
         try
         {
             Organization organization = organizationService.getOrganization(organizationId);
-            getOrganizationEventPublisher().publishOrganizationViewedEvent(organization, true);
+            organizationEventPublisher.publishOrganizationViewedEvent(organization, true);
             return organization;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.error("Error while retrieving Organization with id: [{}]", organizationId, e);
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organization.", e);
@@ -111,7 +112,8 @@ public class OrganizationAPIController
 
     }
 
-    @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getChildObjects(Authentication auth, @PathVariable("organizationId") Long organizationId,
             @PathVariable("objectType") String objectType, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
@@ -123,13 +125,34 @@ public class OrganizationAPIController
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null,
                     String.format("Could not retrieve %s for organization id[%s]", objectType, organizationId), e);
         }
+    }
+
+    @RequestMapping(value = "/search/{organizationId}", method = RequestMethod.GET)
+    public String searchOrganizations(@PathVariable("organizationId") Long organizationId) throws UnsupportedEncodingException
+    {
+        Organization organization = organizationService.getOrganization(organizationId);
+
+        List<String> filteredOrganizations = new ArrayList<>();
+        filteredOrganizations.add(Long.toString(organization.getOrganizationId()));
+
+        Organization parent = organization.getParentOrganization();
+        while (parent != null)
+        {
+            filteredOrganizations.add(Long.toString(parent.getOrganizationId()));
+            parent = parent.getParentOrganization();
+        }
+
+        String organizationFilter = URLEncoder.encode(
+                filteredOrganizations.stream().map(o -> String.format("fq=\"-object_id_s\":%s", o)).collect(Collectors.joining("&")),
+                "UTF-8");
+
+        return String.format(facetedSearchPath, organizationFilter);
     }
 
     public void setOrganizationService(OrganizationService organizationService)
@@ -142,13 +165,17 @@ public class OrganizationAPIController
         this.executeSolrQuery = executeSolrQuery;
     }
 
-    public OrganizationEventPublisher getOrganizationEventPublisher()
-    {
-        return organizationEventPublisher;
-    }
-
     public void setOrganizationEventPublisher(OrganizationEventPublisher organizationEventPublisher)
     {
         this.organizationEventPublisher = organizationEventPublisher;
+    }
+
+    /**
+     * @param facetedSearchPath
+     *            the facetedSearchPath to set
+     */
+    public void setFacetedSearchPath(String facetedSearchPath)
+    {
+        this.facetedSearchPath = facetedSearchPath;
     }
 }

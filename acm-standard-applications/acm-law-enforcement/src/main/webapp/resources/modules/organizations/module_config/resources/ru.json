@@ -216,6 +216,28 @@
       "value.placeholder": "ru_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "Участники",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -415,7 +437,7 @@
       "identificationNumber.placeholder": "ru_Enter Identification Number",
       "identificationIssuer": "ru_Identification Issuer",
       "identificationIssuer.placeholder": "ru_Enter Identification Issuer",
-      "identificationYearIssued": "ru_Identification Issued",
+      "identificationYearIssued": "ru_Identification Issued Date",
       "identificationYearIssued.placeholder": "ru_Select Identification Issued",
       "identificationYearIssued.close.button": "ru_Close"
     },
@@ -429,6 +451,7 @@
       "faxes.label": "Номера факсов",
       "emails.label": "Адреса электронной почты",
       "urls.label": "URL",
+      "participants.label": "Участники",
       "dbas.label": "Администраторы баз данных",
       "people.label": "Люди",
       "ids.label": "Идентификаторы",

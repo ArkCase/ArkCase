@@ -93,7 +93,7 @@ public class ExchangeCalendarService
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
             } else
             {
-                errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR");
+                errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
             }
             errorDetails.put("error_message", ce.getMessage());
             return errorDetails;
@@ -181,10 +181,10 @@ public class ExchangeCalendarService
 
         if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
         {
-            log.warn("User {} does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
+            log.warn("User [{}] does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
                     objectType);
             throw new CalendarServiceAccessDeniedException(
-                    String.format("User %s does not have READ permission to access object with [%s] id of [%s] type.", user.getFullName(),
+                    String.format("User [%s] does not have READ permission to access object with [%s] id of [%s] type.", user.getFullName(),
                             objectId, objectType));
         }
         return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
@@ -263,11 +263,11 @@ public class ExchangeCalendarService
 
         if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
         {
-            log.warn("User {} does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
+            log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                     calendarEvent.getObjectId(), calendarEvent.getObjectType());
             throw new CalendarServiceAccessDeniedException(
-                    String.format("User %s does not have WRITE permission to access object with [%s] id of [%s] type.", user.getFullName(),
-                            calendarEvent.getObjectId(), calendarEvent.getObjectType()));
+                    String.format("User [%s] does not have WRITE permission to access object with [%s] id of [%s] type.",
+                            user.getFullName(), calendarEvent.getObjectId(), calendarEvent.getObjectType()));
         }
 
         Appointment appointment;

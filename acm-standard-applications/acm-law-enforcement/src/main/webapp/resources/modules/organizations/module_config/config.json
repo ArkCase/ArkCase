@@ -241,27 +241,25 @@
           ]
         },
         {
-          "id": "locations",
+          "id": "addresses",
           "type": "component",
           "columnDefs": [
             {
               "name": "streetAddress",
               "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.streetAddress' title='{{row.entity.streetAddress}}' class='ui-grid-cell-contents'></div>"
+              "headerCellFilter": "translate"
             },
             {
               "name": "modified",
               "displayName": "organizations.comp.addresses.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "width": 150
+              "enableCellEdit": false
             },
             {
               "name": "modifier",
               "displayName": "organizations.comp.addresses.table.columns.modifier",
               "headerCellFilter": "translate",
-              "width": 150,
               "lookup": "userFullNames"
             }
           ]

@@ -25,7 +25,42 @@
     "priority.label": "優先",
     "assignee.label": "割り当て先",
     "owningGroup.label": "グループに所属",
-    "dueDate.label": "期限日"
+    "dueDate.label": "期限日",
+    "priorities": {
+      "low%": "低い",
+      "medium%": "中位",
+      "high%": "高い",
+      "expedite%": "優先度",
+      "unknown%": "未選択"
+    },
+    "caseTypes": {
+      "agricultural%": "農業",
+      "arson%": "放火",
+      "backgroundInvestigation%": "バックグラウンド調査",
+      "benefitsAppeal%": "福祉上訴",
+      "businessDispute%": "より良いビジネス紛争",
+      "clinicalFraud%": "臨床調査者の詐欺",
+      "congressional%": "議会の応答",
+      "disabilityWaiver%": "障害免除の要求",
+      "domesticDispute%": "家族紛争",
+      "drugTrafficking%": "麻薬密売",
+      "educationWaiver%": "教育免除要求",
+      "eeoHarassment%": "EEO/嫌がらせ",
+      "embezzlement%": "横領",
+      "extortion%": "強要",
+      "fraud%": "詐欺",
+      "government%": "政府",
+      "investorComplaint%": "投資人の苦情",
+      "laborRacketeering%": "労働脅迫",
+      "local%": "ローカル",
+      "murder%": "殺人",
+      "newDrugFraud%": "新薬申請詐欺",
+      "payoff%": "賄賂",
+      "pensionWaiver%": "年金免除申請",
+      "pollution%": "汚染",
+      "productTampering%": "製品改ざん",
+      "assetTheftMisuse%": "資産の盗難または誤用"
+    }
   },
   "cases.comp.actions": {
     "title": "操作",
