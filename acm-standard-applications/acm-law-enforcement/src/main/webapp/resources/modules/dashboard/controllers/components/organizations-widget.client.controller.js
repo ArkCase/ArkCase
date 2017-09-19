@@ -35,8 +35,7 @@ angular.module('dashboard.organizations', ['adf.provider'])
                         configName: "complaints",
                         getInfo: ComplaintInfoService.getComplaintInfo,
                         validateInfo: ComplaintInfoService.validateComplaintInfo
-                    },
-
+                    }
                 ];
 
                 var module = _.find(modules, function (module) {
