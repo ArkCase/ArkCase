@@ -110,6 +110,7 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
             params.address = address || {};
             params.isEdit = isEdit || false;
             params.isDefault = $scope.isDefault(address);
+            params.hideNoField = params.isDefault;
 
             var modalInstance = $modal.open({
                 animation: true,
