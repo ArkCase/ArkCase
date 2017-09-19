@@ -35,7 +35,9 @@
             "priority": "Приоритет",
             "created": "Создано",
             "modified": "Изменено",
-            "status": "Статус"
+            "dueDate": "Срок",
+            "status": "Статус",
+            "assignee": "Правопреемник"
           },
           "overdue.tooltip": "Дело просрочено",
           "deadline.tooltip": "Крайний срок приближается"
@@ -51,7 +53,9 @@
             "priority": "Приоритет",
             "created": "Создано",
             "modified": "Изменено",
-            "status": "Статус"
+            "dueDate": "Срок",
+            "status": "Статус",
+            "assignee": "Правопреемник"
           },
           "overdue.tooltip": "Жалоба просрочена",
           "deadline.tooltip": "Крайний срок приближается",

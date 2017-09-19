@@ -55,9 +55,40 @@ public class LdapSyncDatabaseHelper
         persistUsers(directoryName, users);
 
         storeRoles(directoryName, usersByRole);
-        storeRoles(directoryName, usersByLdapGroup);
+
+        if (singleUser)
+        {
+            addUserInGroups(usersByLdapGroup);
+        } else
+        {
+            storeRoles(directoryName, usersByLdapGroup);
+        }
     }
 
+    /**
+     * Used when single user sync is performed. The user is added in groups where it is found as member.
+     * Also roles are added per group membership.
+     * @param groupUsersMap Map where key set is all LDAP groups and values is set with
+     *                      one element when the user we sync is member in the particular group or zero elements when it is not.
+     */
+
+    private void addUserInGroups(Map<String, Set<LdapUser>> groupUsersMap)
+    {
+        groupUsersMap.forEach((groupName, userMembers) -> {
+            if (userMembers.size() == 1)
+            {
+                String userId = userMembers.iterator().next().getUserId();
+                AcmUser user = getUserDao().findByUserId(userId);
+                AcmGroup group = getGroupDao().findByName(groupName);
+
+                if (user != null && group != null)
+                {
+                    group.addMember(user);
+                    persistUserRole(user.getUserId(), groupName);
+                }
+            }
+        });
+    }
 
     private AcmUserRole persistUserRole(String userId, String roleName)
     {

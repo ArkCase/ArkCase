@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "ru_(Select One)",
+    "select.option.none": "(Выбрать один)",
+    "value.unknown": "Неизвестно",
+
     "defaultDateFormat": "ru_MM/DD/YYYY",
     "defaultTimeFormat": "ru_hh:mm:ss",
     "defaultDateTimeFormat": "ru_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "ru_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "ru_Invalid data"
+    "error.invalidData": "Недопустимые данные"
   },
   "common.objects": {
-    "progressNoData": "ru_[ No data ]",
-    "progressLoading": "ru_Loading data ",
-    "progressError": "ru_Failed to load data "
+    "progressNoData": "[ Нет данных ]",
+    "progressLoading": "Загрузка данных ",
+    "progressError": "Не удалось загрузить данные "
   },
   "common.frevvo": {
     "defaultDateFormat": "ru_YYYY-MM-DD"
@@ -136,6 +138,16 @@
     "edtPlaceholder": "ru_Type in to search",
     "noData.text": "ru_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Показать больше значений",
+    "showLess.button.text": "Показать меньше значений",
+    "results.text": "Результаты",
+    "noResults.text": "Нет результатов",
+    "tooltip": {
+      "collapseFacetList": "Свернуть список фасетов",
+      "expandFacetList": "Расширять список фасетов"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "ru_Notes",
     "modal.addNote": "ru_Add Note",
@@ -219,7 +231,13 @@
   "common.directive.coreCalendar": {
     "title": "ru_Calendar",
     "start.label": "ru_Start: ",
-    "end.label": "ru_End: "
+    "end.label": "ru_End: ",
+    "message": {
+      "error.accessDenied": "ru_Access denied to calendar service.",
+      "error.serviceConfiguration": "ru_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ru_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ru_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ru_Participants",

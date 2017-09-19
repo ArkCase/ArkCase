@@ -262,6 +262,29 @@
         }
       }
     },
+    "security.calendarCredentialsConfiguration": {
+      "title": "zh-tw_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "zh-tw_System Email Address",
+        "password": "zh-tw_System Password",
+        "password.placeholder": "zh-tw_System Password",
+        "save.button": "zh-tw_Save",
+        "validate.button": "zh-tw_Validate"
+      },
+      "modal": {
+        "title": "zh-tw_Outlook folder override",
+        "message": "zh-tw_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "zh-tw_Confirm",
+        "cancel.button": "zh-tw_Cancel"
+      },
+      "message": {
+        "credentials.valid": "zh-tw_Credentials are valid",
+        "credentials.invalid": "zh-tw_Credentials are not valid",
+        "credentials.error": "zh-tw_An error has occurred while checking the credentials",
+        "save.successful": "zh-tw_Outlook folder creator saved successfully",
+        "save.fail": "zh-tw_Outlook folder creator not saved"
+      }
+    },
     "security.emailConfiguration": {
       "title": "zh-tw_Document Delivery Policy",
       "emailConfigForm": {

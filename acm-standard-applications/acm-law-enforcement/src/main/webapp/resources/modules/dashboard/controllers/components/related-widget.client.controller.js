@@ -14,9 +14,9 @@ angular.module('dashboard.related', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'ObjectAssociation.Service', 'ObjectService', 'UtilService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
         function ($scope, $stateParams, $translate,
-                  PersonInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, ObjectAssociationService, ObjectService, Util, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -71,5 +71,11 @@ angular.module('dashboard.related', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
+            $scope.onClickObjLink = function (event, rowEntity) {
+                event.preventDefault();
+                var targetType = ObjectService.ObjectTypes.PERSON;
+                var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
+                gridHelper.showObject(targetType, targetId);
+            };
         }
     ]);

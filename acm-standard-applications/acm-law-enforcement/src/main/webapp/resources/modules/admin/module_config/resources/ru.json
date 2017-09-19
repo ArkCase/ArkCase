@@ -262,6 +262,29 @@
         }
       }
     },
+    "security.calendarCredentialsConfiguration": {
+      "title": "ru_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "ru_System Email Address",
+        "password": "ru_System Password",
+        "password.placeholder": "ru_System Password",
+        "save.button": "ru_Save",
+        "validate.button": "ru_Validate"
+      },
+      "modal": {
+        "title": "ru_Outlook folder override",
+        "message": "ru_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "ru_Confirm",
+        "cancel.button": "ru_Cancel"
+      },
+      "message": {
+        "credentials.valid": "ru_Credentials are valid",
+        "credentials.invalid": "ru_Credentials are not valid",
+        "credentials.error": "ru_An error has occurred while checking the credentials",
+        "save.successful": "ru_Outlook folder creator saved successfully",
+        "save.fail": "ru_Outlook folder creator not saved"
+      }
+    },
     "security.emailConfiguration": {
       "title": "ru_Document Delivery Policy",
       "emailConfigForm": {

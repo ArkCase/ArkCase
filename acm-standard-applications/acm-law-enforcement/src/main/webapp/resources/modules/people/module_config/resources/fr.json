@@ -72,6 +72,13 @@
       "noPictureSelected": "fr_No Files Selected.",
       "browse": "fr_Browse",
       "description": "fr_Description"
+    },
+    "dialog.edit": {
+      "title": "fr_Edit Picture",
+      "setPrimary": "fr_Set as Primary?",
+      "yes": "fr_Yes",
+      "change": "fr_Change Picture",
+      "save": "fr_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "fr_Enter Type",
       "value.label": "fr_URL",
       "value.placeholder": "fr_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "fr_Type",
+      "name": "fr_Name"
+    },
+    "dialogUserPicker": {
+      "header": "fr_Choose User",
+      "table.columns": {
+        "name": "fr_Name",
+        "type": "fr_Type",
+        "title": "fr_Title",
+        "id": "fr_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "fr_Choose Group",
+      "table.columns": {
+        "name": "fr_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "Numéros de téléphone",
       "emails.label": "Email",
       "urls.label": "URL",
+      "participants.label": "Participants",
       "aliases.label": "Alias",
       "organizations.label": "Organisations",
       "ids.label": "Identification des personnes",

@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "de_(Select One)",
+    "select.option.none": "(Wähle Eins)",
+    "value.unknown": "Unbekannt",
+
     "defaultDateFormat": "de_MM/DD/YYYY",
     "defaultTimeFormat": "de_hh:mm:ss",
     "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "de_Invalid data"
+    "error.invalidData": "Ungültige Daten"
   },
   "common.objects": {
-    "progressNoData": "de_[ No data ]",
-    "progressLoading": "de_Loading data ",
-    "progressError": "de_Failed to load data "
+    "progressNoData": "[ Keine Daten ]",
+    "progressLoading": "Daten laden ",
+    "progressError": "Daten konnten nicht geladen werden "
   },
   "common.frevvo": {
     "defaultDateFormat": "de_YYYY-MM-DD"
@@ -136,6 +138,16 @@
     "edtPlaceholder": "de_Type in to search",
     "noData.text": "de_No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Mehr Werte anzeigen",
+    "showLess.button.text": "Weniger Werte anzeigen",
+    "results.text": "Ergebnisse",
+    "noResults.text": "Keine Ergebnisse",
+    "tooltip": {
+      "collapseFacetList": "Zusammenbruch Facettenliste",
+      "expandFacetList": "Erweitern Facettenliste"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "de_Notes",
     "modal.addNote": "de_Add Note",
@@ -219,7 +231,13 @@
   "common.directive.coreCalendar": {
     "title": "de_Calendar",
     "start.label": "de_Start: ",
-    "end.label": "de_End: "
+    "end.label": "de_End: ",
+    "message": {
+      "error.accessDenied": "de_Access denied to calendar service.",
+      "error.serviceConfiguration": "de_Invalid calendar service configuration.",
+      "error.serviceCredentials": "de_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "de_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "de_Participants",

@@ -648,6 +648,12 @@
       }
     }
   },
+  "coreCalendarErrorMessage": {
+    "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
+    "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
+    "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
+  },
   "dialogPersonPicker": {
     "enableFiltering": false,
     "multiSelect": false,
@@ -751,6 +757,11 @@
       {
         "name": "name",
         "displayName": "common.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName" : "common.dialogObjectPicker.table.columns.title",
         "headerCellFilter": "translate"
       }
     ],
