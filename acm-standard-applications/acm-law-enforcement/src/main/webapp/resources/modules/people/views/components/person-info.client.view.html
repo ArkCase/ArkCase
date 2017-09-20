@@ -5,13 +5,15 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <h4><a href="#" editable-text="objectInfo.givenName" onaftersave="savePerson()"
-                               permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                               permission="editCase" permission-properties="objectInfo" permission-action="disable"
+                                e-required>
                             {{objectInfo.givenName || "Unknown"}}</a>,
                             <a href="#" editable-text="objectInfo.middleName" onaftersave="savePerson()"
                                permission="editCase" permission-properties="objectInfo" permission-action="disable">
                                 {{objectInfo.middleName}}</a><span ng-show="objectInfo.middleName !== null">,</span>
                             <a href="#" editable-text="objectInfo.familyName" onaftersave="savePerson()"
-                               permission="editCase" permission-properties="objectInfo" permission-action="disable">
+                               permission="editCase" permission-properties="objectInfo" permission-action="disable"
+                               e-required>
                                 {{objectInfo.familyName || "Unknown"}}</a></h4></div>
                     <div class="col-xs-6  text-right">
                         <h4>{{objectInfo.id}}</h4>

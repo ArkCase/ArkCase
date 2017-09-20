@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "fr_(Select One)",
+    "select.option.none": "(Sélectionnez un)",
+    "value.unknown": "Inconnu",
+
     "defaultDateFormat": "fr_MM/DD/YYYY",
     "defaultTimeFormat": "fr_hh:mm:ss",
     "defaultDateTimeFormat": "fr_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "fr_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "fr_Invalid data"
+    "error.invalidData": "Données invalides"
   },
   "common.objects": {
-    "progressNoData": "fr_[ No data ]",
-    "progressLoading": "fr_Loading data ",
-    "progressError": "fr_Failed to load data "
+    "progressNoData": "[Pas de données]",
+    "progressLoading": "Chargement des données ",
+    "progressError": "Impossible de charger des données "
   },
   "common.frevvo": {
     "defaultDateFormat": "fr_YYYY-MM-DD"
@@ -54,7 +56,7 @@
       "type": "fr_Type",
       "created": "fr_Created",
       "modified": "fr_Modified",
-      "author": "fr_Author",
+      "modifier": "fr_Modified By",
       "version": "fr_Version",
       "status": "fr_Status"
     },
@@ -135,6 +137,16 @@
     "btnCancel.text": "fr_Cancel",
     "edtPlaceholder": "fr_Type in to search",
     "noData.text": "fr_No Results"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Afficher plus de valeurs",
+    "showLess.button.text": "Afficher moins de valeurs",
+    "results.text": "Résultats",
+    "noResults.text": "Aucun résultat",
+    "tooltip": {
+      "collapseFacetList": "Effondrer Liste des facettes",
+      "expandFacetList": "Développer Liste des facettes"
+    }
   },
   "common.directive.coreNotes": {
     "title": "fr_Notes",
@@ -219,7 +231,13 @@
   "common.directive.coreCalendar": {
     "title": "fr_Calendar",
     "start.label": "fr_Start: ",
-    "end.label": "fr_End: "
+    "end.label": "fr_End: ",
+    "message": {
+      "error.accessDenied": "fr_Access denied to calendar service.",
+      "error.serviceConfiguration": "fr_Invalid calendar service configuration.",
+      "error.serviceCredentials": "fr_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "fr_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "fr_Participants",

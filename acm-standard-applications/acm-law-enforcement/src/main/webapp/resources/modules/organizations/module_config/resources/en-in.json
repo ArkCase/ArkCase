@@ -215,6 +215,28 @@
       "value.placeholder": "Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBAs",
     "actions": {
@@ -414,7 +436,7 @@
       "identificationNumber.placeholder": "Enter Identification Number",
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
-      "identificationYearIssued": "Identification Issued",
+      "identificationYearIssued": "Identification Issued Date",
       "identificationYearIssued.placeholder": "Select Identification Issued",
       "identificationYearIssued.close.button": "Close"
     },
@@ -428,6 +450,7 @@
       "faxes.label": "Fax Numbers",
       "emails.label": "Email Addresses",
       "urls.label": "URLs",
+      "participants.label": "Participants",
       "dbas.label": "DBAs",
       "people.label": "People",
       "ids.label": "IDs",

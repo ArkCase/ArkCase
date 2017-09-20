@@ -42,7 +42,8 @@
        "password":"Change Password",
        "message":"Enter your new password.",
        "confirmation":"Enter your new password again.",
-       "cancel":"Cancel"
+       "cancel":"Cancel",
+       "outlookPassword":"Store Outlook Password"
    },
    "profile.picture":{
        "title":"Change Picture",

@@ -287,14 +287,13 @@
           ]
         },
         {
-          "id": "locations",
+          "id": "addresses",
           "type": "component",
           "columnDefs": [
             {
-              "name": "fullAddress",
+              "name": "streetAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "headerCellFilter": "translate"
             },
             {
               "name": "modified",
@@ -341,12 +340,12 @@
           "type": "component",
           "columnDefs": [
             {
-              "name": "organization.organizationRole",
+              "name": "associationType",
               "displayName": "complaints.comp.organizations.table.columns.associationType",
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.organizationName",
+              "name": "organization.organizationValue",
               "displayName": "complaints.comp.organizations.table.columns.name",
               "headerCellFilter": "translate"
             },

@@ -85,6 +85,9 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         function showModal(image, isEdit) {
             var params = {};
+            if(image != null){
+                params.userPicture = image.fileName + image.fileActiveVersionNameExtension;
+            }
             params.image = image || {};
             params.isEdit = isEdit || false;
             params.isDefault = $scope.isDefault(image);
@@ -127,14 +130,14 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
             if (data && data.object_id_s) {
                 var id = 0;
                 if ($scope.objectInfo.defaultPicture) {
-                    id = $scope.objectInfo.defaultPicture.fileId
+                    id = $scope.objectInfo.defaultPicture.fileId;
                 }
                 return data.object_id_s == id;
             }
             if (data && data.fileId) {
                 var id = 0;
                 if ($scope.objectInfo.defaultPicture) {
-                    id = $scope.objectInfo.defaultPicture.fileId
+                    id = $scope.objectInfo.defaultPicture.fileId;
                 }
                 return data.fileId == id;
             }

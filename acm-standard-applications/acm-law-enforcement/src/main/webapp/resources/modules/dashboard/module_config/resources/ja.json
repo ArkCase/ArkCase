@@ -35,7 +35,9 @@
             "priority": "優先度",
             "created": "作成日",
             "modified": "変更日",
-            "status": "ステータス"
+            "dueDate": "期日",
+            "status": "ステータス",
+            "assignee": "譲受人"
           },
           "overdue.tooltip": "案件が期限切れです",
           "deadline.tooltip": "締め切りに近づいています"
@@ -51,7 +53,9 @@
             "priority": "優先度",
             "created": "作成日",
             "modified": "変更日",
-            "status": "ステータス"
+            "dueDate": "期日",
+            "status": "ステータス",
+            "assignee": "譲受人"
           },
           "overdue.tooltip": "クレームが期限切れです",
           "deadline.tooltip": "期限が近づいています",
