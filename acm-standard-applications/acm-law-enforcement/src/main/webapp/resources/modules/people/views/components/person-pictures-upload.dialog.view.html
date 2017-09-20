@@ -1,15 +1,26 @@
 <div class="modal-header">
-    <h3><span translate>people.comp.pictures.dialog.title</span></h3>
+    <ng-switch on="userPicture.isEdit">
+        <h3><span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.title</span></h3>
+        <h3><span ng-switch-default translate>people.comp.pictures.dialog.title</span></h3>
+    </ng-switch>
 </div>
 <form name="picturesForm">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label translate>people.comp.pictures.dialog.title</label><span class="required-asterisk">*</span><br/>
+                <ng-switch on="userPicture.isEdit">
+                    <label ng-switch-default translate>people.comp.pictures.dialog.title</label>
+                    <label ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</label>
+                </ng-switch>
+                <span class="required-asterisk">*</span><br/>
                 <button ngf-select ng-model="userPicture" id="file"
                         ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                        class="btn btn-sm btn-default" ngf-change="upload()" required="required"><span
-                        translate>people.comp.pictures.dialog.browse</span></button>
+                        class="btn btn-sm btn-default" ngf-change="upload()" required="required">
+                    <ng-switch on="userPicture.isEdit">
+                        <span ng-switch-default translate>people.comp.pictures.dialog.browse</span>
+                        <span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</span>
+                    </ng-switch>
+                </button>
                 {{userPicture.name}}
             </div>
         </div>
@@ -38,7 +49,14 @@
         <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
             people.comp.pictures.dialog.cancel
         </button>
-        <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="picturesForm.$invalid"><span translate>people.comp.pictures.dialog.upload</span>
-        </button>
+        <ng-switch on="userPicture.isEdit">
+            <button class="btn btn-primary" ng-switch-default ng-click="onClickOk()" ng-disabled="picturesForm.$invalid">
+                <span translate>people.comp.pictures.dialog.upload</span>
+            </button>
+
+            <button class="btn btn-primary" ng-switch-when="true" ng-click="onClickOk()">
+                <span translate>people.comp.pictures.dialog.edit.save</span>
+            </button>
+        </ng-switch>
     </div>
 </form>

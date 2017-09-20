@@ -216,6 +216,28 @@
       "value.placeholder": "es_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -429,6 +451,7 @@
       "faxes.label": "Números de fax",
       "emails.label": "Correo electrónico",
       "urls.label": "URL",
+      "participants.label": "Participantes",
       "dbas.label": "DBA",
       "people.label": "Personas",
       "ids.label": "Identificación de organización",

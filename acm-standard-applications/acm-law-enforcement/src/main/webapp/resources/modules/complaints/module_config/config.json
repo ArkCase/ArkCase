@@ -287,14 +287,13 @@
           ]
         },
         {
-          "id": "locations",
+          "id": "addresses",
           "type": "component",
           "columnDefs": [
             {
-              "name": "fullAddress",
+              "name": "streetAddress",
               "displayName": "complaints.comp.locations.table.columns.address",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.location.fullAddress' title='{{row.entity.location.fullAddress}}' class='ui-grid-cell-contents'></div>"
+              "headerCellFilter": "translate"
             },
             {
               "name": "modified",

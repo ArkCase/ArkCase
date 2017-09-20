@@ -25,7 +25,42 @@
     "priority.label": "Prioridade",
     "assignee.label": "Atribuído a",
     "owningGroup.label": "O grupo pertence a",
-    "dueDate.label": "Data de vencimento"
+    "dueDate.label": "Data de vencimento",
+    "priorities": {
+      "low%": "Baixo",
+      "medium%": "Médio",
+      "high%": "Alto",
+      "expedite%": "Acelerar",
+      "unknown%": "Desconhecido"
+    },
+    "caseTypes": {
+      "agricultural%": "Agrícola",
+      "arson%": "Incêndio culposo",
+      "backgroundInvestigation%": "Investigação de fundo",
+      "benefitsAppeal%": "Recurso de Benefícios",
+      "businessDispute%": "Melhor disputa comercial",
+      "clinicalFraud%": "Fraude do Investigador Clínico",
+      "congressional%": "Resposta do Congresso",
+      "disabilityWaiver%": "Pedido de isenção de deficiência",
+      "domesticDispute%": "Disputa doméstica",
+      "drugTrafficking%": "Tráfico de drogas",
+      "educationWaiver%": "Solicitação de isenção educacional",
+      "eeoHarassment%": "EEO/Assédio",
+      "embezzlement%": "Embraiagem",
+      "extortion%": "Extorsão",
+      "fraud%": "Fraude",
+      "government%": "Governo",
+      "investorComplaint%": "Reclamação de investidor",
+      "laborRacketeering%": "Trabalho Racketeering",
+      "local%": "Local",
+      "murder%": "Assassinato",
+      "newDrugFraud%": "Fraude de aplicação de novas drogas",
+      "payoff%": "Suborno",
+      "pensionWaiver%": "Pedido de isenção de pensão",
+      "pollution%": "Poluição",
+      "productTampering%": "Tampering do Produto",
+      "assetTheftMisuse%": "Roubo ou uso indevido de ativos"
+    }
   },
   "cases.comp.actions": {
     "title": "Ações",

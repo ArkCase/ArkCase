@@ -25,7 +25,42 @@
     "priority.label": "Priority",
     "assignee.label": "Assigned To",
     "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "dueDate.label": "Due Date",
+    "priorities": {
+      "low%": "Low",
+      "medium%": "Medium",
+      "high%": "High",
+      "expedite%": "Expedite",
+      "unknown%": "Unknown"
+    },
+    "caseTypes": {
+      "agricultural%": "Agricultural",
+      "arson%": "Arson",
+      "backgroundInvestigation%": "Background Investigation",
+      "benefitsAppeal%": "Benefits Appeal",
+      "businessDispute%": "Better Business Dispute",
+      "clinicalFraud%": "Clinical Investigator Fraud",
+      "congressional%": "Congressional Response",
+      "disabilityWaiver%": "Disability Waiver Request",
+      "domesticDispute%": "Domestic Dispute",
+      "drugTrafficking%": "Drug Trafficking",
+      "educationWaiver%": "Education Waiver Request",
+      "eeoHarassment%": "EEO/Harassment",
+      "embezzlement%": "Embezzlement",
+      "extortion%": "Extortion",
+      "fraud%": "Fraud",
+      "government%": "Government",
+      "investorComplaint%": "Investor Complaint",
+      "laborRacketeering%": "Labor Racketeering",
+      "local%": "Local",
+      "murder%": "Murder",
+      "newDrugFraud%": "New Drug Application Fraud",
+      "payoff%": "Payoff",
+      "pensionWaiver%": "Pension Waiver Request",
+      "pollution%": "Pollution",
+      "productTampering%": "Product Tampering",
+      "assetTheftMisuse%": "Theft or misuse of asset"
+    }
   },
   "cases.comp.actions": {
     "title": "Actions",
@@ -328,5 +363,4 @@
       "noSort": "(No Sort)"
     }
   }
-
 }

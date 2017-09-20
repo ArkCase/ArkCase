@@ -72,6 +72,13 @@
       "noPictureSelected": "de_No Files Selected.",
       "browse": "de_Browse",
       "description": "de_Description"
+    },
+    "dialog.edit": {
+      "title": "de_Edit Picture",
+      "setPrimary": "de_Set as Primary?",
+      "yes": "de_Yes",
+      "change": "de_Change Picture",
+      "save": "de_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "de_Enter Type",
       "value.label": "de_URL",
       "value.placeholder": "de_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Teilnehmer",
+    "table.columns": {
+      "type": "de_Type",
+      "name": "de_Name"
+    },
+    "dialogUserPicker": {
+      "header": "de_Choose User",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "id": "de_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "de_Choose Group",
+      "table.columns": {
+        "name": "de_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "Telefonnummern",
       "emails.label": "E-Mail-Adressen",
       "urls.label": "URL",
+      "participants.label": "Teilnehmer",
       "aliases.label": "Aliase",
       "organizations.label": "Organisationen",
       "ids.label": "Menschen ID",
