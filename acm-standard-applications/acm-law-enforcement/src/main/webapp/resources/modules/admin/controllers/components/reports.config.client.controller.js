@@ -35,7 +35,7 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
 
             $scope.reportsConfig = payload[3];
 
-            var host = $scope.params.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
+            var host = $scope.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
             $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
         });
 
