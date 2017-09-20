@@ -1,18 +1,21 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', '$q',
+angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', 'LookupService', '$q', '$sce',
 
-    function ($scope, reportsConfigService, $q) {
-		var deferred = $q.defer();
-		var tempReportsPromise = reportsConfigService.getReports();
+    function ($scope, reportsConfigService, LookupService, $q, $sce) {
+        var deferred = $q.defer();
+        var tempReportsPromise = reportsConfigService.getReports();
         var tempUserGroupsPromise = reportsConfigService.getUserGroups();
         var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
+        var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
         $scope.reports = [];
         $scope.reportsMap = [];
         $scope.userGroupsAll = [];
+        $scope.reportsConfig = null;
+        $scope.reportDesignerUrl = null;
 
         //wait all promises to resolve
-        $q.all([tempReportsPromise, tempUserGroupsPromise, tempReportsUserGroupsPromise]).then(function (payload) {
+        $q.all([tempReportsPromise, tempUserGroupsPromise, tempReportsUserGroupsPromise, promiseServerConfig]).then(function (payload) {
             //get all reports
             angular.forEach(payload[0].data, function (report) {
                 var element = new Object;
@@ -29,6 +32,11 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
 
             //get all reports user groups
             $scope.reportsUserGroups = payload[2].data;
+
+            $scope.reportsConfig = payload[3];
+
+            var host = $scope.params.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
+            $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
         });
 
         //callback function when report is selected
@@ -80,8 +88,14 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             }, function(){
                 deferred.reject();
             });
-            
+
             return deferred.promise;
         };
+
+        $scope.openPentaho = function() {
+            if ($scope.reportDesignerUrl) {
+                window.open($scope.reportDesignerUrl, '_blank');
+            }
+        }
     }
 ]);

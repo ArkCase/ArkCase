@@ -392,8 +392,13 @@
     "dashboard.title": "hi_Dashboard",
     "dashboard.config": "hi_Dashboard Configuration",
     "dashboard.widgets": "hi_Widgets",
-    "reports.title": "hi_Reports",
-    "reports.config": "hi_Reports Configuration",
+    "reports": {
+      "title": "hi_Reports",
+      "config": "hi_Reports Configuration",
+      "btn": {
+        "reportDesigner": "hi_Report Designer"
+      }
+    },
     "forms.title": "hi_Forms",
     "forms.config": "hi_Form Configuration",
     "workflows.title": "hi_Workflows",
