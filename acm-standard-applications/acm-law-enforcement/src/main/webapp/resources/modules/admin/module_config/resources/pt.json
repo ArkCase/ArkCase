@@ -392,8 +392,13 @@
     "dashboard.title": "pt_Dashboard",
     "dashboard.config": "pt_Dashboard Configuration",
     "dashboard.widgets": "pt_Widgets",
-    "reports.title": "pt_Reports",
-    "reports.config": "pt_Reports Configuration",
+    "reports": {
+      "title": "pt_Reports",
+      "config": "pt_Reports Configuration",
+      "btn": {
+        "reportDesigner": "pt_Report Designer"
+      }
+    },
     "forms.title": "pt_Forms",
     "forms.config": "pt_Form Configuration",
     "workflows.title": "pt_Workflows",

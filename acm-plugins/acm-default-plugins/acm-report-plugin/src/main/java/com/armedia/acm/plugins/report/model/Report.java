@@ -78,15 +78,35 @@ public class Report implements Serializable{
 	}
 
 	public void setPropertyName(String propertyName) {
-		if (propertyName == null) {
-			if (getName() != null && getName().length() > 5) {
-				String str = getName().replace(" ", "_").substring(0, getName().length()-5);
-				if (!str.equals(str.toUpperCase())) {
-					str = str.replaceAll("(?<!^)([a-z])([A-Z])", "$1_$2");
+		if (propertyName == null)
+		{
+			if (getName() != null)
+			{
+				int numberOfLettersInExtension = 0;
+				String[] splittedNameByDot = getName().split("\\.");
+
+				if (splittedNameByDot.length > 1)
+				{
+					String extension = splittedNameByDot[splittedNameByDot.length - 1];
+					if (extension != null)
+					{
+						numberOfLettersInExtension = extension.length();
+					}
 				}
-				this.propertyName = str.toUpperCase();
+
+				if (getName().length() >= numberOfLettersInExtension)
+				{
+					String str = getName().replace(" ", "_").substring(0, getName().length() - (numberOfLettersInExtension + 1));
+					if (!str.equals(str.toUpperCase()))
+					{
+						str = str.replaceAll("(?<!^)([a-z])([A-Z])", "$1_$2");
+					}
+					this.propertyName = str.toUpperCase();
+				}
 			}
-		} else {
+		}
+		else
+		{
 			this.propertyName = propertyName;			
 		}
 		
