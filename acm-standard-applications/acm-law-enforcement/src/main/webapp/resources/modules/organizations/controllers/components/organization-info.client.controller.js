@@ -25,9 +25,9 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
         $scope.addParent = function () {
 
             var params = {};
-            if ($scope.objectInfo.parentOrganization != null) {
-                params.organizationId = $scope.objectInfo.parentOrganization.organizationId;
-                params.organizationValue = $scope.objectInfo.parentOrganization.organizationValue;
+            //params.types = vm.organizationTypes;
+            if (!!$scope.objectInfo.organizationId) {
+                params.haveParent = $scope.objectInfo;
             }
 
             var modalInstance = $modal.open({
