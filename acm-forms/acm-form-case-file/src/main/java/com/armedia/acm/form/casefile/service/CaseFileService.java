@@ -27,9 +27,6 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
-import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -127,6 +124,8 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Create Frevvo form from CaseFile
         form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
 
+        updateXMLAttachment(attachments, getFormName(), form);
+
         // Save Attachments
         FrevvoUploadedFiles frevvoFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
@@ -213,12 +212,6 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Init Case File types
         caseFileForm.setCaseTypes(convertToList((String) getProperties().get(getFormName() + ".types"), ","));
 
-        // Init Initiator information
-        caseFileForm.setInitiatorId(initInitiator());
-
-        // Init People information
-        caseFileForm.setPeople(initPeople());
-
         JSONObject json = createResponse(caseFileForm);
 
         return json;
@@ -232,48 +225,6 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setIdentificationDao(IdentificationDao personIdentificationDao)
     {
         this.identificationDao = personIdentificationDao;
-    }
-
-    protected Long initInitiator()
-    {
-        InitiatorPerson initiator = new InitiatorPerson();
-
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        initiator.setTitles(titles);
-        initiator.setContactMethods(initContactMethods());
-        initiator.setOrganizations(initOrganizations());
-        initiator.setAddresses(initAddresses());
-        initiator.setType(CaseFileFormConstants.PERSON_TYPE_INITIATOR);
-        initiator.setTypes(convertToList((String) getProperties().get(getFormName() + ".personTypes"), ","));
-
-        return initiator.getId();
-    }
-
-    protected List<Person> initPeople()
-    {
-        List<Person> people = new ArrayList<>();
-
-        PeoplePerson peoplePerson = new PeoplePerson();
-
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        peoplePerson.setTitles(titles);
-        peoplePerson.setContactMethods(initContactMethods());
-        peoplePerson.setOrganizations(initOrganizations());
-        peoplePerson.setAddresses(initAddresses());
-
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".personTypes"), ",");
-
-        // Remove "Initiator". It's first in the list
-        if (types != null && types.size() > 0)
-        {
-            types.remove(0);
-        }
-
-        peoplePerson.setTypes(types);
-
-        people.add(peoplePerson);
-
-        return people;
     }
 
     protected JSONObject initParticipantsAndGroupsInfo()
