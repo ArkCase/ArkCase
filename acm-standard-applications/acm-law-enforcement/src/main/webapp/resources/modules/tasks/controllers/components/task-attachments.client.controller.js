@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal'
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
-    , function ($scope, $stateParams, $q, $modal
+    , function ($scope, $stateParams, $q, $modal, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
@@ -39,7 +39,10 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.fileTypes = [];
+                    for(var i = 0; i < data[1].length; i++){
+                        $scope.treeConfig.fileTypes.push({"type": data[1][i].key, "label": $translate.instant(data[1][i].value)})
+                    }
                     $scope.treeConfig.fileLanguages = data[2];
                 });
         };
