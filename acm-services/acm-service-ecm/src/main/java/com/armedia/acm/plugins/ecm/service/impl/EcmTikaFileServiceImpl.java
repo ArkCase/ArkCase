@@ -146,9 +146,27 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         fileMetadata.put("Content-Type", contentType);
         fileMetadata.put("File-Name-Extension", extension);
 
-        if (fileMetadata.containsKey("Creation-Date"))
+        // Creation-Date is not always trustworthy... some webcams produce values that make no sense, like the year 1903.
+        // Prefer a set of fields, whichever is set first -
+        String strCreated = null;
+        String[] preferredDateFieldsInOrder = {
+                "date",
+                "Last-Save-Date",
+                "Last-Modified",
+                "dcterms:modified",
+                "Creation-Date"
+        };
+        for (String preferredField : preferredDateFieldsInOrder)
         {
-            String strCreated = (String) fileMetadata.get("Creation-Date");
+            if (fileMetadata.containsKey(preferredField))
+            {
+                strCreated = (String) fileMetadata.get(preferredField);
+                break;
+            }
+        }
+
+        if (strCreated != null)
+        {
             LocalDateTime created = LocalDateTime.parse(strCreated, DateTimeFormatter.ISO_DATE_TIME);
             Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
             fileMetadata.put("Creation-Date-Local", createdDate);
