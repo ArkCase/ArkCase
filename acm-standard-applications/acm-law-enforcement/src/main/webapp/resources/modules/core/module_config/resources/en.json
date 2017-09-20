@@ -342,6 +342,29 @@
         "YE":  "Yemen",
         "ZM":  "Zambia",
         "ZW":  "Zimbabwe"
+      },
+      "costsheet": {
+      	"titles": {
+      	  "taxi": "Taxi",
+      	  "hotel": "Hotel",
+      	  "overtime": "Overtime",
+      	  "food": "Food"
+      	}
+      },
+      "timesheet": {
+      	"statuses": {
+      	  "draft": "Draft",
+      	  "inapproval": "In Approval",
+      	  "approved": "Approved"
+      	}
+      },
+      "changeCase": {
+      	"statuses": {
+      	  "active": "Active",
+      	  "inactive": "Inactive",
+      	  "closed": "Closed",
+      	  "deleted": "Deleted"
+      	}
       }
     },
     "userInfo": {

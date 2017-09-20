@@ -25,24 +25,6 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
-    <bean id="securityTagTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityTagTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="securityFieldTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityFieldTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
     <bean id="localeSettingsJson" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
@@ -259,16 +241,6 @@
                     <property name="configName" value="objectTypes"/>
                     <property name="configDescription" value="Object Types"/>
                     <property name="json" ref="objectTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="securityTagTypes"/>
-                    <property name="configDescription" value="Security Tag Types"/>
-                    <property name="json" ref="securityTagTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="securityFieldTypes"/>
-                    <property name="configDescription" value="Security Field Types"/>
-                    <property name="json" ref="securityFieldTypesJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="localeSettings"/>

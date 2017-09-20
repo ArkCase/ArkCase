@@ -35,10 +35,12 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.service.CostsheetEventPublisher;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -95,6 +97,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     private EcmFileDao ecmFileDao;
     private CaseFileFactory caseFileFactory;
     private AcmUserActionExecutor userActionExecutor;
+    private LookupDao lookupDao;
+    private TranslationService translationService;
 
     private SaveComplaintTransaction saveComplaintTransaction;
     private EcmFileService ecmFileService;
@@ -777,5 +781,25 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     public void setFrevvoFormServiceFactory(FrevvoFormServiceFactory frevvoFormServiceFactory)
     {
         this.frevvoFormServiceFactory = frevvoFormServiceFactory;
+    }
+
+    public LookupDao getLookupDao()
+    {
+        return lookupDao;
+    }
+
+    public void setLookupDao(LookupDao lookupDao)
+    {
+        this.lookupDao = lookupDao;
+    }
+
+    public TranslationService getTranslationService()
+    {
+        return translationService;
+    }
+
+    public void setTranslationService(TranslationService translationService)
+    {
+        this.translationService = translationService;
     }
 }

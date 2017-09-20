@@ -14,20 +14,10 @@
     </bean>
 
     <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" scope="prototype">
-        <property name="costFactory" ref="costFactory"/>
-        <property name="properties" ref="acm-form-properties" />
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService" />
-        <property name="userDao" ref="userJpaDao" />
-        <property name="userActionDao" ref="userActionDao" />
-        <property name="userActionExecutor" ref="userActionExecutor"/>
+        <property name="costFactory" ref="costFactory"/>        
         <property name="costsheetService" ref="costsheetService" />
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
-        <property name="searchResults" ref="searchResults"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
     </bean>
 

@@ -8,7 +8,6 @@ import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -20,9 +19,6 @@ import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
-import com.armedia.acm.services.config.lookups.service.LookupDao;
-import com.armedia.acm.services.labels.service.TranslationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
@@ -39,7 +35,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -50,13 +45,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
 
     private SaveComplaintTransaction saveComplaintTransaction;
-    private AcmPluginManager acmPluginManager;
     private PersonDao personDao;
     private ComplaintEventPublisher complaintEventPublisher;
     private TagService tagService;
     private AssociatedTagService associatedTagService;
-    private LookupDao lookupDao;
-    private TranslationService translationService;
 
     private ComplaintFactory complaintFactory;
 
@@ -250,12 +242,9 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact initiator = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + translationService.translate(entry.getValue()))
-                .collect(Collectors.toList());
         List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
 
-        mainInformation.setTitles(titles);
+        mainInformation.setTitles(getStandardLookupEntries("personTitles"));
         mainInformation.setAnonymous("");
         mainInformation.setTypes(types);
         mainInformation.setType("Initiator");
@@ -313,9 +302,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact people = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("personTitles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + translationService.translate(entry.getValue()))
-                .collect(Collectors.toList());
         List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
 
         if (types != null && types.size() > 0)
@@ -323,7 +309,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             types.remove(0);
         }
 
-        mainInformation.setTitles(titles);
+        mainInformation.setTitles(getStandardLookupEntries("personTitles"));
         mainInformation.setAnonymous("");
         mainInformation.setTypes(types);
 
@@ -534,25 +520,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     }
 
     /**
-     * @return the acmPluginManager
-     */
-    @Override
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    /**
-     * @param acmPluginManager
-     *            the acmPluginManager to set
-     */
-    @Override
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
-    }
-
-    /**
      * @return the personDao
      */
     public PersonDao getPersonDao()
@@ -597,25 +564,5 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     public void setAssociatedTagService(AssociatedTagService associatedTagService)
     {
         this.associatedTagService = associatedTagService;
-    }
-
-    public LookupDao getLookupDao()
-    {
-        return lookupDao;
-    }
-
-    public void setLookupDao(LookupDao lookupDao)
-    {
-        this.lookupDao = lookupDao;
-    }
-
-    public TranslationService getTranslationService()
-    {
-        return translationService;
-    }
-
-    public void setTranslationService(TranslationService translationService)
-    {
-        this.translationService = translationService;
     }
 }

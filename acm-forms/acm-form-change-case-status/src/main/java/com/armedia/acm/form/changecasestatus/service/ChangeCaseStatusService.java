@@ -14,6 +14,7 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.services.users.model.AcmUserActionName;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,8 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
     private ChangeCaseStatusDao changeCaseStatusDao;
     private ApplicationEventPublisher applicationEventPublisher;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
      */
     @Override
@@ -54,12 +56,12 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String, org.springframework.util.MultiValueMap)
      */
     @Override
-    public boolean save(String xml,
-                        MultiValueMap<String, MultipartFile> attachments) throws Exception
+    public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
     {
 
         String mode = getRequest().getParameter("mode");
@@ -101,7 +103,8 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
             {
                 Long changeCaseStatusId = Long.parseLong(requestId);
                 changeCaseStatusFromDatabase = getChangeCaseStatusDao().find(changeCaseStatusId);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LOG.warn("Close Case Request with id=" + requestId + " is not found. The new request will be recorded in the database.");
             }
@@ -118,11 +121,14 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         if (!"edit".equals(mode))
         {
             // Record user action
-            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_CREATED, getAuthentication().getName());
-        } else
+            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_CREATED,
+                    getAuthentication().getName());
+        }
+        else
         {
             // Record user action
-            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_MODIFIED, getAuthentication().getName());
+            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CHANGE_CASE_STATUS_MODIFIED,
+                    getAuthentication().getName());
         }
 
         // Update Status to "IN APPROVAL"
@@ -134,13 +140,11 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
 
         // Save attachments (or update XML form and PDF form if the mode is "edit")
         String cmisFolderId = findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
-        FrevvoUploadedFiles uploadedFiles = saveAttachments(
-                attachments,
-                cmisFolderId,
-                FrevvoFormName.CASE_FILE.toUpperCase(),
+        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, FrevvoFormName.CASE_FILE.toUpperCase(),
                 caseFile.getId());
 
-        ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
+        ChangeCaseStatusFormEvent event = new ChangeCaseStatusFormEvent(caseFile.getCaseNumber(), caseFile.getId(), savedRequest,
+                uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
         getApplicationEventPublisher().publishEvent(event);
 
         return true;
@@ -168,7 +172,8 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         {
             information.setDate(new Date());
         }
-        information.setResolveOptions(convertToList((String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".statuses"), ","));
+
+        information.setResolveOptions(getStandardLookupEntries("changeCaseStatuses"));
 
         String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
         List<String> resolutions = convertToList(caseResolutions, ",");
@@ -190,7 +195,8 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
     }
 
     /**
-     * @param caseFileDao the caseFileDao to set
+     * @param caseFileDao
+     *            the caseFileDao to set
      */
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
@@ -212,8 +218,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         return applicationEventPublisher;
     }
 
-    public void setApplicationEventPublisher(
-            ApplicationEventPublisher applicationEventPublisher)
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
     }
@@ -224,5 +229,4 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
         // Implementation no needed so far
         return null;
     }
-
 }
