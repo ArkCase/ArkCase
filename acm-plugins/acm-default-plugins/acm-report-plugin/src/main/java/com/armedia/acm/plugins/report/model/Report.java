@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.plugins.report.model;
 
@@ -16,230 +16,266 @@ import java.util.Date;
 
 /**
  * @author riste.tutureski
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class Report implements Serializable{
+public class Report implements Serializable
+{
 
-	private static final long serialVersionUID = -8652555531179054044L;
-	
-	private String id;
-	private String name;
-	private String propertyName;
-	private String title;
-	private String description;
-	private Long fileSize;
-	
-	@XmlElement(name="createdDate")
-	@XmlJavaTypeAdapter(value=DateMillisecondAdapter.class)
-	private Date created;
-	
-	@XmlElement(name="lastModifiedDate")
-	@XmlJavaTypeAdapter(value=DateMillisecondAdapter.class)
-	private Date modified;
-	
-	private boolean folder;
-	private boolean hidden;
-	private boolean locked;
-	private String path;
-	private String propertyPath;
-	private String versionId;
-	private boolean versioned;
-	private String locale;
-	private boolean injected;
-	
-	@XmlElement(name="localePropertiesMapEntries")
-	private ReportProperties properties;
-	
-	public String getId() {
-		return id;
-	}
-	
-	public void setId(String id) {
-		this.id = id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-		
-		setPropertyName(null);
-	}
-	
-	public String getPropertyName() {
-		if (propertyName == null) {
-			setPropertyName(null);
-		}
-		return propertyName;
-	}
+    private static final long serialVersionUID = -8652555531179054044L;
 
-	public void setPropertyName(String propertyName) {
-		if (propertyName == null)
-		{
-			if (getName() != null)
-			{
-				int numberOfLettersInExtension = 0;
-				String[] splittedNameByDot = getName().split("\\.");
+    private String id;
+    private String name;
+    private String propertyName;
+    private String title;
+    private String description;
+    private Long fileSize;
 
-				if (splittedNameByDot.length > 1)
-				{
-					String extension = splittedNameByDot[splittedNameByDot.length - 1];
-					if (extension != null)
-					{
-						numberOfLettersInExtension = extension.length();
-					}
-				}
+    @XmlElement(name = "createdDate")
+    @XmlJavaTypeAdapter(value = DateMillisecondAdapter.class)
+    private Date created;
 
-				if (getName().length() >= numberOfLettersInExtension)
-				{
-					String str = getName().replace(" ", "_").substring(0, getName().length() - (numberOfLettersInExtension + 1));
-					if (!str.equals(str.toUpperCase()))
-					{
-						str = str.replaceAll("(?<!^)([a-z])([A-Z])", "$1_$2");
-					}
-					this.propertyName = str.toUpperCase();
-				}
-			}
-		}
-		else
-		{
-			this.propertyName = propertyName;			
-		}
-		
-	}
+    @XmlElement(name = "lastModifiedDate")
+    @XmlJavaTypeAdapter(value = DateMillisecondAdapter.class)
+    private Date modified;
 
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	public Long getFileSize() {
-		return fileSize;
-	}
-	
-	public void setFileSize(Long fileSize) {
-		this.fileSize = fileSize;
-	}
-	
-	public Date getCreated() {
-		return created;
-	}
-	
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-	
-	public Date getModified() {
-		return modified;
-	}
-	
-	public void setModified(Date modified) {
-		this.modified = modified;
-	}
-	
-	public boolean isFolder() {
-		return folder;
-	}
-	
-	public void setFolder(boolean folder) {
-		this.folder = folder;
-	}
-	
-	public boolean isHidden() {
-		return hidden;
-	}
-	
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
-	
-	public boolean isLocked() {
-		return locked;
-	}
-	
-	public void setLocked(boolean locked) {
-		this.locked = locked;
-	}
-	
-	public String getPath() {
-		return path;
-	}
-	
-	public void setPath(String path) {
-		this.path = path;
-		
-		setPropertyPath(null);
-	}
-	
-	public String getPropertyPath() {
-		if (propertyPath == null) {
-			setPropertyPath(null);
-		}
-		return propertyPath;
-	}
+    private boolean folder;
+    private boolean hidden;
+    private boolean locked;
+    private String path;
+    private String propertyPath;
+    private String versionId;
+    private boolean versioned;
+    private String locale;
+    private boolean injected;
 
-	public void setPropertyPath(String propertyPath) {
-		if (propertyPath == null) {
-			if (getPath() != null) {
-				this.propertyPath = getPath().replace("/", ":");
-			}
-		} else {
-			this.propertyPath = propertyPath;
-		}
-	}
+    @XmlElement(name = "localePropertiesMapEntries")
+    private ReportProperties properties;
 
-	public String getVersionId() {
-		return versionId;
-	}
-	
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
-	}
-	
-	public boolean isVersioned() {
-		return versioned;
-	}
-	
-	public void setVersioned(boolean versioned) {
-		this.versioned = versioned;
-	}
+    public String getId()
+    {
+        return id;
+    }
 
-	public String getLocale() {
-		return locale;
-	}
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public boolean isInjected() {
-		return injected;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
 
-	public void setInjected(boolean injected) {
-		this.injected = injected;
-	}
+        setPropertyName(null);
+    }
 
-	public ReportProperties getProperties() {
-		return properties;
-	}
+    public String getPropertyName()
+    {
+        if (propertyName == null)
+        {
+            setPropertyName(null);
+        }
+        return propertyName;
+    }
 
-	public void setProperties(ReportProperties properties) {
-		this.properties = properties;
-	}
+    public void setPropertyName(String propertyName)
+    {
+        if (propertyName == null)
+        {
+            String reportName = getName();
+            if (reportName != null)
+            {
+                int lastDot = reportName.lastIndexOf(".");
+                String noExtension = lastDot > 0 ? reportName.substring(0, lastDot) : reportName;
+
+                String goodPropertyName = noExtension.replace(" ", "_");
+
+
+                if (!goodPropertyName.equals(goodPropertyName.toUpperCase()))
+                {
+                    // convert camelCase to underscore-separated, e.g. ReportName becoems Report_Name
+                    goodPropertyName = goodPropertyName.replaceAll("(?<!^)([a-z])([A-Z])", "$1_$2");
+                }
+                goodPropertyName = goodPropertyName.toUpperCase();
+
+                this.propertyName = goodPropertyName;
+            }
+        }
+        else
+        {
+            this.propertyName = propertyName;
+        }
+
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public Long getFileSize()
+    {
+        return fileSize;
+    }
+
+    public void setFileSize(Long fileSize)
+    {
+        this.fileSize = fileSize;
+    }
+
+    public Date getCreated()
+    {
+        return created;
+    }
+
+    public void setCreated(Date created)
+    {
+        this.created = created;
+    }
+
+    public Date getModified()
+    {
+        return modified;
+    }
+
+    public void setModified(Date modified)
+    {
+        this.modified = modified;
+    }
+
+    public boolean isFolder()
+    {
+        return folder;
+    }
+
+    public void setFolder(boolean folder)
+    {
+        this.folder = folder;
+    }
+
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden)
+    {
+        this.hidden = hidden;
+    }
+
+    public boolean isLocked()
+    {
+        return locked;
+    }
+
+    public void setLocked(boolean locked)
+    {
+        this.locked = locked;
+    }
+
+    public String getPath()
+    {
+        return path;
+    }
+
+    public void setPath(String path)
+    {
+        this.path = path;
+
+        setPropertyPath(null);
+    }
+
+    public String getPropertyPath()
+    {
+        if (propertyPath == null)
+        {
+            setPropertyPath(null);
+        }
+        return propertyPath;
+    }
+
+    public void setPropertyPath(String propertyPath)
+    {
+        if (propertyPath == null)
+        {
+            if (getPath() != null)
+            {
+                this.propertyPath = getPath().replace("/", ":");
+            }
+        }
+        else
+        {
+            this.propertyPath = propertyPath;
+        }
+    }
+
+    public String getVersionId()
+    {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId)
+    {
+        this.versionId = versionId;
+    }
+
+    public boolean isVersioned()
+    {
+        return versioned;
+    }
+
+    public void setVersioned(boolean versioned)
+    {
+        this.versioned = versioned;
+    }
+
+    public String getLocale()
+    {
+        return locale;
+    }
+
+    public void setLocale(String locale)
+    {
+        this.locale = locale;
+    }
+
+    public boolean isInjected()
+    {
+        return injected;
+    }
+
+    public void setInjected(boolean injected)
+    {
+        this.injected = injected;
+    }
+
+    public ReportProperties getProperties()
+    {
+        return properties;
+    }
+
+    public void setProperties(ReportProperties properties)
+    {
+        this.properties = properties;
+    }
 }
