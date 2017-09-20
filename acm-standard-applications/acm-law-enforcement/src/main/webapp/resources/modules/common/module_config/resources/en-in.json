@@ -1,6 +1,8 @@
 {
   "common": {
     "select.option.none": "(Select One)",
+    "value.unknown": "Unknown",
+
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
@@ -55,7 +57,7 @@
       "type": "Type",
       "created": "Created",
       "modified": "Modified",
-      "author": "Author",
+      "modifier": "Modified By",
       "version": "Version",
       "status": "Status"
     },
@@ -141,6 +143,16 @@
     "edtPlaceholder": "Type in to search",
     "noData.text": "No Results"
   },
+  "common.directive.search": {
+    "showMore.button.text": "Show More Values",
+    "showLess.button.text": "Show Less Values",
+    "results.text": "Results",
+    "noResults.text": "No Results",
+    "tooltip": {
+      "collapseFacetList": "Collapse Facet List",
+      "expandFacetList": "Expand Facet List"
+    }
+  },
   "common.directive.coreNotes": {
     "title": "Notes",
     "modal.addNote": "Add Note",
@@ -224,7 +236,13 @@
   "common.directive.coreCalendar": {
     "title": "en-in_Calendar",
     "start.label": "en-in_Start: ",
-    "end.label": "en-in_End: "
+    "end.label": "en-in_End: ",
+    "message": {
+      "error.accessDenied": "en-in_Access denied to calendar service.",
+      "error.serviceConfiguration": "en-in_Invalid calendar service configuration.",
+      "error.serviceCredentials": "en-in_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "en-in_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "Participants",

@@ -241,27 +241,25 @@
           ]
         },
         {
-          "id": "locations",
+          "id": "addresses",
           "type": "component",
           "columnDefs": [
             {
               "name": "streetAddress",
               "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.streetAddress' title='{{row.entity.streetAddress}}' class='ui-grid-cell-contents'></div>"
+              "headerCellFilter": "translate"
             },
             {
               "name": "modified",
               "displayName": "organizations.comp.addresses.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "width": 150
+              "enableCellEdit": false
             },
             {
               "name": "modifier",
               "displayName": "organizations.comp.addresses.table.columns.modifier",
               "headerCellFilter": "translate",
-              "width": 150,
               "lookup": "userFullNames"
             }
           ]
@@ -1066,7 +1064,7 @@
           "name": "person.givenName",
           "displayName": "organizations.comp.people.table.columns.firstName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}}<\/a>"
+          "cellTemplate": "<a class='primary' data-ui-sref=\"people.main({id: row.entity.person.id})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary </span>"
         },
         {
           "name": "person.familyName",

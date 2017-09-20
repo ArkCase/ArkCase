@@ -216,6 +216,28 @@
       "value.placeholder": "hi_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "प्रतिभागियों",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -415,7 +437,7 @@
       "identificationNumber.placeholder": "hi_Enter Identification Number",
       "identificationIssuer": "hi_Identification Issuer",
       "identificationIssuer.placeholder": "hi_Enter Identification Issuer",
-      "identificationYearIssued": "hi_Identification Issued",
+      "identificationYearIssued": "hi_Identification Issued Date",
       "identificationYearIssued.placeholder": "hi_Select Identification Issued",
       "identificationYearIssued.close.button": "hi_Close"
     },
@@ -430,6 +452,7 @@
       "faxes.label": "फैक्स नंबर",
       "emails.label": "ईमेल पते",
       "urls.label": "यूआरएल",
+      "participants.label": "प्रतिभागियों को",
       "dbas.label": "DBA",
       "people.label": "लोग",
       "ids.label": "संगठन संख्या",
