@@ -28,7 +28,7 @@ angular.module('people').config(['$stateProvider',
                 url: '/:id/main',
                 templateUrl: 'modules/people/views/components/person-main.client.view.html',
                 params: {
-                    "type": "PEOPLE"
+                    "type": "PERSON"
                 }
             })
 

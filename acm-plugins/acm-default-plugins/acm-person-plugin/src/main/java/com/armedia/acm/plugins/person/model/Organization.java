@@ -41,6 +41,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     private List<String> organizationTypes;
 
     @Column(name = "cm_organization_value")
+    @Size(min=1)
     private String organizationValue;
 
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
