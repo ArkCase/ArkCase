@@ -271,6 +271,10 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 params.typeDisabled = true;
             }
             else {
+                var initiatorIndex = $scope.personTypes.indexOf($scope.frevvoPersonTypes.initiatorType);
+                if(initiatorIndex != -1) {
+                    $scope.personTypes.splice(initiatorIndex, 1);
+                }
                 params.typeDisabled = false;
             }
 

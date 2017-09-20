@@ -11,6 +11,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="personDao" ref="acmPersonDao" />
+        <property name="personAssociationDao" ref="acmPersonAssociationDao" />
     </bean>
 
     <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" scope="prototype">

@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.form.config.xml.PeopleItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.plugins.person.model.Person;
@@ -40,7 +41,7 @@ public class CaseFileForm {
 	private Long initiatorId;
 	private String initiatorFullName;
 	private String personType;
-	private List<Person> people;
+	private List<PeopleItem> people;
 	
 	@XmlElement(name="caseId")
 	public Long getId() {
@@ -184,13 +185,14 @@ public class CaseFileForm {
 		this.personType = personType;
 	}
 
-	@XmlElement(name="people", type=PeoplePerson.class)
-	public List<Person> getPeople() {
+	@XmlElement(name="peopleItem", type=PeopleItem.class)
+	public List<PeopleItem> getPeople()
+	{
 		return people;
 	}
 
-	public void setPeople(List<Person> people) {
+	public void setPeople(List<PeopleItem> people)
+	{
 		this.people = people;
 	}
-	
 }
