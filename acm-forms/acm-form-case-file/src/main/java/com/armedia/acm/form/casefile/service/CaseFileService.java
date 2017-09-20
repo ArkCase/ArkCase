@@ -31,9 +31,6 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
 import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
-import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
-import com.armedia.acm.services.config.lookups.service.LookupDao;
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
@@ -50,7 +47,6 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -67,13 +63,9 @@ public class CaseFileService extends FrevvoFormAbstractService
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private CaseFileEventUtility caseFileEventUtility;
     private String caseFolderNameFormat;
-    private LookupDao lookupDao;
-
     private RuntimeService activitiRuntimeService;
 
     private CaseFile caseFile;
-
-    private FunctionalAccessService functionalAccessService;
 
     /*
      * (non-Javadoc)
@@ -241,9 +233,7 @@ public class CaseFileService extends FrevvoFormAbstractService
     {
         InitiatorPerson initiator = new InitiatorPerson();
 
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("titles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
-        initiator.setTitles(titles);
+        initiator.setTitles(getStandardLookupEntries("personTitles"));
         initiator.setContactMethods(initContactMethods());
         initiator.setOrganizations(initOrganizations());
         initiator.setAddresses(initAddresses());
@@ -259,9 +249,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
         PeoplePerson peoplePerson = new PeoplePerson();
 
-        List<StandardLookupEntry> titlesEntries = (List<StandardLookupEntry>) lookupDao.getLookupByName("titles").getEntries();
-        List<String> titles = titlesEntries.stream().map(entry -> entry.getKey() + "=" + entry.getValue()).collect(Collectors.toList());
-        peoplePerson.setTitles(titles);
+        peoplePerson.setTitles(getStandardLookupEntries("personTitles"));
         peoplePerson.setContactMethods(initContactMethods());
         peoplePerson.setOrganizations(initOrganizations());
         peoplePerson.setAddresses(initAddresses());
@@ -565,18 +553,6 @@ public class CaseFileService extends FrevvoFormAbstractService
         this.caseFile = caseFile;
     }
 
-    @Override
-    public FunctionalAccessService getFunctionalAccessService()
-    {
-        return functionalAccessService;
-    }
-
-    @Override
-    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
-    {
-        this.functionalAccessService = functionalAccessService;
-    }
-
     public CaseFileEventUtility getCaseFileEventUtility()
     {
         return caseFileEventUtility;
@@ -595,15 +571,5 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setCaseFolderNameFormat(String caseFolderNameFormat)
     {
         this.caseFolderNameFormat = caseFolderNameFormat;
-    }
-
-    public LookupDao getLookupDao()
-    {
-        return lookupDao;
-    }
-
-    public void setLookupDao(LookupDao lookupDao)
-    {
-        this.lookupDao = lookupDao;
     }
 }

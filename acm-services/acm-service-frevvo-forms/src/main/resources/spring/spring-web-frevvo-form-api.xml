@@ -50,6 +50,8 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
         <property name="frevvoFormServiceFactory" ref="frevvoFormServiceFactory"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
 	</bean>
 
 </beans>

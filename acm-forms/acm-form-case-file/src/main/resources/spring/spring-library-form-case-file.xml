@@ -12,30 +12,16 @@
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
-    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" scope="prototype">
+    <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" parent="frevvoFormService" scope="prototype">
         <property name="caseFileFactory" ref="caseFileFactory"/>
-        <property name="objectAssociationDao" ref="objectAssociationDao"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="properties" ref="acm-form-properties"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="userActionDao" ref="userActionDao"/>
-        <property name="userActionExecutor" ref="userActionExecutor"/>
         <property name="saveCaseService" ref="saveCaseService"/>
-        <property name="acmHistoryDao" ref="acmHistoryDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="acmHistoryDao" ref="acmHistoryDao"/>        
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="identificationDao" ref="acmIdentificationDao"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
-        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
-        <property name="functionalAccessService" ref="functionalAccessService"/>
-        <property name="searchResults" ref="searchResults"/>
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>        
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="caseFolderNameFormat" value="Case (%s)"/>
-        <property name="lookupDao" ref="lookupDao"/>
     </bean>
 
     <bean id="caseFileUpdatedListener" class="com.armedia.acm.form.casefile.service.CaseFileUpdatedListener">

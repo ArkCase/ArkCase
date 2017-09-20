@@ -76,6 +76,8 @@ public class FrevvoFormServiceFactory
             service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setMuleContextManager(frevvoFormController.getMuleContextManager());
+            service.setLookupDao(frevvoFormController.getLookupDao());
+            service.setTranslationService(frevvoFormController.getTranslationService());
 
             return service;
         }

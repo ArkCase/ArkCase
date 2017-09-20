@@ -1,15 +1,25 @@
 /**
- * 
+ *
  */
 package com.armedia.acm.form.closecomplaint.service;
 
-import java.util.Date;
-
+import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.closecomplaint.model.CloseComplaintFormEvent;
+import com.armedia.acm.form.closecomplaint.model.ExistingCase;
+import com.armedia.acm.form.closecomplaint.model.ReferExternal;
+import com.armedia.acm.form.config.ResolveInformation;
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
+import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
+import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
+import com.armedia.acm.plugins.complaint.model.Complaint;
+import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
+import com.armedia.acm.services.users.model.AcmUserActionName;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,201 +28,204 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
-import com.armedia.acm.form.closecomplaint.model.ExistingCase;
-import com.armedia.acm.form.closecomplaint.model.ReferExternal;
-import com.armedia.acm.form.config.ResolveInformation;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
-import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
-import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
-import com.armedia.acm.plugins.complaint.model.Complaint;
-import com.armedia.acm.plugins.complaint.model.ComplaintUpdatedEvent;
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
-import com.armedia.acm.services.users.model.AcmUserActionName;
+import java.util.Date;
 
 /**
  * @author riste.tutureski
- *
  */
-public class CloseComplaintService extends FrevvoFormAbstractService {
+public class CloseComplaintService extends FrevvoFormAbstractService
+{
 
-	private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
-	private ComplaintDao complaintDao;
-	private CaseFileDao caseFileDao;
+    private Logger LOG = LoggerFactory.getLogger(CloseComplaintService.class);
+    private ComplaintDao complaintDao;
+    private CaseFileDao caseFileDao;
     private CloseComplaintRequestDao closeComplaintRequestDao;
-	private ApplicationEventPublisher applicationEventPublisher;
-	private AcmPluginManager acmPluginManager;
-	private FunctionalAccessService functionalAccessService;
-	private CloseComplaintRequestFactory closeComplaintRequestFactory;
+    private ApplicationEventPublisher applicationEventPublisher;
+    private CloseComplaintRequestFactory closeComplaintRequestFactory;
 
-	/* (non-Javadoc)
-	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
-	 */
-	@Override
-	public Object get(String action) {
-		Object result = null;
-		
-		if (action != null) {
-			if ("init-form-data".equals(action)) {
-				result = initFormData();
-			}
-			
-			if ("case".equals(action)) {
-				String caseNumber = getRequest().getParameter("caseNumber");
-				result = getCase(caseNumber);
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
+     */
+    @Override
+    public Object get(String action)
+    {
+        Object result = null;
 
-			}
-		}
-		
-		return result;
-	}
+        if (action != null)
+        {
+            if ("init-form-data".equals(action))
+            {
+                result = initFormData();
+            }
 
-	/* (non-Javadoc)
-	 * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String, org.springframework.util.MultiValueMap)
-	 */
-	@Override
-	public boolean save(String xml,
-			MultiValueMap<String, MultipartFile> attachments) throws Exception {
+            if ("case".equals(action))
+            {
+                String caseNumber = getRequest().getParameter("caseNumber");
+                result = getCase(caseNumber);
 
-		String mode = getRequest().getParameter("mode");
-		
-		// Convert XML data to Object
-		CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
-		
-		if (form == null){
-			LOG.warn("Cannot unmarshall Close Complaint Form.");
-			return false;
-		}
-		
-		// Get Complaint depends on the complaint ID
-		Complaint complaint = getComplaintDao().find(form.getInformation().getId());
-		
-		if (complaint == null) {
-			LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getId());
-			return false;
-		}
-		
-		if (("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())) && !"edit".equals(mode)){
-			LOG.info("The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.");
-			return true;
-		}
+            }
+        }
+
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String, org.springframework.util.MultiValueMap)
+     */
+    @Override
+    public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
+    {
+
+        String mode = getRequest().getParameter("mode");
+
+        // Convert XML data to Object
+        CloseComplaintForm form = (CloseComplaintForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
+
+        if (form == null)
+        {
+            LOG.warn("Cannot unmarshall Close Complaint Form.");
+            return false;
+        }
+
+        // Get Complaint depends on the complaint ID
+        Complaint complaint = getComplaintDao().find(form.getInformation().getId());
+
+        if (complaint == null)
+        {
+            LOG.warn("Cannot find complaint by given complaintId=" + form.getInformation().getId());
+            return false;
+        }
+
+        if (("IN APPROVAL".equals(complaint.getStatus()) || "CLOSED".equals(complaint.getStatus())) && !"edit".equals(mode))
+        {
+            LOG.info("The complaint is already in '" + complaint.getStatus() + "' mode. No further action will be taken.");
+            return true;
+        }
 
         CloseComplaintRequest closeComplaintRequest = getCloseComplaintRequestFactory().fromFormXml(form, getAuthentication());
-        
-        if ("edit".equals(mode)){
-        	String requestId = getRequest().getParameter("requestId");
-        	CloseComplaintRequest closeComplaintRequestFromDatabase = null;
-        	try{
-	        	Long closeComplaintRequestId = Long.parseLong(requestId);
-	        	closeComplaintRequestFromDatabase = getCloseComplaintRequestDao().find(closeComplaintRequestId);
-        	}
-        	catch(Exception e)
-        	{
-        		LOG.warn("Close Complaint Request with id=" + requestId + " is not found. The new request will be recorded in the database.");
-        	}
-        	
-        	if (null != closeComplaintRequestFromDatabase){
-        		closeComplaintRequest.setId(closeComplaintRequestFromDatabase.getId());
-        		getCloseComplaintRequestDao().delete(closeComplaintRequestFromDatabase.getParticipants());
-        	}
+
+        if ("edit".equals(mode))
+        {
+            String requestId = getRequest().getParameter("requestId");
+            CloseComplaintRequest closeComplaintRequestFromDatabase = null;
+            try
+            {
+                Long closeComplaintRequestId = Long.parseLong(requestId);
+                closeComplaintRequestFromDatabase = getCloseComplaintRequestDao().find(closeComplaintRequestId);
+            }
+            catch (Exception e)
+            {
+                LOG.warn("Close Complaint Request with id=" + requestId
+                        + " is not found. The new request will be recorded in the database.");
+            }
+
+            if (null != closeComplaintRequestFromDatabase)
+            {
+                closeComplaintRequest.setId(closeComplaintRequestFromDatabase.getId());
+                getCloseComplaintRequestDao().delete(closeComplaintRequestFromDatabase.getParticipants());
+            }
         }
-        
+
         CloseComplaintRequest savedRequest = getCloseComplaintRequestDao().save(closeComplaintRequest);
-        
+
         if (!"edit".equals(mode))
         {
-        	// Record user action
-        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_CREATED, getAuthentication().getName());
+            // Record user action
+            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_CREATED,
+                    getAuthentication().getName());
         }
         else
         {
-        	// Record user action
-        	getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_MODIFIED, getAuthentication().getName());
+            // Record user action
+            getUserActionExecutor().execute(savedRequest.getId(), AcmUserActionName.LAST_CLOSE_COMPLAINT_MODIFIED,
+                    getAuthentication().getName());
         }
-		
-		// Update Status to "IN APPROVAL"
-		if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode)){
-			complaint.setStatus("IN APPROVAL");
-			Complaint updatedComplaint = getComplaintDao().save(complaint);
 
-			ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
-			complaintUpdatedEvent.setSucceeded(true);
-			getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
-		}
-		
-		// Save attachments (or update XML form and PDF form if the mode is "edit")
+        // Update Status to "IN APPROVAL"
+        if (!complaint.getStatus().equals("IN APPROVAL") && !"edit".equals(mode))
+        {
+            complaint.setStatus("IN APPROVAL");
+            Complaint updatedComplaint = getComplaintDao().save(complaint);
+
+            ComplaintUpdatedEvent complaintUpdatedEvent = new ComplaintUpdatedEvent(updatedComplaint);
+            complaintUpdatedEvent.setSucceeded(true);
+            getApplicationEventPublisher().publishEvent(complaintUpdatedEvent);
+        }
+
+        // Save attachments (or update XML form and PDF form if the mode is "edit")
         String cmisFolderId = findFolderIdForAttachments(complaint.getContainer(), complaint.getObjectType(), complaint.getId());
-		FrevvoUploadedFiles uploadedFiles = saveAttachments(
-                attachments,
-                cmisFolderId,
-                FrevvoFormName.COMPLAINT.toUpperCase(),
+        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, cmisFolderId, FrevvoFormName.COMPLAINT.toUpperCase(),
                 complaint.getComplaintId());
 
-		CloseComplaintFormEvent event = new CloseComplaintFormEvent(
-				complaint.getComplaintNumber(), complaint.getComplaintId(), savedRequest, uploadedFiles, mode,
-				getAuthentication().getName(), getUserIpAddress(), true);
-				getApplicationEventPublisher().publishEvent(event);
-		
-		return true;
-	}
-	
-	private Object initFormData(){
+        CloseComplaintFormEvent event = new CloseComplaintFormEvent(complaint.getComplaintNumber(), complaint.getComplaintId(),
+                savedRequest, uploadedFiles, mode, getAuthentication().getName(), getUserIpAddress(), true);
+        getApplicationEventPublisher().publishEvent(event);
 
-		String mode = getRequest().getParameter("mode");
-		CloseComplaintForm closeComplaint = new CloseComplaintForm();
-		
-		ResolveInformation information = new ResolveInformation();
-		if (!"edit".equals(mode))
-		{
-			information.setDate(new Date());
-		}
-		information.setResolveOptions(convertToList((String) getProperties().get(getFormName() + ".dispositions"), ","));
-		
-		ReferExternal referExternal = new ReferExternal();
-		if (!"edit".equals(mode))
-		{
-			referExternal.setDate(new Date());
-		}
-		ContactMethod contact = new ContactMethod();
-		contact.setTypes(convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ","));
-		referExternal.setContact(contact);
-		
-		closeComplaint.setInformation(information);
-		closeComplaint.setReferExternal(referExternal);
-		
-		JSONObject json = createResponse(closeComplaint);
+        return true;
+    }
 
-		return json;
-	}
-	
-	private Object getCase(String caseNumber){
-		CloseComplaintForm closeComplaint = new CloseComplaintForm();
-		ExistingCase existingCase = new ExistingCase();
+    private Object initFormData()
+    {
 
-		CaseFile caseFile = null;
-		
-		try{
-			caseFile = getCaseFileDao().findByCaseNumber(caseNumber);
-		}catch(Exception e){
-			LOG.warn("The case with number '" + caseNumber + "' doesn't exist.");
-		}
-		
-		if (caseFile != null){
-			existingCase.setCaseNumber(caseNumber);
-			existingCase.setCaseTitle(caseFile.getTitle());
-			existingCase.setCaseCreationDate(caseFile.getCreated());
-			existingCase.setCasePriority(caseFile.getPriority());
-		}
-		
-		closeComplaint.setExistingCase(existingCase);
-		
-		JSONObject json = createResponse(closeComplaint);
-		
-		return json;
-	}
+        String mode = getRequest().getParameter("mode");
+        CloseComplaintForm closeComplaint = new CloseComplaintForm();
+
+        ResolveInformation information = new ResolveInformation();
+        if (!"edit".equals(mode))
+        {
+            information.setDate(new Date());
+        }
+        information.setResolveOptions(convertToList((String) getProperties().get(getFormName() + ".dispositions"), ","));
+
+        ReferExternal referExternal = new ReferExternal();
+        if (!"edit".equals(mode))
+        {
+            referExternal.setDate(new Date());
+        }
+        ContactMethod contact = new ContactMethod();
+        contact.setTypes(convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ","));
+        referExternal.setContact(contact);
+
+        closeComplaint.setInformation(information);
+        closeComplaint.setReferExternal(referExternal);
+
+        JSONObject json = createResponse(closeComplaint);
+
+        return json;
+    }
+
+    private Object getCase(String caseNumber)
+    {
+        CloseComplaintForm closeComplaint = new CloseComplaintForm();
+        ExistingCase existingCase = new ExistingCase();
+
+        CaseFile caseFile = null;
+
+        try
+        {
+            caseFile = getCaseFileDao().findByCaseNumber(caseNumber);
+        }
+        catch (Exception e)
+        {
+            LOG.warn("The case with number '" + caseNumber + "' doesn't exist.");
+        }
+
+        if (caseFile != null)
+        {
+            existingCase.setCaseNumber(caseNumber);
+            existingCase.setCaseTitle(caseFile.getTitle());
+            existingCase.setCaseCreationDate(caseFile.getCreated());
+            existingCase.setCasePriority(caseFile.getPriority());
+        }
+
+        closeComplaint.setExistingCase(existingCase);
+
+        JSONObject json = createResponse(closeComplaint);
+
+        return json;
+    }
 
     @Override
     public String getFormName()
@@ -220,39 +233,45 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         return FrevvoFormName.CLOSE_COMPLAINT;
     }
 
-	@Override
-	public Class<?> getFormClass()
-	{
-		return CloseComplaintForm.class;
-	}
+    @Override
+    public Class<?> getFormClass()
+    {
+        return CloseComplaintForm.class;
+    }
 
-	/**
-	 * @return the complaintDao
-	 */
-	public ComplaintDao getComplaintDao() {
-		return complaintDao;
-	}
+    /**
+     * @return the complaintDao
+     */
+    public ComplaintDao getComplaintDao()
+    {
+        return complaintDao;
+    }
 
-	/**
-	 * @param complaintDao the complaintDao to set
-	 */
-	public void setComplaintDao(ComplaintDao complaintDao) {
-		this.complaintDao = complaintDao;
-	}
+    /**
+     * @param complaintDao
+     *            the complaintDao to set
+     */
+    public void setComplaintDao(ComplaintDao complaintDao)
+    {
+        this.complaintDao = complaintDao;
+    }
 
-	/**
-	 * @return the caseFileDao
-	 */
-	public CaseFileDao getCaseFileDao() {
-		return caseFileDao;
-	}
+    /**
+     * @return the caseFileDao
+     */
+    public CaseFileDao getCaseFileDao()
+    {
+        return caseFileDao;
+    }
 
-	/**
-	 * @param caseFileDao the caseFileDao to set
-	 */
-	public void setCaseFileDao(CaseFileDao caseFileDao) {
-		this.caseFileDao = caseFileDao;
-	}
+    /**
+     * @param caseFileDao
+     *            the caseFileDao to set
+     */
+    public void setCaseFileDao(CaseFileDao caseFileDao)
+    {
+        this.caseFileDao = caseFileDao;
+    }
 
     public CloseComplaintRequestDao getCloseComplaintRequestDao()
     {
@@ -264,46 +283,30 @@ public class CloseComplaintService extends FrevvoFormAbstractService {
         this.closeComplaintRequestDao = closeComplaintRequestDao;
     }
 
-	public ApplicationEventPublisher getApplicationEventPublisher()
-	{
-		return applicationEventPublisher;
-	}
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
 
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-	{
-		this.applicationEventPublisher = applicationEventPublisher;
-	}
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
-	public AcmPluginManager getAcmPluginManager() {
-		return acmPluginManager;
-	}
+    @Override
+    public Object convertToFrevvoForm(Object obj, Object form)
+    {
+        // Implementation no needed so far
+        return null;
+    }
 
-	public void setAcmPluginManager(AcmPluginManager acmPluginManager) {
-		this.acmPluginManager = acmPluginManager;
-	}
+    public CloseComplaintRequestFactory getCloseComplaintRequestFactory()
+    {
+        return closeComplaintRequestFactory;
+    }
 
-	public FunctionalAccessService getFunctionalAccessService() {
-		return functionalAccessService;
-	}
-
-	public void setFunctionalAccessService(
-			FunctionalAccessService functionalAccessService) {
-		this.functionalAccessService = functionalAccessService;
-	}
-
-	@Override
-	public Object convertToFrevvoForm(Object obj, Object form) {
-		// Implementation no needed so far
-		return null;
-	}
-
-	public CloseComplaintRequestFactory getCloseComplaintRequestFactory()
-	{
-		return closeComplaintRequestFactory;
-	}
-
-	public void setCloseComplaintRequestFactory(CloseComplaintRequestFactory closeComplaintRequestFactory)
-	{
-		this.closeComplaintRequestFactory = closeComplaintRequestFactory;
-	}
+    public void setCloseComplaintRequestFactory(CloseComplaintRequestFactory closeComplaintRequestFactory)
+    {
+        this.closeComplaintRequestFactory = closeComplaintRequestFactory;
+    }
 }
