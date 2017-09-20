@@ -72,6 +72,13 @@
       "noPictureSelected": "zh-cn_No Files Selected.",
       "browse": "zh-cn_Browse",
       "description": "zh-cn_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-cn_Edit Picture",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "change": "zh-cn_Change Picture",
+      "save": "zh-cn_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "zh-cn_Enter Type",
       "value.label": "zh-cn_URL",
       "value.placeholder": "zh-cn_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "电话号码",
       "emails.label": "电子邮箱",
       "urls.label": "网址",
+      "participants.label": "参与成员",
       "aliases.label": "别名",
       "organizations.label": "组织",
       "ids.label": "成员号码",

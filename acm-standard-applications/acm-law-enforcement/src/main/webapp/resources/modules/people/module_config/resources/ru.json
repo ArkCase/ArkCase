@@ -72,6 +72,13 @@
       "noPictureSelected": "ru_No Files Selected.",
       "browse": "ru_Browse",
       "description": "ru_Description"
+    },
+    "dialog.edit": {
+      "title": "ru_Edit Picture",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "change": "ru_Change Picture",
+      "save": "ru_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "ru_Enter Type",
       "value.label": "ru_URL",
       "value.placeholder": "ru_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Участники",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "телефонные номера",
       "emails.label": "электронная почта",
       "urls.label": "URL-адреса",
+      "participants.label": "Участники",
       "aliases.label": "Псевдонимы",
       "organizations.label": "Организации",
       "ids.label": "Идентификатор людей",
