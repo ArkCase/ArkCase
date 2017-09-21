@@ -262,7 +262,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         form.setPeriod(new Date());
 
         LOG.debug("setting form types");
-        List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
+        List<String> types = getStandardLookupEntries("timesheetTypes");
 
         LOG.debug("setting charge codes");
 
@@ -273,7 +273,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
 
         // Init Statuses
         LOG.debug("setting statuses");
-        form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".statuses"), ","));
+        form.setStatusOptions(getStandardLookupEntries("timesheetStatuses"));
 
         LOG.debug("Creating json");
         // Create JSON and back to the Frevvo form

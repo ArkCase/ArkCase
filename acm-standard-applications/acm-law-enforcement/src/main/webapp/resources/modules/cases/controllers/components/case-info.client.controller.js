@@ -31,11 +31,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
-                var options = [];
-                _.each(priorities, function (priority) {
-                    options.push({value: priority, text: priority});
-                });
-                $scope.priorities = options;
+                $scope.priorities = priorities;
                 return priorities;
             }
         );
@@ -51,13 +47,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        CaseLookupService.getCaseTypes().then(
+        ObjectLookupService.getCaseFileTypes().then(
             function (caseTypes) {
-                var options = [];
-                _.forEach(caseTypes, function (item) {
-                    options.push({value: item, text: item});
-                });
-                $scope.caseTypes = options;
+                $scope.caseTypes = caseTypes;
                 return caseTypes;
             }
         );
@@ -248,6 +240,23 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveCase();
         };
-
+        
+        $scope.showCaseTypeValue = function() {
+            var caseType = _.findWhere($scope.caseTypes, {key : $scope.objectInfo.caseType});
+            if (caseType) {
+                return $translate.instant(caseType.value);
+            } else {
+                return 'Unknown';
+            }
+        }
+        
+        $scope.showPriorityValue = function() {
+            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
+            if (priority) {
+                return $translate.instant(priority.value);
+            } else {
+                return 'Unknown';
+            }
+        }
     }
 ]);

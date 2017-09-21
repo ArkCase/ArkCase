@@ -216,7 +216,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         ComplaintForm complaint = new ComplaintForm();
 
         // Participants Initialization
-        List<String> participantTypes = convertToList((String) getProperties().get(getFormName() + ".participantTypes"), ",");
+        List<String> participantTypes = getStandardLookupEntries("complaintParticipantTypes");
         complaint.setParticipantsTypeOptions(participantTypes);
         complaint.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, getFormName()));
 
@@ -242,7 +242,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact initiator = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
+        List<String> types = getStandardLookupEntries("complaintPersonTypes");
 
         mainInformation.setTitles(getStandardLookupEntries("personTitles"));
         mainInformation.setAnonymous("");
@@ -251,7 +251,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<ContactMethod> communicationDevices = new ArrayList<>();
         ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
+        types = getStandardLookupEntries("deviceTypes");
 
         communicatoinDevice.setTypes(types);
         communicatoinDevice.setCreated(new Date());
@@ -260,7 +260,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<Organization> organizationInformations = new ArrayList<>();
         Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
+        types = getStandardLookupEntries("organizationTypes");
 
         organizationInformation.setOrganizationTypes(types);
         organizationInformation.setCreated(new Date());
@@ -269,7 +269,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<PostalAddress> locationInformations = new ArrayList<>();
         PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+        types = getStandardLookupEntries("locationTypes");
 
         locationInformation.setTypes(types);
         locationInformation.setCreated(new Date());
@@ -277,7 +277,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         locationInformations.add(locationInformation);
 
         PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
+        types = getStandardLookupEntries("aliasTypes");
 
         aliasInformation.setAliasTypes(types);
         aliasInformation.setCreated(new Date());
@@ -302,7 +302,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact people = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
+        List<String> types = getStandardLookupEntries("complaintPersonTypes");
 
         if (types != null && types.size() > 0)
         {
@@ -315,7 +315,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<ContactMethod> communicationDevices = new ArrayList<>();
         ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
+        types = getStandardLookupEntries("deviceTypes");
 
         communicatoinDevice.setTypes(types);
         communicatoinDevice.setCreated(new Date());
@@ -324,7 +324,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<Organization> organizationInformations = new ArrayList<>();
         Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
+        types = getStandardLookupEntries("organizationTypes");
 
         organizationInformation.setOrganizationTypes(types);
         organizationInformation.setCreated(new Date());
@@ -333,7 +333,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         List<PostalAddress> locationInformations = new ArrayList<>();
         PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+        types = getStandardLookupEntries("locationTypes");
 
         locationInformation.setTypes(types);
         locationInformation.setCreated(new Date());
@@ -341,7 +341,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         locationInformations.add(locationInformation);
 
         PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
+        types = getStandardLookupEntries("aliasTypes");
 
         aliasInformation.setAliasTypes(types);
         aliasInformation.setCreated(new Date());
@@ -365,10 +365,10 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         ComplaintForm complaint = new ComplaintForm();
 
-        List<String> categories = convertToList((String) getProperties().get(getFormName() + ".categories"), ",");
-        List<String> priorities = convertToList((String) getProperties().get(getFormName() + ".priorities"), ",");
-        List<String> frequencies = convertToList((String) getProperties().get(getFormName() + ".frequencies"), ",");
-        List<String> locationTypes = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+        List<String> categories = getStandardLookupEntries("complaintTypes");
+        List<String> priorities = getStandardLookupEntries("priorities");
+        List<String> frequencies = getStandardLookupEntries("frequencies");
+        List<String> locationTypes = getStandardLookupEntries("locationTypes");
 
         PostalAddress location = new PostalAddress();
         location.setTypes(locationTypes);

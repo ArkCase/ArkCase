@@ -177,7 +177,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService
         {
             information.setDate(new Date());
         }
-        information.setResolveOptions(convertToList((String) getProperties().get(getFormName() + ".dispositions"), ","));
+        information.setResolveOptions(getStandardLookupEntries("dispositions"));
 
         ReferExternal referExternal = new ReferExternal();
         if (!"edit".equals(mode))
@@ -185,7 +185,7 @@ public class CloseComplaintService extends FrevvoFormAbstractService
             referExternal.setDate(new Date());
         }
         ContactMethod contact = new ContactMethod();
-        contact.setTypes(convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ","));
+        contact.setTypes(getStandardLookupEntries("deviceTypes"));
         referExternal.setContact(contact);
 
         closeComplaint.setInformation(information);

@@ -23,7 +23,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -175,9 +174,7 @@ public class ChangeCaseStatusService extends FrevvoFormAbstractService
 
         information.setResolveOptions(getStandardLookupEntries("changeCaseStatuses"));
 
-        String caseResolutions = (String) getProperties().get(FrevvoFormName.CHANGE_CASE_STATUS + ".resolutions");
-        List<String> resolutions = convertToList(caseResolutions, ",");
-        changeCaseStatus.setResolutions(resolutions);
+        changeCaseStatus.setResolutions(getStandardLookupEntries("changeCaseStatusResolutions"));
 
         changeCaseStatus.setInformation(information);
 

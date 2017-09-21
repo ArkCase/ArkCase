@@ -22,6 +22,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.activiti.engine.RuntimeService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -90,21 +91,14 @@ public class EbriefService extends FrevvoFormAbstractService
         attachments = updateFileName(getCaseFile().getTitle(), FrevvoFormConstants.PDF, attachments);
 
         // Save Attachments
-        FrevvoUploadedFiles frevvoFiles = saveAttachments(
-                attachments,
-                form.getCmisFolderId(),
-                FrevvoFormName.CASE_FILE.toUpperCase(),
+        FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(), FrevvoFormName.CASE_FILE.toUpperCase(),
                 form.getId());
 
         String mode = getRequest().getParameter("mode");
         if (!"edit".equals(mode))
         {
             CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-            workflowListener.handleNewCaseFile(
-                    getCaseFile(),
-                    frevvoFiles,
-                    getActivitiRuntimeService(),
-                    getFileWorkflowBusinessRule(),
+            workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
                     this);
         }
 
@@ -130,7 +124,8 @@ public class EbriefService extends FrevvoFormAbstractService
         try
         {
             caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
-        } catch (PipelineProcessException | PersistenceException e)
+        }
+        catch (PipelineProcessException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("eBrief", e.getMessage(), e);
         }
@@ -151,7 +146,7 @@ public class EbriefService extends FrevvoFormAbstractService
     {
         EbriefInformation information = new EbriefInformation();
 
-        information.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
+        // information.setTypes(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".types"), ","));
 
         JSONObject json = createResponse(information);
 
@@ -162,7 +157,7 @@ public class EbriefService extends FrevvoFormAbstractService
     {
         EbriefDetails details = new EbriefDetails();
 
-        details.setCourtLocations(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".court.locations"), ","));
+        // details.setCourtLocations(convertToList((String) getProperties().get(FrevvoFormName.EBRIEF + ".court.locations"), ","));
 
         JSONObject json = createResponse(details);
 
@@ -196,7 +191,8 @@ public class EbriefService extends FrevvoFormAbstractService
 
             ApplicationNotificationEvent event = new ApplicationNotificationEvent(notification, "notification", true, getUserIpAddress());
             getNotificationEventPublisher().publishNotificationEvent(event);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot publish notification ... ", e);
         }
@@ -224,7 +220,6 @@ public class EbriefService extends FrevvoFormAbstractService
         this.caseFileDao = caseFileDao;
     }
 
-
     public SaveCaseService getSaveCaseService()
     {
         return saveCaseService;
@@ -250,8 +245,7 @@ public class EbriefService extends FrevvoFormAbstractService
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(
-            FileWorkflowBusinessRule fileWorkflowBusinessRule)
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
@@ -291,8 +285,7 @@ public class EbriefService extends FrevvoFormAbstractService
         return notificationEventPublisher;
     }
 
-    public void setNotificationEventPublisher(
-            NotificationEventPublisher notificationEventPublisher)
+    public void setNotificationEventPublisher(NotificationEventPublisher notificationEventPublisher)
     {
         this.notificationEventPublisher = notificationEventPublisher;
     }

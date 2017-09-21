@@ -30,11 +30,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
 
         ObjectLookupService.getPriorities().then(
             function (priorities) {
-                var options = [];
-                _.each(priorities, function (priority) {
-                    options.push({value: priority, text: priority});
-                });
-                $scope.priorities = options;
+                $scope.priorities = priorities;
                 return priorities;
             }
         );
@@ -247,6 +243,14 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
             saveComplaint();
         };
-
+        
+        $scope.showPriorityValue = function() {
+            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
+            if (priority) {
+                return $translate.instant(priority.value);
+            } else {
+                return 'Unknown';
+            }
+        }
     }
 ]);
