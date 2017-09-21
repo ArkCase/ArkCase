@@ -47,6 +47,8 @@ public class ReportServiceImpl implements ReportService
     private final Logger LOG = LoggerFactory.getLogger(getClass());
     private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
     private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";
+    private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -276,7 +278,7 @@ public class ReportServiceImpl implements ReportService
 
                 if (report.isInjected())
                 {
-                    String value = createPentahoReportUri(report.getPropertyPath());
+                    String value = createPentahoReportUri(report);
                     propertiesToUpdate.put(key, value);
                     reportPluginProperties.put(key, value);
                 } else
@@ -292,14 +294,28 @@ public class ReportServiceImpl implements ReportService
         return true;
     }
 
-    private String createPentahoReportUri(String path) throws AcmEncryptionException
+    private String createPentahoReportUri(Report report) throws AcmEncryptionException
     {
-        String url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
-                PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+        if (report == null)
+        {
+            return null;
+        }
+
+        String url = null;
+        if (report.getName() != null && report.getName().endsWith(".prpti"))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE,
+                    PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT);
+        }
+        else
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
+                    PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+        }
 
         if (url != null)
         {
-            url = url.replace("{path}", path);
+            url = url.replace("{path}", report.getPropertyPath());
         }
 
         return url;
