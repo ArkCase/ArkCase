@@ -10,12 +10,9 @@ angular.module('audit').config(['$stateProvider',
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('audit');
-                        $translatePartialLoader.addPart('dashboard');
                         return $translate.refresh();
                     }]
-            }
-        });
+                }
+            });
     }
-]).run(['Helper.DashboardService', function (DashboardHelper) {
-    DashboardHelper.addLocales();
-}]);
+]);

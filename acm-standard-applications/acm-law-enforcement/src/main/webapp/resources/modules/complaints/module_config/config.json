@@ -1256,7 +1256,7 @@
     },
     {
       "id": "pastapprovals",
-      "title": "complaints.comp.pastapprovals.title",
+      "title": "complaints.comp.pastApprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
       "type": "grid",
@@ -1292,7 +1292,7 @@
     },
     {
       "id": "userSearch",
-      "title": "complaints.userSearch.title",
+      "title": "complaints.userOrGroupSearch.title",
       "enableFiltering": false,
       "multiSelect": false,
       "showFacets": false,
