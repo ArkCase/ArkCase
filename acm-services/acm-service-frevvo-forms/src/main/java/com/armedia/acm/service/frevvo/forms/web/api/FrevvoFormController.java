@@ -7,7 +7,6 @@ package com.armedia.acm.service.frevvo.forms.web.api;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.form.casefile.service.CaseFileFactory;
 import com.armedia.acm.form.cost.service.CostFactory;
-import com.armedia.acm.form.ebrief.service.EbriefFactory;
 import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory;
 import com.armedia.acm.form.project.service.ProjectFactory;
 import com.armedia.acm.form.time.service.TimeFactory;
@@ -135,8 +134,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     private FunctionalAccessService functionalAccessService;
 
     private ComplaintFactory complaintFactory;
-
-    private EbriefFactory ebriefFactory;
 
     private ProjectFactory projectFactory;
 
@@ -671,16 +668,6 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
     public void setComplaintFactory(ComplaintFactory complaintFactory)
     {
         this.complaintFactory = complaintFactory;
-    }
-
-    public EbriefFactory getEbriefFactory()
-    {
-        return ebriefFactory;
-    }
-
-    public void setEbriefFactory(EbriefFactory ebriefFactory)
-    {
-        this.ebriefFactory = ebriefFactory;
     }
 
     public ProjectFactory getProjectFactory()

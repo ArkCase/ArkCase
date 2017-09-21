@@ -39,7 +39,6 @@
         <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="complaintFactory" ref="complaintFactory"/>
-        <property name="ebriefFactory" ref="ebriefFactory"/>
         <property name="projectFactory" ref="projectFactory"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
