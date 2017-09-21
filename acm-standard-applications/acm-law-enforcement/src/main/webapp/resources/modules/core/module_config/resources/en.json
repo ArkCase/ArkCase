@@ -7,7 +7,8 @@
         "owning-group": "Owning Group",
         "collaborator": "Collaborator",
         "reader": "Reader",
-        "no-access": "No Access"
+        "no-access": "No Access",
+        "case": "Case File"
       },
       "addressTypes": {
         "business" : "Business"
@@ -93,6 +94,101 @@
         "partner":  "Partner",
         "subCompany":  "SubCompany",
         "parentCompany":  "ParentCompany"
+      },
+      "complaintPersonTypes": {
+        "initiator":  "Initiator",
+        "complaintant":  "Complaintant",
+        "subject":  "Subject",
+        "witness":  "Witness",
+        "wrongdoer":  "Wrongdoer"
+      },
+      "caseFilePersonTypes": {
+        "defendant":  "Defendant",
+        "was-officer":  "WAS Officer",
+        "victim":  "Victim",
+        "defenseCounsel":  "Defense Counsel",
+        "forensicScientist":  "Forensic Scientist"
+      },
+      "deviceTypes": {
+        "homePhone":  "Home phone",
+        "workPhone":  "Work phone",
+        "mobile":  "Mobile",
+        "email":  "Email",
+        "facebook":  "Facebook"
+      },
+      "priorities": {
+        "low":  "Low",
+        "medium":  "Medium",
+        "high":  "High",
+        "expedite":  "Expedite",
+      },
+      "frequencies": {
+        "once":  "Once",
+        "ongoing":  "Ongoing",
+        "intermittent":  "Intermittent"
+      },
+      "dispositions": {
+        "add_existing_case":  "Add to Existing Case",
+        "open_investigation":  "Open Investigation",
+        "no_action":  "No Further Action",
+        "refer_external":  "Refer External"
+      },
+      "resolutions": {
+        "denied":  "Denied",
+        "full":  "Full",
+        "partial":  "Partial"
+      },
+      "categories": {
+        "agricultural":  "Agricultural",
+        "arson":  "Arson",
+        "backgroundInvestigation":  "Background Investigation",
+        "benefits-appeal":  "Benefits Appeal",
+        "better-business-dispute":  "Better Business Dispute",
+        "clinical-investigator-fraud":  "Clinical Investigator Fraud",
+        "congressionalResponse":  "Congressional Response",
+        "disability-waiver-request":  "Disability Waiver Request",
+        "domesticDispute":  "Domestic Dispute",
+        "drugTrafficking":  "Drug Trafficking",
+        "education-waiver-request":  "Education Waiver Request",
+        "eeo-harassment":  "EEO/Harassment",
+        "embezzlement":  "Embezzlement",
+        "extortion":  "Extortion",
+        "fraud":  "Fraud",
+        "government":  "Government",
+        "investorComplaint":  "Investor Complaint",
+        "laborRacketeering":  "Labor Racketeering",
+        "local":  "Local",
+        "murder":  "Murder",
+        "new-drug-application-fraud":  "New Drug Application Fraud",
+        "payoff":  "Payoff",
+        "pension-waiver-request":  "Pension Waiver Request",
+        "pollution":  "Pollution",
+        "productTampering":  "Product Tampering",
+        "theft-or-misuse-of-asset":  "Theft or misuse of asset"
+      },
+      "caseFileProperties": {
+        "id":  "id",
+        "caseNumber":  "caseNumber",
+        "caseType":  "caseType",
+        "title":  "title",
+        "status":  "status",
+        "details":  "details",
+        "incidentDate":  "incidentDate",
+        "created":  "created",
+        "creator":  "creator",
+        "modified":  "modified",
+        "modifier":  "modifier",
+        "closed":  "closed",
+        "disposition":  "disposition",
+        "priority":  "priority",
+        "objectType":  "objectType"
+      },
+      "complaintProperties": {
+        "complaintId":  "complaintId",
+        "complaintNumber":  "complaintNumber",
+        "complaintType":  "complaintType",
+        "priority":  "priority",
+        "complaintTitle":  "complaintTitle"
       },
       "countries": {
         "AF":  "Afghanistan",
@@ -344,27 +440,41 @@
         "ZW":  "Zimbabwe"
       },
       "costsheet": {
-      	"titles": {
-      	  "taxi": "Taxi",
-      	  "hotel": "Hotel",
-      	  "overtime": "Overtime",
-      	  "food": "Food"
-      	}
+        "titles": {
+          "taxi": "Taxi",
+          "hotel": "Hotel",
+          "overtime": "Overtime",
+          "food": "Food"
+        }
       },
       "timesheet": {
-      	"statuses": {
-      	  "draft": "Draft",
-      	  "inapproval": "In Approval",
-      	  "approved": "Approved"
-      	}
+        "statuses": {
+          "draft": "Draft",
+          "inapproval": "In Approval",
+          "approved": "Approved"
+        },
+        "other": {
+          "leap": "LEAP",
+          "training": "Training",
+          "conference": "Conference"
+        },
+        "types": {
+          "case_file":  "Case",
+          "complaint":  "Complaint"
+        }
       },
       "changeCase": {
-      	"statuses": {
-      	  "active": "Active",
-      	  "inactive": "Inactive",
-      	  "closed": "Closed",
-      	  "deleted": "Deleted"
-      	}
+        "statuses": {
+          "active": "Active",
+          "inactive": "Inactive",
+          "closed": "Closed",
+          "deleted": "Deleted"
+        },
+        "resolutions": {
+          "denied": "Denied",
+          "full": "Full",
+          "partial": "Partial"
+        }
       }
     },
     "userInfo": {
