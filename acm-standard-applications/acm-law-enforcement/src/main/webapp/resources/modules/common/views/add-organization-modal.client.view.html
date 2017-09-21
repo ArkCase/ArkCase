@@ -12,7 +12,6 @@
             <div class="col-sm-6 form-group">
                 <label>&nbsp;</label>
                 <button type="button" class="btn btn-primary"
-                        ng-show="!editMode"
                         ng-click="addNewOrganization()" translate>
                     common.addOrganization.addNew.label
                 </button>
@@ -35,7 +34,7 @@
                        translate>common.addOrganization.organization.label</label><span
                     class="required-asterisk">*</span>
                 <input id="organization" class="input-md form-control" type="text"
-                       ng-model="organizationValue" readonly ng-disabled="editMode"
+                       ng-model="organizationValue" readonly
                        placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
                        ng-click="pickOrganization()" required>
             </div>
