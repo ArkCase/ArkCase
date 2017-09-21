@@ -1114,11 +1114,6 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "identificationID",
-          "displayName": "organizations.comp.ids.table.columns.id",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "identificationNumber",
           "displayName": "organizations.comp.ids.table.columns.number",
           "headerCellFilter": "translate",
