@@ -392,8 +392,13 @@
     "dashboard.title": "zh-tw_Dashboard",
     "dashboard.config": "zh-tw_Dashboard Configuration",
     "dashboard.widgets": "zh-tw_Widgets",
-    "reports.title": "zh-tw_Reports",
-    "reports.config": "zh-tw_Reports Configuration",
+    "reports": {
+      "title": "zh-tw_Reports",
+      "config": "zh-tw_Reports Configuration",
+      "btn": {
+        "reportDesigner": "zh-tw_Report Designer"
+      }
+    },
     "forms.title": "zh-tw_Forms",
     "forms.config": "zh-tw_Form Configuration",
     "workflows.title": "zh-tw_Workflows",
