@@ -16,6 +16,7 @@
     {
       "id": "news",
       "title": "dashboard.comp.news.title",
+      "configurable": true,
       "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
       "query": "select * from xml where url = '$1'",
       "format": "json"
@@ -23,12 +24,14 @@
     {
       "id": "weather",
       "title": "dashboard.comp.weather.title",
+      "configurable": true,
       "APPID": "672e193bbf022bdc749986f7be4c0364",
       "units": "imperial"
     },
     {
       "id": "myCases",
       "title": "dashboard.comp.myCases.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -95,6 +98,7 @@
     {
       "id": "myTasks",
       "title": "dashboard.comp.myTasks.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -157,6 +161,7 @@
     {
       "id": "myComplaints",
       "title": "dashboard.comp.myComplaints.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -218,6 +223,7 @@
     {
       "id": "workflowReport",
       "title": "dashboard.comp.workflowReport.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -264,18 +270,21 @@
     {
       "id": "newComplaints",
       "title": "dashboard.comp.newComplaints.title",
+      "configurable": true,
       "redirectSettings": {
       }
     },
     {
       "id": "newCases",
       "title": "dashboard.comp.newCases.title",
+      "configurable": true,
       "redirectSettings": {
       }
     },
     {
       "id": "casesByQueue",
       "title": "dashboard.comp.casesByQueue.title",
+      "configurable": true,
       "redirectSettings": {
       }
     }

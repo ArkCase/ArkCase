@@ -17,6 +17,7 @@
       "id": "tagsFacetedSearch",
       "title": "tags.comp.tagsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "typeAheadColumn": "title_parseable",

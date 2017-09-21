@@ -17,6 +17,7 @@
       "id": "subscriptionsFacetedSearch",
       "title": "subscriptions.comp.subscriptionsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,

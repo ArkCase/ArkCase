@@ -571,7 +571,7 @@
     },
     {
       "id": "referenceSearchGrid",
-      "title": "my-documents.comp.referenceSearchGrid.title",
+      "title": "document-repository.comp.referenceSearchGrid.title",
       "enabled": "true",
       "type": "grid",
       "enableFiltering": false,

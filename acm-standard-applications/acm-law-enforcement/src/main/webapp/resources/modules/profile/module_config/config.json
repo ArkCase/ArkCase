@@ -17,6 +17,7 @@
       "id": "subscription",
       "title": "profile.comp.subscription.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "paginationPageSizes": [
         5,
@@ -64,22 +65,26 @@
     {
       "id": "company",
       "title": "profile.comp.company.title",
-      "enabled": true
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "contact",
       "title": "profile.comp.contact.title",
-      "enabled": true
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "group",
       "title": "profile.comp.group.title",
-      "enabled": true
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "picture",
       "title": "profile.comp.picture.title",
-      "enabled": true
+      "enabled": true,
+      "configurable": true
     }
   ]
 }

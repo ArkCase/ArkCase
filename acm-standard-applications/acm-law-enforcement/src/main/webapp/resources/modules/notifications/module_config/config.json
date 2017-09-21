@@ -17,6 +17,7 @@
       "id": "notificationsFacetedSearch",
       "title": "notifications.comp.notificationsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,

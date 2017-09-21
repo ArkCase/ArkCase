@@ -17,6 +17,7 @@
       "id": "auditselection",
       "title": "audit.comp.auditselection.title",
       "enabled": true,
+      "configurable": true,
       "auditDropdown": [
         {
           "id": "",
@@ -55,7 +56,8 @@
     {
       "id": "datepickers",
       "title": "audit.comp.datepickers.title",
-      "enabled": true
+      "enabled": true,
+      "configurable": true
     }
   ]
 }
