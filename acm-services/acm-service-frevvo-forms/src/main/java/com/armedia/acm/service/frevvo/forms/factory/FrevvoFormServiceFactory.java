@@ -4,7 +4,6 @@
 package com.armedia.acm.service.frevvo.forms.factory;
 
 import com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusService;
-import com.armedia.acm.form.ebrief.service.EbriefService;
 import com.armedia.acm.form.electroniccommunication.service.ElectronicCommunicationService;
 import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormService;
 import com.armedia.acm.form.project.service.ProjectService;
@@ -129,36 +128,6 @@ public class FrevvoFormServiceFactory
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
-
-            return service;
-        }
-
-        if (FrevvoFormName.EBRIEF.equals(name))
-        {
-            String contextPath = request.getServletContext().getContextPath();
-
-            EbriefService service = new EbriefService();
-
-            service.setEcmFileService(frevvoFormController.getEcmFileService());
-            service.setServletContextPath(contextPath);
-            service.setProperties(frevvoFormController.getProperties());
-            service.setRequest(request);
-            service.setAuthentication(authentication);
-            service.setAuthenticationTokenService(frevvoFormController.getAuthenticationTokenService());
-            service.setUserDao(frevvoFormController.getUserDao());
-            service.setUserActionDao(frevvoFormController.getUserActionDao());
-            service.setUserActionExecutor(frevvoFormController.getUserActionExecutor());
-            service.setSearchResults(frevvoFormController.getSearchResults());
-            service.setAcmPluginManager(frevvoFormController.getAcmPluginManager());
-            service.setEcmFileDao(frevvoFormController.getEcmFileDao());
-            service.setSaveCaseService(frevvoFormController.getSaveCaseService());
-            service.setCaseFileDao(frevvoFormController.getCaseFileDao());
-            service.setEbriefFactory(frevvoFormController.getEbriefFactory());
-            service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
-            service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
-            service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
-            service.setNotificationDao(frevvoFormController.getNotificationDao());
-            service.setNotificationEventPublisher(frevvoFormController.getNotificationEventPublisher());
 
             return service;
         }
