@@ -22,7 +22,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.description = params.description;
 
             if (params.isSelectedParent) {
-                // $scope.haveParent = params.organization.parentOrganization;
                 $scope.haveParent = params.isSelectedParent;
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
