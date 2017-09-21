@@ -5,7 +5,7 @@ package com.armedia.acm.form.casefile.service;
 
 import com.armedia.acm.form.casefile.model.CaseFileForm;
 import com.armedia.acm.form.casefile.model.CaseFileFormConstants;
-import com.armedia.acm.form.config.xml.PeopleItem;
+import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -81,7 +81,7 @@ public class CaseFileFactory extends FrevvoFormFactory
             {
                 // Update Person Association
                 personAssociation.setPerson(person);
-                personAssociation.setPersonType(form.getPersonType());
+                personAssociation.setPersonType(form.getInitiatorType());
 
             }
             caseFile.setOriginator(personAssociation);
@@ -103,16 +103,17 @@ public class CaseFileFactory extends FrevvoFormFactory
             if(initiatorPersonAssociation != null)
                 paArray.add(initiatorPersonAssociation);
 
-            for (PeopleItem peopleItem : form.getPeople())
+            for (PersonItem personItem : form.getPeople())
             {
-                Person person = getPersonDao().find(peopleItem.getId());
-                PersonAssociation personAssociation = (peopleItem.getPersonAssociationId() == null) ? new PersonAssociation() : getPersonAssociationDao().find(peopleItem.getPersonAssociationId());
+                Person person = getPersonDao().find(personItem.getId());
+                PersonAssociation personAssociation = (personItem.getPersonAssociationId() == null) ? new PersonAssociation() : getPersonAssociationDao().find(
+                        personItem.getPersonAssociationId());
 
                 if(person == null)
                     continue;
 
                 personAssociation.setPerson(person);
-                personAssociation.setPersonType(peopleItem.getPersonType());
+                personAssociation.setPersonType(personItem.getPersonType());
                 paArray.add(personAssociation);
             }
             caseFile.setPersonAssociations(paArray);
@@ -152,24 +153,24 @@ public class CaseFileFactory extends FrevvoFormFactory
                 {
                     form.setInitiatorId(caseFile.getOriginator().getPerson().getId());
                     form.setInitiatorFullName(caseFile.getOriginator().getPerson().getFullName());
-                    form.setPersonType(caseFile.getOriginator().getPersonType());
+                    form.setInitiatorType(caseFile.getOriginator().getPersonType());
                 }
 
                 if (caseFile.getPersonAssociations() != null)
                 {
-                    List<PeopleItem> people = new ArrayList<>();
+                    List<PersonItem> people = new ArrayList<>();
                     for (PersonAssociation pa : caseFile.getPersonAssociations())
                     {
                         if (pa.getPerson() != null && !pa.getPersonType().equals("Initiator"))
                         {
-                            PeopleItem peopleItem = new PeopleItem();
+                            PersonItem personItem = new PersonItem();
 
-                            peopleItem.setId(pa.getPerson().getId());
-                            peopleItem.setValue(pa.getPerson().getFullName());
-                            peopleItem.setPersonType(pa.getPersonType());
-                            peopleItem.setPersonAssociationId(pa.getId());
+                            personItem.setId(pa.getPerson().getId());
+                            personItem.setValue(pa.getPerson().getFullName());
+                            personItem.setPersonType(pa.getPersonType());
+                            personItem.setPersonAssociationId(pa.getId());
 
-                            people.add(peopleItem);
+                            people.add(personItem);
                         }
                     }
                     form.setPeople(people);

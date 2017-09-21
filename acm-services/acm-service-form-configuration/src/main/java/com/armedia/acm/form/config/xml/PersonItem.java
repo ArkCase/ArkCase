@@ -4,7 +4,7 @@ import com.armedia.acm.form.config.Item;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class PeopleItem extends Item
+public class PersonItem extends Item
 {
 
     private String personType;
