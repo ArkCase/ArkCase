@@ -30,7 +30,7 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             }*/
             if (!!isSelectedParent) {
                 params.organization = $scope.objectInfo;
-                params.organization.isSelectedParent = isSelectedParent;
+                params.isSelectedParent = isSelectedParent;
             }
 
             var modalInstance = $modal.open({
