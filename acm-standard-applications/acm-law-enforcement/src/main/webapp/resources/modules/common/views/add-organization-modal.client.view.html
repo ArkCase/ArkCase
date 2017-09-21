@@ -72,7 +72,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>common.addOrganization.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isChanged">
         <span translate>common.addOrganization.btnOk.text</span>
     </button>
 </div>
