@@ -27,6 +27,7 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             var params = {};
             if (!!isSelectedParent) {
                 params.organization = $scope.objectInfo;
+                // params.organizationId = $scope.objectInfo.organizationId;
                 params.isSelectedParent = isSelectedParent;
             }
 
