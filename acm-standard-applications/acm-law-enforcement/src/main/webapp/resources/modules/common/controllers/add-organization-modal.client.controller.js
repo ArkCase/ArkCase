@@ -20,10 +20,14 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
-            if (!!params.haveParent) {
-                $scope.haveParent = params.haveParent;
-                if (!!params.haveParent.parentOrganization) {
-                    $scope.organizationValue = params.haveParent.parentOrganization.organizationValue;
+
+            if (params.organization.isSelectedParent) {
+                // $scope.haveParent = params.organization.parentOrganization;
+                $scope.haveParent = params.organization.isSelectedParent;
+                $scope.organization = params.organization;
+                if (!!params.organization.parentOrganization) {
+                    $scope.organizationId = params.organization.organizationId;
+                    $scope.organizationValue = params.organization.parentOrganization.organizationValue;
                 }
             }
             $scope.type = _.find($scope.types, function (type) {
@@ -32,9 +36,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
-                if(!!$scope.haveParent){
-                    $scope.haveParent.parentOrganization = null;
-                }
+                $scope.organization.parentOrganization = null;
                 $modalInstance.dismiss('Cancel');
             };
 
@@ -96,11 +98,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
-                        if ($scope.haveParent.parentOrganization != null) {
-                            $scope.haveParent.parentOrganization.organizationValue = selected.name;
+                        if ($scope.organization.parentOrganization != null) {
+                            $scope.organization.parentOrganization.organizationValue = selected.name;
                         } else {
-                            $scope.haveParent.parentOrganization = {};
-                            $scope.haveParent.parentOrganization.organizationValue = selected.name;
+                            $scope.organization.parentOrganization = {};
+                            $scope.organization.parentOrganization.organizationValue = selected.name;
                         }
                     }
                 });
@@ -120,11 +122,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
-                    if ($scope.haveParent.parentOrganization != null) {
-                        $scope.haveParent.parentOrganization.organizationValue = data.organization.organizationValue;
+                    if ($scope.organization.parentOrganization != null) {
+                        $scope.organization.parentOrganization.organizationValue = data.organization.organizationValue;
                     } else {
-                        $scope.haveParent.parentOrganization = {};
-                        $scope.haveParent.parentOrganization.organizationValue = data.organization.organizationValue;
+                        $scope.organization.parentOrganization = {};
+                        $scope.organization.parentOrganization.organizationValue = data.organization.organizationValue;
                     }
                 });
             };
