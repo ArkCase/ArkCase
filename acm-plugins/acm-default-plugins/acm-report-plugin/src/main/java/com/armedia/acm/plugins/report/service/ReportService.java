@@ -28,4 +28,6 @@ public interface ReportService
     public Map<String, List<String>> getReportToGroupsMap();
 
     public boolean saveReportToGroupsMap(Map<String, List<String>> reportToGroupsMap, Authentication auth);
+
+    public List<Report> sync() throws Exception;
 }
