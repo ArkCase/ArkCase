@@ -396,7 +396,8 @@
       "title": "ru_Reports",
       "config": "ru_Reports Configuration",
       "btn": {
-        "reportDesigner": "ru_Report Designer"
+        "reportDesigner": "ru_Report Designer",
+        "sync": "ru_Synchronise"
       }
     },
     "forms.title": "ru_Forms",

@@ -396,7 +396,8 @@
       "title": "pt_Reports",
       "config": "pt_Reports Configuration",
       "btn": {
-        "reportDesigner": "pt_Report Designer"
+        "reportDesigner": "pt_Report Designer",
+        "sync": "pt_Synchronise"
       }
     },
     "forms.title": "pt_Forms",

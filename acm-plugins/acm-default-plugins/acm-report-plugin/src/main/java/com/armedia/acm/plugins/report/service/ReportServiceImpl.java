@@ -258,6 +258,31 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
+    public List<Report> sync() throws Exception
+    {
+        List<Report> reports = getPentahoReports();
+        if (reports != null)
+        {
+            List<String> propertiesToDelete = new ArrayList<>();
+            for (Entry<String, String> entry : reportPluginProperties.entrySet())
+            {
+                Report found = reports.stream().filter(item -> entry.getKey().equals(item.getPropertyName())).findFirst().orElse(null);
+                if (found == null)
+                {
+                    propertiesToDelete.add(entry.getKey());
+                }
+            }
+
+            propertiesToDelete.forEach(item -> reportPluginProperties.remove(item));
+
+            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
+            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportToGroupsMapPropertiesFileLocation());
+        }
+
+        return reports;
+    }
+
+    @Override
     public Map<String, List<String>> getReportToGroupsMap()
     {
         Map<String, String> reportsToGroupsMap = getReportToGroupsMapProperties();
