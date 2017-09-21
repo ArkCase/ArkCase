@@ -396,7 +396,8 @@
       "title": "es_Reports",
       "config": "es_Reports Configuration",
       "btn": {
-        "reportDesigner": "es_Report Designer"
+        "reportDesigner": "es_Report Designer",
+        "sync": "es_Synchronise"
       }
     },
     "forms.title": "es_Forms",

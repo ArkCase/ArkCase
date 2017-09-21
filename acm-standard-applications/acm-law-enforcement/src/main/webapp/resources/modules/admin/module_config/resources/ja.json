@@ -396,7 +396,8 @@
       "title": "ja_Reports",
       "config": "ja_Reports Configuration",
       "btn": {
-        "reportDesigner": "ja_Report Designer"
+        "reportDesigner": "ja_Report Designer",
+        "sync": "ja_Synchronise"
       }
     },
     "forms.title": "ja_Forms",
