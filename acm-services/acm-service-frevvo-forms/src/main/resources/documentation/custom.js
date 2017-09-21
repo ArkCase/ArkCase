@@ -483,10 +483,8 @@ function getElementValue(cssClass, elementType, property) {
 function updateElementValue(value, elementType, elementId, cssClass, property) {
     var htmlElement;
     if (elementId) {
-        console.log("Find by element ID");
         htmlElement = getElementById(elementId);
     } else if (cssClass) {
-        console.log("Find by css class");
         htmlElement = getHtmlElement(cssClass, elementType, value);
     }
     property = (property !== undefined) ? property : "value";

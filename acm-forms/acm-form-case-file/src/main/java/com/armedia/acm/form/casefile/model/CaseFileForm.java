@@ -12,12 +12,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
-import com.armedia.acm.form.config.xml.PeopleItem;
+import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
-import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 
 /**
  * @author riste.tutureski
@@ -40,8 +37,8 @@ public class CaseFileForm {
 	private List<String> owningGroupOptions;
 	private Long initiatorId;
 	private String initiatorFullName;
-	private String personType;
-	private List<PeopleItem> people;
+	private String initiatorType;
+	private List<PersonItem> people;
 	
 	@XmlElement(name="caseId")
 	public Long getId() {
@@ -174,24 +171,24 @@ public class CaseFileForm {
 		this.initiatorFullName = initiatorFullName;
 	}
 
-	@XmlElement(name="personType")
-	public String getPersonType()
+	@XmlElement(name="initiatorType")
+	public String getInitiatorType()
 	{
-		return personType;
+		return initiatorType;
 	}
 
-	public void setPersonType(String personType)
+	public void setInitiatorType(String initiatorType)
 	{
-		this.personType = personType;
+		this.initiatorType = initiatorType;
 	}
 
-	@XmlElement(name="peopleItem", type=PeopleItem.class)
-	public List<PeopleItem> getPeople()
+	@XmlElement(name="peopleItem", type=PersonItem.class)
+	public List<PersonItem> getPeople()
 	{
 		return people;
 	}
 
-	public void setPeople(List<PeopleItem> people)
+	public void setPeople(List<PersonItem> people)
 	{
 		this.people = people;
 	}
