@@ -16,8 +16,7 @@
                     <a href="#" editable-select="objectInfo.caseType" onaftersave="saveCase()"
                        permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable"
-                       e-ng-options="c.value as c.text for c in caseTypes">{{objectInfo.caseType ||
-                        'Unknown'}}</a>
+                       e-ng-options="c.key as c.value | translate for c in caseTypes">{{ showCaseTypeValue() }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.type.label</span></small>
             </div>
@@ -33,8 +32,7 @@
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveCase()"
                        permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
-                        'Unknown'}}</a>
+                       e-ng-options="p.key as p.value for p in priorities">{{ showPriorityValue() }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.priority.label</span></small>
             </div>

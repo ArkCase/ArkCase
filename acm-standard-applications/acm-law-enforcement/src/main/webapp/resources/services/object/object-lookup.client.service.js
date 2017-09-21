@@ -19,23 +19,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
-             * @name _getPriorities
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of priorities
-             *
-             * @returns {Array} An array returned by $resource
-             */
-            _getPriorities: {
-                url: "api/latest/plugin/complaint/priorities"
-                , method: "GET"
-                , cache: false
-                , isArray: true
-            }
-
-            /**
-             * @ngdoc method
              * @name _getGroups
              * @methodOf services:Object.LookupService
              *
@@ -44,7 +27,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
              *
              * @returns {Object} Data returned by $resource
              */
-            , _getGroups: {
+            _getGroups: {
                 url: "api/latest/service/functionalaccess/groups/acm-complaint-approve?n=1000&s=name asc"
                 , method: "GET"
                 , cache: false
@@ -105,18 +88,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getPriorities = function () {
-            var cachePriorities = new Store.SessionData(Service.SessionCacheNames.PRIORITIES);
-            var priorities = cachePriorities.get();
-            return Util.serviceCall({
-                service: Service._getPriorities
-                , result: priorities
-                , onSuccess: function (data) {
-                    if (Service.validatePriorities(data)) {
-                        cachePriorities.set(data);
-                        return data;
-                    }
-                }
-            });
+            return Service.getLookupByLookupName("priorities");
         };
 
         /**
@@ -433,20 +405,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
-         * @name getSecurityTagTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of security tag types
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getSecurityTagTypes = function () {
-            return LookupService.getLookup("securityTagTypes");
-        };
-
-        /**
-         * @ngdoc method
          * @name getPersonRelationTypes
          * @methodOf services:Object.LookupService
          *
@@ -470,10 +428,23 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getOrganizationRelationTypes = function () {
-            //return LookupService.getLookup("organizationRelationTypes");
             return Service.getLookupByLookupName("organizationRelationTypes");
         };
 
+        /**
+         * @ngdoc method
+         * @name getCaseFileTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of case file types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getCaseFileTypes = function () {
+            return Service.getLookupByLookupName("caseFileTypes");
+        };
+        
         /**
          * @ngdoc method
          * @name getObjectTypes
@@ -540,21 +511,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
-         * @name getSecurityFieldTypes
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of object types
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getSecurityFieldTypes = function () {
-            var data = LookupService.getLookup("securityFieldTypes");
-            return data;
-        };
-
-        /**
-         * @ngdoc method
          * @name getIdentificationTypes
          * @methodOf services:Object.LookupService
          *
@@ -564,7 +520,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getIdentificationTypes = function () {
-            //return LookupService.getLookup("identificationTypes");
             return Service.getLookupByLookupName("identificationTypes");
         };
 

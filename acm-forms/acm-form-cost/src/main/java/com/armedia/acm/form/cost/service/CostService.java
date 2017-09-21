@@ -148,11 +148,12 @@ public class CostService extends FrevvoFormChargeAbstractService
         form.setUserOptions(Arrays.asList(userId + "=" + user.getFullName()));
 
         // Init Types
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
+        List<String> types = getStandardLookupEntries("costsheetTypes");
+        ;
         form.setObjectTypeOptions(types);
 
         // Init Statuses
-        form.setStatusOptions(convertToList((String) getProperties().get(getFormName() + ".statuses"), ","));
+        form.setStatusOptions(getStandardLookupEntries("costsheetStatuses"));
 
         // Init Titles
         CostItem item = new CostItem();
