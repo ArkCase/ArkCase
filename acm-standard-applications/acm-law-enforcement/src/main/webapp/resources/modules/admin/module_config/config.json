@@ -19,6 +19,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "directoryTypes": [
         {
           "name": "OpenLDAP",
@@ -109,6 +110,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "fieldId",
@@ -155,6 +157,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "mergingActiveVersion",
@@ -206,6 +209,7 @@
       "enableRowSelection": true,
       "enableRowHeaderSelection": true,
       "enableFullRowSelection": true,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -281,6 +285,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "templateVersionActive",
@@ -350,6 +355,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -383,6 +389,7 @@
       "id": "plainFormsConfig",
       "title": "admin.comp.plainFormsConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "formsDropdown": [
         {
@@ -425,6 +432,7 @@
       "id": "workflowsConfig",
       "title": "admin.comp.workflowsConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "columnDefs": [
         {
@@ -491,6 +499,7 @@
       "id": "workflowsHistoryDialogConfig",
       "title": "admin.comp.workflowsHistoryDialogConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "columnDefs": [
         {
@@ -547,6 +556,7 @@
       "id": "usersPicker",
       "title": "admin.comp.usersPicker.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -595,6 +605,7 @@
       "id": "orgHierarchy",
       "title": "admin.comp.orgHierarchy.title",
       "enabled": "true",
+      "configurable": true,
       "topLevelGroupTypes": [
         "LDAP_GROUP",
         "ADHOC_GROUP"
@@ -606,6 +617,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -705,6 +717,7 @@
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "templateName",
