@@ -139,28 +139,6 @@
       }
     }
   },
-  "cases.comp.participants": {
-    "title": "Participants",
-    "table.columns": {
-      "type": "Type",
-      "name": "Name"
-    },
-    "dialogUserPicker": {
-      "header": "Choose User",
-      "table.columns": {
-        "name": "Name",
-        "type": "Type",
-        "title": "Title",
-        "id": "Username"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "Choose Group",
-      "table.columns": {
-        "name": "Name"
-      }
-    }
-  },
   "cases.comp.notes": {
     "title": "Notes",
     "table.columns": {
@@ -388,5 +366,4 @@
       "noSort": "(No Sort)"
     }
   }
-
 }
