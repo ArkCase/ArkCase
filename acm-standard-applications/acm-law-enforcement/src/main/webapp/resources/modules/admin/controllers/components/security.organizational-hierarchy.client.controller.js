@@ -112,7 +112,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         $modalInstance.dismiss('cancel');
                     };
                 },
-                size: 'md'
+                size: 'sm'
             });
 
             //handle the result
@@ -123,7 +123,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     var newGroup = payload.data;
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
                     newGroup.object_id_s = newGroup.name;
-                    newGroup.parent_id_s = parent.name;
+                    newGroup.parent_id_s = parent.object_id_s;
                     if (newGroup.supervisor) {
                         newGroup.supervisor = newGroup.supervisor.fullName;
                     }
@@ -527,7 +527,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         $modalInstance.dismiss('cancel');
                     };
                 },
-                size: 'md'
+                size: 'sm'
             });
 
             //handle the result
@@ -546,7 +546,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
 
-                    groupsMap[payload.data.name] = newGroup;
+                    groupsMap[payload.data.object_id_s] = newGroup;
                     addToTree(newGroup, true);
                     messageService.succsessAction();
                 }, function () {
