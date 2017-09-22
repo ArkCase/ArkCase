@@ -49,24 +49,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 , cache: false
                 , isArray: true
             }
-
-            /**
-             * @ngdoc method
-             * @name _getPersonTypes
-             * @methodOf services:Object.LookupService
-             *
-             * @description
-             * Query list of person types
-             *
-             * @returns {Object} An array returned by $resource
-             */
-            , _getPersonTypes: {
-                url: "api/latest/plugin/person/types"
-                , method: "GET"
-                , cache: false
-                , isArray: true
-            }
-
         });
 
         Service.SessionCacheNames = {
@@ -263,20 +245,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-        Service.getPersonTypes = function () {
-            var cachePersonTypes = new Store.SessionData(Service.SessionCacheNames.PERSON_TYPES);
-            var personTypes = cachePersonTypes.get();
-            return Util.serviceCall({
-                service: Service._getPersonTypes
-                , result: personTypes
-                , onSuccess: function (data) {
-                    if (Service.validatePersonTypes(data)) {
-                        cachePersonTypes.set(data);
-                        return data;
-                    }
-                }
-            });
-        };
+         Service.getPersonTypes = function(objectType){
+             switch(objectType){
+                 case "COMPLAINT":
+                     return Service.getLookupByLookupName("complaintPersonTypes");
+                     break;
+                 case "CASE_FILE":
+                     return Service.getLookupByLookupName("caseFilePersonTypes");
+             }
+           };
 
         /**
          * @ngdoc method
