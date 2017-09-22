@@ -13,7 +13,7 @@
     	<property name="springContextHolder" ref="acmContextHolder" />
     </bean>
 
-    <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" scope="prototype">
+    <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" parent="frevvoFormService" scope="prototype">
         <property name="costFactory" ref="costFactory"/>        
         <property name="costsheetService" ref="costsheetService" />
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>

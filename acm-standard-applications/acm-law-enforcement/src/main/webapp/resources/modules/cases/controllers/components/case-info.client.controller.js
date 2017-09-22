@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService'
     , 'Object.ParticipantService', 'SearchService', 'Search.QueryBuilderService'
-    , function ($scope, $stateParams, $translate, $modal
+    , function ($scope, $q, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
         , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService
         , ObjectParticipantService, SearchService, SearchQueryBuilder
@@ -29,7 +29,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.config = componentConfig;
         });
 
-        ObjectLookupService.getPriorities().then(
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
                 $scope.priorities = priorities;
                 return priorities;
@@ -47,7 +48,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        ObjectLookupService.getCaseFileTypes().then(
+        var caseFileTypesPromise = ObjectLookupService.getCaseFileTypes();
+        caseFileTypesPromise.then(
             function (caseTypes) {
                 $scope.caseTypes = caseTypes;
                 return caseTypes;
@@ -181,6 +183,10 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
+            $q.all([getPrioritiesPromise, caseFileTypesPromise]).then(function() {
+                setCaseTypeValue();
+                setPriorityValue();
+            });
             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
                     var options = [];
@@ -205,6 +211,8 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
          */
         function saveCase() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setCaseTypeValue();
+            setPriorityValue();
             if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
@@ -241,21 +249,21 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             saveCase();
         };
         
-        $scope.showCaseTypeValue = function() {
+        var setCaseTypeValue = function() {
             var caseType = _.findWhere($scope.caseTypes, {key : $scope.objectInfo.caseType});
             if (caseType) {
-                return $translate.instant(caseType.value);
+                $scope.caseTypeValue = caseType.value;
             } else {
-                return 'Unknown';
+                $scope.caseTypeValue = 'core.unknown';
             }
         }
         
-        $scope.showPriorityValue = function() {
+        var setPriorityValue = function() {
             var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
             if (priority) {
-                return $translate.instant(priority.value);
+                $scope.priorityValue = priority.value;
             } else {
-                return 'Unknown';
+                $scope.priorityValue = 'core.unknown';
             }
         }
     }

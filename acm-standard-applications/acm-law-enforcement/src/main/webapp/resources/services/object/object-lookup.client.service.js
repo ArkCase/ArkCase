@@ -447,6 +447,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         
         /**
          * @ngdoc method
+         * @name getComplaintTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of complaint types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getComplaintTypes = function () {
+            return Service.getLookupByLookupName("complaintTypes");
+        };
+        
+        /**
+         * @ngdoc method
          * @name getObjectTypes
          * @methodOf services:Object.LookupService
          *

@@ -49,8 +49,9 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 return groups;
             }
         );
-
-        ObjectLookupService.getPriorities().then(
+        
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
                 $scope.priorities = priorities;
                 return priorities;
@@ -220,7 +221,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-
+            getPrioritiesPromise.then(function() {
+                setPriorityValue();
+            });
+            
             var owningGroupParticipantType = 'owning group';
             $scope.owningGroup = 'Unknown';
 
@@ -321,6 +325,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setPriorityValue();
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = TaskInfoService.saveTaskInfo(objectInfo);
@@ -342,12 +347,12 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             return promiseSaveInfo;
         }
 
-        $scope.showPriorityValue = function() {
+        var setPriorityValue = function() {
             var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
             if (priority) {
-                return $translate.instant(priority.value);
+                $scope.priorityValue = priority.value;
             } else {
-                return 'Unknown';
+                $scope.priorityValue = 'core.unknown';
             }
         }
     }

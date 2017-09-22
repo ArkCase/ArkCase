@@ -120,7 +120,7 @@
         "low":  "Low",
         "medium":  "Medium",
         "high":  "High",
-        "expedite":  "Expedite",
+        "expedite":  "Expedite"
       },
       "frequencies": {
         "once":  "Once",
@@ -496,6 +496,7 @@
       "btnOK.text": "OK",
       "btnCancel.text": "Cancel",
       "checkbox_warning.label": "I acknowledge this warning."
-    }
+    },
+    "unknown": "Unknown"
   }
 }
