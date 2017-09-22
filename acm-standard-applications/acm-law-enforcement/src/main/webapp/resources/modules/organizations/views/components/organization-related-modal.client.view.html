@@ -19,7 +19,7 @@
                 </div>
                 <select id="relationshipTypes"
                         ng-model="relationshipType"
-                        ng-options="item.type as item.name for item in relationshipTypes"></select>
+                        ng-options="item.key as item.value | translate for item in relationshipTypes"></select>
             </div>
         </div>
     </form>

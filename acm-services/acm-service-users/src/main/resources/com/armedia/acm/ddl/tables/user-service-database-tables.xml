@@ -495,4 +495,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="28-add-user-lang-column" author="bojan.milenkoski">
+        <addColumn tableName="acm_user">
+            <column name="cm_lang" type="VARCHAR(10)" defaultValue="en">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

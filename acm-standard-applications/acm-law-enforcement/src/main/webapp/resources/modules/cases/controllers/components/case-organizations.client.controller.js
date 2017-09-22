@@ -16,13 +16,9 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
         );
 
         //TODO: change personTypes with some new organizationTypes
-        ObjectLookupService.getPersonTypes().then(
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (organizationTypes) {
-                var options = [];
-                _.forEach(organizationTypes, function (v, k) {
-                    options.push({type: v, name: v});
-                });
-                $scope.organizationTypes = options;
+                $scope.organizationTypes = organizationTypes;
                 return organizationTypes;
             });
 
