@@ -28,7 +28,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.config = componentConfig;
         });
 
-        ObjectLookupService.getPriorities().then(
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
                 $scope.priorities = priorities;
                 return priorities;
@@ -46,13 +47,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-        ComplaintLookupService.getComplaintTypes().then(
+        var getComplaintTypesPromise = ObjectLookupService.getComplaintTypes();
+        getComplaintTypesPromise.then(
             function (complaintTypes) {
-                var options = [];
-                _.forEach(complaintTypes, function (item) {
-                    options.push({value: item, text: item});
-                });
-                $scope.complaintTypes = options;
+                $scope.complaintTypes = complaintTypes;
                 return complaintTypes;
             }
         );
@@ -192,7 +190,11 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
-
+            $q.all([getComplaintTypesPromise, getPrioritiesPromise]).then(function() {
+                setComplaintTypeValue();
+                setPriorityValue();
+            });
+            
             //if (previousId != objectId) {
             ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
@@ -211,6 +213,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
          */
         function saveComplaint() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setComplaintTypeValue();
+            setPriorityValue();
             if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
@@ -244,12 +248,21 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         
-        $scope.showPriorityValue = function() {
+        var setComplaintTypeValue = function() {
+            var complaintType = _.findWhere($scope.complaintTypes, {key : $scope.objectInfo.complaintType});
+            if (complaintType) {
+                $scope.complaintTypeValue = complaintType.value;
+            } else {
+                $scope.complaintTypeValue = 'core.unknown';
+            }
+        }
+        
+        var setPriorityValue = function() {
             var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
             if (priority) {
-                return $translate.instant(priority.value);
+                $scope.priorityValue = priority.value;
             } else {
-                return 'Unknown';
+                $scope.priorityValue = 'core.unknown';
             }
         }
     }

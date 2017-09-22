@@ -128,6 +128,8 @@ public class FrevvoFormServiceFactory
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setEcmFileDao(frevvoFormController.getEcmFileDao());
             service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
+            service.setLookupDao(frevvoFormController.getLookupDao());
+            service.setTranslationService(frevvoFormController.getTranslationService());
 
             return service;
         }

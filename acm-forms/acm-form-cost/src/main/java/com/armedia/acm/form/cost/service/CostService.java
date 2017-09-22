@@ -149,7 +149,6 @@ public class CostService extends FrevvoFormChargeAbstractService
 
         // Init Types
         List<String> types = getStandardLookupEntries("costsheetTypes");
-        ;
         form.setObjectTypeOptions(types);
 
         // Init Statuses

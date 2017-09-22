@@ -13,21 +13,6 @@
 angular.module('services').factory('Person.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.LookupService',
     function ($resource, $translate, Store, Util, ObjectLookupService) {
         var Service = $resource('api/latest/plugin', {}, {
-            /**
-             * ngdoc method
-             * name _getPersonTypes
-             * methodOf services:Person.LookupService
-             *
-             * @description
-             * Query list of person types
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            _getPersonTypes: {
-                url: 'api/latest/plugin/person/types'
-                , cache: true
-                , isArray: true
-            }
         });
 
         Service.SessionCacheNames = {
@@ -45,18 +30,7 @@ angular.module('services').factory('Person.LookupService', ['$resource', '$trans
          * @returns {Object} Promise
          */
         Service.getPersonTypes = function () {
-            var cachePersonTypes = new Store.SessionData(Service.SessionCacheNames.PERSON_TYPES);
-            var personTypes = cachePersonTypes.get();
-            return Util.serviceCall({
-                service: Service._getPersonTypes
-                , result: personTypes
-                , onSuccess: function (data) {
-                    if (Service.validatePersonTypes(data)) {
-                        cachePersonTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return ObjectLookupService.getPersonTypes();
         };
 
         /**
