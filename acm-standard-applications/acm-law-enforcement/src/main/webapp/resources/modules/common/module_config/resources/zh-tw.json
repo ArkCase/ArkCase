@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "zh-tw_(Select One)",
+    "select.option.none": "（選擇一個）",
+    "value.unknown": "未知",
+
     "defaultDateFormat": "zh-tw_MM/DD/YYYY",
     "defaultTimeFormat": "zh-tw_hh:mm:ss",
     "defaultDateTimeFormat": "zh-tw_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "zh-tw_Invalid data"
+    "error.invalidData": "不正確數據"
   },
   "common.objects": {
-    "progressNoData": "zh-tw_[ No data ]",
-    "progressLoading": "zh-tw_Loading data ",
-    "progressError": "zh-tw_Failed to load data "
+    "progressNoData": "[ 無數據 ]",
+    "progressLoading": "加載數據 ",
+    "progressError": "無法加載數據 "
   },
   "common.frevvo": {
     "defaultDateFormat": "zh-tw_YYYY-MM-DD"
@@ -134,7 +136,17 @@
     "btnOk.text": "zh-tw_OK",
     "btnCancel.text": "zh-tw_Cancel",
     "edtPlaceholder": "zh-tw_Type in to search",
-    "noData.text": "zh-tw_No Results"
+    "noData.text": "沒有結果"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "顯示更多",
+    "showLess.button.text": "顯示更少",
+    "results.text": "結果",
+    "noResults.text": "無結果",
+    "tooltip": {
+      "collapseFacetList": "縮減分類表",
+      "expandFacetList": "展開分類表"
+    }
   },
   "common.directive.coreNotes": {
     "title": "註釋",

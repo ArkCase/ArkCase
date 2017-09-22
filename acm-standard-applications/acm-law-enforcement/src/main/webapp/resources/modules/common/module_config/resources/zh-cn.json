@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "zh-cn_(Select One)",
+    "select.option.none": "（选择一个）",
+    "value.unknown": "未知",
+
     "defaultDateFormat": "zh-cn_MM/DD/YYYY",
     "defaultTimeFormat": "zh-cn_hh:mm:ss",
     "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "zh-cn_Invalid data"
+    "error.invalidData": "不正确数据"
   },
   "common.objects": {
-    "progressNoData": "zh-cn_[ No data ]",
-    "progressLoading": "zh-cn_Loading data ",
-    "progressError": "zh-cn_Failed to load data "
+    "progressNoData": "[ 无数据 ]",
+    "progressLoading": "加载数据 ",
+    "progressError": "无法加载数据 "
   },
   "common.frevvo": {
     "defaultDateFormat": "zh-cn_YYYY-MM-DD"
@@ -135,6 +137,16 @@
     "btnCancel.text": "zh-cn_Cancel",
     "edtPlaceholder": "zh-cn_Type in to search",
     "noData.text": "zh-cn_No Results"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "显示更多",
+    "showLess.button.text": "显示更少",
+    "results.text": "结果",
+    "noResults.text": "无结果",
+    "tooltip": {
+      "collapseFacetList": "缩减分类表",
+      "expandFacetList": "展开分类表"
+    }
   },
   "common.directive.coreNotes": {
     "title": "注释",

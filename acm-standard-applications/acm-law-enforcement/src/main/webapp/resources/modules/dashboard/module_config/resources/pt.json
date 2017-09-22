@@ -35,7 +35,9 @@
             "priority": "Prioridade",
             "created": "Criado",
             "modified": "Modificado",
-            "status": "Status"
+            "dueDate": "Data de Vencimento",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "Caso está atrasado",
           "deadline.tooltip": "Prazo está se aproximando"
@@ -51,7 +53,9 @@
             "priority": "Prioridade",
             "created": "Criado",
             "modified": "Modificado",
-            "status": "Status"
+            "dueDate": "Data de Vencimento",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "A queixa está atrasada",
           "deadline.tooltip": "Prazo está se aproximando",

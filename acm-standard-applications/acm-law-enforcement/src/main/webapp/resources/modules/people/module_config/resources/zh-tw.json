@@ -72,6 +72,13 @@
       "noPictureSelected": "zh-tw_No Files Selected.",
       "browse": "zh-tw_Browse",
       "description": "zh-tw_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-tw_Edit Picture",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "change": "zh-tw_Change Picture",
+      "save": "zh-tw_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "zh-tw_Enter Type",
       "value.label": "zh-tw_URL",
       "value.placeholder": "zh-tw_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "參與成員",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "name": "zh-tw_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-tw_Choose User",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "id": "zh-tw_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-tw_Choose Group",
+      "table.columns": {
+        "name": "zh-tw_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "電話號碼",
       "emails.label": "電子郵箱",
       "urls.label": "網址",
+      "participants.label": "參與成員",
       "aliases.label": "別名",
       "organizations.label": "組織",
       "ids.label": "成員號碼",

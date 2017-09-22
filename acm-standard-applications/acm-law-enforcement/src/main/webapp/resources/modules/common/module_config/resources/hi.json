@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "hi_(Select One)",
+    "select.option.none": "(एक चुनें)",
+    "value.unknown": "अज्ञात",
+
     "defaultDateFormat": "hi_MM/DD/YYYY",
     "defaultTimeFormat": "hi_hh:mm:ss",
     "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "hi_Invalid data"
+    "error.invalidData": "अमान्य डेटा"
   },
   "common.objects": {
-    "progressNoData": "hi_[ No data ]",
-    "progressLoading": "hi_Loading data ",
-    "progressError": "hi_Failed to load data "
+    "progressNoData": "[ कोई डेटा नहीं ]",
+    "progressLoading": "डेटा लोड करना ",
+    "progressError": "डेटा लोड करने में विफल "
   },
   "common.frevvo": {
     "defaultDateFormat": "hi_YYYY-MM-DD"
@@ -135,6 +137,16 @@
     "btnCancel.text": "hi_Cancel",
     "edtPlaceholder": "hi_Type in to search",
     "noData.text": "hi_No Results"
+  },
+  "common.directive.search": {
+    "showmore.button.text": "अधिक मान दिखाएँ",
+    "showLess.button.text": "कम मूल्य दिखाएं",
+    "results.text": "परिणाम",
+    "noResults.text": "कोई परिणाम नहीं",
+    "tooltip": {
+      "collapseFacetList": "संकुचित फ़ैकेट सूची",
+      "expandFacetList": "वैपेट सूची का विस्तार करें"
+    }
   },
   "common.directive.coreNotes": {
     "title": "hi_Notes",

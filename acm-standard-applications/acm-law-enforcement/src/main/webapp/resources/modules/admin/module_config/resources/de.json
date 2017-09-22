@@ -392,8 +392,14 @@
     "dashboard.title": "de_Dashboard",
     "dashboard.config": "de_Dashboard Configuration",
     "dashboard.widgets": "de_Widgets",
-    "reports.title": "de_Reports",
-    "reports.config": "de_Reports Configuration",
+    "reports": {
+      "title": "de_Reports",
+      "config": "de_Reports Configuration",
+      "btn": {
+        "reportDesigner": "de_Report Designer",
+        "sync": "de_Synchronise"
+      }
+    },
     "forms.title": "de_Forms",
     "forms.config": "de_Form Configuration",
     "workflows.title": "de_Workflows",

@@ -25,7 +25,42 @@
     "priority.label": "Priorité",
     "assignee.label": "Assigné à",
     "owningGroup.label": "Appartenant au groupe",
-    "dueDate.label": "Date d'échéance"
+    "dueDate.label": "Date d'échéance",
+    "priorities": {
+      "low%": "Bas",
+      "medium%": "Moyen",
+      "high%": "Haute",
+      "expedite%": "Accélérer",
+      "unknown%": "Inconnu"
+    },
+    "caseTypes": {
+      "agricultural%": "Agricole",
+      "arson%": "Incendie volontaire",
+      "backgroundInvestigation%": "Enquête de fond",
+      "benefitsAppeal%": "Appel des prestations",
+      "businessDispute%": "Meilleur litige commercial",
+      "clinicalFraud%": "Fraude aux enquêteurs cliniques",
+      "congressional%": "Réponse du Congrès",
+      "disabilityWaiver%": "Demande de renonciation aux personnes handicapées",
+      "domesticDispute%": "Dispute domestique",
+      "drugTrafficking%": "Trafic de drogue",
+      "educationWaiver%": "Demande de renonciation à l'éducation",
+      "eeoHarassment%": "EEO/Harcèlement",
+      "embezzlement%": "Détournement de fonds",
+      "extortion%": "Extorsion",
+      "fraud%": "Fraude",
+      "government%": "Gouvernement",
+      "investorComplaint%": "Plainte des investisseurs",
+      "laborRacketeering%": "Travail en racking",
+      "local%": "Local",
+      "murder%": "Meurtre",
+      "newDrugFraud%": "Fraude d'application de nouveaux médicaments",
+      "payoff%": "Pot-de-vin",
+      "pensionWaiver%": "Demande d'exemption de pension",
+      "pollution%": "Pollution",
+      "productTampering%": "Tampering du produit",
+      "assetTheftMisuse%": "Vol ou mauvaise utilisation de l'actif"
+    }
   },
   "cases.comp.actions": {
     "title": "Actions",

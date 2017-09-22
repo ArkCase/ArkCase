@@ -35,7 +35,9 @@
             "priority": "Prioridad",
             "created": "Creado",
             "modified": "Modificado",
-            "status": "Estado"
+            "dueDate": "Fecha de vencimiento",
+            "status": "Estado",
+            "assignee": "Cesionario"
           },
           "overdue.tooltip": "El caso está atrasado",
           "deadline.tooltip": "La fecha límite se aproxima"
@@ -51,7 +53,9 @@
             "priority": "Prioridad",
             "created": "Creado",
             "modified": "Modificado",
-            "status": "Estado"
+            "dueDate": "Fecha de vencimiento",
+            "status": "Estado",
+            "assignee": "Cesionario"
           },
           "overdue.tooltip": "La queja está atrasada",
           "deadline.tooltip": "La fecha límite se aproxima",

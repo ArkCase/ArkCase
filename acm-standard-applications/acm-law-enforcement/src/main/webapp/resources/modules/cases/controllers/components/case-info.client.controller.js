@@ -65,6 +65,39 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             showModal(participant);
         };
 
+        var lookupPriorities = function() {
+            ObjectLookupService.getPriorities().then(
+                function (priorities) {
+                    var options = [];
+                    _.each(priorities, function (priority) {
+                        var text = $translate.data(priority, "cases.comp.info.priorities");
+                        options.push({value: priority, text: text});
+                    });
+                    $scope.priorities = options;
+                    return priorities;
+                }
+            );
+        };
+
+        var lookupCaseTypes = function() {
+            CaseLookupService.getCaseTypes().then(
+                function (caseTypes) {
+                    var options = [];
+                    _.forEach(caseTypes, function (item) {
+                        var text = $translate.data(item, "cases.comp.info.caseTypes");
+                        options.push({value: item, text: text});
+                    });
+                    $scope.caseTypes = options;
+                    return caseTypes;
+                }
+            );
+        };
+
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            lookupPriorities();
+            lookupCaseTypes();
+        });
+
         var showModal = function (participant) {
             var modalScope = $scope.$new();
             modalScope.participant = participant || {};
