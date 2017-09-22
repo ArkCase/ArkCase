@@ -142,6 +142,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     deferred.resolve(newGroup);
                 }, function () {
                     //error adding group
+                    messageService.error("Group name already exists.");
                     deferred.reject();
                 });
             }, function (result) {
