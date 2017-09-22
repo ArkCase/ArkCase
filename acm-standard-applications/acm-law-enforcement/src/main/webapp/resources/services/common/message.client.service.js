@@ -82,7 +82,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * This method displays error message in notify popup window.
              */
             error: function (message) {
-        	showMessage(message, {position: 'left'});
+                showMessage(message, {position: 'left', classes: 'alert-danger'});
             },
 
             /**
@@ -111,7 +111,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
                         ].join('');
                     }
 
-                    showMessage(msg);
+                    showMessage(msg, {classes: 'alert-danger'});
                 }
             },
 
@@ -139,7 +139,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * This method displays succcess action message in notify popup window.
              */
             succsessAction: function(){
-            	showMessage($translate.instant('common.service.messageService.actionMessages.success'), {position: 'left'});
+            	showMessage($translate.instant('common.service.messageService.actionMessages.success'), {position: 'left', classes: 'alert-success'});
             },
             
             /**
@@ -151,7 +151,7 @@ angular.module('services').factory('MessageService', ['$injector', '$translate',
              * This method displays error action message in notify popup window.
              */
             errorAction: function(){
-            	showMessage($translate.instant('common.service.messageService.actionMessages.error'), {position: 'left'});
+            	showMessage($translate.instant('common.service.messageService.actionMessages.error'), {position: 'left', classes: 'alert-danger'});
             },
         };
     }

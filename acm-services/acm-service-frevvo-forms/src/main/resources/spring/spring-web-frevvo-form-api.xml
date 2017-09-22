@@ -26,7 +26,6 @@
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="caseFileFactory" ref="caseFileFactory"/>
-        <property name="caseFilePSFactory" ref="caseFilePSFactory"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
         <property name="timesheetService" ref="timesheetService" />
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
@@ -40,7 +39,6 @@
         <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>
         <property name="functionalAccessService" ref="functionalAccessService"/>
         <property name="complaintFactory" ref="complaintFactory"/>
-        <property name="ebriefFactory" ref="ebriefFactory"/>
         <property name="projectFactory" ref="projectFactory"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
@@ -51,6 +49,8 @@
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
         <property name="frevvoFormServiceFactory" ref="frevvoFormServiceFactory"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
 	</bean>
 
 </beans>

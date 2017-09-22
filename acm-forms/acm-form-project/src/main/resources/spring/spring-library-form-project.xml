@@ -10,10 +10,8 @@
     	<property name="acmParticipantDao" ref="acmParticipantDao" />
     </bean>
     
-    <bean id="projectService" class="com.armedia.acm.form.project.service.ProjectService" scope="prototype">
+    <bean id="projectService" class="com.armedia.acm.form.project.service.ProjectService" parent="frevvoFormService" scope="prototype">
     	<property name="projectFactory" ref="projectFactory" />
-    	<property name="ecmFileDao" ref="ecmFileDao" />
-    	<property name="ecmFileService" ref="ecmFileService" />
     </bean>
     
     <bean id="projectUpdatedListener" class="com.armedia.acm.form.project.service.ProjectUpdatedListener">

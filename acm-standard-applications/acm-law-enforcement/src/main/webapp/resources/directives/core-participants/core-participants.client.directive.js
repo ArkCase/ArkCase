@@ -72,11 +72,9 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
                 var promiseUsers = gridHelper.getUsers();
 
-                var promiseTypes = ObjectLookupService.getParticipantTypes().then(
+                var promiseTypes = ObjectLookupService.getParticipantTypes(scope.participantsInit.objectType).then(
                     function (participantTypes) {
-                        scope.participantTypes = participantTypes.filter(function (el) {
-                            return (el.objectTypes.indexOf(scope.participantsInit.objectType) > -1);
-                        });
+                        scope.participantTypes = participantTypes;
                         return participantTypes;
                     }
                 );
