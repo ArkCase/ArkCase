@@ -396,7 +396,8 @@
       "title": "Reports",
       "config": "Reports Configuration",
       "btn": {
-        "reportDesigner": "Report Designer"
+        "reportDesigner": "Report Designer",
+        "sync": "Synchronise"
       }
     },
     "forms.title": "Forms",

@@ -396,7 +396,8 @@
       "title": "zh-tw_Reports",
       "config": "zh-tw_Reports Configuration",
       "btn": {
-        "reportDesigner": "zh-tw_Report Designer"
+        "reportDesigner": "zh-tw_Report Designer",
+        "sync": "zh-tw_Synchronise"
       }
     },
     "forms.title": "zh-tw_Forms",
