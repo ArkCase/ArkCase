@@ -25,7 +25,42 @@
     "priority.label": "優先級別",
     "assignee.label": "指定人員",
     "owningGroup.label": "所屬群體",
-    "dueDate.label": "到期日期"
+    "dueDate.label": "到期日期",
+    "priorities": {
+      "low%": "低級",
+      "medium%": "中級",
+      "high%": "高級",
+      "expedite%": "加急",
+      "unknown%": "未選"
+    },
+    "caseTypes": {
+      "agricultural%": "農業",
+      "arson%": "縱火",
+      "backgroundInvestigation%": "背景調查",
+      "benefitsAppeal%": "福利上訴",
+      "businessDispute%": "更好商業的糾紛",
+      "clinicalFraud%": "臨床調查員欺詐",
+      "congressional%": "國會響應",
+      "disabilityWaiver%": "殘疾豁免請求",
+      "domesticDispute%": "家庭糾紛",
+      "drugTrafficking%": "販毒運毒",
+      "educationWaiver%": "教育豁免申請書",
+      "eeoHarassment%": "EEO/騷擾",
+      "embezzlement%": "貪污",
+      "extortion%": "勒索",
+      "fraud%": "欺詐",
+      "government%": "政府",
+      "investorComplaint%": "投資者投訴",
+      "laborRacketeering%": "勞工敲詐",
+      "local%": "當地",
+      "murder%": "謀殺",
+      "newDrugFraud%": "新藥申請欺詐",
+      "payoff%": "賄賂",
+      "pensionWaiver%": "退休金申請",
+      "pollution%": "污染",
+      "productTampering%": "產品篡改",
+      "assetTheftMisuse%": "盜用或濫用資產"
+    }
   },
   "cases.comp.actions": {
     "title": "行動",

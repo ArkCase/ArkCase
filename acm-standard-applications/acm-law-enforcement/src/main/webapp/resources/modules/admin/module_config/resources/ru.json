@@ -392,8 +392,14 @@
     "dashboard.title": "ru_Dashboard",
     "dashboard.config": "ru_Dashboard Configuration",
     "dashboard.widgets": "ru_Widgets",
-    "reports.title": "ru_Reports",
-    "reports.config": "ru_Reports Configuration",
+    "reports": {
+      "title": "ru_Reports",
+      "config": "ru_Reports Configuration",
+      "btn": {
+        "reportDesigner": "ru_Report Designer",
+        "sync": "ru_Synchronise"
+      }
+    },
     "forms.title": "ru_Forms",
     "forms.config": "ru_Form Configuration",
     "workflows.title": "ru_Workflows",

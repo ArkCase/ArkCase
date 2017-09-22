@@ -392,8 +392,14 @@
     "dashboard.title": "zh-cn_Dashboard",
     "dashboard.config": "zh-cn_Dashboard Configuration",
     "dashboard.widgets": "zh-cn_Widgets",
-    "reports.title": "zh-cn_Reports",
-    "reports.config": "zh-cn_Reports Configuration",
+    "reports": {
+      "title": "zh-cn_Reports",
+      "config": "zh-cn_Reports Configuration",
+      "btn": {
+        "reportDesigner": "zh-cn_Report Designer",
+        "sync": "zh-cn_Synchronise"
+      }
+    },
     "forms.title": "zh-cn_Forms",
     "forms.config": "zh-cn_Form Configuration",
     "workflows.title": "zh-cn_Workflows",
