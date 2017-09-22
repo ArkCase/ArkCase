@@ -396,7 +396,8 @@
       "title": "hi_Reports",
       "config": "hi_Reports Configuration",
       "btn": {
-        "reportDesigner": "hi_Report Designer"
+        "reportDesigner": "hi_Report Designer",
+        "sync": "hi_Synchronise"
       }
     },
     "forms.title": "hi_Forms",
