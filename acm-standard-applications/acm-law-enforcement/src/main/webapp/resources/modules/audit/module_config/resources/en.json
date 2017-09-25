@@ -25,5 +25,11 @@
     "datepickers":{
       "close": "Done"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "Audit"
+  },
+  "audit.comp.datepickers": {
+    "title": "Audits"
   }
 }

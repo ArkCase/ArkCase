@@ -1,7 +1,7 @@
 {
   "id": "preference",
   "title": "Preferences",
-  "configurable": true,
+  "configurable": false,
   "menus": [
     {
       "menuId": "usermenu",

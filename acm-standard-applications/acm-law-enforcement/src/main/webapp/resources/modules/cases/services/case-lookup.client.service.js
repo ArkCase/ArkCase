@@ -48,7 +48,7 @@ angular.module('services').factory('Case.LookupService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.getCaseTypes = function () {
-            return ObjectLookupService.getCaseTypes();
+            return ObjectLookupService.getCaseFileTypes();
         };
 
         /**

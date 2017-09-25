@@ -82,11 +82,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         var lookupCaseTypes = function() {
             CaseLookupService.getCaseTypes().then(
                 function (caseTypes) {
-                    var options = [];
-                    _.forEach(caseTypes, function (item) {
-                        var text = $translate.data(item, "cases.comp.info.caseTypes");
-                        options.push({value: item, text: text});
-                    });
                     $scope.caseTypes = options;
                     return caseTypes;
                 }
