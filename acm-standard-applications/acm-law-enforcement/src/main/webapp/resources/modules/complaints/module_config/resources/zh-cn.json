@@ -270,6 +270,9 @@
   "complaints.comp.calendar": {
     "title": "日历"
   },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "参考搜索"
+  },
   "complaints.comp.addreference": {
     "title": "zh-cn_Add Reference",
     "cancelButton": "zh-cn_Cancel",
