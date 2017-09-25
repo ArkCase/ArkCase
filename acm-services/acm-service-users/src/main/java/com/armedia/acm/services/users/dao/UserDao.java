@@ -50,11 +50,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public void init()
     {
-        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("localeSettings")).findFirst().get()
+        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst().get()
                 .getConfigAsJson();
         Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
                 .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.localeCode");
+        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.defaultLocale").toString();
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());

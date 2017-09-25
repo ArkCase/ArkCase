@@ -15,8 +15,9 @@
   "components": [
     {
       "id": "notificationsFacetedSearch",
-      "title": "Notifications Faceted Search",
+      "title": "notifications.comp.notificationsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,
