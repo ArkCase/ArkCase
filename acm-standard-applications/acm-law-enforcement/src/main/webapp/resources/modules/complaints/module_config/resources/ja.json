@@ -270,6 +270,9 @@
   "complaints.comp.calendar": {
     "title": "日報"
   },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "リファレンス検索"
+  },
   "complaints.comp.addreference": {
     "title": "ja_Add Reference",
     "cancelButton": "ja_Cancel",
