@@ -9,11 +9,11 @@ angular.module('admin').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
 
-                        var arrayOfComponents = ['admin', 'common', 'dashboard', 'audit', 'cases', 'complaints', 'cost-tracking',
+                        var components = ['admin', 'common', 'dashboard', 'audit', 'cases', 'complaints', 'cost-tracking',
                             'document-details', 'document-repository', 'notifications', 'organizations', 'people', 'profile', 'reports',
                             'search', 'subscriptions', 'tags', 'tasks', 'time-tracking'];
 
-                        _.forEach(arrayOfComponents, function(component){
+                        _.forEach(components, function(component){
                             $translatePartialLoader.addPart(component);
                         });
 
