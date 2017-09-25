@@ -35,8 +35,9 @@
         <constructor-arg value="quiet-user-cache"/>
     </bean>
 
-    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao">
-        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>
+    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
+        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>        
+        <property name="configList" ref="configList"/>
     </bean>
     <!-- End UserDao caching functionality -->
 

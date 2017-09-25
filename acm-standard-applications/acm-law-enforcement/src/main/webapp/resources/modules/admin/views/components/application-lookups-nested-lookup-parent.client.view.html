@@ -1,0 +1,23 @@
+<div ng-controller="Admin.NestedLookupParentController">
+    <span>&nbsp;</span>
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span>Parent lookup: {{ selectedLookupDef.name }}</span>
+                <div class="pull-right">
+                    <div class="pull-right">
+                        <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+	    <div ui-grid="gridOptions"
+	         ui-grid-resize-columns
+	         ui-grid-selection
+	         adjust-table-height="gridOptions.data.length"
+	         ui-grid-auto-resize
+	         class="grid">
+	    </div>
+    </div>
+    <div ng-include="'modules/admin/views/components/application-lookups-nested-lookup-sublookup.client.view.html'"></div>
+</div>

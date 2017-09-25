@@ -392,8 +392,14 @@
     "dashboard.title": "ja_Dashboard",
     "dashboard.config": "ja_Dashboard Configuration",
     "dashboard.widgets": "ja_Widgets",
-    "reports.title": "ja_Reports",
-    "reports.config": "ja_Reports Configuration",
+    "reports": {
+      "title": "ja_Reports",
+      "config": "ja_Reports Configuration",
+      "btn": {
+        "reportDesigner": "ja_Report Designer",
+        "sync": "ja_Synchronise"
+      }
+    },
     "forms.title": "ja_Forms",
     "forms.config": "ja_Form Configuration",
     "workflows.title": "ja_Workflows",

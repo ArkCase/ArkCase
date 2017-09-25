@@ -26,6 +26,12 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 method: 'GET',
                 url: 'api/v1/users/info'
             }
+        
+            , _updateUserLang: {
+                method: 'POST',
+                url: 'api/v1/users/lang/:lang',
+                cache: false
+            }
         });
 
 
@@ -94,6 +100,15 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
             }
             return true;
         };
+        
+        Service.updateUserLang = function (lang) {
+            return Util.serviceCall({
+                service: Service._updateUserLang
+                , param: {lang: lang}
+                , data: {}
+            });
+        };
+        
         return Service;
     }
 ]);

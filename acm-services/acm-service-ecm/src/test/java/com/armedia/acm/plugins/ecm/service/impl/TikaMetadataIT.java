@@ -37,6 +37,24 @@ public class TikaMetadataIT
 
         Object[][] testData = {
                 {
+                        "Video (ArkCase FOIA)",
+                        "media-files/ArkCase _ FOIA.MP4",
+                        "video/mp4",
+                        ".mp4",
+                        null,
+                        null,
+                        null,
+                        null,
+                        224,
+                        398,
+                        0.0,
+                        0.0,
+                        131.88,
+                        0,
+                        0,
+                        0
+                },
+                {
                         "Video (Police body camera)",
                         "media-files/Police Bodycam.mp4",
                         "video/mp4",
@@ -147,11 +165,18 @@ public class TikaMetadataIT
             assertEquals(gpsLongDegrees, multimedia.getGpsLongitudeDegrees(), 0.005);
             assertEquals(duration, multimedia.getDurationSeconds(), 0.001);
 
-            Calendar multimediaCreated = Calendar.getInstance();
-            multimediaCreated.setTime(multimedia.getCreated());
-            assertEquals(year, multimediaCreated.get(Calendar.YEAR));
-            assertEquals(month, multimediaCreated.get(Calendar.MONTH));
-            assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
+            if (year > 0)
+            {
+                Calendar multimediaCreated = Calendar.getInstance();
+                multimediaCreated.setTime(multimedia.getCreated());
+                assertEquals(year, multimediaCreated.get(Calendar.YEAR));
+                assertEquals(month, multimediaCreated.get(Calendar.MONTH));
+                assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
+            }
+            else
+            {
+                assertNull(multimedia.getCreated());
+            }
 
             logger.info(multimedia.toString());
         }

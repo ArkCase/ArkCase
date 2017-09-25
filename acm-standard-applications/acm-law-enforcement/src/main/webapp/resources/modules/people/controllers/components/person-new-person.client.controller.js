@@ -44,7 +44,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
             _.each(contactMethodTypes, function (cmType) {
-                $scope.cmTypes[cmType.type] = cmType;
+                $scope.cmTypes[cmType.key] = cmType;
             });
 
             //used for generating the view for communication accounts
