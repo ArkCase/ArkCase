@@ -257,6 +257,7 @@
       "title": "complaints.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -540,6 +541,7 @@
       "id": "info",
       "title": "complaints.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -547,6 +549,7 @@
       "id": "actions",
       "title": "complaints.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -555,6 +558,7 @@
       "title": "complaints.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
@@ -562,6 +566,7 @@
       "title": "complaints.comp.addresses.title",
       "icon": "fa fa-map-marker",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -631,6 +636,7 @@
       "className": "com.armedia.acm.plugins.person.model.Person",
       "personAssociationClassName": "com.armedia.acm.plugins.person.model.PersonAssociation",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -687,6 +693,7 @@
       "title": "complaints.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -746,6 +753,7 @@
       "title": "complaints.comp.documents.title",
       "icon": "fa fa-file",
       "enabled": true,
+      "configurable": true,
       "type": "empty",
       "docTree": {
         "email": {
@@ -764,6 +772,7 @@
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -848,6 +857,7 @@
       "title": "complaints.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "enableSorting": true,
@@ -889,6 +899,7 @@
       "title": "complaints.comp.tasks.title",
       "icon": "fa fa-check-circle",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -955,6 +966,7 @@
       "title": "complaints.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1006,6 +1018,7 @@
       "title": "complaints.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1041,6 +1054,7 @@
       "title": "complaints.comp.time.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1087,6 +1101,7 @@
       "title": "complaints.comp.cost.title",
       "icon": "fa fa-money",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1135,6 +1150,7 @@
       "title": "complaints.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
@@ -1173,12 +1189,14 @@
       "title": "complaints.comp.calendar.title",
       "icon": "fa fa-calendar",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
       "id": "referenceSearchGrid",
       "title": "complaints.comp.referenceSearchGrid.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": false,
@@ -1243,6 +1261,7 @@
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "complaints.comp.approvalRouting.addNewTooltip",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1284,9 +1303,10 @@
     },
     {
       "id": "pastapprovals",
-      "title": "complaints.comp.pastapprovals.title",
+      "title": "complaints.comp.pastApprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1320,8 +1340,9 @@
     },
     {
       "id": "userSearch",
-      "title": "complaints.userSearch.title",
+      "title": "complaints.userOrGroupSearch.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [

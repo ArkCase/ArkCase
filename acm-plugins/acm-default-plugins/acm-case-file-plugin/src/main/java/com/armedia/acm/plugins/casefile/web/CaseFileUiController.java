@@ -52,7 +52,7 @@ public class CaseFileUiController
 
     private String getViewName()
     {
-        String jsp = getProperties().getProperty("jsp", "casefile");
+        String jsp = "casefile";
         return jsp;
     }
 
@@ -69,7 +69,8 @@ public class CaseFileUiController
                     mv.addObject(attrName, ar);
                 }
 
-            } catch (JSONException e)
+            }
+            catch (JSONException e)
             {
                 log.error(e.getMessage());
             }

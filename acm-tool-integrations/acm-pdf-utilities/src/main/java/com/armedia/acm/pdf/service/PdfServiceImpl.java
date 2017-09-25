@@ -361,10 +361,8 @@ public class PdfServiceImpl implements PdfService
     @Override
     public InputStream extractPages(InputStream is, String filename, List<Integer> pageNumbers) throws PdfServiceException
     {
-        try
+        try (PDDocument extractedDocument = new PDDocument(); PDDocument sourceDocument = PDDocument.load(is);)
         {
-            PDDocument extractedDocument = new PDDocument();
-            PDDocument sourceDocument = PDDocument.load(is);
             extractedDocument.setDocumentInformation(sourceDocument.getDocumentInformation());
             extractedDocument.getDocumentCatalog().setViewerPreferences(sourceDocument.getDocumentCatalog().getViewerPreferences());
 

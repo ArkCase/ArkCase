@@ -1,9 +1,11 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', 'Acm.StoreService', 'UtilService'
-    , 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService', 'Config.LocaleService', 'ConfigService'
-    , function ($scope, $q, $state, Store, Util
-        , Authentication, Menus, ServCommService, AutoSuggestService, LocaleService, ConfigService) {
+angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
+    , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
+    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService'
+    , function ($scope, $q, $state, $translate
+        , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
+        , LocaleService, ConfigService, UserInfoService, MessageService) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -84,31 +86,42 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             isSelected = false;
         };
 
+        // set application language for the user
+        var localeSettingsPromise = LocaleService.getSettings()
+        var userInfoPromise = Authentication.queryUserInfo();
+        
+        $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
+            var userInfo = result[1];
 
-        var localeData = LocaleService.getLocaleData();
-        var locales = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
-        var localeCode = Util.goodMapValue(localeData, "code", LocaleService.DEFAULT_CODE);
-        $scope.localeDropdownOptions = locales;
-        $scope.localeSelected = _.find(locales, {code: localeCode});
-        LocaleService.useLocale($scope.localeSelected.code);
+            var userLocale = _.findWhere(result[0].locales, {code: userInfo.langCode});
+
+            $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);;
+            $scope.localeSelected = userLocale;
+
+            LocaleService.useLocale($scope.localeSelected.code);
+        });
 
         $scope.changeLocale = function ($event, localeNew) {
             $event.preventDefault();
-            $scope.localeSelected = localeNew;
-            var localeData = LocaleService.getLocaleData();
-            localeData.code = localeNew.code;
-            localeData.iso = localeNew.iso;
-            LocaleService.setLocaleData(localeData);
-            LocaleService.useLocale(localeNew.code);
+            userInfoPromise.then(function (userInfo) {                
+                Authentication.updateUserLang(localeNew.code).then(function () {
+                    userInfo.langCode = localeNew.code;
+                    $scope.localeSelected = localeNew;
+                    LocaleService.setLocaleData(localeData);
+                    LocaleService.useLocale(localeNew.code);
+                }
+                , function (error) {
+                    MessageService.error(error.data ? error.data : error);
+                    return error;
+                });
+            });
         };
 
+        // TODO delete UPDATE button and this function if not needed
         $scope.updateLocales = function($event) {
             $event.preventDefault();
-            LocaleService.getSettings().then(function(data){
+            localeSettingsPromise.then(function(data) {
                 $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
-                var localeData = LocaleService.getLocaleData();
-                localeData.locales = $scope.localeDropdownOptions;
-                LocaleService.setLocaleData(localeData);
                 return data;
             });
         }

@@ -139,28 +139,6 @@
       }
     }
   },
-  "cases.comp.participants": {
-    "title": "Participants",
-    "table.columns": {
-      "type": "Type",
-      "name": "Name"
-    },
-    "dialogUserPicker": {
-      "header": "Choose User",
-      "table.columns": {
-        "name": "Name",
-        "type": "Type",
-        "title": "Title",
-        "id": "Username"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "Choose Group",
-      "table.columns": {
-        "name": "Name"
-      }
-    }
-  },
   "cases.comp.notes": {
     "title": "Notes",
     "table.columns": {
@@ -266,6 +244,9 @@
       "parent": "Parent",
       "modified": "Modified"
     }
+  },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Reference Search"
   },
   "cases.comp.split": {
     "title": "Split",
@@ -385,5 +366,4 @@
       "noSort": "(No Sort)"
     }
   }
-
 }

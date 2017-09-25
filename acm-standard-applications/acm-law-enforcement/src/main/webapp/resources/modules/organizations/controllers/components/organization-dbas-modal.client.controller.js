@@ -1,5 +1,5 @@
-angular.module('organizations').controller('Organizations.DBAsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('organizations').controller('Organizations.DBAsModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $translate, $modalInstance, ObjectLookupService, params) {
             ObjectLookupService.getDBAsTypes().then(function (response) {
                 $scope.dbasTypes = response;
             });

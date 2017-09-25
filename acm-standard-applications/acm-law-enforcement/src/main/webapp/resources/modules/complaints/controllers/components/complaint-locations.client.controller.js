@@ -1,19 +1,10 @@
 'use strict';
 
-angular.module('complaints').controller('Complaint.LocationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
-    , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, ComplaintInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService ) {
-
-
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
+angular.module('complaints').controller('Complaints.LocationsController', ['$scope', '$translate', '$stateParams', '$q', '$modal'
+    , 'UtilService', 'Helper.UiGridService', 'ConfigService', 'Complaint.InfoService'
+    , 'Object.LookupService', 'Helper.ObjectBrowserService'
+    , function ($scope, $translate, $stateParams, $q, $modal, Util, HelperUiGridService, ConfigService, ComplaintInfoService
+        , ObjectLookupService, HelperObjectBrowserService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -185,5 +176,4 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
         };
     }
 ]);
-
 

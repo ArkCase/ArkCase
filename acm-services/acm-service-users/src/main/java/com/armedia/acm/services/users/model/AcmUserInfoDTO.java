@@ -22,6 +22,7 @@ public class AcmUserInfoDTO
     private String company;
     private String title;
     private String notificationMessage;
+    private String langCode;
 
     public String getUserId()
     {
@@ -161,5 +162,15 @@ public class AcmUserInfoDTO
     public void setNotificationMessage(String notificationMessage)
     {
         this.notificationMessage = notificationMessage;
+    }
+
+    public String getLangCode()
+    {
+        return langCode;
+    }
+
+    public void setLangCode(String lang)
+    {
+        this.langCode = lang;
     }
 }

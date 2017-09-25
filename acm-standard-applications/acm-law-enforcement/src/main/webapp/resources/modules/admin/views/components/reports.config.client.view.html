@@ -1,4 +1,19 @@
 <div ng-controller="Admin.ReportsConfigController">
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="openPentaho()"><i
+                    class="fa fa-plus"/>
+                <span translate>admin.reports.btn.reportDesigner</span>
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="syncReports()"><i
+                    class="fa fa-refresh"/>
+                <span translate>admin.reports.btn.sync</span>
+            </button>
+        </div>
+    </div>
     <panel-view header="{{'admin.reports.config' | translate}}" collapsible="false">
         <div class="row">
         <object-authorization-roles data="reports" object-display-name="name" on-object-selected="onObjSelect"
