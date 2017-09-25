@@ -21,7 +21,7 @@
     "created.label": "作成日",
     "priority.label": "優先",
     "assignee.label": "割り当て先",
-    "owningGroup.label": "グループに所属",
+    "owningGroup.label": "群に所属",
     "dueDate.label": "期限日"
   },
   "complaints.comp.actions": {
@@ -44,7 +44,7 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "ファイル",
+    "title": "文書",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
@@ -182,15 +182,15 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "ノート",
+    "title": "注解",
     "table.columns": {
-      "note": "ノート",
+      "note": "注解",
       "created": "ja_Created",
       "creator": "ja_Author"
     }
   },
   "complaints.comp.tasks": {
-    "title": "タスク",
+    "title": "任務",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -355,10 +355,10 @@
       "locations.label": "場所",
       "people.label": "人員",
       "organizations.label": "組織",
-      "documents.label": "ファイル",
+      "documents.label": "文書",
       "participants.label": "参加者",
-      "notes.label": "ノート",
-      "tasks.label": "タスク",
+      "notes.label": "注解",
+      "tasks.label": "任務",
       "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
