@@ -1,6 +1,9 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -11,42 +14,39 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Properties;
+
+import java.util.List;
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
+@RequestMapping({
+        "/api/v1/plugin/casefile",
+        "/api/latest/plugin/casefile" })
 public class GetCaseTypesAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private Properties caseFileProperties;
+    private LookupDao lookupDao;
 
     @RequestMapping(value = "/caseTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String[] caseTypes(
-            Authentication authentication,
-            HttpSession session
-    ) throws AcmListObjectsFailedException
+    public String[] caseTypes(Authentication authentication, HttpSession session) throws AcmListObjectsFailedException
     {
         if (log.isDebugEnabled())
         {
             log.debug("Finding case types");
         }
 
-        String commaSeparated = getCaseFileProperties().getProperty("casefile.case-types");
-
-        String[] retval = commaSeparated.split(",");
-
-        return retval;
+        List<StandardLookupEntry> lookupEntries = (List<StandardLookupEntry>) getLookupDao().getLookupByName("caseFileTypes").getEntries();
+        return lookupEntries.stream().map(StandardLookupEntry::getKey).toArray(String[]::new);
     }
 
-    public Properties getCaseFileProperties()
+    public LookupDao getLookupDao()
     {
-        return caseFileProperties;
+        return lookupDao;
     }
 
-    public void setCaseFileProperties(Properties caseFileProperties)
+    public void setLookupDao(LookupDao lookupDao)
     {
-        this.caseFileProperties = caseFileProperties;
+        this.lookupDao = lookupDao;
     }
 }

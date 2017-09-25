@@ -20,6 +20,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -108,6 +109,9 @@ public class AcmUser implements Serializable
 
     @Embedded
     private PasswordResetToken passwordResetToken;
+
+    @Column(name = "cm_lang")
+    private String lang;
 
     @PrePersist
     public void preInsert()
@@ -250,10 +254,8 @@ public class AcmUser implements Serializable
     @JsonIgnore
     public Set<AcmGroup> getLdapGroups()
     {
-        return groups == null ? new HashSet<>() :
-                groups.stream()
-                        .filter(group -> group.getType().equals(AcmGroupType.LDAP_GROUP.name()))
-                        .collect(Collectors.toSet());
+        return groups == null ? new HashSet<>()
+                : groups.stream().filter(group -> group.getType().equals(AcmGroupType.LDAP_GROUP.name())).collect(Collectors.toSet());
     }
 
     @JsonIgnore
@@ -261,9 +263,7 @@ public class AcmUser implements Serializable
     {
         if (in.getGroups() != null)
         {
-            return in.getGroups().stream()
-                    .map(AcmGroup::getName)
-                    .collect(Collectors.toSet());
+            return in.getGroups().stream().map(AcmGroup::getName).collect(Collectors.toSet());
         }
         return new HashSet<>();
     }
@@ -340,7 +340,8 @@ public class AcmUser implements Serializable
         if (getUserId() == null)
         {
             return 0;
-        } else
+        }
+        else
         {
             return getUserId().hashCode();
         }
@@ -459,5 +460,15 @@ public class AcmUser implements Serializable
     public void setPasswordResetToken(PasswordResetToken passwordResetToken)
     {
         this.passwordResetToken = passwordResetToken;
+    }
+
+    public String getLang()
+    {
+        return lang;
+    }
+
+    public void setLang(String lang)
+    {
+        this.lang = lang;
     }
 }
