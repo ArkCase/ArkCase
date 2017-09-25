@@ -197,18 +197,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     private JSONObject initFormData()
     {
-        // Initiator, People and Incident initialization
-        Contact initiator = initInitiatorFields();
-        Contact people = initPeopleFields();
-
-        List<Contact> peoples = new ArrayList<Contact>();
-        peoples.add(people);
-
         ComplaintForm complaint = initIncidentFields();
-
-        complaint.setInitiator(initiator);
-        complaint.setPeople(peoples);
-
         JSONObject json = createResponse(complaint);
 
         return json;
@@ -296,72 +285,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         initiator.setAlias(aliasInformation);
 
         return initiator;
-
-    }
-
-    private Contact initPeopleFields()
-    {
-
-        String userId = getAuthentication().getName();
-        AcmUser user = getUserDao().findByUserId(userId);
-
-        Contact people = new Contact();
-
-        MainInformation mainInformation = new MainInformation();
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
-
-        if (types != null && types.size() > 0)
-        {
-            types.remove(0);
-        }
-
-        mainInformation.setTitles(titles);
-        mainInformation.setAnonymous("");
-        mainInformation.setTypes(types);
-
-        List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
-        ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
-
-        communicatoinDevice.setTypes(types);
-        communicatoinDevice.setCreated(new Date());
-        communicatoinDevice.setCreator(user.getFullName());
-        communicationDevices.add(communicatoinDevice);
-
-        List<Organization> organizationInformations = new ArrayList<Organization>();
-        Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
-
-        organizationInformation.setOrganizationTypes(types);
-        organizationInformation.setCreated(new Date());
-        organizationInformation.setCreator(user.getFullName());
-        organizationInformations.add(organizationInformation);
-
-        List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
-        PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
-
-        locationInformation.setTypes(types);
-        locationInformation.setCreated(new Date());
-        locationInformation.setCreator(user.getFullName());
-        locationInformations.add(locationInformation);
-
-        PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
-
-        aliasInformation.setAliasTypes(types);
-        aliasInformation.setCreated(new Date());
-        aliasInformation.setCreator(user.getFullName());
-
-
-        people.setMainInformation(mainInformation);
-        people.setCommunicationDevice(communicationDevices);
-        people.setOrganization(organizationInformations);
-        people.setLocation(locationInformations);
-        people.setAlias(aliasInformation);
-
-        return people;
 
     }
 
