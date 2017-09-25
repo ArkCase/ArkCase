@@ -50,6 +50,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.microsoft.ews-java-api</groupId>
             <artifactId>ews-java-api</artifactId>
         </dependency>
