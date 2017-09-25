@@ -1,6 +1,16 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import com.armedia.acm.services.config.lookups.model.StandardLookup;
+import com.armedia.acm.services.config.lookups.model.StandardLookupEntry;
+import com.armedia.acm.services.config.lookups.service.LookupDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,21 +30,18 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-complaint-plugin-test.xml"
-})
+        "classpath:/spring/spring-library-complaint-plugin-test.xml" })
 public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
+    private LookupDao mockLookupDao;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -43,8 +50,9 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Properties complaintProperties = new Properties();
+    private StandardLookup complaintPrioritiesLookup;
 
+    private StandardLookup complaintTypesLookup;
 
     @Before
     public void setUp() throws Exception
@@ -55,28 +63,43 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         mockAuthentication = createMock(Authentication.class);
 
-        complaintProperties.setProperty("complaint.priorities", "1,2,3,4");
-        complaintProperties.setProperty("complaint.complaint-types", "A,B,C,D");
+        complaintPrioritiesLookup = new StandardLookup();
+        List<StandardLookupEntry> complaintPrioritiesLookupEntries = new ArrayList<>();
+        complaintPrioritiesLookupEntries.add(new StandardLookupEntry("1", "value1"));
+        complaintPrioritiesLookupEntries.add(new StandardLookupEntry("2", "value2"));
+        complaintPrioritiesLookupEntries.add(new StandardLookupEntry("3", "value3"));
+        complaintPrioritiesLookupEntries.add(new StandardLookupEntry("4", "value4"));
+        complaintPrioritiesLookup.setEntries(complaintPrioritiesLookupEntries);
 
-        unit.setComplaintProperties(complaintProperties);
+        complaintTypesLookup = new StandardLookup();
+        List<StandardLookupEntry> complaintTypesLookupEntries = new ArrayList<>();
+        complaintTypesLookupEntries.add(new StandardLookupEntry("A", "valueA"));
+        complaintTypesLookupEntries.add(new StandardLookupEntry("B", "valueB"));
+        complaintTypesLookupEntries.add(new StandardLookupEntry("C", "valueC"));
+        complaintTypesLookupEntries.add(new StandardLookupEntry("D", "valueD"));
+        complaintTypesLookup.setEntries(complaintTypesLookupEntries);
 
+        mockLookupDao = createMock(LookupDao.class);
+
+        unit.setLookupDao(mockLookupDao);
     }
 
     @Test
     public void getComplaintTypes() throws Exception
     {
-        String[] typeList = {"A", "B", "C", "D"};
+        String[] typeList = {
+                "A",
+                "B",
+                "C",
+                "D" };
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
-
+        expect((StandardLookup) mockLookupDao.getLookupByName("complaintTypes")).andReturn(complaintTypesLookup);
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/complaint/types")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication))
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/api/latest/plugin/complaint/types")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).principal(mockAuthentication)).andReturn();
 
         verifyAll();
 
@@ -95,24 +118,25 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         assertArrayEquals(typeList, types);
 
-
     }
 
     @Test
     public void getComplaintPriorities() throws Exception
     {
-        String[] priorityList = {"1", "2", "3", "4"};
+        String[] priorityList = {
+                "1",
+                "2",
+                "3",
+                "4" };
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
+        expect((StandardLookup) mockLookupDao.getLookupByName("priorities")).andReturn(complaintPrioritiesLookup);
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/complaint/priorities")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .principal(mockAuthentication))
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/api/latest/plugin/complaint/priorities")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).principal(mockAuthentication)).andReturn();
 
         verifyAll();
 
@@ -131,7 +155,6 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         assertArrayEquals(priorityList, priorities);
 
-
     }
 
     @Test
@@ -145,21 +168,17 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
         xmlConverter.setMarshaller(marshaller);
         xmlConverter.setUnmarshaller(marshaller);
 
-        mockMvc = MockMvcBuilders.
-                standaloneSetup(unit).
-                setHandlerExceptionResolvers(exceptionResolver).
-                setMessageConverters(xmlConverter).
-                build();
+        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).setMessageConverters(xmlConverter)
+                .build();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
+        expect((StandardLookup) mockLookupDao.getLookupByName("priorities")).andReturn(complaintPrioritiesLookup);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/complaint/priorities")
-                        .accept(MediaType.parseMediaType("text/xml"))
-                        .principal(mockAuthentication))
+                get("/api/latest/plugin/complaint/priorities").accept(MediaType.parseMediaType("text/xml")).principal(mockAuthentication))
                 .andReturn();
 
         verifyAll();
@@ -169,7 +188,6 @@ public class GetComplaintListOfValuesAPIControllerTest extends EasyMockSupport
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertTrue(result.getResponse().getContentType().startsWith(MediaType.TEXT_XML_VALUE));
-
 
     }
 

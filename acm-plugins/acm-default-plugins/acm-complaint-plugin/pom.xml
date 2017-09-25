@@ -145,7 +145,7 @@
             <artifactId>acm-mule-module-cmis</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
