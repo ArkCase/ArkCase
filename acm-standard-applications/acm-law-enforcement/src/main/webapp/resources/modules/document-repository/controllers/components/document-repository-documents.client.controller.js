@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
-    , '$modal', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
+    , '$modal', '$translate', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
     , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
-    , function ($scope, $stateParams, $modal, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
+    , function ($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
         , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
@@ -46,7 +46,10 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes = data[1];
+                    $scope.treeConfig.fileTypes=[];
+                    for(var i = 0; i < data[1].length; i++){
+                        $scope.treeConfig.fileTypes.push({"type":data[1][i].key, "label": $translate.instant(data[1][i].value)});
+                    }
                     $scope.treeConfig.fileLanguages = data[2]; 
                 });
         };

@@ -15,21 +15,6 @@ angular.module('services').factory('Complaint.LookupService', ['$resource', '$tr
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * ngdoc method
-             * name _getComplaintTypes
-             * methodOf services:Complaint.LookupService
-             *
-             * @description
-             * Query list of complaint types
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            _getComplaintTypes: {
-                url: 'api/latest/plugin/complaint/types'
-                , cache: true
-                , isArray: true
-            }
-            /**
-             * ngdoc method
              * name _getApprovers
              * methodOf services:Complaint.LookupService
              *
@@ -38,7 +23,7 @@ angular.module('services').factory('Complaint.LookupService', ['$resource', '$tr
              *
              * @returns {Object} Object returned by $resource
              */
-            , _getApprovers: {
+            _getApprovers: {
                 url: 'api/latest/service/functionalaccess/users/acm-complaint-approve/:group/:assignee'
                 , cache: true
                 , isArray: true
@@ -63,18 +48,7 @@ angular.module('services').factory('Complaint.LookupService', ['$resource', '$tr
          * @returns {Object} Promise
          */
         Service.getComplaintTypes = function () {
-            var cacheComplaintTypes = new Store.SessionData(Service.SessionCacheNames.COMPLAINT_TYPES);
-            var complaintTypes = cacheComplaintTypes.get();
-            return Util.serviceCall({
-                service: Service._getComplaintTypes
-                , result: complaintTypes
-                , onSuccess: function (data) {
-                    if (Service.validateComplaintTypes(data)) {
-                        cacheComplaintTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return ObjectLookupService.getComplaintTypes();
         };
 
         /**

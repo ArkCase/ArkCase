@@ -19,10 +19,6 @@
                 <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
                 <prop key="complaint.workflow.activiti.inApproval.stateName">IN APPROVAL</prop>
                 <prop key="complaint.workflow.activiti.approved.stateName">ACTIVE</prop>
-                <prop key="complaint.complaint-types">Agricultural,Arson,Better Business Dispute,Domestic
-                    Dispute,Government,Local,Pollution
-                </prop>
-                <prop key="complaint.priorities">Low,Medium,High,Expedite</prop>
                 <prop key="ephesoft.load.documents.seconds">10</prop>
             </props>
         </property>
@@ -189,23 +185,11 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" scope="prototype">
-        <property name="objectAssociationDao" ref="objectAssociationDao"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
+    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" parent="frevvoFormService" scope="prototype">
         <property name="complaintFactory" ref="complaintFactory"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
-        <property name="properties" ref="acm-form-properties"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="userActionDao" ref="userActionDao"/>
-        <property name="userActionExecutor" ref="userActionExecutor"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="personDao" ref="acmPersonDao"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
-        <property name="functionalAccessService" ref="functionalAccessService"/>
-        <property name="searchResults" ref="searchResults"/>
         <property name="tagService" ref="tagService"/>
         <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
