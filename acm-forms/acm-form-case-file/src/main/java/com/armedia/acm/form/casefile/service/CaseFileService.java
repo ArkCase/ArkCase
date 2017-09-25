@@ -28,10 +28,10 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
+
 import org.activiti.engine.RuntimeService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -40,6 +40,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,16 +60,12 @@ public class CaseFileService extends FrevvoFormAbstractService
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
     private CaseFileEventUtility caseFileEventUtility;
     private String caseFolderNameFormat;
-
     private RuntimeService activitiRuntimeService;
 
     private CaseFile caseFile;
 
-    private FunctionalAccessService functionalAccessService;
-
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#get(java.lang.String)
      */
     @Override
@@ -94,9 +91,7 @@ public class CaseFileService extends FrevvoFormAbstractService
 
     /*
      * (non-Javadoc)
-     * 
-     * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String,
-     * org.springframework.util.MultiValueMap)
+     * @see com.armedia.acm.frevvo.config.FrevvoFormService#save(java.lang.String, org.springframework.util.MultiValueMap)
      */
     @Override
     public boolean save(String xml, MultiValueMap<String, MultipartFile> attachments) throws Exception
@@ -168,7 +163,8 @@ public class CaseFileService extends FrevvoFormAbstractService
         try
         {
             caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
-        } catch (PipelineProcessException | PersistenceException e)
+        }
+        catch (PipelineProcessException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
@@ -190,7 +186,6 @@ public class CaseFileService extends FrevvoFormAbstractService
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.frevvo.config.FrevvoFormService#getFormName()
      */
     @Override
@@ -210,7 +205,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         CaseFileForm caseFileForm = new CaseFileForm();
 
         // Init Case File types
-        caseFileForm.setCaseTypes(convertToList((String) getProperties().get(getFormName() + ".types"), ","));
+        caseFileForm.setCaseTypes(getStandardLookupEntries("caseFileTypes"));
 
         JSONObject json = createResponse(caseFileForm);
 
@@ -232,7 +227,7 @@ public class CaseFileService extends FrevvoFormAbstractService
         CaseFileForm form = new CaseFileForm();
 
         // Init Participant types
-        List<String> participantTypes = convertToList((String) getProperties().get(getFormName() + ".participantTypes"), ",");
+        List<String> participantTypes = getStandardLookupEntries("caseFileParticipantTypes");
         form.setParticipantsTypeOptions(participantTypes);
         form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, getFormName()));
 
@@ -249,73 +244,6 @@ public class CaseFileService extends FrevvoFormAbstractService
         return json;
     }
 
-    private List<ContactMethod> initContactMethods()
-    {
-        List<ContactMethod> contactMethods = new ArrayList<>();
-        List<String> contactMethodTypes = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
-
-        ContactMethod contactMethod = new ContactMethod();
-
-        contactMethod.setTypes(contactMethodTypes);
-        contactMethod.setCreated(new Date());
-        contactMethod.setCreator(getUserFullName());
-
-        contactMethods.add(contactMethod);
-
-        return contactMethods;
-    }
-
-    private List<Organization> initOrganizations()
-    {
-        List<Organization> organizations = new ArrayList<>();
-        List<String> organizationsTypes = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
-
-        Organization organization = new Organization();
-
-        organization.setOrganizationTypes(organizationsTypes);
-        organization.setCreated(new Date());
-        organization.setCreator(getUserFullName());
-
-        organizations.add(organization);
-
-        return organizations;
-    }
-
-    private List<PostalAddress> initAddresses()
-    {
-        List<PostalAddress> locations = new ArrayList<>();
-        List<String> locationTypes = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
-
-        PostalAddress location = new PostalAddress();
-
-        location.setTypes(locationTypes);
-        location.setCreated(new Date());
-        location.setCreator(getUserFullName());
-
-        locations.add(location);
-
-        return locations;
-    }
-
-    private String getUserFullName()
-    {
-        String fullName = null;
-
-        String userId = getAuthentication().getName();
-
-        if (userId != null)
-        {
-            AcmUser user = getUserDao().findByUserId(userId);
-
-            if (user != null)
-            {
-                return user.getFullName();
-            }
-        }
-
-        return fullName;
-    }
-
     private CaseFileForm handleCaseReinvestigation(CaseFileForm form)
     {
         String mode = getRequest().getParameter("mode");
@@ -327,7 +255,8 @@ public class CaseFileService extends FrevvoFormAbstractService
             try
             {
                 oldCaseId = Long.parseLong(oldCaseIdAsString);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LOG.error("Cannot parse String oldCaseId={} to Long.", oldCaseIdAsString, e);
             }
@@ -414,7 +343,8 @@ public class CaseFileService extends FrevvoFormAbstractService
                     }
                 }
             }
-        } catch (AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        }
+        catch (AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             LOG.error("Cannot save old case documents.", e);
         }
@@ -507,18 +437,6 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setCaseFile(CaseFile caseFile)
     {
         this.caseFile = caseFile;
-    }
-
-    @Override
-    public FunctionalAccessService getFunctionalAccessService()
-    {
-        return functionalAccessService;
-    }
-
-    @Override
-    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
-    {
-        this.functionalAccessService = functionalAccessService;
     }
 
     public CaseFileEventUtility getCaseFileEventUtility()
