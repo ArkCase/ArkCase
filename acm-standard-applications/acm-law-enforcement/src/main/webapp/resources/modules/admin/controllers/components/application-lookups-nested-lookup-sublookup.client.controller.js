@@ -102,7 +102,8 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
                 $scope.selectedLookupDef = selectedLookupDef;
                 $scope.parentLookup = parentLookup;
                 $scope.selectedParentLookupValue = selectedParentLookupValue;
-                $scope.lookup.splice(0, $scope.lookup.length, ...selectedParentLookupValue.subLookup);
+                $scope.lookup.splice(0, $scope.lookup.length);
+                $scope.lookup.push.apply($scope.lookup, selectedParentLookupValue.subLookup);
             } else {
                 $scope.selectedLookupDef = {};
                 $scope.parentLookup = [];
@@ -134,12 +135,14 @@ angular.module('admin').controller('Admin.NestedLookupSubLookupController', ['$s
         function fetchLookup() {
             ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
                 // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
-                $scope.parentLookup.splice(0, $scope.parentLookup.length, ...lookup);
+                $scope.parentLookup.splice(0, $scope.parentLookup.length);
+                $scope.parentLookup.push.apply($scope.parentLookup, lookup);
                 var selectedParentLookupValue = _.find($scope.parentLookup, function(parentLookupEntry) {
                     return parentLookupEntry.key == $scope.selectedParentLookupValue.key;
                 });
                 $scope.selectedParentLookupValue = selectedParentLookupValue;
-                $scope.lookup.splice(0, $scope.lookup.length, ...$scope.selectedParentLookupValue.subLookup);
+                $scope.lookup.splice(0, $scope.lookup.length);
+                $scope.lookup.push.apply($scope.lookup, $scope.selectedParentLookupValue.subLookup);
             });
         }
     }
