@@ -60,7 +60,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             //init children array
             if (!group.children)
                 group.children = [];
-            if (!group.parent_id_s) {
+            if (!group.ascendants_id_ss) {
                 //add group to root
                 if (top)
                     $scope.data.unshift(group);
@@ -130,14 +130,17 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
-                    newGroup.name = UUIDRegEx.test(newGroup.name) ? newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
+                    newGroup.name = UUIDRegEx.test(newGroup.name) ?
+                        newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
 
                     groupsMap[newGroup.object_id_s] = newGroup;
+
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
                     }
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
 
+                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
                     addToTree(newGroup, true);
                     deferred.resolve(newGroup);
                 }, function () {
@@ -538,14 +541,15 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     //added successfully
                     var newGroup = payload.data;
                     newGroup.object_sub_type_s = 'ADHOC_GROUP';
-                    newGroup.object_id_s = payload.data.name;
+                    newGroup.object_id_s = payload.data.object_id_s;
                     if (payload.data.supervisor)
                         newGroup.supervisor = payload.data.supervisor.fullName;
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
 
-                    newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
+                    newGroup.name = UUIDRegEx.test(payload.data.name) ?
+                        payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
 
                     groupsMap[payload.data.object_id_s] = newGroup;
                     addToTree(newGroup, true);

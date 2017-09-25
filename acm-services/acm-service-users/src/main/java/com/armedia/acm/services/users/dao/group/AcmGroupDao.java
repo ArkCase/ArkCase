@@ -29,7 +29,6 @@ import java.util.Set;
  */
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Transactional
@@ -83,7 +82,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     }
 
     @Transactional
-    public AcmGroup markGroupDelete(AcmGroup group)
+    public AcmGroup markGroupDeleted(AcmGroup group)
     {
         group.setAscendantsList(null);
         group.setStatus(AcmGroupStatus.DELETE);
@@ -192,19 +191,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         return result.isEmpty() ? null : result.get(0);
     }
-
-    /*public AcmGroup subGroupByUIName(AcmGroup group)
-    {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
-                "group.parentGroup.name = :uuidName AND group.status <> :status", AcmGroup.class);
-
-        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
-        query.setParameter("uuidName", group.getParentGroup().getName());
-        query.setParameter("status", AcmGroupStatus.DELETE.name());
-        List<AcmGroup> result = query.getResultList();
-
-        return result.isEmpty() ? null : result.get(0);
-    }*/
 
     /**
      * Find ad-hoc group by matching name.

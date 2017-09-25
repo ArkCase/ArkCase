@@ -68,8 +68,9 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
                 solr.getAdditionalProperties().put("supervisor_name_s", in.getSupervisor().getFullName());
             }
         }
-        // TODO: also add descendants groups
+
         solr.setMember_id_ss(in.getUserMemberIds().collect(Collectors.toList()));
+        solr.setChild_id_ss(in.getGroupMemberIds().collect(Collectors.toList()));
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

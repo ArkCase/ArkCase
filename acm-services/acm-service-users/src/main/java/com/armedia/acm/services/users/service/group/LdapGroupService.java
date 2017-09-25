@@ -157,7 +157,7 @@ public class LdapGroupService
             log.debug("No such group [{}]", group);
             throw new AcmUserActionFailedException("Delete LDAP GROUP", "GROUP", null, "No such group", null);
         }
-        getGroupDao().markGroupDelete(existingGroup);
+        getGroupDao().markGroupDeleted(existingGroup);
 
         getGroupDao().markRolesByGroupInvalid(group);
 

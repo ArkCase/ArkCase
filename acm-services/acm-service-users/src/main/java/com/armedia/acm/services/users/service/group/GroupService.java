@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.service.group;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
@@ -48,7 +49,7 @@ public interface GroupService
      * @param group
      * @return The new saved group or null if group with given name already exists in the same tree level
      */
-    // AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
+     AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
 
     /**
      * Checks if given string matches the regex .*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}
@@ -64,9 +65,19 @@ public interface GroupService
      * @param acmGroup group we want to rename
      * @param newName  group new name
      */
-    // void renameGroup(AcmGroup acmGroup, String newName);
+    void renameGroup(AcmGroup acmGroup, String newName);
 
     List<AcmGroup> findByUserMember(AcmUser user);
 
     AcmGroup markGroupDeleted(String groupId);
+
+    AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll);
+
+    AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId);
+
+    AcmGroup removeSupervisor(String groupId, boolean applyToAll);
+
+    AcmGroup removeMembersFromAdHocGroup(Set<AcmUser> members, String groupId);
+
+    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException;
 }

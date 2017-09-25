@@ -155,16 +155,7 @@ public class AcmGroupAPIController
                                Authentication auth) throws MuleException
     {
         LOG.info("Taking subgroups from Solr with ID = [{}] " + groupId);
-
-        String groupString = getGroupsByParent(groupId, startRow, maxRows, sort, auth);
-
-        if (groupString != null)
-        {
-            return groupString;
-        }
-
-        throw new IllegalStateException("Cannot retrieve subgroups for group with ID = " + groupId);
-
+        return getGroupsByParent(groupId, startRow, maxRows, sort, auth);
     }
 
     @RequestMapping(value = "/group/get/toplevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -177,8 +168,8 @@ public class AcmGroupAPIController
     {
         LOG.info("Taking all top level groups from Solr.");
 
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE "
-                + "AND -status_lcs:CLOSED";
+        String query = "object_type_s:GROUP AND -ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
         if (groupSubtype != null && !groupSubtype.isEmpty())
         {
@@ -205,7 +196,8 @@ public class AcmGroupAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    private String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
     {
         String query = "ascendants_id_ss:\"" + groupId
                 + "\" AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
@@ -229,52 +221,26 @@ public class AcmGroupAPIController
             return (String) response.getPayload();
         }
 
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        throw new IllegalStateException("Can't retrieve sub-groups for group: " + groupId + ". Unexpected payload type: "
+                + response.getPayload().getClass().getName());
     }
 
     @RequestMapping(value = "/group/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveGroup(@RequestBody AcmGroup group) throws AcmCreateObjectFailedException
+    public AcmGroup saveGroup(@RequestBody AcmGroup group)
     {
         LOG.info("Saving ad-hoc group [{}]", group.getName());
-
-       /* try
-        {
-            return groupService.checkAndSaveAdHocGroup(group);
-        } catch (Exception e)
-        {
-            throw new AcmCreateObjectFailedException("Group", e.getMessage(), e);
-        }
-*/
-        return null;
+        return groupService.checkAndSaveAdHocGroup(group);
     }
 
     @RequestMapping(value = "/group/save/{parentId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup,
-                                 @PathVariable("parentId") String parentId) throws AcmCreateObjectFailedException
+                                 @PathVariable("parentId") String parentId)
+            throws AcmCreateObjectFailedException
     {
         LOG.info("Saving ad-hoc subgroup [{}]", subGroup.getName());
-
-       /* try
-        {
-            AcmGroup parent = getGroupDao().findByName(parentId);
-
-            // If supervisor for the subgroup is empty, get from the parent group
-            if (subGroup.getSupervisor() == null)
-            {
-                subGroup.setSupervisor(parent.getSupervisor());
-            }
-
-            //    subGroup.addMemberOfGroup(parent);
-
-            return groupService.checkAndSaveAdHocGroup(subGroup);
-
-        } catch (Exception e)
-        {
-            throw new AcmCreateObjectFailedException("Group", e.getMessage(), e);
-        }*/
-        return null;
+        return groupService.saveAdHocSubGroup(subGroup, parentId);
     }
 
     @RequestMapping(value = "/group/{groupId}/remove", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -282,14 +248,7 @@ public class AcmGroupAPIController
     public AcmGroup deleteGroup(@PathVariable String groupId) throws AcmUserActionFailedException
     {
         LOG.info("Removing group with id [{}]", groupId);
-
-        try
-        {
-            return getGroupService().markGroupDeleted(groupId);
-        } catch (Exception e)
-        {
-            throw new AcmUserActionFailedException("Delete", "Group", -1L, e.getMessage(), e);
-        }
+        return getGroupService().markGroupDeleted(groupId);
     }
 
     public GroupService getGroupService()
