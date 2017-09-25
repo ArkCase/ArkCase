@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>admin.application.lookups.config.modal.addEntry</span>
+    </h3>
+    <h3 ng-show="isEdit">
+        <span translate>admin.application.lookups.config.modal.editEntry</span>
+    </h3>
+</div>
+<div class="modal-body">
+	<div class="row">
+	    <div class="col-sm-4 form-group">
+	        <label for="Key" translate>admin.application.lookups.config.data.key</label><span class="required-asterisk">*</span>
+	        <input id="key" type="text" ng-model="entry.key" class="input-md form-control" required="required"
+	               placeholder="{{ 'admin.application.lookups.config.modal.key.placeholder' | translate }}">
+	    </div>
+	    <div class="col-sm-8 form-group">
+	        <label for="Value" translate>admin.application.lookups.config.data.value</label><span class="required-asterisk">*</span>
+	        <!-- TODO: select from existing labels modal form -->
+	        <input id="value" type="text" ng-model="entry.value" class="input-md form-control" required="required"
+	               placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}">
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-sm-4 form-group">
+	        <label for="InverseKey" translate>admin.application.lookups.config.data.inverseKey</label><span class="required-asterisk">*</span>
+	        <input id="inverseKey" type="text" ng-model="entry.inverseKey" class="input-md form-control" required="required"
+	               placeholder="{{ 'admin.application.lookups.config.modal.inversekey.placeholder' | translate }}">
+	    </div>
+	    <div class="col-sm-8 form-group">
+	        <label for="InverseValue" translate>admin.application.lookups.config.data.inverseValue</label><span class="required-asterisk">*</span>
+	        <!-- TODO: select from existing labels modal form -->
+	        <input id="inverseValue" type="text" ng-model="entry.inverseValue" class="input-md form-control" required="required"
+	               placeholder="{{ 'admin.application.lookups.config.modal.inversevalue.placeholder' | translate }}">
+	    </div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.application.lookups.config.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="lookupEntryForm.$invalid">
+        <span translate>admin.application.lookups.config.modal.btnOk.text</span>
+    </button>
+</div>

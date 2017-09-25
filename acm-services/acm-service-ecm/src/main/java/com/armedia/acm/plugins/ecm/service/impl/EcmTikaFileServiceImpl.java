@@ -168,8 +168,18 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         if (strCreated != null)
         {
             LocalDateTime created = LocalDateTime.parse(strCreated, DateTimeFormatter.ISO_DATE_TIME);
-            Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
-            fileMetadata.put("Creation-Date-Local", createdDate);
+
+            // some movies don't store any dates at all, and then Tika presents the dates from the year 1904 for
+            // some reason, usually as "1904-01-01T00:00:00Z".  So if the date is before 1950 we will ignore it.
+            if (created.getYear() > 1950)
+            {
+                Date createdDate = Date.from(created.toInstant(ZoneOffset.UTC));
+                fileMetadata.put("Creation-Date-Local", createdDate);
+            }
+            else
+            {
+                fileMetadata.put("Creation-Date-Local", null);
+            }
         }
 
         PointLocation gpsPoint = null;

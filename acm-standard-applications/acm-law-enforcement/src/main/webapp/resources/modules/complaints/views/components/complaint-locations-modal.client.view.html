@@ -29,21 +29,18 @@
                         ng-options="item.type as item.name for item in addressTypes"></select>
             </div>
         </div>
-        <div class="row">
-            <div class="col-sm-6 form-group">
-                <label for="streetAddress" translate>
-                    complaints.comp.addresses.modal.streetAddress.label</label><span class="required-asterisk">*</span>
-                <input id="streetAddress" type="text" ng-model="address.streetAddress" required="required"
-                       class="input-md form-control"
-                       placeholder="{{ 'complaints.comp.addresses.modal.streetAddress.placeholder' | translate }}">
-            </div>
-            <div class="col-sm-6 form-group">
-                <label for="streetAddress2" translate>
-                    complaints.comp.addresses.modal.streetAddress2.label</label>
-                <input id="streetAddress2" type="text" ng-model="address.streetAddress2"
-                       class="input-md form-control"
-                       placeholder="{{ 'complaints.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
-            </div>
+        <select
+                id="location.type"
+                ng-model="location.type"
+                ng-options="item.key as item.value | translate for item in addressTypes"></select>
+
+        <div>
+            <label for="location.streetAddress" translate>complaints.comp.locations.modal.street.label</label>
+        </div>
+        <input id="location.streetAddress" type="text" ng-model="location.streetAddress">
+
+        <div>
+            <label for="location.city" translate>complaints.comp.locations.modal.city.label</label>
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">

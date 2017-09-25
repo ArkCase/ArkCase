@@ -8,7 +8,6 @@ import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -26,6 +25,7 @@ import com.armedia.acm.services.tag.service.AssociatedTagService;
 import com.armedia.acm.services.tag.service.TagService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserActionName;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 /**
  * @author riste.tutureski
  */
@@ -46,7 +45,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     private Logger LOG = LoggerFactory.getLogger(ComplaintService.class);
 
     private SaveComplaintTransaction saveComplaintTransaction;
-    private AcmPluginManager acmPluginManager;
     private PersonDao personDao;
     private ComplaintEventPublisher complaintEventPublisher;
     private TagService tagService;
@@ -99,7 +97,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
                 try
                 {
                     existingContactId = Long.parseLong(getRequest().getParameter("existingContactId"));
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     LOG.warn("Provided ID cannot be converted to Long format: ID=" + getRequest().getParameter("existingContactId"));
                 }
@@ -135,15 +134,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         // Update Frevvo XML (with object ids) after saving the object
         updateXMLAttachment(attachments, getFormName(), complaint);
 
-        saveAttachments(
-                attachments,
-                complaint.getCmisFolderId(),
-                FrevvoFormName.COMPLAINT.toUpperCase(),
-                complaint.getComplaintId());
+        saveAttachments(attachments, complaint.getCmisFolderId(), FrevvoFormName.COMPLAINT.toUpperCase(), complaint.getComplaintId());
 
         if (null != complaint && null != complaint.getComplaintId())
         {
-            getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_CREATED, getAuthentication().getName());
+            getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_CREATED,
+                    getAuthentication().getName());
         }
 
         return retval;
@@ -181,7 +177,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             LOG.debug("Creating Tag and AssociatedTag object.");
             String tagName = acmComplaint.getTag();
             AcmTag complaintTag = getTagService().saveTag(tagName, tagName, tagName);
-            getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), acmComplaint.getComplaintTitle(), complaintTag);
+            getAssociatedTagService().saveAssociateTag("COMPLAINT", acmComplaint.getComplaintId(), acmComplaint.getComplaintTitle(),
+                    complaintTag);
         }
 
         getComplaintEventPublisher().publishComplaintEvent(acmComplaint, getAuthentication(), isNew, true);
@@ -201,7 +198,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact initiator = initInitiatorFields();
         Contact people = initPeopleFields();
 
-        List<Contact> peoples = new ArrayList<Contact>();
+        List<Contact> peoples = new ArrayList<>();
         peoples.add(people);
 
         ComplaintForm complaint = initIncidentFields();
@@ -219,7 +216,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         ComplaintForm complaint = new ComplaintForm();
 
         // Participants Initialization
-        List<String> participantTypes = convertToList((String) getProperties().get(getFormName() + ".participantTypes"), ",");
+        List<String> participantTypes = getStandardLookupEntries("complaintParticipantTypes");
         complaint.setParticipantsTypeOptions(participantTypes);
         complaint.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, getFormName()));
 
@@ -245,49 +242,46 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact initiator = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
+        List<String> types = getStandardLookupEntries("complaintPersonTypes");
 
-        mainInformation.setTitles(titles);
+        mainInformation.setTitles(getStandardLookupEntries("personTitles"));
         mainInformation.setAnonymous("");
         mainInformation.setTypes(types);
         mainInformation.setType("Initiator");
 
-        List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
+        List<ContactMethod> communicationDevices = new ArrayList<>();
         ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
+        types = getStandardLookupEntries("deviceTypes");
 
         communicatoinDevice.setTypes(types);
         communicatoinDevice.setCreated(new Date());
         communicatoinDevice.setCreator(user.getFullName());
         communicationDevices.add(communicatoinDevice);
 
-        List<Organization> organizationInformations = new ArrayList<Organization>();
+        List<Organization> organizationInformations = new ArrayList<>();
         Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
+        types = getStandardLookupEntries("organizationTypes");
 
         organizationInformation.setOrganizationTypes(types);
         organizationInformation.setCreated(new Date());
         organizationInformation.setCreator(user.getFullName());
         organizationInformations.add(organizationInformation);
 
-        List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
+        List<PostalAddress> locationInformations = new ArrayList<>();
         PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+        types = getStandardLookupEntries("locationTypes");
 
         locationInformation.setTypes(types);
         locationInformation.setCreated(new Date());
         locationInformation.setCreator(user.getFullName());
         locationInformations.add(locationInformation);
 
-
         PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
+        types = getStandardLookupEntries("aliasTypes");
 
         aliasInformation.setAliasTypes(types);
         aliasInformation.setCreated(new Date());
         aliasInformation.setCreator(user.getFullName());
-
 
         initiator.setMainInformation(mainInformation);
         initiator.setCommunicationDevice(communicationDevices);
@@ -308,39 +302,38 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         Contact people = new Contact();
 
         MainInformation mainInformation = new MainInformation();
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
+        List<String> types = getStandardLookupEntries("complaintPersonTypes");
 
         if (types != null && types.size() > 0)
         {
             types.remove(0);
         }
 
-        mainInformation.setTitles(titles);
+        mainInformation.setTitles(getStandardLookupEntries("personTitles"));
         mainInformation.setAnonymous("");
         mainInformation.setTypes(types);
 
-        List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
+        List<ContactMethod> communicationDevices = new ArrayList<>();
         ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
+        types = getStandardLookupEntries("deviceTypes");
 
         communicatoinDevice.setTypes(types);
         communicatoinDevice.setCreated(new Date());
         communicatoinDevice.setCreator(user.getFullName());
         communicationDevices.add(communicatoinDevice);
 
-        List<Organization> organizationInformations = new ArrayList<Organization>();
+        List<Organization> organizationInformations = new ArrayList<>();
         Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
+        types = getStandardLookupEntries("organizationTypes");
 
         organizationInformation.setOrganizationTypes(types);
         organizationInformation.setCreated(new Date());
         organizationInformation.setCreator(user.getFullName());
         organizationInformations.add(organizationInformation);
 
-        List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
+        List<PostalAddress> locationInformations = new ArrayList<>();
         PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+        types = getStandardLookupEntries("locationTypes");
 
         locationInformation.setTypes(types);
         locationInformation.setCreated(new Date());
@@ -348,12 +341,11 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         locationInformations.add(locationInformation);
 
         PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
+        types = getStandardLookupEntries("aliasTypes");
 
         aliasInformation.setAliasTypes(types);
         aliasInformation.setCreated(new Date());
         aliasInformation.setCreator(user.getFullName());
-
 
         people.setMainInformation(mainInformation);
         people.setCommunicationDevice(communicationDevices);
@@ -391,9 +383,15 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         ComplaintForm complaint = new ComplaintForm();
 
-        List<String> categories = convertToList((String) getProperties().get(getFormName() + ".categories"), ",");
-        List<String> priorities = convertToList((String) getProperties().get(getFormName() + ".priorities"), ",");
-        List<String> frequencies = convertToList((String) getProperties().get(getFormName() + ".frequencies"), ",");
+        List<String> categories = getStandardLookupEntries("complaintTypes");
+        List<String> priorities = getStandardLookupEntries("priorities");
+        List<String> frequencies = getStandardLookupEntries("frequencies");
+        List<String> locationTypes = getStandardLookupEntries("locationTypes");
+
+        PostalAddress location = new PostalAddress();
+        location.setTypes(locationTypes);
+        location.setCreated(new Date());
+        location.setCreator(user.getFullName());
 
         complaint.setCategories(categories);
         complaint.setPriorities(priorities);
@@ -410,12 +408,13 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     {
         SearchResult searchResult = new SearchResult();
 
-        if ((null != existingContactName && !"".equals(existingContactName)) || (null != existingContactValue && !"".equals(existingContactValue)))
+        if ((null != existingContactName && !"".equals(existingContactName))
+                || (null != existingContactValue && !"".equals(existingContactValue)))
         {
             List<Person> persons = personDao.findByNameOrContactValue(existingContactName, existingContactValue);
             if (null != persons && persons.size() > 0)
             {
-                List<String> result = new ArrayList<String>();
+                List<String> result = new ArrayList<>();
                 for (Person person : persons)
                 {
                     result.add(person.getId() + "=" + person.getGivenName() + " " + person.getFamilyName());
@@ -438,9 +437,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         if (null != person)
         {
-            String information = "<strong>Title:</strong> " + person.getTitle() + "<br/>" +
-                    "<strong>First Name:</strong> " + person.getGivenName() + "<br/>" +
-                    "<strong>Last Name:</strong> " + person.getFamilyName() + "<br/>";
+            String information = "<strong>Title:</strong> " + person.getTitle() + "<br/>" + "<strong>First Name:</strong> "
+                    + person.getGivenName() + "<br/>" + "<strong>Last Name:</strong> " + person.getFamilyName() + "<br/>";
 
             // Communication Devices
             information = information + "<strong>Communication Devices:</strong> <br/>";
@@ -452,7 +450,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
                     information = information + "   - " + contactMethod.getType() + ": " + contactMethod.getValue() + "<br/>";
                 }
 
-            } else
+            }
+            else
             {
                 information = information + "   - No any data.<br/>";
             }
@@ -464,10 +463,12 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             {
                 for (Organization organization : organizations)
                 {
-                    information = information + "   - " + organization.getOrganizationType() + ": " + organization.getOrganizationValue() + "<br/>";
+                    information = information + "   - " + organization.getOrganizationType() + ": " + organization.getOrganizationValue()
+                            + "<br/>";
                 }
 
-            } else
+            }
+            else
             {
                 information = information + "   - No any data.<br/>";
             }
@@ -479,20 +480,20 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
             {
                 for (PostalAddress location : locations)
                 {
-                    information = information + "   - " + location.getType() + ": <br/>" +
-                            "      - Address:" + location.getStreetAddress() + "<br/>" +
-                            "      - City:" + location.getCity() + "<br/>" +
-                            "      - State:" + location.getState() + "<br/>" +
-                            "      - Zip Code:" + location.getZip() + "<br/>";
+                    information = information + "   - " + location.getType() + ": <br/>" + "      - Address:" + location.getStreetAddress()
+                            + "<br/>" + "      - City:" + location.getCity() + "<br/>" + "      - State:" + location.getState() + "<br/>"
+                            + "      - Zip Code:" + location.getZip() + "<br/>";
                 }
 
-            } else
+            }
+            else
             {
                 information = information + "   - No any data.<br/>";
             }
 
             searchResult.setInformation(information);
-        } else
+        }
+        else
         {
             LOG.warn("There is no any Person with ID=" + id);
         }
@@ -535,22 +536,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     }
 
     /**
-     * @return the acmPluginManager
-     */
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    /**
-     * @param acmPluginManager the acmPluginManager to set
-     */
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
-    }
-
-    /**
      * @return the personDao
      */
     public PersonDao getPersonDao()
@@ -559,7 +544,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
     }
 
     /**
-     * @param personDao the personDao to set
+     * @param personDao
+     *            the personDao to set
      */
     public void setPersonDao(PersonDao personDao)
     {
@@ -571,8 +557,7 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         return complaintEventPublisher;
     }
 
-    public void setComplaintEventPublisher(
-            ComplaintEventPublisher complaintEventPublisher)
+    public void setComplaintEventPublisher(ComplaintEventPublisher complaintEventPublisher)
     {
         this.complaintEventPublisher = complaintEventPublisher;
     }

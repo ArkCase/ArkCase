@@ -15,6 +15,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.service.SaveCaseService;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.activiti.engine.RuntimeService;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+
 import java.util.List;
 
 /**
@@ -79,21 +81,14 @@ public class ProjectService extends FrevvoFormAbstractService
         updateXMLAttachment(attachments, FrevvoFormName.PROJECT, form);
 
         // Save Attachments
-        FrevvoUploadedFiles frevvoFiles = saveAttachments(
-                attachments,
-                form.getCmisFolderId(),
-                FrevvoFormName.CASE_FILE.toUpperCase(),
+        FrevvoUploadedFiles frevvoFiles = saveAttachments(attachments, form.getCmisFolderId(), FrevvoFormName.CASE_FILE.toUpperCase(),
                 form.getId());
 
         String mode = getRequest().getParameter("mode");
         if (!"edit".equals(mode))
         {
             CaseFileWorkflowListener workflowListener = new CaseFileWorkflowListener();
-            workflowListener.handleNewCaseFile(
-                    getCaseFile(),
-                    frevvoFiles,
-                    getActivitiRuntimeService(),
-                    getFileWorkflowBusinessRule(),
+            workflowListener.handleNewCaseFile(getCaseFile(), frevvoFiles, getActivitiRuntimeService(), getFileWorkflowBusinessRule(),
                     this);
         }
 
@@ -119,7 +114,8 @@ public class ProjectService extends FrevvoFormAbstractService
         try
         {
             caseFile = getSaveCaseService().saveCase(caseFile, getAuthentication(), getUserIpAddress());
-        } catch (PipelineProcessException | PersistenceException e)
+        }
+        catch (PipelineProcessException | PersistenceException e)
         {
             throw new AcmCreateObjectFailedException("Case File", e.getMessage(), e);
         }
@@ -159,7 +155,7 @@ public class ProjectService extends FrevvoFormAbstractService
         ProjectForm form = new ProjectForm();
 
         // Init Participant types
-        List<String> participantTypes = convertToList((String) getProperties().get(FrevvoFormName.PROJECT + ".participantTypes"), ",");
+        List<String> participantTypes = getStandardLookupEntries("projectParticipantTypes");
         form.setParticipantsTypeOptions(participantTypes);
 
         form.setParticipantsPrivilegeTypes(getParticipantsPrivilegeTypes(participantTypes, FrevvoFormName.PROJECT));
@@ -218,8 +214,7 @@ public class ProjectService extends FrevvoFormAbstractService
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(
-            FileWorkflowBusinessRule fileWorkflowBusinessRule)
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
