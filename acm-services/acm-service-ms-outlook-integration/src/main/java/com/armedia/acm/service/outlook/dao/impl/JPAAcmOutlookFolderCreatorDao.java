@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
@@ -126,6 +127,33 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     /*
      * (non-Javadoc)
      *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long)
+     */
+    @Override
+    @Transactional
+    public AcmOutlookFolderCreator getFolderCreator(Long creatorId) throws AcmOutlookFolderCreatorDaoException
+    {
+
+        if (creatorId == null)
+        {
+            throw new AcmOutlookFolderCreatorDaoException("Creator ID cannot be null.");
+        }
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
+                AcmOutlookFolderCreator.class);
+        query.setParameter("creatorId", creatorId);
+
+        try
+        {
+            return query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException e)
+        {
+            throw new AcmOutlookFolderCreatorDaoException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long,
      * java.lang.String)
      */
@@ -211,28 +239,21 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      * (non-Javadoc)
      *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#updateFolderCreator(com.armedia.acm.service.
-     * outlook.model.AcmOutlookFolderCreator)
+     * outlook.model.AcmOutlookFolderCreator, com.armedia.acm.service. outlook.model.AcmOutlookFolderCreator)
      */
     @Override
     @Transactional
-    public boolean updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException
+    public void updateFolderCreator(AcmOutlookFolderCreator existing, AcmOutlookFolderCreator updatedCreator)
+            throws AcmOutlookFolderCreatorDaoException
     {
         log.debug("Updating folder creator with id [{}].", updatedCreator.getId());
 
-        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
-                AcmOutlookFolderCreator.class);
-        query.setParameter("creatorId", updatedCreator.getId());
-
         try
         {
-            AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
+            existing.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
+            existing.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
 
-            boolean shouldRecreate = !retrievedCreator.getSystemEmailAddress().equals(updatedCreator.getSystemEmailAddress());
-
-            retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
-            retrievedCreator.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
-
-            return shouldRecreate;
+            em.merge(existing);
 
         } catch (AcmEncryptionException e)
         {
@@ -241,14 +262,6 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             throw new AcmOutlookFolderCreatorDaoException(String.format(
                     "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [%s]. Cannot update it.",
                     updatedCreator.getId()), e);
-        } catch (NoResultException e)
-        {
-            log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
-                    updatedCreator.getId(), e);
-            throw new AcmOutlookFolderCreatorDaoException(
-                    String.format("There is no 'AcmOutlookFolderCreator' instance with id [%s] stored in the database. Cannot update it.",
-                            updatedCreator.getId()),
-                    e);
         }
     }
 

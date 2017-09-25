@@ -1,5 +1,7 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+import static com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder.OBJECT_TYPE;
+
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
@@ -13,6 +15,7 @@ import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
+import com.armedia.acm.data.AcmProgressEvent;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
@@ -32,11 +35,12 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +56,7 @@ import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFo
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 1, 2017
  *
  */
-public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceExtension
+public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceExtension, ApplicationEventPublisherAware
 {
     private static final String USER_ID = "OUTLOOK_CALENDAR_ADMIN_SERVICE";
 
@@ -90,6 +94,20 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     private AcmEncryptablePropertyEncryptionProperties encryptionProperties;
 
     private AcmOutlookFolderCreatorDao outlookFolderCreatorDao;
+
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
+     * context.ApplicationEventPublisher)
+     */
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     /*
      * (non-Javadoc)
@@ -175,35 +193,53 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
      * service.outlook.model.AcmOutlookFolderCreator)
      */
     @Override
-    public void recreateFolders(AcmOutlookFolderCreator folderCreator)
+    public void updateFolderCreatorAndRecreateFoldersIfNecessary(AcmOutlookFolderCreator folderCreator, String userId)
     {
         recreateFoldersExecutor.execute(() -> {
 
             try
             {
+                boolean shouldRecreate = updateFolderCreatorIfNecessary(folderCreator);
 
-                Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(folderCreator);
-
-                for (AcmOutlookObjectReference reference : objectReferences)
+                if (shouldRecreate)
                 {
-                    try
+                    Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(folderCreator);
+
+                    AcmRecreateOutlookFolderProgressIndicator progressIndicator = new AcmRecreateOutlookFolderProgressIndicator();
+                    progressIndicator.setObjectId(folderCreator.getId());
+                    progressIndicator.setObjectType(OBJECT_TYPE);
+                    progressIndicator.setUser(userId);
+                    progressIndicator.setTotal(objectReferences.size());
+
+                    int updated = 0, failed = 0;
+
+                    for (AcmOutlookObjectReference reference : objectReferences)
                     {
-                        Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
-                        if (!user.isPresent())
+                        try
                         {
-                            continue;
+                            Optional<AcmOutlookUser> outlookUser = getOutlookUser(null, reference.getObjectType());
+                            if (!outlookUser.isPresent())
+                            {
+                                continue;
+                            }
+
+                            CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
+
+                            CalendarFolderHandlerCallback callback = (user, objectId, objectType, folderName, container,
+                                    participants) -> createFolder(outlookUser.get(), objectId, objectType, folderName, container,
+                                            participants);
+                            handler.recreateFolder(outlookUser.get(), reference.getObjectId(), reference.getObjectType(), callback);
+
+                            progressIndicator.setProgress(++updated);
+                            applicationEventPublisher.publishEvent(new AcmProgressEvent(progressIndicator));
+
+                        } catch (CalendarConfigurationException | CalendarServiceException e)
+                        {
+                            log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
+                                    reference.getObjectType(), e);
+                            progressIndicator.setProgressFailed(++failed);
+                            applicationEventPublisher.publishEvent(new AcmProgressEvent(progressIndicator));
                         }
-
-                        CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
-
-                        CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
-                                participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
-                        handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(), callback);
-
-                    } catch (CalendarConfigurationException | CalendarServiceException e)
-                    {
-                        log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
-                                reference.getObjectType(), e);
                     }
                 }
 
@@ -216,76 +252,19 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
         });
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#recreateFolders(com.armedia.acm.
-     * service.outlook.model.AcmOutlookFolderCreator,
-     * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension.
-     * RecreateFoldersTotalToProcessCallback,
-     * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension.RecreateFoldersUpdateStatusCallback,
-     * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension.RecreateFoldersFinishedCallback,
-     * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension.RecreateFoldersNoRecreationCallback)
+    /**
+     * @param folderCreator
+     * @return
+     * @throws AcmOutlookFolderCreatorDaoException
      */
-    @Override
-    public void recreateFolders(AcmOutlookFolderCreator updatedCreator, RecreateFoldersTotalToProcessCallback totalToProcess,
-            RecreateFoldersUpdateStatusCallback updateStatus, RecreateFoldersFailStatusCallback failStatus,
-            RecreateFoldersFinishedCallback finished, RecreateFoldersNoRecreationCallback noRecreation)
-            throws AcmOutlookFolderCreatorDaoException
+    @Transactional
+    public boolean updateFolderCreatorIfNecessary(AcmOutlookFolderCreator folderCreator) throws AcmOutlookFolderCreatorDaoException
     {
+        AcmOutlookFolderCreator existing = outlookFolderCreatorDao.getFolderCreator(folderCreator.getId());
 
-        recreateFoldersExecutor.execute(() -> {
-
-            try
-            {
-                boolean shouldRecreate = outlookFolderCreatorDao.updateFolderCreator(updatedCreator);
-
-                if (shouldRecreate)
-                {
-                    Set<AcmOutlookObjectReference> objectReferences = outlookFolderCreatorDao.getObjectReferences(updatedCreator);
-                    totalToProcess.total(objectReferences.size());
-                    int updated = 0, failed = 0;
-                    for (AcmOutlookObjectReference reference : objectReferences)
-                    {
-                        try
-                        {
-                            Optional<AcmOutlookUser> user = getOutlookUser(null, reference.getObjectType());
-                            if (!user.isPresent())
-                            {
-                                continue;
-                            }
-
-                            CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
-
-                            CalendarFolderHandlerCallback callback = (outlookUser, objectId, objectType, folderName, container,
-                                    participants) -> createFolder(outlookUser, objectId, objectType, folderName, container, participants);
-                            String folderName = handler.recreateFolder(user.get(), reference.getObjectId(), reference.getObjectType(),
-                                    callback);
-
-                            updateStatus.updated(++updated, folderName);
-
-                        } catch (CalendarConfigurationException | CalendarServiceException e)
-                        {
-                            failStatus.failed(++failed, reference.getObjectType(), Long.toString(reference.getObjectId()));
-                            log.warn("Error while retrieving configured outlook user or recreating outlook folder for [{}] object type.",
-                                    reference.getObjectType(), e);
-                        }
-                    }
-
-                    finished.finished(objectReferences.size(), updated, failed);
-                } else
-                {
-                    noRecreation.noRecreationRequired();
-                }
-            } catch (IOException | AcmOutlookFolderCreatorDaoException e)
-            {
-                log.warn("Error while trying to recreate folders for outlook user with [{}] email address.",
-                        updatedCreator.getSystemEmailAddress(), e);
-            }
-
-        });
-
+        boolean shouldRecreate = !existing.getSystemEmailAddress().equals(folderCreator.getSystemEmailAddress());
+        outlookFolderCreatorDao.updateFolderCreator(existing, folderCreator);
+        return shouldRecreate;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

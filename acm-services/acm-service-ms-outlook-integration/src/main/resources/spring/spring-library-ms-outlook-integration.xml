@@ -130,6 +130,9 @@
     <bean id="outlookRecreatableCalendarService" class="com.armedia.acm.service.outlook.service.impl.OutlookRecreatableCalendarServiceImpl">
         <property name="containerDao" ref="acmContainerFolderDao"/>
     </bean>
+
+    <bean id="acmRecreateOutlookFoldersProgressNotifierMessageBuilder"
+          class="com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder"/>
     
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>

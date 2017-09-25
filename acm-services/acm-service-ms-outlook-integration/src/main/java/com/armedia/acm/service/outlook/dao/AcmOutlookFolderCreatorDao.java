@@ -17,6 +17,8 @@ public interface AcmOutlookFolderCreatorDao
 
     AcmOutlookFolderCreator getFolderCreator(String systemEmailAddress, String systemPassword) throws AcmOutlookFolderCreatorDaoException;
 
+    AcmOutlookFolderCreator getFolderCreator(Long creatorId) throws AcmOutlookFolderCreatorDaoException;
+
     AcmOutlookFolderCreator getFolderCreatorForObject(Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException;
 
     void recordFolderCreator(AcmOutlookFolderCreator creator, Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException;
@@ -25,13 +27,12 @@ public interface AcmOutlookFolderCreatorDao
 
     /**
      *
-     * @param updatedCreator
-     * @return {@code true} if folders should be recreated, {@code false} otherwise. Folder should be recreated if the
-     *         email address of the {@code AcmOutlookFolderCreator} is updated.
-     * @see {@code AcmOutlookFolderCreator#getSystemEmailAddress()}
+     * @param existing
+     * @param folderCreator
      * @throws AcmOutlookFolderCreatorDaoException
      */
-    boolean updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException;
+    void updateFolderCreator(AcmOutlookFolderCreator existing, AcmOutlookFolderCreator folderCreator)
+            throws AcmOutlookFolderCreatorDaoException;
 
     Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator) throws AcmOutlookFolderCreatorDaoException;
 
