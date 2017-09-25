@@ -88,8 +88,10 @@ public class UserOrgServiceImpl implements UserOrgService
     {
         ProfileDTO profileDTO = new ProfileDTO();
 
-        List<String> groupsNames = groups.stream().map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
-                ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName()).collect(Collectors.toList());
+        List<String> groupsNames = groups.stream()
+                .map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
+                        ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())
+                .collect(Collectors.toList());
 
         profileDTO.setUserOrgId(userOrgInfo.getUserOrgId());
 
@@ -123,6 +125,7 @@ public class UserOrgServiceImpl implements UserOrgService
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
         profileDTO.setTitle(userOrgInfo.getTitle());
+        profileDTO.setLangCode(user.getLang());
 
         return profileDTO;
     }

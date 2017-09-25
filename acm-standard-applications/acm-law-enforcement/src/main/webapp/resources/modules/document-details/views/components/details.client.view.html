@@ -25,7 +25,7 @@
                         <label translate>documentDetails.comp.details.label.type</label>
                         <select class="form-control"
                                 ng-model="details.ecmFile.fileType"
-                                ng-options="item.type as item.label for item in fileTypes">
+                                ng-options="item.key as item.value | translate for item in fileTypes">
                         </select>
                     </div>
 

@@ -99,6 +99,9 @@ public class AcmUser implements Serializable
     @Column(name = "cm_title")
     private String title;
 
+    @Column(name = "cm_lang")
+    private String lang;
+
     @Column(name = "cm_pwd_ex_date")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate passwordExpirationDate;
@@ -358,6 +361,16 @@ public class AcmUser implements Serializable
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public String getLang()
+    {
+        return lang;
+    }
+
+    public void setLang(String lang)
+    {
+        this.lang = lang;
     }
 
     public LocalDate getPasswordExpirationDate()

@@ -26,4 +26,22 @@
 		<property name="formUrl" ref="formResource" />
 	</bean>
     
+    <bean id="frevvoFormService" class="com.armedia.acm.frevvo.config.FrevvoFormAbstractService" abstract="true">
+        <property name="objectAssociationDao" ref="objectAssociationDao"/>
+        <property name="ecmFileDao" ref="ecmFileDao"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="properties" ref="acm-form-properties"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="userActionDao" ref="userActionDao"/>
+        <property name="userActionExecutor" ref="userActionExecutor"/>
+        <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="functionalAccessService" ref="functionalAccessService"/>
+        <property name="searchResults" ref="searchResults"/>
+        <property name="lookupDao" ref="lookupDao"/>
+        <property name="translationService" ref="translationService"/>
+    </bean>
+    
 </beans>

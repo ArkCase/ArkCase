@@ -394,8 +394,14 @@
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
-    "reports.title": "Reports",
-    "reports.config": "Reports Configuration",
+    "reports": {
+      "title": "Reports",
+      "config": "Reports Configuration",
+      "btn": {
+        "reportDesigner": "Report Designer",
+        "sync": "Synchronise"
+      }
+    },
     "forms.title": "Forms",
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
@@ -482,6 +488,26 @@
           "btnRefresh.label": "Reset",
           "btnRefresh.title": "Reset labels to default values but keep customized labels unchanged",
           "resetCustom.confirm": "Are you sure you want remove selected custom resources?"
+        }
+      },
+      "lookups.config": {
+        "title": "Lookups Configuration",
+        "choose": "Choose Lookup",
+        "data": {
+          "key" : "Key",
+          "value" : "Value",
+          "inverseKey" : "Inverse key",
+          "inverseValue" : "Inverse value"
+        },
+        "modal" : {
+          "editEntry" : "Edit lookup entry",
+          "addEntry" : "Add lookup entry",
+          "key.placeholder" : "Enter entry key",
+          "value.placeholder" : "Enter entry value as label key",
+          "inversekey.placeholder" : "Enter entry inverse key",
+          "inversevalue.placeholder" : "Enter entry inverse value as label key",
+          "btnCancel.text" : "Cancel",
+          "btnOk.text" : "Save entry"
         }
       },
       "module.config": {

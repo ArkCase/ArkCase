@@ -1,16 +1,24 @@
 package com.armedia.acm.services.users.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
 import com.armedia.acm.services.users.model.AcmUserState;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -23,6 +31,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +44,43 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     private Cache quietUserLookupCache;
 
+    private List<AcmConfig> configList;
+
+    private static String DEFAULT_LOCALE_CODE = null;
+
+    public void init()
+    {
+        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("localeSettings")).findFirst().get()
+                .getConfigAsJson();
+        Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
+                .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
+        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.localeCode");
+    }
+
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AcmUser save(AcmUser acmUser)
+    {
+        // Converting from LdapUser to AcmUser lang property is null, so we need to set it
+        if (acmUser.getLang() == null)
+        {
+            // get lang from existing user
+            AcmUser existingUser = findByUserId(acmUser.getUserId());
+            if (existingUser != null)
+            {
+                acmUser.setLang(existingUser.getLang());
+            }
+            else
+            {
+                // set default lang
+                acmUser.setLang(DEFAULT_LOCALE_CODE);
+            }
+        }
+
+        return super.save(acmUser);
+    }
 
     public AcmUser findByUserId(String userId)
     {
@@ -68,7 +113,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            } else
+            }
+            else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -78,7 +124,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 }
             }
 
-        } catch (PersistenceException pe)
+        }
+        catch (PersistenceException pe)
         {
             log.error("Could not find user record: {}", pe.getMessage(), pe);
         }
@@ -162,8 +209,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         query.select(user);
 
-        query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
+        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
+                builder.equal(user.<String> get("userState"), AcmUserState.VALID)));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -247,7 +294,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 return userPasswordExpirationDate.isBefore(LocalDate.now());
             }
             log.info("Password expiration date is not set for user [{}]", principal);
-        } catch (NoResultException | NonUniqueResultException e)
+        }
+        catch (NoResultException | NonUniqueResultException e)
         {
             log.debug("User [{}] not found!", principal);
         }
@@ -262,7 +310,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         try
         {
             return query.getSingleResult();
-        } catch (NoResultException | NonUniqueResultException e)
+        }
+        catch (NoResultException | NonUniqueResultException e)
         {
             log.error("User with password reset token: [{}] not found!", token, e.getMessage());
             return null;
@@ -309,5 +358,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public void setQuietUserLookupCache(Cache quietUserLookupCache)
     {
         this.quietUserLookupCache = quietUserLookupCache;
+    }
+
+    public List<AcmConfig> getConfigList()
+    {
+        return configList;
+    }
+
+    public void setConfigList(List<AcmConfig> configList)
+    {
+        this.configList = configList;
     }
 }

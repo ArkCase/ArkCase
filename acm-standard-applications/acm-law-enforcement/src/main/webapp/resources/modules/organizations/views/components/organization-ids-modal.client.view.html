@@ -15,7 +15,7 @@
                        translate>organizations.comp.ids.modal.type.label</label><span class="required-asterisk">*</span>
                 <select id="idTypes" class="input-md form-control" required="required"
                         ng-model="identification.identificationType"
-                        ng-options="item.type as item.name for item in identificationTypes"></select>
+                        ng-options="item.key as item.value | translate for item in identificationTypes"></select>
             </div>
             <div class="col-sm-6 form-group">
                 <label for="identificationNumber"

@@ -21,7 +21,6 @@ import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-
 public class LdapGroupService
 {
     private AcmGroupDao groupDao;
@@ -37,12 +36,19 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
+        AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
+        if (existingGroup != null)
+        {
+            log.debug("Group with name:{} already exists!", group.getName());
+            throw new NameAlreadyBoundException(null);
+        }
+
         group.setName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());

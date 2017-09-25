@@ -1,9 +1,9 @@
-angular.module('people').controller('People.UrlsModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('People.UrlsModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $translate, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
-                    $scope.urlTypes = _.find(contactMethodTypes, {type: 'url'}).subTypes;
+                    $scope.urlTypes = _.find(contactMethodTypes, {key: 'url'}).subLookup;
                     return contactMethodTypes;
                 });
 

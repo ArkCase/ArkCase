@@ -16,7 +16,7 @@
                     class="required-asterisk">*</span></label>
             <select id="participantType" class="form-control"
                     ng-model="participant.participantType" required
-                    ng-options="item.type as item.name for item in participant.participantTypes"></select>
+                    ng-options="item.key as item.value | translate for item in participant.participantTypes"></select>
         </div>
         <div>
             <label for="participantName"><span

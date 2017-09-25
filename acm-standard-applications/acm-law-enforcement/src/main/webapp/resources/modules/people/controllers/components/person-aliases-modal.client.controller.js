@@ -1,5 +1,5 @@
-angular.module('people').controller('Person.AliasesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('Person.AliasesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $translate, $modalInstance, ObjectLookupService, params) {
             ObjectLookupService.getAliasTypes().then(function (response) {
                 $scope.aliasTypes = response;
             });
