@@ -688,7 +688,6 @@ thead {
 /* Hyperlinks Padding/Wrap Issues */
 
 .ui-grid a {
-	padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;

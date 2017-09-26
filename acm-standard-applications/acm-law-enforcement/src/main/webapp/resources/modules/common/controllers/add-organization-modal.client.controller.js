@@ -31,7 +31,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 }
             }
             $scope.type = _.find($scope.types, function (type) {
-                return type.type == params.type;
+                return type.key == params.type;
             });
             $scope.isNew = params.isNew;
 
@@ -50,8 +50,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     isNew: $scope.isNew
                 };
                 if ($scope.types && $scope.type) {
-                    retValue.type = $scope.type.type;
-                    retValue.inverseType = $scope.type.inverseType;
+                    retValue.type = $scope.type.key;
+                    retValue.inverseType = $scope.type.inverseKey;
                 }
                 if ($scope.showSetPrimary) {
                     retValue.isDefault = $scope.isDefault;

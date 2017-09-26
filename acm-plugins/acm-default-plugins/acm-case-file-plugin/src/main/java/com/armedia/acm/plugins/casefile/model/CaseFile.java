@@ -54,6 +54,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     private String caseType;
 
     @Column(name = "cm_case_title")
+    @Size(min=1)
     private String title;
 
     @Column(name = "cm_case_status")

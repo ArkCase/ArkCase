@@ -13,21 +13,6 @@
 angular.module('services').factory('Organization.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.LookupService',
     function ($resource, $translate, Store, Util, ObjectLookupService) {
         var Service = $resource('api/latest/plugin', {}, {
-            /**
-             * ngdoc method
-             * name _getOrganizationTypes
-             * methodOf services:Organization.LookupService
-             *
-             * @description
-             * Query list of organization types
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            _getOrganizationTypes: {
-                url: 'api/latest/plugin/organization/types'
-                , cache: true
-                , isArray: true
-            }
         });
 
         Service.SessionCacheNames = {
@@ -45,18 +30,7 @@ angular.module('services').factory('Organization.LookupService', ['$resource', '
          * @returns {Object} Promise
          */
         Service.getOrganizationTypes = function () {
-            var cacheOrganizationTypes = new Store.SessionData(Service.SessionCacheNames.ORGANIZATION_TYPES);
-            var organizationTypes = cacheOrganizationTypes.get();
-            return Util.serviceCall({
-                service: Service._getOrganizationTypes
-                , result: organizationTypes
-                , onSuccess: function (data) {
-                    if (Service.validateOrganizationTypes(data)) {
-                        cacheOrganizationTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return ObjectLookupService.getOrganizationTypes();
         };
 
         /**
