@@ -70,7 +70,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         }
 
         solr.setMember_id_ss(in.getUserMemberIds().collect(Collectors.toList()));
-        solr.setChild_id_ss(in.getGroupMemberIds().collect(Collectors.toList()));
+        solr.setChild_id_ss(in.getGroupMemberNames().collect(Collectors.toList()));
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

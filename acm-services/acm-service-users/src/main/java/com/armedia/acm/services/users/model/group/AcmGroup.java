@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -147,7 +148,7 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     @JsonIgnore
-    public Stream<String> getGroupMemberIds()
+    public Stream<String> getGroupMemberNames()
     {
         return memberGroups.stream()
                 .map(AcmGroup::getName);
@@ -180,8 +181,7 @@ public class AcmGroup implements Serializable, AcmEntity
     public void addGroupMember(AcmGroup group)
     {
         memberGroups.add(group);
-        group.getMemberOfGroups().add(group);
-
+        group.getMemberOfGroups().add(this);
     }
 
     public void removeGroupMember(AcmGroup group)
@@ -360,6 +360,7 @@ public class AcmGroup implements Serializable, AcmEntity
      * We will use this as pre-computed list of all ascendants found by traversing
      * the full graph of groups and their member groups trying to find path to this group.
      * // TODO: find better separator then `,`, maybe `;` or `:`
+     *
      * @return `,` separated list of all ascendants of group
      */
     @JsonIgnore
@@ -367,6 +368,17 @@ public class AcmGroup implements Serializable, AcmEntity
     {
         if (ascendantsList == null) return Stream.empty();
         return Arrays.stream(ascendantsList.split(","));
+    }
+
+    public void addAscendant(String ascendantGroup)
+    {
+        if (StringUtils.isNotEmpty(ascendantsList))
+        {
+            ascendantsList += "," + ascendantGroup;
+        } else
+        {
+            ascendantsList = ascendantGroup;
+        }
     }
 
     public void setAscendantsList(String ascendantsList)

@@ -149,15 +149,14 @@ public class LdapGroupService
     public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException, AcmUserActionFailedException
     {
 
-        AcmGroup existingGroup = getGroupDao().findByName(group);
-        log.debug("Removing LDAP group [{}] from database", existingGroup);
+        log.debug("Removing LDAP group [{}] from database", group);
 
+        AcmGroup existingGroup = getGroupDao().markGroupDeleted(group);
         if (existingGroup == null)
         {
             log.debug("No such group [{}]", group);
             throw new AcmUserActionFailedException("Delete LDAP GROUP", "GROUP", null, "No such group", null);
         }
-        getGroupDao().markGroupDeleted(existingGroup);
 
         getGroupDao().markRolesByGroupInvalid(group);
 

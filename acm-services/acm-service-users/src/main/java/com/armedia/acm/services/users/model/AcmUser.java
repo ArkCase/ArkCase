@@ -114,7 +114,7 @@ public class AcmUser implements Serializable
     private Set<AcmGroup> groups = new HashSet<>();
 
     @JsonIgnore
-    public Stream<String> getGroupIds()
+    public Stream<String> getGroupNames()
     {
         return groups.stream()
                 .map(AcmGroup::getName);

@@ -53,13 +53,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             acmGroup = dbQuery.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             LOG.warn("There is no group with name [{}]", name);
-        } catch (NonUniqueResultException e)
+        }
+        catch (NonUniqueResultException e)
         {
             LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
@@ -82,23 +85,25 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     }
 
     @Transactional
-    public AcmGroup markGroupDeleted(AcmGroup group)
+    public AcmGroup markGroupDeleted(String groupName)
     {
-        group.setAscendantsList(null);
-        group.setStatus(AcmGroupStatus.DELETE);
+        AcmGroup acmGroup = findByName(groupName);
+        if (acmGroup == null) return null;
 
-        group.getUserMembers()
-                .forEach(user -> user.getGroups().remove(group));
-        group.getMemberOfGroups()
-                .forEach(acmGroup -> acmGroup.getMemberGroups().remove(group));
-        group.getMemberGroups()
-                .forEach(acmGroup -> acmGroup.getMemberOfGroups().remove(group));
+        acmGroup.setAscendantsList(null);
+        acmGroup.setStatus(AcmGroupStatus.DELETE);
 
-        group.setUserMembers(new HashSet<>());
-        group.setMemberOfGroups(new HashSet<>());
-        group.setMemberGroups(new HashSet<>());
+        acmGroup.getUserMembers()
+                .forEach(user -> user.getGroups().remove(acmGroup));
+        acmGroup.getMemberOfGroups()
+                .forEach(it -> it.getMemberGroups().remove(acmGroup));
+        acmGroup.getMemberGroups()
+                .forEach(it -> acmGroup.getMemberOfGroups().remove(acmGroup));
 
-        return save(group);
+        acmGroup.setUserMembers(new HashSet<>());
+        acmGroup.setMemberOfGroups(new HashSet<>());
+        acmGroup.setMemberGroups(new HashSet<>());
+        return acmGroup;
     }
 
     public void markRolesByGroupInvalid(String groupName)
@@ -216,13 +221,16 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         try
         {
             acmGroup = (AcmGroup) dbQuery.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             LOG.warn("There is no group with name [{}]", name);
-        } catch (NonUniqueResultException e)
+        }
+        catch (NonUniqueResultException e)
         {
             LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
