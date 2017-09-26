@@ -69,8 +69,10 @@ var CustomEventHandlers = {
             FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
         } else if (isObjectPicker(el)) {
             FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
-        } else if(isPersonPicker(el)) {
-            FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el));
+        } else if(isCasePersonPicker(el)) {
+            FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'CASE_FILE'));
+        } else if(isComplaintPersonPicker(el)) {
+            FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'COMPLAINT'));
         }
     },
 
@@ -210,7 +212,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showPersonPicker: function (event, element) {
+    showPersonPicker: function (event, element, formType) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -218,6 +220,7 @@ var CustomEventHandlers = {
             message.action = "open-person-picker";
             message.elementId = element.id;
             message.pickerType = "";
+            message.formType = formType;
 
             var cssClassArray = cssClassToArray(element);
             if (cssClassArray && cssClassArray.length > 1)
@@ -336,9 +339,14 @@ function isAdvancedUserPicker(element) {
 	}
 }
 
-function isPersonPicker(element) {
+function isCasePersonPicker(element) {
     var cssClass = getCssClass(element);
-    return (cssClass && cssClass.indexOf('personPicker') > -1);
+    return (cssClass && cssClass.indexOf('casePersonPicker') > -1);
+}
+
+function isComplaintPersonPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('complaintPersonPicker') > -1);
 }
 
 /**
