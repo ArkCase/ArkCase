@@ -19,9 +19,10 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.organizationValue = params.organizationValue;
             $scope.isChanged = true;
             $scope.isDefault = params.isDefault;
+            $scope.isSelectedParent = params.isSelectedParent;
             $scope.description = params.description;
 
-            if (params.isSelectedParent) {
+            if (!!params.isSelectedParent) {
                 $scope.haveParent = params.isSelectedParent;
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
@@ -75,6 +76,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 $scope.isNew = false;
 
                 var params = {};
+                params.isSelectedParent = $scope.isSelectedParent;
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
@@ -101,24 +103,27 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
-                        if ($scope.organization.parentOrganization != null) {
-                            $scope.organization.parentOrganization.organizationValue = selected.name;
-                        } else {
-                            $scope.organization.parentOrganization = {};
-                            $scope.organization.parentOrganization.organizationValue = selected.name;
-                        }
                     }
                 });
             };
 
             $scope.addNewOrganization = function () {
                 $scope.isNew = true;
+
+                var params = {};
+                params.isSelectedParent = $scope.isSelectedParent;
+
                 var modalInstance = $modal.open({
                     scope: $scope,
                     animation: true,
                     templateUrl: 'modules/common/views/new-organization-modal.client.view.html',
                     controller: 'Common.NewOrganizationModalController',
-                    size: 'lg'
+                    size: 'lg',
+                    resolve: {
+                        params: function () {
+                            return params;
+                        }
+                    }
                 });
 
                 modalInstance.result.then(function (data) {
@@ -126,12 +131,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
-                    if ($scope.organization.parentOrganization != null) {
-                        $scope.organization.parentOrganization.organizationValue = data.organization.organizationValue;
-                    } else {
-                        $scope.organization.parentOrganization = {};
-                        $scope.organization.parentOrganization.organizationValue = data.organization.organizationValue;
-                    }
                 });
             };
         }
