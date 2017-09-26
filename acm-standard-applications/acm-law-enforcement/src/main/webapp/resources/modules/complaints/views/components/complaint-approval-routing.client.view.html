@@ -23,14 +23,12 @@
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.priority.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' |
-                    translate)) || 'Unknown'}}
+                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: 'shortDate' || 'Unknown'}}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.startDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' |
-                    translate)) || 'Unknown' }}
+                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: 'shortDate') || 'Unknown' }}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.dueDate.label</span></small>
             </div>

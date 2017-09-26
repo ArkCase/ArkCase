@@ -276,7 +276,7 @@
               "name": "modified",
               "displayName": "complaints.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "width": 150,
@@ -300,7 +300,7 @@
               "name": "modified",
               "displayName": "complaints.comp.locations.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
               "width": 150
             },
             {
@@ -394,7 +394,7 @@
             {
               "name": "created",
               "displayName": "complaints.comp.notes.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -443,7 +443,7 @@
               "field": "due_tdt",
               "displayName": "complaints.comp.tasks.table.columns.due",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>",
               "width": 150
             }
           ]
@@ -500,7 +500,7 @@
             {
               "name": "created",
               "displayName": "complaints.comp.tags.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate"
             },
             {
@@ -851,7 +851,7 @@
         {
           "name": "created",
           "displayName": "complaints.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -910,7 +910,7 @@
           "field": "create_tdt",
           "displayName": "complaints.comp.tasks.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.create_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "priority",
@@ -923,7 +923,7 @@
           "field": "due_tdt",
           "displayName": "complaints.comp.tasks.table.columns.due",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -971,7 +971,7 @@
           "name": "modified",
           "displayName": "complaints.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "targetType",
@@ -1011,7 +1011,7 @@
           "name": "eventDate",
           "displayName": "complaints.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
         },
         {
           "name": "userId",
@@ -1058,7 +1058,7 @@
           "field": "modified",
           "displayName": "complaints.comp.time.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -1099,7 +1099,7 @@
           "name": "tally",
           "displayName": "complaints.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter": "currency",
+          "cellFilter": "currency: grid.appScope.currencySymbol",
           "cellClass": "text-right"
         },
         {
@@ -1107,7 +1107,7 @@
           "field": "modified",
           "displayName": "complaints.comp.cost.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -1143,7 +1143,7 @@
         {
           "name": "created",
           "displayName": "complaints.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -1212,7 +1212,7 @@
           "name": "modified_date_tdt",
           "displayName": "complaints.comp.addreference.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1293,7 +1293,7 @@
           "name": "approvalDate",
           "displayName": "complaints.comp.pastApprovals.table.columns.approvalDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : 'short' }}</div>",
           "cellEditableCondition": false
         },
         {

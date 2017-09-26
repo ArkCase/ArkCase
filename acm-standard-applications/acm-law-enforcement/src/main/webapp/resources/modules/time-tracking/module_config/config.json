@@ -123,7 +123,7 @@
               "name": "modified",
               "displayName": "timeTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "name": "modifier",
@@ -166,7 +166,7 @@
             {
               "name": "created",
               "displayName": "timeTracking.comp.tags.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate"
             },
             {
@@ -271,13 +271,13 @@
           "name": "date",
           "displayName": "timeTracking.comp.summary.table.columns.date",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.date | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.date | date : 'shortDate' }}</div>"
         },
         {
           "name": "modified",
           "displayName": "timeTracking.comp.summary.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         }
       ]
     },
@@ -307,7 +307,7 @@
         {
           "name": "created",
           "displayName": "timeTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {

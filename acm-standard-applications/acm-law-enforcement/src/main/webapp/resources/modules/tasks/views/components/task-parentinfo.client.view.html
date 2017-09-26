@@ -18,7 +18,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.created | date: ('common.defaultDateUIFormat' | translate)}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.created | date: 'shortDate' }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.incidentDate.label</span>
                 </small>
@@ -68,8 +68,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentComplaintInfo.created | date: "MM/dd/yyyy"}}</div>-->
-                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: ('common.defaultDateUIFormat' | translate)}}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: 'shortDate' }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.incidentDate.label</span>
                 </small>
