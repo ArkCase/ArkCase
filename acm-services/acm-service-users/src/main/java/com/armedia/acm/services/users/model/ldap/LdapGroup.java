@@ -174,12 +174,6 @@ public class LdapGroup
         this.memberGroups = memberGroups;
     }
 
-    public LdapGroup memberGroups(Set<LdapGroup> members)
-    {
-        this.memberGroups = members;
-        return this;
-    }
-
     public void addMemberGroup(LdapGroup group)
     {
         memberGroups.add(group);

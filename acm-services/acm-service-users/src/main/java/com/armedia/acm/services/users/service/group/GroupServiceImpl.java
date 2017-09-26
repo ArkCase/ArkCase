@@ -119,7 +119,7 @@ public class GroupServiceImpl implements GroupService
         newGroup.setUserMembers(acmGroup.getUserMembers());
         groupDao.save(newGroup);
 
-        groupDao.markGroupDeleted(acmGroup);
+        groupDao.markGroupDeleted(acmGroup.getName());
     }
 
     @Override
@@ -132,9 +132,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup markGroupDeleted(String groupName)
     {
-        AcmGroup group = groupDao.findByName(groupName);
-        return group != null ? groupDao.markGroupDeleted(group) : null;
-
+        return  groupDao.markGroupDeleted(groupName);
     }
 
     @Override

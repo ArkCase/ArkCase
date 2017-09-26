@@ -442,7 +442,7 @@ public class AcmGroupsSyncResultTest
                             .map(AcmGroup::getName)
                             .collect(Collectors.toList()), everyItem(isIn(fromArray("A"))));
             assertThat("Changed group A should have new group member", unit.getChangedGroups().get(0)
-                            .getGroupMemberIds().collect(Collectors.toSet()),
+                            .getGroupMemberNames().collect(Collectors.toSet()),
                     everyItem(isIn(fromArray("C"))));
 
             assertThat(unit.getUserNewGroups().size(), is(1));
@@ -510,7 +510,7 @@ public class AcmGroupsSyncResultTest
                             .map(AcmGroup::getName)
                             .collect(Collectors.toList()), everyItem(isIn(fromArray("C"))));
             assertThat("Changed group C should have removed member", unit.getChangedGroups().get(0)
-                    .getGroupMemberIds().count(), equalTo(0L));
+                    .getGroupMemberNames().count(), equalTo(0L));
 
             assertThat(unit.getUserNewGroups().size(), is(0));
             assertThat(unit.getUserRemovedGroups().size(), is(1));
@@ -582,7 +582,7 @@ public class AcmGroupsSyncResultTest
                             .map(AcmGroup::getName)
                             .collect(Collectors.toList()), everyItem(isIn(fromArray("A"))));
             assertThat("Changed group A should have removed member", unit.getChangedGroups().get(0)
-                    .getGroupMemberIds().count(), equalTo(1L));
+                    .getGroupMemberNames().count(), equalTo(1L));
 
             assertThat(unit.getUserNewGroups().size(), is(0));
             assertThat(unit.getUserRemovedGroups().size(), is(1));
