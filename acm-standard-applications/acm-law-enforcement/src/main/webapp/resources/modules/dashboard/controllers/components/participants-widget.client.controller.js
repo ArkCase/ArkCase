@@ -13,9 +13,9 @@ angular.module('dashboard.participants', ['adf.provider'])
             });
     })
     .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService',
+        'Case.InfoService', 'Complaint.InfoService', 'DocumentRepository.InfoService', 'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
             function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService) {
+                  CaseInfoService, ComplaintInfoService, DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -23,18 +23,30 @@ angular.module('dashboard.participants', ['adf.provider'])
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
                     validateInfo: CaseInfoService.validateCaseInfo
-                }
-                , {
+                },
+                {
                     name: "COMPLAINT",
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
-                }
-                , {
+                },
+                {
                     name: "DOC_REPO",
                     configName: "document-repository",
                     getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                     validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                },
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 
