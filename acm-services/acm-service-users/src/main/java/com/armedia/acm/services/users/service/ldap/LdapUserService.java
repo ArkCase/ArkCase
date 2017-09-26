@@ -6,8 +6,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -15,6 +13,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
@@ -29,17 +28,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class LdapUserService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
     private SpringLdapDao ldapDao;
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private AcmUserRoleService userRoleService;
     private SpringLdapUserDao ldapUserDao;
     private SpringContextHolder acmContextHolder;
     private LdapEntryTransformer userTransformer;
@@ -74,7 +73,7 @@ public class LdapUserService
         Set<AcmGroup> groups = new HashSet<>();
         groupNames.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByName(groupName);
+            AcmGroup group = groupDao.findByName(groupName);
             if (group != null)
             {
                 // using user.addGroup() here throws "detached object" error if a user with the same id already
@@ -86,11 +85,10 @@ public class LdapUserService
         user.setGroups(groups);
 
         log.debug("Saving new User [{}] with DN [{}] in database", user.getUserId(), user.getDistinguishedName());
-        AcmUser acmUser = getUserDao().save(user);
-        getUserDao().getEntityManager().flush();
+        AcmUser acmUser = userDao.save(user);
+        userDao.getEntityManager().flush();
 
-        Map<String, List<String>> groupToRoleMap = ldapSyncConfig.getGroupToRolesMap();
-        saveValidUserRolesPerAddedUserGroups(acmUser.getUserId(), groups, groupToRoleMap);
+        userRoleService.saveValidUserRolesPerAddedUserGroups(acmUser.getUserId(), groups);
 
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
@@ -107,11 +105,11 @@ public class LdapUserService
         try
         {
             // passwordExpirationDate is set by ldap after the entry is there
-            LdapUser userEntry = getLdapUserDao().findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
+            LdapUser userEntry = ldapUserDao.findUserByLookup(dn, ldapTemplate, ldapSyncConfig);
             acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
             acmUser.setUserPrincipalName(userEntry.getUserPrincipalName());
-            getUserDao().save(acmUser);
-            getUserDao().getEntityManager().flush();
+            userDao.save(acmUser);
+            userDao.getEntityManager().flush();
 
             setUserAsMemberToLdapGroups(acmUser, acmUser.getLdapGroups(), directoryName);
         } catch (Exception e)
@@ -134,16 +132,16 @@ public class LdapUserService
     @Transactional(rollbackFor = Exception.class)
     public AcmUser addUserInGroups(String userId, List<String> groups, String directory) throws AcmUserActionFailedException
     {
-        AcmUser existingUser = getUserDao().findByUserId(userId);
+        AcmUser existingUser = userDao.findByUserId(userId);
 
         Set<AcmGroup> groupsToUpdate = new HashSet<>();
 
         groups.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByName(groupName);
+            AcmGroup group = groupDao.findByName(groupName);
             if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
             {
-                group = getGroupDao().findByMatchingName(groupName);
+                group = groupDao.findByMatchingName(groupName);
             }
             if (group != null)
             {
@@ -155,13 +153,10 @@ public class LdapUserService
         if (!groupsToUpdate.isEmpty())
         {
             log.debug("Saving User [{}] with DN [{}] in database", existingUser.getUserId(), existingUser.getDistinguishedName());
-            getUserDao().save(existingUser);
-            getUserDao().getEntityManager().flush();
+            userDao.save(existingUser);
+            userDao.getEntityManager().flush();
+            userRoleService.saveValidUserRolesPerAddedUserGroups(userId, groupsToUpdate);
         }
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
-
-        saveValidUserRolesPerAddedUserGroups(userId, groupsToUpdate, ldapSyncConfig.getGroupToRolesMap());
 
         Set<AcmGroup> ldapGroupsToUpdate = groupsToUpdate.stream()
                 .filter(AcmGroup::isLdapGroup)
@@ -176,91 +171,30 @@ public class LdapUserService
     {
         Set<AcmGroup> groupsToUpdate = new HashSet<>();
 
-        AcmUser acmUser = getUserDao().findByUserId(userId);
+        AcmUser acmUser = userDao.findByUserId(userId);
 
         groups.forEach(groupName ->
         {
-            AcmGroup group = getGroupDao().findByName(groupName);
+            AcmGroup group = groupDao.findByName(groupName);
             if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
             {
-                group = getGroupDao().findByMatchingName(groupName);
+                group = groupDao.findByMatchingName(groupName);
             }
-            acmUser.removeGroup(group);
-            log.debug("Removing User [{}] from Group [{}]", acmUser.getUserId(), group);
 
             if (group != null)
             {
+                acmUser.removeGroup(group);
+                log.debug("Removing User [{}] from Group [{}]", acmUser.getUserId(), group);
                 groupsToUpdate.add(group);
             }
         });
 
-        getUserDao().getEntityManager().flush();
+        userDao.getEntityManager().flush();
 
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
-
-        saveInvalidUserRolesPerRemovedUserGroups(acmUser, groupsToUpdate, ldapSyncConfig.getGroupToRolesMap());
+        userRoleService.saveInvalidUserRolesPerRemovedUserGroups(acmUser, groupsToUpdate);
 
         removeUserAsMemberFromLdapGroups(acmUser, groupsToUpdate, directory);
         return acmUser;
-    }
-
-    private void saveValidUserRolesPerAddedUserGroups(String userId, Set<AcmGroup> groups, Map<String, List<String>> groupToRoleMap)
-    {
-        Set<String> groupNames = Stream.concat(
-                groups.stream().map(AcmGroup::getName),
-                groups.stream().flatMap(AcmGroup::getAscendants)
-        ).collect(Collectors.toSet());
-
-        Set<String> rolesToAdd = groupNames.stream()
-                .filter(groupToRoleMap::containsKey)
-                .flatMap(g -> groupToRoleMap.get(g).stream())
-                .collect(Collectors.toSet());
-
-        rolesToAdd.forEach(role ->
-        {
-            AcmUserRole userRole = new AcmUserRole();
-            userRole.setUserId(userId);
-            userRole.setRoleName(role);
-            userRole.setUserRoleState(AcmUserRoleState.VALID.name());
-            log.debug("Saving AcmUserRole [{}] for User [{}]", role, userId);
-            getUserDao().saveAcmUserRole(userRole);
-        });
-        getUserDao().getEntityManager().flush();
-        log.debug("User roles for User [{}] saved", userId);
-    }
-
-    private void saveInvalidUserRolesPerRemovedUserGroups(AcmUser user, Set<AcmGroup> removedGroups,
-                                                          Map<String, List<String>> groupToRoleMap)
-    {
-        Set<String> groupNames = Stream.concat(
-                removedGroups.stream().map(AcmGroup::getName),
-                removedGroups.stream()
-                        .flatMap(AcmGroup::getAscendants)
-        ).collect(Collectors.toSet());
-
-        Set<String> userRoles = user.getGroupIds()
-                .filter(groupToRoleMap::containsKey)
-                .flatMap(g -> groupToRoleMap.get(g).stream())
-                .collect(Collectors.toSet());
-
-        Set<String> rolesToInvalid = groupNames.stream()
-                .filter(groupToRoleMap::containsKey)
-                .flatMap(g -> groupToRoleMap.get(g).stream())
-                .collect(Collectors.toSet());
-
-        rolesToInvalid.stream()
-                .filter(role -> !userRoles.contains(role))
-                .forEach(role ->
-                {
-                    AcmUserRole userRole = new AcmUserRole();
-                    userRole.setUserId(user.getUserId());
-                    userRole.setRoleName(role);
-                    userRole.setUserRoleState(AcmUserRoleState.INVALID.name());
-                    log.debug("Saving AcmUserRole [{}] for User [{}]", role, user.getUserId());
-                    getUserDao().saveAcmUserRole(userRole);
-                });
-        getUserDao().getEntityManager().flush();
-        log.debug("User roles for User [{}] saved", user.getUserId());
     }
 
     private void setUserAsMemberToLdapGroups(AcmUser ldapUser, Set<AcmGroup> ldapGroups, String directory)
@@ -370,13 +304,13 @@ public class LdapUserService
     public AcmUser editLdapUser(AcmUser acmUser, String userId, String directory) throws AcmLdapActionFailedException
     {
         log.debug("Saving updated User [{}] in database", acmUser.getUserId());
-        AcmUser existingUser = getUserDao().findByUserId(userId);
+        AcmUser existingUser = userDao.findByUserId(userId);
         existingUser.setFirstName(acmUser.getFirstName());
         existingUser.setLastName(acmUser.getLastName());
         existingUser.setFullName(String.format("%s %s", acmUser.getFirstName(), acmUser.getLastName()));
         existingUser.setMail(acmUser.getMail());
-        // acmUser = getUserDao().save(existingUser);
-        // getUserDao().getEntityManager().flush();
+        acmUser = getUserDao().save(existingUser);
+        getUserDao().getEntityManager().flush();
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         String strippedBaseDdUserDn = MapperUtils.
@@ -401,8 +335,8 @@ public class LdapUserService
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         log.debug("Creating new user [{}] as a clone of [{}]", acmUser.getUserId(), userId);
-        AcmUser existingUser = getUserDao().findByUserId(userId);
-        return createLdapUser(acmUser, existingUser.getGroupIds().collect(Collectors.toList()), password, directory);
+        AcmUser existingUser = userDao.findByUserId(userId);
+        return createLdapUser(acmUser, existingUser.getGroupNames().collect(Collectors.toList()), password, directory);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -411,19 +345,18 @@ public class LdapUserService
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        AcmGroup ldapGroup = getGroupDao().findByName(groupName);
+        AcmGroup ldapGroup = groupDao.findByName(groupName);
         List<AcmUser> ldapUsers = new ArrayList<>();
         for (AcmUser user : acmUsers)
         {
-            AcmUser existingUser = getUserDao().findByUserId(user.getUserId());
+            AcmUser existingUser = userDao.findByUserId(user.getUserId());
             log.debug("Adding Group [{}] to User [{}]", groupName, user.getUserId());
             existingUser.addGroup(ldapGroup);
             log.debug("Saving updated User [{}]", user.getUserId());
-            AcmUser savedUser = getUserDao().save(existingUser);
-            getUserDao().getEntityManager().flush();
+            AcmUser savedUser = userDao.save(existingUser);
+            userDao.getEntityManager().flush();
 
-            saveValidUserRolesPerAddedUserGroups(user.getUserId(), new HashSet<>(Arrays.asList(ldapGroup)),
-                    ldapSyncConfig.getGroupToRolesMap());
+            userRoleService.saveValidUserRolesPerAddedUserGroups(user.getUserId(), new HashSet<>(Arrays.asList(ldapGroup)));
 
             String strippedBaseDCGroupDn = MapperUtils.stripBaseFromDn(ldapGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
             try
@@ -453,20 +386,20 @@ public class LdapUserService
     @Transactional(rollbackFor = Exception.class)
     public AcmUser deleteAcmUser(String userId, String directory) throws AcmLdapActionFailedException
     {
-        AcmUser existingUser = getUserDao().findByUserId(userId);
-        List<AcmGroup> lookupGroups = getGroupDao().findByUserMember(existingUser);
+        AcmUser existingUser = userDao.findByUserId(userId);
+        List<AcmGroup> lookupGroups = groupDao.findByUserMember(existingUser);
 
         for (AcmGroup group : lookupGroups)
         {
             group.removeUserMember(existingUser);
-            getGroupDao().save(group);
+            groupDao.save(group);
         }
 
         log.debug("Mark User: [{}] INVALID in database", existingUser.getUserId());
-        getUserDao().markUserInvalid(userId);
+        userDao.markUserInvalid(userId);
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
-        saveInvalidUserRolesPerRemovedUserGroups(existingUser, new HashSet<>(lookupGroups), ldapSyncConfig.getGroupToRolesMap());
+        userRoleService.saveInvalidUserRolesPerRemovedUserGroups(existingUser, new HashSet<>(lookupGroups));
 
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
@@ -528,7 +461,7 @@ public class LdapUserService
                 existing.getGroups().forEach(group ->
                 {
                     group.removeUserMember(existing);
-                    getGroupDao().save(group);
+                    groupDao.save(group);
                 });
             }
         }
@@ -564,6 +497,26 @@ public class LdapUserService
         this.groupDao = groupDao;
     }
 
+    public AcmUserRoleService getUserRoleService()
+    {
+        return userRoleService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
+    }
+
+    public SpringLdapUserDao getLdapUserDao()
+    {
+        return ldapUserDao;
+    }
+
+    public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
+    {
+        this.ldapUserDao = ldapUserDao;
+    }
+
     public SpringContextHolder getAcmContextHolder()
     {
         return acmContextHolder;
@@ -582,15 +535,5 @@ public class LdapUserService
     public void setUserTransformer(LdapEntryTransformer userTransformer)
     {
         this.userTransformer = userTransformer;
-    }
-
-    public SpringLdapUserDao getLdapUserDao()
-    {
-        return ldapUserDao;
-    }
-
-    public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
-    {
-        this.ldapUserDao = ldapUserDao;
     }
 }

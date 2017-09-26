@@ -156,7 +156,7 @@ public class AcmGroupsSyncResult
                 .forEach(ldapGroup -> {
                     AcmGroup currentGroup = getAcmGroupToUpdate(updatedGroups, currentGroups, ldapGroup.getName());
 
-                    Set<String> groupMemberGroups = currentGroup.getGroupMemberIds().collect(Collectors.toSet());
+                    Set<String> groupMemberGroups = currentGroup.getGroupMemberNames().collect(Collectors.toSet());
 
                     Set<String> addedGroups = ldapGroup.groupNewGroups(groupMemberGroups);
                     addedGroups.forEach(group ->
