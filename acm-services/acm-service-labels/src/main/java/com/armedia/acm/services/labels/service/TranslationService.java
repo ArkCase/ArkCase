@@ -36,6 +36,11 @@ public class TranslationService
         String translatedValue = labelKey;
         JSONObject jsonObject = null;
 
+        if (!labelKey.contains("."))
+        {
+            return translatedValue;
+        }
+
         try
         {
             jsonObject = labelManagementService.getCachedResource(labelKey.substring(0, labelKey.indexOf(".")), lang);
