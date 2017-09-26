@@ -44,7 +44,7 @@
                 <select ng-if="!haveParent" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in types"
                         required></select>
 
-                <ng-switch ng-if="haveParent" on="!!organization.parentOrganization.organizationValue">
+                <ng-switch ng-if="haveParent" on="!!organizationValue">
                     <input translate ng-switch-when="true" class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.text' | translate}}"/>
                     <input translate ng-switch-default class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.default.text' | translate}}"/>
                 </ng-switch>
