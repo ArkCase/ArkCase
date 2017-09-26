@@ -14,7 +14,6 @@ import com.armedia.acm.calendar.service.Attendee.AttendeeType;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
@@ -175,11 +174,10 @@ public class ExchangeCalendarService
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
-        boolean restricted = handler.isRestricted(objectId);
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
+        if (!handler.checkPermission(user, objectType, objectId))
         {
             log.warn("User [{}] does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
                     objectType);
@@ -254,14 +252,12 @@ public class ExchangeCalendarService
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
-        boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
-
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(calendarEvent.getObjectId()),
                 calendarEvent.getObjectType());
 
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+        if (!handler.checkPermission(user, calendarEvent.getObjectType(), calendarEvent.getObjectId()))
         {
             log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                     calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -324,12 +320,11 @@ public class ExchangeCalendarService
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
-            boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(calendarEvent.getObjectId()),
                     calendarEvent.getObjectType());
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+            if (!handler.checkPermission(user, calendarEvent.getObjectType(), calendarEvent.getObjectId()))
             {
                 log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -466,11 +461,10 @@ public class ExchangeCalendarService
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
-            boolean restricted = handler.isRestricted(objectId);
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
+            if (!handler.checkPermission(user, objectType, objectId))
             {
                 log.warn("User [{}] does not have DELETE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         objectId, objectType);

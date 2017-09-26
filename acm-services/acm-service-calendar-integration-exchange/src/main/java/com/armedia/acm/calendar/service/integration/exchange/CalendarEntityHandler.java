@@ -12,6 +12,8 @@ import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.service.AcmParticipantService;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;
@@ -36,7 +38,6 @@ import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
@@ -45,8 +46,6 @@ import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.FolderPermission;
-import microsoft.exchange.webservices.data.property.complex.FolderPermissionCollection;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.CalendarView;
@@ -91,6 +90,8 @@ public class CalendarEntityHandler
 
     private String entityIdForQuery;
 
+    private AcmParticipantService participantService;
+
     public CalendarEntityHandler()
     {
         sortFields = new HashMap<>();
@@ -104,79 +105,19 @@ public class CalendarEntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    public boolean isRestricted(String objectId)
-    {
-        // return getEntity(objectId, true) != null;
-        // Always return false temporarily until there is a clarification of what `restricted` object means in context
-        // of the calendar enhancements.
-        return false;
-    }
-
-    public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectId,
-            PermissionType permissionType) throws CalendarServiceException
+    public boolean checkPermission(AcmUser user, String objectType, String objectId) throws CalendarServiceException
     {
         AcmContainerEntity entity = getEntity(objectId, true);
         if (entity == null)
         {
             return true;
         }
-        String calendarId = entity.getContainer().getCalendarFolderId();
-        try
-        {
-            CalendarFolder folder = CalendarFolder.bind(service, new FolderId(calendarId));
-            FolderPermissionCollection permissions = folder.getPermissions();
-            for (FolderPermission permission : permissions.getItems())
-            {
-                if (permission.getUserId().getPrimarySmtpAddress().equals(user.getMail()))
-                {
-                    if (hasPermission(permission.getPermissionLevel(), permissionType))
-                    {
-                        return true;
-                    }
-                }
-            }
-        } catch (ServiceLocalException e)
-        {
-            log.warn("Error while evaluationg permission of user [{}] to object with [{}] id of type [{}].", user.getFullName(), objectId,
-                    entityType, e);
-            throw new CalendarServiceException(e);
-        } catch (Exception e)
-        {
-            log.warn("Error binding to remote service while evaluationg permission of user [{}] to object with [{}] id of type [{}].",
-                    user.getFullName(), objectId, entityType, e);
-            throw new CalendarServiceBindToRemoteException(e);
-        }
-        return false;
-    }
 
-    /**
-     * @param permissionLevel
-     * @param permissionType
-     * @return
-     */
-    private boolean hasPermission(FolderPermissionLevel permissionLevel, PermissionType permissionType)
-    {
-        switch (permissionType)
-        {
-        case READ:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingEditor)
-                    || permissionLevel.equals(FolderPermissionLevel.Editor)
-                    || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author)
-                    || permissionLevel.equals(FolderPermissionLevel.NoneditingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Reviewer) || permissionLevel.equals(FolderPermissionLevel.Contributor);
-        case WRITE:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingEditor)
-                    || permissionLevel.equals(FolderPermissionLevel.Editor)
-                    || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author) || permissionLevel.equals(FolderPermissionLevel.Contributor);
+        Optional<AcmParticipant> participant = participantService.listAllParticipantsPerObjectTypeAndId(objectType, Long.valueOf(objectId))
+                .stream().filter(p -> p.getObjectType().equals(objectType)).filter(p -> p.getParticipantLdapId().equals(user.getUserId()))
+                .findAny();
 
-        case DELETE:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author);
-        default:
-            return false;
-        }
+        return participant.isPresent();
     }
 
     public List<AcmCalendarInfo> listCalendars(ServiceConnector connector, AcmUser user, Authentication auth, String sort,
@@ -509,6 +450,15 @@ public class CalendarEntityHandler
     public void setEntityIdForQuery(String entityIdForQuery)
     {
         this.entityIdForQuery = entityIdForQuery;
+    }
+
+    /**
+     * @param participantService
+     *            the participantService to set
+     */
+    public void setParticipantService(AcmParticipantService participantService)
+    {
+        this.participantService = participantService;
     }
 
 }

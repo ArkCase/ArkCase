@@ -169,8 +169,8 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         // given
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         when(templateConfigurations.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {}));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
+        // when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
+        // when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN, Arrays.asList(CASE_FILE, COMPLAINT),
@@ -218,8 +218,8 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
+        // when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
+        // when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         // when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
@@ -266,8 +266,8 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
+        // when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
+        // when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN + EMAIL_PATTERN, Arrays.asList(CASE_FILE),
