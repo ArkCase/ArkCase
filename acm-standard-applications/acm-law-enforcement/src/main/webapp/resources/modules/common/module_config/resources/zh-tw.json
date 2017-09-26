@@ -10,6 +10,25 @@
     "defaultDateUIFormat": "zh-tw_MM/dd/yyyy",
     "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm"
   },
+  "common.addOrganization": {
+    "title": "zh-tw_Add Parent Organization",
+    "addNew.label": "zh-tw_Add new Organization",
+    "selectExisting.label": "zh-tw_Select existing organization",
+    "organization.label": "zh-tw_Organization",
+    "description": "zh-tw_Description",
+    "type.label": "zh-tw_Organization Association Type",
+    "type.label.default.text": "zh-tw_No parent Organization",
+    "type.label.text": "zh-tw_Parent Organization",
+    "btnCancel.text": "zh-tw_Cancel",
+    "btnOk.text": "zh-tw_Save Organization",
+    "setPrimary.label": "zh-tw_Set As Primary?",
+    "radioYes.text": "zh-tw_Yes",
+    "radioNo.text": "zh-tw_No",
+    "duplicateOrganizationRoleErrorMessage": "zh-tw_Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "zh-tw_Edit Parent Organization"
+  },
   "common.service": {
     "error.invalidData": "不正確數據"
   },
