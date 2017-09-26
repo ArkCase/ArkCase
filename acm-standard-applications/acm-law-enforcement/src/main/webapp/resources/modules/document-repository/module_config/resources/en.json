@@ -117,6 +117,9 @@
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "document-repository.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
