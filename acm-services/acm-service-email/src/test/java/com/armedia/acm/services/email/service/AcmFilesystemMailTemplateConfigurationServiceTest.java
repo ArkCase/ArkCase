@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 6, 2017
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AcmFilesystemMailTemplateConfigurationServiceTest
