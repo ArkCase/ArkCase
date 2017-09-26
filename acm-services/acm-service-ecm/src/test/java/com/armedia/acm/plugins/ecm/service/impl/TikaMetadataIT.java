@@ -33,52 +33,153 @@ public class TikaMetadataIT
     @Test
     public void extractMetadata() throws Exception
     {
+        // see the loop below to understand each of the values in the below arrays.  One array per test file.
 
-        logger.info("------------------- Video (Camera) ------------------------");
-        Resource videoResource = new ClassPathResource("media-files/VID_20170721_130803497.mp4");
-        EcmTikaFile video = ecmTikaFileService.detectFileUsingTika(
-                IOUtils.toByteArray(videoResource.getInputStream()),
-                videoResource.getFile().getName());
-        assertEquals("video/mp4", video.getContentType());
-        assertEquals(".mp4", video.getNameExtension());
-        assertEquals("39°18'00\"N 77°48'55\"W", video.getGpsReadable());
-        assertEquals("+39.30010-077.81540/", video.getGpsIso6709());
-        assertNull(video.getDeviceMake());
-        assertNull(video.getDeviceModel());
-        assertEquals(Integer.valueOf(1080), video.getHeightPixels());
-        assertEquals(Integer.valueOf(1920), video.getWidthPixels());
-        assertEquals(39.3001, video.getGpsLatitudeDegrees(), 0.005);
-        assertEquals(-77.8154, video.getGpsLongitudeDegrees(), 0.005);
-        assertEquals(4.86, video.getDurationSeconds(), 0.001);
+        Object[][] testData = {
+                {
+                        "Video (ArkCase FOIA)",
+                        "media-files/ArkCase _ FOIA.MP4",
+                        "video/mp4",
+                        ".mp4",
+                        null,
+                        null,
+                        null,
+                        null,
+                        224,
+                        398,
+                        0.0,
+                        0.0,
+                        131.88,
+                        0,
+                        0,
+                        0
+                },
+                {
+                        "Video (Police body camera)",
+                        "media-files/Police Bodycam.mp4",
+                        "video/mp4",
+                        ".mp4",
+                        null,
+                        null,
+                        null,
+                        null,
+                        360,
+                        640,
+                        0.0,
+                        0.0,
+                        44.0,
+                        2016,
+                        Calendar.OCTOBER,
+                        22
+                },
+                {
+                        "Video (Evidence)",
+                        "media-files/Evidence Video.mp4",
+                        "video/mp4",
+                        ".mp4",
+                        null,
+                        null,
+                        null,
+                        null,
+                        480,
+                        854,
+                        0.0,
+                        0.0,
+                        60.6,
+                        2017,
+                        Calendar.JULY,
+                        25
+                },
+                {
+                        "Video (Camera)",
+                        "media-files/VID_20170721_130803497.mp4",
+                        "video/mp4",
+                        ".mp4",
+                        "39°18'00\"N 77°48'55\"W",
+                        "+39.30010-077.81540/",
+                        null,
+                        null,
+                        1080,
+                        1920,
+                        39.3001,
+                        -77.8154,
+                        4.86,
+                        2017,
+                        Calendar.JULY,
+                        21
+                },
+                {
+                        "Picture (Camera)",
+                        "media-files/IMG_20170721_125157844.jpg",
+                        "image/jpeg",
+                        ".jpg",
+                        "39°18'00\"N 77°48'56\"W",
+                        "+39.30007-077.81552/",
+                        "Motorola",
+                        "XT1254",
+                        5248,
+                        2952,
+                        39.300068,
+                        -77.815521,
+                        0.0,
+                        2017,
+                        Calendar.JULY,
+                        21
+                }
+        };
 
-        Calendar videoCreated = Calendar.getInstance();
-        videoCreated.setTime(video.getCreated());
-        assertEquals(2017, videoCreated.get(Calendar.YEAR));
+        for (Object[] test : testData)
+        {
+            String testType = (String) test[0];
+            String filePath = (String) test[1];
+            Object mimeType = test[2];
+            Object extension = test[3];
+            Object gpsReadable = test[4];
+            Object gpsIso6709 = test[5];
+            Object deviceMake = test[6];
+            Object deviceModel = test[7];
+            int height = (int) test[8];
+            int width = (int) test[9];
+            double gpsLatDegrees = (double) test[10];
+            double gpsLongDegrees = (double) test[11];
+            double duration = (double) test[12];
+            int year = (int) test[13];
+            int month = (int) test[14];
+            int day = (int) test[15];
 
-        logger.info(video.toString());
+            logger.info("------------------- {} ------------------------", testType);
 
-        logger.info("------------------- Picture (Camera) ------------------------");
-        Resource imageResource = new ClassPathResource("media-files/IMG_20170721_125157844.jpg");
-        EcmTikaFile image = ecmTikaFileService.detectFileUsingTika(
-                IOUtils.toByteArray(imageResource.getInputStream()),
-                imageResource.getFile().getName());
-        assertEquals("image/jpeg", image.getContentType());
-        assertEquals(".jpg", image.getNameExtension());
-        assertEquals("39°18'00\"N 77°48'56\"W", image.getGpsReadable());
-        assertEquals("+39.30007-077.81552/", image.getGpsIso6709());
-        assertEquals("Motorola", image.getDeviceMake());
-        assertEquals("XT1254", image.getDeviceModel());
-        assertEquals(Integer.valueOf(5248), image.getHeightPixels());
-        assertEquals(Integer.valueOf(2952), image.getWidthPixels());
-        assertEquals(39.300068, image.getGpsLatitudeDegrees(), 0.005);
-        assertEquals(-77.815521, image.getGpsLongitudeDegrees(), 0.005);
-        assertEquals(0.0, image.getDurationSeconds(), 0.001);
+            Resource resource = new ClassPathResource(filePath);
+            EcmTikaFile multimedia = ecmTikaFileService.detectFileUsingTika(
+                    IOUtils.toByteArray(resource.getInputStream()),
+                    resource.getFile().getName());
+            assertEquals(mimeType, multimedia.getContentType());
+            assertEquals(extension, multimedia.getNameExtension());
+            assertEquals(gpsReadable, multimedia.getGpsReadable());
+            assertEquals(gpsIso6709, multimedia.getGpsIso6709());
+            assertEquals(deviceMake, multimedia.getDeviceMake());
+            assertEquals(deviceModel, multimedia.getDeviceModel());
+            assertEquals(Integer.valueOf(height), multimedia.getHeightPixels());
+            assertEquals(Integer.valueOf(width), multimedia.getWidthPixels());
+            assertEquals(gpsLatDegrees, multimedia.getGpsLatitudeDegrees(), 0.005);
+            assertEquals(gpsLongDegrees, multimedia.getGpsLongitudeDegrees(), 0.005);
+            assertEquals(duration, multimedia.getDurationSeconds(), 0.001);
 
-        Calendar imageCreated = Calendar.getInstance();
-        imageCreated.setTime(image.getCreated());
-        assertEquals(2017, imageCreated.get(Calendar.YEAR));
+            if (year > 0)
+            {
+                Calendar multimediaCreated = Calendar.getInstance();
+                multimediaCreated.setTime(multimedia.getCreated());
+                assertEquals(year, multimediaCreated.get(Calendar.YEAR));
+                assertEquals(month, multimediaCreated.get(Calendar.MONTH));
+                assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
+            }
+            else
+            {
+                assertNull(multimedia.getCreated());
+            }
 
-        logger.info(image.toString());
+            logger.info(multimedia.toString());
+        }
 
     }
 

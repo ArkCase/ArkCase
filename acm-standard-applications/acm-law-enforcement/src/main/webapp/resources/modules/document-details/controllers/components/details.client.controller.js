@@ -45,6 +45,16 @@ angular.module('document-details').controller('Document.DetailsController',
                 }
             );
 
+            ObjectLookupService.getPersonTypes(_ecmFile.container.containerObjectType).then(function (personTypes) {
+                var options = [];
+                _.forEach(personTypes, function (v, k) {
+                    options.push({type: v, name: v});
+                });
+                $scope.personTypes = options;
+                return personTypes;
+            });
+
+
         });
 
         $scope.details = {};
@@ -85,15 +95,6 @@ angular.module('document-details').controller('Document.DetailsController',
         ObjectLookupService.getOrganizationTypes().then(function (organizationTypes) {
             $scope.organizationTypes = organizationTypes;
             return organizationTypes;
-        });
-
-        ObjectLookupService.getPersonTypes().then(function (personTypes) {
-            var options = [];
-            _.forEach(personTypes, function (v, k) {
-                options.push({type: v, name: v});
-            });
-            $scope.personTypes = options;
-            return personTypes;
         });
 
         $scope.getActiveVersion = function (ecmFile) {

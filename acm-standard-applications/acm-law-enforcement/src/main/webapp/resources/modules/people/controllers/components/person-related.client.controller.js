@@ -10,7 +10,10 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         $scope.relationshipTypes = [];
         ObjectLookupService.getPersonRelationTypes().then(
             function (relationshipTypes) {
-                $scope.relationshipTypes = relationshipTypes;
+                for (var i = 0; i < relationshipTypes.length; i++) {
+                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                }
+
                 return relationshipTypes;
             });
 
@@ -141,7 +144,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             if (associationData.inverseType) {
                 if (!association.inverseAssociation) {
                     association.inverseAssociation = {};
-            }
+                }
                 if (association.inverseAssociation.inverseAssociation != association) {
                     association.inverseAssociation.inverseAssociation = association;
                 }

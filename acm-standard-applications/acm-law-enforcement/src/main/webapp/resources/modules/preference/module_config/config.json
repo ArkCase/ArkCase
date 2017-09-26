@@ -1,7 +1,7 @@
 {
   "id": "preference",
   "title": "Preferences",
-  "configurable": true,
+  "configurable": false,
   "menus": [
     {
       "menuId": "usermenu",
@@ -86,6 +86,7 @@
         "phones",
         "emails",
         "urls",
+        "participants",
         "aliases",
         "organizations",
         "ids",
@@ -106,6 +107,7 @@
         "faxes",
         "emails",
         "urls",
+        "participants",
         "dbas",
         "people",
         "ids",

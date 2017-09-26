@@ -1,7 +1,7 @@
 {
   "id": "analytics-audit",
   "title": "Audit Analytics",
-  "configurable": true,
+  "configurable": false,
   "menus": [
     {
       "menuId": "leftnav",

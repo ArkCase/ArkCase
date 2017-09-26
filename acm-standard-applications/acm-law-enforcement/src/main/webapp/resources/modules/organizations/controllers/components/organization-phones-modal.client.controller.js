@@ -1,9 +1,9 @@
-angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('organizations').controller('Organizations.PhonesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $translate, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
-                    $scope.phoneTypes = _.find(contactMethodTypes, {type: 'phone'}).subTypes;
+                    $scope.phoneTypes = _.find(contactMethodTypes, {key: 'phone'}).subLookup;
                     return contactMethodTypes;
                 });
 

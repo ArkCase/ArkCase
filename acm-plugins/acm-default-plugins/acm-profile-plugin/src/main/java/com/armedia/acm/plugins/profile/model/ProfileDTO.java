@@ -31,6 +31,7 @@ public class ProfileDTO
     private String title;
     private List<String> groups;
     private Long userOrgId;
+    private String langCode;
 
     public String getUserId()
     {
@@ -260,6 +261,16 @@ public class ProfileDTO
     public void setUserOrgId(Long userOrgId)
     {
         this.userOrgId = userOrgId;
+    }
+
+    public String getLangCode()
+    {
+        return langCode;
+    }
+
+    public void setLangCode(String langCode)
+    {
+        this.langCode = langCode;
     }
 
 }

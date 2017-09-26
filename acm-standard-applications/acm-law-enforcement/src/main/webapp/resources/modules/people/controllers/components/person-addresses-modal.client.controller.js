@@ -1,5 +1,5 @@
-angular.module('people').controller('People.AddressesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('people').controller('People.AddressesModalController', ['$scope', '$translate', '$modalInstance', 'Object.LookupService', 'params',
+        function ($scope, $translate, $modalInstance, ObjectLookupService, params) {
 
             ObjectLookupService.getAddressTypes().then(
                 function (addressTypes) {

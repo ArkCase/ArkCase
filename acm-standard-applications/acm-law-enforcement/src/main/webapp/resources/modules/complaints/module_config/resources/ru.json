@@ -270,6 +270,9 @@
   "complaints.comp.calendar": {
     "title": "Календарь"
   },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Поиск ссылок"
+  },
   "complaints.comp.addreference": {
     "title": "ru_Add Reference",
     "cancelButton": "ru_Cancel",
