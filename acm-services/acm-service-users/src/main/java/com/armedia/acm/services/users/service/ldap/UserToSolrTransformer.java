@@ -44,7 +44,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setStatus_lcs(in.getUserState().name());
 
         // Add groups
-        solr.setGroups_id_ss(in.getGroupIds().count() == 0 ? null : in.getGroupIds().collect(Collectors.toList()));
+        solr.setGroups_id_ss(in.getGroupNames().count() == 0 ? null : in.getGroupNames().collect(Collectors.toList()));
 
         solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
         solr.setAdditionalProperty("country_s", in.getCountry());

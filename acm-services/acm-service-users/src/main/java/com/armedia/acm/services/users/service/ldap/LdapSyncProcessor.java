@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -20,6 +21,7 @@ public class LdapSyncProcessor
 {
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private AcmRoleToGroupMapping roleToGroupConfig;
     private LdapDatabaseSyncService ldapDatabaseSyncService;
 
     @Transactional
@@ -33,8 +35,8 @@ public class LdapSyncProcessor
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
         Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, allUsersByIdMap);
 
-        Map<String, Set<String>> roleToGroup = ldapSyncConfig.getRoleToGroupsMap();
-        Map<String, List<String>> groupToRoleMap = ldapSyncConfig.getGroupToRolesMap();
+        Map<String, Set<String>> roleToGroup = roleToGroupConfig.getRoleToGroupsMap();
+        Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
 
         AcmUserRolesSyncResult acmUserRolesSyncResult = new AcmUserRolesSyncResult(acmGroupsSyncResult.getUserNewGroups(),
                 acmGroupsSyncResult.getUserRemovedGroups(), groupToRoleMap, userGroupsMap);
@@ -67,5 +69,10 @@ public class LdapSyncProcessor
     public void setLdapDatabaseSyncService(LdapDatabaseSyncService ldapDatabaseSyncService)
     {
         this.ldapDatabaseSyncService = ldapDatabaseSyncService;
+    }
+
+    public void setRoleToGroupConfig(AcmRoleToGroupMapping roleToGroupConfig)
+    {
+        this.roleToGroupConfig = roleToGroupConfig;
     }
 }
