@@ -1,8 +1,8 @@
 'use strict';
 
 //Setting up route
-angular.module('cases').config(['$stateProvider', '$translateProvider',
-    function ($stateProvider, $translateProvider) {
+angular.module('cases').config(['$stateProvider',
+    function ($stateProvider) {
         // Project state routing
         $stateProvider
             .state('cases', {

@@ -105,6 +105,7 @@
       "title": "timeTracking.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -182,6 +183,7 @@
       "id": "info",
       "title": "timeTracking.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -189,6 +191,7 @@
       "id": "actions",
       "title": "timeTracking.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -197,6 +200,7 @@
       "title": "timeTracking.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
@@ -204,6 +208,7 @@
       "title": "timeTracking.comp.person.title",
       "icon": "fa fa-user",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -233,6 +238,7 @@
       "title": "timeTracking.comp.summary.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -280,6 +286,7 @@
       "title": "timeTracking.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
