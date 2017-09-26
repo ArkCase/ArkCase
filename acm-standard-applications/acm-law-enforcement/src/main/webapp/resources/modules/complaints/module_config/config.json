@@ -1099,7 +1099,7 @@
           "name": "tally",
           "displayName": "complaints.comp.cost.table.columns.tally",
           "headerCellFilter": "translate",
-          "cellFilter": "currency: grid.appScope.currencySymbol",
+          "cellFilter": "currency",
           "cellClass": "text-right"
         },
         {
