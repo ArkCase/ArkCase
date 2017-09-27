@@ -138,8 +138,13 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.personAssociationTypes,
-                returnValueValidationFunction : validatePersonAssociation
+                returnValueValidationFunction: validatePersonAssociation,
+                hideNoField: hasPeople()
             };
+
+            if (!hasPeople()) {
+                params.isDefault = true;
+            }
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -173,6 +178,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 }
             });
         };
+
+        function hasPeople() {
+            return $scope.gridOptions.data.length > 0 ? true : false;
+        }
 
         function savePersonAssociation(association, data) {
             association.organization = $scope.objectInfo;
