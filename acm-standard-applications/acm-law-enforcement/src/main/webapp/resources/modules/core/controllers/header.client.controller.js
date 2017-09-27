@@ -107,7 +107,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                 Authentication.updateUserLang(localeNew.code).then(function () {
                     userInfo.langCode = localeNew.code;
                     $scope.localeSelected = localeNew;
-                    LocaleService.setLocaleData(localeData);
+                    LocaleService.setLocaleData(localeNew);
                     LocaleService.useLocale(localeNew.code);
                 }
                 , function (error) {
