@@ -357,6 +357,24 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
     }
 
+    private List<PostalAddress> initAddresses()
+    {
+        String userId = getAuthentication().getName();
+        AcmUser user = getUserDao().findByUserId(userId);
+        List<PostalAddress> locations = new ArrayList<>();
+        List<String> locationTypes = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
+
+        PostalAddress location = new PostalAddress();
+
+        location.setTypes(locationTypes);
+        location.setCreated(new Date());
+        location.setCreator(user.getFullName());
+
+        locations.add(location);
+
+        return locations;
+    }
+
     private ComplaintForm initIncidentFields()
     {
 
@@ -380,10 +398,8 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         complaint.setFrequencies(frequencies);
         complaint.setDate(new Date());
         complaint.setPriority("Low");
-        complaint.setLocation(location);
-
+        complaint.setAddresses(initAddresses());
         return complaint;
-
     }
 
     // This search is from database. For now it's not used. We moved to SOLR search.

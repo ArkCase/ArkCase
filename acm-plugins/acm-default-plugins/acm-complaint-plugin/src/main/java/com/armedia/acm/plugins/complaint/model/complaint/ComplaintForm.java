@@ -41,7 +41,7 @@ public class ComplaintForm {
 	private String complaintTag;
 	private String frequency;
 	private List<String> frequencies;
-	private PostalAddress location;
+	private List<PostalAddress> addresses;
 	private Contact initiator;
 	private List<Contact> people;
     private String cmisFolderId;
@@ -153,12 +153,14 @@ public class ComplaintForm {
 	}
 
 	@XmlElement(name="location", type=GeneralPostalAddress.class)
-	public PostalAddress getLocation() {
-		return location;
+	public List<PostalAddress> getAddresses()
+	{
+		return addresses;
 	}
 
-	public void setLocation(PostalAddress location) {
-		this.location = location;
+	public void setAddresses(List<PostalAddress> addresses)
+	{
+		this.addresses = addresses;
 	}
 
 	@XmlElement(name="initiator", type=InitiatorContact.class)
