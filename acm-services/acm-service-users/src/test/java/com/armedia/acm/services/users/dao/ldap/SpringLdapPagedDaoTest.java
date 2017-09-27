@@ -1,8 +1,8 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +13,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
@@ -78,7 +79,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
@@ -115,7 +116,7 @@ public class SpringLdapPagedDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 

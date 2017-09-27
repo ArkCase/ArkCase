@@ -32,8 +32,6 @@ public class AcmRoleToGroupMappingTest
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
                 + "ARKCASE_ADMINISTRATOR");
         unit = new AcmRoleToGroupMapping(roleToGroupMap);
-
-        //unit.setRoleToGroupMap(roleToGroupMap);
     }
 
     @Test

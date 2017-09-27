@@ -143,7 +143,8 @@ public class UserOrgServiceImpl implements UserOrgService
             {
                 userOrg = saveUserOrgTransaction(userOrg, authentication);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, true);
-            } catch (MuleException e)
+            }
+            catch (MuleException e)
             {
                 log.error("UserOrg for user [{}] was not saved. {}", userId, e);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
@@ -172,7 +173,8 @@ public class UserOrgServiceImpl implements UserOrgService
         try
         {
             userOrg = saveUserOrgTransaction(userOrg, authentication);
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("UserOrg for user [{}] was not saved. {}", userId, e);
             userOrgTransactionSuccess = false;
