@@ -35,12 +35,12 @@ public class AcmGroupsSyncResult
     public Map<String, Set<String>> sync(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups, Map<String, AcmUser> currentUsers)
     {
         Map<String, AcmGroup> currentGroups = getGroupsByIdMap(acmGroups);
-
-        newGroups = findAndCreateNewGroups(ldapGroups, currentGroups);
         separateUserAndGroupsFromGroupMembers(ldapGroups, currentGroups, currentUsers);
         mapAscendantsToLdapGroups(ldapGroups);
 
+        newGroups = findAndCreateNewGroups(ldapGroups, currentGroups);
         changedGroups = findAndUpdateModifiedGroups(ldapGroups, currentGroups);
+
         Map<String, AcmGroup> changedGroupsMap = getGroupsByIdMap(changedGroups);
         addAndRemoveGroupMemberUsers(ldapGroups, currentUsers, currentGroups, changedGroupsMap);
         addAndRemoveGroupMemberGroups(ldapGroups, currentGroups, changedGroupsMap);
@@ -56,7 +56,7 @@ public class AcmGroupsSyncResult
     public void mapAscendantsToLdapGroups(List<LdapGroup> ldapGroups)
     {
         ldapGroups.forEach(ldapGroup -> {
-            Set<LdapGroup> ascendants = new GroupBFS()
+            Set<LdapGroup> ascendants = new LdapGroupUtils()
                     .findAscendantsForLdapGroupNode(new LdapGroupNode(ldapGroup), new HashSet<>(ldapGroups));
             ldapGroup.setAscendants(ascendants);
         });
@@ -173,6 +173,7 @@ public class AcmGroupsSyncResult
     {
         AcmGroup acmGroup = getAcmGroupToUpdate(updatedGroups, currentGroups, group);
         currentGroup.addGroupMember(acmGroup);
+        acmGroup.addAscendant(currentGroup.getName());
         updatedGroups.put(currentGroup.getName(), currentGroup);
         acmGroup.getUserMembers().forEach(user -> {
             addUserNewGroup(user.getUserId(), currentGroup.getName());
@@ -188,6 +189,7 @@ public class AcmGroupsSyncResult
     {
         AcmGroup acmGroup = getAcmGroupToUpdate(updatedGroups, currentGroups, group);
         currentGroup.removeGroupMember(acmGroup);
+        acmGroup.removeAscendant(currentGroup.getName());
         updatedGroups.put(acmGroup.getName(), acmGroup);
         acmGroup.getUserMembers().stream()
                 .filter(user -> !currentGroup.getUserMembers().contains(user))

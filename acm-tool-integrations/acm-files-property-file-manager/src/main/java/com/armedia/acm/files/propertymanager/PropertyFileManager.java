@@ -66,11 +66,10 @@ public class PropertyFileManager
         {
             try (InputStream in = new FileInputStream(fileName))
             {
-
                 p.load(in);
             } catch (IOException e)
             {
-                log.warn("Could not open properties file: {}", e.getMessage(), e);
+                log.warn("Could not open properties file: {}", e.getMessage());
             }
         }
 
@@ -81,7 +80,7 @@ public class PropertyFileManager
             p.store(out, null);
         } catch (IOException e)
         {
-            log.warn("Could not update properties file: {}", e.getMessage(), e);
+            log.warn("Could not update properties file: {}", e.getMessage());
         }
     }
 
@@ -95,7 +94,6 @@ public class PropertyFileManager
         {
             try (InputStream in = new FileInputStream(fileName))
             {
-
                 p.load(in);
             } catch (IOException e)
             {

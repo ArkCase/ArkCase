@@ -176,7 +176,10 @@ public class LdapGroup
 
     public void addMemberGroup(LdapGroup group)
     {
-        memberGroups.add(group);
+        if (!this.equals(group))
+        {
+            memberGroups.add(group);
+        }
     }
 
     public Set<LdapGroup> getDescendants()

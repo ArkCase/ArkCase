@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isIn;
 import static org.hamcrest.core.Every.everyItem;
 
-public class LdapGroupBFSTest
+public class LdapGroupUtilsTest
 {
     private LdapGroup a;
     private LdapGroup b;
@@ -23,7 +23,7 @@ public class LdapGroupBFSTest
     private LdapGroup c1;
     private LdapGroup c2;
 
-    private GroupBFS ldapGroupBFS;
+    private LdapGroupUtils ldapLdapGroupUtils;
     private LdapGroupNode ldapGroupNode;
 
     @Before
@@ -62,8 +62,8 @@ public class LdapGroupBFSTest
     public void findDescendantsOfATest()
     {
         ldapGroupNode = new LdapGroupNode(a);
-        ldapGroupBFS = new GroupBFS();
-        Set<LdapGroup> visited = ldapGroupBFS.findDescendantsForLdapGroupNode(ldapGroupNode);
+        ldapLdapGroupUtils = new LdapGroupUtils();
+        Set<LdapGroup> visited = ldapLdapGroupUtils.findDescendantsForLdapGroupNode(ldapGroupNode);
 
         assertThat("Visited should be", visited, everyItem(isIn(groups(a, b, c, b1, b2, c1, c2))));
     }
@@ -72,8 +72,8 @@ public class LdapGroupBFSTest
     public void testFindAscendantsOfATest()
     {
         ldapGroupNode = new LdapGroupNode(a);
-        ldapGroupBFS = new GroupBFS();
-        Set<LdapGroup> visited = ldapGroupBFS.findAscendantsForLdapGroupNode(ldapGroupNode, groups(a, b, b1, b2, c, c1, c2));
+        ldapLdapGroupUtils = new LdapGroupUtils();
+        Set<LdapGroup> visited = ldapLdapGroupUtils.findAscendantsForLdapGroupNode(ldapGroupNode, groups(a, b, b1, b2, c, c1, c2));
         assertThat("Ascendants of A should be", visited, everyItem(isIn(groups(c2, c))));
     }
 

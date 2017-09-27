@@ -31,7 +31,7 @@ public class SupervisorGroupAPIController
     @ResponseBody
     public AcmGroup addSupervisorToGroup(@RequestBody AcmUser supervisor,
                                          @PathVariable("groupId") String groupId,
-                                         @PathVariable("applyToAll") boolean applyToAll)
+                                         @PathVariable("applyToAll") boolean applyToAll) throws AcmUserActionFailedException
     {
         LOG.info("Saving supervisor to the group with ID = [{}]", groupId);
         return groupService.setSupervisor(supervisor, groupId, applyToAll);
