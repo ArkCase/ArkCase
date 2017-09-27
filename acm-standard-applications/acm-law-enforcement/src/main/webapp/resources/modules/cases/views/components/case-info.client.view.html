@@ -16,7 +16,7 @@
                     <a href="#" editable-select="objectInfo.caseType" onaftersave="saveCase()"
                        permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable"
-                       e-ng-options="c.key as c.value for c in caseTypes">{{ caseTypeValue | translate }}</a>
+                       e-ng-options="c.key as c.value | translate for c in caseTypes">{{ caseTypeValue | translate }}</a>
                 </div>
                 <small class="text-muted"><span translate>cases.comp.info.type.label</span></small>
             </div>
