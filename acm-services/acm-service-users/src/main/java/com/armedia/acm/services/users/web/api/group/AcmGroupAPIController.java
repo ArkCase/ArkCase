@@ -119,7 +119,7 @@ public class AcmGroupAPIController
                            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
                            Authentication auth) throws Exception
     {
-        LOG.info("Taking group from Solr with ID = " + groupId);
+        LOG.info("Taking group from Solr with ID = [{}]", groupId);
 
         String query = "object_id_s:" + groupId
                 + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";

@@ -1,10 +1,10 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
@@ -30,7 +31,6 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     private AcmLdapSyncConfig syncConfig;
 
     private CustomPagedLdapDao unit;
-
 
     @Before
     public void setUp()
@@ -75,9 +75,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         List<LdapGroup> pageThree = new ArrayList<>();
         pageThree.add(buildGroup("cream"));
 
-
         syncConfig.setSyncPageSize(3);
-
 
         // first search returns a full page
         expect(mockLdapTemplate.search(
@@ -106,7 +104,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapGroup> found = unit.findGroupsPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapGroup> found = unit.findGroupsPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
@@ -141,7 +139,6 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         syncConfig.setSyncPageSize(3);
 
-
         // first search returns a full page
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getUserSearchBase()),
@@ -169,7 +166,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
@@ -203,7 +200,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
@@ -215,7 +212,6 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         }
 
     }
-
 
     @Test
     public void findUsersPaged_userDomainNotAppendedIfAbsent() throws Exception
@@ -237,7 +233,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         replayAll();
 
-        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, null);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 

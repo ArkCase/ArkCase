@@ -38,10 +38,10 @@ public class LdapEntryTransformer
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
-        String userID = user.getUserId();
-        if (StringUtils.isNotEmpty(userDomain) && userID.endsWith("@" + userDomain))
+        String userId = user.getUserId();
+        if (StringUtils.isNotEmpty(userDomain) && userId.endsWith("@" + userDomain))
         {
-            userID = userID.substring(0, userID.indexOf(userDomain) - 1);
+            userId = userId.substring(0, userId.indexOf(userDomain) - 1);
         }
 
         for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
@@ -56,7 +56,7 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
-                context.setAttributeValue(attr, userID);
+                context.setAttributeValue(attr, userId);
             } else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
             {
                 context.setAttributeValue(attr, user.getFirstName());
@@ -84,7 +84,7 @@ public class LdapEntryTransformer
                 context.setAttributeValue(attr, Long.toString(timestamp));
             } else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
             {
-                context.setAttributeValue(attr, String.format("/home/%s", userID));
+                context.setAttributeValue(attr, String.format("/home/%s", userId));
             } else
             {
                 context.setAttributeValue(attr, value);

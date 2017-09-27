@@ -116,7 +116,7 @@ public class LdapSyncService
         LdapUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(),
                 getLdapSyncConfig().getUserSyncAttributes());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
         return user;
@@ -136,7 +136,7 @@ public class LdapSyncService
 
         LdapUser user = getSpringLdapUserDao().findUserByLookup(dn, template, getLdapSyncConfig());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
         return user;
@@ -149,7 +149,8 @@ public class LdapSyncService
         {
             date = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
                     String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY), null);
-        } catch (AcmEncryptionException e)
+        }
+        catch (AcmEncryptionException e)
         {
             log.warn("Failed to read [{}] date property. All users will be synced ", AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY,
                     e.getMessage());
