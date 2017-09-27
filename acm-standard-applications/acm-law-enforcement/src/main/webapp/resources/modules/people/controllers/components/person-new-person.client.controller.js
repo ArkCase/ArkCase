@@ -181,12 +181,13 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         };
 
 
-        $scope.searchOrganization = function (index) {
+        $scope.searchOrganization = function (index, isNewPerson) {
             var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.organizationTypes
+                types: $scope.organizationTypes,
+                isNewPerson: isNewPerson
             };
             //set this params for editing
             if (association.organization) {
