@@ -20,13 +20,13 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isChanged = true;
             $scope.isDefault = params.isDefault;
             $scope.isSelectedParent = params.isSelectedParent;
+            $scope.isEditParent = !!params.organizationId;
             $scope.description = params.description;
 
             if (!!params.isSelectedParent) {
-                $scope.haveParent = params.isSelectedParent;
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
-                    $scope.editMode = !!params.organization.parentOrganization.organizationId;
+                    $scope.isEditParent = !!params.organization.parentOrganization.organizationId;
                     $scope.organizationId = params.organization.organizationId;
                     $scope.organizationValue = params.organization.parentOrganization.organizationValue;
                 }
@@ -37,7 +37,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
-                if (!!$scope.haveParent && $scope.organization.parentOrganization != null && !(!!$scope.organization.parentOrganization.organizationId)) {
+                if (!!$scope.isSelectedParent && $scope.organization.parentOrganization != null && !(!!$scope.organization.parentOrganization.organizationId)) {
                     $scope.organization.parentOrganization = null;
                 }
                 $modalInstance.dismiss('Cancel');
