@@ -30,7 +30,7 @@ public class LdapDatabaseSyncService
         Set<AcmUser> newUsers = acmUsersSyncResult.getNewUsers().stream()
                 .filter(user -> !user.getGroups().isEmpty())
                 .collect(Collectors.toSet());
-        log.info("Saving new users [{}]", acmUsersSyncResult.getNewUsers().size());
+        log.info("Saving new users [{}]", newUsers.size());
         newUsers.forEach(acmUser -> {
             log.info("Saving AcmUser [{}]", acmUser.getUserId());
             userDao.persistUser(acmUser);

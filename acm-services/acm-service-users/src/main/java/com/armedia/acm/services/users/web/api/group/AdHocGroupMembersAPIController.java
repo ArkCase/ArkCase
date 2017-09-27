@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.web.api.group;
 
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -31,7 +32,7 @@ public class AdHocGroupMembersAPIController
     public AcmGroup saveMembersToAdHocGroup(@RequestBody Set<AcmUser> members,
                                             @PathVariable("groupId") String groupId,
                                             @RequestParam(value = "addToAllParentGroups", required = false,
-                                                    defaultValue = "false") String addToAllParentGroups)
+                                                    defaultValue = "false") String addToAllParentGroups) throws AcmUserActionFailedException
     {
         LOG.info("Saving members to the group with ID = [{}]", groupId);
         return groupService.addMembersToAdHocGroup(members, groupId);

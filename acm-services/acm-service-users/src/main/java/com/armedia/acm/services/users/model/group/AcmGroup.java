@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -379,6 +380,13 @@ public class AcmGroup implements Serializable, AcmEntity
         {
             ascendantsList = ascendantGroup;
         }
+    }
+
+    public void removeAscendant(String ascendantGroup)
+    {
+        ascendantsList = getAscendants()
+                .filter(it -> !it.equals(ascendantGroup))
+                .collect(Collectors.joining(","));
     }
 
     public void setAscendantsList(String ascendantsList)

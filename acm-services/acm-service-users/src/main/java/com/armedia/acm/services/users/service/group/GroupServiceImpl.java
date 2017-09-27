@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
@@ -132,14 +133,21 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup markGroupDeleted(String groupName)
     {
-        return  groupDao.markGroupDeleted(groupName);
+        return groupDao.markGroupDeleted(groupName);
     }
 
     @Override
     @Transactional
-    public AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll)
+    public AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException
     {
         AcmGroup group = groupDao.findByName(groupId);
+
+        if (group == null)
+        {
+            log.error("Failed to set supervisor to group. Group [{}] was not found.", groupId);
+            throw new AcmUserActionFailedException("Set Members", "Group", -1L, "Failed to set supervisor to group. Group "
+                    + groupId + " was not found.", null);
+        }
 
         supervisor = userDao.findByUserId(supervisor.getUserId());
 
@@ -154,9 +162,15 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId)
+    public AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId) throws AcmUserActionFailedException
     {
         AcmGroup group = groupDao.findByName(groupId);
+        if (group == null)
+        {
+            log.error("Failed to add members to group. Group [{}] was not found.", groupId);
+            throw new AcmUserActionFailedException("Save Members", "Group", -1L, "Failed to add members to group. Group "
+                    + groupId + " was not found.", null);
+        }
         members = updateMembersWithDatabaseInfo(members);
         members.forEach(group::addUserMember);
         members.forEach(member ->
@@ -165,9 +179,15 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup removeSupervisor(String groupId, boolean applyToAll)
+    public AcmGroup removeSupervisor(String groupId, boolean applyToAll) throws AcmUserActionFailedException
     {
         AcmGroup group = groupDao.findByName(groupId);
+        if (group == null)
+        {
+            log.error("Failed to remove supervisor from group. Group [{}] was not found.", groupId);
+            throw new AcmUserActionFailedException("Remove Supervisor", "Group", -1L, "Failed to remove supervisor from group. Group "
+                    + groupId + " was not found.", null);
+        }
         group.setSupervisor(null);
 
         if (applyToAll)

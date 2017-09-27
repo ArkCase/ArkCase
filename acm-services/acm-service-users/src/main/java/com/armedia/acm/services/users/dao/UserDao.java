@@ -330,6 +330,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     @Transactional
     public AcmUser persistUser(AcmUser acmUser)
     {
+        acmUser.setLang(DEFAULT_LOCALE_CODE);
         getEm().persist(acmUser);
         return acmUser;
     }

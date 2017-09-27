@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
@@ -71,11 +72,11 @@ public interface GroupService
 
     AcmGroup markGroupDeleted(String groupId);
 
-    AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll);
+    AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
-    AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId);
+    AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId) throws AcmUserActionFailedException;
 
-    AcmGroup removeSupervisor(String groupId, boolean applyToAll);
+    AcmGroup removeSupervisor(String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
     AcmGroup removeMembersFromAdHocGroup(Set<AcmUser> members, String groupId);
 
