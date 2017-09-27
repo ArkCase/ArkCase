@@ -20,6 +20,10 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
+    <bean id="userRoleService" class="com.armedia.acm.services.users.service.AcmUserRoleService">
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="roleToGroupConfig" ref="acmRoleToGroupConfig"/>
+    </bean>
 
     <!-- UserDao caching functionality -->
     <bean id="quietUserLookupCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -35,13 +39,13 @@
         <constructor-arg value="quiet-user-cache"/>
     </bean>
 
-    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.ldap.UserDao" init-method="init">
+    <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
         <property name="quietUserLookupCache" ref="quietUserLookupCache"/>        
         <property name="configList" ref="configList"/>
     </bean>
     <!-- End UserDao caching functionality -->
 
-    <bean id="userActionDao" class="com.armedia.acm.services.users.dao.ldap.UserActionDao"/>
+    <bean id="userActionDao" class="com.armedia.acm.services.users.dao.UserActionDao"/>
 
     <bean id="groupDao" class="com.armedia.acm.services.users.dao.group.AcmGroupDao"/>
 
@@ -49,20 +53,17 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="userRoleService" ref="userRoleService"/>
     </bean>
 
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
         <property name="userActionDao" ref="userActionDao"/>
     </bean>
 
-    <bean id="userDatabaseHelper" class="com.armedia.acm.services.users.service.ldap.LdapSyncDatabaseHelper">
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
-    </bean>
-
     <bean id="ldapSyncProcessor" class="com.armedia.acm.services.users.service.ldap.LdapSyncProcessor">
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="roleToGroupConfig" ref="acmRoleToGroupConfig"/>
         <property name="ldapDatabaseSyncService" ref="ldapDatabaseSyncService"/>
     </bean>
 
@@ -73,6 +74,32 @@
 
     <bean id="acmLdapAuthenticateManager" class="com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager">
         <property name="springContextHolder" ref="acmContextHolder"/>
+    </bean>
+
+    <bean id="applicationRoleToUserGroupProperties"
+          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
+        <!-- note: must leave "file:" at the start of the file name for spring
+        to be able to read the file; otherwise it will try to read from the
+        classpath -->
+        <property name="location" value="file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+        <!-- following properties are the default mapping of roles to
+             groups.  These properties will be overwritten by properties in the
+             properties file.  The properties file must have each key from the
+             below list. -->
+        <property name="properties">
+            <props>
+                <prop key="ROLE_INVESTIGATOR"></prop>
+                <prop key="ROLE_INVESTIGATOR_SUPERVISOR"></prop>
+                <prop key="ROLE_ANALYST"></prop>
+                <prop key="ROLE_CALLCENTER"></prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="acmRoleToGroupConfig" class="com.armedia.acm.services.users.model.AcmRoleToGroupMapping">
+        <constructor-arg name="roleToGroupMap" ref="applicationRoleToUserGroupProperties"/>
     </bean>
 
     <!-- NOTE: LDAP sync service beans (of class com.armedia.acm.services.users.service.ldap.LdapSyncService) should
@@ -99,6 +126,7 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="ldapUserDao" ref="springLdapUserDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
+        <property name="userRoleService" ref="userRoleService"/>
         <property name="userTransformer" ref="ldapEntryTransformer"/>
     </bean>
 
@@ -125,7 +153,6 @@
                 <prop key="sn">lastName</prop>
                 <prop key="uid">userId</prop>
                 <prop key="mail">mail</prop>
-                <prop key="memberOf">memberOf</prop>
                 <prop key="userAccountControl">userAccountControl</prop>
                 <prop key="userPassword">userPassword</prop>
                 <prop key="unicodePwd">unicodePwd</prop>
