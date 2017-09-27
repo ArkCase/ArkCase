@@ -244,7 +244,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             saveComplaint();
         };
         $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.dueDate));
             saveComplaint();
         };
         

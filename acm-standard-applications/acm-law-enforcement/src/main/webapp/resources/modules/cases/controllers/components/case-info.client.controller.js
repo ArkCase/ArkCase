@@ -213,7 +213,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (data) {
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment.utc(UtilDateService.isoToDate($scope.objectInfo.dueDate));
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             $q.all([getPrioritiesPromise, caseFileTypesPromise]).then(function() {
@@ -278,7 +278,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             saveCase();
         };
         $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.dueDate));
             saveCase();
         };
         
