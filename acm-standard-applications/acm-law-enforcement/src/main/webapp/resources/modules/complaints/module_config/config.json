@@ -298,16 +298,15 @@
             },
             {
               "name": "modified",
-              "displayName": "complaints.comp.locations.table.columns.modified",
+              "displayName": "complaints.comp.addresses.table.columns.modified",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-              "width": 150
+              "enableCellEdit": false
             },
             {
               "name": "modifier",
-              "displayName": "complaints.comp.locations.table.columns.modifier",
+              "displayName": "complaints.comp.addresses.table.columns.modifier",
               "headerCellFilter": "translate",
-              "width": 150,
               "lookup": "userFullNames"
             }
           ]
@@ -563,46 +562,75 @@
       "type": "empty"
     },
     {
-      "id": "locations",
-      "title": "complaints.comp.locations.title",
-      "icon": "fa fa-location-arrow",
+      "id": "addresses",
+      "title": "complaints.comp.addresses.title",
+      "icon": "fa fa-map-marker",
       "enabled": true,
       "configurable": true,
       "type": "grid",
-      "enableFiltering": false,
-      "enableSorting": false,
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
       "columnDefs": [
         {
-          "name": "address",
-          "field": "streetAddress",
-          "displayName": "complaints.comp.locations.table.columns.address",
+          "name": "type",
+          "displayName": "complaints.comp.addresses.table.columns.type",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.type}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+          "width": "*"
+        },
+        {
+          "name": "streetAddress",
+          "displayName": "complaints.comp.addresses.table.columns.streetAddress",
           "headerCellFilter": "translate"
         },
         {
-          "name": "type",
-          "displayName": "complaints.comp.locations.table.columns.type",
-          "headerCellFilter": "translate",
-          "lookup": "addressTypes"
+          "name": "streetAddress2",
+          "displayName": "complaints.comp.addresses.table.columns.streetAddress2",
+          "headerCellFilter": "translate"
         },
         {
           "name": "city",
-          "displayName": "complaints.comp.locations.table.columns.city",
+          "displayName": "complaints.comp.addresses.table.columns.city",
           "headerCellFilter": "translate"
         },
         {
           "name": "state",
-          "displayName": "complaints.comp.locations.table.columns.state",
+          "displayName": "complaints.comp.addresses.table.columns.state",
           "headerCellFilter": "translate"
         },
         {
           "name": "zip",
-          "displayName": "complaints.comp.locations.table.columns.zip",
+          "displayName": "complaints.comp.addresses.table.columns.zip",
           "headerCellFilter": "translate"
+        },
+        {
+          "name": "country",
+          "displayName": "complaints.comp.addresses.table.columns.country",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "displayName": "complaints.comp.addresses.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "enableCellEdit": false
+        },
+        {
+          "name": "modifier",
+          "displayName": "complaints.comp.addresses.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "lookup": "userFullNames"
         }
       ]
     },
     {
-      "id": "people",
+      "id": "complaints",
       "title": "complaints.comp.people.title",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",

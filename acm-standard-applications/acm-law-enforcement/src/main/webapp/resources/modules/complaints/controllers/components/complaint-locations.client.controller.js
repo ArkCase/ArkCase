@@ -7,115 +7,173 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
         , ObjectLookupService, HelperObjectBrowserService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
-            moduleId: "complaints"
-            , componentId: "locations"
-            , scope: $scope
+            scope: $scope
             , stateParams: $stateParams
+            , moduleId: "complaints"
+            , componentId: "addresses"
             , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
             , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
+            }
+            , onObjectInfoRetrieved: function (objectInfo) {
+                onObjectInfoRetrieved(objectInfo);
             }
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        ObjectLookupService.getAddressTypes().then(
-            function (addressTypes) {
-                $scope.addressTypes = addressTypes;
-                return addressTypes;
-            }
-        );
+        var promiseUsers = gridHelper.getUsers();
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete");
+            PermissionsService.getActionPermission('editComplaint', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.COMPLAINT}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilterToConfig(promiseUsers, config);
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $q.all([componentHelper.promiseConfig]).then(function () {
-                $scope.objectInfo = objectInfo;
-                var location = Util.goodMapValue($scope.objectInfo, "location", null);
-                $scope.gridOptions.data = (location) ? [location] : [];
-            });
+            $scope.objectInfo = objectInfo;
+            $scope.gridOptions.data = $scope.objectInfo.addresses;
         };
 
+        //Addresses
         $scope.addNew = function () {
-            var location = {};
-            //put location to scope, we will need it when we return from popup
-            $scope.location = location;
-            showModal(false);
-        };
 
+            var address = {};
+            address.created = Util.dateToIsoString(new Date());
+            address.creator = $scope.userId;
+            address.className = "com.armedia.acm.plugins.addressable.model.PostalAddress";
+            $scope.address = address;
+            var item = {
+                id: '',
+                parentId: $scope.objectInfo.id,
+                addressType: '',
+                streetAddress: '',
+                streetAddress2: '',
+                city: '',
+                state: '',
+                zip: '',
+                country: ''
+            };
+            showModal(item, false);
+        };
         $scope.editRow = function (rowEntity) {
-            $scope.location = angular.copy(rowEntity);
-            showModal(true);
+            $scope.address = rowEntity;
+            var item = {
+                id: rowEntity.id,
+                parentId: $scope.objectInfo.id,
+                addressType: rowEntity.type,
+                streetAddress: rowEntity.streetAddress,
+                streetAddress2: rowEntity.streetAddress2,
+                city: rowEntity.city,
+                state: rowEntity.state,
+                zip: rowEntity.zip,
+                country: rowEntity.country
+
+            };
+            showModal(item, true);
         };
 
         $scope.deleteRow = function (rowEntity) {
-            gridHelper.deleteRow(rowEntity);
-
             var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row
-                $scope.objectInfo.location = null;
-                saveObjectInfoAndRefresh();
+            if (0 < id) {    //do not need to call service when deleting a new row with id==0
+                $scope.objectInfo.addresses = _.remove($scope.objectInfo.addresses, function (item) {
+                    return item.id != id;
+                });
+                saveObjectInfoAndRefresh()
             }
         };
 
-        var showModal = function (isEdit) {
-            var modalScope = $scope.$new();
-            modalScope.location = $scope.location || {};
-            modalScope.isEdit = isEdit || false;
-            modalScope.addressTypes = $scope.addressTypes;
+
+        $scope.setPrimary = function () {
+            console.log('set primary');
+        };
+
+        function showModal(address, isEdit) {
+            var params = {};
+            params.address = address || {};
+            params.isEdit = isEdit || false;
+            params.isDefault = $scope.isDefault(address);
+            params.hideNoField = params.isDefault;
 
             var modalInstance = $modal.open({
-                scope: modalScope,
                 animation: true,
                 templateUrl: 'modules/complaints/views/components/complaint-locations-modal.client.view.html',
-                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-                    $scope.onClickOk = function () {
-                        $modalInstance.close({
-                            location: $scope.location,
-                            isEdit: $scope.isEdit
-                        });
-                    };
-                    $scope.onClickCancel = function () {
-                        $modalInstance.dismiss('cancel');
+                controller: 'Complaint.AddressesModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
                     }
-                }],
-                size: 'sm'
+                }
             });
 
             modalInstance.result.then(function (data) {
-                $scope.objectInfo.location = data.location;
+                var address;
+                if (!data.isEdit)
+                    address = $scope.address;
+                else {
+                    address = _.find($scope.objectInfo.addresses, {id: data.address.id});
+                }
+                address.type = data.address.addressType;
+                address.streetAddress = data.address.streetAddress;
+                address.streetAddress2 = data.address.streetAddress2;
+                address.city = data.address.city;
+                address.state = data.address.state;
+                address.zip = data.address.zip;
+                address.country = data.address.country;
+                if (!data.isEdit) {
+                    if(!$scope.objectInfo.addresses){
+                        $scope.objectInfo.addresses=[];
+                    }
+                    $scope.objectInfo.addresses.push(address);
+                }
+
+                if (data.isDefault || $scope.objectInfo.addresses.length == 1) {
+                    $scope.objectInfo.defaultAddress = address;
+                }
                 saveObjectInfoAndRefresh();
             });
-        };
+        }
 
-        var saveObjectInfoAndRefresh = function () {
-            var saveObject = Util.omitNg($scope.objectInfo);
-            ComplaintInfoService.saveComplaintInfo(saveObject).then(
-                function (objectSaved) {
-                    refresh();
-                    return objectSaved;
-                },
-                function (error) {
-                    return error;
-                }
-            );
-        };
+        function saveObjectInfoAndRefresh() {
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
+                promiseSaveInfo.then(
+                    function (objectInfo) {
+                        $scope.$emit("report-object-updated", objectInfo);
+                        return objectInfo;
+                    }
+                    , function (error) {
+                        $scope.$emit("report-object-update-failed", error);
+                        return error;
+                    }
+                );
+            }
+            return promiseSaveInfo;
+        }
 
-        var refresh = function () {
-            $scope.$emit('report-object-refreshed', $stateParams.id);
+        $scope.isDefault = function (data) {
+            var id = 0;
+            if ($scope.objectInfo.defaultAddress) {
+                id = $scope.objectInfo.defaultAddress.id
+            }
+            if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
+                return true;
+            }
+            return data.id == id;
         };
     }
 ]);
-
 
