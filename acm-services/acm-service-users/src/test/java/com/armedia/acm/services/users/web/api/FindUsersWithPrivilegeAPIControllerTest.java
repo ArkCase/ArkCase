@@ -1,7 +1,7 @@
 package com.armedia.acm.services.users.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
