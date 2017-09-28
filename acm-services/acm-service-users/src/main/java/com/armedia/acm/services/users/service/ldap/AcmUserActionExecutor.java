@@ -5,11 +5,9 @@ package com.armedia.acm.services.users.service.ldap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
+import com.armedia.acm.services.users.dao.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUserAction;
-import com.armedia.acm.services.users.model.AcmUserActionName;
 
 /**
  * @author riste.tutureski

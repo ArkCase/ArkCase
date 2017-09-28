@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -93,7 +94,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     }
 
-    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
+    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException
     {
         when(mockLdapGroupService.getGroupDao()).thenReturn(mockGroupDao);
         when(mockGroupDao.findByName(anyString())).thenReturn(group);

@@ -2,7 +2,6 @@ package com.armedia.acm.services.functionalaccess.web.api;
 
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,9 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * @author riste.tutureski
@@ -47,7 +47,6 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
     private Authentication mockAuthentication;
     private FunctionalAccessService mockFunctionalAccessService;
     private AcmPluginManager mockPluginManager;
-    private AcmGroupDao mockAcmGroupDao;
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -59,7 +58,6 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
         mockAuthentication = createMock(Authentication.class);
         mockPluginManager = createMock(AcmPluginManager.class);
-        mockAcmGroupDao = createMock(AcmGroupDao.class);
 
         mockFunctionalAccessService = createMock(FunctionalAccessService.class);
         unit.setFunctionalAccessService(mockFunctionalAccessService);
@@ -87,7 +85,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmGroup group1 = new AcmGroup();
         group1.setName("acm_administrator_dev");
-        group1.setMembers(membersGroup1);
+        group1.setUserMembers(membersGroup1);
 
         // Group 2
         Set<AcmUser> membersGroup2 = new HashSet<>();
@@ -102,7 +100,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmGroup group2 = new AcmGroup();
         group2.setName("acm_supervisor_dev");
-        group2.setMembers(membersGroup2);
+        group2.setUserMembers(membersGroup2);
 
         List<AcmUser> expectedUserList = Arrays.asList(user1, user2, user3, user4);
 
@@ -118,7 +116,8 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         // functional access control service.  We need unit tests on the functional access control service, to
         // ensure it is working correctly.
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
-        expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null)).andReturn(group2.getMembers());
+        expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null))
+                .andReturn(group2.getUserMembers());
 
         replayAll();
 
@@ -140,7 +139,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertEquals(group2.getMembers().size(), resultUserList.size());
+        assertEquals(group2.getUserMembers().size(), resultUserList.size());
 
     }
 
@@ -151,7 +150,6 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         String privilege = "acm-privilege";
         String role1 = "ROLE_ADMINISTRATOR";
         String role2 = "ROLE_INVESTIGATOR_SUPERVISOR";
-
 
         // Group 1
         Set<AcmUser> membersGroup1 = new HashSet<>();
@@ -166,8 +164,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmGroup group1 = new AcmGroup();
         group1.setName("acm_administrator_dev");
-        group1.setMembers(membersGroup1);
-
+        group1.setUserMembers(membersGroup1);
 
         // Group 2
         Set<AcmUser> membersGroup2 = new HashSet<>();
@@ -182,23 +179,21 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
 
         AcmGroup group2 = new AcmGroup();
         group2.setName("acm_supervisor_dev");
-        group2.setMembers(membersGroup2);
-
+        group2.setUserMembers(membersGroup2);
 
         List<AcmUser> expectedUserList = Arrays.asList(user1, user2);
-
 
         List<String> rolesForPrivilege = Arrays.asList(role1, role2);
         Map<String, List<String>> rolesToGroups = new HashMap<>();
         rolesToGroups.put(role1, Arrays.asList(group1.getName()));
         rolesToGroups.put(role2, Arrays.asList(group2.getName()));
 
-
         expect(mockAuthentication.getName()).andReturn("user");
         expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
 
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
-        expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group1.getName(), null)).andReturn(group1.getMembers());
+        expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, group1.getName(), null))
+                .andReturn(group1.getUserMembers());
 
         replayAll();
 
@@ -225,7 +220,6 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         {
             assertTrue(resultUserList.contains(expected));
         }
-
     }
 
 }

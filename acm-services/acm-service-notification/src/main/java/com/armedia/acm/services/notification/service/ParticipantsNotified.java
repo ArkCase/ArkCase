@@ -6,8 +6,8 @@ import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
@@ -18,9 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by ncuculova
- */
 public class ParticipantsNotified implements UsersNotified
 {
     private UserDao userDao;
@@ -81,7 +78,7 @@ public class ParticipantsNotified implements UsersNotified
                 AcmGroup group = getGroupDao().findByName(participant.getReceiverLdapId());
                 if (group != null)
                 {
-                    receivers.addAll(group.getMembers());
+                    receivers.addAll(group.getUserMembers());
                 }
 
             } else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))

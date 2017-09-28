@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 
 /**
  * @author riste.tutureski

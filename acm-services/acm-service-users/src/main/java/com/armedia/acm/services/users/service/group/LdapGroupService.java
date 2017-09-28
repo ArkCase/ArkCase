@@ -1,11 +1,11 @@
 package com.armedia.acm.services.users.service.group;
 
-
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -20,7 +20,6 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.transaction.annotation.Transactional;
-
 
 public class LdapGroupService
 {
@@ -37,12 +36,12 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException,AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
-        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
 
+        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
         if (existingGroup != null)
         {
@@ -51,30 +50,28 @@ public class LdapGroupService
         }
 
         group.setName(group.getName().toUpperCase());
-        group.setType(AcmGroupType.LDAP_GROUP.name());
+        group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
         group.setDirectoryName(directoryName);
-        group.setStatus("ACTIVE");
-        log.debug("Saving Group:{} with DN:{} in database", group.getName(), group.getDistinguishedName());
+        group.setStatus(AcmGroupStatus.ACTIVE);
+        log.debug("Saving Group [{}] with DN [{}] in database", group.getName(), group.getDistinguishedName());
         AcmGroup acmGroup = getGroupDao().save(group);
         getGroupDao().getEm().flush();
 
-        log.debug("Saving Group:{} with DN:{} in LDAP server", group.getName(), group.getDistinguishedName());
+        log.debug("Saving Group [{}] with DN [{}] in LDAP server", group.getName(), group.getDistinguishedName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
-                null, ldapSyncConfig.getBaseDC());
-        log.debug("Ldap Group Context: {}", context.getAttributes());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        log.debug("Ldap Group Context [{}]", context.getAttributes());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
 
-        log.debug("Group:{} with DN:{} saved in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
+        log.debug("Group [{}] with DN [{}] saved in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
         return acmGroup;
     }
 
@@ -86,80 +83,82 @@ public class LdapGroupService
                 get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-
         AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
         if (existingGroup != null)
         {
-            log.debug("Group with name:{} already exists!", group.getName());
+            log.debug("Group with name [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
-        AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
-        log.debug("Found parent-group:{} for new LDAP sub-group:{}", parentGroup.getName(), group.getName());
-
         group.setName(group.getName().toUpperCase());
-        group.setType(AcmGroupType.LDAP_GROUP.name());
+        group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
-        group.setParentGroup(parentGroup);
         group.setDirectoryName(directoryName);
 
-        log.debug("Saving sub-group:{} with parent-group:{} in database", group.getName(), parentGroup.getName());
         AcmGroup acmGroup = getGroupDao().save(group);
         getGroupDao().getEm().flush();
 
-        log.debug("Saving sub-group:{} with parent-group:{} in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
+        AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
+        log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
+        parentGroup.addGroupMember(acmGroup);
+        log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), group.getName());
+        getGroupDao().save(parentGroup);
+        log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
-                parentGroupName, ldapSyncConfig.getBaseDC());
-        log.debug("Ldap Sub-Group Context: {}", context.getAttributes());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        log.debug("Ldap Sub-Group Context [{}]", context.getAttributes());
         try
         {
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
 
-        log.debug("Sub-group:{} with DN:{} saved in LDAP server", acmGroup.getName(), acmGroup.getDistinguishedName());
+        log.debug("Sub-group [{}] with DN [{}] saved in LDAP server", acmGroup.getName(), acmGroup.getDistinguishedName());
 
         String parentGroupDnStrippedBase = MapperUtils.stripBaseFromDn(parentGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
 
         try
         {
-            log.debug("Update parent-group:{} with DN:{} with the new member:{} in LDAP server", parentGroup.getName(),
+            log.debug("Update parent-group [{}] with DN [{}] with the new member [{}] in LDAP server", parentGroup.getName(),
                     parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
             DirContextOperations parentGroupContext = new RetryExecutor<DirContextOperations>()
                     .retryResult(() -> ldapTemplate.lookupContext(parentGroupDnStrippedBase));
             parentGroupContext.addAttributeValue("member", acmGroup.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(parentGroupContext));
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
-            log.error("Updating parent-group DN:{} failed! Rollback saved sub-group DN:{} ",
+            log.error("Updating parent-group DN [{}] failed! Rollback saved sub-group DN [{}] ",
                     parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
             try
             {
                 new RetryExecutor().retry(() -> ldapTemplate.unbind(parentGroupDnStrippedBase));
-            }
-            catch (Exception ee)
+            } catch (Exception ee)
             {
                 log.warn("Rollback failed", ee);
             }
 
-            log.debug("Sub-group entry DN:{} deleted", groupDN);
+            log.debug("Sub-group entry DN [{}] deleted", groupDN);
             throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
         }
         return acmGroup;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException
+    public AcmGroup removeLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException, AcmUserActionFailedException
     {
-        AcmGroup existingGroup = getGroupDao().findByName(group);
-        log.debug("Removing LDAP group:{} from database", existingGroup.getName());
-        getGroupDao().markGroupDelete(group);
 
+        log.debug("Removing LDAP group [{}] from database", group);
+
+        AcmGroup existingGroup = getGroupDao().markGroupDeleted(group);
+        if (existingGroup == null)
+        {
+            log.debug("No such group [{}]", group);
+            throw new AcmUserActionFailedException("Delete LDAP GROUP", "GROUP", null, "No such group", null);
+        }
+
+        getGroupDao().markRolesByGroupInvalid(group);
 
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
@@ -167,15 +166,16 @@ public class LdapGroupService
 
         try
         {
-            log.debug("Deleting group:{} with DN:{} in LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
+            log.debug("Deleting group [{}] with DN [{}] in LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(existingGroup.getDistinguishedName(),
                     ldapSyncConfig.getBaseDC())));
-            log.debug("Group:{} with DN:{} was successfully deleted in DB and LDAP", existingGroup.getName(), existingGroup.getDistinguishedName());
-        }
-        catch (Exception e)
+            log.debug("Group [{}] with DN [{}] was successfully deleted in DB and LDAP", existingGroup.getName(),
+                    existingGroup.getDistinguishedName());
+        } catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
+
         return existingGroup;
     }
 

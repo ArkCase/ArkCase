@@ -106,7 +106,7 @@ public class MapperUtils
         return null;
     };
 
-    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShaddowAccount = adapter ->
+    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter ->
     {
         String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
         String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");
