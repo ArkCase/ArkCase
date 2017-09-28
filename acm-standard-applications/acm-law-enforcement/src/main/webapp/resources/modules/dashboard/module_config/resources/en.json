@@ -140,8 +140,8 @@
           "description": "Display the current temperature of a city",
           "location": "Location",
           "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-          "weatherWidgetDescription":"Description",
-          "enterWeatherWidgetDescription": "Enter widget description"
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "title": "Weather",
         "noDataMessage": "Currently there are no weather info"
@@ -153,8 +153,8 @@
           "description": "Displays a RSS/Atom feed",
           "feedUrl": "Feed Url",
           "insertUrl": "Please insert a feed url in the widget configuration",
-          "newsWidgetDescription":"Description",
-          "enterNewsWidgetDescription": "Enter widget description"
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "title": "News",
         "noDataMessage": "Currently there is no RSS/info"
