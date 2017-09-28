@@ -1,9 +1,10 @@
-package com.armedia.acm.services.users.model;
+package com.armedia.acm.services.users.model.ldap;
+
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class LdapUser
 {
@@ -25,7 +26,6 @@ public class LdapUser
     private String userPrincipalName;
     private String state;
     private LocalDate passwordExpirationDate;
-    private Set<String> ldapGroups = new HashSet<>();
 
     public AcmUser toAcmUser()
     {
@@ -246,16 +246,6 @@ public class LdapUser
     public void setPasswordExpirationDate(LocalDate passwordExpirationDate)
     {
         this.passwordExpirationDate = passwordExpirationDate;
-    }
-
-    public Set<String> getLdapGroups()
-    {
-        return ldapGroups;
-    }
-
-    public void setLdapGroups(Set<String> ldapGroups)
-    {
-        this.ldapGroups = ldapGroups;
     }
 
     @Override

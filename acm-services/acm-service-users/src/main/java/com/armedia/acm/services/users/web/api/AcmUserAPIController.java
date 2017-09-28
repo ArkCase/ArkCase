@@ -32,9 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {
-        "/api/v1/ldap/",
-        "/api/latest/ldap/" })
+@RequestMapping(value = { "/api/v1/ldap/", "/api/latest/ldap/" })
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
@@ -50,7 +48,8 @@ public class AcmUserAPIController extends SecureLdapController
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
-    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory, @PathVariable String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
@@ -109,10 +108,11 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addUserInGroups(@RequestBody List<String> groupNames, @PathVariable("userId") String userId,
-            @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+                                   @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -126,10 +126,11 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser removeUserFromGroups(@RequestParam("groupNames") List<String> groupNames, @PathVariable("userId") String userId,
-            @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+                                        @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -139,8 +140,8 @@ public class AcmUserAPIController extends SecureLdapController
         catch (Exception e)
         {
             log.error("Removing user [{}] from groups [{}] failed!", userId, groupNames, e);
-            throw new AcmUserActionFailedException("Removing user from groups", null, null, "Removing the user from groups: [{}] failed!",
-                    e);
+            throw new AcmUserActionFailedException("Removing user from groups", null, null,
+                    "Removing the user from groups: [{}] failed!", e);
         }
     }
 
@@ -188,10 +189,11 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, String> changePassword(@RequestBody Map<String, String> credentials, @PathVariable String directory,
-            @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
+                                              @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try

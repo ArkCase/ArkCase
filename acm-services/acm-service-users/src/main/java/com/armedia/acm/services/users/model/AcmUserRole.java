@@ -21,6 +21,7 @@ public class AcmUserRole
     private String userId;
 
     @Column(name = "cm_user_role_state")
+    // TODO: change this to enumerated type
     private String userRoleState;
 
     @PrePersist
