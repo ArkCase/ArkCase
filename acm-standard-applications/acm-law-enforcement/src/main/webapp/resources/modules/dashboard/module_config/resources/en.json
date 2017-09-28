@@ -136,8 +136,8 @@
           "description": "Display the current temperature of a city",
           "location": "Location",
           "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-          "newsWidgetDescription":"Description",
-          "enterNewsWidgetDescription": "Enter widget description"
+          "weatherWidgetDescription":"Description",
+          "enterWeatherWidgetDescription": "Enter widget description"
         },
         "title": "Weather",
         "noDataMessage": "Currently there are no weather info"
