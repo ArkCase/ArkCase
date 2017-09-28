@@ -146,7 +146,9 @@
           "enterFeedUrl": "Enter Feed url",
           "description": "Displays a RSS/Atom feed",
           "feedUrl": "Feed Url",
-          "insertUrl": "Please insert a feed url in the widget configuration"
+          "insertUrl": "Please insert a feed url in the widget configuration",
+          "newsWidgetDescription":"Description",
+          "enterNewsWidgetDescription": "Enter widget description"
         },
         "title": "News",
         "noDataMessage": "Currently there is no RSS/info"
