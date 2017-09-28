@@ -26,6 +26,10 @@
           "lastYear": "Last Year",
           "all": "All"
         },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
+        },
         "noDataMessage": "Currently there are no cases info"
       },
       "myCases": {
