@@ -105,6 +105,7 @@
       "title": "costTracking.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -122,7 +123,7 @@
               "name": "modified",
               "displayName": "costTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "name": "modifier",
@@ -165,7 +166,7 @@
             {
               "name": "created",
               "displayName": "costTracking.comp.tags.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate"
             },
             {
@@ -182,6 +183,7 @@
       "id": "info",
       "title": "costTracking.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -189,6 +191,7 @@
       "id": "actions",
       "title": "costTracking.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -197,6 +200,7 @@
       "title": "costTracking.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
@@ -204,6 +208,7 @@
       "title": "costTracking.comp.person.title",
       "icon": "fa fa-user",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -232,6 +237,7 @@
       "title": "costTracking.comp.summary.title",
       "icon": "fa fa-money",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -283,6 +289,7 @@
       "title": "costTracking.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
@@ -303,7 +310,7 @@
         {
           "name": "created",
           "displayName": "costTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {

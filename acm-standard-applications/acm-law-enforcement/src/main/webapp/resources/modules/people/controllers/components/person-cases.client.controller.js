@@ -15,13 +15,9 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
             }
         );
 
-        ObjectLookupService.getPersonTypes().then(
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (personTypes) {
-                var options = [];
-                _.forEach(personTypes, function (v, k) {
-                    options.push({type: v, name: v});
-                });
-                $scope.personTypes = options;
+                $scope.personTypes = personTypes;
                 return personTypes;
             });
 

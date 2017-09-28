@@ -10,6 +10,25 @@
     "defaultDateUIFormat": "pt_MM/dd/yyyy",
     "defaultDateTimeUIFormat": "pt_MM/dd/yyyy HH:mm"
   },
+  "common.addOrganization": {
+  "title": "pt_Add Parent Organization",
+  "addNew.label": "pt_Add new Organization",
+  "selectExisting.label": "pt_Select existing organization",
+  "organization.label": "pt_Organization",
+  "description": "pt_Description",
+  "type.label": "pt_Organization Association Type",
+  "type.label.default.text": "pt_No parent Organization",
+  "type.label.text": "pt_Parent Organization",
+  "btnCancel.text": "pt_Cancel",
+  "btnOk.text": "pt_Save Organization",
+  "setPrimary.label": "pt_Set As Primary?",
+  "radioYes.text": "pt_Yes",
+  "radioNo.text": "pt_No",
+  "duplicateOrganizationRoleErrorMessage": "pt_Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "pt_Edit Parent Organization"
+  },
   "common.service": {
     "error.invalidData": "Dados inválidos"
   },

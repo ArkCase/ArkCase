@@ -8,7 +8,6 @@ import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocumentId;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -133,25 +132,41 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
                         // transformers can return null if they don't want to add to the advanced or quick search
                         // repo...
 
-                        SolrAdvancedSearchDocument advancedSearchDocument = transformer.toSolrAdvancedSearch(jpaObject);
-                        if (advancedSearchDocument != null)
+                        try
                         {
-                            solrAdvancedSearchDocs.add(advancedSearchDocument);
+                            SolrAdvancedSearchDocument advancedSearchDocument = transformer.toSolrAdvancedSearch(jpaObject);
+                            if (advancedSearchDocument != null)
+                            {
+                                solrAdvancedSearchDocs.add(advancedSearchDocument);
+                            }
+                        } catch (Exception e)
+                        {
+                            log.error("[{}]: unable to generate Advanced search document for [{}]", transformer.getClass(), jpaObject.toString());
                         }
 
-                        SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
-                        if (quickSearchDocument != null)
+                        try
                         {
-                            solrQuickSearchDocs.add(quickSearchDocument);
+                            SolrDocument quickSearchDocument = transformer.toSolrQuickSearch(jpaObject);
+                            if (quickSearchDocument != null)
+                            {
+                                solrQuickSearchDocs.add(quickSearchDocument);
+                            }
+                        } catch (Exception e)
+                        {
+                            log.error("[{}]: unable to generate Quick search document for [{}]", transformer.getClass(), jpaObject.toString());
                         }
 
-                        SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
-
-                        if (contentFileDocument != null)
+                        try
                         {
-                            solrContentFileDocs.add(contentFileDocument);
+                            SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
+                            if (contentFileDocument != null)
+                            {
+                                solrContentFileDocs.add(contentFileDocument);
+                            }
+                        } catch (Exception e)
+                        {
+                            log.error("[{}]: unable to generate Content file index for [{}]", transformer.getClass(), jpaObject.toString());
                         }
-
                     }
                 }
             }

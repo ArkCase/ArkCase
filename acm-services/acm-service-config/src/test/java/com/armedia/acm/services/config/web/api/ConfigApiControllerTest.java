@@ -1,19 +1,20 @@
 package com.armedia.acm.services.config.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import com.armedia.acm.services.config.model.AcmConfig;
-import com.armedia.acm.services.config.model.AppConfig;
-import com.armedia.acm.services.config.model.JsonConfig;
-import com.armedia.acm.services.config.model.PropertyConfig;
+import com.armedia.acm.services.config.service.ConfigService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,25 +28,17 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-config-plugin-test.xml"
-})
+        "classpath:/spring/spring-library-config-plugin-test.xml" })
 public class ConfigApiControllerTest extends EasyMockSupport
 {
-    private List<AcmConfig> mockConfigList;
-    private AppConfig mockConfig1;
-    private PropertyConfig mockConfig2;
-    private PropertyConfig mockConfig3;
+    private ConfigService mockConfigService;
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     private MockHttpSession mockHttpSession;
@@ -55,48 +48,34 @@ public class ConfigApiControllerTest extends EasyMockSupport
 
     private ConfigApiController unit;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     @Before
     public void setUp() throws Exception
     {
-        mockConfig1 = createMock(AppConfig. class);
-        mockConfig2 = createMock(PropertyConfig. class);
-        mockConfig3 = createMock(PropertyConfig. class);
-
-        mockConfigList = new ArrayList<AcmConfig>();
-        mockConfigList.add(mockConfig1);
-        mockConfigList.add(mockConfig2);
-        mockConfigList.add(mockConfig3);
-
+        mockConfigService = createMock(ConfigService.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
-
         unit = new ConfigApiController();
-        unit.setConfigList(mockConfigList);
-
+        unit.setConfigService(mockConfigService);
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
-    public void getConfig1() throws Exception
+    public void getConfig() throws Exception
     {
+        // given
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        expect(mockConfig1.getConfigName()).andReturn("config1");
-        expect(mockConfig1.getConfigAsJson()).andReturn("{\"some1\":\"value1\"}");
-
+        expect(mockConfigService.getConfigAsJson("config")).andReturn("{\"some1\":\"value1\"}");
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
+        // when
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/service/config/{name}", "config1")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
+        MvcResult result = mockMvc.perform(get("/api/v1/service/config/{name}", "config")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication))
                 .andReturn();
 
+        // then
         verifyAll();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -104,7 +83,6 @@ public class ConfigApiControllerTest extends EasyMockSupport
 
         String returned = result.getResponse().getContentAsString();
         assertNotNull(returned);
-        log.info("getConfig1(), returned=", returned);
 
         ObjectMapper om = new ObjectMapper();
         JsonNode actualObj = om.readTree(returned);
@@ -114,98 +92,23 @@ public class ConfigApiControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void getConfig2() throws Exception
+    public void getNotExistingConfig() throws Exception
     {
+        // given
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        expect(mockConfig1.getConfigName()).andReturn("config1");
-        expect(mockConfig2.getConfigName()).andReturn("config2");
-        expect(mockConfig2.getConfigAsJson()).andReturn("{\"some2\":\"value2\"}");
+        expect(mockConfigService.getConfigAsJson("config_no_such")).andReturn("{}");
 
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
+        // when
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/service/config/{name}", "config2")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
+        MvcResult result = mockMvc.perform(get("/api/v1/service/config/{name}", "config_no_such")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication))
                 .andReturn();
 
-        verifyAll();
-
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
-
-        String returned = result.getResponse().getContentAsString();
-        assertNotNull(returned);
-        log.info("getConfig2(), returned=", returned);
-
-        ObjectMapper om = new ObjectMapper();
-        JsonNode actualObj = om.readTree(returned);
-        JsonNode someNode = actualObj.path("some2");
-        String someValue = someNode.textValue();
-        assertEquals(someValue, "value2");
-    }
-
-    @Test
-    public void getConfig3() throws Exception
-    {
-        mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
-
-        expect(mockConfig1.getConfigName()).andReturn("config1");
-        expect(mockConfig2.getConfigName()).andReturn("config2");
-        expect(mockConfig3.getConfigName()).andReturn("config3");
-        expect(mockConfig3.getConfigAsJson()).andReturn("{\"some3\":\"value3\"}");
-
-        expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/service/config/{name}", "config3")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
-                .andReturn();
-
-        verifyAll();
-
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertTrue(result.getResponse().getContentType().startsWith(MediaType.APPLICATION_JSON_VALUE));
-
-        String returned = result.getResponse().getContentAsString();
-        assertNotNull(returned);
-        log.info("getConfig3(), returned=", returned);
-
-        ObjectMapper om = new ObjectMapper();
-        JsonNode actualObj = om.readTree(returned);
-        JsonNode someNode = actualObj.path("some3");
-        String someValue = someNode.textValue();
-        assertEquals(someValue, "value3");
-    }
-
-    @Test
-    public void getConfig4() throws Exception
-    {
-        mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
-
-        expect(mockConfig1.getConfigName()).andReturn("config1");
-        expect(mockConfig2.getConfigName()).andReturn("config2");
-        expect(mockConfig3.getConfigName()).andReturn("config3");
-
-        expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
-
-        replayAll();
-
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/service/config/{name}", "config_no_such")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
-                .andReturn();
-
+        // then
         verifyAll();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -213,40 +116,39 @@ public class ConfigApiControllerTest extends EasyMockSupport
 
         String returned = result.getResponse().getContentAsString();
         assertEquals(returned, "{}");
-        log.info("returned=", returned);
     }
 
     @Test
     public void getInfo() throws Exception
     {
+        // given
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
-        AppConfig acmConfig1 = new AppConfig();
-        PropertyConfig acmConfig2 = new PropertyConfig();
-        JsonConfig acmConfig3 = new JsonConfig();
+        List<Map<String, String>> info = new ArrayList<>();
+        Map<String, String> appConfigName = new HashMap<>();
+        appConfigName.put("name", "appConfigName");
+        appConfigName.put("description", "appConfigDescription");
+        info.add(appConfigName);
+        Map<String, String> propertyConfigName = new HashMap<>();
+        propertyConfigName.put("name", "propertyConfigName");
+        propertyConfigName.put("description", "propertyConfigDescription");
+        info.add(propertyConfigName);
+        Map<String, String> jsonConfigName = new HashMap<>();
+        jsonConfigName.put("name", "jsonConfigName");
+        jsonConfigName.put("description", "jsonConfigDescription");
+        info.add(jsonConfigName);
 
-        acmConfig1.setConfigName("appConfigName");
-        acmConfig1.setConfigDescription("appConfigDescription");
-        acmConfig2.setConfigName("propertyConfigName");
-        acmConfig2.setConfigDescription("propertyConfigDescription");
-        acmConfig3.setConfigName("jsonConfigName");
-        acmConfig3.setConfigDescription("jsonConfigDescription");
-
-        List<AcmConfig> configList = Arrays.asList(acmConfig1, acmConfig2, acmConfig3);
-
-        unit.setConfigList(configList);
+        expect(mockConfigService.getInfo()).andReturn(info);
 
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
+        // when
         replayAll();
 
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/service/config")
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .session(mockHttpSession)
-                        .principal(mockAuthentication))
-                .andReturn();
+        MvcResult result = mockMvc.perform(get("/api/v1/service/config").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .session(mockHttpSession).principal(mockAuthentication)).andReturn();
 
+        // then
         verifyAll();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -254,18 +156,19 @@ public class ConfigApiControllerTest extends EasyMockSupport
 
         String returned = result.getResponse().getContentAsString();
         assertNotNull(returned);
-        log.info("returned={}", returned);
 
         ObjectMapper om = new ObjectMapper();
 
-        List<Map<String, String>> resultList = om.readValue(returned, new TypeReference<List<Map<String, String>>>() {});
+        List<Map<String, String>> resultList = om.readValue(returned, new TypeReference<List<Map<String, String>>>()
+        {
+        });
 
         assertNotNull(resultList);
-        assertEquals(acmConfig1.getConfigName(), resultList.get(0).get("name"));
-        assertEquals(acmConfig1.getConfigDescription(), resultList.get(0).get("description"));
-        assertEquals(acmConfig2.getConfigName(), resultList.get(1).get("name"));
-        assertEquals(acmConfig2.getConfigDescription(), resultList.get(1).get("description"));
-        assertEquals(acmConfig3.getConfigName(), resultList.get(2).get("name"));
-        assertEquals(acmConfig3.getConfigDescription(), resultList.get(2).get("description"));
+        assertEquals("appConfigName", resultList.get(0).get("name"));
+        assertEquals("appConfigDescription", resultList.get(0).get("description"));
+        assertEquals("propertyConfigName", resultList.get(1).get("name"));
+        assertEquals("propertyConfigDescription", resultList.get(1).get("description"));
+        assertEquals("jsonConfigName", resultList.get(2).get("name"));
+        assertEquals("jsonConfigDescription", resultList.get(2).get("description"));
     }
 }

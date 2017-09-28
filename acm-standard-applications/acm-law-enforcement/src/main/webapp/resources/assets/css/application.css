@@ -802,6 +802,10 @@ thead {
     min-height: 270px;
 }
 
+.modal-backdrop {
+	z-index: -1;
+}
+
 /* Overriding of .form-inline class for the needs of the x-editable popup form. */
 /* This will only affect the element with class .form-inline which is immediately after element with class .editable. */
 /* In this way we localize this override only for x-editable.*/

@@ -10,24 +10,9 @@
  *
  * Case.LookupService provides functions for Case lookup data
  */
-angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.ModelService',
-    function ($resource, $translate, Store, Util, ObjectModelService) {
+angular.module('services').factory('Case.LookupService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.ModelService', 'Object.LookupService',
+    function ($resource, $translate, Store, Util, ObjectModelService, ObjectLookupService) {
         var Service = $resource('api/latest/plugin', {}, {
-            /**
-             * ngdoc method
-             * name _getCaseTypes
-             * methodOf services:Case.LookupService
-             *
-             * @description
-             * Query list of case types
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            _getCaseTypes: {
-                url: 'api/latest/plugin/casefile/caseTypes'
-                , cache: true
-                , isArray: true
-            }
             /**
              * ngdoc method
              * name _getApprovers
@@ -38,7 +23,7 @@ angular.module('services').factory('Case.LookupService', ['$resource', '$transla
              *
              * @returns {Object} Object returned by $resource
              */
-            , _getApprovers: {
+            _getApprovers: {
                 url: 'api/latest/service/functionalaccess/users/acm-case-approve/:group/:assignee'
                 , cache: true
                 , isArray: true
@@ -63,18 +48,7 @@ angular.module('services').factory('Case.LookupService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.getCaseTypes = function () {
-            var cacheCaseTypes = new Store.SessionData(Service.SessionCacheNames.CASE_TYPES);
-            var caseTypes = cacheCaseTypes.get();
-            return Util.serviceCall({
-                service: Service._getCaseTypes
-                , result: caseTypes
-                , onSuccess: function (data) {
-                    if (Service.validateCaseTypes(data)) {
-                        cacheCaseTypes.set(data);
-                        return data;
-                    }
-                }
-            });
+            return ObjectLookupService.getCaseFileTypes();
         };
 
         /**

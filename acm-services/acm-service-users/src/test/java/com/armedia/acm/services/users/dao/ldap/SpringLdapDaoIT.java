@@ -1,8 +1,8 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by dmiller on 6/28/16.
@@ -51,14 +52,13 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
-        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, null);
+        List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapUser ->
         {
-            log.debug("AcmUser: {} : {} -> {}", ldapUser.getUserId(), ldapUser.getDistinguishedName(),
-                    ldapUser.getLdapGroups());
+            log.debug("AcmUser: {} : {}", ldapUser.getUserId(), ldapUser.getDistinguishedName());
         });
     }
 
@@ -67,12 +67,12 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
-        List<LdapGroup> result = springLdapDao.findGroupsPaged(ldapTemplate, acmSyncLdapConfig, null);
+        List<LdapGroup> result = springLdapDao.findGroupsPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapGroup ->
-                log.trace("Ldap Group: {} -> {}", ldapGroup.getName(), ldapGroup.getParentGroups())
+                log.trace("Ldap Group: {}", ldapGroup.getName())
         );
     }
 
@@ -84,7 +84,7 @@ public class SpringLdapDaoIT
         for (int i = 0; i < RUNS; ++i)
         {
             long start = System.currentTimeMillis();
-            List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, null);
+            List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig, Optional.ofNullable(null));
             long time = System.currentTimeMillis() - start;
             sum += time;
             log.debug("Result: {}", result.size());
@@ -104,7 +104,7 @@ public class SpringLdapDaoIT
         for (int i = 0; i < RUNS; ++i)
         {
             long start = System.currentTimeMillis();
-            List<LdapUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig, attributes, null);
+            List<LdapUser> result = springLdapDao.findUsers(ldapTemplate, acmSyncLdapConfig, attributes, Optional.ofNullable(null));
             long time = System.currentTimeMillis() - start;
             sum += time;
             log.debug("Result: {}", result.size());
@@ -121,9 +121,8 @@ public class SpringLdapDaoIT
 
         String userName = "ann-acm";
         long start = System.currentTimeMillis();
-        LdapUser
-                ldapUser =
-                springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig, acmSyncLdapConfig.getUserSyncAttributes());
+        LdapUser ldapUser = springLdapUserDao.findUser(userName, ldapTemplate, acmSyncLdapConfig,
+                acmSyncLdapConfig.getUserSyncAttributes());
         long time = System.currentTimeMillis() - start;
         log.debug("Time: [{}ms]", time);
         log.debug("User found: [{}]", ldapUser.getDistinguishedName());
@@ -148,12 +147,12 @@ public class SpringLdapDaoIT
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
         List<LdapGroup> result = springLdapDao.findGroupsPaged(ldapTemplate, acmSyncLdapConfig,
-                ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+                Optional.of(ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString()));
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
         result.forEach(ldapGroup ->
-                log.debug("Ldap Group: {} -> {}", ldapGroup.getName(), ldapGroup.getParentGroups())
+                log.debug("Ldap Group: {}", ldapGroup.getName())
         );
     }
 
@@ -163,7 +162,7 @@ public class SpringLdapDaoIT
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
         long start = System.currentTimeMillis();
         List<LdapUser> result = springLdapDao.findUsersPaged(ldapTemplate, acmSyncLdapConfig,
-                ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString());
+                Optional.of(ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString()));
         long time = System.currentTimeMillis() - start;
         log.debug("Result: {}", result.size());
         log.debug("Time: {}ms", time);
