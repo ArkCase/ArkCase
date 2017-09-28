@@ -4,7 +4,7 @@ angular.module('organizations').controller('Organizations.FaxesModalController',
             ObjectLookupService.getContactMethodTypes().then(
                 function (contactMethodTypes) {
                     $scope.faxTypes = _.find(contactMethodTypes, {key: 'fax'}).subLookup;
-                    return contactMethodTypes;
+                    return $scope.faxTypes;
                 });
 
             $scope.fax = params.fax;
