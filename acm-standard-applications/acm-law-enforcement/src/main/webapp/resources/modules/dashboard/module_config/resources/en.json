@@ -10,7 +10,11 @@
         "description": "Displays active case files by queue",
         "xAxis": "Queues",
         "yAxis": "Number of Case Files",
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "label": {
+          "widgetDescription": "Description",
+          "enterWidgetDescription": "Enter widget description"
+        }
       },
       "casesByStatus": {
         "title": "Cases By Status",

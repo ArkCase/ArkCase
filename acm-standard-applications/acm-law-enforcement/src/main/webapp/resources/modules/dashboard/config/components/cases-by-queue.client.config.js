@@ -9,6 +9,14 @@ angular.module('dashboard.cases-by-queue', ['adf.provider'])
                 controller: 'Dashboard.CasesByQueueController',
                 controllerAs: 'casesByQueue',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/cases-by-queue.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/cases-by-queue.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
+                edit: {
+                    templateUrl: 'modules/dashboard/views/components/cases-by-queue-edit.client.view.html'
+                }
             });
     });
