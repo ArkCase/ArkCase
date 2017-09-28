@@ -17,6 +17,14 @@
                         ng-model="identification.identificationType"
                         ng-options="item.type as item.name for item in identificationTypes"></select>
             </div>
+            <div class="col-sm-6 form-group">
+                <label for="identificationNumber"
+                       translate>organizations.comp.ids.modal.number.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="identificationNumber" type="text" required="required" class="input-md form-control"
+                       ng-model="identification.identificationNumber"
+                       placeholder="{{ 'organizations.comp.ids.modal.number.placeholder' | translate }}">
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">
