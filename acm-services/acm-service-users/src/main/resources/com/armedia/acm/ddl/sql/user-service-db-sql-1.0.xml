@@ -1,0 +1,23 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-populate_acm_group_membership_from_current_data" author="ncuculova">
+        <preConditions>
+            <and>
+                <columnExists tableName="acm_group" columnName="cm_group_parent_name"/>
+            </and>
+        </preConditions>
+        <!-- ANSI standard SQL, should work on any database -->
+        <sql>
+            <comment>Get group with parent group and move to group membership table</comment>
+            INSERT INTO acm_group_membership
+            SELECT ag.cm_group_parent_name AS cm_group_name,
+            ag.cm_group_name AS cm_member_group_name
+            FROM acm_group ag
+            WHERE cm_group_type="LDAP_GROUP"
+            AND cm_group_parent_name IS NOT NULL;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

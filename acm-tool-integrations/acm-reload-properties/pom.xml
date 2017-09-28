@@ -10,7 +10,7 @@
     <groupId>com.armedia.acm.acm-tool-integrations</groupId>
     <artifactId>acm-reload-properties</artifactId>
     <name>ACM Reload Properties</name>
-    <description>Reloading properties fiels when changed on the file system. This is fix for Spring version 4.x.x</description>
+    <description>Reloading properties fields when changed on the file system. This is fix for Spring version 4.x.x</description>
 
     <dependencies>
     

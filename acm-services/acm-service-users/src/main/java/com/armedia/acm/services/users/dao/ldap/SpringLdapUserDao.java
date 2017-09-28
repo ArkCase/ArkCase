@@ -1,6 +1,6 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.LdapUser;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -22,7 +22,6 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class SpringLdapUserDao

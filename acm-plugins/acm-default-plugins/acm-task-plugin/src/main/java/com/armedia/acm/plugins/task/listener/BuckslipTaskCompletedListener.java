@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.task.listener;
 
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;

@@ -1,6 +1,6 @@
 package com.armedia.acm.auth;
 
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;

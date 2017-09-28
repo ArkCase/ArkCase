@@ -3,12 +3,12 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 11.11.2014.
@@ -27,9 +27,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
     @Override
     public SolrAdvancedSearchDocument toSolrAdvancedSearch(AcmUser in)
     {
-
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
-
         solr.setId(in.getUserId() + "-USER");
         solr.setObject_id_s(in.getUserId() + "");
         solr.setObject_type_s("USER");
@@ -46,7 +44,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setStatus_lcs(in.getUserState().name());
 
         // Add groups
-        solr.setGroups_id_ss(new ArrayList<>(in.getGroupIds(in)));
+        solr.setGroups_id_ss(in.getGroupNames().count() == 0 ? null : in.getGroupNames().collect(Collectors.toList()));
 
         solr.setAdditionalProperty("directory_name_s", in.getUserDirectoryName());
         solr.setAdditionalProperty("country_s", in.getCountry());
