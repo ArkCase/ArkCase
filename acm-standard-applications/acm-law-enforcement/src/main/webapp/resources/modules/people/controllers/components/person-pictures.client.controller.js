@@ -47,8 +47,6 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var eventName = "object.changed/" + objectInfo.objectType + "/" + objectInfo.id;
-            
             $scope.reloadGrid();
         };
 
