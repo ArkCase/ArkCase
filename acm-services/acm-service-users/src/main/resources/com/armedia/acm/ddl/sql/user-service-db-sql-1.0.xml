@@ -1,45 +1,59 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
-            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
- 
- 	<changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mysql">
+    <changeSet id="01-populate_acm_group_membership_from_current_data" author="ncuculova">
+        <preConditions>
+            <and>
+                <columnExists tableName="acm_group" columnName="cm_group_parent_name"/>
+            </and>
+        </preConditions>
+        <!-- ANSI standard SQL, should work on any database -->
+        <sql>
+            <comment>Get group with parent group and move to group membership table</comment>
+            INSERT INTO acm_group_membership
+            SELECT ag.cm_group_parent_name AS cm_group_name,
+            ag.cm_group_name AS cm_member_group_name
+            FROM acm_group ag
+            WHERE cm_group_type="LDAP_GROUP"
+            AND cm_group_parent_name IS NOT NULL;
+        </sql>
+    </changeSet>
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mysql">
         <update tableName="acm_group">
-            <column name="cm_group_display_name" value="SUBSTRING_INDEX(cm_group_name, '-UUID-', 1)"/>            
+            <column name="cm_group_display_name" value="SUBSTRING_INDEX(cm_group_name, '-UUID-', 1)"/>
         </update>
     </changeSet>
-    
-    <changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
         <update tableName="acm_group">
-            <column name="cm_group_display_name" value="cm_group_name"/>            
+            <column name="cm_group_display_name" value="cm_group_name"/>
         </update>
     </changeSet>
-    <changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
         <update tableName="acm_group">
             <column name="cm_group_display_name" value="SUBSTRING(cm_group_display_name,0,CHARINDEX('-UUID-',cm_group_display_name,0))"/>
-            <where>cm_group_display_name LIKE '%-UUID-%'</where>            
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
     </changeSet>
-    
-    <changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
         <update tableName="acm_group">
-            <column name="cm_group_display_name" value="cm_group_name"/>            
+            <column name="cm_group_display_name" value="cm_group_name"/>
         </update>
     </changeSet>
-    <changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
         <update tableName="acm_group">
             <column name="cm_group_display_name" value="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
-            <where>cm_group_display_name LIKE '%-UUID-%'</where>            
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
     </changeSet>
-    
-    <changeSet id="01-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="postgresql">
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="postgresql">
         <update tableName="acm_group">
-            <column name="cm_group_display_name" value="split_part(cm_group_name, '-UUID-', 1)"/>            
+            <column name="cm_group_display_name" value="split_part(cm_group_name, '-UUID-', 1)"/>
         </update>
-    </changeSet> 
-
+    </changeSet>
 </databaseChangeLog>
-

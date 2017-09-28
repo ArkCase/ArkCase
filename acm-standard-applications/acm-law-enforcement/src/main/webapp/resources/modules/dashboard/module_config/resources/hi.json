@@ -24,7 +24,7 @@
         },
         "noDataMessage": "वर्तमान में कोई मामलों की जानकारी नहीं है"
       },
-      "mycases": {
+      "myCases": {
         "title": "मेरे मामले",
         "description": "मेरे मामलों को प्रदर्शित करता है",
         "noDataMessage": "वर्तमान में कोई मामलों की जानकारी नहीं है",
@@ -35,7 +35,9 @@
             "priority": "प्राथमिकता",
             "created": "बनाया",
             "modified": "संशोधित",
-            "status": "स्थिति"
+            "dueDate": "नियत तारीख",
+            "status": "स्थिति",
+            "assignee": "संपत्ति-भागी"
           },
           "overdue.tooltip": "केस ओवरड्यू है",
           "deadline.tooltip": "समय सीमा आ रही है"
@@ -51,7 +53,9 @@
             "priority": "प्राथमिकता",
             "created": "बनाया",
             "modified": "संशोधित",
-            "status": "स्थिति"
+            "dueDate": "नियत तारीख",
+            "status": "स्थिति",
+            "assignee": "संपत्ति-भागी"
           },
           "overdue.tooltip": "शिकायत अतिदेय है",
           "deadline.tooltip": "समय सीमा आ रही है",

@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
-import com.armedia.acm.plugins.admin.service.LabelManagementService;
+import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
+import com.armedia.acm.services.labels.service.LabelManagementService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -21,20 +23,20 @@ import java.util.Iterator;
  * Created by sergey on 2/14/16.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({
+        "/api/v1/plugin/admin",
+        "/api/latest/plugin/admin" })
 public class LabelManagementRetrieveAdminResource
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/admin-resource", method = RequestMethod.GET, produces = {
-            MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE
-    })
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
-    public String retrieveResource(
-            @RequestParam("lang") String lang,
-            @RequestParam("ns") String ns,
-            HttpServletResponse response) throws IOException, AcmLabelManagementException
+    public String retrieveResource(@RequestParam("lang") String lang, @RequestParam("ns") String ns, HttpServletResponse response)
+            throws IOException, AcmLabelManagementException
     {
 
         try
@@ -45,13 +47,14 @@ public class LabelManagementRetrieveAdminResource
             Iterator<String> keys = jsonResource.keys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
                 JSONObject node = (JSONObject) jsonResource.get(key);
                 node.put("id", key);
                 jsonResourceArray.put(node);
             }
             return jsonResourceArray.toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't retrieve admin resource %s:%s", lang, ns);
             log.error(msg, e);

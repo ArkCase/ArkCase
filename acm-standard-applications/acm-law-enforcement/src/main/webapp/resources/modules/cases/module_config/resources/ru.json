@@ -25,7 +25,42 @@
     "priority.label": "Приоритет",
     "assignee.label": "Назначено",
     "owningGroup.label": "Собственная группа",
-    "dueDate.label": "Дата погашения"
+    "dueDate.label": "Дата погашения",
+    "priorities": {
+      "low%": "Низко",
+      "medium%": "Средний",
+      "high%": "Высоко",
+      "expedite%": "Ускорить",
+      "unknown%": "Неизвестно"
+    },
+    "caseTypes": {
+      "agricultural%": "Сельское хозяйство",
+      "arson%": "Поджог",
+      "backgroundInvestigation%": "Фоновое исследование",
+      "benefitsAppeal%": "Апелляция о преимуществах",
+      "businessDispute%": "Лучший бизнес-спор",
+      "clinicalFraud%": "Мошенничество с клиническим исследователем",
+      "congressional%": "Ответ Конгресса",
+      "disabilityWaiver%": "Запрос на отказ от инвалидности",
+      "domesticDispute%": "Внутренний спор",
+      "drugTrafficking%": "Торговля наркотиками",
+      "educationWaiver%": "Запрос на отказ от образования",
+      "eeoHarassment%": "EEO/Преследование",
+      "embezzlement%": "Оскорбление",
+      "extortion%": "Вымогательство",
+      "fraud%": "Мошенничество",
+      "government%": "Правительство",
+      "investorComplaint%": "Жалоба инвестора",
+      "laborRacketeering%": "Трудовая ракета",
+      "local%": "Местный",
+      "murder%": "Убийство",
+      "newDrugFraud%": "Мошенничество с применением новых лекарств",
+      "payoff%": "Взятка",
+      "pensionWaiver%": "Запрос на отказ от пенсионного обеспечения",
+      "pollution%": "Загрязнение",
+      "productTampering%": "Нарушение продукта",
+      "assetTheftMisuse%": "Кража или злоупотребление активами"
+    }
   },
   "cases.comp.actions": {
     "title": "Действия",

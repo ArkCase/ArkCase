@@ -135,11 +135,16 @@ public class CalendarEntityHandler
                     }
                 }
             }
-        } catch (Exception e)
+        } catch (ServiceLocalException e)
         {
-            log.debug("Error while evaluationg permission of user {} to object with {} id of type {}.", user.getFullName(), objectId,
+            log.warn("Error while evaluationg permission of user [{}] to object with [{}] id of type [{}].", user.getFullName(), objectId,
                     entityType, e);
             throw new CalendarServiceException(e);
+        } catch (Exception e)
+        {
+            log.warn("Error binding to remote service while evaluationg permission of user [{}] to object with [{}] id of type [{}].",
+                    user.getFullName(), objectId, entityType, e);
+            throw new CalendarServiceBindToRemoteException(e);
         }
         return false;
     }
@@ -193,6 +198,9 @@ public class CalendarEntityHandler
     public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
             String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
+
+        log.debug("Getting calendar items info for object with id: [{}] of [{}] type.", objectId, entityType);
+
         try
         {
             FindItemsResults<Appointment> findResults = retreiveAppointments(service, after, before, sort, sortDirection, start, maxItems,
@@ -212,9 +220,13 @@ public class CalendarEntityHandler
                 events.add(event);
             }
             return events;
+        } catch (CalendarServiceBindToRemoteException e)
+        {
+            // Just re-throw here. The extra catch block is needed to prevent it being wrapped in the more general type.
+            throw e;
         } catch (Exception e)
         {
-            log.debug("Error while trying to retrieve appointment items info for Object with {} id, of {} type.", objectId, entityType, e);
+            log.warn("Error while trying to retrieve appointment items info for Object with {} id, of {} type.", objectId, entityType, e);
             throw new CalendarServiceException(e);
         }
     }
@@ -222,6 +234,8 @@ public class CalendarEntityHandler
     public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
             String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
+
+        log.debug("Getting calendar items for object with id: [{}] of [{}] type.", objectId, entityType);
 
         try
         {
@@ -238,9 +252,13 @@ public class CalendarEntityHandler
                 events.add(event);
             }
             return events;
+        } catch (CalendarServiceBindToRemoteException e)
+        {
+            // Just re-throw here. The extra catch block is needed to prevent it being wrapped in the more general type.
+            throw e;
         } catch (Exception e)
         {
-            log.debug("Error while trying to retrieve appointment items details for object with {} id, of {} type.", objectId, entityType,
+            log.warn("Error while trying to retrieve appointment items details for object with {} id, of {} type.", objectId, entityType,
                     e);
             throw new CalendarServiceException(e);
         }
@@ -300,7 +318,16 @@ public class CalendarEntityHandler
 
         calendarView.setPropertySet(new PropertySet(AppointmentSchema.Subject, AppointmentSchema.Start, AppointmentSchema.End, orderBy));
 
-        CalendarFolder calendar = CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)));
+        CalendarFolder calendar;
+        try
+        {
+            calendar = CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)));
+        } catch (Exception e)
+        {
+            log.warn("Error while trying to bind to calendar folder for object with id: [{}] of [{}] type.", objectId, entityType, e);
+            throw new CalendarServiceBindToRemoteException(e);
+        }
+
         FindItemsResults<Appointment> findResults = calendar.findAppointments(calendarView);
 
         if (!findResults.getItems().isEmpty())

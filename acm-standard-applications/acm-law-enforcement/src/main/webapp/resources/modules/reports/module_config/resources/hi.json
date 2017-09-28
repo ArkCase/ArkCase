@@ -33,6 +33,9 @@
     },
     "btn": {
       "generateReport": "hi_Generate report"
+    },
+    "checkBox": {
+      "XMLReport": "XML के रूप में दिखाएं"
     }
   }
 }

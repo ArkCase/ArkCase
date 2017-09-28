@@ -78,28 +78,6 @@
         <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
     </bean>
 
-    <bean id="labelManagementService" class="com.armedia.acm.plugins.admin.service.LabelManagementService">
-        <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
-        <property name="moduleConfigLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/config.json"/>
-        <property name="moduleResourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/resources/%s.json"/>
-        <property name="customResourceFile" value="%s.%s.json"/>
-        <property name="customResourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/custom/"/>
-        <property name="resourceFile" value="%s.%s.json"/>
-        <property name="resourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
-        <property name="settingsFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
-        <property name="defaultLocale" value="en"/>
-        <property name="defaultLocales">
-            <map>
-                <entry key="en" value="English"></entry>
-            </map>
-        </property>
-    </bean>
-
     <bean id="angularPropertiesManagementService"
           class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
         <property name="propertiesFileLocation"
@@ -119,7 +97,7 @@
         <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
         <property name="applicationRolesPrivilegesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
-        <property name="userDao" ref="acmUserDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <task:scheduler id="historyCleanScheduler" pool-size="1"/>

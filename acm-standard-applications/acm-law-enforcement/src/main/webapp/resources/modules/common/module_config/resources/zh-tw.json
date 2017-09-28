@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "zh-tw_(Select One)",
+    "select.option.none": "（選擇一個）",
+    "value.unknown": "未知",
+
     "defaultDateFormat": "zh-tw_MM/DD/YYYY",
     "defaultTimeFormat": "zh-tw_hh:mm:ss",
     "defaultDateTimeFormat": "zh-tw_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "zh-tw_Invalid data"
+    "error.invalidData": "不正確數據"
   },
   "common.objects": {
-    "progressNoData": "zh-tw_[ No data ]",
-    "progressLoading": "zh-tw_Loading data ",
-    "progressError": "zh-tw_Failed to load data "
+    "progressNoData": "[ 無數據 ]",
+    "progressLoading": "加載數據 ",
+    "progressError": "無法加載數據 "
   },
   "common.frevvo": {
     "defaultDateFormat": "zh-tw_YYYY-MM-DD"
@@ -54,7 +56,7 @@
       "type": "zh-tw_Type",
       "created": "zh-tw_Created",
       "modified": "zh-tw_Modified",
-      "author": "zh-tw_Author",
+      "modifier": "zh-tw_Modified By",
       "version": "zh-tw_Version",
       "status": "zh-tw_Status"
     },
@@ -134,7 +136,17 @@
     "btnOk.text": "zh-tw_OK",
     "btnCancel.text": "zh-tw_Cancel",
     "edtPlaceholder": "zh-tw_Type in to search",
-    "noData.text": "zh-tw_No Results"
+    "noData.text": "沒有結果"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "顯示更多",
+    "showLess.button.text": "顯示更少",
+    "results.text": "結果",
+    "noResults.text": "無結果",
+    "tooltip": {
+      "collapseFacetList": "縮減分類表",
+      "expandFacetList": "展開分類表"
+    }
   },
   "common.directive.coreNotes": {
     "title": "註釋",
@@ -219,7 +231,13 @@
   "common.directive.coreCalendar": {
     "title": "zh-tw_Calendar",
     "start.label": "zh-tw_Start: ",
-    "end.label": "zh-tw_End: "
+    "end.label": "zh-tw_End: ",
+    "message": {
+      "error.accessDenied": "zh-tw_Access denied to calendar service.",
+      "error.serviceConfiguration": "zh-tw_Invalid calendar service configuration.",
+      "error.serviceCredentials": "zh-tw_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "zh-tw_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "zh-tw_Participants",

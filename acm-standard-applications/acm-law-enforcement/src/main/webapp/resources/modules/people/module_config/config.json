@@ -212,6 +212,7 @@
       "title": "people.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -426,7 +427,7 @@
               "name": "organization.organizationValue",
               "displayName": "people.comp.organizations.table.columns.value",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "organization.defaultIdentification.identificationNumber",
@@ -502,30 +503,30 @@
           "columnDefs": [
             {
               "name": "id",
-              "field": "object_id_s",
+              "field": "parent_object.object_id_s",
               "displayName": "people.comp.complaints.table.columns.id",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
               "width": 130
             },
             {
               "name": "title",
-              "field": "title_parseable",
+              "field": "parent_object.title_parseable",
               "sortField": "title_parseable_lcs",
               "displayName": "people.comp.complaints.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "status",
-              "field": "status_lcs",
+              "field": "parent_object.status_lcs",
               "displayName": "people.comp.complaints.table.columns.status",
               "headerCellFilter": "translate"
             },
             {
               "width": 150,
               "name": "assignee",
-              "field": "assignee_id_lcs",
+              "field": "parent_object.assignee_id_lcs",
               "displayName": "people.comp.complaints.table.columns.assignee",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
@@ -533,10 +534,10 @@
             {
               "width": 150,
               "name": "modified",
-              "field": "modified_date_tdt",
+              "field": "parent_object.modified_date_tdt",
               "displayName": "people.comp.complaints.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             }
           ]
         },
@@ -643,6 +644,7 @@
       "id": "info",
       "title": "people.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -650,12 +652,14 @@
       "id": "actions",
       "title": "people.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
       "title": "people.comp.details.title",
+      "configurable": true,
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
@@ -665,6 +669,7 @@
       "title": "people.comp.pictures.title",
       "icon": "fa fa-picture-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -719,6 +724,7 @@
       "title": "people.comp.addresses.title",
       "icon": "fa fa-map-marker",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -786,6 +792,7 @@
       "title": "people.comp.phones.title",
       "icon": "fa fa-phone",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -833,6 +840,7 @@
       "title": "people.comp.emails.title",
       "icon": "fa fa-envelope",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -880,6 +888,7 @@
       "title": "people.comp.urls.title",
       "icon": "fa fa-link",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -915,7 +924,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.urls.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -928,6 +937,7 @@
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1013,6 +1023,7 @@
       "title": "people.comp.aliases.title",
       "icon": "fa fa-eye",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1063,6 +1074,7 @@
       "title": "people.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "multiSelect": false,
@@ -1078,7 +1090,7 @@
           "name": "organization.organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+          "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
         },
         {
           "name": "organization.defaultIdentification.identificationNumber",
@@ -1117,6 +1129,7 @@
       "title": "people.comp.ids.title",
       "icon": "fa fa-credit-card",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1175,6 +1188,7 @@
       "title": "people.comp.cases.title",
       "icon": "fa fa-folder",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1241,6 +1255,7 @@
       "title": "people.comp.complaints.title",
       "icon": "fa fa-exclamation-triangle",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1308,6 +1323,7 @@
       "title": "people.comp.related.title",
       "icon": "fa fa-exchange",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1369,6 +1385,7 @@
       "title": "people.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [

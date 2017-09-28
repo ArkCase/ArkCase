@@ -312,6 +312,7 @@
       "title": "tasks.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -778,6 +779,7 @@
       "id": "parentinfo",
       "title": "tasks.comp.parentinfo.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -785,6 +787,7 @@
       "id": "actions",
       "title": "tasks.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -793,6 +796,7 @@
       "title": "tasks.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
@@ -800,6 +804,7 @@
       "title": "tasks.comp.reworkdetails.title",
       "icon": "fa fa-repeat",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -834,6 +839,7 @@
       "title": "tasks.comp.docsreview.title",
       "icon": "fa fa-search-plus",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -875,6 +881,7 @@
       "title": "tasks.comp.rejcomments.title",
       "icon": "fa fa-hand-stop-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -911,6 +918,7 @@
       "title": "tasks.comp.parentdocs.title",
       "icon": "fa fa-file",
       "enabled": true,
+      "configurable": true,
       "type": "empty",
       "docTree": {
         "email": {
@@ -925,6 +933,7 @@
       "title": "tasks.comp.attachments.title",
       "icon": "fa fa-file",
       "enabled": true,
+      "configurable": true,
       "type": "empty",
       "docTree": {
         "email": {
@@ -940,6 +949,7 @@
       "title": "tasks.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "enableSorting": true,
@@ -981,6 +991,7 @@
       "title": "tasks.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1026,6 +1037,7 @@
       "title": "tasks.comp.workflow.title",
       "icon": "fa fa-code-fork",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1074,6 +1086,7 @@
       "title": "tasks.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1109,6 +1122,7 @@
       "title": "tasks.comp.signatures.title",
       "icon": "fa fa-certificate",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1140,6 +1154,7 @@
       "title": "tasks.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
@@ -1177,6 +1192,7 @@
       "id": "userSearch",
       "title": "tasks.userOrGroupSearch.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -1212,8 +1228,9 @@
     },
     {
       "id": "objectSearch",
-      "title": "tasks.objectSearch",
+      "title": "tasks.objectSearch.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -1250,8 +1267,9 @@
     },
     {
       "id": "referenceSearchGrid",
-      "title": "Reference Search",
+      "title": "tasks.referenceSearchGrid.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": false,
@@ -1386,10 +1404,11 @@
     },
     {
       "id": "approvalRouting",
-      "title": "tasks.comp.approvalRouting",
+      "title": "tasks.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1431,9 +1450,10 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "tasks.comp.pastApprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [

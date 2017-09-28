@@ -35,7 +35,9 @@
             "priority": "Priorité",
             "created": "Créé",
             "modified": "Modifié",
-            "status": "Statut"
+            "dueDate": "Date d'échéance",
+            "status": "Statut",
+            "assignee": "Cessionnaire"
           },
           "overdue.tooltip": "L'affaire est en retard",
           "deadline.tooltip": "La date limite est l'approche"
@@ -51,7 +53,9 @@
             "priority": "Priorité",
             "created": "Créé",
             "modified": "Modifié",
-            "status": "Statut"
+            "dueDate": "Date d'échéance",
+            "status": "Statut",
+            "assignee": "Cessionnaire"
           },
           "overdue.tooltip": "La plainte est en retard",
           "deadline.tooltip": "La date limite est l'approche",

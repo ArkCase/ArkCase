@@ -9,10 +9,12 @@ angular.module('cases').config(['$stateProvider',
                 url: '/cases',
                 templateUrl: 'modules/cases/views/cases.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                        , function ($translate, $translatePartialLoader, LocaleService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('cases');
+                        $translate.buildDataLookups(LocaleService.getLabelResource("cases", "en"));
                         return $translate.refresh();
                     }]
                 }

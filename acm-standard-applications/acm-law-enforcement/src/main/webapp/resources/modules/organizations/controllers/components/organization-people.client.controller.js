@@ -65,7 +65,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 })
                 .forEach(function(association) {
                     if (association.person.id == data.personId) {
-                        if (data.type === association.organizationToPersonAssociationType) {
+                        if (data.key === association.organizationToPersonAssociationType) {
                             validationResult.valid = false;
                             validationResult.duplicatePersonRoleError = true;
                         }
@@ -77,7 +77,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         
         ObjectLookupService.getOrganizationPersonRelationTypes().then(
             function (types) {
-                $scope.personAssociationTypes = types;
+                $scope.personAssociationTypes =[];
+                for (var i = 0; i < types.length; i++) {
+                    $scope.personAssociationTypes.push({"key": types[i].inverseKey, "value" : types[i].inverseValue, "inverseKey": types[i].key, "inverseValue": types[i].value});
+                }
                 return types;
             });
 
@@ -174,8 +177,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         function savePersonAssociation(association, data) {
             association.organization = $scope.objectInfo;
             association.person = data.person;
-            association.organizationToPersonAssociationType = data.type;
-            association.personToOrganizationAssociationType = data.inverseType;
+            association.organizationToPersonAssociationType = data.inverseType;
+            association.personToOrganizationAssociationType = data.type;
 
             if (data.isDefault) {
                 //find and change previously primary contact

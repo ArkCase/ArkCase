@@ -262,6 +262,29 @@
         }
       }
     },
+    "security.calendarCredentialsConfiguration": {
+      "title": "es_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "es_System Email Address",
+        "password": "es_System Password",
+        "password.placeholder": "es_System Password",
+        "save.button": "es_Save",
+        "validate.button": "es_Validate"
+      },
+      "modal": {
+        "title": "es_Outlook folder override",
+        "message": "es_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "es_Confirm",
+        "cancel.button": "es_Cancel"
+      },
+      "message": {
+        "credentials.valid": "es_Credentials are valid",
+        "credentials.invalid": "es_Credentials are not valid",
+        "credentials.error": "es_An error has occurred while checking the credentials",
+        "save.successful": "es_Outlook folder creator saved successfully",
+        "save.fail": "es_Outlook folder creator not saved"
+      }
+    },
     "security.emailConfiguration": {
       "title": "es_Document Delivery Policy",
       "emailConfigForm": {
@@ -369,8 +392,14 @@
     "dashboard.title": "es_Dashboard",
     "dashboard.config": "es_Dashboard Configuration",
     "dashboard.widgets": "es_Widgets",
-    "reports.title": "es_Reports",
-    "reports.config": "es_Reports Configuration",
+    "reports": {
+      "title": "es_Reports",
+      "config": "es_Reports Configuration",
+      "btn": {
+        "reportDesigner": "es_Report Designer",
+        "sync": "es_Synchronise"
+      }
+    },
     "forms.title": "es_Forms",
     "forms.config": "es_Form Configuration",
     "workflows.title": "es_Workflows",

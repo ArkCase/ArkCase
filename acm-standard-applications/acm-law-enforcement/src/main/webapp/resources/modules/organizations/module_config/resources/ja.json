@@ -216,6 +216,28 @@
       "value.placeholder": "ja_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "参加者",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -415,7 +437,7 @@
       "identificationNumber.placeholder": "ja_Enter Identification Number",
       "identificationIssuer": "ja_Identification Issuer",
       "identificationIssuer.placeholder": "ja_Enter Identification Issuer",
-      "identificationYearIssued": "ja_Identification Issued",
+      "identificationYearIssued": "ja_Identification Issued Date",
       "identificationYearIssued.placeholder": "ja_Select Identification Issued",
       "identificationYearIssued.close.button": "ja_Close"
     },
@@ -429,6 +451,7 @@
       "faxes.label": "ファックス番号",
       "emails.label": "電子メール",
       "urls.label": "URL",
+      "participants.label": "参加者",
       "dbas.label": "DBA",
       "people.label": "人員",
       "ids.label": "組織識別番号",

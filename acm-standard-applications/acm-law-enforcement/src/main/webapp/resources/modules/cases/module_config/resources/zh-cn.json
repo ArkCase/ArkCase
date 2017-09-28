@@ -25,7 +25,42 @@
     "priority.label": "优先级别",
     "assignee.label": "指定人员",
     "owningGroup.label": "所属群体",
-    "dueDate.label": "到期日期"
+    "dueDate.label": "到期日期",
+    "priorities": {
+      "low%": "低级",
+      "medium%": "中级",
+      "high%": "高级",
+      "expedite%": "加急",
+      "unknown%": "未选"
+    },
+    "caseTypes": {
+      "agricultural%": "农业",
+      "arson%": "纵火",
+      "backgroundInvestigation%": "背景调查",
+      "benefitsAppeal%": "福利上诉",
+      "businessDispute%": "更好商业的纠纷",
+      "clinicalFraud%": "临床调查员欺诈",
+      "congressional%": "国会响应",
+      "disabilityWaiver%": "残疾豁免请求",
+      "domesticDispute%": "家庭纠纷",
+      "drugTrafficking%": "贩毒运毒",
+      "educationWaiver%": "教育豁免申请书",
+      "eeoHarassment%": "EEO/骚扰",
+      "embezzlement%": "贪污",
+      "extortion%": "勒索",
+      "fraud%": "欺诈",
+      "government%": "政府",
+      "investorComplaint%": "投资者投诉",
+      "laborRacketeering%": "劳工敲诈",
+      "local%": "当地",
+      "murder%": "谋杀",
+      "newDrugFraud%": "新药申请欺诈",
+      "payoff%": "贿赂",
+      "pensionWaiver%": "退休金申请",
+      "pollution%": "污染",
+      "productTampering%": "产品篡改",
+      "assetTheftMisuse%": "盗用或滥用资产"
+    }
   },
   "cases.comp.actions": {
     "title": "行动",

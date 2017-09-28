@@ -15,20 +15,23 @@
   "components": [
     {
       "id": "news",
-      "title": "News Widget",
+      "title": "dashboard.comp.news.title",
+      "configurable": true,
       "url": "https:\/\/query.yahooapis.com\/v1\/public\/yql",
       "query": "select * from xml where url = '$1'",
       "format": "json"
     },
     {
       "id": "weather",
-      "title": "Weather Widget",
+      "title": "dashboard.comp.weather.title",
+      "configurable": true,
       "APPID": "672e193bbf022bdc749986f7be4c0364",
       "units": "imperial"
     },
     {
       "id": "myCases",
-      "title": "My Cases Widget",
+      "title": "dashboard.comp.myCases.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -46,19 +49,11 @@
           "enableColumnMenu": false
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myCases.table.header.priority",
-          "headerCellFilter": "translate",
-          "enableSorting": true,
-          "width": 70
-        },
-        {
           "name": "name",
           "displayName": "dashboard.widgets.myCases.table.header.caseId",
           "headerCellFilter": "translate",
           "enableSorting": true,
-          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
-          "width": 130
+          "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "title_parseable",
@@ -69,24 +64,41 @@
           "cellTemplate": "<a data-ui-sref=\"cases.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.priority",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
           "name": "status_lcs",
           "displayName": "dashboard.widgets.myCases.table.header.status",
           "headerCellFilter": "translate",
-          "enableSorting": true,
-          "width": 100
+          "enableSorting": true
+        },
+        {
+          "name": "assignee_id_lcs",
+          "displayName": "dashboard.widgets.myCases.table.header.assignee",
+          "headerCellFilter": "translate",
+          "enableSorting": true
+        },
+        {
+          "name": "dueDate_tdt",
+          "displayName": "dashboard.widgets.myCases.table.header.dueDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myCases.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "width": 70
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },
     {
       "id": "myTasks",
-      "title": "My Tasks Widget",
+      "title": "dashboard.comp.myTasks.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -148,7 +160,8 @@
     },
     {
       "id": "myComplaints",
-      "title": "My Complaints Widget",
+      "title": "dashboard.comp.myComplaints.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -166,17 +179,10 @@
           "enableColumnMenu": false
         },
         {
-          "name": "priority_lcs",
-          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
-          "headerCellFilter": "translate",
-          "width": 70
-        },
-        {
           "name": "name",
           "displayName": "dashboard.widgets.myComplaints.table.header.number",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
-          "width": 130
+          "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
           "name": "title_parseable",
@@ -185,23 +191,39 @@
           "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
         },
         {
+          "name": "priority_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.priority",
+          "headerCellFilter": "translate"
+        },
+        {
           "name": "status_lcs",
           "displayName": "dashboard.widgets.myComplaints.table.header.status",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee_id_lcs",
+          "displayName": "dashboard.widgets.myComplaints.table.header.assignee",
           "headerCellFilter": "translate",
-          "width": 100
+          "enableSorting": true
+        },
+        {
+          "name": "dueDate_tdt",
+          "displayName": "dashboard.widgets.myComplaints.table.header.dueDate",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
-          "width": 70
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
         }
       ]
     },
     {
       "id": "workflowReport",
-      "title": "Workflow Report",
+      "title": "dashboard.comp.workflowReport.title",
+      "configurable": true,
       "enableFiltering": false,
       "paginationPageSizes": [
         5,
@@ -247,19 +269,22 @@
     },
     {
       "id": "newComplaints",
-      "title": "New Complaints",
+      "title": "dashboard.comp.newComplaints.title",
+      "configurable": true,
       "redirectSettings": {
       }
     },
     {
       "id": "newCases",
-      "title": "New Cases",
+      "title": "dashboard.comp.newCases.title",
+      "configurable": true,
       "redirectSettings": {
       }
     },
     {
       "id": "casesByQueue",
-      "title": "Cases By Queue",
+      "title": "dashboard.comp.casesByQueue.title",
+      "configurable": true,
       "redirectSettings": {
       }
     }
