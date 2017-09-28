@@ -63,7 +63,7 @@
                        onaftersave="updateStartDate(dateInfo.taskStartDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{ (dateInfo.taskStartDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown'
+                        {{ (dateInfo.taskStartDate | date: 'shortDate' ) || 'Unknown'
                         }}</a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
@@ -78,7 +78,7 @@
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable" e-required>
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
+                        {{ (dateInfo.dueDate | date: 'shortDate' ) || 'Unknown' }}</a>
                     <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}"
                        tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>
