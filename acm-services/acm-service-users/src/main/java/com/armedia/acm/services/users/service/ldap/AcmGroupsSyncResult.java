@@ -106,6 +106,7 @@ public class AcmGroupsSyncResult
     {
         LdapGroup ldapGroup = new LdapGroup();
         ldapGroup.setName(acmGroup.getName());
+        ldapGroup.setDisplayName(acmGroup.getDisplayName());
         ldapGroup.setDistinguishedName(acmGroup.getDistinguishedName());
         ldapGroup.setDirectoryName(acmGroup.getDirectoryName());
         ldapGroup.setDescription(acmGroup.getDescription());
