@@ -32,6 +32,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
 
     private ObjectAssociationDao objectAssociationDao;
     private ExecuteSolrQuery executeSolrQuery;
+    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
     @Override
     public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType) throws Exception
@@ -135,13 +136,22 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     @Override
     public ObjectAssociation saveAssociation(ObjectAssociation objectAssociation, Authentication auth)
     {
-        return objectAssociationDao.save(objectAssociation);
+        String associationState = (objectAssociation.getAssociationId() == null) ? "NEW" : "UPDATE";
+
+        ObjectAssociation association = objectAssociationDao.save(objectAssociation);
+        if(association != null)
+        {
+            getObjectAssociationEventPublisher().publishObjectAssociationEvent(association, auth, true, associationState);
+        }
+        return association;
     }
 
     @Override
     public void deleteAssociation(Long id, Authentication auth)
     {
+        ObjectAssociation objectAssociation = objectAssociationDao.find(id);
         objectAssociationDao.delete(id);
+        getObjectAssociationEventPublisher().publishObjectAssociationEvent(objectAssociation, auth, true, "DELETE");
     }
 
     @Override
@@ -221,5 +231,15 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public ObjectAssociationEventPublisher getObjectAssociationEventPublisher()
+    {
+        return objectAssociationEventPublisher;
+    }
+
+    public void setObjectAssociationEventPublisher(ObjectAssociationEventPublisher objectAssociationEventPublisher)
+    {
+        this.objectAssociationEventPublisher = objectAssociationEventPublisher;
     }
 }

@@ -18,8 +18,8 @@
  *
  */
 angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService',
-    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService) {
+    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService', 'UtilService',
+    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService, Util) {
         return {
             restrict: 'E',
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
@@ -44,6 +44,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
 
                 ConfigService.getModuleConfig('common').then(function(moduleConfig) {
                     scope.coreCalendarConfig = moduleConfig.coreCalendar;
+                    scope.coreCalendarErrorMessageConfig = moduleConfig.coreCalendarErrorMessage;
                 });
 
                 /* Add Event Modal */
@@ -154,9 +155,16 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                                 });
                             });
                             callback(events);
+                        },
+                        function(reason) {
+                            var errorCause = reason.data.error_cause;
+                            var errorMessage = $translate.instant(scope.coreCalendarErrorMessageConfig[errorCause]);
+
+                            if(!Util.isEmpty(errorMessage)) {
+                                MessageService.error(errorMessage);
+                            }
                         });
                 };
-
             }
         };
     }

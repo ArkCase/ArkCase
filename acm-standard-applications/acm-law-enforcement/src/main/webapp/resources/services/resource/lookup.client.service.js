@@ -10,8 +10,8 @@
 
  * LookupService contains functions to lookup data (typically static data).
  */
-angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService'
-    , function ($resource, Store, Util, SearchService) {
+angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreService', 'UtilService', 'SearchService', 'MessageService', '$log'
+    , function ($resource, Store, Util, SearchService, MessageService, $log) {
         var Service = $resource('api/latest/plugin', {}, {
 
             _getConfig: {
@@ -24,6 +24,13 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , method: "GET"
                 , isArray: true
                 , cache: false
+            }
+            , _saveLookup: {
+                url: "api/latest/service/config/lookups"
+                , method: "POST"
+                , headers: {
+                    "Content-Type": "application/json"
+                }
             }
 
             /**
@@ -276,8 +283,10 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          * @param {String} name  Config name
          *
          * @returns {Object} Promise
+         * @deprecated Use getLookups() from lookup.client.service.js or getLookupByLookupName(name) from object-lookup.client.service.js
          */
         Service.getLookup = function (name) {
+            $log.warn("Using deprecated function getLookup(name) from lookup.client.service.js!");
             var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
             var configMap = cacheConfigMap.get();
             var config = Util.goodMapValue(configMap, name, null);
@@ -292,6 +301,73 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                         configMap[name] = config;
                         cacheConfigMap.set(configMap);
                         return config;
+                    }
+                }
+            });
+        };
+        
+        /**
+         * @ngdoc method
+         * @name getLookups
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query the server configuration for all lookups definitions.
+         * Returns the lookup definitions as object with structure:
+         * {
+         *     "standardLookup" : [{
+         *         "someStandardLookup" : [
+         *                 { "key" : "1", "value" : "1"}, 
+         *                 { "key" : "2", "value" : "2"}
+         *             ]
+         *         }, {
+         *         "anotherStandardLookup" : [
+         *                 { "key" : "1", "value" : "1" }, 
+         *                 { "key" : "2", "value" : "2" }
+         *             ]
+         *         }
+         *     ],
+         *     "nestedLookup" : [{
+         *         "contactMethodTypes" : [
+         *                 { "key" : "1", "value" : "1", "subLookup" : [
+         *                         { "key" : "11", "value" : "11" }, 
+         *                         { "key" : "12", "value" : "12" }, 
+         *                         { "key" : "13", "value" : "13" }
+         *                     ]
+         *                 }, 
+         *                 { "key" : "2", "value" : "2", "subLookup" : [
+         *                         { "key" : "21", "value" : "21" }
+         *                     ]
+         *                 }
+         *             ]
+         *         }
+         *     ],
+         *     "inverseValuesLookup" : [{
+         *             "organizationRelationTypes" : [
+         *                 { "key" : "1", "value" : "1", "inverseKey" : "inv1", "inverseValue" : "inv1" },
+         *                 { "key" : "2", "value" : "2", "inverseKey" : "inv2", "inverseValue" : "inv2" }
+         *             ]
+         *         }
+         *     ]
+         * } 
+         *
+         * @returns {Object} Promise
+         */
+        Service.getLookups = function() {
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var lookups = Util.goodMapValue(configMap, 'lookups', null);
+            return Util.serviceCall({
+                service: Service._getConfig
+                , param: {name: 'lookups'}
+                , result: lookups
+                , onSuccess: function (data) {
+                    lookups = Util.omitNg(data);
+                    if (Service.validateLookups(lookups)) {                        
+                        configMap = configMap || {};
+                        configMap['lookups'] = lookups;
+                        cacheConfigMap.set(configMap);
+                        return lookups;
                     }
                 }
             });
@@ -316,7 +392,96 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             }
             return true;
         };
+        
+        /**
+         * @ngdoc method
+         * @name validateLookups
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Validate lookups data
+         *
+         * @param {Object} data  Lookups data to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateLookups = function (data) {
+            // check if the data contains only known lookup types
+            for (var prop in data) {
+                if (prop !== 'standardLookup' && prop !== 'nestedLookup' && prop !== 'inverseValuesLookup') {
+                    return false;
+                }
+            }
+            
+            // check if the lookups are array objects
+            if (data.standardLookup) {
+                for (var i = 0; i < data.standardLookup.length; i++) {
+                    if (!Util.isArray(data.standardLookup[i][Object.keys(data.standardLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            if (data.nestedLookup) {
+                for (var i = 0; i < data.nestedLookup.length; i++) {
+                    if (!Util.isArray(data.nestedLookup[i][Object.keys(data.nestedLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            if (data.inverseValuesLookup) {
+                for (var i = 0; i < data.inverseValuesLookup.length; i++) {
+                    if (!Util.isArray(data.inverseValuesLookup[i][Object.keys(data.inverseValuesLookup[i])[0]])) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
 
+        /**
+         * @ngdoc method
+         * @name saveLookup
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Saves the the given lookup entries for the lookup definition.
+         *
+         * @param {Object} lookupDef    the lookup definition to be saved with structure:
+         *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
+         * @parma {Array}  lookup       the lookup entries as an array. 
+         *                              For standarLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
+         *                              For nestedLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1', 'subLookup' : [{'key':'11', 'value':'11'}, {'key':'12', 'value':'12'}]}, {...}]
+         *                              For inverseValuesLookup the structure looks like:
+         *                              [{'key':'1', 'value':'1', 'inverseKey':'inv1', 'inverseValue':'inv1'}, {'key':'2', 'value':'2', 'inverseKey':'inv2', 'inverseValue':'inv2'}]
+         *
+         * @returns {Object} Promise returning all lookups from server.
+         */
+        Service.saveLookup = function (lookupDef, lookup) {
+            lookupDef.lookupEntriesAsJson = JSON.stringify(lookup);
+            return Util.serviceCall({
+                service: Service._saveLookup
+                , data: lookupDef
+                , onSuccess: handleSaveLookupSuccess
+            });
+        };
+        
+        function handleSaveLookupSuccess(responseLookups) {
+            var lookups = Util.omitNg(responseLookups);
+            if (Service.validateLookups(lookups)) {
+                var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+                var configMap = cacheConfigMap.get();
+                configMap = configMap || {};
+                configMap['lookups'] = lookups;
+                cacheConfigMap.set(configMap);
+                return lookups;
+            } else {
+                // should not happen
+                return MessageService.error('Lookups returned from server are invalid!');
+            }
+        };
+        
         return Service;
     }
 ]);

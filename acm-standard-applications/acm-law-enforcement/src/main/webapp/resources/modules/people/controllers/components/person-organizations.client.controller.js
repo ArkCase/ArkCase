@@ -37,7 +37,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
 
         var validateOrganizationAssociation = function(data, rowEntity) {
             var validationResult = { valid : true };
-            
+
             $scope.objectInfo.organizationAssociations
                 .filter(function(association) {
                     return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
@@ -50,13 +50,16 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
                         }
                     }
                 });
-                
+
             return validationResult;
         }
-        
+
         ObjectLookupService.getPersonOrganizationRelationTypes().then(
             function (organizationTypes) {
-                $scope.organizationTypes = organizationTypes;
+                $scope.organizationTypes = [];
+                for(var i=0;i<organizationTypes.length;i++){
+                    $scope.organizationTypes.push({"key": organizationTypes[i].inverseKey, "value": organizationTypes[i].inverseValue, "inverseKey": organizationTypes[i].key, "inverseValue": organizationTypes[i].value});
+                }
                 return organizationTypes;
             });
 
@@ -170,8 +173,8 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         function savePersonAssociation(association, data) {
             association.person = {id: $scope.objectInfo.id};
             association.organization = data.organization;
-            association.personToOrganizationAssociationType = data.type;
-            association.organizationToPersonAssociationType = data.inverseType;
+            association.personToOrganizationAssociationType = data.inverseType;
+            association.organizationToPersonAssociationType = data.type;
 
             if (data.isDefault) {
                 //find and change previously default organization
