@@ -3,11 +3,12 @@
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
+    , 'Object.ParticipantService', '$q', 'SearchService', 'Search.QueryBuilderService', "Config.LocaleService"
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
-        , SearchService, SearchQueryBuilder) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
+        , ObjectParticipantService, $q, SearchService, SearchQueryBuilder, LocaleService
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -255,7 +256,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             } else {
                 $scope.complaintTypeValue = 'core.unknown';
             }
-        }
+        };
         
         var setPriorityValue = function() {
             var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
@@ -264,6 +265,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             } else {
                 $scope.priorityValue = 'core.unknown';
             }
-        }
+        };
+
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            $scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang)
+        });
     }
 ]);
