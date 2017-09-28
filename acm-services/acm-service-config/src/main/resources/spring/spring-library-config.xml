@@ -61,12 +61,6 @@
                     <property name="acmApplication" ref="acmApplication"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="thisApp"/>
-                    <property name="configDescription" value="This App"/>
-                    <property name="properties" ref="lawEnforcementAppProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="admin"/>
                     <property name="configDescription" value="Admin"/>
                     <property name="properties" ref="adminPluginProperties"/>

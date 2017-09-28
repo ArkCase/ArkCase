@@ -1,15 +1,15 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;

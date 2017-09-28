@@ -4,11 +4,10 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -129,7 +128,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
-            String currentAssignee)
+                                                 String currentAssignee)
     {
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = new HashSet<>();
@@ -170,9 +169,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             if (groupName.equals(group) || group == null)
             {
                 AcmGroup acmGroup = getAcmGroupDao().findByName(groupName);
-                if (acmGroup != null && !acmGroup.getMembers().isEmpty())
+                if (acmGroup != null)
                 {
-                    retval.addAll(acmGroup.getMembers());
+                    retval.addAll(acmGroup.getUserMembers());
                 }
             }
         }
@@ -213,7 +212,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-            Authentication auth) throws MuleException
+                                       Authentication auth) throws MuleException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
         String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
