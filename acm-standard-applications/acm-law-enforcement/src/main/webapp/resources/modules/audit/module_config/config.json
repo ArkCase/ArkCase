@@ -15,8 +15,9 @@
   "components": [
     {
       "id": "auditselection",
-      "title": "Audit",
+      "title": "audit.comp.auditselection.title",
       "enabled": true,
+      "configurable": true,
       "auditDropdown": [
         {
           "id": "",
@@ -54,8 +55,9 @@
     },
     {
       "id": "datepickers",
-      "title": "Audits",
-      "enabled": true
+      "title": "audit.comp.datepickers.title",
+      "enabled": true,
+      "configurable": true
     }
   ]
 }

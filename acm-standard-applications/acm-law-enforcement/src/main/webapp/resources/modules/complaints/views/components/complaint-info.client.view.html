@@ -16,15 +16,14 @@
                     <a href="#" editable-select="objectInfo.complaintType" onaftersave="saveComplaint()"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                        permission-action="disable"
-                       e-ng-options="c.value as c.text for c in complaintTypes">{{objectInfo.complaintType ||
-                        'Unknown'}}</a>
+                       e-ng-options="c.key as c.value | translate for c in complaintTypes">{{ complaintTypeValue | translate }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.type.label</span></small>
             </div>
             <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
             <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
+                <div class="h4 font-bold">{{objectInfo.created | date: 'shortDate' }}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.created.label</span></small>
             </div>
@@ -33,8 +32,7 @@
                     <a href="#" editable-select="objectInfo.priority" onaftersave="saveComplaint()"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                        permission-action="disable"
-                       e-ng-options="p.value as p.text for p in priorities">{{ objectInfo.priority ||
-                        'Unknown'}}</a>
+                       e-ng-options="p.key as p.value | translate for p in priorities">{{ priorityValue | translate }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.priority.label</span></small>
             </div>
@@ -69,7 +67,7 @@
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
+                        {{ (dateInfo.dueDate | date: 'shortDate' ) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>
             </div>

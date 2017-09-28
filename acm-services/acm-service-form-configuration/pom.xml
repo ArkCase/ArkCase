@@ -63,6 +63,16 @@
             <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-config</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-labels</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
         
          <!-- spring -->
         <dependency>

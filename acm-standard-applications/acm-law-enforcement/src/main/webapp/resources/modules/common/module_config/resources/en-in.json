@@ -10,6 +10,25 @@
     "defaultDateUIFormat": "MM/dd/yyyy",
     "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
   },
+  "common.addOrganization": {
+    "title": "Add Parent Organization",
+    "addNew.label": "Add new Organization",
+    "selectExisting.label": "Select existing organization",
+    "organization.label": "Organization",
+    "description": "Description",
+    "type.label": "Organization Association Type",
+    "type.label.default.text": "No parent Organization",
+    "type.label.text": "Parent Organization",
+    "btnCancel.text": "Cancel",
+    "btnOk.text": "Save Organization",
+    "setPrimary.label": "Set As Primary?",
+    "radioYes.text": "Yes",
+    "radioNo.text": "No",
+    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "Edit Parent Organization"
+  },
   "common.service": {
     "error.invalidData": "Invalid data"
   },

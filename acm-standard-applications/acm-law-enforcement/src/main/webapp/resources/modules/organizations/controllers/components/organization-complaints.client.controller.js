@@ -16,13 +16,9 @@ angular.module('organizations').controller('Organizations.ComplaintsController',
         );
 
         //we are using person types because there are not specified organization types
-        ObjectLookupService.getPersonTypes().then(
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (organizationTypes) {
-                var options = [];
-                _.forEach(organizationTypes, function (v, k) {
-                    options.push({type: v, name: v});
-                });
-                $scope.organizationTypes = options;
+                $scope.organizationTypes = organizationTypes;
                 return organizationTypes;
             });
 

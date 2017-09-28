@@ -5,11 +5,10 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import org.apache.commons.lang3.StringUtils;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -18,17 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create multiple Spring beans, each
@@ -48,7 +39,6 @@ import java.util.stream.Collectors;
 public class LdapSyncService
 {
     private SpringLdapDao ldapDao;
-    private LdapSyncDatabaseHelper ldapSyncDatabaseHelper;
     private AcmLdapSyncConfig ldapSyncConfig;
     private boolean syncEnabled = true;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
@@ -78,10 +68,10 @@ public class LdapSyncService
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), null);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        processRecordsAndUpdateDatabase(ldapUsers, ldapGroups, false);
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig);
     }
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
@@ -98,7 +88,7 @@ public class LdapSyncService
 
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
-        String ldapLastSyncDate = readLastLdapSyncDate();
+        Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
@@ -106,11 +96,9 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
 
-        ldapUsers = filterUsersForKnownGroups(ldapUsers, ldapGroups);
-        filterParentGroups(ldapGroups);
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig());
 
-        writeLastLdapSync();
+        writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
     }
 
     /**
@@ -128,10 +116,9 @@ public class LdapSyncService
         LdapUser user = getSpringLdapUserDao().findUser(username, template, getLdapSyncConfig(),
                 getLdapSyncConfig().getUserSyncAttributes());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        processRecordsAndUpdateDatabase(ldapUsers, acmGroups, true);
-
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
         return user;
     }
 
@@ -149,202 +136,33 @@ public class LdapSyncService
 
         LdapUser user = getSpringLdapUserDao().findUserByLookup(dn, template, getLdapSyncConfig());
         List<LdapUser> ldapUsers = Arrays.asList(user);
-        List<LdapGroup> acmGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), null);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        processRecordsAndUpdateDatabase(ldapUsers, acmGroups, true);
-
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
         return user;
     }
 
-    public void processRecordsAndUpdateDatabase(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups, boolean singleUser)
+    public Optional<String> readLastLdapSyncDate(String directoryName)
     {
-        ldapUsers = filterUsersForKnownGroups(ldapUsers, ldapGroups);
-        filterUserGroups(ldapUsers, ldapGroups);
-        filterParentGroups(ldapGroups);
-
-        Map<String, Set<LdapUser>> usersByLdapGroup = getUsersByLdapGroup(ldapGroups, ldapUsers);
-        Map<String, Set<LdapUser>> usersByApplicationRole = getUsersByApplicationRole(usersByLdapGroup);
-        Map<String, String> childParentPair = populateGroupParentPairs(ldapGroups);
-        Map<String, String> groupNameDistinguishedNamePair = populateGroupNameDistinguishedNamePair(ldapGroups);
-
-        Set<String> applicationRoles = new HashSet<>();
-        Map<String, String> roleToGroup = getLdapSyncConfig().getRoleToGroupMap();
-        applicationRoles.addAll(roleToGroup.keySet());
-
-        getLdapSyncDatabaseHelper().updateDatabase(getLdapSyncConfig().getDirectoryName(), applicationRoles, ldapUsers,
-                usersByApplicationRole, usersByLdapGroup, childParentPair, groupNameDistinguishedNamePair, singleUser);
-    }
-
-    public Map<String, Set<LdapUser>> getUsersByLdapGroup(List<LdapGroup> ldapGroups, List<LdapUser> ldapUsers)
-    {
-        Map<String, Set<LdapUser>> usersByLdapGroup = ldapGroups.stream()
-                .collect(Collectors.toMap(LdapGroup::getName, it -> new HashSet<>()));
-
-        Map<String, LdapGroup> nameToGroup = ldapGroups.stream()
-                .collect(Collectors.toMap(LdapGroup::getName, Function.identity()));
-
-        ldapUsers.forEach(user ->
-                user.getLdapGroups().forEach(ldapGroup ->
-                {
-                    // Add user to the group
-                    log.debug("Adding user [{}] to group [{}]", user.getDistinguishedName(), ldapGroup);
-                    if (usersByLdapGroup.containsKey(ldapGroup))
-                    {
-                        Set<LdapUser> users = usersByLdapGroup.get(ldapGroup);
-                        users.add(user);
-                    }
-                    // Add user to parent groups
-                    if (nameToGroup.containsKey(ldapGroup))
-                    {
-                        LdapGroup group = nameToGroup.get(ldapGroup);
-                        group.getParentGroups().forEach(parentGroup ->
-                        {
-                            if (usersByLdapGroup.containsKey(parentGroup))
-                            {
-                                Set<LdapUser> parentGroupUsers = usersByLdapGroup.get(parentGroup);
-                                parentGroupUsers.add(user);
-                            }
-                        });
-                    }
-                })
-        );
-
-        return usersByLdapGroup;
-    }
-
-    /**
-     * For each user keep only groups that are relevant i.e. exist in synced LDAP groups
-     *
-     * @param ldapUsers  LDAP users list
-     * @param ldapGroups LDAP groups list
-     */
-    public void filterUserGroups(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups)
-    {
-        Set<String> ldapGroupsNames = ldapGroups.stream()
-                .map(LdapGroup::getName)
-                .collect(Collectors.toSet());
-        for (LdapUser user : ldapUsers)
-        {
-            Set<String> userGroups = user.getLdapGroups();
-            // remove all groups that are not fetched LDAP groups
-            userGroups.retainAll(ldapGroupsNames);
-            user.setLdapGroups(userGroups);
-        }
-    }
-
-    /**
-     * For each LDAP group keep only relevant parent groups
-     *
-     * @param ldapGroups All LDAP groups
-     */
-    public void filterParentGroups(List<LdapGroup> ldapGroups)
-    {
-        Set<String> ldapGroupNames = ldapGroups.stream()
-                .map(LdapGroup::getName)
-                .collect(Collectors.toSet());
-        for (LdapGroup group : ldapGroups)
-        {
-            Set<String> groupGroups = group.getParentGroups();
-            groupGroups.retainAll(ldapGroupNames);
-            group.setParentGroups(groupGroups);
-        }
-    }
-
-    /**
-     * Keep only users that are relevant i.e. users who are member of synced LDAP groups
-     *
-     * @param ldapUsers  All LDAP users
-     * @param ldapGroups All LDAP groups
-     */
-    public List<LdapUser> filterUsersForKnownGroups(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups)
-    {
-        Set<String> ldapGroupNames = ldapGroups.stream()
-                .map(LdapGroup::getName)
-                .collect(Collectors.toSet());
-
-        List<LdapUser> filteredUsers = new ArrayList<>();
-        for (LdapUser user : ldapUsers)
-        {
-            Set<String> userGroups = user.getLdapGroups();
-
-            // check if ldapGroupNames contains at least one user group
-            if (!Collections.disjoint(ldapGroupNames, userGroups))
-            {
-                filteredUsers.add(user);
-            }
-        }
-        return filteredUsers;
-    }
-
-    public Map<String, String> populateGroupNameDistinguishedNamePair(List<LdapGroup> ldapGroups)
-    {
-        return ldapGroups.stream()
-                .collect(
-                        Collectors.toMap(
-                                LdapGroup::getName,
-                                LdapGroup::getDistinguishedName
-                        )
-                );
-    }
-
-    public Map<String, String> populateGroupParentPairs(List<LdapGroup> ldapGroups)
-    {
-        Map<String, String> groupParentPairs = new TreeMap<>();
-        for (LdapGroup group : ldapGroups)
-        {
-            Set<String> groupParents = group.getParentGroups();
-            if (!groupParents.isEmpty())
-            {
-                // find only groups with parent groups and return child-parent group pairs
-                groupParents.forEach(groupParent -> groupParentPairs.put(group.getName(), groupParent));
-            }
-        }
-        return groupParentPairs;
-    }
-
-    public Map<String, Set<LdapUser>> getUsersByApplicationRole(Map<String, Set<LdapUser>> usersByLdapGroup)
-    {
-        Map<String, Set<LdapUser>> usersByApplicationRole = new TreeMap<>();
-        Set<String> ldapGroups = usersByLdapGroup.keySet();
-
-        Map<String, List<String>> groupToRoleMap = getLdapSyncConfig().getGroupToRolesMap();
-
-        // for each role in group find all users in that group, than connect users to role
-        ldapGroups.stream().filter(groupToRoleMap::containsKey).forEach(group ->
-        {
-            log.debug("Group '{}' has roles: {} ", group, groupToRoleMap.get(group));
-            for (String applicationRole : groupToRoleMap.get(group))
-            {
-                // for each role in group find all users in that group, than connect users to role
-                Set<LdapUser> usersByGroup = usersByApplicationRole.getOrDefault(applicationRole, new HashSet<>());
-                Set<LdapUser> users = usersByLdapGroup.get(group);
-                log.debug("Add '{}' users to role '{}'", users.size(), applicationRole);
-                usersByGroup.addAll(users);
-                usersByApplicationRole.put(applicationRole, usersByGroup);
-            }
-        });
-        return usersByApplicationRole;
-    }
-
-    public String readLastLdapSyncDate()
-    {
-        String lastSyncDate = null;
+        String date = null;
         try
         {
-            lastSyncDate = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
-                    AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY, null);
-        } catch (AcmEncryptionException e)
+            date = propertyFileManager.load(ldapLastSyncPropertyFileLocation,
+                    String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY), null);
+        }
+        catch (AcmEncryptionException e)
         {
             log.warn("Failed to read [{}] date property. All users will be synced ", AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY,
                     e.getMessage());
         }
-        return lastSyncDate;
+        return Optional.ofNullable(date);
     }
 
-    public void writeLastLdapSync()
+    public void writeLastLdapSync(String directoryName)
     {
-        propertyFileManager.store(AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY, ZonedDateTime.now(ZoneOffset.UTC)
-                .format(DateTimeFormatter.ISO_INSTANT), ldapLastSyncPropertyFileLocation);
+        propertyFileManager.store(String.format("%s.%s", directoryName, AcmLdapConstants.LDAP_LAST_SYNC_PROPERTY_KEY),
+                ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT),
+                ldapLastSyncPropertyFileLocation, false);
     }
 
     public SpringLdapDao getLdapDao()
@@ -355,16 +173,6 @@ public class LdapSyncService
     public void setLdapDao(SpringLdapDao ldapDao)
     {
         this.ldapDao = ldapDao;
-    }
-
-    public LdapSyncDatabaseHelper getLdapSyncDatabaseHelper()
-    {
-        return ldapSyncDatabaseHelper;
-    }
-
-    public void setLdapSyncDatabaseHelper(LdapSyncDatabaseHelper ldapSyncDatabaseHelper)
-    {
-        this.ldapSyncDatabaseHelper = ldapSyncDatabaseHelper;
     }
 
     public AcmLdapSyncConfig getLdapSyncConfig()

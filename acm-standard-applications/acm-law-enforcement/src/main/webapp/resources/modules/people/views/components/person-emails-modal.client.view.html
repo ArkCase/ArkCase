@@ -23,8 +23,8 @@
 
                 <label for="emailTypes"
                        translate>people.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
-                <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subType"
-                        ng-options="item.type as item.name for item in emailTypes"></select>
+                <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subLookup"
+                        ng-options="item.key as item.value | translate for item in emailTypes"></select>
 
             </div>
         </div>

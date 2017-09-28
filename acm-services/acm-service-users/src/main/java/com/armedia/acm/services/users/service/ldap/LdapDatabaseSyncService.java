@@ -1,16 +1,19 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class LdapDatabaseSyncService
 {
@@ -18,27 +21,32 @@ public class LdapDatabaseSyncService
     private UserDao userDao;
     private AcmGroupDao groupDao;
 
+    @Transactional
     public List<AcmUser> saveUsers(AcmUsersSyncResult acmUsersSyncResult)
     {
         List<AcmUser> savedUsers = new ArrayList<>();
-        log.info("Saving new users [{}]", acmUsersSyncResult.getNewUsers().size());
-        acmUsersSyncResult.getNewUsers().forEach(acmUser -> {
+
+        //filter out users that are not members to any AcmGroup
+        Set<AcmUser> newUsers = acmUsersSyncResult.getNewUsers().stream()
+                .filter(user -> !user.getGroups().isEmpty())
+                .collect(Collectors.toSet());
+        log.info("Saving new users [{}]", newUsers.size());
+        newUsers.forEach(acmUser -> {
             log.info("Saving AcmUser [{}]", acmUser.getUserId());
-            userDao.save(acmUser);
+            userDao.persistUser(acmUser);
             savedUsers.add(acmUser);
         });
 
         log.info("Updating existing users [{}]", acmUsersSyncResult.getChangedUsers().size());
         acmUsersSyncResult.getChangedUsers().forEach(acmUser -> {
             log.info("Updating AcmUser [{}]", acmUser.getUserId());
-            userDao.save(acmUser);
+            acmUser = userDao.save(acmUser);
             savedUsers.add(acmUser);
         });
-
-        userDao.getEm().flush();
         return savedUsers;
     }
 
+    @Transactional
     public List<AcmGroup> saveGroups(AcmGroupsSyncResult acmGroupsSyncResult)
     {
         List<AcmGroup> savedGroups = new ArrayList<>();
@@ -58,6 +66,7 @@ public class LdapDatabaseSyncService
         return savedGroups;
     }
 
+    @Transactional
     public void saveAcmRoles(List<String> applicationRoles, String roleType)
     {
         log.info("Saving AcmRoles [{}]", applicationRoles.size());
@@ -70,6 +79,7 @@ public class LdapDatabaseSyncService
         });
     }
 
+    @Transactional
     public void saveAcmUserRoles(List<AcmUserRole> acmUserRoles)
     {
         log.info("Saving AcmUserRoles [{}]", acmUserRoles.size());

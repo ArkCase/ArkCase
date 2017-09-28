@@ -270,6 +270,9 @@
   "complaints.comp.calendar": {
     "title": "कैलेंडर"
   },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "संदर्भ खोज"
+  },
   "complaints.comp.addreference": {
     "title": "hi_Add Reference",
     "cancelButton": "hi_Cancel",
