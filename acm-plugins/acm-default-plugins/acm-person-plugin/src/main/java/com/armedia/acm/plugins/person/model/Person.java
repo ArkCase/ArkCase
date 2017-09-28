@@ -52,6 +52,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -132,14 +133,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_postal_address", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
     private List<PostalAddress> addresses = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
     @OrderBy(value = "id")
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
@@ -155,32 +156,32 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             CascadeType.DETACH,
             CascadeType.REFRESH,
             CascadeType.REMOVE,
-            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "person")
+            CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "person")
     private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
 
     @OneToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
-            CascadeType.REMOVE })
+            CascadeType.REMOVE})
     @JoinColumns({
             @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> associationsToObjects = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
     private List<Identification> identifications = new ArrayList<>();
 
     @ManyToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
-            CascadeType.REMOVE })
+            CascadeType.REMOVE})
     @JoinTable(name = "acm_person_organization", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
     private List<Organization> organizations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -255,7 +256,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_person_restricted_flag", nullable = false)
@@ -828,5 +829,15 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     public void setRestricted(Boolean restricted)
     {
         this.restricted = restricted;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || !(obj instanceof Person))
+        {
+            return false;
+        }
+        return getId() == ((Person) obj).getId();
     }
 }

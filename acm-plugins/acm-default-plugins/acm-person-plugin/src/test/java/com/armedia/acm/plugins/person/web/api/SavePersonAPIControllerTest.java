@@ -122,7 +122,7 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
         Capture<Person> found = Capture.newInstance();
 
         expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).andReturn(saved);
-        mockEventPublisher.publishPersonUpsertEvent(capture(found), eq(false), eq(true));
+        mockEventPublisher.publishPersonUpsertEvents(capture(found), anyObject(), eq(false), eq(true));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -226,7 +226,7 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
 
         expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).
                 andThrow(new CannotCreateTransactionException("testException"));
-        mockEventPublisher.publishPersonUpsertEvent(capture(found), eq(false), eq(false));
+        mockEventPublisher.publishPersonUpsertEvents(capture(found), anyObject(), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
@@ -138,5 +139,14 @@ public class Identification implements Serializable, AcmEntity {
 
     public void setIdentificationYearIssued(Date identificationYearIssued) {
         this.identificationYearIssued = identificationYearIssued;
+    }
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || !(obj instanceof Identification))
+        {
+            return false;
+        }
+        return getIdentificationID() == ((Identification) obj).getIdentificationID();
     }
 }

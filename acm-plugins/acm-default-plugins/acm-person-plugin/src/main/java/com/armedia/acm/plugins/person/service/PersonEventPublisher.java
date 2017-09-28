@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.objectdiff.AcmObjectChange;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
@@ -12,10 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.List;
+
 public class PersonEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
+    private PersonDiff personDiff;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -37,16 +41,19 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
-    public void publishPersonUpsertEvent(Person source, boolean newPerson, boolean succeeded)
+    public void publishPersonUpsertEvents(Person source, Person oldPerson, boolean newPerson, boolean succeeded)
     {
         log.debug("Publishing a person event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
+
         PersonModifiedEvent personPersistenceEvent = new PersonModifiedEvent(source, ipAddress);
         if (newPerson)
         {
             personPersistenceEvent.setEventAction("created");
         } else
         {
+            AcmObjectChange acmObjectChange = personDiff.compare(oldPerson, source);
+            System.out.println(acmObjectChange);
             personPersistenceEvent.setEventAction("updated");
         }
         personPersistenceEvent.setSucceeded(succeeded);
@@ -62,4 +69,8 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
+    public void setPersonDiff(PersonDiff personDiff)
+    {
+        this.personDiff = personDiff;
+    }
 }

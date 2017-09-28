@@ -41,14 +41,14 @@ public class SavePersonAPIController
         {
             Person saved = getPersonTransaction().savePerson(in, auth);
 
-            getEventPublisher().publishPersonUpsertEvent(saved, isInsert, true);
+            getEventPublisher().publishPersonUpsertEvents(saved, in, isInsert, true);
 
             return saved;
 
         } catch (MuleException | TransactionException e)
         {
 
-            getEventPublisher().publishPersonUpsertEvent(in, isInsert, false);
+            getEventPublisher().publishPersonUpsertEvents(in, in, isInsert, false);
 
             throw new AcmCreateObjectFailedException("person", e.getMessage(), e);
         }
