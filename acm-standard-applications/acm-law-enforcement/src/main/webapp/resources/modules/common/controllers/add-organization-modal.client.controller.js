@@ -20,6 +20,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.organizationValue = params.organizationValue;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
+            if(!!params.isNewPerson){
+                $scope.isNewPerson = params.isNewPerson;
+                $scope.isDefault = $scope.isNewPerson;
+            }
+            $scope.hideNoField = !(!!$scope.isNewPerson);
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
             });
