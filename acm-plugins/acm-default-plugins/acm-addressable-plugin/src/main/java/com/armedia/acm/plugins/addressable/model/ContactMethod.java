@@ -251,4 +251,13 @@ public class ContactMethod implements Serializable, AcmEntity
         this.className = className;
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null || !(obj instanceof ContactMethod))
+        {
+            return false;
+        }
+        return getId() == ((ContactMethod) obj).getId();
+    }
 }
