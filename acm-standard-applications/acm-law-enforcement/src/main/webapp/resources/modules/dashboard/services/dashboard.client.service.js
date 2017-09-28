@@ -125,7 +125,6 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 var userInfo = result[1];
 
                 var userLocale = _.findWhere(locales, {code: userInfo.langCode});
-                LocaleService.useLocale(userLocale.iso);
                 setLocale(userLocale.iso);
             });
             
