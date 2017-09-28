@@ -20,7 +20,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isChanged = true;
             $scope.isDefault = params.isDefault;
             $scope.isSelectedParent = params.isSelectedParent;
-            $scope.isEditParent = !!params.organizationId;
+            $scope.isEditParent = false;
             $scope.description = params.description;
 
             if (!!params.isSelectedParent) {
