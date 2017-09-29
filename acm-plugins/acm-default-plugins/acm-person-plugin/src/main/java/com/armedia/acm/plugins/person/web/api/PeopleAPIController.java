@@ -217,6 +217,9 @@ public class PeopleAPIController
         }
     }
 
+    /*
+     * This method should be with identical query string as the call to faceted search that it forwards to.
+     */
     @RequestMapping(value = "/search/{personId}", method = RequestMethod.GET)
     public String searchOrganizations(@PathVariable("personId") Long personId, Authentication auth) throws UnsupportedEncodingException
     {
