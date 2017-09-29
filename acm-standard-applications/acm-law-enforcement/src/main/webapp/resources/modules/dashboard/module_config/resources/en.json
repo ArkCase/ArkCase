@@ -121,7 +121,11 @@
       "newCases": {
         "title": "New Cases",
         "description": "Displays new cases",
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
+        }
       },
       "teamWorkload": {
         "title": "Team Workload",
