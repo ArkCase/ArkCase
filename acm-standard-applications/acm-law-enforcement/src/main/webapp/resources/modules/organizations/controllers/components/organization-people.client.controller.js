@@ -139,7 +139,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 isDefault: false,
                 types: $scope.personAssociationTypes,
                 returnValueValidationFunction: validatePersonAssociation,
-                showNoField: hasPeople()
+                hideNoField: !hasPeople()
             };
 
             if (!hasPeople()) {
