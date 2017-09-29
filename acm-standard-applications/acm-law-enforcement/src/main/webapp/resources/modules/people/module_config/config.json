@@ -471,11 +471,6 @@
               "headerCellFilter": "translate"
             },
             {
-              "name": "identificationID",
-              "displayName": "people.comp.ids.table.columns.id",
-              "headerCellFilter": "translate"
-            },
-            {
               "name": "identificationNumber",
               "displayName": "people.comp.ids.table.columns.number",
               "headerCellFilter": "translate",
@@ -1143,11 +1138,6 @@
         {
           "name": "identificationType",
           "displayName": "people.comp.ids.table.columns.type",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "identificationID",
-          "displayName": "people.comp.ids.table.columns.id",
           "headerCellFilter": "translate"
         },
         {
