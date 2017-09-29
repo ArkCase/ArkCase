@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h3>
-        <ng-switch on="editMode || isEditParent">
+        <ng-switch on="editMode || isEditParent"">
             <span ng-switch-when="true" translate>common.editOrganization.title</span>
             <span ng-switch-default translate>common.addOrganization.title</span>
         </ng-switch>
@@ -12,7 +12,6 @@
             <div class="col-sm-6 form-group">
                 <label>&nbsp;</label>
                 <button type="button" class="btn btn-primary" ng-show="!editMode || isEditParent"
-
                         ng-click="addNewOrganization()" translate>
                     common.addOrganization.addNew.label
                 </button>
