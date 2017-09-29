@@ -3,12 +3,28 @@
     "select.option.none": "(Select One)",
     "value.unknown": "Unknown",
 
+    "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
+    "_2_": "Please use one of the predefined formats: ",
+    "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
+    "_4_": "'short'     - equivalent to 'M/d/yy h:mm a' for en_US locale (e.g. 9/3/10 12:05 PM)",
+    "_5_": "'fullDate'  - equivalent to 'EEEE, MMMM d, y' for en_US locale (e.g. Friday, September 3, 2010)",
+    "_6_": "'longDate'  - equivalent to 'MMMM d, y' for en_US locale (e.g. September 3, 2010)",
+    "_7_": "'mediumDate'- equivalent to 'MMM d, y' for en_US locale (e.g. Sep 3, 2010)",
+    "_8_": "'shortDate' - equivalent to 'M/d/yy' for en_US locale (e.g. 9/3/10)",
+    "_9_": "'mediumTime'- equivalent to 'h:mm:ss a' for en_US locale (e.g. 12:05:08 PM)",
+    "_10": "'shortTime' - equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)",
+    "_11": " ",
+    "_12": "Following date formats are phased out. If customers request to have customize format, we need ",
+    "_13": "to educate them to avoid doing so, because of i18n conerns",
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "MM/dd/yyyy",
     "defaultDateUIFormat": "MM/dd/yyyy",
     "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "YYYY-MM-DD"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
@@ -17,9 +33,6 @@
     "progressNoData": "[ No data ]",
     "progressLoading": "Loading data ",
     "progressError": "Failed to load data "
-  },
-  "common.frevvo": {
-    "defaultDateFormat": "YYYY-MM-DD"
   },
   "common.service.messageService": {
     "authorizationError": "You are not authorized to take this action",
@@ -592,12 +605,14 @@
     }
   },
   "common.addOrganization": {
-    "title": "Add Organization",
+    "title": "Add Parent Organization",
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
     "description": "Description",
     "type.label": "Organization Association Type",
+    "type.label.default.text": "No parent Organization",
+    "type.label.text": "Parent Organization",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Organization",
     "setPrimary.label": "Set As Primary?",
@@ -619,7 +634,7 @@
     "radioNo.text": "No"
   },
   "common.editOrganization": {
-    "title": "Edit Organization"
+    "title": "Edit Parent Organization"
   },
   "common.newOrganization": {
     "title": "Organization",

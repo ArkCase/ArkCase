@@ -37,7 +37,7 @@
           "name": "created",
           "displayName": "profile.subscriptions.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "width": "25%"
         },
         {
