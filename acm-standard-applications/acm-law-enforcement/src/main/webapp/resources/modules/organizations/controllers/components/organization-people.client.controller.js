@@ -136,15 +136,11 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         $scope.addPerson = function () {
             var params = {
                 showSetPrimary: true,
-                isDefault: false,
+                isDefault: !hasPeople(),
                 types: $scope.personAssociationTypes,
                 returnValueValidationFunction: validatePersonAssociation,
                 hideNoField: !hasPeople()
             };
-
-            if (!hasPeople()) {
-                params.isDefault = true;
-            }
 
             var modalInstance = $modal.open({
                 scope: $scope,
