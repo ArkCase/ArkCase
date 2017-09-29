@@ -108,6 +108,10 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
+        },
         "noDataMessage": "Currently there are no complaints info"
       },
       "newCases": {
