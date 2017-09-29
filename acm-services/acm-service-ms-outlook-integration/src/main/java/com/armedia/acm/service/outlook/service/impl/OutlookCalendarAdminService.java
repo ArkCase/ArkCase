@@ -29,7 +29,7 @@ import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.impl.CalendarFolderHandler.CalendarFolderHandlerCallback;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.binary.Base64;
@@ -54,7 +54,6 @@ import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFo
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 1, 2017
- *
  */
 public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceExtension, ApplicationEventPublisherAware
 {
@@ -226,8 +225,8 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
                             CalendarFolderHandler handler = folderHandlers.get(reference.getObjectType());
 
                             CalendarFolderHandlerCallback callback = (user, objectId, objectType, folderName, container,
-                                    participants) -> createFolder(outlookUser.get(), objectId, objectType, folderName, container,
-                                            participants);
+                                                                      participants) -> createFolder(outlookUser.get(), objectId, objectType, folderName, container,
+                                    participants);
                             handler.recreateFolder(outlookUser.get(), reference.getObjectId(), reference.getObjectType(), callback);
 
                             progressIndicator.setProgress(++updated);
@@ -269,7 +268,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createFolder(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
-            List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+                             List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
 
         OutlookFolder outlookFolder = new OutlookFolder();
@@ -290,7 +289,8 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
         {
             // this will cause all permissions in folder to be removed
             log.warn("There are not defined participants types to include");
-        } else
+        }
+        else
         {
             for (AcmParticipant ap : participantsForObject)
             {
@@ -306,46 +306,50 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
                     outlookFolderPermission.setEmail(user.getMail());
                     switch (ap.getParticipantType())
                     {
-                    case "follower":
-                        if (getFollowerAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
-                            break;
-                        }
-                    case "assignee":
-                        if (getAssigneeAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
-                            break;
-                        }
-                    case "approver":
-                        if (getApproverAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
-                            break;
-                        }
-                    default:
-                        if (getDefaultAccess() != null)
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
-                            break;
-                        } else
-                        {
-                            outlookFolderPermission.setLevel(FolderPermissionLevel.None);
-                            break;
-                        }
+                        case "follower":
+                            if (getFollowerAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
+                                break;
+                            }
+                            else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
+                                break;
+                            }
+                        case "assignee":
+                            if (getAssigneeAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
+                                break;
+                            }
+                            else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
+                                break;
+                            }
+                        case "approver":
+                            if (getApproverAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
+                                break;
+                            }
+                            else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
+                                break;
+                            }
+                        default:
+                            if (getDefaultAccess() != null)
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
+                                break;
+                            }
+                            else
+                            {
+                                outlookFolderPermission.setLevel(FolderPermissionLevel.None);
+                                break;
+                            }
                     }
                     folderPermissionsToBeAdded.add(outlookFolderPermission);
                 }
@@ -355,9 +359,8 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     *
      * @see com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#
-     *      getFolderCreatorsWithInvalidCredentials(java.util.List)
+     * getFolderCreatorsWithInvalidCredentials(java.util.List)
      */
     @Override
     public List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials()
@@ -381,11 +384,11 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
             // that doesn't have valid credentials
         }).filter(c -> c != null).filter(c -> !verifierService.verifyEmailCredentials(USER_ID,
                 new EmailCredentials(c.getSystemEmailAddress(), c.getSystemPassword()))).map(c -> {
-                    // remove the password, we don't want to send decrypted password over the wire back to the user
-                    c.setSystemPassword(null);
-                    c.setOutlookObjectReferences(null);
-                    return c;
-                }).collect(Collectors.toList());
+            // remove the password, we don't want to send decrypted password over the wire back to the user
+            c.setSystemPassword(null);
+            c.setOutlookObjectReferences(null);
+            return c;
+        }).collect(Collectors.toList());
     }
 
     private Optional<AcmOutlookUser> getOutlookUser(String userName, String objectType) throws CalendarConfigurationException
@@ -412,8 +415,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param extendedService
-     *            the extendedService to set
+     * @param extendedService the extendedService to set
      */
     public void setExtendedService(CalendarAdminService extendedService)
     {
@@ -421,8 +423,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param userDao
-     *            the userDao to set
+     * @param userDao the userDao to set
      */
     public void setUserDao(UserDao userDao)
     {
@@ -430,8 +431,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param outlookFolderService
-     *            the outlookFolderService to set
+     * @param outlookFolderService the outlookFolderService to set
      */
     public void setOutlookFolderService(OutlookFolderService outlookFolderService)
     {
@@ -439,8 +439,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param participantsTypesForOutlookFolder
-     *            the participantsTypesForOutlookFolder to set
+     * @param participantsTypesForOutlookFolder the participantsTypesForOutlookFolder to set
      */
     public void setParticipantsTypesForOutlookFolder(List<String> participantsTypesForOutlookFolder)
     {
@@ -456,8 +455,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param defaultAccess
-     *            the defaultAccess to set
+     * @param defaultAccess the defaultAccess to set
      */
     public void setDefaultAccess(String defaultAccess)
     {
@@ -473,8 +471,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param approverAccess
-     *            the approverAccess to set
+     * @param approverAccess the approverAccess to set
      */
     public void setApproverAccess(String approverAccess)
     {
@@ -490,8 +487,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param assigneeAccess
-     *            the assigneeAccess to set
+     * @param assigneeAccess the assigneeAccess to set
      */
     public void setAssigneeAccess(String assigneeAccess)
     {
@@ -507,8 +503,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param followerAccess
-     *            the followerAccess to set
+     * @param followerAccess the followerAccess to set
      */
     public void setFollowerAccess(String followerAccess)
     {
@@ -516,8 +511,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param folderHandlers
-     *            the folderHandlers to set
+     * @param folderHandlers the folderHandlers to set
      */
     public void setFolderHandlers(Map<String, CalendarFolderHandler> folderHandlers)
     {
@@ -525,8 +519,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param recreateFoldersExecutor
-     *            the recreateFoldersExecutor to set
+     * @param recreateFoldersExecutor the recreateFoldersExecutor to set
      */
     public void setRecreateFoldersExecutor(TaskExecutor recreateFoldersExecutor)
     {
@@ -534,8 +527,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param verifierService
-     *            the verifierService to set
+     * @param verifierService the verifierService to set
      */
     public void setVerifierService(EmailCredentialsVerifierService verifierService)
     {
@@ -543,8 +535,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param cryptoUtils
-     *            the cryptoUtils to set
+     * @param cryptoUtils the cryptoUtils to set
      */
     public void setCryptoUtils(AcmCryptoUtils cryptoUtils)
     {
@@ -552,8 +543,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param encryptionProperties
-     *            the encryptionProperties to set
+     * @param encryptionProperties the encryptionProperties to set
      */
     public void setEncryptionProperties(AcmEncryptablePropertyEncryptionProperties encryptionProperties)
     {
@@ -561,8 +551,7 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
     }
 
     /**
-     * @param outlookFolderCreatorDao
-     *            the outlookFolderCreatorDao to set
+     * @param outlookFolderCreatorDao the outlookFolderCreatorDao to set
      */
     public void setOutlookFolderCreatorDao(AcmOutlookFolderCreatorDao outlookFolderCreatorDao)
     {
