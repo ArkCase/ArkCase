@@ -22,7 +22,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.personName = params.personName;
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
-            $scope.showNoField = params.showNoField;
+            $scope.hideNoField = params.hideNoField;
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
             });
