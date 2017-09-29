@@ -10,4 +10,12 @@
             <option value="lastYear" translate>dashboard.widgets.casesByStatus.timePeriod.lastYear</option>
         </select>
     </div>
+    <div class="form-group">
+        <label for="description">
+            <span translate>dashboard.widgets.casesByStatus.label.widgetDescription</span>
+        </label>
+        <input type="text" class="form-control" id="description" ng-model="config.description"
+               placeholder="{{'dashboard.widgets.casesByStatus.label.enterWidgetDescription' | translate}}">
+    </div>
+
 </form>
