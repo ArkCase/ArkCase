@@ -1,9 +1,13 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import static com.armedia.acm.plugins.person.model.PersonOrganizationConstants.PERSON_OBJECT_TYPE;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
@@ -32,18 +36,22 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.PersistenceException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = {
-        "/api/v1/plugin/people",
-        "/api/latest/plugin/people" })
+@RequestMapping(value = { "/api/v1/plugin/people", "/api/latest/plugin/people" })
 public class PeopleAPIController
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
+    private String facetedSearchPath;
+    private ObjectAssociationService objectAssociationService;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'PERSON', 'editPerson')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -55,8 +63,7 @@ public class PeopleAPIController
         {
             log.debug("Persist a Person: [{}];", in);
             return personService.savePerson(in, auth);
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Person: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
@@ -73,8 +80,7 @@ public class PeopleAPIController
         {
             log.debug("Persist a Person: [{}];", in);
             return personService.savePerson(in, pictures, auth);
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Person: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
@@ -92,8 +98,7 @@ public class PeopleAPIController
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
@@ -109,8 +114,7 @@ public class PeopleAPIController
         {
             Person person = personService.get(personId);
             return person;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.error("Error while retrieving Person with id: [{}]", personId, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve person.", e);
@@ -131,8 +135,7 @@ public class PeopleAPIController
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null, "Could not retrieve people.", e);
@@ -153,8 +156,7 @@ public class PeopleAPIController
 
             personService.insertImageForPerson(person, image, data.isDefault(), data.getDescription(), auth);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Person: [{}]", person, e);
             throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
@@ -174,8 +176,7 @@ public class PeopleAPIController
 
             personService.saveImageForPerson(personId, image, data.isDefault(), data.getEcmFile(), auth);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch (PipelineProcessException | PersistenceException e)
+        } catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Person with id: [{}]", personId, e);
             throw new AcmCreateObjectFailedException("Person", e.getMessage(), e);
@@ -208,13 +209,28 @@ public class PeopleAPIController
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Person", null,
                     String.format("Could not retrieve %s for person id[%s]", objectType, personId).toString(), e);
         }
+    }
+
+    @RequestMapping(value = "/search/{personId}", method = RequestMethod.GET)
+    public String searchOrganizations(@PathVariable("personId") Long personId, Authentication auth) throws UnsupportedEncodingException
+    {
+        List<ObjectAssociation> personAssociations = objectAssociationService.findByParentTypeAndId(PERSON_OBJECT_TYPE, personId);
+
+        List<String> filteredPersons = new ArrayList<>();
+        filteredPersons.add(Long.toString(personId));
+
+        filteredPersons.addAll(personAssociations.stream().map(oa -> Long.toString(oa.getTargetId())).collect(Collectors.toList()));
+
+        String organizationFilter = URLEncoder.encode(
+                filteredPersons.stream().map(o -> String.format("fq=\"-object_id_s\":%s", o)).collect(Collectors.joining("&")), "UTF-8");
+
+        return String.format(facetedSearchPath, organizationFilter);
     }
 
     public void setPersonService(PersonService personService)
@@ -225,5 +241,23 @@ public class PeopleAPIController
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
         this.executeSolrQuery = executeSolrQuery;
+    }
+
+    /**
+     * @param facetedSearchPath
+     *            the facetedSearchPath to set
+     */
+    public void setFacetedSearchPath(String facetedSearchPath)
+    {
+        this.facetedSearchPath = facetedSearchPath;
+    }
+
+    /**
+     * @param objectAssociationService
+     *            the objectAssociationService to set
+     */
+    public void setObjectAssociationService(ObjectAssociationService objectAssociationService)
+    {
+        this.objectAssociationService = objectAssociationService;
     }
 }
