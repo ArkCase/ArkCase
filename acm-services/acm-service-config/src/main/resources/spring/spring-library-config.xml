@@ -33,6 +33,15 @@
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
     </bean>
+    
+    <bean id="languageJsonSettings"  class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
 
     <bean id="lookupsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
@@ -50,12 +59,6 @@
                     <property name="configName" value="app"/>
                     <property name="configDescription" value="App"/>
                     <property name="acmApplication" ref="acmApplication"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="thisApp"/>
-                    <property name="configDescription" value="This App"/>
-                    <property name="properties" ref="lawEnforcementAppProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="admin"/>
@@ -251,6 +254,11 @@
                     <property name="configName" value="lookups"/>
                     <property name="configDescription" value="Lookups"/>
                     <property name="json" ref="lookupsJsonConfig"/>
+                </bean>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="languageSettings"/>
+                    <property name="configDescription" value="Language Setting"/>
+                    <property name="json" ref="languageJsonSettings"/>
                 </bean>
             </list>
         </constructor-arg>

@@ -2,7 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.model.LdapUser;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.junit.Before;
 import org.junit.Test;
 

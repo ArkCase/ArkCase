@@ -1,4 +1,4 @@
-package com.armedia.acm.services.users.dao.ldap;
+package com.armedia.acm.services.users.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.config.model.AcmConfig;
@@ -35,6 +35,7 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -49,11 +50,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public void init()
     {
-        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("localeSettings")).findFirst().get()
+        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst().get()
                 .getConfigAsJson();
         Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
                 .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.localeCode");
+        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.defaultLocale").toString();
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -126,7 +127,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (PersistenceException pe)
         {
-            log.error("Could not find user record: " + pe.getMessage(), pe);
+            log.error("Could not find user record: {}", pe.getMessage(), pe);
         }
 
         return null;
@@ -244,7 +245,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         if (existing == null)
         {
             getEntityManager().persist(in);
-            getEntityManager().flush();
         }
         return in;
     }
@@ -259,11 +259,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         if (existing == null)
         {
             getEntityManager().persist(userRole);
-            getEntityManager().flush();
             return userRole;
         }
 
-        existing.setUserRoleState(userRole.getUserRoleState());
+        if (!Objects.equals(existing.getUserRoleState(), userRole.getUserRoleState()))
+        {
+            existing.setUserRoleState(userRole.getUserRoleState());
+        }
+
         return userRole;
     }
 
@@ -322,6 +325,14 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                         + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
         allUsersInDirectory.setParameter("directoryName", directoryName);
         return allUsersInDirectory.getResultList();
+    }
+
+    @Transactional
+    public AcmUser persistUser(AcmUser acmUser)
+    {
+        acmUser.setLang(DEFAULT_LOCALE_CODE);
+        getEm().persist(acmUser);
+        return acmUser;
     }
 
     public EntityManager getEntityManager()

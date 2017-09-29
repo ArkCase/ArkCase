@@ -68,12 +68,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         var lookupPriorities = function() {
             ObjectLookupService.getPriorities().then(
                 function (priorities) {
-                    var options = [];
-                    _.each(priorities, function (priority) {
-                        var text = $translate.data(priority, "cases.comp.info.priorities");
-                        options.push({value: priority, text: text});
-                    });
-                    $scope.priorities = options;
+                    $scope.priorities = priorities;
                     return priorities;
                 }
             );
@@ -82,12 +77,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         var lookupCaseTypes = function() {
             CaseLookupService.getCaseTypes().then(
                 function (caseTypes) {
-                    var options = [];
-                    _.forEach(caseTypes, function (item) {
-                        var text = $translate.data(item, "cases.comp.info.caseTypes");
-                        options.push({value: item, text: text});
-                    });
-                    $scope.caseTypes = options;
+                    $scope.caseTypes = caseTypes;
                     return caseTypes;
                 }
             );

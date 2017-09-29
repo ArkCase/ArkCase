@@ -722,5 +722,44 @@
         "update.error": "Error updating configuration row."
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "Security - Ldap config grid"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "Correspondence Management Merge Fields grid"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "Correspondence Management Merge Fields version grid"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "Correspondence Management Templates grid"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "Correspondance Management Template Versions grid"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "Application - Labels Config grid"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "Forms - Forms Config grid"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "Workflows - Workflows Config grid"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "Workflows - Workflows Config history dialog grid"
+  },
+  "admin.comp.usersPicker": {
+    "title": "Select users"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "Organization Hierarchy"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS Configuration Grid"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "Email templates"
   }
 }

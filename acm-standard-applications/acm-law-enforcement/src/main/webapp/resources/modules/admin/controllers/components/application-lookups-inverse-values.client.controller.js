@@ -130,7 +130,8 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
         function fetchLookup() {
             ObjectLookupService.getLookup($scope.selectedLookupDef).then(function(lookup) {
                 // if we change the reference of $scope.lookup variable the UI is not updated, so we change the elements in the array
-                $scope.lookup.splice(0, $scope.lookup.length, ...lookup);
+                $scope.lookup.splice(0, $scope.lookup.length);
+                $scope.lookup.push.apply($scope.lookup, lookup);
             });
         }
 
