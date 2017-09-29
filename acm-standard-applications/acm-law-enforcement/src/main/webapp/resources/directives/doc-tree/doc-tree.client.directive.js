@@ -79,7 +79,7 @@
         "label": "Other"
       }
     ];
-});
+ });
  </file>
  </example>
  */
@@ -1150,15 +1150,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "created",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var versionDate = UtilDateService.getDatePart(node.data.created);
-                                $(element).text(versionDate);
+                                var createDate = $filter("date")(node.data.created, "shortDate");
+                                $(element).text(createDate);
                             }
                         }
                         , {
                             name: "modified",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var versionDate = UtilDateService.getDatePart(node.data.modified);
-                                $(element).text(versionDate);
+                                var modifiedDate = $filter("date")(node.data.modified, "shortDate");
+                                $(element).text(modifiedDate);
                             }
                         }
                         , {

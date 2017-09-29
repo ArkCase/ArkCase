@@ -85,13 +85,13 @@
           "name": "dueDate_tdt",
           "displayName": "dashboard.widgets.myCases.table.header.dueDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myCases.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ]
     },
@@ -146,7 +146,7 @@
           "name": "dueDate_tdt",
           "displayName": "dashboard.widgets.myTasks.table.header.dueDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>",
           "width": 70
         },
         {
@@ -210,13 +210,13 @@
           "name": "dueDate_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.dueDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.dueDate_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "modified_date_tdt",
           "displayName": "dashboard.widgets.myComplaints.table.header.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ]
     },

@@ -122,7 +122,7 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
                     phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
                 }
                 phone.type = 'phone';
-                phone.subType = data.phone.subType;
+                phone.subType = data.phone.subLookup;
                 phone.value = data.phone.value;
                 phone.description = data.phone.description;
 

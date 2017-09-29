@@ -98,7 +98,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);;
             $scope.localeSelected = userLocale;
 
-            LocaleService.useLocale($scope.localeSelected.code);
+            LocaleService.setLocaleData($scope.localeSelected);
         });
 
         $scope.changeLocale = function ($event, localeNew) {
@@ -108,7 +108,6 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                     userInfo.langCode = localeNew.code;
                     $scope.localeSelected = localeNew;
                     LocaleService.setLocaleData(localeNew);
-                    LocaleService.useLocale(localeNew.code);
                 }
                 , function (error) {
                     MessageService.error(error.data ? error.data : error);
