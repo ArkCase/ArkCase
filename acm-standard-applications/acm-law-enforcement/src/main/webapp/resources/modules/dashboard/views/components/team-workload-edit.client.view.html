@@ -11,4 +11,11 @@
             <option value="dueInAMonth" translate>dashboard.widgets.teamWorkload.dueDate.dueMonth</option>
         </select>
     </div>
+    <div class="form-group">
+        <label for="description">
+            <span translate>dashboard.widgets.teamWorkload.label.widgetDescription</span>
+        </label>
+        <input type="text" class="form-control" id="description" ng-model="config.description"
+               placeholder="{{'dashboard.widgets.teamWorkload.label.enterWidgetDescription' | translate}}">
+    </div>
 </form>
