@@ -216,8 +216,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = moment.utc(UtilDateService.isoToDate($scope.objectInfo.dueDate));
-            $scope.dateInfo.taskStartDate = moment.utc(UtilDateService.isoToDate($scope.objectInfo.taskStartDate));
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
+            $scope.dateInfo.taskStartDate = moment($scope.objectInfo.taskStartDate).format($translate.instant('common.defaultDateFormat'));
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
@@ -260,11 +260,12 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             saveTask();
         };
         $scope.updateStartDate = function () {
-            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.taskStartDate));
+            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.taskStartDate)).format($translate.instant('common.defaultDateFormat'));
             saveTask();
         };
         $scope.updateDueDate = function () {
-            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.dueDate));
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveTask();
         };
         $scope.updateOwningGroup = function () {
