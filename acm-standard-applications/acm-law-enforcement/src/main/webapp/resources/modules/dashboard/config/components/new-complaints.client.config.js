@@ -10,6 +10,11 @@ angular.module('dashboard.new-complaints', ['adf.provider'])
                 controllerAs: 'newComplaints',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/new-complaints.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
                 edit: {
                     templateUrl: 'modules/dashboard/views/components/new-complaints-edit.client.view.html'
                 }

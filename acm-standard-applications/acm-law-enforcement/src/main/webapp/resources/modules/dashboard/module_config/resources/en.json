@@ -10,7 +10,11 @@
         "description": "Displays active case files by queue",
         "xAxis": "Queues",
         "yAxis": "Number of Case Files",
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "label": {
+          "widgetDescription": "Description",
+          "enterWidgetDescription": "Enter widget description"
+        }
       },
       "casesByStatus": {
         "title": "Cases By Status",
@@ -21,6 +25,10 @@
           "lastMonth": "Last Month",
           "lastYear": "Last Year",
           "all": "All"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "noDataMessage": "Currently there are no cases info"
       },
@@ -41,6 +49,10 @@
           },
           "overdue.tooltip": "Case is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         }
       },
       "myComplaints": {
@@ -60,6 +72,10 @@
           "overdue.tooltip": "Complaint is Overdue",
           "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         }
       },
       "myTasks": {
@@ -96,6 +112,10 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
+        },
         "noDataMessage": "Currently there are no complaints info"
       },
       "newCases": {
@@ -113,6 +133,10 @@
           "dueWeek": "Due in 7 Days",
           "dueMonth": "Due in Month",
           "all": "All"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "noDataMessage": "Currently there are no team tasks info"
       },
@@ -140,8 +164,8 @@
           "description": "Display the current temperature of a city",
           "location": "Location",
           "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-          "weatherWidgetDescription":"Description",
-          "enterWeatherWidgetDescription": "Enter widget description"
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "title": "Weather",
         "noDataMessage": "Currently there are no weather info"
@@ -153,8 +177,8 @@
           "description": "Displays a RSS/Atom feed",
           "feedUrl": "Feed Url",
           "insertUrl": "Please insert a feed url in the widget configuration",
-          "newsWidgetDescription":"Description",
-          "enterNewsWidgetDescription": "Enter widget description"
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         },
         "title": "News",
         "noDataMessage": "Currently there is no RSS/info"

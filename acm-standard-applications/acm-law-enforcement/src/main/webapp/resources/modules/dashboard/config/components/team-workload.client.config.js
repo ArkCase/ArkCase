@@ -10,6 +10,11 @@ angular.module('dashboard.team-workload', ['adf.provider'])
                 controllerAs: 'teamWorkload',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/team-workload.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
                 edit: {
                     templateUrl: 'modules/dashboard/views/components/team-workload-edit.client.view.html'
                 }
