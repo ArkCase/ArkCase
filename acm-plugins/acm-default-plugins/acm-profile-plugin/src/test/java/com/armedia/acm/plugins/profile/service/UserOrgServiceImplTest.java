@@ -7,8 +7,8 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -28,9 +28,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.TestCase.*;
-import static org.easymock.EasyMock.*;
-
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 
 public class UserOrgServiceImplTest extends EasyMockSupport
 {

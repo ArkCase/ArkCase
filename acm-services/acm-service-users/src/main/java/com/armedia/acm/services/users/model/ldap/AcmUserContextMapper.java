@@ -1,15 +1,11 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.model.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class AcmUserContextMapper implements ContextMapper
 {
@@ -66,16 +62,6 @@ public class AcmUserContextMapper implements ContextMapper
         user.setUserPrincipalName(MapperUtils.getAttribute(adapter, "userPrincipalName"));
         user.setUid(MapperUtils.getAttribute(adapter, "uid"));
         user.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getAllUsersSortingAttribute()));
-
-        Set<String> ldapGroupsForUser = new HashSet<>();
-        if (adapter.attributeExists("memberOf"))
-        {
-            String[] groupsUserIsMemberOf = adapter.getStringAttributes("memberOf");
-            ldapGroupsForUser = MapperUtils.mapAttributes(groupsUserIsMemberOf, MapperUtils.getRdnMappingFunction("cn"))
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toSet());
-        }
-        user.setLdapGroups(ldapGroupsForUser);
         user.setPasswordExpirationDate(Directory.valueOf(acmLdapSyncConfig.getDirectoryType()).getPasswordExpirationDate(adapter));
         return user;
     }

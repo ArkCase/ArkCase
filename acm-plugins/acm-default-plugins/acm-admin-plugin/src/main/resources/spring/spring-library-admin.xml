@@ -97,7 +97,7 @@
         <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
         <property name="applicationRolesPrivilegesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
-        <property name="userDao" ref="acmUserDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <task:scheduler id="historyCleanScheduler" pool-size="1"/>

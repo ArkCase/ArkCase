@@ -1,6 +1,6 @@
 package com.armedia.acm.services.users.service.ldap;
 
-import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,23 +17,21 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.Matchers.isIn;
 import static org.junit.Assert.assertThat;
 
-public class AcmLdapSyncConfigTest
+public class AcmRoleToGroupMappingTest
 {
-    private AcmLdapSyncConfig unit;
+    private AcmRoleToGroupMapping unit;
     private Map<String, String> roleToGroupMap;
 
     @Before
     public void setup()
     {
-        unit = new AcmLdapSyncConfig();
 
         roleToGroupMap = new HashMap<>();
         roleToGroupMap.put("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV,ARKCASE_ADMINISTRATOR");
         roleToGroupMap.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
                 + "ARKCASE_ADMINISTRATOR");
-
-        unit.setRoleToGroupMap(roleToGroupMap);
+        unit = new AcmRoleToGroupMapping(roleToGroupMap);
     }
 
     @Test
@@ -103,5 +101,4 @@ public class AcmLdapSyncConfigTest
             });
         });
     }
-
 }

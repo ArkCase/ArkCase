@@ -1,7 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.LdapUser;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import java.util.List;
 import java.util.Map;

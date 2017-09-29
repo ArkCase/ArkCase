@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import freemarker.template.Configuration;
 import freemarker.template.Template;

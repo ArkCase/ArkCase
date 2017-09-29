@@ -129,6 +129,16 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             $scope.gridOptions.data = objectInfo.organizationAssociations;
         };
 
+        $scope.getPrimaryContact = function(organizationAssiciation)
+        {
+            var primaryContact = organizationAssiciation.organization.primaryContact;
+            if (!!primaryContact) {
+                return (primaryContact.person.givenName.trim() + ' ' + primaryContact.person.familyName.trim()).trim();
+            }
+
+            return '';
+        };
+
         $scope.addOrganization = function () {
             var params = {
                 showSetPrimary: true,

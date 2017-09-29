@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.armedia.acm.services.users.dao.ldap;
+package com.armedia.acm.services.users.dao;
 
 import java.util.List;
 
