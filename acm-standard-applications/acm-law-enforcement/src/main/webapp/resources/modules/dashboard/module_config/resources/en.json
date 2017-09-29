@@ -72,6 +72,10 @@
           "overdue.tooltip": "Complaint is Overdue",
           "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         }
       },
       "myTasks": {
