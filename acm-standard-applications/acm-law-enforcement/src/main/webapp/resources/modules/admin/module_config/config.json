@@ -15,10 +15,11 @@
   "components": [
     {
       "id": "securityLdapConfig",
-      "title": "Security - Ldap config grid",
+      "title": "admin.comp.securityLdapConfig.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "directoryTypes": [
         {
           "name": "OpenLDAP",
@@ -105,10 +106,11 @@
     },
     {
       "id": "correspondenceManagementMergeFields",
-      "title": "Correspondence Management Merge Fields grid",
+      "title": "admin.comp.correspondenceManagementMergeFields.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "fieldId",
@@ -151,10 +153,11 @@
     },
     {
       "id": "correspondenceManagementMergeFieldsVersions",
-      "title": "Correspondence Management Merge Fields version grid",
+      "title": "admin.comp.correspondenceManagementMergeFieldsVersions.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "mergingActiveVersion",
@@ -178,7 +181,7 @@
           "name": "modified",
           "displayName": "admin.correspondenceManagement.mergefields.version.grid.modified",
           "visible": true,
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -199,13 +202,14 @@
     },
     {
       "id": "correspondenceManagementTemplates",
-      "title": "Correspondence Management Templates grid",
+      "title": "admin.comp.correspondenceManagementTemplates.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
       "enableRowSelection": true,
       "enableRowHeaderSelection": true,
       "enableFullRowSelection": true,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -237,7 +241,7 @@
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "width": 120
         },
@@ -277,10 +281,11 @@
     },
     {
       "id": "correspondenceManagementTemplateVersions",
-      "title": "Correspondance Management Template Versions grid",
+      "title": "admin.comp.correspondenceManagementTemplateVersions.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "templateVersionActive",
@@ -324,7 +329,7 @@
           "name": "modified",
           "displayName": "admin.correspondenceManagement.templates.grid.modified",
           "visible": true,
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "width": 100
         },
@@ -346,10 +351,11 @@
     },
     {
       "id": "labelsConfig",
-      "title": "Application - Labels Config grid",
+      "title": "admin.comp.labelsConfig.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -409,8 +415,9 @@
     },
     {
       "id": "plainFormsConfig",
-      "title": "Forms - Forms Config grid",
+      "title": "admin.comp.plainFormsConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "formsDropdown": [
         {
@@ -451,8 +458,9 @@
     },
     {
       "id": "workflowsConfig",
-      "title": "Workflows - Workflows Config grid",
+      "title": "admin.comp.workflowsConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "columnDefs": [
         {
@@ -492,13 +500,13 @@
           "name": "created",
           "displayName": "Created",
           "visible": false,
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>"
         },
         {
           "name": "modified",
           "displayName": "admin.workflows.config.grid.modified",
           "visible": true,
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -517,8 +525,9 @@
     },
     {
       "id": "workflowsHistoryDialogConfig",
-      "title": "Workflows - Workflows Config history dialog grid",
+      "title": "admin.comp.workflowsHistoryDialogConfig.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "columnDefs": [
         {
@@ -559,7 +568,7 @@
           "name": "modified",
           "displayName": "admin.workflows.config.grid.modified",
           "visible": true,
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -573,8 +582,9 @@
     },
     {
       "id": "usersPicker",
-      "title": "Select users",
+      "title": "admin.comp.usersPicker.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -607,7 +617,7 @@
           "name": "modified_date_tdt",
           "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -621,8 +631,9 @@
     },
     {
       "id": "orgHierarchy",
-      "title": "Organization Hierarchy",
+      "title": "admin.comp.orgHierarchy.title",
       "enabled": "true",
+      "configurable": true,
       "topLevelGroupTypes": [
         "LDAP_GROUP",
         "ADHOC_GROUP"
@@ -630,10 +641,11 @@
     },
     {
       "id": "cmisConfiguration",
-      "title": "CMIS Configuration Grid",
+      "title": "admin.comp.cmisConfiguration.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "id",
@@ -729,10 +741,11 @@
     },
     {
       "id": "emailTemplates",
-      "title": "Email templates",
+      "title": "admin.comp.emailTemplates.title",
       "enabled": true,
       "type": "grid",
       "enableFiltering": false,
+      "configurable": true,
       "columnDefs": [
         {
           "name": "templateName",
@@ -767,7 +780,7 @@
           "visible": false,
           "displayName": "admin.security.emailTemplates.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "width": 150,

@@ -12,7 +12,7 @@ public enum Directory
 {
     activedirectory("yyyyMMddHHmmss.0VV", MapperUtils.convertFileTimeTimestampToDate,
             MapperUtils.activeDirectoryPasswordToAttribute),
-    openldap("yyyyMMddHHmmssVV", MapperUtils.calculatePasswordExpirationDateByShaddowAccount,
+    openldap("yyyyMMddHHmmssVV", MapperUtils.calculatePasswordExpirationDateByShadowAccount,
             MapperUtils.openLdapPasswordToAttribute);
 
     private final String datePattern;

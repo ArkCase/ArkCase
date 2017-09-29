@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.web.api.group;
 
-
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -22,17 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({"/api/v1/ldap", "/api/latest/ldap"})
+@RequestMapping({ "/api/v1/ldap", "/api/latest/ldap" })
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
     private AcmGroupEventPublisher acmGroupEventPublisher;
 
-
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
@@ -45,7 +42,7 @@ public class LdapGroupAPIController extends SecureLdapController
         }
         catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate group name: {}", group.getName(), e);
+            log.error("Duplicate group name [{}]", group.getName(), e);
             AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
                     AcmGroupType.LDAP_GROUP.name(), "groupName", e);
             acmAppErrorJsonMsg.putExtra("group", group);
@@ -53,7 +50,7 @@ public class LdapGroupAPIController extends SecureLdapController
         }
         catch (Exception e)
         {
-            log.error("Adding new LDAP group:{} failed!", group.getName(), e);
+            log.error("Adding new LDAP group [{}] failed!", group, e);
             throw new AcmUserActionFailedException("create new LDAP group", null, null, "Adding new LDAP group failed", e);
         }
     }
@@ -61,8 +58,7 @@ public class LdapGroupAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
-                                       @PathVariable String parentGroupName)
+    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory, @PathVariable String parentGroupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
 
@@ -73,7 +69,7 @@ public class LdapGroupAPIController extends SecureLdapController
         }
         catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate sub-group name: {}", group.getName(), e);
+            log.error("Duplicate sub-group name [{}]", group.getName(), e);
             AcmAppErrorJsonMsg acmAppErrorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!",
                     "LDAP_GROUP", "groupName", e);
             acmAppErrorJsonMsg.putExtra("subgroup", group);
@@ -82,13 +78,14 @@ public class LdapGroupAPIController extends SecureLdapController
         catch (Exception e)
         {
             log.error("Adding subgroup:{} within LDAP group:{} failed!", group.getName(), parentGroupName, e);
-            throw new AcmUserActionFailedException("create new LDAP subgroup", null, null,
-                    "Adding new LDAP subgroup failed!", e);
+            throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
         }
     }
 
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeLdapGroup(@PathVariable String directory, @PathVariable String groupName) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+    public ResponseEntity<?> removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupName") String groupName)
+            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+
     {
         AcmGroup source = getLdapGroupService().getGroupDao().findByName(groupName);
         checkIfLdapManagementIsAllowed(directory);
@@ -105,7 +102,6 @@ public class LdapGroupAPIController extends SecureLdapController
             throw new AcmUserActionFailedException("Delete", "LDAP group", -1L, "Removing LDAP group failed!", e);
         }
     }
-
 
     public LdapGroupService getLdapGroupService()
     {
