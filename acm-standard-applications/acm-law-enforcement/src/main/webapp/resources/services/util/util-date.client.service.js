@@ -130,6 +130,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract date part from an ISO Datetime in default format.
              */
             , getDatePart: function (isoDateTime, replacement) {
+                console.log("WARNING: Util.DateService.getDatePart() is obsolete, because it is not i18n compliant.");
                 return Service.goodIsoDate(isoDateTime, Service.defaultDateFormat, replacement);
             }
 
@@ -145,6 +146,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract time part from an ISO Datetime in default format.
              */
             , getTimePart: function (isoDateTime, replacement) {
+                console.log("WARNING: Util.DateService.getTimePart() is obsolete, because it is not i18n compliant.");
                 return Service.goodIsoDate(isoDateTime, Service.defaultTimeFormat, replacement);
             }
 

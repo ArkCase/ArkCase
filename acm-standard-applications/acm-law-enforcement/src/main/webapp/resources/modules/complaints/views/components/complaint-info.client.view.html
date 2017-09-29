@@ -23,7 +23,7 @@
             <!--<b>Priority: </b><a href="#" editable-select="objectInfo.priority" e-ng-options="p as p for p in priorities">{{ objectInfo.priority  || 'Unknown'}}</a>-->
             <!--<select ng-model="myselect" ng-options="o as o for o in myoptions"></select>-->
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{objectInfo.created | date: ('common.defaultDateUIFormat' | translate)}}
+                <div class="h4 font-bold">{{objectInfo.created | date: 'shortDate' }}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.created.label</span></small>
             </div>
@@ -67,7 +67,7 @@
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{ (dateInfo.dueDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown' }}</a>
+                        {{ (dateInfo.dueDate | date: 'shortDate' ) || 'Unknown' }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>
             </div>

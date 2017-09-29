@@ -14,7 +14,6 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.users.model.AcmUserActionName;
-
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,8 +106,7 @@ public class ROIService extends FrevvoFormAbstractService
             getUserActionExecutor().execute(complaint.getComplaintId(), AcmUserActionName.LAST_COMPLAINT_MODIFIED,
                     getAuthentication().getName());
 
-        }
-        else if ("case".equals(type))
+        } else if ("case".equals(type))
         {
             CaseFile caseFile = caseFileDao.find(roiForm.getReportDetails().getCaseId());
 
@@ -189,8 +187,7 @@ public class ROIService extends FrevvoFormAbstractService
     }
 
     /**
-     * @param complaintDao
-     *            the complaintDao to set
+     * @param complaintDao the complaintDao to set
      */
     public void setComplaintDao(ComplaintDao complaintDao)
     {
@@ -206,8 +203,7 @@ public class ROIService extends FrevvoFormAbstractService
     }
 
     /**
-     * @param caseFileDao
-     *            the caseFileDao to set
+     * @param caseFileDao the caseFileDao to set
      */
     public void setCaseFileDao(CaseFileDao caseFileDao)
     {
