@@ -73,7 +73,9 @@ public class ExchangeTypesConverter
         OlsonTimeZoneDefinition startTimeZoneDefinition = new OlsonTimeZoneDefinition(
                 TimeZone.getTimeZone(calendarEvent.getStart().getZone()));
         appointment.setStartTimeZone(startTimeZoneDefinition);
-        Date startDate = Date.from(calendarEvent.getStart().toInstant());
+        Date startDate = calendarEvent.isAllDayEvent()
+                ? Date.from(calendarEvent.getStart().toLocalDate().atStartOfDay(calendarEvent.getStart().getZone()).toInstant())
+                : Date.from(calendarEvent.getStart().toInstant());
         appointment.setStart(startDate);
         if (calendarEvent.getEnd() == null)
         {
@@ -81,7 +83,10 @@ public class ExchangeTypesConverter
         }
         OlsonTimeZoneDefinition endTimeZoneDefinition = new OlsonTimeZoneDefinition(TimeZone.getTimeZone(calendarEvent.getEnd().getZone()));
         appointment.setEndTimeZone(endTimeZoneDefinition);
-        appointment.setEnd(Date.from(calendarEvent.getEnd().toInstant()));
+        Date endDate = calendarEvent.isAllDayEvent()
+                ? Date.from(calendarEvent.getStart().toLocalDate().atStartOfDay(calendarEvent.getStart().getZone()).plusDays(1).toInstant())
+                : Date.from(calendarEvent.getEnd().toInstant());
+        appointment.setEnd(endDate);
         appointment.setIsAllDayEvent(calendarEvent.isAllDayEvent());
 
         processRecurrence(appointment, calendarEvent, updateRecurrence);
@@ -469,8 +474,7 @@ public class ExchangeTypesConverter
             }
             if (recurrence.getStartDate() != null)
             {
-                recurrenceDetails
-                        .setStartAt(ZonedDateTime.ofInstant(recurrence.getStartDate().toInstant(), startTimeZone));
+                recurrenceDetails.setStartAt(ZonedDateTime.ofInstant(recurrence.getStartDate().toInstant(), startTimeZone));
             }
             if (recurrence.getEndDate() != null)
             {
