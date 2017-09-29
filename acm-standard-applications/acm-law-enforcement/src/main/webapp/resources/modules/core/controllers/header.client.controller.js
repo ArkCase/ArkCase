@@ -87,7 +87,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         };
 
         // set application language for the user
-        var localeSettingsPromise = LocaleService.getSettings()
+        var localeSettingsPromise = LocaleService.getSettings();
         var userInfoPromise = Authentication.queryUserInfo();
         
         $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
@@ -95,10 +95,11 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
 
             var userLocale = _.findWhere(result[0].locales, {code: userInfo.langCode});
 
-            $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);;
+            $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);
             $scope.localeSelected = userLocale;
 
             LocaleService.setLocaleData($scope.localeSelected);
+            LocaleService.useLocale($scope.localeSelected.code);
         });
 
         $scope.changeLocale = function ($event, localeNew) {
@@ -108,6 +109,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                     userInfo.langCode = localeNew.code;
                     $scope.localeSelected = localeNew;
                     LocaleService.setLocaleData(localeNew);
+                    LocaleService.useLocale(localeNew.code);
                 }
                 , function (error) {
                     MessageService.error(error.data ? error.data : error);
@@ -117,6 +119,12 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         };
 
         // TODO delete UPDATE button and this function if not needed
+        //
+        // jwu: Update function is needed.
+        //      1. Very first time ArkCase user only see English locale until 'Update' button is pressed
+        //      2. New locale added may not show up in the list until updated
+        //      We may hide the button with some trick, like do it in background with timeout, for example.
+        //      I voted for simpler code to let user do it himself.
         $scope.updateLocales = function($event) {
             $event.preventDefault();
             localeSettingsPromise.then(function(data) {

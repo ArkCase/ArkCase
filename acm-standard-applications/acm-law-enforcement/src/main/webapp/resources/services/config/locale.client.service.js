@@ -198,7 +198,6 @@ angular.module('services').config(function ($provide) {
             }
             var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
             cacheLocale.set(localeData);
-            useLocale(localeData.code);
         };
 
         /**
@@ -211,7 +210,7 @@ angular.module('services').config(function ($provide) {
          *
          * @param {String} localeCode  Locale code
          */
-        function useLocale(localeCode) {
+        Service.useLocale = function(localeCode) {
             $translate.use(localeCode);
             dynamicLocale.set(localeCode);
         };
