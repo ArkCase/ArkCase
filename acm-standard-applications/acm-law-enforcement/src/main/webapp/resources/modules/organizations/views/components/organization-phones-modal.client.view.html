@@ -22,6 +22,7 @@
                     class="required-asterisk">*</span>
                 <select id="phoneTypes" class="input-md form-control" required="required"
                         ng-model="phone.subLookup"
+                        ng-init="phone.subLookup = phone.subType"
                         ng-options="item.key as item.value | translate for item in phoneTypes"></select>
             </div>
         </div>

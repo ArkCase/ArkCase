@@ -605,12 +605,14 @@
     }
   },
   "common.addOrganization": {
-    "title": "Add Organization",
+    "title": "Add Parent Organization",
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
     "description": "Description",
     "type.label": "Organization Association Type",
+    "type.label.default.text": "No parent Organization",
+    "type.label.text": "Parent Organization",
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Organization",
     "setPrimary.label": "Set As Primary?",
@@ -632,7 +634,7 @@
     "radioNo.text": "No"
   },
   "common.editOrganization": {
-    "title": "Edit Organization"
+    "title": "Edit Parent Organization"
   },
   "common.newOrganization": {
     "title": "Organization",
