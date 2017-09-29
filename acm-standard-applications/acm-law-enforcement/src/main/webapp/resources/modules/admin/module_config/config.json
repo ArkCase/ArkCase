@@ -380,6 +380,34 @@
       ]
     },
     {
+      "id": "labelsChooser",
+      "title": "Application - Labels Config grid",
+      "enabled": true,
+      "type": "grid",
+      "enableFiltering": false,
+      "columnDefs": [
+        {
+          "name": "id",
+          "displayName": "admin.application.labels.config.data.id",
+          "visible": true,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "value",
+          "displayName": "admin.application.labels.config.data.value",
+          "visible": true,
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5
+    },
+    {
       "id": "plainFormsConfig",
       "title": "Forms - Forms Config grid",
       "enabled": true,
