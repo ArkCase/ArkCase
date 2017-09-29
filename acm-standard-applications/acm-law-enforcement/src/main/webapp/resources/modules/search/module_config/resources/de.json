@@ -2,21 +2,21 @@
   "search": {
     "title": "Suche",
     "search.btn": "Suche",
-    "export.btn": "de_Export",
-    "search.placeholder": "de_Type in to search",
+    "export.btn": "Export",
+    "search.placeholder": "In die Suche eingeben",
     "menus": {
       "leftnav.item": "Suche"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "de_ID",
-          "name": "de_Name",
-          "type": "de_Type",
-          "title": "de_Title",
-          "parent": "de_Parent",
-          "assignee": "de_Assignee",
-          "modified": "de_Modified"
+          "id": "ID",
+          "name": "Name",
+          "type": "Typ",
+          "title": "Titel",
+          "parent": "Elternteil",
+          "assignee": "Bevollmächtigter",
+          "modified": "modifiziert"
         }
       }
     }

@@ -24,7 +24,7 @@
     "created.label": "作成日",
     "priority.label": "優先",
     "assignee.label": "割り当て先",
-    "owningGroup.label": "グループに所属",
+    "owningGroup.label": "群に所属",
     "dueDate.label": "期限日",
     "priorities": {
       "low%": "低い",
@@ -36,7 +36,7 @@
     "caseTypes": {
       "agricultural%": "農業",
       "arson%": "放火",
-      "backgroundInvestigation%": "バックグラウンド調査",
+      "backgroundInvestigation%": "背景調査",
       "benefitsAppeal%": "福祉上訴",
       "businessDispute%": "より良いビジネス紛争",
       "clinicalFraud%": "臨床調査者の詐欺",
@@ -195,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "ノート",
+    "title": "注解",
     "table.columns": {
       "note": "ja_Note",
       "created": "ja_Created",
@@ -203,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "タスク",
+    "title": "任務",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -389,10 +389,10 @@
       "details.label": "詳細",
       "people.label": "人員",
       "organizations.label": "組織",
-      "documents.label": "ファイル",
+      "documents.label": "文書",
       "participants.label": "参加者",
-      "notes.label": "ノート",
-      "tasks.label": "タスク",
+      "notes.label": "注解",
+      "tasks.label": "任務",
       "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
