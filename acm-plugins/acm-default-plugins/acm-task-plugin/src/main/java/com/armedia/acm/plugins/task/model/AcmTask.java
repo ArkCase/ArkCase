@@ -53,7 +53,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private Integer percentComplete;
     private String details;
 
-    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date createDate;
 
     @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
