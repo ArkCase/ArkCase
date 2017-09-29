@@ -10,13 +10,18 @@
  * Loads cases in the "My Cases" widget.
  */
 angular.module('dashboard.my-cases')
-    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
-        function ($scope, $translate, Authentication, DashboardService, ConfigService) {
+    .controller('Dashboard.MyCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params',
+        function ($scope, $translate, Authentication, DashboardService, ConfigService, params) {
             var vm = this;
             vm.config = null;
             var userInfo = null;
             //var userGroups = null;
             var userGroupList = null;
+
+            if(params.description !== undefined) {
+                $scope.$parent.model.description = " - " + params.description;
+            }
+
             ConfigService.getComponentConfig("dashboard", "myCases").then(function (config) {
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;
