@@ -49,6 +49,10 @@
           },
           "overdue.tooltip": "Case is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
+        },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
         }
       },
       "myComplaints": {
