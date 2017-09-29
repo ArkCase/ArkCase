@@ -154,6 +154,10 @@
             "taskName": "Task Name"
           }
         },
+        "label": {
+          "widgetDescription":"Description",
+          "enterWidgetDescription": "Enter widget description"
+        },
         "noDataMessage": "Currently there is no workflow report info"
       },
       "weather": {
