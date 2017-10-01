@@ -1,7 +1,7 @@
 <section class="scrollable">
-    <header class="dk header">
-        <div class="wrapper">
-            <div class="input-group">
+    <header class="dk header" ng-show="treeConfig.search || treeConfig.refresh || treeConfig.sorters || treeConfig.filters">
+        <div class="wrapper" ng-show="treeConfig.search">
+            <div class="input-group" ng-show="treeConfig.search">
                 <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
                        placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
             <span class="input-group-btn">
@@ -12,7 +12,7 @@
             </div>
         </div>
 
-        <div class="btn-group inline select pull-right">
+        <div class="btn-group inline select pull-right" ng-show="treeConfig.refresh">
             <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
                 <span>
                 <i class="fa fa-refresh"></i>

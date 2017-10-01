@@ -857,6 +857,77 @@
       ]
     }
   ],
+
+  "tree": {
+    "pageSize": 3,
+    "filters": false,
+    "sorters": false,
+    "refresh": false,
+    "search": false,
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/security",
+        "label": "admin.security.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/security/access",
+        "label": "admin.security.functionalAccessControl",
+        "components": [
+          "security.functional-access-control"
+        ]
+      },
+      {
+        "type": "p/security/ldap",
+        "label": "admin.security.ldapConfig",
+        "components": [
+          "security.ldap-config"
+        ]
+      },
+      {
+        "type": "p/security/org",
+        "label": "admin.security.organizationalHierarchy.title",
+        "components": [
+          "security.organizational-hierarchy"
+        ]
+      },
+      {
+        "type": "p/dashboard",
+        "label": "admin.dashboard.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/dashboard/cfg",
+        "label": "admin.dashboard.config",
+        "components": [
+          "dashboard.config"
+        ]
+      },
+      {
+        "type": "p/docMan",
+        "label": "admin.documentManagement.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/docMan/cmis",
+        "label": "admin.documentManagement.cmisConfiguration",
+        "components": [
+          "cmis-configuration"
+        ]
+      }
+    ]
+  },
   "adminTree": [
     {
       "title": "admin.security.title",
