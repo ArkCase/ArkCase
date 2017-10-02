@@ -93,7 +93,7 @@
                             <label for="server" translate>
                                 admin.security.emailConfiguration.emailConfigForm.server.label
                             </label>
-                            <input type="text" name="server" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.server.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.host" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" required>
+                            <input type="text" name="server" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.server.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.host" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                         </div>
                         <div class="col-lg-2 form-group">
                             <label for="port" translate>
@@ -137,14 +137,14 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-2 form-group">
-                            <button class="btn btn-sm btn-primary form-control" name="validate" ng-click="validateSmtpConfiguration(emailSenderConfigDataModel)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp' && emailSenderConfigDataModel.host==''">
+                            <button class="btn btn-sm btn-primary form-control" name="validate" ng-click="validateSmtpConfiguration(emailSenderConfigDataModel)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.validate.button
                                 </span>
                             </button>
                         </div>
                         <div class="col-lg-4 form-group">
-                             <span class="text-danger" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && !isSmtpValid && emailSenderConfigDataModel.host == ''">
+                             <span class="text-danger" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && !isSmtpValid">
                                 <i class="fa fa-times"></i>
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.smtpNotValid
