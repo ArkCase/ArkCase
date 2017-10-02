@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.addressable.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -36,7 +37,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.addressable.model.ContactMethod")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class ContactMethod implements Serializable, AcmEntity
+public class ContactMethod implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 1827685289454605556L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -106,6 +107,12 @@ public class ContactMethod implements Serializable, AcmEntity
         {
             setStatus("ACTIVE");
         }
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return ContactMethodConstants.OBJECT_TYPE;
     }
 
     @XmlTransient

@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.objectdiff.AcmObjectChange;
+import com.armedia.acm.objectdiff.model.AcmObjectModified;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-
-import java.util.List;
 
 public class PersonEventPublisher implements ApplicationEventPublisherAware
 {
@@ -52,8 +50,8 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
             personPersistenceEvent.setEventAction("created");
         } else
         {
-            AcmObjectChange acmObjectChange = personDiff.compare(oldPerson, source);
-            System.out.println(acmObjectChange);
+            AcmObjectModified acmObjectModified = personDiff.compare(oldPerson, source);
+            System.out.println(acmObjectModified);
             personPersistenceEvent.setEventAction("updated");
         }
         personPersistenceEvent.setSucceeded(succeeded);

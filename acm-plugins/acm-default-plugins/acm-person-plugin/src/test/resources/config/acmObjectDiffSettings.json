@@ -1,7 +1,7 @@
 [
   {
     "className": "com.armedia.acm.plugins.person.model.Person",
-    "path": "person",
+    "name": "person",
     "id": [
       "id"
     ],
@@ -38,7 +38,7 @@
   },
   {
     "className": "com.armedia.acm.plugins.addressable.model.PostalAddress",
-    "path": "address",
+    "name": "address",
     "id": [
       "id"
     ],
@@ -55,7 +55,7 @@
   },
   {
     "className": "com.armedia.acm.plugins.person.model.Identification",
-    "path": "identification",
+    "name": "identification",
     "id": [
       "identificationID"
     ],
@@ -68,7 +68,7 @@
   },
   {
     "className": "com.armedia.acm.plugins.addressable.model.ContactMethod",
-    "path": "contactMethod",
+    "name": "contactMethod",
     "id": [
       "id"
     ],
@@ -80,7 +80,7 @@
   },
   {
     "className": "com.armedia.acm.plugins.person.model.PersonAlias",
-    "path": "personAlias",
+    "name": "personAlias",
     "id": [
       "id"
     ],

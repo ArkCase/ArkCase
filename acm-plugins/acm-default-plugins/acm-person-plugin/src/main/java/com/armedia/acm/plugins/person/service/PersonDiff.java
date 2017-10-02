@@ -1,16 +1,8 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.objectdiff.*;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
-import com.armedia.acm.plugins.addressable.model.PostalAddress;
-import com.armedia.acm.plugins.person.model.Identification;
-import com.armedia.acm.plugins.person.model.IdentificationConstants;
+import com.armedia.acm.objectdiff.model.AcmObjectModified;
+import com.armedia.acm.objectdiff.service.AcmObjectDiffUtils;
 import com.armedia.acm.plugins.person.model.Person;
-import org.apache.commons.io.IOUtils;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 public class PersonDiff {
 
@@ -23,7 +15,7 @@ public class PersonDiff {
      * @param updatedPerson
      * @return
      */
-    public AcmObjectChange compare(Person oldPerson, Person updatedPerson) {
+    public AcmObjectModified compare(Person oldPerson, Person updatedPerson) {
         if (!acmObjectChangeUtils.idMatches(oldPerson, updatedPerson)) {
             throw new IllegalArgumentException("oldPerson don't have same id as updatedPerson");
         }
@@ -31,7 +23,7 @@ public class PersonDiff {
         //check changes in person properties which are primitive types or their wrappers
 
 
-        AcmObjectChange objectChange =
+        AcmObjectModified objectChange =
                 acmObjectChangeUtils.getObjectChange(null, oldPerson, updatedPerson);
 
 
