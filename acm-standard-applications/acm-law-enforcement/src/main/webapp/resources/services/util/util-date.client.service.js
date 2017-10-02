@@ -196,7 +196,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              */
             , convertToCurrentTime: function (date) {
                 var now = new Date();
-                var convertedTime = new Date(date.setTime(date.getTime() + (now.getHours()*60*60*1000) + (now.getMinutes()*60*1000) + (now.getSeconds()*1000)));
+                var convertedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
                 return convertedTime;
             }
 
