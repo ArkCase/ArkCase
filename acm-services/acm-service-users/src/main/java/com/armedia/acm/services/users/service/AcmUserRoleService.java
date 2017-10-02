@@ -40,7 +40,7 @@ public class AcmUserRoleService
             AcmUserRole userRole = new AcmUserRole();
             userRole.setUserId(userId);
             userRole.setRoleName(role);
-            userRole.setUserRoleState(AcmUserRoleState.VALID.name());
+            userRole.setUserRoleState(AcmUserRoleState.VALID);
             log.debug("Saving AcmUserRole [{}] for User [{}]", role, userId);
             userDao.saveAcmUserRole(userRole);
         });
@@ -75,7 +75,7 @@ public class AcmUserRoleService
                     AcmUserRole userRole = new AcmUserRole();
                     userRole.setUserId(user.getUserId());
                     userRole.setRoleName(role);
-                    userRole.setUserRoleState(AcmUserRoleState.INVALID.name());
+                    userRole.setUserRoleState(AcmUserRoleState.INVALID);
                     log.debug("Saving AcmUserRole [{}] for User [{}]", role, user.getUserId());
                     userDao.saveAcmUserRole(userRole);
                 });

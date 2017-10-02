@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.AcmUserRoleState;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -156,7 +157,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
                 + "AND userRole.userRoleState = :userRoleState)");
         roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("userRoleState", "VALID");
+        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -168,7 +169,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND userRole.userRoleState = :userRoleState) " + "AND acmRole.roleType = :roleType");
         roleQuery.setParameter("userId", userId);
         roleQuery.setParameter("roleType", acmRoleType.getRoleName());
-        roleQuery.setParameter("userRoleState", "VALID");
+        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -180,7 +181,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
         usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleNames", roles);
-        usersWithRole.setParameter("userRoleState", "VALID");
+        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
 
         List<AcmUser> retval = usersWithRole.getResultList();
 
@@ -194,7 +195,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND role.roleName = :roleName " + "ORDER BY user.lastName, user.firstName");
         usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleName", role);
-        usersWithRole.setParameter("userRoleState", "VALID");
+        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
 
         List<AcmUser> retval = usersWithRole.getResultList();
 
