@@ -17,7 +17,6 @@ public class AcmCollectionElementModified extends AcmCollectionElementChange
     }
 
 
-
     public List<AcmPropertyChange> getChanges()
     {
         return changes;
