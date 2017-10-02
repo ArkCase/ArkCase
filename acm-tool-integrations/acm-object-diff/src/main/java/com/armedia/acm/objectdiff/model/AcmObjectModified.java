@@ -3,7 +3,7 @@ package com.armedia.acm.objectdiff.model;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AcmObjectModified extends AcmPropertyChange
+public class AcmObjectModified extends AcmObjectChange
 {
     private Long affectedObjectId;
     private String affectedObjectType;
@@ -11,14 +11,6 @@ public class AcmObjectModified extends AcmPropertyChange
     public AcmObjectModified()
     {
         setAction(AcmDiffConstants.OBJECT_MODIFIED);
-    }
-
-    public AcmObjectModified(String path, Long objectId, String objectType)
-    {
-        this();
-        setPath(path);
-        setAffectedObjectId(objectId);
-        setAffectedObjectType(objectType);
     }
 
     private List<AcmPropertyChange> changes = new LinkedList<>();
