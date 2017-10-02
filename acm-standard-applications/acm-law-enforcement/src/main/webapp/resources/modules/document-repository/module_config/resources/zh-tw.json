@@ -14,8 +14,8 @@
   },
   "document-repository.comp.info": {
     "title": "信息",
-    "docRepoId": "文件存儲號:",
-    "docRepoName": "文件存儲名稱:",
+    "docRepoId": "文檔庫存號:",
+    "docRepoName": "文檔庫存名稱:",
     "modified.label": "修改日期",
     "assignee.label": "指定人員",
     "owningGroup.label": "所屬群體",
@@ -27,7 +27,7 @@
     "subscribe.button": "訂閱",
     "unsubscribe.button": "取消訂閱",
     "delete.button": "刪除",
-    "confirm.delete.documentRepository.msg": "此操作將刪除整個文件存儲，確定要繼續嗎?"
+    "confirm.delete.documentRepository.msg": "此操作將刪除整個文檔庫存，確定要繼續嗎?"
   },
   "document-repository.comp.details": {
     "title": "詳情",

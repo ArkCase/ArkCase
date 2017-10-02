@@ -7,9 +7,11 @@ angular.module('search').config(['$stateProvider',
             templateUrl: 'modules/search/views/search.client.view.html',
             params: {query: "", isSelected: false},
             resolve: {
-                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                    , function ($translate, $translatePartialLoader, LocaleService) {
                     $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('search');
+                    $translate.buildDataLookups(LocaleService.getLabelResources(["common", "search"], "en"));
                     return $translate.refresh();
                 }]
             }

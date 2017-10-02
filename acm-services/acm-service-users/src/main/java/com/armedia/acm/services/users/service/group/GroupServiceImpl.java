@@ -145,7 +145,7 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to set supervisor to group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Set Members", "Group", -1L, "Failed to set supervisor to group. Group "
+            throw new AcmUserActionFailedException("Set supervisor", "Group", -1L, "Failed to set supervisor to group. Group "
                     + groupId + " was not found.", null);
         }
 

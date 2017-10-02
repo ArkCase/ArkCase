@@ -8,4 +8,9 @@
             <list/>
         </property>
     </bean>
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="calendarServiceProvider" class="com.armedia.acm.service.outlook.FakeVerifier"/>
+
 </beans>
