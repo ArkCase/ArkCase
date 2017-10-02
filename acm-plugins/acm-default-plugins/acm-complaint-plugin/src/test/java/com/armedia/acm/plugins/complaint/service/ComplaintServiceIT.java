@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
@@ -8,6 +9,7 @@ import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.complaint.model.complaint.Contact;
 import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.web.api.MDCConstants;
@@ -25,9 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -143,17 +143,17 @@ public class ComplaintServiceIT
 
         frevvoComplaint.setLocation(location);
 
-        Contact initiator = new Contact();
-        frevvoComplaint.setInitiator(initiator);
+        Person initiator = new Person();
+        initiator.setId(123L);
+        initiator.setGivenName("Tom");
+        initiator.setFamilyName("Initiator");
 
-        populateContact(initiator, "Initiator");
+        frevvoComplaint.setInitiatorId(initiator.getId());
+        frevvoComplaint.setPeople(populatePeople());
 
-        Contact witness = new Contact();
-        frevvoComplaint.setPeople(Arrays.asList(witness));
-        populateContact(witness, "Witness");
 
-        assertEquals("Witness first", frevvoComplaint.getPeople().get(0).getMainInformation().getFirstName());
-        assertEquals("Initiator first", frevvoComplaint.getInitiator().getMainInformation().getFirstName());
+        assertEquals("Jack Witness", frevvoComplaint.getPeople().get(0).getValue());
+        assertEquals(Long.valueOf(123), frevvoComplaint.getInitiatorId());
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
@@ -167,8 +167,7 @@ public class ComplaintServiceIT
         assertNotNull(acmComplaint);
         verifyComplaint(frevvoComplaint, acmComplaint);
 
-        verifyContact(frevvoComplaint.getInitiator(), acmComplaint.getOriginator());
-
+        assertEquals(frevvoComplaint.getInitiatorId(), acmComplaint.getOriginator().getPerson().getId());
         assertEquals(2, acmComplaint.getPersonAssociations().size());
 
 
@@ -178,89 +177,26 @@ public class ComplaintServiceIT
             if ( "Witness".equals(pa.getPersonType()) )
             {
                 witnessFound = true;
-                verifyContact(frevvoComplaint.getPeople().get(0), pa);
             }
         }
 
         assertTrue(witnessFound);
-
-
     }
 
-    private void verifyContact(Contact contact, PersonAssociation personAssociation)
+    private List<PersonItem> populatePeople()
     {
-        assertNotNull(personAssociation);
-        verifyContactMainInfo(contact.getMainInformation(), personAssociation);
+        List<PersonItem> people = new ArrayList<>();
 
-        assertNotNull(personAssociation.getPerson().getPersonAliases());
-        verifyContactAlias(contact.getAlias(), personAssociation);
+        PersonItem p1 = new PersonItem();
+        p1.setPersonType("Witness");
+        p1.setId(234L);
+        p1.setValue("Jack Witness");
+        people.add(p1);
 
-        assertNotNull(personAssociation.getPerson().getAddresses());
-        verifyAddresses(contact.getLocation().get(0), personAssociation);
-
-        assertNotNull(personAssociation.getPerson().getOrganizations());
-        verifyOrganizations(contact.getOrganization().get(0), personAssociation);
-
-        assertNotNull(personAssociation.getPerson().getContactMethods());
-        verifyContactMethods(contact.getCommunicationDevice().get(0), personAssociation);
-
-        assertEquals(1, personAssociation.getTags().size());
-        assertEquals("Anonymous", personAssociation.getTags().get(0));
+        return people;
     }
 
-    private void populateContact(Contact in, String personType)
-    {
-        MainInformation initMainInfo = new MainInformation();
-        in.setMainInformation(initMainInfo);
 
-        PersonAlias alias = new PersonAlias();
-        in.setAlias(alias);
-
-        PostalAddress location = new PostalAddress();
-        in.setLocation(Arrays.asList(location));
-
-        Organization organization = new Organization();
-        in.setOrganization(Arrays.asList(organization));
-
-        ContactMethod contactMethod = new ContactMethod();
-        in.setCommunicationDevice(Arrays.asList(contactMethod));
-
-        initMainInfo.setAnonymous("true");
-        initMainInfo.setDescription(personType + " Desc");
-        initMainInfo.setFirstName(personType + " first");
-        initMainInfo.setLastName(personType + " last");
-        initMainInfo.setTitle("mr.");
-        initMainInfo.setType(personType);
-
-        alias.setAliasType("Nick Name");
-        alias.setAliasValue(personType + " alias");
-
-        location.setType("type");
-        location.setCity("city");
-        location.setCountry("country");
-        location.setState("state");
-        location.setStreetAddress("street address");
-        location.setStreetAddress2("street address 2");
-        location.setZip("zip");
-
-        organization.setOrganizationType("org type");
-        organization.setOrganizationValue("org value");
-
-        contactMethod.setType("contact type");
-        contactMethod.setValue("contact value");
-    }
-
-    private void verifyContactMethods(ContactMethod contactMethod, PersonAssociation pa)
-    {
-        assertEquals(1, pa.getPerson().getContactMethods().size());
-        ContactMethod cm = pa.getPerson().getContactMethods().get(0);
-
-        assertNotNull(cm.getValue());
-        assertNotNull(cm.getType());
-
-        assertEquals(contactMethod.getValue(), cm.getValue());
-        assertEquals(contactMethod.getType(), cm.getType());
-    }
 
     private void verifyComplaint(ComplaintForm frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)
     {
@@ -274,65 +210,4 @@ public class ComplaintServiceIT
         assertEquals(frevvoComplaint.getPriority(), acmComplaint.getPriority());
         assertEquals(frevvoComplaint.getComplaintTitle(), acmComplaint.getComplaintTitle());
     }
-
-    private void verifyOrganizations(Organization organization, PersonAssociation pa)
-    {
-        assertEquals(1, pa.getPerson().getOrganizations().size());
-        Organization org = pa.getPerson().getOrganizations().get(0);
-
-        assertNotNull(org.getOrganizationValue());
-        assertNotNull(org.getOrganizationType());
-
-        assertEquals(organization.getOrganizationValue(), org.getOrganizationValue());
-        assertEquals(organization.getOrganizationType(), org.getOrganizationType());
-    }
-
-    private void verifyAddresses(PostalAddress location, PersonAssociation pa)
-    {
-        assertEquals(1, pa.getPerson().getAddresses().size());
-        PostalAddress addr = pa.getPerson().getAddresses().get(0);
-
-        assertNotNull(addr.getCity());
-        assertNotNull(addr.getZip());
-        assertNotNull(addr.getStreetAddress());
-        assertNotNull(addr.getStreetAddress2());
-        assertNotNull(addr.getState());
-        assertNotNull(addr.getCountry());
-
-        assertEquals(location.getCity(), addr.getCity());
-        assertEquals(location.getCountry(), addr.getCountry());
-        assertEquals(location.getState(), addr.getState());
-        assertEquals(location.getStreetAddress(), addr.getStreetAddress());
-        assertEquals(location.getStreetAddress2(), addr.getStreetAddress2());
-        assertEquals(location.getZip(), addr.getZip());
-
-    }
-
-    private void verifyContactAlias(PersonAlias alias, PersonAssociation pa)
-    {
-        assertEquals(1, pa.getPerson().getPersonAliases().size());
-        PersonAlias acmPa = pa.getPerson().getPersonAliases().get(0);
-
-        assertNotNull(acmPa.getAliasType());
-        assertNotNull(acmPa.getAliasValue());
-
-        assertEquals(alias.getAliasType(), acmPa.getAliasType());
-        assertEquals(alias.getAliasValue(), acmPa.getAliasValue());
-    }
-
-    private void verifyContactMainInfo(MainInformation initMainInfo, PersonAssociation pa)
-    {
-        assertNotNull(pa.getPerson().getGivenName());
-        assertNotNull(pa.getPerson().getFamilyName());
-        assertNotNull(pa.getPerson().getTitle());
-        assertNotNull(pa.getPersonType());
-        assertNotNull(pa.getPersonDescription());
-
-        assertEquals(initMainInfo.getFirstName(), pa.getPerson().getGivenName());
-        assertEquals(initMainInfo.getLastName(), pa.getPerson().getFamilyName());
-        assertEquals(initMainInfo.getTitle(), pa.getPerson().getTitle());
-        assertEquals(initMainInfo.getType(), pa.getPersonType());
-        assertEquals(initMainInfo.getDescription(), pa.getPersonDescription());
-    }
-
 }

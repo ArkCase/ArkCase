@@ -19,7 +19,7 @@ public class AcmUserRolesSyncResult
 {
     private final List<AcmUserRole> acmUserRoles;
 
-    private static Function<String, AcmUserRole> acmUserRole(String user, String roleState)
+    private static Function<String, AcmUserRole> acmUserRole(String user, AcmUserRoleState roleState)
     {
         return role -> {
             AcmUserRole acmUserRole = new AcmUserRole();
@@ -37,7 +37,7 @@ public class AcmUserRolesSyncResult
 
         List<AcmUserRole> newUserRoles = userAddedGroups.entrySet().stream()
                 .flatMap(entry -> getRolesPerGroups(entry.getValue(), groupToRole).stream()
-                        .map(acmUserRole(entry.getKey(), AcmUserRoleState.VALID.name()))
+                        .map(acmUserRole(entry.getKey(), AcmUserRoleState.VALID))
                 )
                 .collect(Collectors.toList());
         this.acmUserRoles.addAll(newUserRoles);
@@ -51,21 +51,23 @@ public class AcmUserRolesSyncResult
                                     .filter(group -> !removedGroups.contains(group))
                                     .collect(Collectors.toSet());
                             Set<String> rolesToRemain = getRolesPerGroups(userGroupsToRemain, groupToRole);
-                            return findInvalidUserRoles(rolesToRemove, rolesToRemain, userId);
+                            return mapInvalidUserRoles(rolesToRemove, rolesToRemain, userId);
                         }
                 )
                 .collect(Collectors.toList());
         this.acmUserRoles.addAll(invalidUserRoles);
 
+        // map added groups as VALID AcmRoles
         newUserRoles = userAddedGroups.entrySet().stream()
                 .flatMap(userGroups -> userGroups.getValue().stream()
-                        .map(acmUserRole(userGroups.getKey(), AcmUserRoleState.VALID.name())))
+                        .map(acmUserRole(userGroups.getKey(), AcmUserRoleState.VALID)))
                 .collect(Collectors.toList());
         this.acmUserRoles.addAll(newUserRoles);
 
+        // map removed groups INVALID AcmRoles
         invalidUserRoles = userRemovedGroups.entrySet().stream()
                 .flatMap(userGroups -> userGroups.getValue().stream().map(
-                        acmUserRole(userGroups.getKey(), AcmUserRoleState.INVALID.name()))
+                        acmUserRole(userGroups.getKey(), AcmUserRoleState.INVALID))
                 )
                 .collect(Collectors.toList());
         this.acmUserRoles.addAll(invalidUserRoles);
@@ -81,11 +83,11 @@ public class AcmUserRolesSyncResult
                 .collect(Collectors.toSet());
     }
 
-    private Stream<? extends AcmUserRole> findInvalidUserRoles(Set<String> rolesToRemove, Set<String> rolesToRemain, String userId)
+    private Stream<? extends AcmUserRole> mapInvalidUserRoles(Set<String> rolesToRemove, Set<String> rolesToRemain, String userId)
     {
         return rolesToRemove.stream()
                 .filter(role -> !rolesToRemain.contains(role))
-                .map(acmUserRole(userId, AcmUserRoleState.INVALID.name()));
+                .map(acmUserRole(userId, AcmUserRoleState.INVALID));
     }
 
     public List<AcmUserRole> getAcmUserRoles()

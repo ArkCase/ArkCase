@@ -3,7 +3,9 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="getUserInfoAPIController" class="com.armedia.acm.services.users.web.api.GetUserInfoAPIController"/>
+    <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
 
     <bean id="findUsersWithPrivilegeAPIController"
           class="com.armedia.acm.services.users.web.api.FindUsersWithPrivilegeAPIController">
@@ -14,12 +16,6 @@
     <bean id="findParticipantTypesForObjectTypeNameAPIController"
           class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
         <property name="acmApplication" ref="acmApplication"/>
-    </bean>
-
-    <bean id="getGroupAPIController" class="com.armedia.acm.services.users.web.api.group.GetGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="muleContextManager" ref="muleContextManager"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="getGroupSupervisorAPIController"
@@ -34,36 +30,19 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
-    <bean id="saveGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SaveGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
+    <bean id="acmGroupAPIController" class="com.armedia.acm.services.users.web.api.group.AcmGroupAPIController">
+        <property name="groupService" ref="groupService"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
+
+    <bean id="supervisorGroupAPIController"
+          class="com.armedia.acm.services.users.web.api.group.SupervisorGroupAPIController">
         <property name="groupService" ref="groupService"/>
     </bean>
 
-    <bean id="removeGroupAPIController" class="com.armedia.acm.services.users.web.api.group.RemoveGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-    </bean>
-
-    <bean id="saveSupervisorToGroupAPIController"
-          class="com.armedia.acm.services.users.web.api.group.SaveSupervisorToGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
-    <bean id="saveMembersToGroupAPIController"
-          class="com.armedia.acm.services.users.web.api.group.SaveMembersToGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="groupService" ref="groupService"/>
-    </bean>
-
-    <bean id="removeSupervisorFromGroupAPIController"
-          class="com.armedia.acm.services.users.web.api.group.RemoveSupervisorFromGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
-    </bean>
-
-    <bean id="removeMembersFromGroupAPIController"
-          class="com.armedia.acm.services.users.web.api.group.RemoveMembersFromGroupAPIController">
-        <property name="groupDao" ref="groupDao"/>
+    <bean id="adHocGroupMembersAPIController"
+          class="com.armedia.acm.services.users.web.api.group.AdHocGroupMembersAPIController">
         <property name="groupService" ref="groupService"/>
     </bean>
 

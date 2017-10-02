@@ -72,6 +72,13 @@
       "noPictureSelected": "ja_No Files Selected.",
       "browse": "ja_Browse",
       "description": "ja_Description"
+    },
+    "dialog.edit": {
+      "title": "ja_Edit Picture",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "change": "ja_Change Picture",
+      "save": "ja_Save changes"
     }
   },
   "people.comp.addresses": {
@@ -211,6 +218,28 @@
       "type.placeholder": "ja_Enter Type",
       "value.label": "ja_URL",
       "value.placeholder": "ja_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "参加者",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
     }
   },
   "people.comp.aliases": {
@@ -426,6 +455,7 @@
       "phones.label": "電話番号",
       "emails.label": "電子メール",
       "urls.label": "URL",
+      "participants.label": "参加者",
       "aliases.label": "別名",
       "organizations.label": "組織",
       "ids.label": "人員識番号",

@@ -33,6 +33,9 @@
     },
     "btn": {
       "generateReport": "Generate report"
+    },
+    "checkBox": {
+      "xmlReport": "Show as XML"
     }
   }
 }

@@ -28,7 +28,7 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
             $scope.objectNameProperty = params.objectNameProperty;
             $scope.objectTypeLabel = params.objectTypeLabel;
             $scope.type = _.find($scope.types, function (type) {
-                return type.type == params.type;
+                return type.key == params.type;
             });
 
             $scope.onClickCancel = function () {
@@ -40,8 +40,8 @@ angular.module('common').controller('Common.AddObjectAssociationModalController'
                     solrDocument: $scope.solrDocument
                 };
                 if ($scope.types && $scope.type) {
-                    retValue.type = $scope.type.type;
-                    retValue.inverseType = $scope.type.inverseType;
+                    retValue.type = $scope.type.key;
+                    retValue.inverseType = $scope.type.inverseKey;
                 }
                 if ($scope.showDescription) {
                     retValue.description = $scope.description;

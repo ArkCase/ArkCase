@@ -212,6 +212,7 @@
       "title": "people.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -230,7 +231,7 @@
               "name": "modified",
               "displayName": "people.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "width": 150,
@@ -281,7 +282,7 @@
               "name": "modified",
               "displayName": "people.comp.addresses.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -316,7 +317,7 @@
             {
               "name": "modified",
               "displayName": "people.comp.phones.table.columns.modified",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -347,7 +348,7 @@
             {
               "name": "modified",
               "displayName": "people.comp.emails.table.columns.modified",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -378,7 +379,7 @@
             {
               "name": "modified",
               "displayName": "people.comp.urls.table.columns.modified",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -411,7 +412,7 @@
             {
               "name": "modified",
               "displayName": "people.comp.aliases.table.columns.modified",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -426,7 +427,7 @@
               "name": "organization.organizationValue",
               "displayName": "people.comp.organizations.table.columns.value",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "organization.defaultIdentification.identificationNumber",
@@ -444,7 +445,7 @@
               "name": "organizationType",
               "displayName": "people.comp.organizations.table.columns.contact",
               "headerCellFilter": "translate",
-              "cellTemplate": "<span>{{row.entity.organization.defaultContact ? row.entity.organization.defaultContact.value + '[' + row.entity.organization.defaultContact.type + ']' : ''}}</span>"
+              "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
             },
             {
               "name": "phone",
@@ -456,7 +457,7 @@
               "name": "location",
               "displayName": "people.comp.organizations.table.columns.location",
               "headerCellFilter": "translate",
-              "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
+              "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
             }
           ]
         },
@@ -467,11 +468,6 @@
             {
               "name": "identificationType",
               "displayName": "people.comp.ids.table.columns.type",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "identificationID",
-              "displayName": "people.comp.ids.table.columns.id",
               "headerCellFilter": "translate"
             },
             {
@@ -489,7 +485,7 @@
             {
               "name": "modified",
               "displayName": "people.comp.ids.table.columns.modified",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -502,30 +498,30 @@
           "columnDefs": [
             {
               "name": "id",
-              "field": "object_id_s",
+              "field": "parent_object.object_id_s",
               "displayName": "people.comp.complaints.table.columns.id",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>",
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>",
               "width": 130
             },
             {
               "name": "title",
-              "field": "title_parseable",
+              "field": "parent_object.title_parseable",
               "sortField": "title_parseable_lcs",
               "displayName": "people.comp.complaints.table.columns.title",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.object_id_s})\">{{COL_FIELD}}<\/a>"
+              "cellTemplate": "<a data-ui-sref=\"complaints.main({id: row.entity.parent_object.object_id_s})\">{{COL_FIELD}}<\/a>"
             },
             {
               "name": "status",
-              "field": "status_lcs",
+              "field": "parent_object.status_lcs",
               "displayName": "people.comp.complaints.table.columns.status",
               "headerCellFilter": "translate"
             },
             {
               "width": 150,
               "name": "assignee",
-              "field": "assignee_id_lcs",
+              "field": "parent_object.assignee_id_lcs",
               "displayName": "people.comp.complaints.table.columns.assignee",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
@@ -533,10 +529,10 @@
             {
               "width": 150,
               "name": "modified",
-              "field": "modified_date_tdt",
+              "field": "parent_object.modified_date_tdt",
               "displayName": "people.comp.complaints.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : 'shortDate' }}</div>"
             }
           ]
         },
@@ -579,7 +575,7 @@
               "field": "parent_object.modified_date_tdt",
               "displayName": "people.comp.cases.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : 'shortDate' }}</div>"
             }
           ]
         },
@@ -643,6 +639,7 @@
       "id": "info",
       "title": "people.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
@@ -650,12 +647,14 @@
       "id": "actions",
       "title": "people.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
       "title": "people.comp.details.title",
+      "configurable": true,
       "icon": "fa fa-info-circle",
       "enabled": true,
       "type": "empty"
@@ -665,6 +664,7 @@
       "title": "people.comp.pictures.title",
       "icon": "fa fa-picture-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -699,7 +699,7 @@
         {
           "name": "created",
           "displayName": "people.comp.pictures.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.create_date_tdt | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -719,6 +719,7 @@
       "title": "people.comp.addresses.title",
       "icon": "fa fa-map-marker",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -770,7 +771,7 @@
           "name": "modified",
           "displayName": "people.comp.addresses.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
           "enableCellEdit": false
         },
         {
@@ -786,6 +787,7 @@
       "title": "people.comp.phones.title",
       "icon": "fa fa-phone",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -821,7 +823,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.phones.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -833,6 +835,7 @@
       "title": "people.comp.emails.title",
       "icon": "fa fa-envelope",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -868,7 +871,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.emails.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -880,6 +883,7 @@
       "title": "people.comp.urls.title",
       "icon": "fa fa-link",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -915,7 +919,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.urls.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -928,6 +932,7 @@
       "icon": "fa fa-users",
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1013,6 +1018,7 @@
       "title": "people.comp.aliases.title",
       "icon": "fa fa-eye",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1045,7 +1051,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.aliases.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -1063,6 +1069,7 @@
       "title": "people.comp.organizations.title",
       "icon": "fa fa-building",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "multiSelect": false,
@@ -1078,7 +1085,7 @@
           "name": "organization.organizationValue",
           "displayName": "people.comp.organizations.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
+          "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
         },
         {
           "name": "organization.defaultIdentification.identificationNumber",
@@ -1117,6 +1124,7 @@
       "title": "people.comp.ids.title",
       "icon": "fa fa-credit-card",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1130,11 +1138,6 @@
         {
           "name": "identificationType",
           "displayName": "people.comp.ids.table.columns.type",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "identificationID",
-          "displayName": "people.comp.ids.table.columns.id",
           "headerCellFilter": "translate"
         },
         {
@@ -1152,7 +1155,7 @@
           "name": "identificationYearIssued",
           "displayName": "people.comp.ids.table.columns.yearIssued",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.identificationYearIssued | date : 'shortDate' }}</div>"
         },
         {
           "name": "modifier",
@@ -1163,7 +1166,7 @@
         {
           "name": "modified",
           "displayName": "people.comp.ids.table.columns.modified",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -1175,6 +1178,7 @@
       "title": "people.comp.cases.title",
       "icon": "fa fa-folder",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1232,7 +1236,7 @@
           "field": "parent_object.modified_date_tdt",
           "displayName": "people.comp.cases.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ]
     },
@@ -1241,6 +1245,7 @@
       "title": "people.comp.complaints.title",
       "icon": "fa fa-exclamation-triangle",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1299,7 +1304,7 @@
           "field": "parent_object.modified_date_tdt",
           "displayName": "people.comp.complaints.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.parent_object.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ]
     },
@@ -1308,6 +1313,7 @@
       "title": "people.comp.related.title",
       "icon": "fa fa-exchange",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1369,6 +1375,7 @@
       "title": "people.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1389,7 +1396,7 @@
           "name": "eventDate",
           "displayName": "people.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
         },
         {
           "name": "userId",

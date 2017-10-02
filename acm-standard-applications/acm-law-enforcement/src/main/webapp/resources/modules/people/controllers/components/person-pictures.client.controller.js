@@ -47,12 +47,6 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var eventName = "object.changed/" + objectInfo.objectType + "/" + objectInfo.id;
-            //we want to subscribe to changes because the data is from solr and on edit it
-            //will take time to get it so we need to wait for message
-            $scope.$bus.subscribe(eventName, function (data) {
-                $scope.refresh();
-            });
             $scope.reloadGrid();
         };
 
@@ -85,6 +79,9 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         function showModal(image, isEdit) {
             var params = {};
+            if(image != null){
+                params.userPicture = image.fileName + image.fileActiveVersionNameExtension;
+            }
             params.image = image || {};
             params.isEdit = isEdit || false;
             params.isDefault = $scope.isDefault(image);
@@ -127,14 +124,14 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
             if (data && data.object_id_s) {
                 var id = 0;
                 if ($scope.objectInfo.defaultPicture) {
-                    id = $scope.objectInfo.defaultPicture.fileId
+                    id = $scope.objectInfo.defaultPicture.fileId;
                 }
                 return data.object_id_s == id;
             }
             if (data && data.fileId) {
                 var id = 0;
                 if ($scope.objectInfo.defaultPicture) {
-                    id = $scope.objectInfo.defaultPicture.fileId
+                    id = $scope.objectInfo.defaultPicture.fileId;
                 }
                 return data.fileId == id;
             }

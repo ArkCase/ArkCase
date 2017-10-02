@@ -15,8 +15,9 @@
   "components": [
     {
       "id": "notificationsFacetedSearch",
-      "title": "Notifications Faceted Search",
+      "title": "notifications.comp.notificationsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,
@@ -32,7 +33,7 @@
           "name": "description_parseable",
           "displayName": "notifications.comp.grid.columns.description",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{row.entity.description_parseable}} on {{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : ('common.defaultDateTimeUIFormat' | translate)+':ss'}}</div>"
+          "cellTemplate": "<div>{{row.entity.description_parseable}} on {{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short' +':ss'}}</div>"
         },
         {
           "name": "parent_number_lcs",
@@ -51,7 +52,7 @@
           "type": "date",
           "displayName": "notifications.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : ('common.defaultDateTimeUIFormat' | translate)+':ss'}}</div>"
+          "cellTemplate": "<div>{{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short' +':ss'}}</div>"
         }
       ],
       "paginationPageSizes": [

@@ -79,7 +79,7 @@
         "label": "Other"
       }
     ];
-});
+ });
  </file>
  </example>
  */
@@ -1150,21 +1150,21 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "created",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var versionDate = UtilDateService.getDatePart(node.data.created);
-                                $(element).text(versionDate);
+                                var createDate = $filter("date")(node.data.created, "shortDate");
+                                $(element).text(createDate);
                             }
                         }
                         , {
                             name: "modified",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var versionDate = UtilDateService.getDatePart(node.data.modified);
-                                $(element).text(versionDate);
+                                var modifiedDate = $filter("date")(node.data.modified, "shortDate");
+                                $(element).text(modifiedDate);
                             }
                         }
                         , {
-                            name: "author",
+                            name: "modifier",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var versionUser = Util.goodValue(node.data.creator);
+                                var versionUser = Util.goodValue(node.data.modifier);
                                 if (versionUser) {
                                     //UserInfoService.getUserInfoByIdQuietly(versionUser).then(function (userInfo) {
                                     UserInfoService.getUserInfoById(versionUser).then(function (userInfo) {
@@ -2388,6 +2388,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                 folderList.children[replaced].ext = Util.goodValue(replaceInfo.fileActiveVersionNameExtension);
                                                 folderList.children[replaced].mimeType = Util.goodValue(replaceInfo.fileActiveVersionMimeType);
                                                 folderList.children[replaced].modified = Util.goodValue(replaceInfo.modified);
+                                                folderList.children[replaced].modifier = Util.goodValue(replaceInfo.modifier);
                                                 folderList.children[replaced].version = Util.goodValue(replaceInfo.activeVersionTag);
 
                                                 folderList.children[replaced].versionList = [];
@@ -2397,7 +2398,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                                         ver.ext = replaceInfo.versions[i].versionFileNameExtension;
                                                         ver.mimeType = replaceInfo.versions[i].versionFileMimeType;
                                                         ver.versionTag = replaceInfo.versions[i].versionTag;
-                                                        ver.created = replaceInfo.versions[i].created;
+                                                        ver.modifier = replaceInfo.versions[i].modifier;
                                                         ver.modified = replaceInfo.versions[i].modified;
                                                         ver.creator = replaceInfo.versions[i].creator;
                                                         folderList.children[replaced].versionList.push(ver);
@@ -2416,6 +2417,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.data.ext = replacedFile.ext;
                                     fileNode.data.mimeType = replacedFile.mimeType;
                                     fileNode.data.modified = replacedFile.modified;
+                                    fileNode.data.modifier = replacedFile.modifier;
                                     fileNode.data.version = replacedFile.version;
                                     fileNode.data.versionList = replacedFile.versionList;
                                     fileNode.renderTitle();
@@ -3084,6 +3086,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 function (renamedInfo) {
                                     node.title = renamedInfo.fileName;
                                     node.tooltip = node.title;
+                                    node.data.modifier = renamedInfo.modifier;
+                                    node.data.modified = renamedInfo.modified;
                                     DocTree.markNodeOk(node);
                                     dfd.resolve(renamedInfo);
                                 }
@@ -3142,6 +3146,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                     fileNode.data.version = Util.goodValue(activeVersion.activeVersionTag);
                                     fileNode.data.ext = Util.goodValue(activeVersion.fileActiveVersionNameExtension);
                                     fileNode.data.mimeType = Util.goodValue(activeVersion.fileActiveVersionMimeType);
+                                    fileNode.data.modifier = Util.goodValue(activeVersion.modifier);
+                                    fileNode.data.modified = Util.goodValue(activeVersion.modified);
                                     DocTree.markNodeOk(fileNode);
                                     fileNode.renderTitle();
                                     dfd.resolve();

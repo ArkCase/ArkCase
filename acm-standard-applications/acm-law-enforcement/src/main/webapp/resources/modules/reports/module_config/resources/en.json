@@ -37,5 +37,11 @@
     "checkBox": {
       "xmlReport": "Show as XML"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "Datepickers"
+  },
+  "reports.comp.reportselection": {
+    "title": "Reports"
   }
 }

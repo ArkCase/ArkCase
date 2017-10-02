@@ -13,6 +13,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
@@ -130,7 +131,7 @@ public interface EcmFileService
             String parentObjectType,
             Long parentObjectId,
             EcmFile metadata) throws AcmCreateObjectFailedException, AcmUserActionFailedException;
-    
+
     EcmFile upload(
             String arkcaseFileName,
             String fileType,
@@ -274,4 +275,21 @@ public interface EcmFileService
     int getTotalPageCount(String parentObjectType, Long parentObjectId, List<String> totalPageCountFileTypes, List<String> totalPageCountMimeTypes, Authentication auth);
 
     EcmFile updateSecurityField(Long fileId, String securityFieldValue) throws AcmObjectNotFoundException;
+
+    /**
+     * Save files from request to temp directory
+     *
+     * @param files multipart-files to save
+     * @return List<EcmFile> which includes unique filename id for saved files in temp directory
+     */
+    List<EcmFile> saveFilesToTempDirectory(MultiValueMap<String, MultipartFile> files);
+
+    /**
+     * Delete temp files uploaded earlier, named 'uniqueFileName'
+     *
+     * @param uniqueFileName name of file in temp directory to save
+     * @return whether the delete was successful
+     */
+    boolean deleteTempFile(String uniqueFileName);
+
 }

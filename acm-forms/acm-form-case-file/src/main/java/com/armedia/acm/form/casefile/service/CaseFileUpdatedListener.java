@@ -3,11 +3,11 @@
  */
 package com.armedia.acm.form.casefile.service;
 
-import com.armedia.acm.form.casefile.model.CaseFilePSForm;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
 import com.armedia.acm.plugins.casefile.model.CaseEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -24,7 +24,6 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
 
     private Properties properties;
     private FrevvoFormService caseFileService;
-    private FrevvoFormService caseFilePSService;
 
     @Override
     public void onApplicationEvent(CaseEvent event)
@@ -46,11 +45,9 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
                         if (FrevvoFormName.CASE_FILE.equals(activeFormName))
                         {
                             getCaseFileService().updateXML(event.getCaseFile(), event.getEventUser(), getCaseFileService().getFormClass());
-                        } else if (FrevvoFormName.CASE_FILE_PS.equals(activeFormName))
-                        {
-                            getCaseFilePSService().updateXML(event.getCaseFile(), event.getEventUser(), CaseFilePSForm.class);
                         }
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         LOG.error(String.format("Could not update Frevvo form XML: [%s]", e.getMessage()), e);
                     }
@@ -78,15 +75,4 @@ public class CaseFileUpdatedListener implements ApplicationListener<CaseEvent>
     {
         this.caseFileService = caseFileService;
     }
-
-    public FrevvoFormService getCaseFilePSService()
-    {
-        return caseFilePSService;
-    }
-
-    public void setCaseFilePSService(CaseFilePSService caseFilePSService)
-    {
-        this.caseFilePSService = caseFilePSService;
-    }
-
 }
