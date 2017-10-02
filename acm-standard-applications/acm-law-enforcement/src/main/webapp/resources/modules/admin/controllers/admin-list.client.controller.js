@@ -22,16 +22,21 @@ angular.module('admin').controller('AdminListController', ['$scope', '$state', '
                 }
             });
             $scope.treeData.total = count;
+            return config;
+        }).then(function(){
+            expandTree();
+        });
 
+        var expandTree = function() {
             $timeout(function() {
-                var expandTree = Util.goodMapValue($scope.treeControl, "expandAll", false);
-                if (expandTree) {
+                var expandAll = Util.goodMapValue($scope.treeControl, "expandAll", false);
+                if (expandAll) {
+                    expandAll();
+                } else {
                     expandTree();
                 }
-            }, 0);
-
-            return config;
-        });
+            }, 100);
+        };
 
         $scope.onLoad = function(start, n, sort, filters){
             return $scope.treeData.docs;
