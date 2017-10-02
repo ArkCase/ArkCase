@@ -11,6 +11,12 @@
 
     <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
 
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list/>
+        </constructor-arg>
+    </bean>
+
     <!--<bean id="logoutUrl" class="java.lang.String">-->
     <!--<constructor-arg index="0" value="/logout"/>-->
     <!--</bean>-->
