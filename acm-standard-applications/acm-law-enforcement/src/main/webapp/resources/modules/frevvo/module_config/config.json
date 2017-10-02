@@ -101,6 +101,14 @@
     "paginationPageSize": 10,
     "start": 0
   },
+  "dialogPersonPicker": {
+    "personTypes" : {
+      "initiatorType" : {
+        "type": "Initiator",
+        "name": "Initiator"
+      }
+    }
+  },
   "dialogObjectPicker": {
     "enableFiltering": false,
     "multiSelect": false,

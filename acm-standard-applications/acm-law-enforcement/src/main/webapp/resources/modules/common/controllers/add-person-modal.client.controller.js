@@ -14,6 +14,9 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicatePersonRoleError = false;
 
+            $scope.pickerType =  params.pickerType;
+            $scope.pickerTypeDisabled = params.typeDisabled;
+
             $scope.showSetPrimary = params.showSetPrimary;
 
             $scope.personId = params.personId;
