@@ -11,19 +11,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by nebojsha on 25.08.2015.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-search.xml",
-        "/spring/spring-library-object-lock-mule-test.xml", "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-object-lock-mule-test.xml",
+        "/spring/spring-library-user-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmObjectLockDaoIT
