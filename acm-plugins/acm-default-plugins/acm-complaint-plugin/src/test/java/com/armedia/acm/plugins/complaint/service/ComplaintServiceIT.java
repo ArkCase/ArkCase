@@ -1,17 +1,10 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.form.config.xml.PersonItem;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
-import com.armedia.acm.plugins.complaint.model.complaint.Contact;
-import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
-import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.web.api.MDCConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring",
@@ -39,6 +34,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-activiti-configuration.xml",
                 "/spring/spring-library-authentication-token.xml",
                 "/spring/spring-library-business-process.xml",
+                "/spring/spring-library-calendar-config-service.xml",
+                "/spring/spring-library-calendar-integration-exchange-service.xml",
                 "/spring/spring-library-case-file-dao.xml",
                 "/spring/spring-library-case-file-events.xml",
                 "/spring/spring-library-case-file-rules.xml",
@@ -50,6 +47,7 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-data-access-control.xml",
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-ecm-tika.xml",
                 "/spring/spring-library-event.xml",
                 "/spring/spring-library-folder-watcher.xml",
                 "/spring/spring-library-forms-configuration.xml",
@@ -59,8 +57,10 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-note.xml",
                 "/spring/spring-library-object-association-plugin.xml",
                 "/spring/spring-library-object-history.xml",
+                "/spring/spring-library-organization-rules.xml",
                 "/spring/spring-library-particpants.xml",
                 "/spring/spring-library-person.xml",
+                "/spring/spring-library-person-rules.xml",
                 "/spring/spring-library-plugin-manager.xml",
                 "/spring/spring-library-profile.xml",
                 "/spring/spring-library-property-file-manager.xml",
@@ -73,7 +73,8 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-drools-rule-monitor.xml",
                 "/spring/spring-library-object-lock.xml",
                 "/spring/spring-library-email.xml",
-                "/spring/spring-library-email-smtp.xml"
+                "/spring/spring-library-email-smtp.xml",
+                "/spring/spring-library-form-configurations.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -99,6 +100,9 @@ public class ComplaintServiceIT
     @Autowired
     private ComplaintFactory complaintFactory;
 
+    @Autowired
+    private PersonDao personDao;
+
     @Before
     public void setUp() throws Exception
     {
@@ -111,6 +115,7 @@ public class ComplaintServiceIT
         service.setSaveComplaintTransaction(saveComplaintTransaction);
         service.setComplaintEventPublisher(complaintEventPublisher);
         service.setComplaintFactory(complaintFactory);
+        service.setPersonDao(personDao);
 
         Authentication auth = new UsernamePasswordAuthenticationToken("anotherUser", "password");
         service.setAuthentication(auth);
@@ -143,18 +148,6 @@ public class ComplaintServiceIT
 
         frevvoComplaint.setLocation(location);
 
-        Person initiator = new Person();
-        initiator.setId(123L);
-        initiator.setGivenName("Tom");
-        initiator.setFamilyName("Initiator");
-
-        frevvoComplaint.setInitiatorId(initiator.getId());
-        frevvoComplaint.setPeople(populatePeople());
-
-
-        assertEquals("Jack Witness", frevvoComplaint.getPeople().get(0).getValue());
-        assertEquals(Long.valueOf(123), frevvoComplaint.getInitiatorId());
-
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
         entityManager.flush();
@@ -167,35 +160,8 @@ public class ComplaintServiceIT
         assertNotNull(acmComplaint);
         verifyComplaint(frevvoComplaint, acmComplaint);
 
-        assertEquals(frevvoComplaint.getInitiatorId(), acmComplaint.getOriginator().getPerson().getId());
-        assertEquals(2, acmComplaint.getPersonAssociations().size());
-
-
-        boolean witnessFound = false;
-        for ( PersonAssociation pa : acmComplaint.getPersonAssociations() )
-        {
-            if ( "Witness".equals(pa.getPersonType()) )
-            {
-                witnessFound = true;
-            }
-        }
-
-        assertTrue(witnessFound);
+        assertEquals(0, acmComplaint.getPersonAssociations().size());
     }
-
-    private List<PersonItem> populatePeople()
-    {
-        List<PersonItem> people = new ArrayList<>();
-
-        PersonItem p1 = new PersonItem();
-        p1.setPersonType("Witness");
-        p1.setId(234L);
-        p1.setValue("Jack Witness");
-        people.add(p1);
-
-        return people;
-    }
-
 
 
     private void verifyComplaint(ComplaintForm frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)

@@ -14,7 +14,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -32,11 +31,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -51,11 +51,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public void init()
     {
-        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst().get()
-                .getConfigAsJson();
-        Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
-                .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.defaultLocale").toString();
+        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst();
+        if (localeSettings.isPresent())
+        {
+            String settings = localeSettings.get().getConfigAsJson();
+            Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
+                    .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
+            DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale").toString();
+        }
+        else
+        {
+            DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
+        }
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -125,8 +132,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 }
             }
 
-        }
-        catch (PersistenceException pe)
+        } catch (PersistenceException pe)
         {
             log.error("Could not find user record: {}", pe.getMessage(), pe);
         }
@@ -210,8 +216,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         query.select(user);
 
-        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String> get("userState"), AcmUserState.VALID)));
+        query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
+                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -295,8 +301,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 return userPasswordExpirationDate.isBefore(LocalDate.now());
             }
             log.info("Password expiration date is not set for user [{}]", principal);
-        }
-        catch (NoResultException | NonUniqueResultException e)
+        } catch (NoResultException | NonUniqueResultException e)
         {
             log.debug("User [{}] not found!", principal);
         }
@@ -311,8 +316,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         try
         {
             return query.getSingleResult();
-        }
-        catch (NoResultException | NonUniqueResultException e)
+        } catch (NoResultException | NonUniqueResultException e)
         {
             log.error("User with password reset token: [{}] not found!", token, e.getMessage());
             return null;
