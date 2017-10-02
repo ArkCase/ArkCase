@@ -7,7 +7,7 @@
         <constructor-arg type="java.io.InputStream" value="classpath:config/acmObjectDiffSettings.json"/>
     </bean>
 
-    <bean id="acmObjectDiffUtils" class="com.armedia.acm.objectdiff.AcmObjectDiffUtils">
+    <bean id="acmObjectDiffUtils" class="com.armedia.acm.objectdiff.service.AcmObjectDiffUtils">
         <property name="configurationMap" ref="acmDiffBeanConfiguration"/>
     </bean>
 

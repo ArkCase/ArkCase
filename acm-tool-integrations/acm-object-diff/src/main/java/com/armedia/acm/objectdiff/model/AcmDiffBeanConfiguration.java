@@ -1,11 +1,11 @@
-package com.armedia.acm.objectdiff;
+package com.armedia.acm.objectdiff.model;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class AcmDiffBeanConfiguration implements Serializable {
     private String className;
-    private String path;
+    private String name;
     private List<String> includeFields;
     private List<String> skipFields;
     private List<String> id;
@@ -18,12 +18,12 @@ public class AcmDiffBeanConfiguration implements Serializable {
         this.className = className;
     }
 
-    public String getPath() {
-        return path;
+    public String getName() {
+        return name;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getIncludeFields() {

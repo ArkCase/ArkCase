@@ -1,14 +1,12 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.objectdiff.AcmChange;
-import com.armedia.acm.objectdiff.AcmObjectChange;
+import com.armedia.acm.objectdiff.model.AcmObjectModified;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationConfig;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Before;
@@ -119,7 +117,7 @@ public class PersonDiffTest {
         newPhone.setType("phone");
         newPerson.getContactMethods().add(newPhone);
 
-        AcmObjectChange objectChange = personDiff.compare(oldPerson, newPerson);
+        AcmObjectModified objectChange = personDiff.compare(oldPerson, newPerson);
         System.out.println(objectChange);
 
 
