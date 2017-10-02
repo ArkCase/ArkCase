@@ -41,7 +41,7 @@ public class AcmObjectDiffUtils
      * @param newObj New Object
      * @return true if ID's matches
      */
-    public boolean idMatches(Object oldObj, Object newObj)
+    private boolean idMatches(Object oldObj, Object newObj)
     {
         if (oldObj == null || newObj == null)
         {
@@ -99,13 +99,28 @@ public class AcmObjectDiffUtils
      * AcmObjectModified if created if bean is defined in the config file
      * AcmObjectReplaced is created if ID of oldObject differs from ID of new Object or one of them is null
      *
+     * @param oldObj Old object
+     * @param newObj New object
+     * @return AcmObjectChange or null if there is no change
+     */
+    public AcmObjectChange compareObjects(Object oldObj, Object newObj)
+    {
+        return compareObjects(null, null, oldObj, newObj);
+    }
+
+    /**
+     * Create object change which can be: AcmObjectModified, AcmObjectReplaced
+     * <p>
+     * AcmObjectModified if created if bean is defined in the config file
+     * AcmObjectReplaced is created if ID of oldObject differs from ID of new Object or one of them is null
+     *
      * @param parentPath path of the parent object - can be null
      * @param property   if applicable, name of the field in the parent object
      * @param oldObj     Old object
      * @param newObj     New object
      * @return AcmObjectChange or null if there is no change
      */
-    public AcmObjectChange createObjectChange(String parentPath, String property, Object oldObj, Object newObj)
+    private AcmObjectChange compareObjects(String parentPath, String property, Object oldObj, Object newObj)
     {
         AcmDiffBeanConfiguration cfg = configurationMap.get(oldObj.getClass().getName());
 
@@ -173,14 +188,14 @@ public class AcmObjectDiffUtils
                         }
                     } else if (oldValue instanceof Collection)
                     {
-                        AcmCollectionChange collectionChange = createCollectionChange(acmObjectModified.getPath(), fieldName, Collection.class.cast(oldValue), Collection.class.cast(newValue));
+                        AcmCollectionChange collectionChange = compareCollections(acmObjectModified.getPath(), fieldName, Collection.class.cast(oldValue), Collection.class.cast(newValue));
                         if (collectionChange != null && !collectionChange.getChanges().isEmpty())
                         {
                             acmObjectModified.addChange(collectionChange);
                         }
                     } else if (configurationMap.containsKey(validValueClass.getName()))
                     {
-                        AcmObjectChange objectChange = createObjectChange(acmObjectModified.getPath(), fieldName, oldValue, newValue);
+                        AcmObjectChange objectChange = compareObjects(acmObjectModified.getPath(), fieldName, oldValue, newValue);
                         if (objectChange != null)
                         {
                             acmObjectModified.addChange(objectChange);
@@ -225,13 +240,25 @@ public class AcmObjectDiffUtils
     /**
      * AcmCollectionChange is created if some element in new Collection is added, removed or modified
      *
+     * @param oldCollection Old collection
+     * @param newCollection New Collection
+     * @return AcmCollectionChange
+     */
+    public AcmCollectionChange compareCollections(Collection oldCollection, Collection newCollection)
+    {
+        return compareCollections(null, null, oldCollection, newCollection);
+    }
+
+    /**
+     * AcmCollectionChange is created if some element in new Collection is added, removed or modified
+     *
      * @param parentPath    path of the parent object
      * @param property      field name in the parent object
      * @param oldCollection Old collection
      * @param newCollection New Collection
      * @return AcmCollectionChange
      */
-    public AcmCollectionChange createCollectionChange(String parentPath, String property, Collection oldCollection, Collection newCollection)
+    private AcmCollectionChange compareCollections(String parentPath, String property, Collection oldCollection, Collection newCollection)
     {
         if (oldCollection instanceof List && oldCollection instanceof List)
         {
@@ -272,7 +299,7 @@ public class AcmObjectDiffUtils
                 if (idMatches(oldObj, newObj))
                 {
                     found = true;
-                    AcmObjectChange change = createObjectChange(acmListChange.getPath(), null, oldObj, newObj);
+                    AcmObjectChange change = compareObjects(acmListChange.getPath(), null, oldObj, newObj);
 
                     if (change != null && change instanceof AcmObjectModified)
                     {
