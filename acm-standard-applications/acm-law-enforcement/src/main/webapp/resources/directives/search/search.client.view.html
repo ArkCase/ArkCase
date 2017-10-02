@@ -23,7 +23,7 @@
                 <li ng-repeat="facet in facets" ng-if="facet.fields.length && facet.name != filterName">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" href="#collapseFacet-{{$index}}"
-                        ><strong>{{facet.name}}</strong></a>
+                        ><strong>{{facet.nameTranslated}}</strong></a>
                     </h4>
                     <ul id="collapseFacet-{{$index}}" class="panel-collapse collapse in list-unstyled">
                         <li ng-repeat="field in facet.fields | limitTo : facet.limit">
@@ -31,7 +31,7 @@
                                 <label><input type="checkbox"
                                               ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
                                               ng-click="selectFacet($event.target.checked, facet.name, field.name.nameValue)"/>
-                                    {{field.name.nameFiltered | mapKeyValue: customization.labels}}
+                                    {{field.name.nameTranslated | mapKeyValue: customization.labels}}
                                     <span class="pull-right label label-info">{{field.count}}</span></label>
                             </div>
                         </li>
@@ -83,7 +83,8 @@
         <div class="well-sm">
             <div class="panel panel-success panel-grid" ng-if="gridOptions.data">
                 <div class="panel-heading">
-                    <div class="panel-title">{{gridOptions.data.length > 0 ? 'Results' : 'No Results'}}
+                    <div class="panel-title">
+                        {{(gridOptions.data.length > 0 ? 'common.directive.search.results.text' : 'common.directive.search.noResults.text') | translate}}
                         <div class="pull-right" ng-if="gridOptions.data.length > 0">
                             <a class="btn btn-xs btn-default" type="button" ng-href="{{exportUrl}}">{{ exportBtn }}</a>
                         </div>

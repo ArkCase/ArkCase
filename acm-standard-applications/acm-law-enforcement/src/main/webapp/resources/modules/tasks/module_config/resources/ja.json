@@ -1,46 +1,46 @@
 {
   "tasks": {
-    "title": "タスク",
-    "progressNoTask": "[ タスクのデータはありません ]",
-    "progressLoading": "タスクの読み込み",
-    "progressError": "タスクの読み込みに失敗しました"
+    "title": "任務",
+    "progressNoTask": "[ 任務のデータはありません ]",
+    "progressLoading": "任務の読み込み",
+    "progressError": "任務の読み込みに失敗しました"
   },
   "tasks.menus": {
-    "leftnav.item": "タスク",
-    "topbar.item": "タスク"
+    "leftnav.item": "任務",
+    "topbar.item": "任務"
   },
   "tasks.comp.main": {
     "title": "概観"
   },
   "tasks.comp.info": {
     "title": "情報",
-    "taskId": "タスク識別番号:",
+    "taskId": "任務識別番号:",
     "percentage.label": "完成度％",
     "assignee.label": "割り当て先",
     "priority.label": "優先",
     "startDate.label": "開始日",
     "dueDate.label": "期限日",
     "state.label": "状態",
-    "overdue.tooltip": "タスク延滞",
+    "overdue.tooltip": "任務延滞",
     "deadline.tooltip": "締め切りが近づいています",
-    "owningGroup.label": "グループに所属"
+    "owningGroup.label": "群に所属"
   },
   "tasks.comp.parentinfo": {
-    "title": "タスクの起源",
-    "taskId": "タスク識別番号:",
+    "title": "任務の起源",
+    "taskId": "任務識別番号:",
     "case": {
-      "subjectType.label": "サブジェクトタイプ",
-      "incidentDate.label": "インシデントの日付",
+      "subjectType.label": "亜種類",
+      "incidentDate.label": "事件の日付",
       "priority.label": "優先",
       "assignee.label": "割り当て先",
-      "owningGroup.label": "グループに所属"
+      "owningGroup.label": "群に所属"
     },
     "complaint": {
-      "subjectType.label": "サブジェクトタイプ",
-      "incidentDate.label": "インシデントの日付",
+      "subjectType.label": "亜種類",
+      "incidentDate.label": "事件の日付",
       "priority.label": "優先",
       "assignee.label": "割り当て先",
-      "owningGroup.label": "グループに所属"
+      "owningGroup.label": "群に所属"
     },
     "costsheet": {
       "approver.label": "承認者"
@@ -52,22 +52,22 @@
   },
   "tasks.comp.actions": {
     "title": "行动",
-    "diagram.button": "ja_Process Diagram",
-    "eSignature.button": "ja_Sign",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "reject.button": "ja_Reject",
-    "delete.button": "ja_Delete",
-    "complete.button": "ja_Complete",
-    "approve.button": "ja_Approve Document",
-    "rework.button": "ja_Send for Rework",
-    "claim.button": "ja_Claim",
-    "unclaim.button": "ja_Unclaim",
-    "error.outcomeFieldMissing": "ja_Cannot complete task because of missing required value",
+    "diagram.button": "プロセス図",
+    "eSignature.button": "署名された",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "reject.button": "拒否",
+    "delete.button": "削除",
+    "complete.button": "完了しました",
+    "approve.button": "承認文書",
+    "rework.button": "リワークのために送る",
+    "claim.button": "請求",
+    "unclaim.button": "申し立て",
+    "error.outcomeFieldMissing": "必須値がないために任務を完了できません",
     "modal": {
-      "errorHeaderText": "ja_Error",
-      "btnOk.text": "ja_OK",
-      "btnClose.text": "ja_Close"
+      "errorHeaderText": "エラー",
+      "btnOk.text": "はい",
+      "btnClose.text": "閉じる"
     }
   },
   "tasks.comp.details": {
@@ -96,7 +96,7 @@
     "searchInputPlaceholder": "ja_Search"
   },
   "tasks.comp.attachments": {
-    "title": "添付ファイル",
+    "title": "添付文書",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
@@ -333,8 +333,8 @@
       "details.label": "詳細",
       "reworkDetails.label": "詳細をやり直し",
       "docReview.label": "レビュー文書",
-      "parentDoc.label": "タスクの起源",
-      "attachments.label": "添付ファイル",
+      "parentDoc.label": "任務の起源",
+      "attachments.label": "添付文書",
       "references.label": "参照",
       "notes.label": "コメント",
       "workflow.label": "プロセスの概要",
@@ -344,7 +344,7 @@
       "reject.label": "を説明することを拒否し"
     },
     "filters": {
-      "myTasks": "私のタスク",
+      "myTasks": "私の任務",
       "opened": "開いているすべて",
       "completed": "すべて終了",
       "dueToday": "今日はすべてが原因",
@@ -356,8 +356,8 @@
     "sorters": {
       "createdDateAsc": "作成日で並べ替え",
       "createdDateDesc": "アンチは、イベントの日付順",
-      "nameAsc": "タスク名で並べ替え",
-      "nameDesc": "アンチは、タスク名でソート",
+      "nameAsc": "任務名で並べ替え",
+      "nameDesc": "アンチは、任務名でソート",
       "noSort": "(注文しません)"
     }
   }

@@ -49,7 +49,7 @@
         "displayName": "common.directive.docTree.table.columns.type",
         "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "12%",
         "index": 4
       },
@@ -58,7 +58,7 @@
         "displayName": "common.directive.docTree.table.columns.created",
         "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 5
       },
@@ -67,17 +67,17 @@
         "displayName": "common.directive.docTree.table.columns.modified",
         "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
         "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 6
       },
       {
-        "name": "author",
-        "field": "creator",
-        "displayName": "common.directive.docTree.table.columns.author",
-        "headTemplate": "<label id='author' class='doc-tree-header' style='cursor: pointer;'></label>",
-        "icon": "<i class='fa fa-fw' data-sort='author' data-dir='ASC'></i>",
-        "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
+        "name": "modifier",
+        "field": "modifier",
+        "displayName": "common.directive.docTree.table.columns.modifier",
+        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
         "index": 7
@@ -85,7 +85,7 @@
       {
         "name": "version",
         "displayName": "common.directive.docTree.table.columns.version",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%",
         "index": 8
       },
@@ -648,6 +648,12 @@
       }
     }
   },
+  "coreCalendarErrorMessage": {
+    "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
+    "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
+    "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
+  },
   "dialogPersonPicker": {
     "enableFiltering": false,
     "multiSelect": false,
@@ -751,6 +757,11 @@
       {
         "name": "name",
         "displayName": "common.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName" : "common.dialogObjectPicker.table.columns.title",
         "headerCellFilter": "translate"
       }
     ],

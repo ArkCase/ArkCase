@@ -53,6 +53,7 @@
         <module>acm-service-webdav</module>
         <module>acm-service-calendar</module>
         <module>acm-service-calendar-integration-exchange</module>
+        <module>acm-service-labels</module>
   </modules>
 
 

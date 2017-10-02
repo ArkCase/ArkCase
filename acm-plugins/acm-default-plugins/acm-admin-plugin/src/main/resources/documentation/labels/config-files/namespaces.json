@@ -64,10 +64,6 @@
         "name": "Document Management"
     },
     {
-        "id": "ebrief",
-        "name": "eBrief"
-    },
-    {
         "id": "casefilesplit",
         "name": "Split Case"
     },

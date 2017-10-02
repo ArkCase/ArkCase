@@ -264,9 +264,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Calling pipeline manager handlers");
-            getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () ->
+            return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () ->
             {
-                return ecmFile;
+                return pipelineContext.getEcmFile();
             });
         } catch (Exception e)
         {

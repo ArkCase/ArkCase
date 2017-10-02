@@ -49,24 +49,21 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 return groups;
             }
         );
-
-        ObjectLookupService.getPriorities().then(
+        
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
-                var options = [];
-                _.each(priorities, function (priority) {
-                    options.push({value: priority, text: priority});
-                });
-                $scope.priorities = options;
+                $scope.priorities = priorities;
                 return priorities;
             }
         );
 
         $scope.openAssigneePickerModal = function () {
             var participant = {
-                        id: '',
-                        participantLdapId: '',
-                        config: $scope.config
-                    };
+                id: '',
+                participantLdapId: '',
+                config: $scope.config
+            };
             showAssigneeModal(participant, false);
         };
 
@@ -90,7 +87,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
             modalInstance.result.then(function (chosenNode) {
                 $scope.participant = {};
-                
+
                 if (chosenNode.participant.participantLdapId != '' && chosenNode.participant.participantLdapId != null) {
                     $scope.participant.participantLdapId = chosenNode.participant.participantLdapId;
                     $scope.participant.object_type_s = chosenNode.participant.object_type_s;
@@ -118,7 +115,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
                             // Seting the owningGroup in the objectInfo before the save
                             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-                            $scope.updateAssignee($scope.assignee); 
+                            $scope.updateAssignee($scope.assignee);
                         }
                     }
                 }
@@ -129,10 +126,10 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         $scope.openGroupPickerModal = function () {
             var participant = {
-                        id: '',
-                        participantLdapId: '',
-                        config: $scope.config
-                    };
+                id: '',
+                participantLdapId: '',
+                config: $scope.config
+            };
             showGroupModal(participant, false);
         };
 
@@ -156,7 +153,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
             modalInstance.result.then(function (chosenGroup) {
                 $scope.participant = {};
-                 
+
                 if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
                     $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
                     $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
@@ -168,63 +165,66 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     var start = 0;
                     var searchQuery = '*';
                     var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + '"' + chosenOwningGroup + '"';
-                    
+
                     // Creating a query to get all the users that belong to a particular Owning Group
                     // this query is need for the search logic below
                     var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
                     if (query) {
                         SearchService.queryFilteredSearch({
-                            query: query
-                        },
-                        function (data) {
-                            var returnedUsers = data.response.docs;
-                            // Going through th collection of returnedUsers to see if there is a match with the current assignee
-                            // if there is a match that means the current assignee is within that owning group hence no 
-                            // changes to the current assignee is needed
-                            _.each(returnedUsers, function (returnedUser) {
-                                if (currentAssignee === returnedUser.object_id_s) {
-                                    $scope.iscurrentAssigneeInOwningGroup = true;
-                                }
-                            });
-                            if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
-                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
-
-                                $scope.updateOwningGroup();
-                            } else {
-                                $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
-                                $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
-                                $scope.assignee = null;
-
-                                var assigneeParticipantType = 'assignee';
-                                // Iterating through the array to find the participant with the ParticipantType eqaul assignee
-                                // then setiing the participantLdapId to empty string
-                                _.each($scope.objectInfo.participants, function(participant) {
-                                    if(participant.participantType == assigneeParticipantType){
-                                        participant.participantLdapId = '';
+                                query: query
+                            },
+                            function (data) {
+                                var returnedUsers = data.response.docs;
+                                // Going through th collection of returnedUsers to see if there is a match with the current assignee
+                                // if there is a match that means the current assignee is within that owning group hence no
+                                // changes to the current assignee is needed
+                                _.each(returnedUsers, function (returnedUser) {
+                                    if (currentAssignee === returnedUser.object_id_s) {
+                                        $scope.iscurrentAssigneeInOwningGroup = true;
                                     }
                                 });
-                                
-                                // Seting the owningGroup in the objectInfo before the save
-                                ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-                                $scope.updateAssignee($scope.assignee); 
-                            }    
-                        });
+                                if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
+                                    $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                    $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
+
+                                    $scope.updateOwningGroup();
+                                } else {
+                                    $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                    $scope.objectInfo.candidateGroups = [$scope.participant.participantLdapId];
+                                    $scope.assignee = null;
+
+                                    var assigneeParticipantType = 'assignee';
+                                    // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                                    // then setiing the participantLdapId to empty string
+                                    _.each($scope.objectInfo.participants, function(participant) {
+                                        if(participant.participantType == assigneeParticipantType){
+                                            participant.participantLdapId = '';
+                                        }
+                                    });
+
+                                    // Seting the owningGroup in the objectInfo before the save
+                                    ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
+                                    $scope.updateAssignee($scope.assignee);
+                                }
+                            });
                     }
                 }
-            }, function(error) {    
+            }, function(error) {
             });
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
-            $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
+            $scope.dateInfo.taskStartDate = moment($scope.objectInfo.taskStartDate).format($translate.instant('common.defaultDateFormat'));
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-
+            getPrioritiesPromise.then(function() {
+                setPriorityValue();
+            });
+            
             var owningGroupParticipantType = 'owning group';
             $scope.owningGroup = 'Unknown';
 
@@ -259,12 +259,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.objectInfo.assignee = assignee;
             saveTask();
         };
-        $scope.updateStartDate = function (taskStartDate) {
-            $scope.objectInfo.taskStartDate = UtilDateService.dateToIso($scope.dateInfo.taskStartDate);
+        $scope.updateStartDate = function () {
+            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.taskStartDate)).format($translate.instant('common.defaultDateFormat'));
             saveTask();
         };
-        $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveTask();
         };
         $scope.updateOwningGroup = function () {
@@ -325,6 +326,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         function saveTask() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setPriorityValue();
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = TaskInfoService.saveTaskInfo(objectInfo);
@@ -346,5 +348,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             return promiseSaveInfo;
         }
 
+        var setPriorityValue = function() {
+            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
+            if (priority) {
+                $scope.priorityValue = priority.value;
+            } else {
+                $scope.priorityValue = 'core.unknown';
+            }
+        }
     }
 ]);

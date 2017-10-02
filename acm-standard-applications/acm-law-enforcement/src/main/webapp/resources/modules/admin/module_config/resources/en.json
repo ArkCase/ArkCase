@@ -264,6 +264,29 @@
         }
       }
     },
+    "security.calendarCredentialsConfiguration": {
+      "title": "Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "System Email Address",
+        "password": "System Password",
+        "password.placeholder": "System Password",
+        "save.button": "Save",
+        "validate.button": "Validate"
+      },
+      "modal": {
+        "title": "Outlook folder override",
+        "message": "You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "Confirm",
+        "cancel.button": "Cancel"
+      },
+      "message": {
+        "credentials.valid": "Credentials are valid",
+        "credentials.invalid": "Credentials are not valid",
+        "credentials.error": "An error has occurred while checking the credentials",
+        "save.successful": "Outlook folder creator saved successfully",
+        "save.fail": "Outlook folder creator not saved"
+      }
+    },
     "security.emailConfiguration": {
       "title": "Document Delivery Policy",
       "emailConfigForm": {
@@ -371,8 +394,14 @@
     "dashboard.title": "Dashboard",
     "dashboard.config": "Dashboard Configuration",
     "dashboard.widgets": "Widgets",
-    "reports.title": "Reports",
-    "reports.config": "Reports Configuration",
+    "reports": {
+      "title": "Reports",
+      "config": "Reports Configuration",
+      "btn": {
+        "reportDesigner": "Report Designer",
+        "sync": "Synchronise"
+      }
+    },
     "forms.title": "Forms",
     "forms.config": "Form Configuration",
     "workflows.title": "Workflows",
@@ -459,6 +488,26 @@
           "btnRefresh.label": "Reset",
           "btnRefresh.title": "Reset labels to default values but keep customized labels unchanged",
           "resetCustom.confirm": "Are you sure you want remove selected custom resources?"
+        }
+      },
+      "lookups.config": {
+        "title": "Lookups Configuration",
+        "choose": "Choose Lookup",
+        "data": {
+          "key" : "Key",
+          "value" : "Value",
+          "inverseKey" : "Inverse key",
+          "inverseValue" : "Inverse value"
+        },
+        "modal" : {
+          "editEntry" : "Edit lookup entry",
+          "addEntry" : "Add lookup entry",
+          "key.placeholder" : "Enter entry key",
+          "value.placeholder" : "Enter entry value as label key",
+          "inversekey.placeholder" : "Enter entry inverse key",
+          "inversevalue.placeholder" : "Enter entry inverse value as label key",
+          "btnCancel.text" : "Cancel",
+          "btnOk.text" : "Save entry"
         }
       },
       "module.config": {
@@ -672,5 +721,44 @@
         "update.error": "Error updating configuration row."
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "Security - Ldap config grid"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "Correspondence Management Merge Fields grid"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "Correspondence Management Merge Fields version grid"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "Correspondence Management Templates grid"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "Correspondance Management Template Versions grid"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "Application - Labels Config grid"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "Forms - Forms Config grid"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "Workflows - Workflows Config grid"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "Workflows - Workflows Config history dialog grid"
+  },
+  "admin.comp.usersPicker": {
+    "title": "Select users"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "Organization Hierarchy"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS Configuration Grid"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "Email templates"
   }
 }

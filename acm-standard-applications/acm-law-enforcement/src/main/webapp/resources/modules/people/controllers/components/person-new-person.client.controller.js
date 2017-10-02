@@ -44,7 +44,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
             _.each(contactMethodTypes, function (cmType) {
-                $scope.cmTypes[cmType.type] = cmType;
+                $scope.cmTypes[cmType.key] = cmType;
             });
 
             //used for generating the view for communication accounts
@@ -181,12 +181,13 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         };
 
 
-        $scope.searchOrganization = function (index) {
+        $scope.searchOrganization = function (index, isNewPerson) {
             var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.organizationTypes
+                types: $scope.organizationTypes,
+                isNewPerson: isNewPerson
             };
             //set this params for editing
             if (association.organization) {

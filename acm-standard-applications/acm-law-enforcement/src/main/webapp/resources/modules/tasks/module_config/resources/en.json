@@ -269,6 +269,9 @@
       "username": "Assignee"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",

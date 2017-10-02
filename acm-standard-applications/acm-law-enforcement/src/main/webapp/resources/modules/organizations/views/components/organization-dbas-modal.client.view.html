@@ -21,7 +21,7 @@
                     class="required-asterisk">*</span>
                 <select id="type"
                         ng-model="dba.type" class="input-md form-control" required="required"
-                        ng-options="item.type as item.name for item in dbasTypes"></select>
+                        ng-options="item.key as item.value | translate for item in dbasTypes"></select>
             </div>
         </div>
         <div class="row">

@@ -216,6 +216,28 @@
       "value.placeholder": "zh-cn_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
@@ -364,6 +386,7 @@
       "faxes.label": "传真号码",
       "emails.label": "电子邮箱",
       "urls.label": "网址",
+      "participants.label": "参与成员",
       "dbas.label": "DBA",
       "people.label": "成员",
       "ids.label": "组织号码",

@@ -1,35 +1,52 @@
 'use strict';
 
-angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', '$q',
+angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', 'Admin.ReportsConfigService', 'LookupService', '$q', '$sce',
 
-    function ($scope, reportsConfigService, $q) {
-		var deferred = $q.defer();
-		var tempReportsPromise = reportsConfigService.getReports();
-        var tempUserGroupsPromise = reportsConfigService.getUserGroups();
-        var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
+    function ($scope, reportsConfigService, LookupService, $q, $sce) {
+        var deferred = $q.defer();
+
         $scope.reports = [];
         $scope.reportsMap = [];
         $scope.userGroupsAll = [];
+        $scope.reportsConfig = null;
+        $scope.reportDesignerUrl = null;
 
-        //wait all promises to resolve
-        $q.all([tempReportsPromise, tempUserGroupsPromise, tempReportsUserGroupsPromise]).then(function (payload) {
-            //get all reports
-            angular.forEach(payload[0].data, function (report) {
-                var element = new Object;
-                element.name = report["title"];
-                element.key = report["propertyName"];
-                $scope.reports.push(element);
-                $scope.reportsMap[report["propertyName"]] = report;
+        $scope.execute = function ()
+        {
+            var tempReportsPromise = reportsConfigService.getReports();
+            var tempUserGroupsPromise = reportsConfigService.getUserGroups();
+            var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
+            var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
+            $scope.reports = [];
+            $scope.reportsMap = [];
+            $scope.userGroupsAll = [];
+            //wait all promises to resolve
+            $q.all([tempReportsPromise, tempUserGroupsPromise, tempReportsUserGroupsPromise, promiseServerConfig]).then(function (payload) {
+                //get all reports
+                angular.forEach(payload[0].data, function (report) {
+                    var element = new Object;
+                    element.name = report["title"];
+                    element.key = report["propertyName"];
+                    $scope.reports.push(element);
+                    $scope.reportsMap[report["propertyName"]] = report;
+                });
+
+                //get all user groups
+                angular.forEach(payload[1].data.response.docs, function (userGroup) {
+                    $scope.userGroupsAll[userGroup["object_id_s"]] = userGroup;
+                });
+
+                //get all reports user groups
+                $scope.reportsUserGroups = payload[2].data;
+
+                $scope.reportsConfig = payload[3];
+
+                var url = $scope.reportsConfig['PENTAHO_SERVER_URL'] + '/pentaho';
+                $scope.reportDesignerUrl = $sce.trustAsResourceUrl(url);
             });
+        }
 
-            //get all user groups
-            angular.forEach(payload[1].data.response.docs, function (userGroup) {
-                $scope.userGroupsAll[userGroup["object_id_s"]] = userGroup;
-            });
-
-            //get all reports user groups
-            $scope.reportsUserGroups = payload[2].data;
-        });
+        $scope.execute();
 
         //callback function when report is selected
         $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
@@ -80,8 +97,23 @@ angular.module('admin').controller('Admin.ReportsConfigController', ['$scope', '
             }, function(){
                 deferred.reject();
             });
-            
+
             return deferred.promise;
         };
+
+        $scope.openPentaho = function() {
+            if ($scope.reportDesignerUrl) {
+                window.open($scope.reportDesignerUrl, '_blank');
+            }
+        }
+
+        $scope.syncReports = function() {
+            reportsConfigService.syncReports().then(function() {
+                $scope.execute();
+                deferred.resolve();
+            }, function(){
+                deferred.reject();
+            });
+        }
     }
 ]);
