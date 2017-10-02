@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.objectdiff.model.AcmObjectChange;
-import com.armedia.acm.objectdiff.model.AcmObjectModified;
+import com.armedia.acm.objectdiff.service.AcmObjectDiffUtils;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Identification;
@@ -25,10 +25,11 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(locations = {
         "/spring/spring-library-person-diff-test.xml"
 })
-public class PersonDiffTest {
+public class PersonDiffTest
+{
 
     @Autowired
-    private PersonDiff personDiff;
+    private AcmObjectDiffUtils acmObjectDiffUtils;
     private Person oldPerson;
     private ContactMethod defaultUrl;
     private ContactMethod defaultEmail;
@@ -39,7 +40,8 @@ public class PersonDiffTest {
 
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
 
         defaultUrl = new ContactMethod();
         defaultUrl.setId(1l);
@@ -99,7 +101,8 @@ public class PersonDiffTest {
     }
 
     @Test
-    public void compare() throws Exception {
+    public void compare() throws Exception
+    {
         Person newPerson = SerializationUtils.clone(oldPerson);
         newPerson.setModified(new Date(System.currentTimeMillis()));
 
@@ -118,7 +121,7 @@ public class PersonDiffTest {
         newPhone.setType("phone");
         newPerson.getContactMethods().add(newPhone);
 
-        AcmObjectChange objectChange = personDiff.compare(oldPerson, newPerson);
+        AcmObjectChange objectChange = acmObjectDiffUtils.compareObjects(oldPerson, newPerson);
         System.out.println(objectChange);
 
 
@@ -128,13 +131,7 @@ public class PersonDiffTest {
 
         //assertEquals(3, objectChange.getChanges().size());
 
-        ObjectMapper om = new ObjectMapper();
-        om.enable(SerializationFeature.INDENT_OUTPUT);
-        System.out.println(om.writerWithDefaultPrettyPrinter().writeValueAsString(objectChange));
+        System.out.println(objectChange.getChangesAsJson());
 
-    }
-
-    public void setPersonDiff(PersonDiff personDiff) {
-        this.personDiff = personDiff;
     }
 }
