@@ -1,6 +1,6 @@
 package com.armedia.acm.objectdiff.model;
 
-public class AcmObjectReplaced extends AcmPropertyChange
+public class AcmObjectReplaced extends AcmObjectChange
 {
     private Object oldValue;
     private Object newValue;
@@ -9,7 +9,7 @@ public class AcmObjectReplaced extends AcmPropertyChange
     {
         setProperty(property);
         setPath(path);
-        setAction(AcmDiffConstants.VALUE_CHANGED);
+        setAction(AcmDiffConstants.OBJECT_REPLACED);
     }
 
     public Object getOldValue()

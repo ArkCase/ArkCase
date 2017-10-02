@@ -1,9 +1,9 @@
 package com.armedia.acm.objectdiff.model;
 
-public abstract class AcmCollectionElementChange extends AcmChange
+public abstract class AcmObjectChange extends AcmPropertyChange
 {
-    protected Long affectedObjectId;
-    protected String affectedObjectType;
+    private Long affectedObjectId;
+    private String affectedObjectType;
 
     public Long getAffectedObjectId()
     {

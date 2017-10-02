@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.objectdiff.model.AcmObjectChange;
 import com.armedia.acm.objectdiff.model.AcmObjectModified;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
@@ -50,7 +51,7 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
             personPersistenceEvent.setEventAction("created");
         } else
         {
-            AcmObjectModified acmObjectModified = personDiff.compare(oldPerson, source);
+            AcmObjectChange acmObjectModified = personDiff.compare(oldPerson, source);
             System.out.println(acmObjectModified);
             personPersistenceEvent.setEventAction("updated");
         }
