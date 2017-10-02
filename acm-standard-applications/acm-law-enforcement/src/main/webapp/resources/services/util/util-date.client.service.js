@@ -186,6 +186,22 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 return currentTimeZoneOffset;
             }
 
+            /**
+             * @ngdoc method
+             * @name convertToCurrentTime
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Computates the time difference between UTC time and local time
+             *
+             * @Returns {Date} Date object
+             */
+            , convertToCurrentTime: function (date) {
+                var now = new Date();
+                var convertedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+                return convertedTime;
+            }
+
         };
 
         return Service;
