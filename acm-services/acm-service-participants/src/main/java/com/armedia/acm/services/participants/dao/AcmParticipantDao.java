@@ -83,7 +83,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     {
         String jpql = "" +
                 "SELECT count(app.id) AS numFound " +
-                "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.members m " +
+                "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.userMembers m " +
                 "WHERE app.participant.objectId = :objectId " +
                 "AND app.participant.objectType = :objectType " +
                 "AND app.objectAction = :action " +
