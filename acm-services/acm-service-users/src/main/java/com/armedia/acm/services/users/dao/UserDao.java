@@ -51,15 +51,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public void init()
     {
-        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst();
+        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
+                .findFirst();
         if (localeSettings.isPresent())
         {
             String settings = localeSettings.get().getConfigAsJson();
             Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
                     .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
             DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale").toString();
-        }
-        else
+        } else
         {
             DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
         }
@@ -79,8 +79,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (existingUser != null)
             {
                 acmUser.setLang(existingUser.getLang());
-            }
-            else
+            } else
             {
                 // set default lang
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
@@ -121,8 +120,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            }
-            else
+            } else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -132,7 +130,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 }
             }
 
-        } catch (PersistenceException pe)
+        }
+        catch (PersistenceException pe)
         {
             log.error("Could not find user record: {}", pe.getMessage(), pe);
         }
@@ -295,13 +294,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         try
         {
             AcmUser user = findByUserIdAnyCase(principal);
+            if (user.getUserState() != AcmUserState.VALID)
+            {
+                return false;
+            }
             LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
             if (userPasswordExpirationDate != null)
             {
                 return userPasswordExpirationDate.isBefore(LocalDate.now());
             }
             log.info("Password expiration date is not set for user [{}]", principal);
-        } catch (NoResultException | NonUniqueResultException e)
+        }
+        catch (NoResultException | NonUniqueResultException e)
         {
             log.debug("User [{}] not found!", principal);
         }
@@ -316,20 +320,22 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         try
         {
             return query.getSingleResult();
-        } catch (NoResultException | NonUniqueResultException e)
+        }
+        catch (NoResultException | NonUniqueResultException e)
         {
             log.error("User with password reset token: [{}] not found!", token, e.getMessage());
             return null;
         }
     }
 
-    public List<AcmUser> findByDirectory(String directoryName)
+    public List<AcmUser> findValidUsersByDirectory(String directoryName)
     {
-        TypedQuery<AcmUser> allUsersInDirectory = getEm()
+        TypedQuery<AcmUser> allValidUsersInDirectory = getEm()
                 .createQuery("SELECT DISTINCT acmUser FROM AcmUser acmUser LEFT JOIN FETCH acmUser.groups "
-                        + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
-        allUsersInDirectory.setParameter("directoryName", directoryName);
-        return allUsersInDirectory.getResultList();
+                        + "WHERE acmUser.userDirectoryName = :directoryName AND acmUser.userState = :userState", AcmUser.class);
+        allValidUsersInDirectory.setParameter("directoryName", directoryName);
+        allValidUsersInDirectory.setParameter("userState", AcmUserState.VALID);
+        return allValidUsersInDirectory.getResultList();
     }
 
     @Transactional
