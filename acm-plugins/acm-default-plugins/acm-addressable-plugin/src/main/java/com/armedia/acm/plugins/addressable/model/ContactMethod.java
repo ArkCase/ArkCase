@@ -89,6 +89,9 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
+    @Transient
+    private String objectType = ContactMethodConstants.OBJECT_TYPE;
+
     @PrePersist
     protected void beforeInsert()
     {
@@ -112,7 +115,7 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
     @Override
     public String getObjectType()
     {
-        return ContactMethodConstants.OBJECT_TYPE;
+        return objectType;
     }
 
     @XmlTransient

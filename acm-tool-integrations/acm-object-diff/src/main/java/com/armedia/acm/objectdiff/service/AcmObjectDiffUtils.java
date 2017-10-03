@@ -122,7 +122,6 @@ public class AcmObjectDiffUtils
      */
     private AcmObjectChange compareObjects(String parentPath, String property, Object oldObj, Object newObj)
     {
-        AcmDiffBeanConfiguration cfg = configurationMap.get(oldObj.getClass().getName());
 
         if (oldObj == null && newObj == null)
         {
@@ -136,6 +135,13 @@ public class AcmObjectDiffUtils
             acmObjectReplaced.setOldValue(oldObj);
             acmObjectReplaced.setNewValue(newObj);
             return acmObjectReplaced;
+        }
+
+        AcmDiffBeanConfiguration cfg = configurationMap.get(oldObj.getClass().getName());
+        if (cfg == null)
+        {
+            //no configuration for given object
+            return null;
         }
 
         //check if objects are same types
@@ -290,6 +296,17 @@ public class AcmObjectDiffUtils
      */
     private AcmCollectionChange createListChange(String parentPath, String property, List oldList, List newList)
     {
+        if (oldList == null && newList == null)
+        {
+            //they are same
+            return null;
+        }
+        Class clazz = getTypeOfCollection(oldList != null ? oldList : newList);
+        if (clazz == null || !configurationMap.containsKey(clazz.getName()))
+        {
+            //can't determine type of objects in the list
+            return null;
+        }
         AcmCollectionChange acmListChange = new AcmCollectionChange(parentPath + "." + property, property);
         for (Object oldObj : oldList)
         {
@@ -304,7 +321,8 @@ public class AcmObjectDiffUtils
                     if (change != null && change instanceof AcmObjectModified)
                     {
                         AcmDiffBeanConfiguration cfg = configurationMap.get(oldObj.getClass().getName());
-                        change.setPath(acmListChange.getPath() + "." + cfg.getName());
+                        String pathSuffix = cfg != null ? cfg.getName() : oldObj.getClass().getSimpleName();
+                        change.setPath(acmListChange.getPath() + "." + pathSuffix);
                         updateChangeForAcmObjectInfo(oldObj, change);
                         acmListChange.addChange(new AcmCollectionElementModified((AcmObjectModified) change));
                     }
@@ -314,7 +332,8 @@ public class AcmObjectDiffUtils
             {
                 AcmCollectionElementRemoved elementChange = new AcmCollectionElementRemoved(oldObj);
                 AcmDiffBeanConfiguration cfg = configurationMap.get(oldObj.getClass().getName());
-                elementChange.setPath(acmListChange.getPath() + "." + cfg.getName());
+                String pathSuffix = cfg != null ? cfg.getName() : oldObj.getClass().getSimpleName();
+                elementChange.setPath(acmListChange.getPath() + "." + pathSuffix);
                 updateChangeForAcmCollectionObjectInfo(oldObj, elementChange);
                 acmListChange.addChange(elementChange);
             }
@@ -335,7 +354,8 @@ public class AcmObjectDiffUtils
                 AcmCollectionElementAdded elementChange = new AcmCollectionElementAdded(newObj);
                 AcmDiffBeanConfiguration cfg = configurationMap.get(newObj.getClass().getName());
                 updateChangeForAcmCollectionObjectInfo(newObj, elementChange);
-                elementChange.setPath(acmListChange.getPath() + "." + cfg.getName());
+                String pathSuffix = cfg != null ? cfg.getName() : newObj.getClass().getSimpleName();
+                elementChange.setPath(acmListChange.getPath() + "." + pathSuffix);
                 acmListChange.addChange(elementChange);
             }
         }
@@ -346,6 +366,22 @@ public class AcmObjectDiffUtils
         {
             return acmListChange;
         }
+    }
+
+    private Class getTypeOfCollection(List list)
+    {
+        Class clazz = null;
+        for (Object obj : list)
+        {
+            if (clazz == null)
+            {
+                clazz = obj.getClass();
+            } else if (!clazz.equals(obj.getClass()))
+            {
+                return null;
+            }
+        }
+        return clazz;
     }
 
     /**
