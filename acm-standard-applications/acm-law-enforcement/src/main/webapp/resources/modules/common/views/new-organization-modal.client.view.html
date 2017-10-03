@@ -25,9 +25,9 @@
 
         <div class="row well-sm">
             <div class="col-sm-4 form-group">
-                <label for="familyName" translate> common.newOrganization.name</label>
+                <label translate> common.newOrganization.name</label>
                 <span class="required-asterisk">*</span>
-                <input type="text" id="familyName" ng-model="organization.organizationValue"
+                <input type="text" ng-model="organization.organizationValue"
                        class="input-md form-control"
                        required="required"
                        placeholder="{{ 'common.newOrganization.name.placeholder' | translate }}"
@@ -54,15 +54,15 @@
                        style="background-color: white;">
             </div>
         </div>
-        <div id="accordion" class="panel-group">
+        <div id="#accordionNewOrganization{{accordionSuffix}}" class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseIdentification" translate>
+                        <a data-toggle="collapse" data-parent="#accordionNewOrganization{{accordionSuffix}}" href="#collapseIdentification{{accordionSuffix}}" translate>
                             common.newOrganization.identification.title</a>
                     </h4>
                 </div>
-                <div id="collapseIdentification" class="panel-collapse collapse in">
+                <div id="collapseIdentification{{accordionSuffix}}" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-4 form-group">
@@ -214,10 +214,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOrganizations" translate>common.newOrganization.people.title</a>
+                    <a data-toggle="collapse" data-parent="#accordionNewOrganization{{accordionSuffix}}" href="#collapsePeople{{accordionSuffix}}" translate>common.newOrganization.people.title</a>
                 </h4>
             </div>
-            <div id="collapseOrganizations" class="panel-collapse collapse">
+            <div id="collapsePeople{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div ng-repeat="personAssociation in organization.personAssociations">
                         <div class="row">
@@ -260,10 +260,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseLocations" translate>common.newOrganization.locations.title</a>
+                    <a data-toggle="collapse" data-parent="#accordionNewOrganization{{accordionSuffix}}" href="#collapseLocations{{accordionSuffix}}" translate>common.newOrganization.locations.title</a>
                 </h4>
             </div>
-            <div id="collapseLocations" class="panel-collapse collapse">
+            <div id="collapseLocations{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4 form-group">
@@ -421,11 +421,11 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts"
+                    <a data-toggle="collapse" data-parent="#accordionNewOrganization{{accordionSuffix}}" href="#collapseCommunicationAccounts{{accordionSuffix}}"
                        translate>common.newOrganization.communicationAccounts.title</a>
                 </h4>
             </div>
-            <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
+            <div id="collapseCommunicationAccounts{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div ng-repeat="caType in communicationAccountsTypes">
                         <div id="defaultPhone" class="row">
