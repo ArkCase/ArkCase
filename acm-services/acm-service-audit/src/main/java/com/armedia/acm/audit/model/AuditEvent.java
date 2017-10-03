@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -92,6 +93,10 @@ public class AuditEvent
     @ManyToOne(optional = true)
     @JoinColumn(name = "cm_audit_activity", referencedColumnName = "cm_key", nullable = true, insertable = false, updatable = false)
     private AcmAuditLookup auditLookup;
+
+    @Lob
+    @Column(name = "cm_diff_details")
+    private String diffDetails;
 
     public Date getEventDate()
     {
@@ -265,6 +270,16 @@ public class AuditEvent
     public void setEventProperties(Map<String, String> eventProperties)
     {
         this.eventProperties = eventProperties;
+    }
+
+    public String getDiffDetails()
+    {
+        return diffDetails;
+    }
+
+    public void setDiffDetails(String diffDetails)
+    {
+        this.diffDetails = diffDetails;
     }
 
     @Override
