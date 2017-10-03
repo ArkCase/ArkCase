@@ -47,6 +47,16 @@ angular.module('dashboard.organizations', ['adf.provider'])
                     columnDefs: []
                 };
 
+                $scope.getPrimaryContact = function(organizationAssiciation)
+                {
+                    var primaryContact = organizationAssiciation.organization.primaryContact;
+                    if (!!primaryContact) {
+                        return (primaryContact.person.givenName.trim() + ' ' + primaryContact.person.familyName.trim()).trim();
+                    }
+
+                    return '';
+                };
+
                 var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
                 new HelperObjectBrowserService.Component({
