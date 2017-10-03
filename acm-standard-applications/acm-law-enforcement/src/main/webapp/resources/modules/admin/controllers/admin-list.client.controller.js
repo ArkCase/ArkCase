@@ -43,8 +43,6 @@ angular.module('admin').controller('AdminListController', ['$scope', '$state', '
         };
 
         $scope.onSelect = function(selectedObject){
-            console.log(selectedObject);
-            console.log(selectedObject.components);
             var comp = Util.goodMapValue(selectedObject, "components[0]", false);
             if (comp) {
                 $state.go('admin.view-node', {
