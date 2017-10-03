@@ -27,7 +27,7 @@ public class LdapSyncProcessor
     @Transactional
     public void sync(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups, AcmLdapSyncConfig ldapSyncConfig)
     {
-        List<AcmUser> currentUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
+        List<AcmUser> currentUsers = userDao.findValidUsersByDirectory(ldapSyncConfig.getDirectoryName());
         AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult();
         Map<String, AcmUser> allUsersByIdMap = acmUsersSyncResult.sync(ldapUsers, currentUsers);
 

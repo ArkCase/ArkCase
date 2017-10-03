@@ -79,10 +79,10 @@ public class LdapUserService
                 // using user.addGroup() here throws "detached object" error if a user with the same id already
                 // exists in the database (INVALID or DELETED)
                 groups.add(group);
+                group.addUserMember(user);
             }
             log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group);
         });
-        user.setGroups(groups);
 
         log.debug("Saving new User [{}] with DN [{}] in database", user.getUserId(), user.getDistinguishedName());
         AcmUser acmUser = userDao.save(user);
@@ -336,6 +336,7 @@ public class LdapUserService
     {
         log.debug("Creating new user [{}] as a clone of [{}]", acmUser.getUserId(), userId);
         AcmUser existingUser = userDao.findByUserId(userId);
+        acmUser.setLang(existingUser.getLang());
         return createLdapUser(acmUser, existingUser.getGroupNames().collect(Collectors.toList()), password, directory);
     }
 
