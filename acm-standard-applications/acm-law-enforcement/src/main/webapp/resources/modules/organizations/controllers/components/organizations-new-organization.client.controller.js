@@ -36,7 +36,8 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             },
             defaultFax: {
                 type: 'fax'
-            }
+            },
+            details: ''
         };
 
         ObjectLookupService.getOrganizationPersonRelationTypes().then(
@@ -182,7 +183,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
             _.each(contactMethodTypes, function (cmType) {
-                $scope.cmTypes[cmType.type] = cmType;
+                $scope.cmTypes[cmType.key] = cmType;
             });
 
             //used for generating the view for communication accounts

@@ -1,33 +1,40 @@
 {
   "organizations": {
     "title": "组织",
-    "progressNoComplaint": "zh-cn_[ No organizations data ]",
-    "progressLoading": "zh-cn_Loading organization ",
-    "progressError": "zh-cn_Failed to load organization "
+    "progressNoComplaint": "[ 无组织数据 ]",
+    "progressLoading": "加载组织数据",
+    "progressError": "加载组织数据失败",
+    "noDataMessage": "无数据"
   },
   "organizations.menus": {
     "leftnav.item": "组织",
     "topbar.item": "组织"
   },
+  "organizations.comp.main": {
+    "title": "概述"
+  },
   "organizations.comp.info": {
-    "phone.label": "zh-cn_Phone",
-    "email.label": "zh-cn_Email",
-    "status.label": "zh-cn_Status",
-    "identification.label": "zh-cn_ID",
-    "primary.label": "zh-cn_Primary Contact",
-    "parent.label": "zh-cn_Parent Organization",
-    "parent.placeholder": "zh-cn_Enter Parent Organization"
+    "title": "信息",
+    "phone.label": "电话",
+    "email.label": "电子邮箱",
+    "status.label": "状态",
+    "organization.label": "组织",
+    "identification.label": "身份号码",
+    "primary.label": "主要联系人",
+    "parent.label": "上层组织",
+    "parent.placeholder": "输入上层组织"
   },
   "organizations.comp.actions": {
-    "export.button": "zh-cn_Export",
-    "import.button": "zh-cn_Import",
-    "delete.button": "zh-cn_Delete",
-    "activate.button": "zh-cn_Activate",
-    "deactivate.button": "zh-cn_Deactivate",
-    "merge.button": "zh-cn_Merge"
+    "title": "行动",
+    "export.button": "输出",
+    "import.button": "输入",
+    "delete.button": "删除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合并"
   },
   "organizations.comp.details": {
-    "title": "zh-cn_Details",
+    "title": "详情",
     "informSaved": "zh-cn_Organization details saved",
     "table.columns": {
       "title": "zh-cn_Details",
@@ -36,7 +43,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "zh-cn_Locations",
+    "title": "地点",
     "table.columns": {
       "type": "zh-cn_Type",
       "streetAddress": "zh-cn_Address 1",
@@ -82,7 +89,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "zh-cn_Phone Numbers",
+    "title": "电话号码",
     "table.columns": {
       "type": "zh-cn_Phone Type",
       "value": "zh-cn_Phone Number",
@@ -114,7 +121,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "zh-cn_Fax Numbers",
+    "title": "传真号码",
     "table.columns": {
       "type": "zh-cn_Fax Type",
       "value": "zh-cn_Fax Number",
@@ -146,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "zh-cn_Email Addresses",
+    "title": "电子邮箱",
     "table.columns": {
       "type": "zh-cn_Email Address Type",
       "value": "zh-cn_Email Address",
@@ -178,7 +185,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "zh-cn_URLs",
+    "title": "网址",
     "table.columns": {
       "type": "zh-cn_Type",
       "value": "zh-cn_Url",
@@ -209,8 +216,30 @@
       "value.placeholder": "zh-cn_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
-    "title": "zh-cn_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "zh-cn_Delete",
       "setPrimary": "zh-cn_Set as Primary",
@@ -242,7 +271,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "zh-cn_IDs",
+    "title": "组织号码",
     "table.columns": {
       "type": "zh-cn_Type",
       "id": "zh-cn_ID",
@@ -282,7 +311,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "zh-cn_People",
+    "title": "成员",
     "table.columns": {
       "type": "zh-cn_Role",
       "firstName": "zh-cn_FirstName",
@@ -299,7 +328,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "zh-cn_Cases",
+    "title": "案件",
     "table.columns": {
       "priority": "zh-cn_Priority",
       "id": "zh-cn_ID",
@@ -310,7 +339,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "zh-cn_Complaints",
+    "title": "投诉",
     "table.columns": {
       "priority": "zh-cn_Priority",
       "id": "zh-cn_ID",
@@ -321,7 +350,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "zh-cn_Related Organizations",
+    "title": "相关组织",
     "table.columns": {
       "associationType": "zh-cn_Relationship",
       "type": "zh-cn_Type",
@@ -342,77 +371,42 @@
     }
   },
   "organizations.comp.history": {
-    "title": "zh-cn_History",
+    "title": "历史",
     "table.columns": {
       "eventType": "zh-cn_Event Name",
       "eventDate": "zh-cn_Date",
       "userId": "zh-cn_User"
     }
   },
-  "organizations.comp.newOrganization": {
-    "title": "zh-cn_Organization",
-    "addAnother": "zh-cn_Add Another",
-    "remove": "zh-cn_Remove",
-    "name": "zh-cn_Organization Name",
-    "name.placeholder": "zh-cn_Enter Organization Name",
-    "type": "zh-cn_Organization Type",
-    "type.placeholder": "zh-cn_Select Organization Type",
-    "saveButton": "zh-cn_Save Organization",
-    "parentOrganization": "zh-cn_Parent organization",
-    "searchParentOrganization.placeholder": "zh-cn_Search Parent Organization",
-    "communicationAccounts": {
-      "title": "zh-cn_Communication Accounts",
-      "phone": "zh-cn_Phone",
-      "phone.placeholder": "zh-cn_Enter Phone",
-      "phoneType": "zh-cn_Phone Type",
-      "email": "zh-cn_Email",
-      "email.placeholder": "zh-cn_Enter Email",
-      "emailType": "zh-cn_Email Type",
-      "fax": "zh-cn_Fax",
-      "fax.placeholder": "zh-cn_Enter Fax",
-      "faxType": "zh-cn_Fax Type",
-      "url": "zh-cn_URL",
-      "url.placeholder": "zh-cn_Enter URL",
-      "removeContactMethod": "zh-cn_Remove",
-      "urlType": "zh-cn_URL Type"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "addresses.label": "地点",
+      "phones.label": "电话号码",
+      "faxes.label": "传真号码",
+      "emails.label": "电子邮箱",
+      "urls.label": "网址",
+      "participants.label": "参与成员",
+      "dbas.label": "DBA",
+      "people.label": "成员",
+      "ids.label": "组织号码",
+      "complaints.label": "投诉",
+      "cases.label": "案件",
+      "related.label": "相关组织",
+      "history.label": "历史"
     },
-    "people": {
-      "title": "zh-cn_People",
-      "searchExisting.placeholder": "zh-cn_Search Existing Person",
-      "personType": "zh-cn_Person Type"
+    "filters": {
+      "iHaveCreated": "我创建的所有",
+      "noFilter": "(无限制)"
     },
-    "locations": {
-      "title": "zh-cn_Locations",
-      "country": "zh-cn_Country",
-      "country.placeholder": "zh-cn_Select Country",
-      "state": "zh-cn_State",
-      "state.placeholder": "zh-cn_Enter State",
-      "zip": "zh-cn_Zip",
-      "zip.placeholder": "zh-cn_Enter Zip",
-      "city": "zh-cn_City",
-      "city.placeholder": "zh-cn_Enter City",
-      "type": "zh-cn_Address Type",
-      "type.placeholder": "zh-cn_Select Address Type",
-      "streetAddress": "zh-cn_Street Address",
-      "streetAddress.placeholder": "zh-cn_Enter Street Address",
-      "streetAddress2": "zh-cn_Street Address2",
-      "streetAddress2.placeholder": "zh-cn_Enter Street Address2"
-    },
-    "identification": {
-      "title": "zh-cn_Identifications",
-      "identificationID": "zh-cn_Identification ID",
-      "identificationID.placeholder": "zh-cn_Enter Identification ID",
-      "identificationType": "zh-cn_Identification Type",
-      "identificationType.placeholder": "zh-cn_Select Identification Type",
-      "identificationNumber": "zh-cn_Identification Number",
-      "identificationNumber.placeholder": "zh-cn_Enter Identification Number",
-      "identificationIssuer": "zh-cn_Identification Issuer",
-      "identificationIssuer.placeholder": "zh-cn_Enter Identification Issuer",
-      "identificationYearIssued": "zh-cn_Identification Issued",
-      "identificationYearIssued.placeholder": "zh-cn_Select Identification Issued",
-      "identificationYearIssued.close.button": "zh-cn_Close"
-    },
-    "informCreated": "zh-cn_{{objectType}} {{organizationValue}} was created."
-  },
-  "organizations.menus.topbar.item": "zh-cn_New Organization"
+    "sorters": {
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "idAsc": "按组织号排序",
+      "idDesc": "按组织号反排序",
+      "nameAsc": "按组织名排序",
+      "nameDesc": "按组织名反排序",
+      "noSort": "(不排序)"
+    }
+  }
 }

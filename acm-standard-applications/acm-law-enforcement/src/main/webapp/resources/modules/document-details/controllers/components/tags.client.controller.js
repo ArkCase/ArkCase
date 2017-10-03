@@ -9,12 +9,14 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         $scope.tags = [];
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
 
         ConfigService.getComponentConfig("document-details", "tags").then(function (config) {
             gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.setUserNameFilter(promiseUsers);
 
             $scope.retrieveGridData();
         });
@@ -22,7 +24,7 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
         $scope.retrieveGridData = function () {
             if (Util.goodPositive($stateParams.id)) {
                 var promiseQueryTags = ObjectTagsService.getAssociateTags($stateParams.id, ObjectService.ObjectTypes.FILE);
-                $q.all([promiseQueryTags]).then(function (data) {
+                $q.all([promiseQueryTags, promiseUsers]).then(function (data) {
                     $scope.tags = data[0];
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = $scope.tags;
@@ -45,6 +47,8 @@ angular.module('document-details').controller('Document.TagsController', ['$scop
 
             modalInstance.result.then(function (tags) {
                 _.forEach(tags, function (tag) {
+                    tag.object_id_s = tag.id.split("-")[0];
+                    tag.tags_s = tag.title_parseable;
                     if (tag.id) {
                         if (tag.object_id_s) {
                             var tagsFound = _.filter($scope.tags, function (tagAss) {

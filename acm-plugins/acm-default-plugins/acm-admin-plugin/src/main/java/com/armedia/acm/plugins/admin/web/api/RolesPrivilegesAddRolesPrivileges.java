@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
+import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
+import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,8 +20,9 @@ import java.util.List;
  * Created by sergey.kolomiets  on 6/24/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstants{
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstants
+{
     private Logger log = LoggerFactory.getLogger(getClass());
     private RolesPrivilegesService rolesPrivilegesService;
 
@@ -30,22 +33,24 @@ public class RolesPrivilegesAddRolesPrivileges implements RolePrivilegesConstant
     @ResponseBody
     public String addRolesPrivileges(
             @PathVariable(PROP_ROLES_NAMES) String rolesNames,
-            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames) throws IOException, AcmRolesPrivilegesException{
+            @PathVariable(PROP_PRIVILEGES_NAMES) String privilegesNames) throws IOException, AcmRolesPrivilegesException
+    {
 
-        try {
+        try
+        {
             List<String> roles = Arrays.asList(rolesNames.split(","));
             List<String> privileges = Arrays.asList(privilegesNames.split(","));
             rolesPrivilegesService.addRolesPrivileges(roles, privileges);
             return "{}";
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't add roles privileges", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't add roles privileges", e);
             throw new AcmRolesPrivilegesException("Can't add roles privileges", e);
         }
     }
 
-    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService) {
+    public void setRolesPrivilegesService(RolesPrivilegesService rolesPrivilegesService)
+    {
         this.rolesPrivilegesService = rolesPrivilegesService;
     }
 }

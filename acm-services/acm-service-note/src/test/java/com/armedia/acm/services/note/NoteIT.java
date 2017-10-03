@@ -28,7 +28,8 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-acm-encryption.xml",
                 "/spring/spring-library-user-service.xml",
                 "/spring/spring-library-mule-context-manager.xml",
-                "/spring/spring-library-search.xml"
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-note-plugin-test.xml"
         })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class NoteIT

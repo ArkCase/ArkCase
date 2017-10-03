@@ -1,25 +1,28 @@
 {
   "timeTracking": {
     "title": "トラック時間",
-    "progressNoTimesheet": "ja_[ No timesheet is selected ]",
-    "progressLoading": "ja_Loading timesheet ",
-    "progressError": "ja_Failed to load timesheet"
+    "progressNoTimesheet": "[ 時間シートが選択されていません ]",
+    "progressLoading": "時間シートの読み込み",
+    "progressError": "時間シートの読み込みに失敗しました"
   },
   "timeTracking.menus": {
     "leftnav.item": "トラック時間",
-    "topbar.item": "時間ログ"
+    "topbar.item": "時間シート"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "概観"
   },
   "timeTracking.comp.info": {
-    "lastModified.label": "ja_Last Modified"
+    "title": "情報",
+    "lastModified.label": "前回の時間変更"
   },
   "timeTracking.comp.actions": {
-    "new.button": "ja_New Timesheet",
-    "edit.button": "ja_Edit Timesheet"
+    "title": "行动",
+    "new.button": "新しい時間シート",
+    "edit.button": "時間シートの編集"
   },
   "timeTracking.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Timesheet details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -27,15 +30,15 @@
       "modifier": "ja_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "ja_Person",
+  "timeTracking.comp.person": {
+    "title": "人員",
     "table.columns": {
       "fullName": "ja_Full Name",
       "userId": "ja_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "ja_Hours Summary",
+    "title": "時間の概要",
     "table.columns": {
       "code": "ja_Parent ID",
       "type": "ja_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -66,6 +69,22 @@
         "success": "ja_Tag deleted successfully",
         "error": "ja_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "person.label": "人員",
+      "summary.label": "時間",
+      "tags.label": "タグ"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "アンチ日付順",
+      "idAsc": "時間識別番号を並べ替える",
+      "idDesc": "時間識別番号を昇順で並べ替え",
+      "nameDesc": "名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }

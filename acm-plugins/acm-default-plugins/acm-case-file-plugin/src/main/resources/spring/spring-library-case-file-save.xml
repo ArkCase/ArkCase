@@ -46,6 +46,7 @@
         <property name="autoCreateFolderForCaseFile"
                   value="${casefile.auto_create_calendar_folder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
     <bean id="caseFileFolderStructureHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileFolderStructureHandler">

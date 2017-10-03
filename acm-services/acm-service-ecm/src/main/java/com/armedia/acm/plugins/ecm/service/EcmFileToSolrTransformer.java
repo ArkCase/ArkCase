@@ -4,10 +4,11 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,17 +160,29 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         if (creator != null)
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
-            solr.setAssignee_full_name_lcs(creator.getFullName());
         }
         else
         {
-            solr.setAssignee_full_name_lcs(in.getCreator());
+            solr.setAdditionalProperty("creator_full_name_lcs", in.getCreator());
+        }
+
+        AcmUser assignee = getUserDao().quietFindByUserId(ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants()));
+        if (assignee != null)
+        {
+            solr.setAssignee_full_name_lcs(assignee.getFullName());
+        } else
+        {
+            solr.setAssignee_full_name_lcs("");
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
         if (modifier != null)
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFullName());
+        }
+        else
+        {
+            solr.setAdditionalProperty("modifier_full_name_lcs", in.getModifier());
         }
 
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());

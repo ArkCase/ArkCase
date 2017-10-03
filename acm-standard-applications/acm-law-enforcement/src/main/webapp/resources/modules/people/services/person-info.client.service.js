@@ -193,7 +193,7 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             // so we need to set it manualy. The only way to do that is to convert the data to Blob.
             // In that way we can set the desired content-type.
 
-            var data = new Blob([angular.toJson(JSOG.encode(personInfo))], {
+            var data = new Blob([angular.toJson(JSOG.encode(Util.omitNg(personInfo)))], {
                 type: 'application/json'
             });
             formData.append('person', data);
@@ -235,6 +235,9 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          */
         Service.validatePersonInfo = function (data) {
             if (Util.isEmpty(data)) {
+                return false;
+            }
+            if (data.id && !Util.isArray(data.participants)) {
                 return false;
             }
             return true;

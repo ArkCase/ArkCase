@@ -9,22 +9,28 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "Visão geral"
+  },
   "document-repository.comp.info": {
-    "docRepoId": "pt_Repository ID:",
-    "docRepoName": "pt_Document Repository Name:",
-    "modified.label": "pt_Modified Date",
-    "assignee.label": "pt_Assigned To",
-    "owningGroup.label": "pt_Owning Group",
+    "title": "Informações",
+    "docRepoId": "ID do Repositório:",
+    "docRepoName": "Nome do Repositório do Documento:",
+    "modified.label": "Data modificada",
+    "assignee.label": "Atribuído a",
+    "owningGroup.label": "O grupo pertence a",
     "description.label": "pt_Description"
   },
   "document-repository.comp.actions": {
-    "restrict": "pt_Restrict?",
-    "subscribe.button": "pt_Subscribe",
-    "unsubscribe.button": "pt_Unsubscribe",
-    "confirm.delete.documentRepository.msg": "pt_This action will delete the entire repository. Are you sure you want to proceed?"
+    "title": "Ações",
+    "restrict": "Restringir?",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "delete.button": "Eliminar o repositório",
+    "confirm.delete.documentRepository.msg": "Esta ação irá excluir todo o repositório. Tem certeza de que deseja prosseguir?"
   },
   "document-repository.comp.details": {
-    "title": "pt_Details",
+    "title": "Detalhes",
     "informSaved": "pt_Document Repository details saved",
     "table.columns": {
       "title": "pt_Details",
@@ -33,13 +39,13 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "pt_Documents",
+    "title": "Documentos",
     "sendEmail": "pt_Send Email",
     "filterInputPlaceholder": "pt_Filter",
     "searchInputPlaceholder": "pt_Search"
   },
   "document-repository.comp.participants": {
-    "title": "pt_Participants",
+    "title": "Participantes",
     "table.columns": {
       "type": "pt_Type",
       "name": "pt_Name"
@@ -61,7 +67,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "pt_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "pt_Note",
       "created": "pt_Created",
@@ -69,7 +75,7 @@
     }
   },
   "document-repository.comp.references": {
-    "title": "pt_References",
+    "title": "Referências",
     "table.columns": {
       "targetName": "pt_Number",
       "parentName": "pt_Parent",
@@ -80,7 +86,7 @@
     }
   },
   "document-repository.comp.history": {
-    "title": "pt_History",
+    "title": "Histórico",
     "table.columns": {
       "eventType": "pt_Event Name",
       "eventDate": "pt_Date",
@@ -88,7 +94,7 @@
     }
   },
   "document-repository.comp.tags": {
-    "title": "pt_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "pt_Tag",
       "created": "pt_Created",
@@ -181,5 +187,29 @@
     "table.columns.type": "pt_Type",
     "table.columns.title": "pt_Title",
     "table.columns.id": "pt_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "tags.label": "Etiquetas",
+      "references.label": "Referências",
+      "notes.label": "Notas",
+      "history.label": "Histórico"
+    },
+    "filters": {
+      "iHaveCreated": "Tudo o que eu criei",
+      "iAmFollowing": "Tudo o que estou seguindo",
+      "noFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Data Asc",
+      "dateDesc": "Ordenar Data Desc",
+      "idAsc": "Ordenar ID do Repositório Asc",
+      "idDesc": "Ordenar ID do Repositório Desc",
+      "nameAsc": "Classificar por nome Asc",
+      "noSort": "(Não classificar)"
+    }
   }
 }

@@ -121,4 +121,7 @@ angular.module('tasks').config(['$stateProvider',
                 templateUrl: 'modules/tasks/views/components/task-tags.client.view.html'
             })
     }
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

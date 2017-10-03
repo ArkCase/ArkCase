@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Comparator;
 import java.util.List;
@@ -39,6 +40,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher = applicationEventPublisher;
     }
 
+    @Async
     public void publishPersonAssociationEvent(
             PersonAssociation source,
             String ipAddress,
@@ -55,6 +57,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher.publishEvent(personAssociationPersistenceEvent);
     }
 
+    @Async
     public void publishPersonAssociationEvent(
             String personAssociationHistory,
             PersonAssociation source,
@@ -275,6 +278,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
                 .anyMatch(i -> !isPersonAliasChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
+    @Async
     public void publishPersonEvent(Person person, String eventAction, boolean succeeded, String parentType, Long parentId)
     {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -286,6 +290,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher.publishEvent(personEvent);
     }
 
+    @Async
     public void publishPersonAssociationEvent(PersonAssociation source, String eventAction, boolean succeeded)
     {
         String ipAddress = AuthenticationUtils.getUserIpAddress();
@@ -298,6 +303,7 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher.publishEvent(personAssociationEvent);
     }
 
+    @Async
     public void publishPersonAssociationDeletedEvent(PersonAssociation source)
     {
         PersonAssociationDeletedEvent event = new PersonAssociationDeletedEvent(source, source.getParentType(), source.getParentId());

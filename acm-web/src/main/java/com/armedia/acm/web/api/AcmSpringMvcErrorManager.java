@@ -9,6 +9,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.InvalidLookupException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,13 @@ public class AcmSpringMvcErrorManager
         sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
+    @ExceptionHandler(InvalidLookupException.class)
+    public void invalidLookup(HttpServletResponse response, Exception e)
+    {
+        log.error("Invalid lookup: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
+
     @ExceptionHandler(AcmAppErrorJsonMsg.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -128,7 +136,8 @@ public class AcmSpringMvcErrorManager
         {
             response.getOutputStream().write(bytes);
             response.getOutputStream().flush();
-        } catch (IOException ie)
+        }
+        catch (IOException ie)
         {
             log.error("Could not send error response to client: " + ie.getMessage(), ie);
         }

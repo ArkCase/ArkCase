@@ -23,15 +23,12 @@ Time: 12:44
     <script type="text/javascript">
         function addUrlHashToLocalStorage() {
             if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
-                //localStorage.redirectURL = window.location.hash;
                 sessionStorage.redirectURL = window.location.hash;
             } else {
-                //localStorage.removeItem('redirectURL');
                 sessionStorage.removeItem('redirectURL');
             }
         }
         window.onload = addUrlHashToLocalStorage;
-
     </script>
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
@@ -69,6 +66,8 @@ Time: 12:44
             </c:otherwise>
         </c:choose>
 
+        <c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session"/>
+
     </c:if>
 
     <c:if test="${'1'.equals(param.login_error)}">
@@ -84,10 +83,9 @@ Time: 12:44
     </c:if>
 
     <c:if test="${warningEnabled}">
-
         <div id="dialog" class="content-one"><p class="modal-body">${warningMessage}</p></div>
-
     </c:if>
+
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
             <div class="list-group-item">

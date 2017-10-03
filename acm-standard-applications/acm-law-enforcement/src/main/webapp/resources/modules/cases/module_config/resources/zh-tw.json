@@ -1,43 +1,83 @@
 {
   "cases": {
     "title": "案件",
-    "progressNoCase": "zh-tw_[ No case file data ]",
-    "progressLoading": "zh-tw_Loading case file ",
-    "progressError": "zh-tw_Failed to load case file"
+    "progressNoCase": "[ 無案件文件 ]",
+    "progressLoading": "裝載文件",
+    "progressError": "加載案例文件失敗"
   },
   "cases.menus": {
     "leftnav.item": "案件",
     "topbar.item": "案件"
   },
   "cases.error": {
-    "invalidData": "zh-tw_"
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "概述"
   },
   "cases.comp.info": {
-    "caseId": "zh-tw_Case id:",
-    "caseNumber": "zh-tw_Case Number:",
-    "courtRoomName": "zh-tw_Court Room Name:",
-    "type.label": "zh-tw_Type",
-    "created.label": "zh-tw_Created Date",
-    "priority.label": "zh-tw_Priority",
-    "assignee.label": "zh-tw_Assigned To",
-    "owningGroup.label": "zh-tw_Owning Group",
-    "dueDate.label": "zh-tw_Due Date"
+    "title": "信息",
+    "caseId": "案件識別號:",
+    "caseNumber": "案件號碼:",
+    "courtRoomName": "法庭名稱:",
+    "type.label": "種類",
+    "created.label": "創建日期",
+    "priority.label": "優先級別",
+    "assignee.label": "指定人員",
+    "owningGroup.label": "所屬群體",
+    "dueDate.label": "到期日期",
+    "priorities": {
+      "low%": "低級",
+      "medium%": "中級",
+      "high%": "高級",
+      "expedite%": "加急",
+      "unknown%": "未選"
+    },
+    "caseTypes": {
+      "agricultural%": "農業",
+      "arson%": "縱火",
+      "backgroundInvestigation%": "背景調查",
+      "benefitsAppeal%": "福利上訴",
+      "businessDispute%": "更好商業的糾紛",
+      "clinicalFraud%": "臨床調查員欺詐",
+      "congressional%": "國會響應",
+      "disabilityWaiver%": "殘疾豁免請求",
+      "domesticDispute%": "家庭糾紛",
+      "drugTrafficking%": "販毒運毒",
+      "educationWaiver%": "教育豁免申請書",
+      "eeoHarassment%": "EEO/騷擾",
+      "embezzlement%": "貪污",
+      "extortion%": "勒索",
+      "fraud%": "欺詐",
+      "government%": "政府",
+      "investorComplaint%": "投資者投訴",
+      "laborRacketeering%": "勞工敲詐",
+      "local%": "當地",
+      "murder%": "謀殺",
+      "newDrugFraud%": "新藥申請欺詐",
+      "payoff%": "行賄",
+      "pensionWaiver%": "退休金申請",
+      "pollution%": "污染",
+      "productTampering%": "產品篡改",
+      "assetTheftMisuse%": "盜用或濫用資產"
+    }
   },
   "cases.comp.actions": {
-    "restrict": "zh-tw_Restrict?",
-    "new.button": "zh-tw_New",
-    "edit.button": "zh-tw_Edit",
-    "status.button": "zh-tw_Change Case Status",
-    "reinvestigate.button": "zh-tw_Reinvestigate",
-    "subscribe.button": "zh-tw_Subscribe",
-    "unsubscribe.button": "zh-tw_Unsubscribe",
-    "merge.button": "zh-tw_Merge",
-    "claim.button": "zh-tw_Claim",
-    "unclaim.button": "zh-tw_Unclaim",
-    "split.button": "zh-tw_Split"
+    "title": "行動",
+    "restrict": "受限制?",
+    "new.button": "創建",
+    "edit.button": "更改",
+    "status.button": "更改案例狀態",
+    "reinvestigate.button": "重新調查",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權",
+    "merge.button": "合併",
+    "split.button": "分開"
   },
   "cases.comp.details": {
-    "title": "zh-tw_Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Case details saved",
     "table.columns": {
       "title": "zh-tw_Details",
@@ -46,13 +86,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "zh-tw_Documents",
+    "title": "文件",
     "sendEmail": "zh-tw_Send Email",
     "filterInputPlaceholder": "zh-tw_Filter",
     "searchInputPlaceholder": "zh-tw_Search"
   },
   "cases.comp.people": {
-    "title": "zh-tw_People",
+    "title": "成員",
     "table.columns": {
       "entity": "zh-tw_Entity",
       "type": "zh-tw_Type",
@@ -71,7 +111,7 @@
       }
     },
     "organizations": {
-      "title": "zh-tw_Organizations",
+      "title": "組織",
       "table.columns": {
         "type": "zh-tw_Type",
         "value": "zh-tw_Value",
@@ -82,7 +122,7 @@
       }
     },
     "addresses": {
-      "title": "zh-tw_Locations",
+      "title": "地點",
       "table.columns": {
         "type": "zh-tw_Type",
         "streetAddress": "zh-tw_Address",
@@ -119,8 +159,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "組織",
+    "table.columns": {
+      "name": "zh-tw_Organization Name",
+      "associationType": "zh-tw_Role",
+      "type": "zh-tw_Organization Type",
+      "identification": "zh-tw_ID",
+      "value": "zh-tw_Organization",
+      "contact": "zh-tw_Primary Contact",
+      "phone": "zh-tw_Phone",
+      "location": "zh-tw_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "zh-tw_Participants",
+    "title": "參與成員",
     "table.columns": {
       "type": "zh-tw_Type",
       "name": "zh-tw_Name"
@@ -142,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "zh-tw_Notes",
+    "title": "註釋",
     "table.columns": {
       "note": "zh-tw_Note",
       "created": "zh-tw_Created",
@@ -150,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "zh-tw_Tasks",
+    "title": "任務",
     "table.columns": {
       "title": "zh-tw_Title",
       "assignee": "zh-tw_Assignee",
@@ -163,7 +216,7 @@
     "table.deadline.tooltip": "zh-tw_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "zh-tw_References",
+    "title": "參考",
     "table.columns": {
       "targetName": "zh-tw_Number",
       "parentName": "zh-tw_Parent",
@@ -174,7 +227,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "zh-tw_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "zh-tw_Event Name",
       "eventDate": "zh-tw_Date",
@@ -182,7 +235,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "zh-tw_Time",
+    "title": "時間",
     "table.columns": {
       "name": "zh-tw_Form Name",
       "user": "zh-tw_User",
@@ -193,7 +246,7 @@
     "formNamePrefix": "zh-tw_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "zh-tw_Cost",
+    "title": "成本",
     "table.columns": {
       "name": "zh-tw_Form Name",
       "user": "zh-tw_User",
@@ -204,7 +257,7 @@
     "formNamePrefix": "zh-tw_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "zh-tw_Tags",
+    "title": "標籤",
     "table.columns": {
       "tag": "zh-tw_Tag",
       "created": "zh-tw_Created",
@@ -228,7 +281,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "zh-tw_Calendar"
+    "title": "日曆"
   },
   "cases.comp.merge": {
     "id": "zh-tw_merge",
@@ -287,7 +340,7 @@
     "searchGroupHeader": "zh-tw_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "zh-tw_Future Approvers",
+    "title": "批准流程",
     "addNewTooltip": "zh-tw_Add new approver",
     "noBuckslipMessage": "zh-tw_No Data",
     "button": {
@@ -304,7 +357,7 @@
     "state.label": "zh-tw_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "zh-tw_Past Approvers",
+    "title": "過去批准",
     "noBuckslipMessage": "zh-tw_No Data",
     "table.columns": {
       "approvalDate": "zh-tw_Approval Date",
@@ -314,7 +367,7 @@
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "zh-tw_userSearch",
+    "id": "選擇用戶",
     "title": "zh-tw_User/Group Search",
     "search": {
       "btn": "zh-tw_Search",
@@ -329,6 +382,40 @@
       "type": "zh-tw_Type",
       "title": "zh-tw_Title",
       "username": "zh-tw_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "people.label": "成員",
+      "organizations.label": "組織",
+      "documents.label": "文件",
+      "participants.label": "參與成員",
+      "notes.label": "註釋",
+      "tasks.label": "任務",
+      "references.label": "參考",
+      "history.label": "歷史",
+      "time.label": "時間",
+      "cost.label": "成本",
+      "tags.label": "標籤",
+      "calendar.label": "日曆",
+      "approvalRouting.label": "批准流程"
+    },
+    "filters": {
+      "opened": "所有打開的",
+      "iHaveCreated": "我所創建的",
+      "iAmAssigned": "指定給我的",
+      "iAmFollowing": "我關注的",
+      "closed": "所有關閉的",
+      "noFilter": "(無限制)"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按案件號排序",
+      "idDesc": "按案件號反排序",
+      "nameAsc": "按名稱排序",
+      "noSort": "(不排序)"
     }
   }
 }

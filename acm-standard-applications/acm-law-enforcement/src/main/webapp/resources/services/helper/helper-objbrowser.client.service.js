@@ -44,7 +44,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 var key = this.getKey(moduleId, args);
                 this.data[key] = null;
             }
-        }
+        };
 
         var Service = {
             VariableNames: {

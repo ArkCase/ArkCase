@@ -19,7 +19,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         });
 
         $scope.pictures = [{}];
-        $scope.userPicture = null;
+        $scope.userPictures = [];
 
         //new person with predefined values
         $scope.person = {
@@ -36,14 +36,15 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             },
             defaultUrl: {
                 type: 'url'
-            }
+            },
+            details: ''
         };
 
         //contact methods subtypes types
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
             _.each(contactMethodTypes, function (cmType) {
-                $scope.cmTypes[cmType.type] = cmType;
+                $scope.cmTypes[cmType.key] = cmType;
             });
 
             //used for generating the view for communication accounts
@@ -121,29 +122,27 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
             }, 0);
         };
 
-        $scope.addEmptyPerson = function () {
+        $scope.addEmptyPicture = function () {
             $scope.pictures.push({});
             $timeout(function () {
                 //add empty object
             }, 0);
         };
 
-        $scope.removePerson = function (toBeRemoved) {
+        $scope.removePicture = function (index) {
             $timeout(function () {
-                _.remove($scope.pictures, function (object) {
-                    return object === toBeRemoved;
-                });
+                $scope.pictures.splice(index, 1);
+                $scope.userPictures.splice(index, 1);
                 if ($scope.pictures.length < 1) {
                     $scope.pictures.push({});
                 }
             }, 0);
         };
 
-
         $scope.save = function () {
             $scope.loading = true;
             var clearedPersonInfo = clearNotFilledElements(_.cloneDeep($scope.person));
-            var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.pictures);
+            var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.userPictures);
             promiseSavePerson.then(
                 function (objectInfo) {
                     var objectTypeString = $translate.instant('common.objectTypes.' + ObjectService.ObjectTypes.PERSON);
@@ -182,12 +181,13 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         };
 
 
-        $scope.searchOrganization = function (index) {
+        $scope.searchOrganization = function (index, isNewPerson) {
             var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.organizationTypes
+                types: $scope.organizationTypes,
+                isNewPerson: isNewPerson
             };
             //set this params for editing
             if (association.organization) {

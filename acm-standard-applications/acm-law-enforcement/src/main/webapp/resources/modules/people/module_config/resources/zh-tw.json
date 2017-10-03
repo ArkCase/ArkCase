@@ -1,31 +1,36 @@
 {
   "people": {
     "title": "成員",
-    "progressNoComplaint": "zh-tw_[ No people data ]",
-    "progressLoading": "zh-tw_Loading people ",
-    "progressError": "zh-tw_Failed to load people "
+    "progressNoComplaint": "[ 無成員數據 ]",
+    "progressLoading": "加載成員數據",
+    "progressError": "無法加載成員數據"
   },
   "people.menus": {
     "leftnav.item": "成員",
     "topbar.item": "成員"
   },
+  "people.comp.main": {
+    "title": "概述"
+  },
   "people.comp.info": {
-    "phone.label": "zh-tw_Phone",
-    "email.label": "zh-tw_Email",
-    "status.label": "zh-tw_Status",
-    "organization.label": "zh-tw_Organization",
-    "identification.label": "zh-tw_ID"
+    "title": "信息",
+    "phone.label": "電話",
+    "email.label": "電子郵箱",
+    "status.label": "狀態",
+    "organization.label": "組織",
+    "identification.label": "身份號碼"
   },
   "people.comp.actions": {
-    "export.button": "zh-tw_Export",
-    "import.button": "zh-tw_Import",
-    "delete.button": "zh-tw_Delete",
-    "activate.button": "zh-tw_Activate",
-    "deactivate.button": "zh-tw_Deactivate",
-    "merge.button": "zh-tw_Merge"
+    "title": "行動",
+    "export.button": "輸出",
+    "import.button": "輸入",
+    "delete.button": "刪除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合併"
   },
   "people.comp.details": {
-    "title": "zh-tw_Details",
+    "title": "詳情",
     "informSaved": "zh-tw_Person details saved",
     "table.columns": {
       "title": "zh-tw_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "zh-tw_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "zh-tw_Event Name",
       "eventDate": "zh-tw_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "zh-tw_Pictures",
+    "title": "相片",
     "actions": {
       "delete": "zh-tw_Delete",
       "setPrimary": "zh-tw_Set as Primary",
@@ -67,10 +72,17 @@
       "noPictureSelected": "zh-tw_No Files Selected.",
       "browse": "zh-tw_Browse",
       "description": "zh-tw_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-tw_Edit Picture",
+      "setPrimary": "zh-tw_Set as Primary?",
+      "yes": "zh-tw_Yes",
+      "change": "zh-tw_Change Picture",
+      "save": "zh-tw_Save changes"
     }
   },
   "people.comp.addresses": {
-    "title": "zh-tw_Locations",
+    "title": "地點",
     "table.columns": {
       "type": "zh-tw_Type",
       "streetAddress": "zh-tw_Address 1",
@@ -113,7 +125,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "zh-tw_Phone Numbers",
+    "title": "電話號碼",
     "table.columns": {
       "type": "zh-tw_Type",
       "value": "zh-tw_Phone Number",
@@ -145,7 +157,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "zh-tw_Email Addresses",
+    "title": "電子郵箱",
     "table.columns": {
       "type": "zh-tw_Type",
       "value": "zh-tw_Email Address",
@@ -177,7 +189,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "zh-tw_URLs",
+    "title": "網址",
     "table.columns": {
       "value": "zh-tw_URL",
       "type": "zh-tw_Type",
@@ -208,8 +220,30 @@
       "value.placeholder": "zh-tw_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "參與成員",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "name": "zh-tw_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-tw_Choose User",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "id": "zh-tw_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-tw_Choose Group",
+      "table.columns": {
+        "name": "zh-tw_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
-    "title": "zh-tw_Aliases",
+    "title": "別名",
     "actions": {
       "delete": "zh-tw_Delete",
       "setPrimary": "zh-tw_Set as Primary",
@@ -243,7 +277,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "zh-tw_IDs",
+    "title": "成員號碼",
     "table.columns": {
       "type": "zh-tw_Type",
       "id": "zh-tw_ID",
@@ -283,7 +317,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "zh-tw_Organizations",
+    "title": "組織",
     "table.columns": {
       "type": "zh-tw_Type",
       "id": "zh-tw_ID",
@@ -305,7 +339,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "zh-tw_Cases",
+    "title": "案件",
     "table.columns": {
       "priority": "zh-tw_Priority",
       "id": "zh-tw_ID",
@@ -316,7 +350,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "zh-tw_Complaints",
+    "title": "投訴",
     "table.columns": {
       "priority": "zh-tw_Priority",
       "id": "zh-tw_ID",
@@ -327,7 +361,7 @@
     }
   },
   "people.comp.related": {
-    "title": "zh-tw_Related People",
+    "title": "相關人士",
     "table.columns": {
       "firstName": "zh-tw_First Name",
       "lastName": "zh-tw_Last Name",
@@ -411,6 +445,37 @@
       "identificationYearIssued": "zh-tw_Identification Issued",
       "identificationYearIssued.placeholder": "zh-tw_Select Identification Issued",
       "identificationYearIssued.close.button": "zh-tw_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "pictures.label": "相片",
+      "addresses.label": "地點",
+      "phones.label": "電話號碼",
+      "emails.label": "電子郵箱",
+      "urls.label": "網址",
+      "participants.label": "參與成員",
+      "aliases.label": "別名",
+      "organizations.label": "組織",
+      "ids.label": "成員號碼",
+      "complaints.label": "投訴",
+      "cases.label": "案件",
+      "related.label": "相關人士",
+      "history.label": "歷史"
+    },
+    "filters": {
+      "iHaveCreated": "我所創建的",
+      "noFilter": "(無限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按創建日期排序",
+      "createdDateDesc": "按創建日期反排序",
+      "idAsc": "按成員號排序",
+      "idDesc": "按成員號反排序",
+      "nameAsc": "按成員名排序",
+      "nameDesc": "按成員名反排序",
+      "noSort": "(不排序)"
     }
   }
 }

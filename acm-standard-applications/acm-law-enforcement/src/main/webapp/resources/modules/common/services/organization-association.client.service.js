@@ -30,6 +30,10 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
             save: {
                 method: 'POST',
                 url: 'api/latest/plugin/organization-associations',
+                transformRequest: function (data, headersGetter) {
+                    var encodedData = JSOG.encode(Util.omitNg(data));
+                    return angular.toJson(encodedData);
+                },
                 cache: false
             },
 
@@ -44,8 +48,36 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
              * @param {Object} params Map of input parameter.
              * @param {Number} params.organizationId  Organization ID - parent associations for organization
              * @param {String} params.parentType  Parent Type - filter by parent type (optional)
-             * @param {Number} params.parentId  Parent ID - filter by parent id (optional)
-             * @param {boolean} params.parentObjectsOnly  - display parent objects instead of organization association (optional), false by default
+             * @param {Number} params.start  start row
+             * @param {Number} params.n  how many rows to return
+             * @param {String} params.sort sort field
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            list: {
+                method: 'GET',
+                url: 'api/latest/plugin/organization-associations',
+                params: {
+                    'organization-id': '@organizationId',
+                    'parent-type': '@parentType',
+                    'start': '@start',
+                    'n': '@n',
+                    'sort': '@sort'
+                },
+                cache: false
+            },
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services:OrganizationAssociation.Service
+             *
+             * @description
+             * Get organization associations data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Organization Association ID
              * @param {Function} onSuccess (Optional)Callback function of success query.
              * @param {Function} onError (Optional) Callback function when fail.
              *
@@ -53,14 +85,31 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
              */
             get: {
                 method: 'GET',
-                url: 'api/latest/plugin/organization-associations',
-                params: {
-                    'organization-id': '@organizationId',
-                    'parent-type': '@parentType',
-                    'parent-id': '@parentId',
-                    'parent-objects-only': '@parentObjectOnly'
-                },
-                cache: false
+                url: 'api/latest/plugin/organization-associations/:id',
+                cache: false,
+                isArray: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name delete
+             * @methodOf services:OrganizationAssociation.Service
+             *
+             * @description
+             * Delete organization association
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Organization Association ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            delete: {
+                method: 'DELETE',
+                url: 'api/latest/plugin/organization-associations/:id',
+                cache: false,
+                isArray: false
             }
 
         });
@@ -82,12 +131,36 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
          */
         Service.getOrganizationAssociations = function (organizationId, parentType, parentId, parentObjectOnly) {
             return Util.serviceCall({
-                service: Service.get,
+                service: Service.list,
                 data: {
                     organizationId: organizationId,
                     parentType: parentType,
                     parentId: parentId,
                     parentObjectOnly: parentObjectOnly
+                },
+                onSuccess: function (data) {
+                    return data;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getOrganizationAssociation
+         * @methodOf services:OrganizationAssociation.Service
+         *
+         * @description
+         * Query organization association data
+         *
+         * @param {Number} id  Organization Association ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getOrganizationAssociation = function (id) {
+            return Util.serviceCall({
+                service: Service.get,
+                param: {
+                    id: id
                 },
                 onSuccess: function (data) {
                     return data;
@@ -114,6 +187,27 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
                 , data: organizationAssociation
                 , onSuccess: function (data) {
                     return data;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name deleteOrganizationAssociationInfo
+         * @methodOf services:OrganizationAssociation.Service
+         *
+         * @description
+         * Delete organization association
+         *
+         * @param {Number} id  Association ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.deleteOrganizationAssociationInfo = function (id) {
+            return Util.serviceCall({
+                service: Service.delete
+                , param: {
+                    id: id
                 }
             });
         };

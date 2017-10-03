@@ -1,36 +1,41 @@
 {
   "complaints": {
-    "title": "申し立て",
-    "progressNoComplaint": "ja_[ No complaint data ]",
-    "progressLoading": "ja_Loading complaint ",
-    "progressError": "ja_Failed to load complaint "
+    "title": "訴状",
+    "progressNoComplaint": "[ 訴状のデータはありません ]",
+    "progressLoading": "訴状の読み込み",
+    "progressError": "訴状の読み込みに失敗しました"
   },
   "complaints.menus": {
-    "leftnav.item": "申し立て",
-    "topbar.item": "申し立て"
+    "leftnav.item": "訴状",
+    "topbar.item": "訴状"
+  },
+  "complaints.comp.main": {
+    "title": "概観"
   },
   "complaints.comp.info": {
-    "complaintId": "ja_Complaint id:",
-    "complaintNumber": "ja_Complaint ID:",
-    "courtRoomName": "ja_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "title": "情報",
+    "complaintId": "訴状識別番号:",
+    "complaintNumber": "訴状番号:",
+    "courtRoomName": "裁判所名:",
+    "type.label": "種類",
+    "created.label": "作成日",
+    "priority.label": "優先",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "群に所属",
+    "dueDate.label": "期限日"
   },
   "complaints.comp.actions": {
-    "restrict": "ja_Restrict?",
-    "new.button": "ja_New Complaint",
-    "close.button": "ja_Close Complaint",
-    "subscribe.button": "ja_Subscribe",
-    "unsubscribe.button": "ja_Unsubscribe",
-    "claim.button": "ja_Claim",
-    "unclaim.button": "ja_Unclaim"
+    "title": "操作",
+    "restrict": "制限する?",
+    "new.button": "新しい訴状",
+    "close.button": "訴状を閉じる",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "claim.button": "申し立て",
+    "unclaim.button": "申し立て中止"
   },
   "complaints.comp.details": {
-    "title": "ja_Details",
+    "title": "詳細",
     "informSaved": "ja_Complaint details saved",
     "table.columns": {
       "title": "ja_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "ja_Documents",
+    "title": "文書",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
   },
   "complaints.comp.people": {
-    "title": "ja_People",
+    "title": "人員",
     "table.columns": {
       "entity": "ja_Entity",
       "type": "ja_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "ja_Organizations",
+      "title": "組織",
       "table.columns": {
         "type": "ja_Type",
         "value": "ja_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "ja_Locations",
+      "title": "場所",
       "table.columns": {
         "type": "ja_Type",
         "streetAddress": "ja_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "組織",
+    "table.columns": {
+      "name": "ja_Organization Name",
+      "associationType": "ja_Role",
+      "type": "ja_Organization Type",
+      "identification": "ja_ID",
+      "value": "ja_Organization",
+      "contact": "ja_Primary Contact",
+      "phone": "ja_Phone",
+      "location": "ja_Location"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New",
+      "addExisting": "ja_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "ja_Participants",
+    "title": "参加者",
     "table.columns": {
       "type": "ja_Type",
       "name": "ja_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "ja_Locations",
+    "title": "場所",
     "table.columns": {
       "address": "ja_Address",
       "type": "ja_Type",
@@ -158,15 +182,15 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "ja_Notes",
+    "title": "注解",
     "table.columns": {
-      "note": "ja_Note",
+      "note": "注解",
       "created": "ja_Created",
       "creator": "ja_Author"
     }
   },
   "complaints.comp.tasks": {
-    "title": "ja_Tasks",
+    "title": "任務",
     "table.columns": {
       "title": "ja_Title",
       "assignee": "ja_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "ja_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "ja_References",
+    "title": "参照",
     "table.columns": {
       "targetName": "ja_Number",
       "targetTitle": "ja_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "ja_History",
+    "title": "歷史",
     "table.columns": {
       "eventType": "ja_Event Name",
       "eventDate": "ja_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "ja_Time",
+    "title": "時間",
     "table.columns": {
       "name": "ja_Form Name",
       "user": "ja_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "ja_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "ja_Cost",
+    "title": "支出",
     "table.columns": {
       "name": "ja_Form Name",
       "user": "ja_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "ja_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "ja_Tags",
+    "title": "タグ",
     "table.columns": {
       "tag": "ja_Tag",
       "created": "ja_Created",
@@ -244,7 +268,10 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "ja_Calendar"
+    "title": "日報"
+  },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "リファレンス検索"
   },
   "complaints.comp.addreference": {
     "title": "ja_Add Reference",
@@ -281,7 +308,7 @@
     "searchGroupHeader": "ja_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "ja_Future Approvers",
+    "title": "承認ル",
     "addNewTooltip": "ja_Add new approver",
     "noBuckslipMessage": "ja_No Data",
     "button": {
@@ -298,7 +325,7 @@
     "state.label": "ja_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "ja_Past Approvers",
+    "title": "過去の承認",
     "noBuckslipMessage": "ja_No Data",
     "table.columns": {
       "approvalDate": "ja_Approval Date",
@@ -323,6 +350,43 @@
       "type": "ja_Type",
       "title": "ja_Title",
       "username": "ja_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "locations.label": "場所",
+      "people.label": "人員",
+      "organizations.label": "組織",
+      "documents.label": "文書",
+      "participants.label": "参加者",
+      "notes.label": "注解",
+      "tasks.label": "任務",
+      "references.label": "参照",
+      "history.label": "歴史",
+      "time.label": "時間",
+      "cost.label": "支出",
+      "tags.label": "タグ",
+      "calendar.label": "日報",
+      "approvalRouting.label": "承認ル"
+    },
+    "filters": {
+      "opened": "開いているすべての",
+      "iHaveCreated": "私が作成しました",
+      "iAmAssigned": "自分に割り当てられました",
+      "iAmFollowing": "私は心配です",
+      "closedNoFurtherAction": "ノーさらに開閉動作",
+      "closedReferExternal": "外部参照が閉じています",
+      "closedOpenInvestigation": "調査は、閉じました",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "incidentDateAsc": "イベントの日付で並べ替え",
+      "incidentDateDesc": "イベントの日付で並べ替え降順",
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "nameAsc": "名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }

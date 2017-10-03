@@ -1,7 +1,21 @@
 'use strict';
-angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
-    function ($resource) {
-        return $resource('', {}, {
+
+/**
+ *@ngdoc service
+ *@name dashboard:Dashboard.DashboardService
+ *
+ *@description
+ *
+ *{@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/modules/dashboard/services/dashboard..client.service.js modules/dashboard/services/dashboard.client.service.js}
+ *
+ *  The ArkCaseDashboard.provider is used to customize Angular Dashboard Framework provider with ArkCase's own templates. It also expose dashboard provider functions to be used.
+ */
+angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', '$timeout', '$translate', '$q'
+    , 'Acm.StoreService', 'UtilService', 'Config.LocaleService', 'ArkCaseDashboard', 'Authentication'
+    , function ($resource, $timeout, $translate, $q
+        , Store, Util, LocaleService, ArkCaseDashboard, Authentication
+    ) {
+        var Service = $resource('', {}, {
             getConfig: {
                 method: 'GET',
                 url: 'api/v1/plugin/dashboard/get',
@@ -77,12 +91,104 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource',
             getWidgetsPerRoles: {
                 method: 'GET',
                 url: 'api/latest/plugin/dashboard/widgets/get',
-                isArray: true,
+                isArray: true
             },
             saveConfig: {
                 method: 'POST',
                 url: 'api/v1/plugin/dashboard/set'
             }
-        })
+        });
+
+        /**
+         * @ngdoc method
+         * @name localeUseTypical
+         * @methodOf dashboard:Object.Dashboard.DashboardService
+         *
+         * @param {Object} scope, Angular $scope of caller controller
+         *
+         * @description
+         * This function combine the typical usage to set up to use ArkCase Dashboard. It checks and reads any previous
+         * cached locale info, and set to correct locale on locale change event.
+         */
+        Service.localeUseTypical = function(scope) {
+            var setLocale = function(iso) {
+                $timeout(function () {
+                    ArkCaseDashboard.setLocale(iso);
+                }, 0);
+            };
+
+            var localeSettingsPromise = LocaleService.getSettings()
+            var userInfoPromise = Authentication.queryUserInfo();
+            
+            $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
+                var locales = result[0].locales;
+                var userInfo = result[1];
+
+                var userLocale = _.findWhere(locales, {code: userInfo.langCode});
+                setLocale(userLocale.iso);
+            });
+            
+            scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                localeSettingsPromise.then(function(localeSettings) {
+                    var userLocale = _.findWhere(localeSettings.locales, {code: data.language});
+                    if (userLocale) {
+                        var iso = Util.goodMapValue(userLocale, "iso", LocaleService.DEFAULT_ISO);
+                        setLocale(iso);
+                    }
+                });
+            });
+
+        };
+
+
+        //make old code compatible. remove fixOldCode_removeLater() after enough time for all users run the new code
+        Service.fixOldCode_removeLater = function(moduleName, model) {
+            var oldCode = "modules/dashboard/templates/dashboard-title.html" != model.titleTemplateUrl
+                && "modules/dashboard/templates/module-dashboard-title.html" != model.titleTemplateUrl;
+
+            if ("DASHBOARD" == moduleName) {
+                model.titleTemplateUrl = 'modules/dashboard/templates/dashboard-title.html';
+                model.editTemplateUrl = 'modules/dashboard/templates/dashboard-edit.html';
+                model.addTemplateUrl = 'modules/dashboard/templates/widget-add.html';
+                model.title = "dashboard.title";
+            } else {
+                model.titleTemplateUrl = 'modules/dashboard/templates/module-dashboard-title.html';
+            }
+
+            if ("Dashboard" == model.title) {
+                model.title = "dashboard.title";
+            }
+
+            if (model.rows) {
+                model.rows.forEach(function(row){
+                    var columns = row.columns;
+                    if (columns) {
+                        columns.forEach(function(column){
+                            var widgets = column.widgets;
+                            if (widgets) {
+                                widgets.forEach(function(widget){
+                                    if ("modules/dashboard/templates/widget-title.html" != widget.titleTemplateUrl) {
+                                        oldCode = true;
+                                    }
+                                    widget.titleTemplateUrl = "modules/dashboard/templates/widget-title.html";
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            if (oldCode) {
+                $timeout(function () {
+                    Service.saveConfig({
+                        dashboardConfig: angular.toJson(model),
+                        module: moduleName
+                    });
+                }, 0);
+            }
+        };
+        //TODO: remove fixOldCode_removeLater() and its usage in each module
+
+        return Service;
     }
 ]);

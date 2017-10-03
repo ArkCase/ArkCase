@@ -15,10 +15,22 @@
 
     <import resource="file:${user.home}/.arkcase/acm/encryption/spring-properties-encryption.xml"/>
 
+    <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
+
+    <bean id="logoutUrl" class="java.lang.String">
+        <constructor-arg value="/logout"/>
+    </bean>
+
     <bean id="muleContextManager" class="com.armedia.acm.muletools.mulecontextmanager.MuleContextManager">
         <property name="specificConfigFiles">
             <list/>
         </property>
+    </bean>
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list/>
+        </constructor-arg>
     </bean>
 
 </beans>

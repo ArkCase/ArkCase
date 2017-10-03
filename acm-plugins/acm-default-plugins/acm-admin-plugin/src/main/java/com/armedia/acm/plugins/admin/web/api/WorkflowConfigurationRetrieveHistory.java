@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
+import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,8 +19,9 @@ import java.util.List;
  * Created by sergey.kolomiets  on 6/9/15.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/admin", "/api/latest/plugin/admin"} )
-public class WorkflowConfigurationRetrieveHistory {
+@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+public class WorkflowConfigurationRetrieveHistory
+{
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkflowConfigurationService workflowConfigurationService;
@@ -30,21 +32,23 @@ public class WorkflowConfigurationRetrieveHistory {
     @ResponseBody
     public List<AcmProcessDefinition> retrieveHistory(
             @PathVariable("key") String key,
-            @PathVariable("version") int  version) throws IOException, AcmWorkflowConfigurationException {
+            @PathVariable("version") int version) throws IOException, AcmWorkflowConfigurationException
+    {
 
-        try {
+        try
+        {
             List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveHistory(key, version);
 
             return processDefinitions;
-        } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Can't get workflows history", e);
-            }
+        } catch (Exception e)
+        {
+            log.error("Can't get workflows history", e);
             throw new AcmWorkflowConfigurationException("Can't get workflows history", e);
         }
     }
 
-    public void setWorkflowConfigurationService(WorkflowConfigurationService workflowConfigurationService) {
+    public void setWorkflowConfigurationService(WorkflowConfigurationService workflowConfigurationService)
+    {
         this.workflowConfigurationService = workflowConfigurationService;
     }
 }

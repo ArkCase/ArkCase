@@ -102,10 +102,14 @@ angular.module('complaints').config(['$stateProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-tags.client.view.html'
             })
 
-            .state('complaints.approvalrouting', {
+            .state('complaints.approvalRouting', {
                 url: '/:type/:id/approvals',
                 templateUrl: 'modules/complaints/views/components/complaint-approval-routing.client.view.html'
             })
 
     }
-]);
+
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

@@ -1,5 +1,7 @@
 package com.armedia.acm.websockets.configuration;
 
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -8,17 +10,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.simp.stomp.Reactor2StompCodec;
 import org.springframework.messaging.simp.stomp.StompBrokerRelayMessageHandler;
-import org.springframework.messaging.simp.stomp.StompDecoder;
-import org.springframework.messaging.simp.stomp.StompEncoder;
 import org.springframework.messaging.tcp.reactor.Reactor2TcpClient;
 import org.springframework.web.socket.config.annotation.DelegatingWebSocketMessageBrokerConfiguration;
 import reactor.Environment;
 import reactor.core.config.ConfigurationReader;
 import reactor.core.config.PropertiesConfigurationReader;
+import reactor.core.support.NamedDaemonThreadFactory;
 import reactor.fn.Supplier;
 import reactor.io.net.NetStreams;
 import reactor.io.net.Spec;
 import reactor.io.net.config.SslOptions;
+import reactor.io.net.impl.netty.NettyClientSocketOptions;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -86,7 +88,7 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
     private void setSSLOptions(StompBrokerRelayMessageHandler handler)
     {
-        Reactor2StompCodec codec = new Reactor2StompCodec(new StompEncoder(), new StompDecoder());
+        Reactor2StompCodec codec = new Reactor2StompCodec();
         ConfigurationReader reader = new PropertiesConfigurationReader();
         Environment environment = new Environment(reader);
 
@@ -95,12 +97,15 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
         InetSocketAddress socketAddress = new InetSocketAddress(host, port);
 
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new NamedDaemonThreadFactory("reactor-tcp-io"));
+        final NettyClientSocketOptions nettyClientSocketOptions = (new NettyClientSocketOptions()).eventLoopGroup(eventLoopGroup);
+
         NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>> tcpClientSpecFactory = new NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>>()
         {
             @Override
             public Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> apply(Spec.TcpClientSpec<Message<byte[]>, Message<byte[]>> spec)
             {
-                return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions);
+                return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions).options(nettyClientSocketOptions);
             }
         };
         handler.setTcpClient(new Reactor2TcpClient<byte[]>(tcpClientSpecFactory));

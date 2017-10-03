@@ -4,7 +4,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
-
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -68,7 +67,10 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskName", configuration.getTaskName());
         pvars.put("documentAuthor", event.getUserId());
         pvars.put("pdfRenditionId", event.getSource().getFileId());
+
+        //"documentType" is a misleading name here, but keeping it for backwards compatibility
         pvars.put("documentType", event.getSource().getContainer().getContainerObjectTitle());
+        pvars.put("PARENT_OBJECT_NAME", event.getSource().getContainer().getContainerObjectTitle());
 
         pvars.put("OBJECT_TYPE", "FILE");
         pvars.put("OBJECT_ID", event.getSource().getFileId());

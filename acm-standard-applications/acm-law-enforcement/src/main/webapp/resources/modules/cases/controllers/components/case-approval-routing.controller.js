@@ -15,7 +15,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
             scope: $scope
             , stateParams: $stateParams
             , moduleId: "cases"
-            , componentId: "approvalrouting"
+            , componentId: "approvalRouting"
             , retrieveObjectInfo: CaseInfoService.getCaseInfo
             , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onObjectInfoRetrieved: function (objectInfo) {
@@ -65,6 +65,12 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                 });
             }
         };
+
+        $scope.$bus.subscribe('buckslip-task-object-updated-subscribe-created', function (created){
+            if ($scope.objectInfo && created) {
+                $scope.$bus.publish('buckslip-task-object-updated', $scope.objectInfo);
+            }
+        });
 
         $scope.$bus.subscribe('CHILD_OBJECT_OUTCOME_CLICKED', function (name) {
             var taskInfo = Util.omitNg($scope.objectInfo);

@@ -51,5 +51,8 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
                 $scope.noDataMessage = $translate.instant('cases.comp.approvalRouting.noBuckslipMessage');
             }
         });
+
+        $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
+
     }
 ]);

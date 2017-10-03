@@ -10,34 +10,74 @@
     "topbar.item": "Caso"
   },
   "cases.error": {
-    "invalidData": "pt_"
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Visão geral"
   },
   "cases.comp.info": {
-    "caseId": "pt_Case id:",
-    "caseNumber": "pt_Case Number:",
-    "courtRoomName": "pt_Court Room Name:",
-    "type.label": "pt_Type",
-    "created.label": "pt_Created Date",
-    "priority.label": "pt_Priority",
-    "assignee.label": "pt_Assigned To",
-    "owningGroup.label": "pt_Owning Group",
-    "dueDate.label": "pt_Due Date"
+    "title": "Informações",
+    "caseId": "Identificação do Caso:",
+    "caseNumber": "Número do Caso:",
+    "courtRoomName": "Sala do Tribunal:",
+    "type.label": "Tipo",
+    "created.label": "Data criada",
+    "priority.label": "Prioridade",
+    "assignee.label": "Atribuído a",
+    "owningGroup.label": "O grupo pertence a",
+    "dueDate.label": "Data de vencimento",
+    "priorities": {
+      "low%": "Baixo",
+      "medium%": "Médio",
+      "high%": "Alto",
+      "expedite%": "Acelerar",
+      "unknown%": "Desconhecido"
+    },
+    "caseTypes": {
+      "agricultural%": "Agrícola",
+      "arson%": "Incêndio culposo",
+      "backgroundInvestigation%": "Investigação de fundo",
+      "benefitsAppeal%": "Recurso de Benefícios",
+      "businessDispute%": "Melhor disputa comercial",
+      "clinicalFraud%": "Fraude do Investigador Clínico",
+      "congressional%": "Resposta do Congresso",
+      "disabilityWaiver%": "Pedido de isenção de deficiência",
+      "domesticDispute%": "Disputa doméstica",
+      "drugTrafficking%": "Tráfico de drogas",
+      "educationWaiver%": "Solicitação de isenção educacional",
+      "eeoHarassment%": "EEO/Assédio",
+      "embezzlement%": "Embraiagem",
+      "extortion%": "Extorsão",
+      "fraud%": "Fraude",
+      "government%": "Governo",
+      "investorComplaint%": "Reclamação de investidor",
+      "laborRacketeering%": "Trabalho Racketeering",
+      "local%": "Local",
+      "murder%": "Assassinato",
+      "newDrugFraud%": "Fraude de aplicação de novas drogas",
+      "payoff%": "Suborno",
+      "pensionWaiver%": "Pedido de isenção de pensão",
+      "pollution%": "Poluição",
+      "productTampering%": "Tampering do Produto",
+      "assetTheftMisuse%": "Roubo ou uso indevido de ativos"
+    }
   },
   "cases.comp.actions": {
-    "restrict": "pt_Restrict?",
-    "new.button": "pt_New",
-    "edit.button": "pt_Edit",
-    "status.button": "pt_Change Case Status",
-    "reinvestigate.button": "pt_Reinvestigate",
-    "subscribe.button": "pt_Subscribe",
-    "unsubscribe.button": "pt_Unsubscribe",
-    "merge.button": "pt_Merge",
-    "claim.button": "pt_Claim",
-    "unclaim.button": "pt_Unclaim",
-    "split.button": "pt_Split"
+    "title": "Ações",
+    "restrict": "Restringir?",
+    "new.button": "Novo",
+    "edit.button": "Editar",
+    "status.button": "Alterar Status do Caso",
+    "reinvestigate.button": "Investigar novamente",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "merge.button": "Mesclar",
+    "claim.button": "Reclamaçõe",
+    "unclaim.button": "Retirar Reclamaçõe",
+    "split.button": "Dividido"
   },
   "cases.comp.details": {
-    "title": "pt_Details",
+    "title": "Detalhes",
     "informSaved": "pt_Case details saved",
     "table.columns": {
       "title": "pt_Details",
@@ -46,13 +86,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "pt_Documents",
+    "title": "Documentos",
     "sendEmail": "pt_Send Email",
     "filterInputPlaceholder": "pt_Filter",
     "searchInputPlaceholder": "pt_Search"
   },
   "cases.comp.people": {
-    "title": "pt_People",
+    "title": "Pessoas",
     "table.columns": {
       "entity": "pt_Entity",
       "type": "pt_Type",
@@ -71,7 +111,7 @@
       }
     },
     "organizations": {
-      "title": "pt_Organizations",
+      "title": "Organizações",
       "table.columns": {
         "type": "pt_Type",
         "value": "pt_Value",
@@ -119,8 +159,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organizações",
+    "table.columns": {
+      "name": "pt_Organization Name",
+      "associationType": "pt_Role",
+      "type": "pt_Organization Type",
+      "identification": "pt_ID",
+      "value": "pt_Organization",
+      "contact": "pt_Primary Contact",
+      "phone": "pt_Phone",
+      "location": "pt_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "pt_Participants",
+    "title": "Participantes",
     "table.columns": {
       "type": "pt_Type",
       "name": "pt_Name"
@@ -142,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "pt_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "pt_Note",
       "created": "pt_Created",
@@ -150,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "pt_Tasks",
+    "title": "Tarefas",
     "table.columns": {
       "title": "pt_Title",
       "assignee": "pt_Assignee",
@@ -163,7 +216,7 @@
     "table.deadline.tooltip": "pt_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "pt_References",
+    "title": "Referências",
     "table.columns": {
       "targetName": "pt_Number",
       "parentName": "pt_Parent",
@@ -174,7 +227,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "pt_History",
+    "title": "Histórico",
     "table.columns": {
       "eventType": "pt_Event Name",
       "eventDate": "pt_Date",
@@ -182,7 +235,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "pt_Time",
+    "title": "Tempo",
     "table.columns": {
       "name": "pt_Form Name",
       "user": "pt_User",
@@ -193,7 +246,7 @@
     "formNamePrefix": "pt_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "pt_Cost",
+    "title": "Custo",
     "table.columns": {
       "name": "pt_Form Name",
       "user": "pt_User",
@@ -204,7 +257,7 @@
     "formNamePrefix": "pt_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "pt_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "pt_Tag",
       "created": "pt_Created",
@@ -228,7 +281,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "pt_Calendar"
+    "title": "Calendário"
   },
   "cases.comp.merge": {
     "id": "pt_merge",
@@ -287,7 +340,7 @@
     "searchGroupHeader": "pt_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "pt_Future Approvers",
+    "title": "Roteamento de Aprovação",
     "addNewTooltip": "pt_Add new approver",
     "noBuckslipMessage": "pt_No Data",
     "button": {
@@ -304,7 +357,7 @@
     "state.label": "pt_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "pt_Past Approvers",
+    "title": "Roteamento de Aprovação",
     "noBuckslipMessage": "pt_No Data",
     "table.columns": {
       "approvalDate": "pt_Approval Date",
@@ -329,6 +382,40 @@
       "type": "pt_Type",
       "title": "pt_Title",
       "username": "pt_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "people.label": "Pessoas",
+      "organizations.label": "Organizações",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tarefas",
+      "references.label": "Referências",
+      "history.label": "Histórico",
+      "time.label": "Tempo",
+      "cost.label": "Custo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendário",
+      "approvalRouting.label": "Roteamento de Aprovação"
+    },
+    "filters": {
+      "opened": "Todas as queixas abertas",
+      "iHaveCreated": "Tudo o que eu criei",
+      "iAmAssigned": "Tudo o que eu sou atribuído",
+      "iAmFollowing": "Tudo o que estou seguindo",
+      "closed": "Tudo fechado",
+      "noFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Data Asc",
+      "dateDesc": "Ordenar Data Desc",
+      "idAsc": "Ordenar Caso ID Asc",
+      "idDesc": "Ordenar Caso ID Desc",
+      "nameAsc": "Classificar por nome Asc",
+      "noSort": "(Não classificar)"
     }
   }
 }

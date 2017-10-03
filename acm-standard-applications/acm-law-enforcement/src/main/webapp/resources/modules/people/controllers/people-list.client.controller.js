@@ -28,10 +28,10 @@ angular.module('people').controller('PeopleListController', ['$scope', '$state',
             }
             , makeTreeNode: function (personInfo) {
                 return {
-                    nodeId: Util.goodValue(personInfo.personId, 0)
+                    nodeId: Util.goodValue(personInfo.id, 0)
                     , nodeType: ObjectService.ObjectTypes.PERSON
-                    , nodeTitle: Util.goodValue(personInfo.personTitle)
-                    , nodeToolTip: Util.goodValue(personInfo.personTitle)
+                    , nodeTitle: Util.goodValue(personInfo.familyName + " " + personInfo.givenName)
+                    , nodeToolTip: Util.goodValue(personInfo.familyName + " " + personInfo.givenName)
                 };
             }
         });

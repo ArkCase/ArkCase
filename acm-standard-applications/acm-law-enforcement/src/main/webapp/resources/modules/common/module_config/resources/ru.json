@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "ru_(Select One)",
+    "select.option.none": "(Выбрать один)",
+    "value.unknown": "Неизвестно",
+
     "defaultDateFormat": "ru_MM/DD/YYYY",
     "defaultTimeFormat": "ru_hh:mm:ss",
     "defaultDateTimeFormat": "ru_MM/DD/YYYY hh:mm",
@@ -8,13 +10,32 @@
     "defaultDateUIFormat": "ru_MM/dd/yyyy",
     "defaultDateTimeUIFormat": "ru_MM/dd/yyyy HH:mm"
   },
+  "common.addOrganization": {
+    "title": "ru_Add Parent Organization",
+    "addNew.label": "ru_Add new Organization",
+    "selectExisting.label": "ru_Select existing organization",
+    "organization.label": "ru_Organization",
+    "description": "ru_Description",
+    "type.label": "ru_Organization Association Type",
+    "type.label.default.text": "ru_No parent Organization",
+    "type.label.text": "ru_Parent Organization",
+    "btnCancel.text": "ru_Cancel",
+    "btnOk.text": "ru_Save Organization",
+    "setPrimary.label": "ru_Set As Primary?",
+    "radioYes.text": "ru_Yes",
+    "radioNo.text": "ru_No",
+    "duplicateOrganizationRoleErrorMessage": "ru_Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "ru_Edit Parent Organization"
+  },
   "common.service": {
-    "error.invalidData": "ru_Invalid data"
+    "error.invalidData": "Недопустимые данные"
   },
   "common.objects": {
-    "progressNoData": "ru_[ No data ]",
-    "progressLoading": "ru_Loading data ",
-    "progressError": "ru_Failed to load data "
+    "progressNoData": "[ Нет данных ]",
+    "progressLoading": "Загрузка данных ",
+    "progressError": "Не удалось загрузить данные "
   },
   "common.frevvo": {
     "defaultDateFormat": "ru_YYYY-MM-DD"
@@ -54,7 +75,7 @@
       "type": "ru_Type",
       "created": "ru_Created",
       "modified": "ru_Modified",
-      "author": "ru_Author",
+      "modifier": "ru_Modified By",
       "version": "ru_Version",
       "status": "ru_Status"
     },
@@ -104,17 +125,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "ru_ records above...",
-    "btnPrev.toolTip": "ru_Review previous records",
-    "btnNext.titleUnknownSize": "ru_More records...",
-    "btnNext.title": "ru_ more records...",
-    "btnNext.toolTip": "ru_Load more records",
-    "edtQuery.placeHolder": "ru_Search",
-    "btnQuery.text": "ru_Go!",
-    "errorNode.title": "ru_(Error)",
-    "errorNode.toolTip": "ru_(Error)",
-    "noAccessNode.title": "ru_(No Access)",
-    "noAccessNode.toolTip": "ru_(No Access)"
+    "btnPrev.title": "записи выше...",
+    "btnPrev.toolTip": "Просмотр предыдущих записей",
+    "btnNext.titleUnknownSize": "Больше записей...",
+    "btnNext.title": "Больше записей...",
+    "btnNext.toolTip": "Загрузить больше записей",
+    "edtQuery.placeHolder": "Поиск",
+    "btnQuery.text": "Поиск!",
+    "errorNode.title": "(Ошибка)",
+    "errorNode.toolTip": "(Ошибка)",
+    "noAccessNode.title": "(Нет доступа)",
+    "noAccessNode.toolTip": "(Нет доступа)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "ru_items per page",
@@ -135,6 +156,136 @@
     "btnCancel.text": "ru_Cancel",
     "edtPlaceholder": "ru_Type in to search",
     "noData.text": "ru_No Results"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Показать больше значений",
+    "showLess.button.text": "Показать меньше значений",
+    "results.text": "Результаты",
+    "noResults.text": "Нет результатов",
+    "tooltip": {
+      "collapseFacetList": "Свернуть список фасетов",
+      "expandFacetList": "Расширять список фасетов"
+    },
+    "facet": {
+      "names.modifyUser%": "Изменить пользователя",
+      "names.taskPriority%": "Приоритет задачи",
+      "fields.taskPriority.medium%": "Средний",
+      "fields.taskPriority.low%": "Низкий",
+      "fields.taskPriority.high%": "Высокий",
+      "fields.taskPriority.expedite%": "Ускорять",
+      "names.group%": "Группа",
+      "names.tagToken%": "Значок метки",
+      "names.assignee%": "Полное имя получателя",
+      "names.documentRepository%": "Название репозитория документа",
+      "names.taskStatus%": "Статус задачи",
+      "fields.taskStatus.active%": "Активный",
+      "fields.taskStatus.draft%": "Черновик",
+      "fields.taskStatus.closed%": "Закрыто",
+      "fields.taskStatus.record%": "Запись",
+      "fields.taskStatus.inactive%": "Неактивно",
+      "fields.taskStatus.inApproval%": "При утверждении",
+      "fields.taskStatus.delete%": "Удалить",
+      "fields.taskStatus.approved%": "Approved",
+      "fields.taskStatus.unclaimed%": "Невостребованный",
+      "fields.taskStatus.valid%": "Действительный",
+      "names.documentLanguage%": "Язык документа",
+      "names.createUser%": "Создать пользователя",
+      "names.postalCode%": "Почтовый код",
+      "names.incidentType%": "Тип инцидента",
+      "fields.incidentType.agricultural%": "Сельское хозяйство",
+      "fields.incidentType.arson%": "Поджог",
+      "fields.incidentType.backgroundInvestigation%": "Фоновое исследование",
+      "fields.incidentType.benefitsAppeal%": "Апелляция о преимуществах",
+      "fields.incidentType.businessDispute%": "Улучшение бизнес-споров",
+      "fields.incidentType.clinicalFraud%": "Мошенничество с клиническим исследователем",
+      "fields.incidentType.congressional%": "Реакция Конгресса",
+      "fields.incidentType.disabilityWaiver%": "Запрос на отказ от инвалидности",
+      "fields.incidentType.domesticDispute%": "Внутренний спор",
+      "fields.incidentType.drugTrafficking%": "Торговля наркотиками",
+      "fields.incidentType.educationWaiver%": "Запрос на отказ от образования",
+      "fields.incidentType.eeoHarassment%": "EEO / Преследование",
+      "fields.incidentType.embezzlement%": "растрата",
+      "fields.incidentType.extortion%": "Вымогательство",
+      "fields.incidentType.fraud%": "Мошенничество",
+      "fields.incidentType.government%": "Правительство",
+      "fields.incidentType.investorComplaint%": "Жалоба инвестора",
+      "fields.incidentType.laborRacketeering%": "Трудовая ракета",
+      "fields.incidentType.local%": "Местный",
+      "fields.incidentType.murder%": "Убийство",
+      "fields.incidentType.newDrugFraud%": "Мошенничество с применением новых лекарств",
+      "fields.incidentType.payoff%": "взятка",
+      "fields.incidentType.pensionWaiver%": "Запрос на отказ от пенсионного обеспечения",
+      "fields.incidentType.pollution%": "Загрязнение",
+      "fields.incidentType.productTampering%": "Нарушение продукта",
+      "fields.incidentType.assetTheftMisuse%": "Кража или злоупотребление активами",
+      "names.objectType%": "Тип объекта",
+      "fields.objectType.participant%": "Участник",
+      "fields.objectType.contactMethod%": "Метод контакта",
+      "fields.objectType.task%": "Задача",
+      "fields.objectType.file%": "Файл",
+      "fields.objectType.person%": "Человек",
+      "fields.objectType.personAssociation%": "Ассоциация лиц",
+      "fields.objectType.reference%": "Ссылка",
+      "fields.objectType.location%": "Место нахождения",
+      "fields.objectType.organization%": "Организация",
+      "fields.objectType.organizationAssociation%": "Ассоциация организаций",
+      "fields.objectType.caseFile%": "Файл дела",
+      "fields.objectType.complaint%": "Жалоба",
+      "fields.objectType.associatedTag%": "Связанный тег",
+      "fields.objectType.group%": "Группа",
+      "fields.objectType.costsheet%": "Таблица затрат",
+      "fields.objectType.note%": "Примечание",
+      "fields.objectType.docRepo%": "Возврат документа",
+      "fields.objectType.personAlias%": "Псевдоним человека",
+      "fields.objectType.timesheet%": "Расписание",
+      "fields.objectType.subscription%": "Подписка",
+      "fields.objectType.user%": "Пользователь",
+      "fields.objectType.objectLock%": "Блокировка объектов",
+      "names.state%": "Государство",
+      "names.parentType%": "Родительский тип",
+      "fields.parentType.container%": "Контейнер",
+      "fields.parentType.caseFile%": "Файл дела",
+      "fields.parentType.complaint%": "Жалоба",
+      "fields.parentType.organization%": "Организация",
+      "fields.parentType.person%": "Человек",
+      "fields.parentType.task%": "Задача",
+      "fields.parentType.file%": "Файл",
+      "fields.parentType.group%": "Группа",
+      "fields.parentType.docRepo%": "Возврат документа",
+      "fields.parentType.costsheet%": "Таблица затрат",
+      "fields.parentType.timesheet%": "Расписание",
+      "names.owner%": "Владелец",
+      "names.parentObjectType%": "Родительский тип объекта",
+      "fields.parentObjectType.container%": "Контейнер",
+      "fields.parentObjectType.caseFile%": "Файл дела",
+      "fields.parentObjectType.complaint%": "Жалоба",
+      "fields.parentObjectType.organization%": "Организация",
+      "fields.parentObjectType.person%": "Человек",
+      "fields.parentObjectType.task%": "Задача",
+      "fields.parentObjectType.file%": "Файл",
+      "fields.parentObjectType.group%": "Группа",
+      "fields.parentObjectType.docRepo%": "Возврат документа",
+      "fields.parentObjectType.costsheet%": "Таблица затрат",
+      "fields.parentObjectType.timesheet%": "Расписание",
+      "names.personOrganization%": "Лицо, тип организации",
+      "names.city%": "Город",
+      "names.createDate%": "Создать дату",
+      "fields.createDate.previousWeek%": "Предыдущая неделя",
+      "fields.createDate.previousMonth%": "Предыдущий месяц",
+      "fields.createDate.previousYear%": "Предыдущий год",
+      "names.dueDate%": "Дата погашения",
+      "fields.dueDate.previousWeek%": "Предыдущая неделя",
+      "fields.dueDate.previousMonth%": "Предыдущий месяц",
+      "fields.dueDate.previousYear%": "Предыдущий год",
+      "names.incidentDate%": "Дата инцидента",
+      "fields.incidentDate.previousWeek%": "Предыдущая неделя",
+      "fields.incidentDate.previousMonth%": "Предыдущий месяц",
+      "fields.incidentDate.previousYear%": "Предыдущий год",
+      "names.modifyDate%": "Изменить дату",
+      "fields.modifyDate.previousWeek%": "Предыдущая неделя",
+      "fields.modifyDate.previousMonth%": "Предыдущий месяц",
+      "fields.modifyDate.previousYear%": "Предыдущий год"
+    }
   },
   "common.directive.coreNotes": {
     "title": "ru_Notes",
@@ -219,7 +370,13 @@
   "common.directive.coreCalendar": {
     "title": "ru_Calendar",
     "start.label": "ru_Start: ",
-    "end.label": "ru_End: "
+    "end.label": "ru_End: ",
+    "message": {
+      "error.accessDenied": "ru_Access denied to calendar service.",
+      "error.serviceConfiguration": "ru_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ru_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ru_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "ru_Participants",
@@ -247,6 +404,15 @@
   "common.directive.folderActions": {
     "button.addFile": "ru_Add File",
     "button.addFolder": "ru_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
   },
   "common.comp.acmLogin": {
     "confirmLogout": "ru_For your protection, application is about to logout. Click Cancel to stay logged in."

@@ -1,29 +1,33 @@
 {
   "costTracking": {
     "title": "Kostenverfolgung",
-    "progressNoCostsheet": "de_[ No costsheet is selected ]",
-    "progressLoading": "de_Loading costsheet ",
-    "progressError": "de_Failed to load costsheet"
+    "progressNoCostsheet": "[ Keine Daten der Kostenverfolgung ]",
+    "progressLoading": "Laden der Kostenblatt",
+    "progressError": "Fehler beim Laden der Kostenblatt"
   },
   "costTracking.menus": {
     "leftnav.item": "Kostenverfolgung",
-    "topbar.item": "Kostenverfolgung"
+    "topbar.item": "Kostenblatt"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "Übersicht"
   },
   "costTracking.comp.info": {
-    "incidentDate": "de_Incident Date",
-    "priority": "de_Priority",
-    "assignedTo": "de_Assigned To",
-    "subjectType": "de_Subject Type",
-    "state": "de_State"
+    "title": "Informationen",
+    "incidentDate": "Vorfallsdatum",
+    "priority": "Priorität",
+    "assignedTo": "Zugewiesen",
+    "subjectType": "Thema Typ",
+    "state": "Zustand"
+
   },
   "costTracking.comp.actions": {
-    "new.button": "de_New Costsheet",
-    "edit.button": "de_Edit Costsheet"
+    "title": "Aktionen",
+    "new.button": "Neues Kostenblatt",
+    "edit.button": "Kostenblatt bearbeiten"
   },
   "costTracking.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Costsheet details saved",
     "table.columns": {
       "title": "de_Details",
@@ -31,15 +35,15 @@
       "modifier": "de_User Last Modified"
     }
   },
-  "costTracking.comp.people": {
-    "title": "de_Person",
+  "costTracking.comp.person": {
+    "title": "Menschen",
     "table.columns": {
       "fullName": "de_Full Name",
       "userId": "de_Username"
     }
   },
   "costTracking.comp.summary": {
-    "title": "de_Cost Summary",
+    "title": "Kostenübersicht",
     "table.columns": {
       "parentId": "de_ID",
       "parentNumber": "de_Parent ID",
@@ -50,7 +54,7 @@
     }
   },
   "costTracking.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
@@ -71,6 +75,22 @@
         "success": "de_Tag deleted successfully",
         "error": "de_Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Menschen",
+      "summary.label": "Kosten",
+      "tags.label": "Etiketten"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "idAsc": "Sortieren Kostenblatt-ID Auf",
+      "idDesc": "Sortieren Kostenblatt-ID Dec",
+      "nameDesc": "Nach Name sortieren",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

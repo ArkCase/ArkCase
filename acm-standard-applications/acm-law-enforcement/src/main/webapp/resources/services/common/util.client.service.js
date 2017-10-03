@@ -426,7 +426,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
 
             /**
              * @ngdoc method
-             * @name errorPromise
+             * @name rejectPromise
              * @methodOf services.service:UtilService
              *
              * @param {Object} err Error message or object
@@ -434,15 +434,35 @@ angular.module('services').factory('UtilService', ['$q', '$log'
              * @description
              * It returns a promise that is reject right away
              */
-            , errorPromise: function (err) {
+            , rejectPromise: function (err) {
                 var d = $q.defer();
                 d.reject(err);
+                return d.promise;
+            }
+            , errorPromise: function (err) {
+                //console.log("UtilService.errorPromise() is phased out. It is renamed to rejectPromise()");
+                return Util.rejectPromise(err);
+            }
+
+            /**
+             * @ngdoc method
+             * @name resolvePromise
+             * @methodOf services.service:UtilService
+             *
+             * @param {Object} Data Data for promise resolution
+             *
+             * @description
+             * It returns a promise that is resolved right away
+             */
+            , resolvePromise: function (data) {
+                var d = $q.defer();
+                d.resolve(data);
                 return d.promise;
             }
 
             , forEachStripNg: function (data, callback) {
                 _.forEach(data, function (v, k) {
-                    if (_.isString(k) && !k.startsWith("$")) {
+                    if (_.isString(k) && !_.startsWith(k,"$")) {
                         callback(v, k);
                     }
                 });
@@ -456,7 +476,7 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 var copy = _.cloneDeep(obj);
                 _.cloneDeep(copy, function (v, k, o) {
                     if (_.isString(k)) {
-                        if (k.startsWith("$") || k.startsWith("acm$_")) {
+                        if (_.startsWith(k,"$") || _.startsWith(k,"acm$_")) {
                             delete o[k];
                             var z = 1;
                         }
@@ -690,19 +710,6 @@ angular.module('services').factory('UtilService', ['$q', '$log'
                 return string;
             }
         };
-
-
-        //
-        // Fix for incompatibility issues:
-        // startsWith is a method proposed for the next version of JavaScript, ES6.
-        // It's currently unsupported outside of Chrome 41+, and Firefox 17+.
-        //
-        if (!String.prototype.startsWith) {
-            String.prototype.startsWith = function (searchString, position) {
-                position = position || 0;
-                return this.indexOf(searchString, position) === position;
-            };
-        }
 
         return Util;
     }

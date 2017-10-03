@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
-    , function ($scope, $stateParams, $translate, $timeout
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService'
+    , 'Object.ParticipantService', 'SearchService', 'Search.QueryBuilderService'
+    , function ($scope, $q, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
-        , SearchService, SearchQueryBuilder) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService
+        , ObjectParticipantService, SearchService, SearchQueryBuilder
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -23,20 +24,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-        var promiseConfig = ConfigService.getModuleConfig("cases");
 
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Participants'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
-        ObjectLookupService.getPriorities().then(
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
-                var options = [];
-                _.each(priorities, function (priority) {
-                    options.push({value: priority, text: priority});
-                });
-                $scope.priorities = options;
+                $scope.priorities = priorities;
                 return priorities;
             }
         );
@@ -52,13 +48,10 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             }
         );
 
-        CaseLookupService.getCaseTypes().then(
+        var caseFileTypesPromise = ObjectLookupService.getCaseFileTypes();
+        caseFileTypesPromise.then(
             function (caseTypes) {
-                var options = [];
-                _.forEach(caseTypes, function (item) {
-                    options.push({value: item, text: item});
-                });
-                $scope.caseTypes = options;
+                $scope.caseTypes = caseTypes;
                 return caseTypes;
             }
         );
@@ -71,6 +64,29 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
                     };
             showModal(participant);
         };
+
+        var lookupPriorities = function() {
+            ObjectLookupService.getPriorities().then(
+                function (priorities) {
+                    $scope.priorities = priorities;
+                    return priorities;
+                }
+            );
+        };
+
+        var lookupCaseTypes = function() {
+            CaseLookupService.getCaseTypes().then(
+                function (caseTypes) {
+                    $scope.caseTypes = caseTypes;
+                    return caseTypes;
+                }
+            );
+        };
+
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            lookupPriorities();
+            lookupCaseTypes();
+        });
 
         var showModal = function (participant) {
             var modalScope = $scope.$new();
@@ -185,14 +201,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             });
         };
 
-        //$scope.dueDate = null;
         var onObjectInfoRetrieved = function (data) {
-            //$scope.dueDate = ($scope.objectInfo.dueDate) ? moment($scope.objectInfo.dueDate).toDate() : null;
-
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
+            $q.all([getPrioritiesPromise, caseFileTypesPromise]).then(function() {
+                setCaseTypeValue();
+                setPriorityValue();
+            });
             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
                     var options = [];
@@ -211,11 +228,14 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.onPickerClick = function () {
         	$scope.picker.opened = true;
         };
+
         /**
          * Persists the updated casefile metadata to the ArkCase database
          */
         function saveCase() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setCaseTypeValue();
+            setPriorityValue();
             if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
@@ -239,28 +259,36 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
         $scope.saveCase = function () {
             saveCase();
         };
-        //$scope.updateTitle = function() {
-        //    saveCase();
-        //};
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
             saveCase();
         };
-        //$scope.updatePriority = function() {
-        //    saveCase();
-        //};
-        //$scope.updateCaseType = function() {
-        //    saveCase();
-        //};
         $scope.updateAssignee = function () {
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveCase();
         };
-        $scope.updateDueDate = function (dueDate) {
-            //$scope.objectInfo.dueDate = (dueDate) ? moment(dueDate).format($scope.config.dateFormat): null;
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveCase();
         };
-
+        
+        var setCaseTypeValue = function() {
+            var caseType = _.findWhere($scope.caseTypes, {key : $scope.objectInfo.caseType});
+            if (caseType) {
+                $scope.caseTypeValue = caseType.value;
+            } else {
+                $scope.caseTypeValue = 'core.unknown';
+            }
+        }
+        
+        var setPriorityValue = function() {
+            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
+            if (priority) {
+                $scope.priorityValue = priority.value;
+            } else {
+                $scope.priorityValue = 'core.unknown';
+            }
+        }
     }
 ]);

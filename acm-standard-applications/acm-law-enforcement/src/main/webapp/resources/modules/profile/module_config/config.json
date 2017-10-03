@@ -15,8 +15,9 @@
   "components": [
     {
       "id": "subscription",
-      "title": "Subscription",
+      "title": "profile.comp.subscription.title",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "paginationPageSizes": [
         5,
@@ -36,7 +37,7 @@
           "name": "created",
           "displayName": "profile.subscriptions.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "width": "25%"
         },
         {
@@ -63,23 +64,27 @@
     },
     {
       "id": "company",
-      "title": "Company",
-      "enabled": true
+      "title": "profile.comp.company.title",
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "contact",
-      "title": "Contact",
-      "enabled": true
+      "title": "profile.comp.contact.title",
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "group",
-      "title": "Group",
-      "enabled": true
+      "title": "profile.comp.group.title",
+      "enabled": true,
+      "configurable": true
     },
     {
       "id": "picture",
-      "title": "Picture",
-      "enabled": true
+      "title": "profile.comp.picture.title",
+      "enabled": true,
+      "configurable": true
     }
   ]
 }

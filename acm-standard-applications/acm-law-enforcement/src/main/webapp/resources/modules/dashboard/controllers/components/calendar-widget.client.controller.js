@@ -7,8 +7,8 @@ angular.module('dashboard.calendar', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('calendar', {
-                title: 'Calendar',
-                description: 'Displays cases files by queue',
+                title: 'dashboard.widgets.calendar.title',
+                description: 'dashboard.widgets.calendar.description',
                 controller: 'Dashboard.CalendarController',
                 controllerAs: 'calendar',
                 reload: true,

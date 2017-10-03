@@ -10,34 +10,74 @@
     "topbar.item": "Cas"
   },
   "cases.error": {
-    "invalidData": "fr_"
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Vue d'ensemble"
   },
   "cases.comp.info": {
-    "caseId": "fr_Case id:",
-    "caseNumber": "fr_Case Number:",
-    "courtRoomName": "fr_Court Room Name:",
-    "type.label": "fr_Type",
-    "created.label": "fr_Created Date",
-    "priority.label": "fr_Priority",
-    "assignee.label": "fr_Assigned To",
-    "owningGroup.label": "fr_Owning Group",
-    "dueDate.label": "fr_Due Date"
+    "title": "Information",
+    "caseId": "ID de cas:",
+    "caseNumber": "Numéro de cas:",
+    "courtRoomName": "Nom de la salle de la cour:",
+    "type.label": "Type",
+    "created.label": "Date créée",
+    "priority.label": "Priorité",
+    "assignee.label": "Assigné à",
+    "owningGroup.label": "Appartenant au groupe",
+    "dueDate.label": "Date d'échéance",
+    "priorities": {
+      "low%": "Bas",
+      "medium%": "Moyen",
+      "high%": "Haute",
+      "expedite%": "Accélérer",
+      "unknown%": "Inconnu"
+    },
+    "caseTypes": {
+      "agricultural%": "Agricole",
+      "arson%": "Incendie volontaire",
+      "backgroundInvestigation%": "Enquête de fond",
+      "benefitsAppeal%": "Appel des prestations",
+      "businessDispute%": "Meilleur litige commercial",
+      "clinicalFraud%": "Fraude aux enquêteurs cliniques",
+      "congressional%": "Réponse du Congrès",
+      "disabilityWaiver%": "Demande de renonciation aux personnes handicapées",
+      "domesticDispute%": "Dispute domestique",
+      "drugTrafficking%": "Trafic de drogue",
+      "educationWaiver%": "Demande de renonciation à l'éducation",
+      "eeoHarassment%": "EEO/Harcèlement",
+      "embezzlement%": "Détournement de fonds",
+      "extortion%": "Extorsion",
+      "fraud%": "Fraude",
+      "government%": "Gouvernement",
+      "investorComplaint%": "Plainte des investisseurs",
+      "laborRacketeering%": "Travail en racking",
+      "local%": "Local",
+      "murder%": "Meurtre",
+      "newDrugFraud%": "Fraude d'application de nouveaux médicaments",
+      "payoff%": "Pot-de-vin",
+      "pensionWaiver%": "Demande d'exemption de pension",
+      "pollution%": "Pollution",
+      "productTampering%": "Tampering du produit",
+      "assetTheftMisuse%": "Vol ou mauvaise utilisation de l'actif"
+    }
   },
   "cases.comp.actions": {
-    "restrict": "fr_Restrict?",
-    "new.button": "fr_New",
-    "edit.button": "fr_Edit",
-    "status.button": "fr_Change Case Status",
+    "title": "Actions",
+    "restrict": "Restreindre?",
+    "new.button": "Nouveau",
+    "edit.button": "Edit",
+    "status.button": "Changer l'état du cas",
     "reinvestigate.button": "fr_Reinvestigate",
-    "subscribe.button": "fr_Subscribe",
-    "unsubscribe.button": "fr_Unsubscribe",
-    "merge.button": "fr_Merge",
-    "claim.button": "fr_Claim",
-    "unclaim.button": "fr_Unclaim",
-    "split.button": "fr_Split"
+    "subscribe.button": "S'abonner",
+    "unsubscribe.button": "Désabonner",
+    "merge.button": "Fusionner",
+    "claim.button": "Réclamation",
+    "unclaim.button": "Non-réclamation",
+    "split.button": "Divisé"
   },
   "cases.comp.details": {
-    "title": "fr_Details",
+    "title": "Détails",
     "informSaved": "fr_Case details saved",
     "table.columns": {
       "title": "fr_Details",
@@ -46,13 +86,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "fr_Documents",
+    "title": "Documents",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
     "searchInputPlaceholder": "fr_Search"
   },
   "cases.comp.people": {
-    "title": "fr_People",
+    "title": "Personnes",
     "table.columns": {
       "entity": "fr_Entity",
       "type": "fr_Type",
@@ -119,8 +159,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organisations",
+    "table.columns": {
+      "name": "Organization Name",
+      "associationType": "Role",
+      "type": "Organization Type",
+      "identification": "ID",
+      "value": "Organization",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "fr_Participants",
+    "title": "Participants",
     "table.columns": {
       "type": "fr_Type",
       "name": "fr_Name"
@@ -142,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "fr_Notes",
+    "title": "Notes",
     "table.columns": {
       "note": "fr_Note",
       "created": "fr_Created",
@@ -150,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "fr_Tasks",
+    "title": "Tâches",
     "table.columns": {
       "title": "fr_Title",
       "assignee": "fr_Assignee",
@@ -163,7 +216,7 @@
     "table.deadline.tooltip": "fr_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "fr_References",
+    "title": "Références",
     "table.columns": {
       "targetName": "fr_Number",
       "parentName": "fr_Parent",
@@ -174,7 +227,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "fr_History",
+    "title": "Historique",
     "table.columns": {
       "eventType": "fr_Event Name",
       "eventDate": "fr_Date",
@@ -182,7 +235,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "fr_Time",
+    "title": "Heure",
     "table.columns": {
       "name": "fr_Form Name",
       "user": "fr_User",
@@ -193,7 +246,7 @@
     "formNamePrefix": "fr_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "fr_Cost",
+    "title": "Coût",
     "table.columns": {
       "name": "fr_Form Name",
       "user": "fr_User",
@@ -204,7 +257,7 @@
     "formNamePrefix": "fr_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "fr_Tags",
+    "title": "étiquettes",
     "table.columns": {
       "tag": "fr_Tag",
       "created": "fr_Created",
@@ -228,7 +281,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "fr_Calendar"
+    "title": "Calendrier"
   },
   "cases.comp.merge": {
     "id": "fr_merge",
@@ -287,7 +340,7 @@
     "searchGroupHeader": "fr_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "fr_Future Approvers",
+    "title": "Routage d'approbation",
     "addNewTooltip": "fr_Add new approver",
     "noBuckslipMessage": "fr_No Data",
     "button": {
@@ -304,7 +357,7 @@
     "state.label": "fr_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "fr_Past Approvers",
+    "title": "Approbations passées",
     "noBuckslipMessage": "fr_No Data",
     "table.columns": {
       "approvalDate": "fr_Approval Date",
@@ -329,6 +382,40 @@
       "type": "fr_Type",
       "title": "fr_Title",
       "username": "fr_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "people.label": "Personnes",
+      "organizations.label": "Organisations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tâches",
+      "references.label": "Références",
+      "history.label": "Histoire",
+      "time.label": "Heure",
+      "cost.label": "Coût",
+      "tags.label": "étiquettes",
+      "calendar.label": "Calendrier",
+      "approvalRouting.label": "Routage d'approbation"
+    },
+    "filters": {
+      "opened": "Toutes les plaintes ouvertes",
+      "iHaveCreated": "Tout ce que j'ai créé",
+      "iAmAssigned": "Tout ce que je suis assigné",
+      "iAmFollowing": "Tout ce que je suis",
+      "closed": "Tout fermé",
+      "noFilter": "(Pas de filtre)"
+    },
+    "sorters": {
+      "dateAsc": "Trier Date Asc",
+      "dateDesc": "Trier Date Déc",
+      "idAsc": "Trier cas ID Asc",
+      "idDesc": "Trier cas ID Déc",
+      "nameAsc": "Trier par nom Asc",
+      "noSort": "(Non Trier)"
     }
   }
 }

@@ -4,13 +4,14 @@
             <div class="panel-title">
                 <span translate>people.comp.details.title</span>
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-click="saveDetails()"><i class="fa fa-lg fa-save"></i>
+                    <button permission="editPerson" permission-properties="objectInfo" permission-action="hide" class="btn btn-default btn-xs" ng-click="saveDetails()"><i class="fa fa-lg fa-save"></i>
                     </button>
                 </div>
             </div>
         </div>
         <div class="panel-body">
-            <summernote config="options" ng-model="objectInfo.details"></summernote>
+            <!-- TODO: "disable" doesn't work on summernote  -->
+            <summernote permission="editPerson" permission-properties="objectInfo" permission-action="disable" config="options" ng-model="objectInfo.details"></summernote>
         </div>
     </div>
 

@@ -1,71 +1,76 @@
 {
   "tasks": {
     "title": "Tareas",
-    "progressNoTask": "es_[ No task data ]",
-    "progressLoading": "es_Loading task ",
-    "progressError": "es_Failed to load task"
+    "progressNoTask": "[ Sin datos de tarea ]",
+    "progressLoading": "Cargar tarea",
+    "progressError": "Error al cargar la tarea"
   },
   "tasks.menus": {
     "leftnav.item": "Tareas",
     "topbar.item": "Tarea"
   },
+  "tasks.comp.main": {
+    "title": "Descripción general"
+  },
   "tasks.comp.info": {
-    "taskId": "es_Task id:",
-    "percentage.label": "es_% of Completion",
-    "assignee.label": "es_Assignee",
-    "Priority.label": "es_Priority",
-    "startDate.label": "es_Start Date",
-    "dueDate.label": "es_Due Date",
-    "state.label": "es_State",
-    "overdue.tooltip": "es_Task is Overdue",
-    "deadline.tooltip": "es_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "title": "Información",
+    "taskId": "Identificación de la tarea:",
+    "percentage.label": "% de finalización",
+    "assignee.label": "Cesionario",
+    "priority.label": "Prioridad1",
+    "startDate.label": "Fecha de inicio",
+    "dueDate.label": "Fecha de vencimiento",
+    "state.label": "Estado",
+    "overdue.tooltip": "La tarea está atrasada",
+    "deadline.tooltip": "La fecha límite es el acercamiento",
+    "owningGroup.label": "Grupo propietario"
   },
   "tasks.comp.parentinfo": {
-    "taskId": "es_Task id:",
+    "title": "Información para Padres",
+    "taskId": "Identificación de la tarea:",
     "case": {
-      "subjectType.label": "es_Subject Type",
-      "incidentDate.label": "es_Incident Date",
-      "priority.label": "es_Priority",
-      "assignee.label": "es_Assigned To",
-      "owningGroup.label": "es_Owning Group"
+      "subjectType.label": "Tipo de asunto",
+      "incidentDate.label": "Fecha del incidente",
+      "priority.label": "Prioridad",
+      "assignee.label": "Asignado a",
+      "owningGroup.label": "Grupo propietario"
     },
     "complaint": {
-      "subjectType.label": "es_Subject Type",
-      "incidentDate.label": "es_Incident Date",
-      "priority.label": "es_Priority",
-      "assignee.label": "es_Assigned To",
-      "owningGroup.label": "es_Owning Group"
+      "subjectType.label": "Tipo de asunto",
+      "incidentDate.label": "Fecha del incidente",
+      "priority.label": "Prioridad",
+      "assignee.label": "Asignado a",
+      "owningGroup.label": "Grupo propietario"
     },
     "costsheet": {
-      "approver.label": "es_Approver"
+      "approver.label": "Aprobador"
     },
     "timesheet": {
-      "approver.label": "es_Approver"
-    },
-    "_xxx_courtRoomName": "es_Court Room Name:"
+      "approver.label": "Aprobador"
+    }
   },
   "tasks.comp.actions": {
-    "diagram.button": "es_Process Diagram",
-    "eSignature.button": "es_Sign",
-    "subscribe.button": "es_Subscribe",
-    "unsubscribe.button": "es_Unsubscribe",
-    "reject.button": "es_Reject",
-    "delete.button": "es_Delete",
-    "complete.button": "es_Complete",
-    "approve.button": "es_Approve Document",
-    "rework.button": "es_Send for Rework",
-    "claim.button": "es_Claim",
-    "unclaim.button": "es_Unclaim",
-    "error.outcomeFieldMissing": "es_Cannot complete task because of missing required value",
+    "title": "Acciones",
+    "diagram.button": "Diagrama de proceso",
+    "eSignature.button": "Firmar",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "reject.button": "Rechazar",
+    "delete.button": "Borrar",
+    "complete.button": "Completo",
+    "approve.button": "Aprobar documento",
+    "rework.button": "Repetir Trabajo",
+    "claim.button": "Reclamación",
+    "unclaim.button": "No reclamar",
+    "error.outcomeFieldMissing": "No se puede completar la tarea debido a la falta valor requerido",
     "modal": {
-      "errorHeaderText": "es_Error",
-      "btnOk.text": "es_OK",
-      "btnClose.text": "es_Close"
+      "errorHeaderText": "Error",
+      "btnOk.text": "Aceptar",
+      "btnClose.text": "Cerrar"
     }
   },
   "tasks.comp.details": {
-    "title": "es_Task Details",
+    "title": "Detalles",
     "informSaved": "es_Task details saved",
     "table.columns": {
       "details": "es_Details",
@@ -74,7 +79,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "es_Rework Details",
+    "title": "Repetir Trabajo",
     "informSaved": "es_Rework details saved",
     "table.columns": {
       "title": "es_Rework Details",
@@ -83,20 +88,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "es_Parent Documents",
+    "title": "Documentos de los padres",
     "noParentDataMessage": "es_No parent documents for standalone task",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "tasks.comp.attachments": {
-    "title": "es_Attachments",
+    "title": "Adjuntos",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
     "searchInputPlaceholder": "es_Search"
   },
   "tasks.comp.notes": {
-    "title": "es_Notes",
+    "title": "Notas",
     "table.columns": {
       "note": "es_Note",
       "created": "es_Created",
@@ -104,7 +109,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "es_References",
+    "title": "Referencias",
     "table.columns": {
       "targetName": "es_Number",
       "targetTitle": "es_Title",
@@ -114,7 +119,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "es_Reject Comments",
+    "title": "Rechazar comentarios",
     "table.columns": {
       "note": "es_Comment",
       "created": "es_Created",
@@ -122,7 +127,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "es_Workflow",
+    "title": "Flujo de trabajo",
     "table.columns": {
       "participant": "es_Participant",
       "role": "es_Role",
@@ -136,14 +141,14 @@
     "error.loading": "es_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "es_eSignatures",
+    "title": "Firmas Electrónicas",
     "table.columns": {
       "signedDate": "es_Date",
       "signedBy": "es_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "es_Documents Under Review",
+    "title": "Documentos bajo revisión",
     "table.columns": {
       "fileId": "es_ID",
       "fileName": "es_Title",
@@ -153,7 +158,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "es_History",
+    "title": "Historia",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -161,7 +166,7 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "es_Tags",
+    "title": "Etiquetas",
     "table.columns": {
       "tag": "es_Tag",
       "created": "es_Created",
@@ -320,6 +325,39 @@
       "approverId": "es_Approver",
       "approverFullName": "es_Full Name",
       "approverDecision": "es_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "reworkDetails.label": "Repetir Trabajo",
+      "docReview.label": "Documentos bajo revisión",
+      "parentDoc.label": "Documentos de los padres",
+      "attachments.label": "Adjuntos",
+      "references.label": "Referencias",
+      "notes.label": "Notas",
+      "workflow.label": "Flujo de trabajo",
+      "history.label": "Historia",
+      "eSignatures.label": "Firmas Electrónicas",
+      "tags.label": "Etiquetas",
+      "reject.label": "Rechazar comentarios"
+    },
+    "filters": {
+      "myTasks": "Mis tareas",
+      "opened": "Todas las tareas abiertas",
+      "completed": "Todas las tareas completadas",
+      "dueToday": "Todas las tareas debidas hoy",
+      "myDueToday": "Todas mis tareas debidas",
+      "overdue": "Todas las tareas pendientes",
+      "myOverdue": "Todas mis tareas atrasadas",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "createdDateAsc": "Ordenar Fecha de creación Asc",
+      "createdDateDesc": "Ordenar Fecha de creación Desc",
+      "nameAsc": "Ordenar el nombre de la tarea Asc",
+      "nameDesc": "Ordenar el nombre de la tarea Desc",
+      "noSort": "(Sin clasificación)"
     }
   }
 }

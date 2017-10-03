@@ -28,4 +28,23 @@
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
+    <changeSet id="04-group-membership-constraints" author="ncuculova">
+        <addForeignKeyConstraint baseTableName="acm_group_membership"
+                                 baseColumnNames="cm_group_name"
+                                 constraintName="fk_group_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group_membership"
+                                 baseColumnNames="cm_member_group_name"
+                                 constraintName="fk_group_member_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 initiallyDeferred="${initially.deferred}"
+                                 deferrable="${deferrable}"/>
+        <addUniqueConstraint tableName="acm_group_membership"
+                             columnNames="cm_group_name, cm_member_group_name"/>
+    </changeSet>
+
 </databaseChangeLog>

@@ -7,170 +7,19 @@
         <property name="pluginName" value="Config Service Plugin"/>
     </bean>
 
-    <bean id="addressTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/addressTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
+    <bean id="configService" class="com.armedia.acm.services.config.service.ConfigService">
+        <property name="lookupsFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups.json"/>
+        <property name="configList" ref="configList"/>    
     </bean>
 
-    <bean id="aliasTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/aliasTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="contactMethodTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/contactMethodTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="fileTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/fileTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
+    <bean id="lookupDao" class="com.armedia.acm.services.config.lookups.service.ConfigLookupDao">
+        <property name="configService" ref="configService"/>
     </bean>
 
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/objectTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="organizationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/organizationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="participantTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/participantTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="personOrganizationRelationTypes" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/personOrganizationRelationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="organizationPersonRelationTypes" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/organizationPersonRelationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="personTitlesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/personTitles.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="securityTagTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityTagTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="identificationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/identificationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="organizationIdTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/organizationIdTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-    <bean id="dbasTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/dbasTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="personRelationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/personRelationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="organizationRelationTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/organizationRelationTypes.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="countriesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/countries.json"/>
-            </bean>
-        </constructor-arg>
-        <constructor-arg value="UTF-8"/>
-    </bean>
-
-    <bean id="securityFieldTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
-        <constructor-arg type="java.io.InputStream">
-            <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/securityFieldTypes.json"/>
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
@@ -184,12 +33,20 @@
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
     </bean>
-
-    <bean id="statesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+    
+    <bean id="languageJsonSettings"  class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
-                <constructor-arg type="java.io.File"
-                                 value="${user.home}/.arkcase/acm/lookups/states.json"/>
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
+    </bean>
+
+    <bean id="lookupsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/lookups/lookups.json"/>
             </bean>
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
@@ -202,12 +59,6 @@
                     <property name="configName" value="app"/>
                     <property name="configDescription" value="App"/>
                     <property name="acmApplication" ref="acmApplication"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.PropertyConfig">
-                    <property name="configName" value="thisApp"/>
-                    <property name="configDescription" value="This App"/>
-                    <property name="properties" ref="lawEnforcementAppProperties"/>
-                    <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.PropertyConfig">
                     <property name="configName" value="admin"/>
@@ -390,54 +241,9 @@
                     <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="addressTypes"/>
-                    <property name="configDescription" value="Address Types"/>
-                    <property name="json" ref="addressTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="aliasTypes"/>
-                    <property name="configDescription" value="Alias Types"/>
-                    <property name="json" ref="aliasTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="contactMethodTypes"/>
-                    <property name="configDescription" value="Contact Method Types"/>
-                    <property name="json" ref="contactMethodTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="fileTypes"/>
-                    <property name="configDescription" value="File Types"/>
-                    <property name="json" ref="fileTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="objectTypes"/>
                     <property name="configDescription" value="Object Types"/>
                     <property name="json" ref="objectTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="organizationTypes"/>
-                    <property name="configDescription" value="Organization Types"/>
-                    <property name="json" ref="organizationTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="participantTypes"/>
-                    <property name="configDescription" value="Participant Types"/>
-                    <property name="json" ref="participantTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="personTitles"/>
-                    <property name="configDescription" value="Person Titles"/>
-                    <property name="json" ref="personTitlesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="securityTagTypes"/>
-                    <property name="configDescription" value="Security Tag Types"/>
-                    <property name="json" ref="securityTagTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="securityFieldTypes"/>
-                    <property name="configDescription" value="Security Field Types"/>
-                    <property name="json" ref="securityFieldTypesJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
                     <property name="configName" value="localeSettings"/>
@@ -445,49 +251,14 @@
                     <property name="json" ref="localeSettingsJson"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="identificationTypes"/>
-                    <property name="configDescription" value="Identification Types"/>
-                    <property name="json" ref="identificationTypesJsonConfig"/>
+                    <property name="configName" value="lookups"/>
+                    <property name="configDescription" value="Lookups"/>
+                    <property name="json" ref="lookupsJsonConfig"/>
                 </bean>
                 <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="organizationIdTypes"/>
-                    <property name="configDescription" value="Organization ID Types"/>
-                    <property name="json" ref="organizationIdTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="dbasTypes"/>
-                    <property name="configDescription" value="DBA Types"/>
-                    <property name="json" ref="dbasTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="personRelationTypes"/>
-                    <property name="configDescription" value="Person Relationship Types"/>
-                    <property name="json" ref="personRelationTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="organizationRelationTypes"/>
-                    <property name="configDescription" value="Organization Relationship Types"/>
-                    <property name="json" ref="organizationRelationTypesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="countries"/>
-                    <property name="configDescription" value="Countries"/>
-                    <property name="json" ref="countriesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="personOrganizationRelationTypes"/>
-                    <property name="configDescription" value="Person Organization Relation Types"/>
-                    <property name="json" ref="personOrganizationRelationTypes"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="states"/>
-                    <property name="configDescription" value="States"/>
-                    <property name="json" ref="statesJsonConfig"/>
-                </bean>
-                <bean class="com.armedia.acm.services.config.model.JsonConfig">
-                    <property name="configName" value="organizationPersonRelationTypes"/>
-                    <property name="configDescription" value="Organization Person Relation Types"/>
-                    <property name="json" ref="organizationPersonRelationTypes"/>
+                    <property name="configName" value="languageSettings"/>
+                    <property name="configDescription" value="Language Setting"/>
+                    <property name="json" ref="languageJsonSettings"/>
                 </bean>
             </list>
         </constructor-arg>

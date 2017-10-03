@@ -9,9 +9,11 @@
     "leftnav.item": "Cost Tracking",
     "topbar.item": "Costsheet"
   },
-  "costTracking.tree": {
+  "costTracking.comp.main": {
+    "title": "Overview"
   },
   "costTracking.comp.info": {
+    "title": "Info",
     "incidentDate": "Incident Date",
     "priority": "Priority",
     "assignedTo": "Assigned To",
@@ -19,6 +21,7 @@
     "state": "State"
   },
   "costTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "New Costsheet",
     "edit.button": "Edit Costsheet"
   },
@@ -31,7 +34,7 @@
       "modifier": "User Last Modified"
     }
   },
-  "costTracking.comp.people": {
+  "costTracking.comp.person": {
     "title": "Person",
     "table.columns": {
       "fullName": "Full Name",
@@ -57,12 +60,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",
@@ -71,6 +74,22 @@
         "success": "Tag deleted successfully",
         "error": "Error deleting tag"
       }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Person",
+      "summary.label": "Expenses",
+      "tags.label": "Tags"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Ascending",
+      "dateDesc": "Sort Date Descending",
+      "idAsc": "Sort Costsheet ID Ascending",
+      "idDesc": "Sort Costsheet ID Descending",
+      "nameDesc": "Sort By Costsheet Name",
+      "noSort": "(No Sort)"
     }
   }
 }

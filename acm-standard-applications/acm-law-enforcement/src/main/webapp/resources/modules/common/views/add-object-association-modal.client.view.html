@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h3>
+        <span>{{headerLabel}}</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="addObjectAssociationForm">
+        <div class="row">
+            <div class="col-sm-6 form-group" ng-show="showSetPrimary">
+                <label translate>common.addObjectAssociation.setPrimary.label</label><span
+                    class="required-asterisk">*</span>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>common.addObjectAssociation.radioYes.text</translate>
+                </label>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>common.addObjectAssociation.radioNo.text</translate>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <div>
+                    <label>{{objectTypeLabel}}</label>
+                    <span class="required-asterisk">*</span>
+                </div>
+                <input class="form-control" type="text" ng-model="objectName" readonly ng-disabled="editMode"
+                       ng-click="pickObject()"
+                       placeholder="{{selectExistingLabel}}"
+                       required>
+            </div>
+            <div class="col-sm-6 form-group">
+                <div>
+                    <label for="types" translate>common.addObjectAssociation.type.label</label>
+                    <span class="required-asterisk">*</span>
+                </div>
+                <select class="input-md form-control" id="types" ng-model="type" ng-options="o as o.value | translate for o in types"
+                        required></select>
+            </div>
+        </div>
+        <div class="row" ng-show="showDescription">
+            <div class="col-sm-12">
+                <label for="types" translate>common.addObjectAssociation.description</label>
+                <textarea id="description" class="form-control" ng-model="description"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>common.addObjectAssociation.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addObjectAssociationForm.$invalid">
+        <span translate>common.addObjectAssociation.btnOk.text</span>
+    </button>
+</div>

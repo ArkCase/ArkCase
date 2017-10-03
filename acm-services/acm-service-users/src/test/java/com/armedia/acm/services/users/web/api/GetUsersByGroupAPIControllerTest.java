@@ -1,10 +1,7 @@
 package com.armedia.acm.services.users.web.api;
 
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
 import org.apache.commons.httpclient.HttpStatus;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -19,11 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static junit.framework.Assert.assertEquals;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**

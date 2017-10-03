@@ -1,26 +1,5 @@
 {
   "dashboard": {
-    "ADF_COMMON_CLOSE": "Schließen",
-    "ADF_COMMON_DELETE": "Löschen",
-    "ADF_COMMON_TITLE": "Title",
-    "ADF_COMMON_CANCEL": "Cancel",
-    "ADF_COMMON_APPLY": "Apply",
-    "ADF_COMMON_EDIT_DASHBOARD": "Edit dashboard",
-    "ADF_EDIT_DASHBOARD_STRUCTURE_LABEL": "Structure",
-    "ADF_DASHBOARD_TITLE_TOOLTIP_ADD": "Add new widget",
-    "ADF_DASHBOARD_TITLE_TOOLTIP_SAVE": "Save changes",
-    "ADF_DASHBOARD_TITLE_TOOLTIP_EDIT_MODE": "Enable edit mode",
-    "ADF_DASHBOARD_TITLE_TOOLTIP_UNDO": "Undo changes",
-    "ADF_WIDGET_ADD_HEADER": "Add new widget",
-    "ADF_WIDGET_DELETE_CONFIRM_MESSAGE": "Are you sure you want to delete this widget ?",
-    "ADF_WIDGET_TOOLTIP_REFRESH": "Reload Widget Content",
-    "ADF_WIDGET_TOOLTIP_MOVE": "Change widget location",
-    "ADF_WIDGET_TOOLTIP_COLLAPSE": "Collapse widget",
-    "ADF_WIDGET_TOOLTIP_EXPAND": "Expand widget",
-    "ADF_WIDGET_TOOLTIP_EDIT": "Edit widget configuration",
-    "ADF_WIDGET_TOOLTIP_FULLSCREEN": "Fullscreen widget",
-    "ADF_WIDGET_TOOLTIP_REMOVE": "Remove widget",
-
     "title": "Dashboard",
     "menus": {
       "leftnav.item": "Dashboard"
@@ -56,7 +35,9 @@
             "priority": "Priority",
             "created": "Created",
             "modified": "Modified",
-            "status": "Status"
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "Case is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
@@ -72,7 +53,9 @@
             "priority": "Priority",
             "created": "Created",
             "modified": "Modified",
-            "status": "Status"
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
           },
           "overdue.tooltip": "Complaint is Overdue",
           "deadline.tooltip": "Deadline is Approaching",
@@ -178,6 +161,21 @@
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
       },
+      "ids": {
+        "title": "IDs",
+        "description": "Displays IDs details",
+        "noDataMessage": "Currently there are no IDs to display"
+      },
+      "complaints": {
+        "title": "Complaints",
+        "description": "Displays complaint details",
+        "noDataMessage": "Currently there are no complaints to display"
+      },
+      "cases": {
+        "title": "Cases",
+        "description": "Displays case details",
+        "noDataMessage": "Currently there are no cases to display"
+      },
       "documents": {
         "title": "Documents",
         "description": "Displays chart of documents by folder",
@@ -187,6 +185,31 @@
         "title": "Locations",
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
+      },
+      "phones": {
+        "title": "Phone Numbers",
+        "description": "Displays phone numbers",
+        "noDataMessage": "Currently there are no phone numbers to display"
+      },
+      "faxes": {
+        "title": "Fax Numbers",
+        "description": "Displays faxes details",
+        "noDataMessage": "Currently there are no faxes to display"
+      },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Displays DBA details",
+        "noDataMessage": "Currently there are no DBAs to display"
       },
       "tasks": {
         "title": "Tasks",
@@ -202,6 +225,11 @@
         "title": "References",
         "description": "Displays reference details",
         "noDataMessage": "Currently there are no references to display"
+      },
+      "relOrganizations": {
+        "title": "Related Organizations",
+        "description": "Displays Related Organizations details",
+        "noDataMessage": "Currently there are no Related Organizations to display"
       },
       "history": {
         "title": "History",
@@ -238,6 +266,11 @@
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
       },
+      "parentDocs": {
+        "title": "Parent Documents",
+        "description": "Shows parent documents",
+        "noDataMessage": "Currently there no are no parent documents to display"
+      },
       "workflow": {
         "title": "Workflow Overview",
         "description": "Overview of pending workflows",
@@ -262,7 +295,64 @@
         "title": "Expenses",
         "description": "Displays a cost-to-user graph",
         "noDataMessage": "Currently no expense data to display"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "description": "Displays organization",
+        "noDataMessage": "Currently there are no organizations to display"
+      },
+      "tags": {
+        "title": "Tags",
+        "description": "Displays Tags",
+        "noDataMessage": "Currently there are no tags to display"
+      },
+      "approvalRouting": {
+        "title": "Approval Routing",
+        "description": "Displays approval routings",
+        "noDataMessage": "Currently no approvers to display"
+      },
+      "pictures": {
+        "title": "Pictures",
+        "description": "Display pictures",
+        "noDataMessage": "Currently no pictures to display"
+      },
+      "aliases": {
+        "title": "Aliases",
+        "description": "Display aliases",
+        "noDataMessage": "Currently no aliases to display"
+      },
+      "related": {
+        "title": "Related People",
+        "description": "Display related people",
+        "noDataMessage": "Currently no related people to display"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "News Widget"
+  },
+  "dashboard.comp.weather": {
+    "title": "Weather Widget"
+  },
+  "dashboard.comp.myCases": {
+    "title": "My Cases Widget"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "My Tasks Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "My Complaints Widget"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Workflow Report"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "New Complaints"
+  },
+  "dashboard.comp.newCases": {
+    "title": "New Cases"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Cases By Queue"
   }
 }

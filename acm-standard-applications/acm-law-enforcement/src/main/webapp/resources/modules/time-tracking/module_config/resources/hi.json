@@ -1,25 +1,28 @@
 {
   "timeTracking": {
     "title": "समय ट्रैकिंग ",
-    "progressNoTimesheet": "hi_[ No timesheet is selected ]",
-    "progressLoading": "hi_Loading timesheet ",
-    "progressError": "hi_Failed to load timesheet"
+    "progressNoTimesheet": "[ कोई टाइलीशीट चयनित नहीं है ]",
+    "progressLoading": "बार-बार लोड हो रहा है",
+    "progressError": "बारसील लोड करने में विफल"
   },
   "timeTracking.menus": {
     "leftnav.item": "समय ट्रैकिंग",
     "topbar.item": "टाइम्सशीट"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "अवलोकन"
   },
   "timeTracking.comp.info": {
-    "lastModified.label": "hi_Last Modified"
+    "title": "जानकारी",
+    "lastModified.label": "अंतिम संशोधित"
   },
   "timeTracking.comp.actions": {
-    "new.button": "hi_New Timesheet",
-    "edit.button": "hi_Edit Timesheet"
+    "title": "क्रियाएं",
+    "new.button": "न्यू टाइजशीट",
+    "edit.button": "टाइमशेट संपादित करें"
   },
   "timeTracking.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Timesheet details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -27,15 +30,15 @@
       "modifier": "hi_User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
-    "title": "hi_Person",
+  "timeTracking.comp.person": {
+    "title": "लोग",
     "table.columns": {
       "fullName": "hi_Full Name",
       "userId": "hi_Username"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "hi_Hours Summary",
+    "title": "घंटा सारांश",
     "table.columns": {
       "code": "hi_Parent ID",
       "type": "hi_Parent Type",
@@ -45,7 +48,7 @@
     }
   },
   "timeTracking.comp.tags": {
-    "title": "hi_Tags",
+    "title": "टैग",
     "table.columns": {
       "tag": "hi_Tag",
       "created": "hi_Created",
@@ -66,6 +69,22 @@
         "success": "hi_Tag deleted successfully",
         "error": "hi_Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "person.label": "लोग",
+      "summary.label": "व्यय",
+      "tags.label": "टैग"
+    },
+    "sorters": {
+      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
+      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
+      "idAsc": "चढ़ाई में व्यय पत्रक को सॉर्ट करें",
+      "idDesc": "व्यय पत्रक आईडी उतरते क्रमबद्ध करें",
+      "nameDesc": "सॉर्ट इन एएनएससी",
+      "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
 }

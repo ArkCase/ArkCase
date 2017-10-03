@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -21,6 +22,8 @@ import java.util.Properties;
  */
 public class PropertyFileManager
 {
+    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public Properties readFromFile(File propertiesFile) throws IOException
@@ -35,54 +38,78 @@ public class PropertyFileManager
             return p;
         } catch (IOException e)
         {
-            log.error("Could not reload properties from [" + propertiesFile.getName() + "]: " + e.getMessage(), e);
+            log.error("Could not reload properties from [{}] ", propertiesFile.getName(), e);
             throw e;
         }
     }
 
-    private AcmEncryptablePropertyUtils encryptablePropertyUtils;
-
-    public void store(String key, String value, String filename)
+    public void store(String key, String value, String fileName)
     {
         Properties p = new Properties();
         p.setProperty(key, value);
 
-        try (OutputStream fos = new FileOutputStream(filename))
+        try (OutputStream fos = new FileOutputStream(fileName))
         {
+            log.info("Saving property file [{}]", fileName);
             p.store(fos, "last updated");
         } catch (IOException e)
         {
-            log.debug("could not create properties file: " + e.getMessage(), e);
+            log.debug("could not create properties file: [{}] ", e.getMessage(), e);
+        }
+    }
+
+    public void store(String key, String value, String fileName, boolean clean)
+    {
+        Properties p = new Properties();
+
+        if (!clean)
+        {
+            try (InputStream in = new FileInputStream(fileName))
+            {
+                p.load(in);
+            } catch (IOException e)
+            {
+                log.warn("Could not open properties file: {}", e.getMessage());
+            }
+        }
+
+        try (OutputStream out = new FileOutputStream(fileName))
+        {
+            p.setProperty(key, value);
+            log.info("Saving property file [{}]", fileName);
+            p.store(out, null);
+        } catch (IOException e)
+        {
+            log.warn("Could not update properties file: {}", e.getMessage());
         }
     }
 
     public void storeMultiple(Map<String, String> propertiesMap, String fileName, boolean clean)
     {
-        if (propertiesMap != null && propertiesMap.size() > 0)
-        {
-            Properties p = new Properties();
+        if (propertiesMap == null) return;
 
+        Properties p = new Properties();
+
+        if (!clean)
+        {
             try (InputStream in = new FileInputStream(fileName))
             {
-                if (!clean)
-                {
-                    p.load(in);
-                }
+                p.load(in);
             } catch (IOException e)
             {
                 log.warn("Could not open properties file: {}", e.getMessage(), e);
             }
-
-            try (OutputStream out = new FileOutputStream(fileName))
-            {
-                propertiesMap.forEach((key, value) -> p.setProperty(key, value));
-                p.store(out, null);
-            } catch (IOException e)
-            {
-                log.warn("Could not update properties file: " + e.getMessage(), e);
-            }
         }
 
+        try (OutputStream out = new FileOutputStream(fileName))
+        {
+            propertiesMap.forEach(p::setProperty);
+            log.info("Saving property file [{}]", fileName);
+            p.store(out, null);
+        } catch (IOException e)
+        {
+            log.warn("Could not update properties file: {}", e.getMessage(), e);
+        }
     }
 
     public void removeMultiple(List<String> properties, String fileName)
@@ -106,6 +133,7 @@ public class PropertyFileManager
 
             try (FileOutputStream out = new FileOutputStream(fileName))
             {
+                log.info("Saving property file [{}]", fileName);
                 p.store(out, null);
             } catch (IOException e)
             {
@@ -125,6 +153,29 @@ public class PropertyFileManager
             p.load(fis);
 
             retval = encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key, defaultValue));
+
+        } catch (IOException e)
+        {
+            log.warn("file [{}] not found, using default last update time.", filename);
+        }
+
+        return retval;
+    }
+
+    public Map<String, Object> loadMultiple(String filename, String... keys) throws AcmEncryptionException
+    {
+
+        Properties p = new Properties();
+        Map<String, Object> retval = new HashMap<>();
+
+        try (InputStream fis = new FileInputStream(filename))
+        {
+            p.load(fis);
+
+            for (String key : keys)
+            {
+                retval.put(key, encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key)));
+            }
 
         } catch (IOException e)
         {

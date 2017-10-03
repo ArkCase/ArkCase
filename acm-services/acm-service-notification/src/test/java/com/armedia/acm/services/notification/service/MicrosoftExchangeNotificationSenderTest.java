@@ -10,15 +10,15 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.easymock.Capture;
@@ -46,6 +46,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private EcmFileService mockEcmFileService;
     private OutlookService mockOutlookService;
     private NotificationUtils mockNotificationUtils;
+    private UserDao mockUserDao;
 
     @Before
     public void setUp()
@@ -60,14 +61,15 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         mockEmailWithAttachmentsDTO = createMock(EmailWithAttachmentsDTO.class);
         mockEmailWithEmbeddedLinksDTO = createMock(EmailWithEmbeddedLinksDTO.class);
         mockNotificationUtils = createMock(NotificationUtils.class);
+        mockUserDao = createMock(UserDao.class);
 
         microsoftExchangeNotificationSender.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
         microsoftExchangeNotificationSender.setPropertyFileManager(mockPropertyFileManager);
-        microsoftExchangeNotificationSender.setNotificationPropertyFileLocation("");
         microsoftExchangeNotificationSender.setEmailSenderPropertyFileLocation("");
         microsoftExchangeNotificationSender.setEcmFileService(mockEcmFileService);
-        microsoftExchangeNotificationSender.setOutlookService(mockOutlookService);
+        microsoftExchangeNotificationSender.setEmailSenderService(mockOutlookService);
         microsoftExchangeNotificationSender.setNotificationUtils(mockNotificationUtils);
+        microsoftExchangeNotificationSender.setUserDao(mockUserDao);
     }
 
     @Test
@@ -86,10 +88,10 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         setSendExpectations();
 
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
-        Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
+        Capture<AcmUser> outlookCapture = EasyMock.newCapture();
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
                 : null;
-        mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture), eq(authentication));
+        mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), eq(authentication), capture(outlookCapture));
         EasyMock.expectLastCall().andThrow(new Exception("Message not sent"));
         // when
         replayAll();
@@ -117,10 +119,10 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
         setSendExpectations();
 
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
-        Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
+        Capture<AcmUser> userCapture = EasyMock.newCapture();
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication()
                 : null;
-        mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture), eq(authentication));
+        mockOutlookService.sendEmail(capture(emailWithAttachmentsDTOCapture), eq(authentication), capture(userCapture));
         // when
         replayAll();
         Notification returnedNotification = microsoftExchangeNotificationSender.send(notification);
@@ -139,17 +141,13 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
 
         OutlookDTO outlookDTO = new OutlookDTO();
         outlookDTO.setOutlookPassword("outlookPassword");
-        expect(mockOutlookService.retrieveOutlookPassword(mockAuthentication)).andReturn(outlookDTO);
-
-        expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockAcmUser.getMail()).andReturn("user@armedia.com").anyTimes();
 
         mockEmailWithEmbeddedLinksDTO.setTemplate(null);
 
         Capture<EmailWithEmbeddedLinksDTO> emailWithEmbeddedLinksCapture = EasyMock.newCapture();
-        Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
-        expect(mockOutlookService.sendEmailWithEmbeddedLinks(capture(emailWithEmbeddedLinksCapture), capture(outlookUserCapture),
-                eq(mockAuthentication))).andReturn(emailWithEmbeddedLinksResultDTOList);
+        Capture<AcmUser> userCapture = EasyMock.newCapture();
+        expect(mockOutlookService.sendEmailWithEmbeddedLinks(capture(emailWithEmbeddedLinksCapture), eq(mockAuthentication),
+                capture(userCapture))).andReturn(emailWithEmbeddedLinksResultDTOList);
         replayAll();
         List<EmailWithEmbeddedLinksResultDTO> result = microsoftExchangeNotificationSender
                 .sendEmailWithEmbeddedLinks(mockEmailWithEmbeddedLinksDTO, mockAuthentication, mockAcmUser);
@@ -166,14 +164,10 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     {
         OutlookDTO outlookDTO = new OutlookDTO();
         outlookDTO.setOutlookPassword("outlookPassword");
-        expect(mockOutlookService.retrieveOutlookPassword(mockAuthentication)).andReturn(outlookDTO);
 
-        expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockAcmUser.getMail()).andReturn("user@armedia.com");
         Capture<EmailWithAttachmentsDTO> emailWithAttachmentsDTOCapture = EasyMock.newCapture();
-        Capture<AcmOutlookUser> outlookUserCapture = EasyMock.newCapture();
-        mockOutlookService.sendEmailWithAttachments(capture(emailWithAttachmentsDTOCapture), capture(outlookUserCapture),
-                eq(mockAuthentication));
+        Capture<AcmUser> userCapture = EasyMock.newCapture();
+        mockOutlookService.sendEmailWithAttachments(capture(emailWithAttachmentsDTOCapture), eq(mockAuthentication), capture(userCapture));
         mockEmailWithAttachmentsDTO.setTemplate(null);
         replayAll();
         microsoftExchangeNotificationSender.sendEmailWithAttachments(mockEmailWithAttachmentsDTO, mockAuthentication, mockAcmUser);
@@ -183,8 +177,7 @@ public class MicrosoftExchangeNotificationSenderTest extends EasyMockSupport
     private void setSendExpectations() throws AcmEncryptionException
     {
         expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USERNAME, null)).andReturn("email_user_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.PASSWORD, null)).andReturn("email_password_value");
-        expect(mockPropertyFileManager.load("", EmailSenderConfigurationConstants.USER_FROM, null)).andReturn("email_from_value");
+        expect(mockUserDao.findByUserId("email_user_value")).andReturn(mockAcmUser);
     }
 
 }

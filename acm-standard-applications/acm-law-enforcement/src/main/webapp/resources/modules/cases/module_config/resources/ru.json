@@ -1,43 +1,83 @@
 {
   "cases": {
-    "title": "Дела",
-    "progressNoCase": "ru_[ No case file data ]",
-    "progressLoading": "ru_Loading case file ",
-    "progressError": "ru_Failed to load case file"
+    "title": "Случаи",
+    "progressNoCase": "[ Нет файлов ]",
+    "progressLoading": "Загрузка файла",
+    "progressError": "Не удалось загрузить файл"
   },
   "cases.menus": {
-    "leftnav.item": "Дело Файл",
-    "topbar.item": "Дело"
+    "leftnav.item": "Случа Файл ",
+    "topbar.item": "Случа "
   },
   "cases.error": {
-    "invalidData": "ru_"
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Обзор"
   },
   "cases.comp.info": {
-    "caseId": "ru_Case id:",
-    "caseNumber": "ru_Case Number:",
-    "courtRoomName": "ru_Court Room Name:",
-    "type.label": "ru_Type",
-    "created.label": "ru_Created Date",
-    "priority.label": "ru_Priority",
-    "assignee.label": "ru_Assigned To",
-    "owningGroup.label": "ru_Owning Group",
-    "dueDate.label": "ru_Due Date"
+    "title": "Информация",
+    "caseId": "Идентификация случая:",
+    "caseNumber": "Номер случий:",
+    "courtRoomName": "Название судебного зала:",
+    "type.label": "Тип",
+    "created.label": "Дата создания",
+    "priority.label": "Приоритет",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "dueDate.label": "Дата погашения",
+    "priorities": {
+      "low%": "Низко",
+      "medium%": "Средний",
+      "high%": "Высоко",
+      "expedite%": "Ускорить",
+      "unknown%": "Неизвестно"
+    },
+    "caseTypes": {
+      "agricultural%": "Сельское хозяйство",
+      "arson%": "Поджог",
+      "backgroundInvestigation%": "Фоновое исследование",
+      "benefitsAppeal%": "Апелляция о преимуществах",
+      "businessDispute%": "Лучший бизнес-спор",
+      "clinicalFraud%": "Мошенничество с клиническим исследователем",
+      "congressional%": "Ответ Конгресса",
+      "disabilityWaiver%": "Запрос на отказ от инвалидности",
+      "domesticDispute%": "Внутренний спор",
+      "drugTrafficking%": "Торговля наркотиками",
+      "educationWaiver%": "Запрос на отказ от образования",
+      "eeoHarassment%": "EEO/Преследование",
+      "embezzlement%": "Оскорбление",
+      "extortion%": "Вымогательство",
+      "fraud%": "Мошенничество",
+      "government%": "Правительство",
+      "investorComplaint%": "Жалоба инвестора",
+      "laborRacketeering%": "Трудовая ракета",
+      "local%": "Местный",
+      "murder%": "Убийство",
+      "newDrugFraud%": "Мошенничество с применением новых лекарств",
+      "payoff%": "Взятка",
+      "pensionWaiver%": "Запрос на отказ от пенсионного обеспечения",
+      "pollution%": "Загрязнение",
+      "productTampering%": "Нарушение продукта",
+      "assetTheftMisuse%": "Кража или злоупотребление активами"
+    }
   },
   "cases.comp.actions": {
-    "restrict": "ru_Restrict?",
-    "new.button": "ru_New",
-    "edit.button": "ru_Edit",
-    "status.button": "ru_Change Case Status",
-    "reinvestigate.button": "ru_Reinvestigate",
-    "subscribe.button": "ru_Subscribe",
-    "unsubscribe.button": "ru_Unsubscribe",
-    "merge.button": "ru_Merge",
-    "claim.button": "ru_Claim",
-    "unclaim.button": "ru_Unclaim",
-    "split.button": "ru_Split"
+    "title": "Действия",
+    "restrict": "Ограничить?",
+    "new.button": "Новый",
+    "edit.button": "Изменить",
+    "status.button": "Изменить статус",
+    "reinvestigate.button": "Повторное расследование",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "merge.button": "Объединить",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование",
+    "split.button": "Трещина"
   },
   "cases.comp.details": {
-    "title": "ru_Details",
+    "title": "Детали",
     "informSaved": "ru_Case details saved",
     "table.columns": {
       "title": "ru_Details",
@@ -46,13 +86,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "ru_Documents",
+    "title": "Документы",
     "sendEmail": "ru_Send Email",
     "filterInputPlaceholder": "ru_Filter",
     "searchInputPlaceholder": "ru_Search"
   },
   "cases.comp.people": {
-    "title": "ru_People",
+    "title": "Люди",
     "table.columns": {
       "entity": "ru_Entity",
       "type": "ru_Type",
@@ -71,7 +111,7 @@
       }
     },
     "organizations": {
-      "title": "ru_Organizations",
+      "title": "Организации",
       "table.columns": {
         "type": "ru_Type",
         "value": "ru_Value",
@@ -119,8 +159,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Организации",
+    "table.columns": {
+      "name": "ru_Organization Name",
+      "associationType": "ru_Role",
+      "type": "ru_Organization Type",
+      "identification": "ru_ID",
+      "value": "ru_Organization",
+      "contact": "ru_Primary Contact",
+      "phone": "ru_Phone",
+      "location": "ru_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "ru_Participants",
+    "title": "Участники",
     "table.columns": {
       "type": "ru_Type",
       "name": "ru_Name"
@@ -142,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "ru_Notes",
+    "title": "Заметки",
     "table.columns": {
       "note": "ru_Note",
       "created": "ru_Created",
@@ -150,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "ru_Tasks",
+    "title": "Задачи",
     "table.columns": {
       "title": "ru_Title",
       "assignee": "ru_Assignee",
@@ -163,7 +216,7 @@
     "table.deadline.tooltip": "ru_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "ru_References",
+    "title": "Ссылки",
     "table.columns": {
       "targetName": "ru_Number",
       "parentName": "ru_Parent",
@@ -174,7 +227,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "ru_History",
+    "title": "История",
     "table.columns": {
       "eventType": "ru_Event Name",
       "eventDate": "ru_Date",
@@ -182,7 +235,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "ru_Time",
+    "title": "Время",
     "table.columns": {
       "name": "ru_Form Name",
       "user": "ru_User",
@@ -193,7 +246,7 @@
     "formNamePrefix": "ru_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "ru_Cost",
+    "title": "Стоимость",
     "table.columns": {
       "name": "ru_Form Name",
       "user": "ru_User",
@@ -204,7 +257,7 @@
     "formNamePrefix": "ru_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "ru_Tags",
+    "title": "Теги",
     "table.columns": {
       "tag": "ru_Tag",
       "created": "ru_Created",
@@ -228,7 +281,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "ru_Calendar"
+    "title": "Календарь"
   },
   "cases.comp.merge": {
     "id": "ru_merge",
@@ -287,7 +340,7 @@
     "searchGroupHeader": "ru_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "ru_Future Approvers",
+    "title": "Маршрутизация Одобрения",
     "addNewTooltip": "ru_Add new approver",
     "noBuckslipMessage": "ru_No Data",
     "button": {
@@ -304,7 +357,7 @@
     "state.label": "ru_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "ru_Past Approvers",
+    "title": "Прошедшие утверждения",
     "noBuckslipMessage": "ru_No Data",
     "table.columns": {
       "approvalDate": "ru_Approval Date",
@@ -329,6 +382,40 @@
       "type": "ru_Type",
       "title": "ru_Title",
       "username": "ru_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "people.label": "Люди",
+      "organizations.label": "Организации",
+      "documents.label": "Документы",
+      "participants.label": "Участники",
+      "notes.label": "Заметки",
+      "tasks.label": "Задачи",
+      "references.label": "Ссылки",
+      "history.label": "История",
+      "time.label": "Время",
+      "cost.label": "Стоимость",
+      "tags.label": "Теги",
+      "calendar.label": "Календарь",
+      "approvalRouting.label": "Маршрутизация Одобрения"
+    },
+    "filters": {
+      "opened": "Все открытые жалобы",
+      "iHaveCreated": "Все, что я создал",
+      "iAmAssigned": "Все назначено",
+      "iAmFollowing": "Все, за чем я слежу",
+      "closed": "Все закрыты",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "dateAsc": "Сортировка даты Asc",
+      "dateDesc": "Сортировка даты Desc",
+      "idAsc": "Сортировка случая ID Asc",
+      "idDesc": "Сортировка случая ID Desc",
+      "nameAsc": "Сортировать по имени Asc",
+      "noSort": "(Нет Сортировать)"
     }
   }
 }

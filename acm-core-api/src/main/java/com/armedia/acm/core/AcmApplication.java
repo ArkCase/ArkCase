@@ -15,6 +15,7 @@ public class AcmApplication implements Serializable
     private String applicationName;
     private String logoutUrl;
     private String helpUrl;
+    private String baseUrl;
     private String alfrescoUserIdLdapAttribute;
     private List<AcmUserAction> topbarActions;
     private List<AcmUserAction> navigatorTabs;
@@ -136,5 +137,15 @@ public class AcmApplication implements Serializable
     public void setHelpUrl(String helpUrl)
     {
         this.helpUrl = helpUrl;
+    }
+
+    public String getBaseUrl()
+    {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl)
+    {
+        this.baseUrl = baseUrl;
     }
 }

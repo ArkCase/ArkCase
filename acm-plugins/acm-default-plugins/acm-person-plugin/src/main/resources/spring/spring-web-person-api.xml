@@ -40,19 +40,17 @@
     <bean id="personAssociationAPIController"
           class="com.armedia.acm.plugins.person.web.api.PersonAssociationAPIController">
         <property name="personAssociationService" ref="personAssociationService"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="organizationAssociationAPIController"
           class="com.armedia.acm.plugins.person.web.api.OrganizationAssociationAPIController">
         <property name="organizationAssociationService" ref="organizationAssociationService"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="organizationAPIController" class="com.armedia.acm.plugins.person.web.api.OrganizationAPIController">
         <property name="organizationService" ref="organizationService"/>
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="organizationEventPublisher" ref="organizationEventPublisher"/>
+        <property name="facetedSearchPath" value="forward:/api/v1/plugin/search/facetedSearch?filters=%s"/>
     </bean>
 
     <bean id="peopleAPIController" class="com.armedia.acm.plugins.person.web.api.PeopleAPIController">

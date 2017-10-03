@@ -15,8 +15,9 @@
   "components": [
     {
       "id": "subscriptionsFacetedSearch",
-      "title": "Subscriptions Faceted Search",
+      "title": "subscriptions.comp.subscriptionsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,
@@ -51,7 +52,7 @@
           "type": "date",
           "displayName": "subscriptions.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [

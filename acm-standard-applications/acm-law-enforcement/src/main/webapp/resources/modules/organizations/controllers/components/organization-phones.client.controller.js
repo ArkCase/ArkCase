@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -36,8 +36,12 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.ORGANIZATION}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -118,7 +122,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
                     phone = _.find($scope.objectInfo.contactMethods, {id: data.phone.id});
                 }
                 phone.type = 'phone';
-                phone.subType = data.phone.subType;
+                phone.subType = data.phone.subLookup;
                 phone.value = data.phone.value;
                 phone.description = data.phone.description;
 

@@ -3,13 +3,18 @@
     "title": "Organizations",
     "progressNoComplaint": "[ No organizations data ]",
     "progressLoading": "Loading organization ",
-    "progressError": "Failed to load organization "
+    "progressError": "Failed to load organization ",
+    "noDataMessage": "No Data"
   },
   "organizations.menus": {
     "leftnav.item": "Organizations",
     "topbar.item": "Organization"
   },
+  "organizations.comp.main": {
+    "title": "Overview"
+  },
   "organizations.comp.info": {
+    "title": "Info",
     "phone.label": "Phone",
     "email.label": "Email",
     "status.label": "Status",
@@ -19,6 +24,7 @@
     "parent.placeholder": "Enter Parent Organization"
   },
   "organizations.comp.actions": {
+    "title": "Actions",
     "export.button": "Export",
     "import.button": "Import",
     "delete.button": "Delete",
@@ -207,6 +213,28 @@
       "type.placeholder": "Enter Type",
       "value.label": "URL",
       "value.placeholder": "Enter URL"
+    }
+  },
+  "organizations.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
     }
   },
   "organizations.comp.dbas": {
@@ -408,11 +436,41 @@
       "identificationNumber.placeholder": "Enter Identification Number",
       "identificationIssuer": "Identification Issuer",
       "identificationIssuer.placeholder": "Enter Identification Issuer",
-      "identificationYearIssued": "Identification Issued",
+      "identificationYearIssued": "Identification Issued Date",
       "identificationYearIssued.placeholder": "Select Identification Issued",
       "identificationYearIssued.close.button": "Close"
     },
     "informCreated": "{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "addresses.label": "Locations",
+      "phones.label": "Phone Numbers",
+      "faxes.label": "Fax Numbers",
+      "emails.label": "Email Addresses",
+      "urls.label": "URLs",
+      "participants.label": "Participants",
+      "dbas.label": "DBAs",
+      "people.label": "People",
+      "ids.label": "IDs",
+      "complaints.label": "Complaints",
+      "cases.label": "Cases",
+      "related.label": "Related Organizations",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sort Date Created Ascending",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Sort Organization ID Ascending",
+      "idDesc": "Sort Organization ID Descending",
+      "nameAsc": "Sort By Organization Name A-Z",
+      "nameDesc": "Sort By Organization Name Z-A",
+      "noSort": "(No Sort)"
+    }
+  }
 }

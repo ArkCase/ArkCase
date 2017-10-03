@@ -1,71 +1,76 @@
 {
   "tasks": {
     "title": "任务",
-    "progressNoTask": "zh-cn_[ No task data ]",
-    "progressLoading": "zh-cn_Loading task ",
-    "progressError": "zh-cn_Failed to load task"
+    "progressNoTask": "[ 无任务数据 ]",
+    "progressLoading": "加载任务数据",
+    "progressError": "加载任务数据失败"
   },
   "tasks.menus": {
     "leftnav.item": "任务",
     "topbar.item": "任务"
   },
+  "tasks.comp.main": {
+    "title": "概述"
+  },
   "tasks.comp.info": {
-    "taskId": "zh-cn_Task id:",
-    "percentage.label": "zh-cn_% of Completion",
-    "assignee.label": "zh-cn_Assignee",
-    "Priority.label": "zh-cn_Priority",
-    "startDate.label": "zh-cn_Start Date",
-    "dueDate.label": "zh-cn_Due Date",
-    "state.label": "zh-cn_State",
-    "overdue.tooltip": "zh-cn_Task is Overdue",
-    "deadline.tooltip": "zh-cn_Deadline is Approaching",
-    "owningGroup.label": "Owning Group"
+    "title": "信息",
+    "taskId": "任务识别号:",
+    "percentage.label": "完成百分比",
+    "assignee.label": "指定人员",
+    "priority.label": "优先级别",
+    "startDate.label": "开始日期",
+    "dueDate.label": "到期日期",
+    "state.label": "状态",
+    "overdue.tooltip": "任务已逾期",
+    "deadline.tooltip": "截止日期正在接近",
+    "owningGroup.label": "所属群体"
   },
   "tasks.comp.parentinfo": {
-    "taskId": "zh-cn_Task id:",
+    "title": "原属信息",
+    "taskId": "任务识别号:",
     "case": {
-      "subjectType.label": "zh-cn_Subject Type",
-      "incidentDate.label": "zh-cn_Incident Date",
-      "priority.label": "zh-cn_Priority",
-      "assignee.label": "zh-cn_Assigned To",
-      "owningGroup.label": "zh-cn_Owning Group"
+      "subjectType.label": "对象类型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "优先级别",
+      "assignee.label": "指定人员",
+      "owningGroup.label": "所属群体"
     },
     "complaint": {
-      "subjectType.label": "zh-cn_Subject Type",
-      "incidentDate.label": "zh-cn_Incident Date",
-      "priority.label": "zh-cn_Priority",
-      "assignee.label": "zh-cn_Assigned To",
-      "owningGroup.label": "zh-cn_Owning Group"
+      "subjectType.label": "对象类型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "优先级别",
+      "assignee.label": "指定人员",
+      "owningGroup.label": "所属群体"
     },
     "costsheet": {
-      "approver.label": "zh-cn_Approver"
+      "approver.label": "审批者"
     },
     "timesheet": {
-      "approver.label": "zh-cn_Approver"
-    },
-    "_xxx_courtRoomName": "zh-cn_Court Room Name:"
+      "approver.label": "审批者"
+    }
   },
   "tasks.comp.actions": {
-    "diagram.button": "zh-cn_Process Diagram",
-    "eSignature.button": "zh-cn_Sign",
-    "subscribe.button": "zh-cn_Subscribe",
-    "unsubscribe.button": "zh-cn_Unsubscribe",
-    "reject.button": "zh-cn_Reject",
-    "delete.button": "zh-cn_Delete",
-    "complete.button": "zh-cn_Complete",
-    "approve.button": "zh-cn_Approve Document",
-    "rework.button": "zh-cn_Send for Rework",
-    "claim.button": "zh-cn_Claim",
-    "unclaim.button": "zh-cn_Unclaim",
-    "error.outcomeFieldMissing": "zh-cn_Cannot complete task because of missing required value",
+    "title": "行动",
+    "diagram.button": "图标处理",
+    "eSignature.button": "签名",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "reject.button": "回绝",
+    "delete.button": "删除",
+    "complete.button": "完成",
+    "approve.button": "文件审批",
+    "rework.button": "遣返重做",
+    "claim.button": "申明权益",
+    "unclaim.button": "取消申权",
+    "error.outcomeFieldMissing": "由于缺少必需的值而无法完成任务",
     "modal": {
-      "errorHeaderText": "zh-cn_Error",
-      "btnOk.text": "zh-cn_OK",
-      "btnClose.text": "zh-cn_Close"
+      "errorHeaderText": "错误",
+      "btnOk.text": "确定",
+      "btnClose.text": "关闭"
     }
   },
   "tasks.comp.details": {
-    "title": "zh-cn_Task Details",
+    "title": "详情",
     "informSaved": "zh-cn_Task details saved",
     "table.columns": {
       "details": "zh-cn_Details",
@@ -74,7 +79,7 @@
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "zh-cn_Rework Details",
+    "title": "重做详情",
     "informSaved": "zh-cn_Rework details saved",
     "table.columns": {
       "title": "zh-cn_Rework Details",
@@ -83,20 +88,20 @@
     }
   },
   "tasks.comp.parentdocs": {
-    "title": "zh-cn_Parent Documents",
+    "title": "原属文件",
     "noParentDataMessage": "zh-cn_No parent documents for standalone task",
     "sendEmail": "zh-cn_Send Email",
     "filterInputPlaceholder": "zh-cn_Filter",
     "searchInputPlaceholder": "zh-cn_Search"
   },
   "tasks.comp.attachments": {
-    "title": "zh-cn_Attachments",
+    "title": "附件",
     "sendEmail": "zh-cn_Send Email",
     "filterInputPlaceholder": "zh_cn_Filter",
     "searchInputPlaceholder": "zh-cn_Search"
   },
   "tasks.comp.notes": {
-    "title": "zh-cn_Notes",
+    "title": "注释",
     "table.columns": {
       "note": "zh-cn_Note",
       "created": "zh-cn_Created",
@@ -104,7 +109,7 @@
     }
   },
   "tasks.comp.references": {
-    "title": "zh-cn_References",
+    "title": "参考",
     "table.columns": {
       "targetName": "zh-cn_Number",
       "targetTitle": "zh-cn_Title",
@@ -114,7 +119,7 @@
     }
   },
   "tasks.comp.rejcomments": {
-    "title": "zh-cn_Reject Comments",
+    "title": "回绝说明",
     "table.columns": {
       "note": "zh-cn_Comment",
       "created": "zh-cn_Created",
@@ -122,7 +127,7 @@
     }
   },
   "tasks.comp.workflow": {
-    "title": "zh-cn_Workflow",
+    "title": "流程概述",
     "table.columns": {
       "participant": "zh-cn_Participant",
       "role": "zh-cn_Role",
@@ -136,14 +141,14 @@
     "error.loading": "zh-cn_Diagram can't be loaded"
   },
   "tasks.comp.signatures": {
-    "title": "zh-cn_eSignatures",
+    "title": "电子签名",
     "table.columns": {
       "signedDate": "zh-cn_Date",
       "signedBy": "zh-cn_Signed By"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "zh-cn_Documents Under Review",
+    "title": "审查文件",
     "table.columns": {
       "fileId": "zh-cn_ID",
       "fileName": "zh-cn_Title",
@@ -153,7 +158,7 @@
     }
   },
   "tasks.comp.history": {
-    "title": "zh-cn_History",
+    "title": "历史",
     "table.columns": {
       "eventType": "zh-cn_Event Name",
       "eventDate": "zh-cn_Date",
@@ -161,14 +166,14 @@
     }
   },
   "tasks.comp.tags": {
-    "title": "zh-cn_Tags",
+    "title": "标签",
     "table.columns": {
       "tag": "zh-cn_Tag",
       "created": "zh-cn_Created",
       "createdBy": "zh-cn_Created By"
     },
     "modal": {
-      "title": "zh-cn_Tag",
+      "title": "标签",
       "search": "zh-cn_Search for Tag",
       "buttons": {
         "cancel": "zh-cn_Cancel",
@@ -302,7 +307,7 @@
     "searchGroupHeader": "zh-cn_Search Group"
   },
   "tasks.comp.approvalRouting": {
-    "title": "zh-cn_Future Approvers",
+    "title": "批准流程",
     "addNewTooltip": "zh-cn_Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {
@@ -313,13 +318,46 @@
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "zh-cn_Past Approvers",
+    "title": "过去批准",
     "noBuckslipMessage": "No Data",
     "table.columns": {
       "approvalDate": "zh-cn_Approval Date",
       "approverId": "zh-cn_Approver",
       "approverFullName": "zh-cn_Full Name",
       "approverDecision": "zh-cn_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "reworkDetails.label": "重做详情",
+      "docReview.label": "审查文件",
+      "parentDoc.label": "原属文件",
+      "attachments.label": "附件",
+      "references.label": "参考",
+      "notes.label": "注释",
+      "workflow.label": "流程概述",
+      "history.label": "历史",
+      "eSignatures.label": "电子签名",
+      "tags.label": "标签",
+      "reject.label": "回绝说明"
+    },
+    "filters": {
+      "myTasks": "我的任务",
+      "opened": "所有打开的",
+      "completed": "所有完成的",
+      "dueToday": "所有今天到期的",
+      "myDueToday": "我所有今天到期的",
+      "overdue": "所有逾期的",
+      "myOverdue": "我所有逾期的",
+      "noFilter": "(无限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按事件日期反排序",
+      "nameAsc": "按任务名称排序",
+      "nameDesc": "按任务名称反排序",
+      "noSort": "(不排序)"
     }
   }
 }

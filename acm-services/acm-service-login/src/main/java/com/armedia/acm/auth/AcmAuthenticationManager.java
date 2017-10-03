@@ -1,7 +1,6 @@
 package com.armedia.acm.auth;
 
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +31,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmGrantedAuthoritiesMapper authoritiesMapper;
     private DefaultAuthenticationEventPublisher authenticationEventPublisher;
     private UserDao userDao;
-    private AcmGroupDao groupDao;
     private GroupService groupService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -61,21 +59,31 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
-            AcmAuthentication acmAuth = getAcmAuthentication(providerAuthentication);
-            return acmAuth;
+            return getAcmAuthentication(providerAuthentication);
         }
         if (lastException != null)
         {
-            AuthenticationException ae = null;
+            AuthenticationException ae;
             if (lastException instanceof ProviderNotFoundException)
             {
                 ae = (AuthenticationException) lastException;
+            } else if (lastException instanceof BadCredentialsException)
+            {
+                if (getUserDao().isUserPasswordExpired(authentication.getName()))
+                {
+                    ae = new AuthenticationServiceException(
+                            "Your password has expired! An email with reset password link was sent to you.", lastException);
+                } else
+                {
+                    ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
+                }
+
             } else
             {
-                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
-                        ? new AuthenticationServiceException("There was an unknown error in connecting with the authentication services!",
-                                lastException)
-                        : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
+                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException") ?
+                        new AuthenticationServiceException(
+                                "There was an unknown error in connecting with the authentication services!", lastException) :
+                        new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
             }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
             log.debug("Detailed exception: ", lastException);
@@ -85,8 +93,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
         // either there are no providers, or no providers can handle the incoming authentication
 
-        ProviderNotFoundException providerNotFoundException = new ProviderNotFoundException(
-                "No providers to handle authentication of type: " + authentication.getClass().getName());
+        ProviderNotFoundException providerNotFoundException =
+                new ProviderNotFoundException("No providers to handle authentication of type: " + authentication.getClass().getName());
         getAuthenticationEventPublisher().publishAuthenticationFailure(providerNotFoundException, authentication);
         throw providerNotFoundException;
     }
@@ -114,21 +122,14 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
     private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
     {
-        // Result
-        Set<AcmGrantedAuthority> authGroups = null;
-
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
-        List<AcmGroup> groups = getGroupDao().findByUserMember(user);
+        List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
-        if (groups != null)
-        {
-            authGroups = groups.stream()
-                    .map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName())
-                            ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName()))
-                    .collect(Collectors.toSet());
-        }
-
-        return authGroups;
+        return groups.stream()
+                .map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ?
+                        group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) :
+                        group.getName()))
+                .collect(Collectors.toSet());
     }
 
     public SpringContextHolder getSpringContextHolder()
@@ -169,16 +170,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
-    }
-
-    public AcmGroupDao getGroupDao()
-    {
-        return groupDao;
-    }
-
-    public void setGroupDao(AcmGroupDao groupDao)
-    {
-        this.groupDao = groupDao;
     }
 
     public GroupService getGroupService()

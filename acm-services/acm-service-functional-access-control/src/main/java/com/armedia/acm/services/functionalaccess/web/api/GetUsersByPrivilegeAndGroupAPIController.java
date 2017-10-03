@@ -3,7 +3,6 @@ package com.armedia.acm.services.functionalaccess.web.api;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.model.FunctionalAccessConstants;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.slf4j.Logger;

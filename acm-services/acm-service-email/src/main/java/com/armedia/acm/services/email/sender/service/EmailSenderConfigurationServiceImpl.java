@@ -2,7 +2,6 @@ package com.armedia.acm.services.email.sender.service;
 
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
-
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
@@ -13,6 +12,8 @@ import org.springframework.security.core.Authentication;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
@@ -21,7 +22,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author sasko.tanaskoski
- *
  */
 public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigurationService
 {
@@ -53,13 +53,12 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         Lock writeLock = lock.writeLock();
         writeLock.lock();
 
-        try
+        try (OutputStream propertyOutputStream = new FileOutputStream(emailSenderPropertiesResource.getFile()))
         {
-            emailSenderProperties.store(new FileOutputStream(emailSenderPropertiesResource.getFile()),
-                    String.format("Updated by %s", auth.getName()));
+            emailSenderProperties.store(propertyOutputStream, String.format("Updated by %s", auth.getName()));
         } catch (IOException e)
         {
-            log.error("Could not write properties to {} file.", emailSenderPropertiesResource.getFilename());
+            log.error("Could not write properties to [{}] file.", emailSenderPropertiesResource.getFilename());
         } finally
         {
             writeLock.unlock();
@@ -81,35 +80,35 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
             String propertyValue = emailSenderProperties.getProperty(propertyName);
             switch (propertyName)
             {
-            case EmailSenderConfigurationConstants.HOST:
-                emailSenderConfiguration.setHost(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.PORT:
-                emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ENCRYPTION:
-                emailSenderConfiguration.setEncryption(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.TYPE:
-                emailSenderConfiguration.setType(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.USERNAME:
-                emailSenderConfiguration.setUsername(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.PASSWORD:
-                emailSenderConfiguration.setPassword(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.USER_FROM:
-                emailSenderConfiguration.setUserFrom(propertyValue);
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
-                emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
-                emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
-                break;
-            case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
-                emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
+                case EmailSenderConfigurationConstants.HOST:
+                    emailSenderConfiguration.setHost(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.PORT:
+                    emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
+                    break;
+                case EmailSenderConfigurationConstants.ENCRYPTION:
+                    emailSenderConfiguration.setEncryption(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.TYPE:
+                    emailSenderConfiguration.setType(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.USERNAME:
+                    emailSenderConfiguration.setUsername(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.PASSWORD:
+                    emailSenderConfiguration.setPassword(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.USER_FROM:
+                    emailSenderConfiguration.setUserFrom(propertyValue);
+                    break;
+                case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
+                    emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
+                    break;
+                case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
+                    emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
+                    break;
+                case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
+                    emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
             }
         }
 
@@ -121,12 +120,12 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         Properties emailSenderProperties = new Properties();
         Lock readLock = lock.readLock();
         readLock.lock();
-        try
+        try (InputStream propertyInputStream = emailSenderPropertiesResource.getInputStream())
         {
-            emailSenderProperties.load(emailSenderPropertiesResource.getInputStream());
+            emailSenderProperties.load(propertyInputStream);
         } catch (IOException e)
         {
-            log.error("Could not read properties from {} file.", emailSenderPropertiesResource.getFilename());
+            log.error("Could not read properties from [{}] file.", emailSenderPropertiesResource.getFilename());
         } finally
         {
             readLock.unlock();
@@ -145,7 +144,8 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
             if (configuration.getEncryption().equals("starttls") || configuration.getEncryption().equals("off"))
             {
                 authenticatingSmtpClient = new AuthenticatingSMTPClient();
-            } else
+            }
+            else
             {
                 authenticatingSmtpClient = new AuthenticatingSMTPClient("TLS", true);
             }
@@ -184,7 +184,7 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
 
         } catch (Exception e)
         {
-            log.error("SMTP Error, {}", e.getMessage());
+            log.error("SMTP Error, [{}]", e.getMessage(), e);
             if (authenticatingSmtpClient.isConnected())
             {
                 try
@@ -203,18 +203,18 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
     {
         if (SMTPReply.isPositiveCompletion(smtpClient.getReplyCode()))
         {
-            log.info("SMTP Positive Reply {} {}", smtpClient.getReplyCode(), smtpClient.getReplyString());
+            log.info("SMTP Positive Reply [{}] [{}]", smtpClient.getReplyCode(), smtpClient.getReplyString());
             return true;
-        } else
+        }
+        else
         {
-            log.error("SMTP Error Reply {} {}", smtpClient.getReplyCode(), smtpClient.getReplyString());
+            log.error("SMTP Error Reply [{}] [{}]", smtpClient.getReplyCode(), smtpClient.getReplyString());
             return false;
         }
     }
 
     /**
-     * @param emailSenderPropertiesResource
-     *            the emailSenderPropertiesResource to set
+     * @param emailSenderPropertiesResource the emailSenderPropertiesResource to set
      */
     public void setEmailSenderPropertiesResource(Resource emailSenderPropertiesResource)
     {

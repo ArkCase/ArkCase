@@ -6,8 +6,8 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -88,8 +88,10 @@ public class UserOrgServiceImpl implements UserOrgService
     {
         ProfileDTO profileDTO = new ProfileDTO();
 
-        List<String> groupsNames = groups.stream().map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
-                ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName()).collect(Collectors.toList());
+        List<String> groupsNames = groups.stream()
+                .map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
+                        ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())
+                .collect(Collectors.toList());
 
         profileDTO.setUserOrgId(userOrgInfo.getUserOrgId());
 
@@ -123,6 +125,7 @@ public class UserOrgServiceImpl implements UserOrgService
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
         profileDTO.setTitle(userOrgInfo.getTitle());
+        profileDTO.setLangCode(user.getLang());
 
         return profileDTO;
     }
@@ -140,7 +143,8 @@ public class UserOrgServiceImpl implements UserOrgService
             {
                 userOrg = saveUserOrgTransaction(userOrg, authentication);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, true);
-            } catch (MuleException e)
+            }
+            catch (MuleException e)
             {
                 log.error("UserOrg for user [{}] was not saved. {}", userId, e);
                 getEventPublisher().publishProfileEvent(userOrg, authentication, true, false);
@@ -168,8 +172,9 @@ public class UserOrgServiceImpl implements UserOrgService
         boolean userOrgTransactionSuccess = true;
         try
         {
-           userOrg = saveUserOrgTransaction(userOrg, authentication);
-        } catch (MuleException e)
+            userOrg = saveUserOrgTransaction(userOrg, authentication);
+        }
+        catch (MuleException e)
         {
             log.error("UserOrg for user [{}] was not saved. {}", userId, e);
             userOrgTransactionSuccess = false;
@@ -275,19 +280,23 @@ public class UserOrgServiceImpl implements UserOrgService
         this.eventPublisher = eventPublisher;
     }
 
-    public AcmGroupDao getGroupDao() {
+    public AcmGroupDao getGroupDao()
+    {
         return groupDao;
     }
 
-    public void setGroupDao(AcmGroupDao groupDao) {
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
         this.groupDao = groupDao;
     }
 
-    public GroupService getGroupService() {
+    public GroupService getGroupService()
+    {
         return groupService;
     }
 
-    public void setGroupService(GroupService groupService) {
+    public void setGroupService(GroupService groupService)
+    {
         this.groupService = groupService;
     }
 

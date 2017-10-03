@@ -9,7 +9,11 @@
     "leftnav.item": "Tasks",
     "topbar.item": "Task"
   },
+  "tasks.comp.main": {
+    "title": "Overview"
+  },
   "tasks.comp.info": {
+    "title": "Info",
     "taskId": "Task id:",
     "percentage.label": "% of Completion",
     "assignee.label": "Assignee",
@@ -22,6 +26,7 @@
     "owningGroup.label": "Owning Group"
   },
   "tasks.comp.parentinfo": {
+    "title": "Parent Info",
     "taskId": "Task id:",
     "case": {
       "subjectType.label": "Subject Type",
@@ -46,6 +51,7 @@
     "_xxx_courtRoomName": "Court Room Name:"
   },
   "tasks.comp.actions": {
+    "title": "Actions",
     "diagram.button": "Process Diagram",
     "eSignature.button": "Sign",
     "subscribe.button": "Subscribe",
@@ -87,7 +93,8 @@
     "noParentDataMessage": "No parent documents for standalone task",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
+    "searchInputPlaceholder": "Search",
+    "folderName": "Folder Name"
   },
   "tasks.comp.attachments": {
     "title": "Attachments",
@@ -262,6 +269,9 @@
       "username": "Assignee"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "tasks.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
@@ -337,6 +347,39 @@
       "approverId": "Approver",
       "approverFullName": "Full Name",
       "approverDecision": "Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "reworkDetails.label": "Rework Details",
+      "docReview.label": "Documents Under Review",
+      "parentDoc.label": "Parent Documents",
+      "attachments.label": "Attachments",
+      "references.label": "References",
+      "notes.label": "Notes",
+      "workflow.label": "Workflow Overview",
+      "history.label": "History",
+      "eSignatures.label": "eSignatures",
+      "tags.label": "Tags",
+      "reject.label": "Reject Comments"
+    },
+    "filters": {
+      "myTasks": "Tasks for Me",
+      "opened": "All Open Tasks",
+      "completed": "All Completed Tasks",
+      "dueToday": "All Tasks Due Today",
+      "myDueToday": "All Tasks Due Today for Me",
+      "overdue": "All Tasks Overdue",
+      "myOverdue": "All Tasks Overdue for Me",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sort Created Date Asc",
+      "createdDateDesc": "Sort Created Date Desc",
+      "nameAsc": "Sort Task Name Asc",
+      "nameDesc": "Sort Task Name Desc",
+      "noSort": "(No Sort)"
     }
   }
 }

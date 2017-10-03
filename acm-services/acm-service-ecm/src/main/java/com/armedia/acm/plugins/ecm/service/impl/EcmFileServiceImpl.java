@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
@@ -24,6 +25,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
@@ -34,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -41,11 +44,14 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -185,7 +192,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         return upload(arkcaseFileName, fileType, null, file, authentication, targetCmisFolderId, parentObjectType, parentObjectId);
     }
-    
+
     @Transactional
     @Override
     public EcmFile upload(
@@ -696,8 +703,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("File with id: {} does not exists", fileId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
-            }
-            else
+            } else
             {
                 if (!((EcmFileConstants.RECORD).equals(ecmFile.getStatus())))
                 {
@@ -721,8 +727,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
-            }
-            else
+            } else
             {
                 for (AcmCmisObject file : folder.getChildren())
                 {
@@ -943,9 +948,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             fileCopyVersion.setFile(file);
             fileCopyVersion.setVersionTag(cmisObject.getVersionLabel());
 
+            ObjectAssociation personCopy = copyObjectAssociation(file.getPersonAssociation());
+            fileCopy.setPersonAssociation(personCopy);
+
+            ObjectAssociation organizationCopy = copyObjectAssociation(file.getOrganizationAssociation());
+            fileCopy.setOrganizationAssociation(organizationCopy);
+
+            copyFileVersionMetadata(file, fileCopyVersion);
+
             fileCopy.getVersions().add(fileCopyVersion);
 
             result = getEcmFileDao().save(fileCopy);
+
             return result;
         } catch (MuleException e)
         {
@@ -957,6 +971,65 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             log.error("Could not copy file {} ", e.getMessage(), e);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_COPY_FILE, EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
                     "Could not copy file", e);
+        }
+    }
+
+    protected ObjectAssociation copyObjectAssociation(ObjectAssociation original)
+    {
+        if (original == null)
+        {
+            return null;
+        }
+
+        ObjectAssociation copy = new ObjectAssociation();
+
+        try
+        {
+            ArkCaseBeanUtils beanUtils = new ArkCaseBeanUtils();
+            beanUtils.copyProperties(copy, original);
+            copy.setAssociationId(null);
+            copy.setParentName(null);
+            copy.setParentId(null);
+            return copy;
+        } catch (IllegalAccessException | InvocationTargetException e)
+        {
+            log.error("Could not copy object association - should never happen! [{}]", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    protected void copyFileVersionMetadata(EcmFile file, EcmFileVersion fileCopyVersion)
+    {
+        List<EcmFileVersion> versions = file.getVersions();
+
+        // take the most recent version by default
+        EcmFileVersion activeVersion = versions == null || versions.isEmpty() ? null : versions.get(versions.size() - 1);
+
+        // but use the active version if it is there
+        if (versions != null)
+        {
+            for (EcmFileVersion version : versions)
+            {
+                if (version.getVersionTag().equals(file.getActiveVersionTag()))
+                {
+                    activeVersion = version;
+                }
+            }
+        }
+
+        if (activeVersion != null)
+        {
+            fileCopyVersion.setFileSizeBytes(activeVersion.getFileSizeBytes());
+            fileCopyVersion.setMediaCreated(activeVersion.getMediaCreated());
+            fileCopyVersion.setWidthPixels(activeVersion.getWidthPixels());
+            fileCopyVersion.setHeightPixels(activeVersion.getHeightPixels());
+            fileCopyVersion.setGpsReadable(activeVersion.getGpsReadable());
+            fileCopyVersion.setGpsLongitudeDegrees(activeVersion.getGpsLongitudeDegrees());
+            fileCopyVersion.setGpsLatitudeDegrees(activeVersion.getGpsLatitudeDegrees());
+            fileCopyVersion.setGpsIso6709(activeVersion.getGpsIso6709());
+            fileCopyVersion.setDeviceMake(activeVersion.getDeviceMake());
+            fileCopyVersion.setDeviceModel(activeVersion.getDeviceModel());
+            fileCopyVersion.setDurationSeconds(activeVersion.getDurationSeconds());
         }
     }
 
@@ -1058,6 +1131,67 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return saved;
     }
 
+    @Override
+    public List<EcmFile> saveFilesToTempDirectory(MultiValueMap<String, MultipartFile> files)
+    {
+        log.debug("Saving files to temp directory...");
+        List<EcmFile> uploadList = new ArrayList<>();
+
+        if (files != null)
+        {
+            String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
+            for (Map.Entry<String, List<MultipartFile>> entry : files.entrySet())
+            {
+                List<MultipartFile> multipartFiles = entry.getValue();
+                for (MultipartFile file : multipartFiles)
+                {
+
+                    try
+                    {
+                        // This unique filename will allow the temp file to be tracked before it is saved to Alfresco
+                        UUID randomFileId = UUID.randomUUID();
+                        String uniqueTempFileName = randomFileId + "_" + file.getOriginalFilename();
+
+                        // Saves the file content to a temporary location
+                        File tempFileDestination = new File(tempUploadFolderPath + File.separator + uniqueTempFileName);
+                        log.debug("Saving file [{}] as [{}] to [{}]", file.getOriginalFilename(), uniqueTempFileName, tempFileDestination.getCanonicalPath());
+                        FileUtils.copyStreamToFile(file.getInputStream(), tempFileDestination);
+
+                        // The available file metadata will be returned as JSON to the caller
+                        EcmFile uploadedFile = new EcmFile();
+                        uploadedFile.setFileName(file.getOriginalFilename());
+                        uploadedFile.setStatus(uniqueTempFileName);
+                        uploadedFile.setFileActiveVersionMimeType(file.getContentType());
+                        uploadedFile.setCreated(new Date());
+                        uploadedFile.setModified(new Date());
+                        uploadList.add(uploadedFile);
+                    } catch (IOException e)
+                    {
+                        log.error("Failed to write temp file [{}]", e.getMessage(), e);
+                    }
+                }
+            }
+        }
+
+        log.debug("Saved [{}] to temp directory", uploadList);
+        return uploadList;
+    }
+
+    @Override
+    public boolean deleteTempFile(String uniqueFileName)
+    {
+        log.debug("Deleting temp file [{}]", uniqueFileName);
+        boolean fileDeleted = false;
+        String tmpDirectory = FileUtils.getTempDirectoryPath();
+        File file = new File(tmpDirectory + File.separator + uniqueFileName);
+        if (file.exists())
+        {
+            fileDeleted = FileUtils.deleteQuietly(file);
+            log.trace("File [{}] deleted? : [{}]", file.getAbsolutePath(), fileDeleted);
+        }
+        return fileDeleted;
+    }
+
     private String createQueryFormListAndOperator(List<String> elements, String operator)
     {
         String query = "";
@@ -1114,7 +1248,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.VERSIONING_STATE, cmisConfigUtils.getVersioningState(cmisRepositoryId));
 
-        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId);
+        AcmContainer container = getOrCreateContainer(targetObjectType, targetObjectId, cmisRepositoryId);
 
         EcmFile movedFile;
 
@@ -1122,9 +1256,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         {
             MuleMessage message = getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_MOVE_FILE, file, props);
             CmisObject cmisObject = message.getPayload(CmisObject.class);
-            String cmisObjectId = cmisObject.getId();
 
-            file.setVersionSeriesId(cmisObjectId);
+            if (cmisObject instanceof Document)
+            {
+                Document cmisDocument = (Document) cmisObject;
+                file.setVersionSeriesId(cmisDocument.getVersionSeriesId());
+            }
             file.setContainer(container);
 
             file.setFolder(folder);
@@ -1395,4 +1532,5 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     {
         this.cmisConfigUtils = cmisConfigUtils;
     }
+
 }

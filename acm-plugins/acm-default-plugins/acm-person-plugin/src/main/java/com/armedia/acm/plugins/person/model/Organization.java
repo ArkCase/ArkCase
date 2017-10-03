@@ -2,16 +2,19 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-import org.eclipse.persistence.annotations.OrderCorrection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -38,11 +41,12 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * Created by armdev on 09/03/14.
@@ -54,18 +58,12 @@ import java.util.List;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.person.model.Organization")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class Organization implements Serializable, AcmEntity, AcmObject
+public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssignedObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
 
     @Id
-    @TableGenerator(name = "acm_organization_gen",
-            table = "acm_organization_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_organization",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_organization_gen", table = "acm_organization_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_organization", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_organization_gen")
     @Column(name = "cm_organization_id")
     private Long organizationId;
@@ -77,6 +75,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     private List<String> organizationTypes;
 
     @Column(name = "cm_organization_value")
+    @Size(min=1)
     private String organizationValue;
 
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
@@ -94,37 +93,43 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     private String modifier;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(
-            name = "acm_organization_identification",
-            joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
+    @JoinTable(name = "acm_organization_identification", joinColumns = {
+            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
     private List<Identification> identifications = new ArrayList<>();
 
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "acm_organization_postal_address",
-            joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
+    @JoinTable(name = "acm_organization_postal_address", joinColumns = {
+            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
 
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "acm_organization_contact_method",
-            joinColumns = {@JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+    @JoinTable(name = "acm_organization_contact_method", joinColumns = {
+            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST})
+    @OneToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.REFRESH,
+            CascadeType.REMOVE,
+            CascadeType.PERSIST })
     @JoinColumns({
             @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_organization_id"),
-            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<OrganizationAssociation> associationsToObjects = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH, CascadeType.REMOVE, CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "organization")
+    @OneToMany(cascade = {
+            CascadeType.DETACH,
+            CascadeType.REFRESH,
+            CascadeType.REMOVE,
+            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "organization")
     private List<OrganizationAssociation> associationsFromObjects = new ArrayList<>();
+
+    @Column(name = "cm_status")
+    private String status;
 
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
@@ -198,22 +203,35 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "organization", orphanRemoval = true)
     List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumns({
+            @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Column(name = "cm_organization_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
+
     @PostLoad
     protected void postLoad()
     {
-        /*FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
-           same person which is parent to them.
-            Because of deadline didn't have time to find better solution for this like: get object from cache or explore new possibilities
-            So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code should be removed
-            linked with technical dept: AFDP-3487
-            */
+        /*
+         * FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch same person which is
+         * parent to them. Because of deadline didn't have time to find better solution for this like: get object from cache or explore new
+         * possibilities So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code
+         * should be removed linked with technical dept: AFDP-3487
+         */
         updateChildObjectsWithParentObjectReference();
     }
-
 
     @PrePersist
     protected void beforeInsert()
     {
+        if (getStatus() == null || getStatus().trim().isEmpty())
+        {
+            setStatus("ACTIVE");
+        }
         updateChildObjectsWithParentObjectReference();
     }
 
@@ -223,10 +241,9 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         updateChildObjectsWithParentObjectReference();
     }
 
-
     /**
-     * Updates child objects which (should) have reference to **this** object instance, reference is lost due to (de)serialization from/to JSON, XMl, etc.
-     * Also JPA without caching returns different instance for same object, executes additional query for same object id.
+     * Updates child objects which (should) have reference to **this** object instance, reference is lost due to (de)serialization from/to
+     * JSON, XMl, etc. Also JPA without caching returns different instance for same object, executes additional query for same object id.
      */
     private void updateChildObjectsWithParentObjectReference()
     {
@@ -246,6 +263,11 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         if (getPrimaryContact() != null)
         {
             getPrimaryContact().setOrganization(this);
+        }
+        for (AcmParticipant ap : getParticipants())
+        {
+            ap.setObjectId(getId());
+            ap.setObjectType(getObjectType());
         }
     }
 
@@ -477,6 +499,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         return organizationId;
     }
 
+    @Override
     public String getObjectType()
     {
         return objectType;
@@ -522,7 +545,8 @@ public class Organization implements Serializable, AcmEntity, AcmObject
         return personAssociations.stream().filter(association -> association.isPrimaryContact()).findFirst().orElse(null);
     }
 
-    public void setPrimaryContact(PersonOrganizationAssociation personOrganizationAssociation){
+    public void setPrimaryContact(PersonOrganizationAssociation personOrganizationAssociation)
+    {
 
     }
 
@@ -544,5 +568,37 @@ public class Organization implements Serializable, AcmEntity, AcmObject
     public void setPersonAssociations(List<PersonOrganizationAssociation> personAssociations)
     {
         this.personAssociations = personAssociations;
+    }
+
+    @Override
+    public List<AcmParticipant> getParticipants()
+    {
+        return participants;
+    }
+
+    public void setParticipants(List<AcmParticipant> participants)
+    {
+        this.participants = participants;
+    }
+
+    @XmlTransient
+    public String getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus(String status)
+    {
+        this.status = status;
+    }
+
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 }
