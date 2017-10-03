@@ -2,10 +2,10 @@
 
 angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
     , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
-    , 'Config.LocaleService', 'ConfigService'
+    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService'
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
-        , LocaleService, ConfigService) {
+        , LocaleService, ConfigService, UserInfoService, MessageService) {
         $scope.$emit('req-component-config', 'header');
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -86,40 +86,49 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             isSelected = false;
         };
 
+        // set application language for the user
+        var localeSettingsPromise = LocaleService.getSettings();
+        var userInfoPromise = Authentication.queryUserInfo();
+        
+        $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
+            var userInfo = result[1];
 
-        var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
-        var lastLocale = cacheLocale.get();
-        if (Util.isEmpty(lastLocale)) {
-            lastLocale = {};
-            lastLocale.locales = LocaleService.DEFAULT_LOCALES;
-            lastLocale.code = LocaleService.DEFAULT_CODE;
-            lastLocale.iso = LocaleService.DEFAULT_ISO;
-            cacheLocale.set(lastLocale);
-        }
-        var locales = Util.goodMapValue(lastLocale, "locales", LocaleService.DEFAULT_LOCALES);
-        var localeCode = Util.goodMapValue(lastLocale, "code", LocaleService.DEFAULT_CODE);
-        $scope.localeDropdownOptions = locales;
-        $scope.localeSelected = _.find(locales, {code: localeCode});
+            var userLocale = _.findWhere(result[0].locales, {code: userInfo.langCode});
 
-        $translate.use($scope.localeSelected.code);
+            $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.localeSelected = userLocale;
+
+            LocaleService.setLocaleData($scope.localeSelected);
+            LocaleService.useLocale($scope.localeSelected.code);
+        });
 
         $scope.changeLocale = function ($event, localeNew) {
             $event.preventDefault();
-            $scope.localeSelected = localeNew;
-            var lastLocale = cacheLocale.get();
-            lastLocale.code = localeNew.code;
-            lastLocale.iso = localeNew.iso;
-            cacheLocale.set(lastLocale);
-            $translate.use(localeNew.code);
+            userInfoPromise.then(function (userInfo) {                
+                Authentication.updateUserLang(localeNew.code).then(function () {
+                    userInfo.langCode = localeNew.code;
+                    $scope.localeSelected = localeNew;
+                    LocaleService.setLocaleData(localeNew);
+                    LocaleService.useLocale(localeNew.code);
+                }
+                , function (error) {
+                    MessageService.error(error.data ? error.data : error);
+                    return error;
+                });
+            });
         };
 
+        // TODO delete UPDATE button and this function if not needed
+        //
+        // jwu: Update function is needed.
+        //      1. Very first time ArkCase user only see English locale until 'Update' button is pressed
+        //      2. New locale added may not show up in the list until updated
+        //      We may hide the button with some trick, like do it in background with timeout, for example.
+        //      I voted for simpler code to let user do it himself.
         $scope.updateLocales = function($event) {
             $event.preventDefault();
-            LocaleService.getSettings().then(function(data){
+            localeSettingsPromise.then(function(data) {
                 $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
-                lastLocale = cacheLocale.get();
-                lastLocale.locales = $scope.localeDropdownOptions;
-                cacheLocale.set(lastLocale);
                 return data;
             });
         }

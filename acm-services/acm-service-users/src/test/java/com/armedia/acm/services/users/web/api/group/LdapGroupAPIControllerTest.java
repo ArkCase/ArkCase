@@ -1,6 +1,14 @@
 package com.armedia.acm.services.users.web.api.group;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -8,6 +16,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,11 +34,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LdapGroupAPIControllerTest extends EasyMockSupport
@@ -74,13 +78,13 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
         config.setEnableEditingLdapUsers(true);
 
         mockBehaviour(group);
-        when(springContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class)).thenReturn(Collections.singletonMap("armedia_authenticate", config));
+        when(springContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class))
+                .thenReturn(Collections.singletonMap("armedia_authenticate", config));
 
-        MvcResult result = mockMvc.perform(
-                delete("/api/v1/ldap/" + directory + "/groups/" + group.getName())
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
-
+        MvcResult result = mockMvc
+                .perform(delete("/api/v1/ldap/" + directory + "/groups/" + group.getName())
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
 
         LOG.info("Results: " + result.getResponse().getContentAsString());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
@@ -90,11 +94,11 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     }
 
-    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg
+    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException
     {
         when(mockLdapGroupService.getGroupDao()).thenReturn(mockGroupDao);
         when(mockGroupDao.findByName(anyString())).thenReturn(group);
         when(mockLdapGroupService.removeLdapGroup(anyString(), anyString())).thenReturn(group);
-        //doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
+        // doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
     }
 }

@@ -7,10 +7,12 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by marjan.stefanoski on 02.02.2015.
@@ -26,6 +28,12 @@ public class ExecuteSolrQuery
             throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true);
+    }
+    @Async
+    public CompletableFuture<String> getResultsByPredefinedQueryAsync(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort)
+            throws MuleException
+    {
+        return CompletableFuture.completedFuture(getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true));
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,

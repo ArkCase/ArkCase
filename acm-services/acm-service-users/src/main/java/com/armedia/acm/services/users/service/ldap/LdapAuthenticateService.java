@@ -3,17 +3,16 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
-import com.armedia.acm.services.users.model.ldap.MapperUtils;
-import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
+
 
 /**
  * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring
@@ -26,7 +25,7 @@ public class LdapAuthenticateService
     private SpringLdapUserDao ldapUserDao;
     private SpringLdapDao ldapDao;
     private AcmLdapAuthenticateConfig ldapAuthenticateConfig;
-    private SpringContextHolder acmContextHolder;
+    private AcmLdapSyncConfig ldapSyncConfig;
 
     /*
      * Authenticates user against LDAP
@@ -49,25 +48,53 @@ public class LdapAuthenticateService
     public void changeUserPassword(String userName, String currentPassword, String newPassword) throws AcmUserActionFailedException
     {
         log.debug("Changing password for user:{}", userName);
-        LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(getLdapAuthenticateConfig());
+        LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
         AcmUser acmUser = userDao.findByUserId(userName);
         try
         {
             ldapUserDao.changeUserPassword(acmUser.getDistinguishedName(), currentPassword, newPassword, ldapTemplate,
-                    getLdapAuthenticateConfig());
+                    ldapAuthenticateConfig);
             log.debug("Password changed successfully for User: {}", userName);
-
-            // passwordExpirationDate is set by ldap after the entry is there
-            AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                    get(String.format("%s_sync", acmUser.getUserDirectoryName()));
-
-            AcmUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
-            acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
-            getUserDao().save(acmUser);
+            savePasswordExpirationDate(acmUser, ldapTemplate);
         } catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
         }
+    }
+
+    public void resetUserPassword(String token, String password) throws AcmUserActionFailedException
+    {
+        try
+        {
+            AcmUser user = userDao.findByPasswordResetToken(token);
+            if (user == null)
+            {
+                throw new AcmUserActionFailedException("reset password", "USER", null, "User not found!", null);
+            }
+            log.debug("Changing password for user: [{}]", user.getUserId());
+
+            LdapTemplate ldapTemplate = ldapDao.buildLdapTemplate(ldapAuthenticateConfig);
+            ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
+            savePasswordExpirationDate(user, ldapTemplate);
+            invalidateToken(user);
+        } catch (AcmLdapActionFailedException e)
+        {
+            throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
+        }
+    }
+
+    protected void savePasswordExpirationDate(AcmUser acmUser, LdapTemplate ldapTemplate)
+    {
+        // passwordExpirationDate is set by ldap after the entry is there
+        LdapUser userEntry = getLdapUserDao().lookupUser(acmUser.getDistinguishedName(), ldapTemplate, ldapSyncConfig);
+        acmUser.setPasswordExpirationDate(userEntry.getPasswordExpirationDate());
+        userDao.save(acmUser);
+    }
+
+    protected void invalidateToken(AcmUser acmUser)
+    {
+        acmUser.setPasswordResetToken(null);
+        userDao.save(acmUser);
     }
 
     public SpringLdapDao getLdapDao()
@@ -110,13 +137,13 @@ public class LdapAuthenticateService
         this.ldapUserDao = ldapUserDao;
     }
 
-    public SpringContextHolder getAcmContextHolder()
+    public AcmLdapSyncConfig getLdapSyncConfig()
     {
-        return acmContextHolder;
+        return ldapSyncConfig;
     }
 
-    public void setAcmContextHolder(SpringContextHolder acmContextHolder)
+    public void setLdapSyncConfig(AcmLdapSyncConfig ldapSyncConfig)
     {
-        this.acmContextHolder = acmContextHolder;
+        this.ldapSyncConfig = ldapSyncConfig;
     }
 }

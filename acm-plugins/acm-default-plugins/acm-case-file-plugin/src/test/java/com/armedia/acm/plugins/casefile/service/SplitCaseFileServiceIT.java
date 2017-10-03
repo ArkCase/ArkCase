@@ -64,6 +64,7 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-data-access-control.xml",
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-ecm-file.xml",
+                "/spring/spring-library-ecm-tika.xml",
                 "/spring/spring-library-event.xml",
                 "/spring/spring-library-folder-watcher.xml",
                 "/spring/spring-library-merge-case-test-IT.xml",
@@ -83,10 +84,13 @@ import static org.junit.Assert.*;
                 "/spring/spring-library-service-data.xml",
                 "/spring/spring-library-drools-rule-monitor.xml",
                 "/spring/spring-library-object-lock.xml",
-                "/spring/spring-library-email.xml"
-        }
-)
-
+                "/spring/spring-library-email.xml",
+                "/spring/spring-library-email-smtp.xml",
+                "/spring/spring-library-organization-rules.xml",
+                "/spring/spring-library-person-rules.xml",
+                "/spring/spring-library-calendar-config-service.xml",
+                "/spring/spring-library-calendar-integration-exchange-service.xml"
+        })
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT extends EasyMock
 {
@@ -233,9 +237,9 @@ public class SplitCaseFileServiceIT extends EasyMock
         CaseFile originalCase = caseFileDao.find(sourceId);
 
         ObjectAssociation sourceOa = null;
-        for ( ObjectAssociation oa : originalCase.getChildObjects() )
+        for (ObjectAssociation oa : originalCase.getChildObjects())
         {
-            if ( "COPY_TO".equals(oa.getCategory()) )
+            if ("COPY_TO".equals(oa.getCategory()))
                 sourceOa = oa;
         }
         assertNotNull(sourceOa);
@@ -243,9 +247,9 @@ public class SplitCaseFileServiceIT extends EasyMock
         assertEquals(sourceOa.getTargetId().longValue(), copyCaseFile.getId().longValue());
 
         ObjectAssociation copyOa = null;
-        for ( ObjectAssociation oa : copyCaseFile.getChildObjects() )
+        for (ObjectAssociation oa : copyCaseFile.getChildObjects())
         {
-            if ( "COPY_FROM".equals(oa.getCategory()) )
+            if ("COPY_FROM".equals(oa.getCategory()))
                 copyOa = oa;
         }
         assertNotNull(copyOa);
@@ -253,9 +257,9 @@ public class SplitCaseFileServiceIT extends EasyMock
         assertEquals(copyOa.getTargetId().longValue(), originalCase.getId().longValue());
         assertTrue(copyCaseFile.getParticipants().size() >= 3);
         AcmParticipant assignee = null;
-        for ( AcmParticipant ap : copyCaseFile.getParticipants() )
+        for (AcmParticipant ap : copyCaseFile.getParticipants())
         {
-            if ( ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()) )
+            if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
             {
                 assignee = ap;
                 break;

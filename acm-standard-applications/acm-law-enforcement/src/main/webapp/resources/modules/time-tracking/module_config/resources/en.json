@@ -9,12 +9,15 @@
     "leftnav.item": "Time Tracking",
     "topbar.item": "Timesheet"
   },
-  "timeTracking.tree": {
+  "timeTracking.comp.main": {
+    "title": "Overview"
   },
   "timeTracking.comp.info": {
+    "title": "Info",
     "lastModified.label": "Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "New Timesheet",
     "edit.button": "Edit Timesheet"
   },
@@ -27,7 +30,7 @@
       "modifier": "User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
+  "timeTracking.comp.person": {
     "title": "Person",
     "table.columns": {
       "fullName": "Full Name",
@@ -35,7 +38,7 @@
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Hours Summary",
+    "title": "Hours",
     "table.columns": {
       "code": "Parent ID",
       "type": "Parent Type",
@@ -66,6 +69,22 @@
         "success": "Tag deleted successfully",
         "error": "Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Person",
+      "summary.label": "Hours",
+      "tags.label": "Tags"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Ascending",
+      "dateDesc": "Sort Date Descending",
+      "idAsc": "Sort Timesheet ID Ascending",
+      "idDesc": "Sort Timesheet ID Descending",
+      "nameDesc": "Sort By Timesheet Name",
+      "noSort": "(No Sort)"
     }
   }
 }

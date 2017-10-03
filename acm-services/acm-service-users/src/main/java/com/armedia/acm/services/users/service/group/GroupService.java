@@ -1,13 +1,13 @@
-/**
- *
- */
 package com.armedia.acm.services.users.service.group;
 
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,6 +15,9 @@ import java.util.Set;
  */
 public interface GroupService
 {
+    AcmGroup findByName(String name);
+
+    AcmGroup save(AcmGroup groupToSave);
 
     /**
      * Add members to the group
@@ -47,10 +50,11 @@ public interface GroupService
      * @param group
      * @return The new saved group or null if group with given name already exists in the same tree level
      */
-    AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
+     AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
 
     /**
      * Checks if given string matches the regex .*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}
+     *
      * @param str
      * @return true or false
      */
@@ -58,8 +62,23 @@ public interface GroupService
 
     /**
      * Creates or updates ad-hoc group based on the client info coming in from CRM
+     *
      * @param acmGroup group we want to rename
-     * @param newName group new name
+     * @param newName  group new name
      */
     void renameGroup(AcmGroup acmGroup, String newName);
+
+    List<AcmGroup> findByUserMember(AcmUser user);
+
+    AcmGroup markGroupDeleted(String groupId);
+
+    AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
+
+    AcmGroup addMembersToAdHocGroup(Set<AcmUser> members, String groupId) throws AcmUserActionFailedException;
+
+    AcmGroup removeSupervisor(String groupId, boolean applyToAll) throws AcmUserActionFailedException;
+
+    AcmGroup removeMembersFromAdHocGroup(Set<AcmUser> members, String groupId);
+
+    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException;
 }

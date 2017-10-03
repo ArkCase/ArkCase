@@ -8,7 +8,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
@@ -16,16 +19,18 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "acm_user")
-public class AcmUser implements Serializable, AcmLdapUser
+public class AcmUser implements Serializable
 {
     private static final long serialVersionUID = 3399640646540732944L;
 
@@ -67,14 +72,11 @@ public class AcmUser implements Serializable, AcmLdapUser
     private Date deletedAt;
 
     @Column(name = "cm_user_state")
-    private String userState;
+    @Enumerated(EnumType.STRING)
+    private AcmUserState userState;
 
     @Column(name = "cm_mail")
     private String mail;
-
-    @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<AcmGroup> groups;
 
     @Column(name = "cm_distinguished_name")
     private String distinguishedName;
@@ -97,15 +99,57 @@ public class AcmUser implements Serializable, AcmLdapUser
     @Column(name = "cm_title")
     private String title;
 
+    @Column(name = "cm_lang")
+    private String lang;
+
     @Column(name = "cm_pwd_ex_date")
     @Convert(converter = LocalDateConverter.class)
     private LocalDate passwordExpirationDate;
 
-    @Transient
-    private String sortableValue;
+    @Embedded
+    private PasswordResetToken passwordResetToken;
 
-    @Transient
-    private Set<String> ldapGroups = new HashSet<>();
+    @ManyToMany(mappedBy = "userMembers", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JsonIgnore
+    private Set<AcmGroup> groups = new HashSet<>();
+
+    @JsonIgnore
+    public Stream<String> getGroupNames()
+    {
+        return groups.stream()
+                .map(AcmGroup::getName);
+    }
+
+    @JsonIgnore
+    public Set<AcmGroup> getLdapGroups()
+    {
+        return groups.stream()
+                .filter(AcmGroup::isLdapGroup)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
+     * or getGroups().addAll(..)
+     *
+     * @param group
+     */
+    public void addGroup(AcmGroup group)
+    {
+        groups.add(group);
+        group.getUserMembers().add(this);
+    }
+
+    /**
+     * Because of bidirectional ManyToMany relation, this method should be used for removing groups from the user.
+     *
+     * @param group
+     */
+    public void removeGroup(AcmGroup group)
+    {
+        groups.remove(group);
+        group.getUserMembers().remove(this);
+    }
 
     @PrePersist
     public void preInsert()
@@ -150,6 +194,7 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.userDirectoryName = userDirectoryName;
     }
 
+    @JsonIgnore
     public String getsAMAccountName()
     {
         return sAMAccountName;
@@ -160,6 +205,7 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.sAMAccountName = sAMAccountName;
     }
 
+    @JsonIgnore
     public String getUserPrincipalName()
     {
         return userPrincipalName;
@@ -200,12 +246,12 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.deletedAt = deletedAt;
     }
 
-    public String getUserState()
+    public AcmUserState getUserState()
     {
         return userState;
     }
 
-    public void setUserState(String userState)
+    public void setUserState(AcmUserState userState)
     {
         this.userState = userState;
     }
@@ -245,133 +291,18 @@ public class AcmUser implements Serializable, AcmLdapUser
         return groups;
     }
 
-    public void setGroups(Set<AcmGroup> groups)
-    {
-        // Bidirectional ManyToMany relation
-        if (groups != null)
-        {
-            for (AcmGroup group : groups)
-            {
-                if (group.getMembers() != null && !group.getMembers().contains(this))
-                {
-                    group.getMembers().add(this);
-                }
-            }
-        }
-
-        this.groups = groups;
-    }
-
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
-     * or getGroups().addAll(..)
-     *
-     * @param group
-     */
-    public void addGroup(AcmGroup group)
-    {
-        if (group != null)
-        {
-            if (getGroups() == null)
-            {
-                setGroups(new HashSet<>());
-            }
-
-            getGroups().add(group);
-
-            if (group.getMembers() != null && !group.getMembers().contains(this))
-            {
-                group.getMembers().add(this);
-            }
-        }
-    }
-
-    /**
-     * Because of bidirectional ManyToMany relation, this method should be used for removing groups from the user.
-     *
-     * @param group
-     */
-    public void removeGroup(AcmGroup group)
-    {
-        if (group != null)
-        {
-            if (getGroups() != null)
-            {
-                if (getGroups().contains(group))
-                {
-                    getGroups().remove(group);
-                }
-
-                if (group.getMembers() != null && group.getMembers().contains(this))
-                {
-                    group.getMembers().remove(this);
-                }
-            }
-        }
-    }
-
-    @Override
-    @JsonIgnore
-    public int hashCode()
-    {
-        if (getUserId() == null)
-        {
-            return 0;
-        } else
-        {
-            return getUserId().hashCode();
-        }
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof AcmUser))
-        {
-            return false;
-        }
-
-        AcmUser user = (AcmUser) obj;
-
-        if (user.getUserId() == null && getUserId() == null)
-        {
-            return true;
-        }
-
-        if (user.getUserId() == null && getUserId() != null)
-        {
-            return false;
-        }
-
-        return user.getUserId().equals(getUserId());
-    }
-
-    @Override
-    @JsonIgnore
-    public Set<String> getLdapGroups()
-    {
-        return ldapGroups;
-    }
-
-    public void setLdapGroups(Set<String> ldapGroups)
-    {
-        this.ldapGroups = ldapGroups;
-    }
-
-    @Override
     @JsonIgnore
     public String getDistinguishedName()
     {
         return distinguishedName;
     }
 
-    @Override
     public void setDistinguishedName(String distinguishedName)
     {
         this.distinguishedName = distinguishedName;
     }
 
+    @JsonIgnore
     public String getUid()
     {
         return uid;
@@ -380,17 +311,6 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setUid(String uid)
     {
         this.uid = uid;
-    }
-
-    @JsonIgnore
-    public String getSortableValue()
-    {
-        return sortableValue;
-    }
-
-    public void setSortableValue(String sortableValue)
-    {
-        this.sortableValue = sortableValue;
     }
 
     public String getCountry()
@@ -443,6 +363,16 @@ public class AcmUser implements Serializable, AcmLdapUser
         this.title = title;
     }
 
+    public String getLang()
+    {
+        return lang;
+    }
+
+    public void setLang(String lang)
+    {
+        this.lang = lang;
+    }
+
     public LocalDate getPasswordExpirationDate()
     {
         return passwordExpirationDate;
@@ -451,5 +381,35 @@ public class AcmUser implements Serializable, AcmLdapUser
     public void setPasswordExpirationDate(LocalDate passwordExpirationDate)
     {
         this.passwordExpirationDate = passwordExpirationDate;
+    }
+
+    public PasswordResetToken getPasswordResetToken()
+    {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(PasswordResetToken passwordResetToken)
+    {
+        this.passwordResetToken = passwordResetToken;
+    }
+
+    public void setGroups(Set<AcmGroup> groups)
+    {
+        this.groups = groups;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcmUser acmUser = (AcmUser) o;
+        return Objects.equals(userId, acmUser.userId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(userId);
     }
 }

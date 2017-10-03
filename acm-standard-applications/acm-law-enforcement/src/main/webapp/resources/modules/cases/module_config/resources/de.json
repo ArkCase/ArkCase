@@ -1,43 +1,83 @@
 {
   "cases": {
     "title": "Falldateien",
-    "progressNoCase": "de_[ No case file data ]",
-    "progressLoading": "de_Loading case file ",
-    "progressError": "de_Failed to load case file"
+    "progressNoCase": "[ Keine Falldatei Daten ]",
+    "progressLoading": "Falldatei laden",
+    "progressError": "Fehler beim Laden der Falldatei"
   },
   "cases.menus": {
     "leftnav.item": "Falldateien",
     "topbar.item": "Fall"
   },
   "cases.error": {
-    "invalidData": "de_"
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Übersicht"
   },
   "cases.comp.info": {
-    "caseId": "de_Case id:",
-    "caseNumber": "de_Case Number:",
-    "courtRoomName": "de_Court Room Name:",
-    "type.label": "de_Type",
-    "created.label": "de_Created Date",
-    "priority.label": "de_Priority",
-    "assignee.label": "de_Assigned To",
-    "owningGroup.label": "de_Owning Group",
-    "dueDate.label": "de_Due Date"
+    "title": "Informationen",
+    "caseId": "Fallidentifikation:",
+    "caseNumber": "Fallnummer:",
+    "courtRoomName": "Gericht Zimmer Name:",
+    "type.label": "Typ",
+    "created.label": "Erstellungsdatum",
+    "priority.label": "Priorität",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "dueDate.label": "Fälligkeitsdatum",
+    "priorities": {
+      "low%": "Niedrig",
+      "medium%": "Mittel",
+      "high%": "Hoch",
+      "expedite%": "Expedite",
+      "unknown%": "Unbekannt"
+    },
+    "caseTypes": {
+      "agricultural%": "Landwirtschaftliche",
+      "arson%": "Brandstiftung",
+      "backgroundInvestigation%": "Hintergrunduntersuchung",
+      "benefitsAppeal%": "Vorteile Appell",
+      "businessDispute%": "Bessere Geschäftsstreitigkeiten",
+      "clinicalFraud%": "Klinischer Forscherbetrug",
+      "congressional%": "Kongressreaktion",
+      "disabilityWaiver%": "Behinderung Verzichtserklärung",
+      "domesticDispute%": "Häuslicher Streit",
+      "drugTrafficking%": "Drogenhandel",
+      "educationWaiver%": "Ausbildungsberatung",
+      "eeoHarassment%": "EEO/Belästigung",
+      "embezzlement%": "Unterschlagung",
+      "extortion%": "Erpressung",
+      "fraud%": "Betrug",
+      "government%": "Regierung",
+      "investorComplaint%": "Investorbeschwerde",
+      "laborRacketeering%": "Arbeit Racketeering",
+      "local%": "Lokal",
+      "murder%": "Mord",
+      "newDrugFraud%": "Neue Drogenanwendung Betrug",
+      "payoff%": "Auszahlung",
+      "pensionWaiver%": "Pension Verzichtserklärung",
+      "pollution%": "Pollution",
+      "productTampering%": "Produkt-Manipulation",
+      "assetTheftMisuse%": "Diebstahl oder Missbrauch von Vermögenswert"
+    }
   },
   "cases.comp.actions": {
-    "restrict": "de_Restrict?",
-    "new.button": "de_New",
-    "edit.button": "de_Edit",
-    "status.button": "de_Change Case Status",
-    "reinvestigate.button": "de_Reinvestigate",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "merge.button": "de_Merge",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim",
-    "split.button": "de_Split"
+    "title": "Aktionen",
+    "restrict": "Einschränken?",
+    "new.button": "Neu",
+    "edit.button": "Bearbeiten",
+    "status.button": "Änderungsfallstatus",
+    "reinvestigate.button": "Erneut untersuchen",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "merge.button": "Zusammenführen",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung",
+    "split.button": "Teilt"
   },
   "cases.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Case details saved",
     "table.columns": {
       "title": "de_Details",
@@ -46,13 +86,13 @@
     }
   },
   "cases.comp.documents": {
-    "title": "de_Documents",
+    "title": "Dokumente",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "cases.comp.people": {
-    "title": "de_People",
+    "title": "Menschen",
     "table.columns": {
       "entity": "de_Entity",
       "type": "de_Type",
@@ -71,7 +111,7 @@
       }
     },
     "organizations": {
-      "title": "de_Organizations",
+      "title": "Organisationen",
       "table.columns": {
         "type": "de_Type",
         "value": "de_Value",
@@ -119,8 +159,21 @@
       }
     }
   },
+  "cases.comp.organizations": {
+    "title": "Organisationen",
+    "table.columns": {
+      "name": "de_Organization Name",
+      "associationType": "de_Role",
+      "type": "de_Organization Type",
+      "identification": "de_ID",
+      "value": "de_Organization",
+      "contact": "de_Primary Contact",
+      "phone": "de_Phone",
+      "location": "de_Location"
+    }
+  },
   "cases.comp.participants": {
-    "title": "de_Participants",
+    "title": "Teilnehmer",
     "table.columns": {
       "type": "de_Type",
       "name": "de_Name"
@@ -142,7 +195,7 @@
     }
   },
   "cases.comp.notes": {
-    "title": "de_Notes",
+    "title": "Notizen",
     "table.columns": {
       "note": "de_Note",
       "created": "de_Created",
@@ -150,7 +203,7 @@
     }
   },
   "cases.comp.tasks": {
-    "title": "de_Tasks",
+    "title": "Aufgaben",
     "table.columns": {
       "title": "de_Title",
       "assignee": "de_Assignee",
@@ -163,7 +216,7 @@
     "table.deadline.tooltip": "de_Deadline is Approaching"
   },
   "cases.comp.references": {
-    "title": "de_References",
+    "title": "Referenzen",
     "table.columns": {
       "targetName": "de_Number",
       "parentName": "de_Parent",
@@ -174,7 +227,7 @@
     }
   },
   "cases.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -182,7 +235,7 @@
     }
   },
   "cases.comp.time": {
-    "title": "de_Time",
+    "title": "Zeit",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -193,7 +246,7 @@
     "formNamePrefix": "de_Timesheet"
   },
   "cases.comp.cost": {
-    "title": "de_Cost",
+    "title": "Kosten",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -204,7 +257,7 @@
     "formNamePrefix": "de_Costsheet"
   },
   "cases.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
@@ -228,7 +281,7 @@
     }
   },
   "cases.comp.calendar": {
-    "title": "de_Calendar"
+    "title": "Kalender"
   },
   "cases.comp.merge": {
     "id": "de_merge",
@@ -287,7 +340,7 @@
     "searchGroupHeader": "de_Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "de_Future Approvers",
+    "title": "Toekomstige Goedkeuringen",
     "addNewTooltip": "de_Add new approver",
     "noBuckslipMessage": "de_No Data",
     "button": {
@@ -304,7 +357,7 @@
     "state.label": "de_State"
   },
   "cases.comp.pastApprovals": {
-    "title": "de_Past Approvers",
+    "title": "Vorige Goedkeuringen",
     "noBuckslipMessage": "de_No Data",
     "table.columns": {
       "approvalDate": "de_Approval Date",
@@ -329,6 +382,40 @@
       "type": "de_Type",
       "title": "de_Title",
       "username": "de_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "people.label": "Menschen",
+      "organizations.label": "Organisationen",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "notes.label": "Notizen",
+      "tasks.label": "Aufgaben",
+      "references.label": "Referenzen",
+      "history.label": "Geschichte",
+      "time.label": "Zeit",
+      "cost.label": "Kosten",
+      "tags.label": "Etiketten",
+      "calendar.label": "Kalender",
+      "approvalRouting.label": "Toekomstige Goedkeuringen"
+    },
+    "filters": {
+      "opened": "Alle offenen Fälle",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "iAmAssigned": "Alles, was ich zugewiesen bin",
+      "iAmFollowing": "Alles, was ich folge",
+      "closed": "Alle Geschlossenen",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "idAsc": "Sortieren Fall-ID Auf",
+      "idDesc": "Sortieren Fall-ID Dec",
+      "nameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

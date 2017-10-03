@@ -32,14 +32,13 @@
                            style="background-color: white;">
                 </div>
                 <div class="col-sm-4">
-                    <label for="orgType" class="control-label">{{ 'organizations.comp.newOrganization.type'
-                        |
-                        translate}}</label>
+                    <label for="orgType"
+                           class="control-label">{{'organizations.comp.newOrganization.type'|translate}}</label>
                     <span class="required-asterisk">*</span>
                     <select id="orgType" class="form-control" required="required"
                             ng-model="organization.organizationType">
-                        <option ng-repeat="option in organizationTypes" value="{{option.type}}">
-                            {{option.name}}
+                        <option ng-repeat="option in organizationTypes" value="{{option.key}}">
+                            {{option.value | translate}}
                         </option>
                     </select>
                 </div>
@@ -69,7 +68,6 @@
                                 <div class="col-sm-4 form-group">
                                     <label for="identificationNumber" translate>
                                         organizations.comp.newOrganization.identification.identificationNumber</label>
-                                    <span class="required-asterisk">*</span>
                                     <input id="identificationNumber" type="text"
                                            ng-model="organization.defaultIdentification.identificationNumber"
                                            class="input-md form-control"
@@ -77,11 +75,13 @@
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label for="identificationType" translate>organizations.comp.newOrganization.identification.identificationType</label>
-                                    <span class="required-asterisk">*</span>
-                                    <select id="identificationType" ng-required="organization.defaultIdentification.identificationNumber" class="form-control"
+                                    <select id="identificationType"
+                                            ng-required="organization.defaultIdentification.identificationNumber"
+                                            ng-disabled="!organization.defaultIdentification.identificationNumber"
+                                            class="form-control"
                                             ng-model="organization.defaultIdentification.identificationType">
-                                        <option ng-repeat="option in identificationTypes" value="{{option.type}}">
-                                            {{option.name}}
+                                        <option ng-repeat="option in identificationTypes" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -136,7 +136,6 @@
                                     <div class="col-sm-4 form-group">
                                         <label translate>
                                             organizations.comp.newOrganization.identification.identificationNumber</label>
-                                        <span class="required-asterisk">*</span>
                                         <input type="text" ng-model="identification.identificationNumber"
                                                class="input-md form-control" required="required"
                                                placeholder="{{ 'organizations.comp.newOrganization.identification.identificationNumber.placeholder' | translate }}">
@@ -144,11 +143,11 @@
                                     <div class="col-sm-4 form-group">
                                         <label translate>
                                             organizations.comp.newOrganization.identification.identificationType</label>
-                                        <span class="required-asterisk">*</span>
                                         <select required="required" class="form-control"
+                                                ng-disabled="!identification.identificationNumber"
                                                 ng-model="identification.identificationType">
-                                            <option ng-repeat="option in identificationTypes" value="{{option.type}}">
-                                                {{option.name}}
+                                            <option ng-repeat="option in identificationTypes" value="{{option.key}}">
+                                                {{option.value | translate}}
                                             </option>
                                         </select>
                                     </div>
@@ -271,8 +270,8 @@
                                     organizations.comp.newOrganization.locations.country</label>
                                 <select id="country" class="form-control"
                                         ng-model="organization.defaultAddress.country">
-                                    <option ng-repeat="option in countries" value="{{option.code}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in countries" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
@@ -281,8 +280,8 @@
                                     organizations.comp.newOrganization.locations.type</label>
                                 <select id="loctype" class="form-control"
                                         ng-model="organization.defaultAddress.type">
-                                    <option ng-repeat="option in addressTypes" value="{{option.type}}">
-                                        {{option.name}}
+                                    <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                        {{option.value | translate}}
                                     </option>
                                 </select>
                             </div>
@@ -346,8 +345,8 @@
                                         organizations.comp.newOrganization.locations.country</label>
                                     <select id="country" class="form-control"
                                             ng-model="address.country">
-                                        <option ng-repeat="option in countries" value="{{option.code}}">
-                                            {{option.name}}
+                                        <option ng-repeat="option in countries" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -355,8 +354,8 @@
                                     <label for="loctype" translate>
                                         organizations.comp.newOrganization.locations.type</label>
                                     <select id="" class="form-control" ng-model="address.type">
-                                        <option ng-repeat="option in addressTypes" value="{{option.type}}">
-                                            {{option.name}}
+                                        <option ng-repeat="option in addressTypes" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -433,12 +432,12 @@
                 <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
                     <div class="panel-body">
                         <div ng-repeat="caType in communicationAccountsTypes">
-                            <div id="defaultPhone" class="row">
+                            <div class="row">
                                 <div class="col-sm-4">
-                                    <label for="communicationAccounts">
+                                    <label>
                                         {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                         translate}} </label>
-                                    <input id="communicationAccounts" type="text"
+                                    <input type="text"
                                            ng-model="organization['default'+capitalizeFirstLetter(caType)].value"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.' + caType + '.placeholder' | translate }}">
@@ -446,10 +445,13 @@
                                 <div class="col-sm-4">
                                     <label for="defaultPhoneSubType" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
                                         + caType + 'Type' | translate}}</label>
-                                    <select id="defaultPhoneSubType" class="form-control"
-                                            ng-model="organization['default'+capitalizeFirstLetter(caType)].subType">
-                                        <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
-                                            {{option.name}}
+                                    <select id="defaultPhoneSubType"
+                                            class="form-control"
+                                            ng-model="organization['default'+capitalizeFirstLetter(caType)].subType"
+                                            ng-required="organization['default'+capitalizeFirstLetter(caType)].value"
+                                            ng-disabled="!organization['default'+capitalizeFirstLetter(caType)].value">
+                                        <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -472,16 +474,19 @@
                                         {{'organizations.comp.newOrganization.communicationAccounts.' + caType |
                                         translate}} </label>
                                     <input id="caType" type="text" ng-model="contactMethod.value"
+                                           required="required"
                                            class="input-md form-control"
                                            placeholder="{{ 'organizations.comp.newOrganization.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4">
-                                    <label for="caType2" class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
-                                        +
-                                        caType + 'Type' | translate}}</label>
-                                    <select id="caType2" ng-model="contactMethod.subType" class="form-control">
-                                        <option ng-repeat="option in cmTypes[caType].subTypes" value="{{option.type}}">
-                                            {{option.name}}
+                                    <label class="control-label">{{'organizations.comp.newOrganization.communicationAccounts.'
+                                        + caType + 'Type' | translate}}</label>
+                                    <select ng-model="contactMethod.subType"
+                                            required="required"
+                                            ng-disabled="!contactMethod.value"
+                                            class="form-control">
+                                        <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
+                                            {{option.value | translate}}
                                         </option>
                                     </select>
                                 </div>
@@ -505,6 +510,18 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseDetails" translate>organizations.comp.details.title</a>
+                    </h4>
+                </div>
+                <div id="collapseDetails" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <summernote config="options" ng-model="organization.details"></summernote>
                     </div>
                 </div>
             </div>

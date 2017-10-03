@@ -9,7 +9,11 @@
   "document-repository.error": {
     "invalidData": ""
   },
+  "document-repository.comp.main": {
+    "title": "Overview"
+  },
   "document-repository.comp.info": {
+    "title": "Info",
     "docRepoId": "Repository ID:",
     "docRepoName": "Document Repository Name:",
     "modified.label": "Modified Date",
@@ -18,6 +22,7 @@
     "description.label": "Description"
   },
   "document-repository.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
@@ -112,6 +117,9 @@
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "document-repository.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
@@ -183,5 +191,29 @@
     "table.columns.type": "Type",
     "table.columns.title": "Title",
     "table.columns.id": "Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "tags.label": "Tags",
+      "references.label": "References",
+      "notes.label": "Notes",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "iAmFollowing": "All I'm Following",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Asc",
+      "dateDesc": "Sort Date Desc",
+      "idAsc": "Sort Repository ID Asc",
+      "idDesc": "Sort Repository ID Desc",
+      "nameAsc": "Sort By Repository Name Asc",
+      "noSort": "(No Sort)"
+    }
   }
 }

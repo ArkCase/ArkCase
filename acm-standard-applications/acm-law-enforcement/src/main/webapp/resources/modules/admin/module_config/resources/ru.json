@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "ru_Application Role",
     "security.ldapConfig": "ru_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "ru_Add New Directory",
+    "security.ldapConfig.addNewMember": "ru_Add New Member",
+    "security.ldapConfig.addMembers": "ru_Add Members",
+    "security.ldapConfig.addSubgroup": "ru_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "ru_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "ru_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "ru_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "ru_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "ru_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "ru_Edit Member",
+    "security.ldapConfig.removeMember": "ru_Remove Member",
     "security.ldapConfig.table.ldapUrl": "ru_LDAP Url",
     "security.ldapConfig.table.directoryName": "ru_Directory Name",
     "security.ldapConfig.data": {
@@ -68,7 +78,9 @@
       "insert.success": "ru_Successfully inserted new row.",
       "insert.error": "ru_Error inserting new row.",
       "update.success": "ru_Successfully updated row.",
-      "update.error": "ru_Error updating row."
+      "update.error": "ru_Error updating row.",
+      "insert.template.success": "ru_Successfully created template",
+      "insert.template.error": "ru_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "ru_Cancel",
@@ -100,7 +112,7 @@
         "description": "ru_Description",
         "descriptionPlaceholder": "ru_Enter Description",
         "btn": {
-          "ok": "ru_Add Ad-Hoc Group",
+          "ok": "ru_Add Group",
           "cancel": "ru_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "ru_Enter last name",
           "email": "ru_Enter email",
           "password": "ru_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "ru_7",
           "passwordRuleText": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -217,15 +229,189 @@
     "security.selectPrivileges.name": "ru_Name",
     "security.modules": "ru_Modules",
     "security.modules.module": "ru_Module",
+    "security.ldap.user.management": {
+      "title": "ru_LDAP User Management",
+      "cloneButton": "ru_Clone User",
+      "user": "ru_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "ru_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "ru_Enter System Email Address",
+        "password.placeholder": "ru_Enter System Password",
+        "purge.placeholder": "ru_Choose Purge Option",
+        "purgeDays.placeholder": "ru_Enter Days",
+        "save.button": "ru_Save",
+        "validate.button": "ru_Validate",
+        "purge.label": "ru_Purge",
+        "email.label": "ru_System Email Address",
+        "password.label": "ru_System Password",
+        "purgeDays.label": "ru_Days",
+        "emailValid": "ru_System Email Address is valid",
+        "emailNotValid": "ru_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "ru_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "ru_Retain Indefinitely",
+          "objectClosed": "ru_Object = 'Closed'",
+          "objectClosedXDays": "ru_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "ru_Cases",
+          "complaints.label": "ru_Complaints",
+          "tasks.label": "ru_Tasks"
+        }
+      }
+    },
+    "security.calendarCredentialsConfiguration": {
+      "title": "ru_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "ru_System Email Address",
+        "password": "ru_System Password",
+        "password.placeholder": "ru_System Password",
+        "save.button": "ru_Save",
+        "validate.button": "ru_Validate"
+      },
+      "modal": {
+        "title": "ru_Outlook folder override",
+        "message": "ru_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "ru_Confirm",
+        "cancel.button": "ru_Cancel"
+      },
+      "message": {
+        "credentials.valid": "ru_Credentials are valid",
+        "credentials.invalid": "ru_Credentials are not valid",
+        "credentials.error": "ru_An error has occurred while checking the credentials",
+        "save.successful": "ru_Outlook folder creator saved successfully",
+        "save.fail": "ru_Outlook folder creator not saved"
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "ru_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "ru_Save",
+        "deliveryMethods.label": "ru_Delivery Methods",
+        "enableDocumentEmail.checkbox": "ru_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "ru_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "ru_Documents can be sent as hyperlinks",
+        "serverSettings.label": "ru_Server Settings",
+        "serverType.label": "ru_Server Type",
+        "serverType.placeholder": "ru_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "ru_SMTP",
+          "outlook": "ru_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "ru_For details refer to Microsoft Exchange Configuration",
+        "server.label": "ru_Server Address",
+        "server.placeholder": "ru_Enter Server Address",
+        "port.label": "ru_Port",
+        "port.placeholder": "ru_Enter Port",
+        "encryption.label": "ru_Encryption",
+        "encryption.placeholder": "ru_Choose Encryption",
+        "encryptionOptions": {
+          "off": "ru_OFF",
+          "ssl-tls": "ru_SSL/TLS",
+          "starttls": "ru_STARTTLS"
+        },
+        "username.label": "ru_Username",
+        "username.placeholder": "ru_Enter Username",
+        "password.label": "ru_Password",
+        "password.placeholder": "ru_Enter Password",
+        "userFrom.label": "ru_From",
+        "userFrom.placeholder": "ru_Enter Email From field",
+        "validate.label": "ru_SMTP Validation",
+        "validate.button": "ru_Validate",
+        "smtpValid": "ru_SMTP settings are valid",
+        "smtpNotValid": "ru_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "ru_Email Templates",
+      "table.columns": {
+        "templateName": "ru_Template Name",
+        "emailPattern": "ru_Email Pattern",
+        "source": "ru_Source",
+        "objectTypes": "ru_Object Types",
+        "actions": "ru_Actions",
+        "modified": "ru_Modified Date",
+        "modifier": "ru_Modified By"
+      },
+      "modal": {
+        "title": "ru_Email Template",
+        "templateName.label": "ru_Template Name",
+        "templateName.placeholder": "ru_Enter Template Name",
+        "emailPattern.label": "ru_Email Pattern",
+        "emailPattern.placeholder": "ru_Enter Email Pattern",
+        "source.label": "ru_Source",
+        "objectTypes.label": "ru_Object Types",
+        "actions.label": "ru_Actions",
+        "manual.label": "ru_Manual",
+        "automated.label": "ru_Automated",
+        "browse": "ru_Browse",
+        "save": "ru_Save",
+        "cancel": "ru_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "ru_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "ru_Save",
+        "enableExchangeIntegration.checkbox": "ru_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "ru_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "ru_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "ru_Exchange2007",
+          "Exchange2007_SP1": "ru_Exchange2007_SP1",
+          "Exchange2010": "ru_Exchange2010",
+          "Exchange2010_SP1": "ru_Exchange2010_SP1",
+          "Exchange2010_SP2": "ru_Exchange2010_SP2",
+          "Exchange2013": "ru_Exchange2013",
+          "Exchange2013_SP1": "ru_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "ru_Enable Autodiscovery",
+        "clientAccessServer.label": "ru_Client Access Server",
+        "clientAccessServer.description": "ru_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "ru_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "ru_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "ru_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "ru_None",
+          "Owner": "ru_Owner",
+          "PublishingEditor": "ru_PublishingEditor",
+          "Editor": "ru_Editor",
+          "PublishingAuthor": "ru_PublishingAuthor",
+          "Author": "ru_Author",
+          "NoneditingAuthor": "ru_NoneditingAuthor",
+          "Reviewer": "ru_Reviewer",
+          "Contributor": "ru_Contributor",
+          "FreeBusyTimeOnly": "ru_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "ru_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "ru_Custom"
+        }
+      }
+    },
     "dashboard.title": "ru_Dashboard",
     "dashboard.config": "ru_Dashboard Configuration",
     "dashboard.widgets": "ru_Widgets",
-    "reports.title": "ru_Reports",
-    "reports.config": "ru_Reports Configuration",
+    "reports": {
+      "title": "ru_Reports",
+      "config": "ru_Reports Configuration",
+      "btn": {
+        "reportDesigner": "ru_Report Designer",
+        "sync": "ru_Synchronise"
+      }
+    },
     "forms.title": "ru_Forms",
     "forms.config": "ru_Form Configuration",
     "workflows.title": "ru_Workflows",
     "workflows.config": "ru_Workflow Configuration",
+    "workflows.config.bpmn.upload": "ru_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "ru_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "ru_Description",
+      "label.noFileSelected": "ru_No File Selected",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "ru_Cant make this process active!",
       "success": "ru_Process succesfully activated."
@@ -272,26 +458,34 @@
     "formWorkflows.link.editRole.save.success": "ru_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "ru_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "ru_Application",
+      "title": "Приложение",
+      "locale.config": {
+        "title": "Конфигурация локали",
+        "defaultLabel": "локали по умолчанию:"
+      },
       "labels.config": {
-        "defaultLabel": "ru_Default",
-        "applyBtn": "ru_Apply",
-        "resetModule": "ru_Reset Module",
-        "resetModule.confirm": "ru_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "ru_Reset current module (delete custom resources)",
-        "resetAll": "ru_Reset All",
-        "resetAll.confirm": "ru_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "ru_Reset all resources (delete all custom resources)",
-        "refreshAll": "ru_Refresh All",
-        "refreshAll.title": "ru_Refresh all resources (keep custom resources)",
-        "title": "ru_Label Configuration",
-        "filterBy": "ru_Filter By Id",
-        "filterByValue": "ru_Filter By Value",
+        "title": "Конфигурация метки",
+        "progressMessage": "Обновление меток...",
         "data": {
-          "description": "ru_Description",
-          "defaultValue": "ru_Default Value",
-          "id": "ru_ID",
-          "value": "ru_Value"
+          "description": "Описание",
+          "defaultValue": "Значение по умолчанию",
+          "id": "Идентификация",
+          "value": "Стоимость"
+        },
+        "btnReset": {
+          "label": "Сброс...",
+          "title": "Сбросить ресурсы ярлыков по умолчанию"
+        },
+        "setToDefault": {
+          "dialog.title": "Сбросить метки по умолчанию",
+          "chkResetCustom.label": "Очистить индивидуальные метки?",
+          "btnCancel.label": "Отменить",
+          "btnCancel.title": "Закройте диалог без каких-либо действий",
+          "btnReset.label": "Сброс",
+          "btnReset.title": "Очистить индивидуальные метки и сбросить их до значений по умолчанию",
+          "btnRefresh.label": "Сброс",
+          "btnRefresh.title": "Сбросить метки до значений по умолчанию, но не менять индивидуальные метки",
+          "resetCustom.confirm": "Вы действительно хотите удалить выбранные пользовательские ресурсы?"
         }
       },
       "module.config": {
@@ -355,11 +549,11 @@
         "created": "ru_Created",
         "modified": "ru_Modified",
         "creator": "ru_Creator",
-        "modifier": "ru_Modifier",
+        "modifier": "ru_Modified By",
         "activated": "ru_Status",
         "objectType": "ru_Object Type",
         "version": "ru_Version",
-        "templateVersionActive" : "ru_Active"
+        "templateVersionActive": "ru_Active"
       },
       "templates.fieldNames.label": "ru_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +563,7 @@
         "table.columns": {
           "beanId": "ru_Bean ID",
           "jpaQuery": "ru_JPA Query",
-          "queryType": "ru_Query Type"
+          "objectType": "ru_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +580,14 @@
       "mergefields.saveMergeFields": "ru_Save",
       "mergefields.versionMergeFields": "ru_Versions",
       "mergefields.grid": {
-      "fieldId": "ru_ID",
-      "fieldValue": "ru_Value",
-      "fieldDescription": "ru_Description"
+        "fieldId": "ru_ID",
+        "fieldValue": "ru_Value",
+        "fieldDescription": "ru_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "ru_Version",
         "modified": "ru_Modified",
-        "modifier": "ru_Modifier",
+        "modifier": "ru_Modified By",
         "mergingActiveVersion": "ru_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +604,100 @@
       "target": "ru_Target"
     },
     "forms.message.delete.success": "ru_Successfully deleted row.",
-    "forms.message.delete.error": "ru_Error deleting row."
+    "forms.message.delete.error": "ru_Error deleting row.",
+    "documentManagement": {
+      "title": "ru_Document Management",
+      "cmisConfiguration": "ru_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "ru_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "ru_New CMIS Configuration",
+          "edit": "ru_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "ru_Cancel",
+          "ok": "ru_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "ru_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "ru_CMIS ID",
+          "placeholder": "ru_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "ru_Base URL",
+          "placeholder": "ru_Base URL"
+        },
+        "username": {
+          "label": "ru_Username",
+          "placeholder": "ru_Username"
+        },
+        "password": {
+          "label": "ru_Password",
+          "placeholder": "ru_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "ru_Use Alfresco Extension",
+          "placeholder": "ru_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "ru_Endpoint",
+          "placeholder": "ru_Endpoint"
+        },
+        "maxIdle": {
+          "label": "ru_Maximum Idle",
+          "placeholder": "ru_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "ru_Maximum Active",
+          "placeholder": "ru_Maximum Active"
+        },
+        "maxWait": {
+          "label": "ru_Maximum Wait",
+          "placeholder": "ru_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "ru_Minimum Eviction Milliseconds",
+          "placeholder": "ru_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "ru_Eviction Check Interval Milliseconds",
+          "placeholder": "ru_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "ru_Reconnect Count",
+          "placeholder": "ru_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "ru_Reconnect Frequency",
+          "placeholder": "ru_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "ru_Repository Id",
+          "placeholder": "ru_Repository Id"
+        },
+        "versioningState": {
+          "label": "ru_Versioning State",
+          "placeholder": "ru_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "ru_Cancel",
+        "deleteBtn": "ru_Cofirm Delete",
+        "headerText": "ru_You are about to delete CMIS Configuration:",
+        "bodyText": "ru_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "ru_Successfully deleted configuration.",
+        "delete.error": "ru_Error deleting configuration.",
+        "insert.success": "ru_Successfully created new configuration row.",
+        "insert.error": "ru_Error creating new configuration row.",
+        "update.success": "ru_Successfully updated configuration row.",
+        "update.error": "ru_Error updating configuration row."
+      }
+    }
   }
 }

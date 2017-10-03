@@ -139,20 +139,23 @@
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
 
-    <bean id="acmApplicationTaskEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
+    <bean id="acmApplicationTaskEventHandler"
+          class="com.armedia.acm.plugins.task.service.impl.AcmApplicationTaskEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
         <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
         <property name="eventList">
-             <list value-type="java.lang.String">
-                 <value>create</value>
-                 <value>complete</value>
-                 <value>delete</value>
-                 <value>save</value>
-                 <value>assignment</value>
-             </list>
-         </property>
+            <list value-type="java.lang.String">
+                <value>create</value>
+                <value>complete</value>
+                <value>delete</value>
+                <value>save</value>
+                <value>assignment</value>
+                <value>claim</value>
+                <value>unclaim</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
@@ -163,20 +166,22 @@
         <property name="sendDocumentsToSolr" ref="sendDocumentsToSolr"/>
         <property name="taskToSolrTransformer" ref="taskToSolrTransformer"/>
         <property name="eventList">
-             <list value-type="java.lang.String">
-                 <value>create</value>
-                 <value>complete</value>
-                 <value>delete</value>
-                 <value>save</value>
-                 <value>terminate</value>
-             </list>
-         </property>
+            <list value-type="java.lang.String">
+                <value>create</value>
+                <value>complete</value>
+                <value>delete</value>
+                <value>save</value>
+                <value>terminate</value>
+                <value>claim</value>
+                <value>unclaim</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="upcomingTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.UpcomingTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="messageSubject" value="${upcoming.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${upcoming.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>
@@ -185,7 +190,7 @@
     <bean id="overdueTasksNotifier" class="com.armedia.acm.plugins.task.service.impl.OverdueTasksNotifier">
         <property name="activitiTaskService" ref="activitiTaskService"/>
         <property name="activitiTaskDao" ref="acmTaskDao"/>
-        <property name="smtpNotificationSender" ref="smtpNotificationSender"/>
+        <property name="senderFactory" ref="notificationSenderFactory"/>
         <property name="messageSubject" value="${overdue.tasks.notification.subject}"/>
         <property name="messageBodyTemplate" value="${overdue.tasks.notification.body.template}"/>
         <property name="userDao" ref="userJpaDao"/>

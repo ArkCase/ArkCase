@@ -4,11 +4,8 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
     '$translate', 'UtilService', 'ConfigService', '$q', 'owningGroup',
     function ($scope, $modal, $modalInstance, $translate, Util, ConfigService, $q, owningGroup) {
 
-        var promiseConfig = ConfigService.getModuleConfig("tasks");
-
-        $q.all([promiseConfig]).then(function (data) {
-            var foundComponent = data[0].components.filter(function(component) { return component.title === 'Info'; });
-            $scope.config = foundComponent[0];
+        ConfigService.getComponentConfig("tasks", "info").then(function (componentConfig) {
+            $scope.config = componentConfig;
         });
 
         $scope.onClickOk = function () {
@@ -25,8 +22,10 @@ angular.module('tasks').controller('Tasks.AssigneePickerController', ['$scope', 
             $scope.owningGroup = owningGroup;
 
             params.header = $translate.instant("tasks.comp.assigneePickerModal.searchAssigneeHeader");
-            params.filter = 'fq="object_type_s":(GROUP OR USER)';
-            params.extraFilter = '&fq="name": ';
+            params.filter = 'fq="object_type_s": USER';
+            if(owningGroup!="Unknown")
+                params.filter += '&fq="groups_id_ss": ' + $scope.owningGroup;
+            params.extraFilter =' &fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({

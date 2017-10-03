@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,9 +34,10 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private Long taskId;
     private String priority;
+    @Size(min=1)
     private String title;
 
-    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
+    @NotNull
     private Date dueDate;
     private String attachedToObjectType;
     private String attachedToObjectName;
@@ -50,7 +53,6 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private Integer percentComplete;
     private String details;
 
-    @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
     private Date createDate;
 
     @JsonFormat(pattern = SearchConstants.ISO_DATE_FORMAT)
@@ -607,7 +609,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     {
         if (getChildObjects() != null)
         {
-            return getChildObjects().stream().filter(child -> ObjectAssociationConstants.OBJECT_TYPE.equals(child.getAssociationType()))
+            return getChildObjects().stream().filter(child -> ObjectAssociationConstants.REFFERENCE_TYPE.equals(child.getAssociationType()))
                     .collect(Collectors.toList());
         }
 

@@ -27,4 +27,10 @@
     </bean>
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list/>
+        </constructor-arg>
+    </bean>
 </beans>

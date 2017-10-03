@@ -44,4 +44,7 @@ angular.module('cost-tracking').config(['$stateProvider',
             })
 
 	}
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

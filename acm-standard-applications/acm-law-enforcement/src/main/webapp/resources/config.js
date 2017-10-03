@@ -39,7 +39,8 @@ var ApplicationConfiguration = (function () {
         "com.2fdevs.videogular.plugins.controls",
         "com.2fdevs.videogular.plugins.overlayplay",
         "com.2fdevs.videogular.plugins.poster",
-        "com.2fdevs.videogular.plugins.buffering"
+        "com.2fdevs.videogular.plugins.buffering",
+        "tmh.dynamicLocale"
     ];
 
     // Init list of errors that should not be shown to the end user

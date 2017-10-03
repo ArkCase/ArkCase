@@ -17,6 +17,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         });
 
         $scope.pictures = [{}];
+        $scope.userPictures = [];
 
         //new person with predefined values
         $scope.person = {
@@ -40,7 +41,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         ObjectLookupService.getContactMethodTypes().then(function (contactMethodTypes) {
             $scope.cmTypes = {};
             _.each(contactMethodTypes, function (cmType) {
-                $scope.cmTypes[cmType.type] = cmType;
+                $scope.cmTypes[cmType.key] = cmType;
             });
 
             //used for generating the view for communication accounts
@@ -118,29 +119,31 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }, 0);
         };
 
-        $scope.addEmptyPerson = function () {
+        $scope.addEmptyPicture = function () {
             $scope.pictures.push({});
             $timeout(function () {
                 //add empty object
             }, 0);
         };
 
-        $scope.removePerson = function (toBeRemoved) {
+        $scope.removePicture = function (index) {
             $timeout(function () {
-                _.remove($scope.pictures, function (object) {
-                    return object === toBeRemoved;
-                });
+                $scope.pictures.splice(index, 1);
+                $scope.userPictures.splice(index, 1);
                 if ($scope.pictures.length < 1) {
                     $scope.pictures.push({});
                 }
             }, 0);
         };
 
+        $scope.onClickCancel = function () {
+            $modalInstance.dismiss('Cancel');
+        };
 
         $scope.save = function () {
             $modalInstance.close({
                 person: clearNotFilledElements(_.cloneDeep($scope.person)),
-                images: $scope.pictures
+                images: $scope.userPictures
             });
         };
 

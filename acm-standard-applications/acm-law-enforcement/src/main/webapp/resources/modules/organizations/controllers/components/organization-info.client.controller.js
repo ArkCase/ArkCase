@@ -22,10 +22,13 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
 
         };
 
-        $scope.addParent = function () {
+        $scope.addParent = function (isSelectedParent) {
 
             var params = {};
-            //params.types = vm.organizationTypes;
+            if (!!isSelectedParent) {
+                params.organization = $scope.objectInfo;
+                params.isSelectedParent = isSelectedParent;
+            }
 
             var modalInstance = $modal.open({
                 scope: $scope,

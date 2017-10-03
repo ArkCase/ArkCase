@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "hi_(Select One)",
+    "select.option.none": "(एक चुनें)",
+    "value.unknown": "अज्ञात",
+
     "defaultDateFormat": "hi_MM/DD/YYYY",
     "defaultTimeFormat": "hi_hh:mm:ss",
     "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
@@ -8,13 +10,32 @@
     "defaultDateUIFormat": "hi_MM/dd/yyyy",
     "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
   },
+  "common.addOrganization": {
+    "title": "hi_Add Parent Organization",
+    "addNew.label": "hi_Add new Organization",
+    "selectExisting.label": "hi_Select existing organization",
+    "organization.label": "hi_Organization",
+    "description": "hi_Description",
+    "type.label": "hi_Organization Association Type",
+    "type.label.default.text": "hi_No parent Organization",
+    "type.label.text": "hi_Parent Organization",
+    "btnCancel.text": "hi_Cancel",
+    "btnOk.text": "hi_Save Organization",
+    "setPrimary.label": "hi_Set As Primary?",
+    "radioYes.text": "hi_Yes",
+    "radioNo.text": "hi_No",
+    "duplicateOrganizationRoleErrorMessage": "hi_Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "hi_Edit Parent Organization"
+  },
   "common.service": {
-    "error.invalidData": "hi_Invalid data"
+    "error.invalidData": "अमान्य डेटा"
   },
   "common.objects": {
-    "progressNoData": "hi_[ No data ]",
-    "progressLoading": "hi_Loading data ",
-    "progressError": "hi_Failed to load data "
+    "progressNoData": "[ कोई डेटा नहीं ]",
+    "progressLoading": "डेटा लोड करना ",
+    "progressError": "डेटा लोड करने में विफल "
   },
   "common.frevvo": {
     "defaultDateFormat": "hi_YYYY-MM-DD"
@@ -54,7 +75,7 @@
       "type": "hi_Type",
       "created": "hi_Created",
       "modified": "hi_Modified",
-      "author": "hi_Author",
+      "modifier": "hi_Modified By",
       "version": "hi_Version",
       "status": "hi_Status"
     },
@@ -104,17 +125,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "hi_ records above...",
-    "btnPrev.toolTip": "hi_Review previous records",
-    "btnNext.titleUnknownSize": "hi_More records...",
-    "btnNext.title": "hi_ more records...",
-    "btnNext.toolTip": "hi_Load more records",
-    "edtQuery.placeHolder": "hi_Search",
-    "btnQuery.text": "hi_Go!",
-    "errorNode.title": "hi_(Error)",
-    "errorNode.toolTip": "hi_(Error)",
-    "noAccessNode.title": "hi_(No Access)",
-    "noAccessNode.toolTip": "hi_(No Access)"
+    "btnPrev.title": "ऊपर रिकॉर्ड...",
+    "btnPrev.toolTip": "पिछला रिकॉर्ड की समीक्षा करें",
+    "btnNext.titleUnknownSize": "अधिक अभिलेख...",
+    "btnNext.title": "अधिक अभिलेख...",
+    "btnNext.toolTip": "अधिक अभिलेख लोड करें",
+    "edtQuery.placeHolder": "खोज",
+    "btnQuery.text": "जाओ!",
+    "errorNode.title": "(त्रुटि)",
+    "errorNode.toolTip": "(त्रुटि)",
+    "noAccessNode.title": "(प्रवेश नहीं)",
+    "noAccessNode.toolTip": "(प्रवेश नहीं)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "hi_items per page",
@@ -129,12 +150,142 @@
     "authorized": "hi_Authorized"
   },
   "common.directive.searchModal": {
-    "header": "hi_Search",
-    "btnSearch.text": "hi_Search",
-    "btnOk.text": "hi_OK",
-    "btnCancel.text": "hi_Cancel",
-    "edtPlaceholder": "hi_Type in to search",
-    "noData.text": "hi_No Results"
+    "header": "खोज",
+    "btnSearch.text": "खोज",
+    "btnOk.text": "ओके",
+    "btnCancel.text": "रद्द करें",
+    "edtPlaceholder": "खोज में टाइप करें",
+    "noData.text": "कोई परिणाम नहीं"
+  },
+  "common.directive.search": {
+    "showmore.button.text": "अधिक मान दिखाएँ",
+    "showLess.button.text": "कम मूल्य दिखाएं",
+    "results.text": "परिणाम",
+    "noResults.text": "कोई परिणाम नहीं",
+    "tooltip": {
+      "collapseFacetList": "संकुचित फ़ैकेट सूची",
+      "expandFacetList": "वैपेट सूची का विस्तार करें"
+    },
+    "facet": {
+      "names.modifyUser%": "उपयोगकर्ता संशोधित करें",
+      "names.taskPriority%": "कार्य प्राथमिकता",
+      "fields.taskPriority.medium%": "मध्यम",
+      "fields.taskPriority.low%": "कम",
+      "fields.taskPriority.high%": "उच्च",
+      "fields.taskPriority.expedite%": "एक्साइडिट",
+      "names.group%": "समूह",
+      "names.tagToken%": "टैग टोकन",
+      "names.assignee%": "नियुक्त पूर्ण नाम",
+      "names.documentRepository%": "दस्तावेज़ रिपॉजिटरी नाम",
+      "names.taskStatus%": "कार्य स्थिति",
+      "fields.taskStatus.active%": "सक्रिय",
+      "fields.taskStatus.draft%": "ड्राफ्ट",
+      "fields.taskStatus.closed%": "बंद",
+      "fields.taskStatus.record%": "रिकॉर्ड",
+      "fields.taskStatus.inactive%": "निष्क्रिय",
+      "fields.taskStatus.inApproval%": "अनुमोदन में",
+      "fields.taskStatus.delete%": "हटाएं",
+      "fields.taskStatus.approved%": "स्वीकृत",
+      "fields.taskStatus.unclaimed%": "दावा नहीं किया गया",
+      "fields.taskStatus.valid%": "मान्य",
+      "names.documentLanguage%": "दस्तावेज़ भाषा",
+      "names.createUser%": "उपयोगकर्ता बनाएं",
+      "names.postalCode%": "डाक कोड",
+      "names.incidentType%": "घटना प्रकार",
+      "fields.incidentType.agricultural%": "कृषि",
+      "fields.incidentType.arson%": "आगजनी",
+      "fields.incidentType.backgroundInvestigation%": "पृष्ठभूमि की जांच",
+      "fields.incidentType.benefitsAppeal%": "लाभ अपील",
+      "fields.incidentType.businessDispute%": "बेहतर व्यवसाय विवाद",
+      "fields.incidentType.clinicalFraud%": "नैदानिक ​​अन्वेषक धोखाधड़ी",
+      "fields.incidentType.congressional%": "कांग्रेस प्रतिक्रिया",
+      "fields.incidentType.disabilityWaiver%": "विकलांगता छूट अनुरोध",
+      "fields.incidentType.domesticDispute%": "घरेलू विवाद",
+      "fields.incidentType.drugTrafficking%": "ड्रग ट्रैफिकिंग",
+      "fields.incidentType.educationWaiver%": "शिक्षा छूट अनुरोध",
+      "fields.incidentType.eeoHarassment%": "ईईओ / उत्पीड़न",
+      "fields.incidentType.embezzlement%": "एम्बज़ेलमेंट",
+      "fields.incidentType.extortion%": "जबरन",
+      "fields.incidentType.fraud%": "धोखाधड़ी",
+      "fields.incidentType.government%": "सरकार",
+      "fields.incidentType.investorComplaint%": "निवेशक शिकायत",
+      "fields.incidentType.laborRacketeering%": "लेबर रैकेटिटेरिंग",
+      "fields.incidentType.local%": "स्थानीय",
+      "fields.incidentType.murder%": "मर्डर",
+      "fields.incidentType.newDrugFraud%": "न्यू ड्रग एप्लिकेशन फ्रॉड",
+      "fields.incidentType.payoff%": "भुगतान",
+      "fields.incidentType.pensionWaiver%": "पेंशन छूट अनुरोध",
+      "fields.incidentType.pollution%": "प्रदूषण",
+      "fields.incidentType.productTampering%": "उत्पाद छेड़छाड़",
+      "fields.incidentType.assetTheftMisuse%": "परिसंपत्ति की चोरी या दुरुपयोग",
+      "names.objectType%": "ऑब्जेक्ट प्रकार",
+      "fields.objectType.participant%": "सहभागी",
+      "fields.objectType.contactMethod%": "संपर्क विधि",
+      "fields.objectType.task%": "टास्क",
+      "fields.objectType.file%": "फ़ाइल",
+      "fields.objectType.person%": "व्यक्ति",
+      "fields.objectType.personAssociation%": "पर्सन एसोसिएशन",
+      "fields.objectType.reference%": "संदर्भ",
+      "fields.objectType.location%": "स्थान",
+      "fields.objectType.organization%": "संगठन",
+      "fields.objectType.organizationAssociation%": "संगठन एसोसिएशन",
+      "fields.objectType.caseFile%": "केस फ़ाइल",
+      "fields.objectType.complaint%": "शिकायत",
+      "fields.objectType.associatedTag%": "एसोसिएटेड टैग",
+      "fields.objectType.group%": "समूह",
+      "fields.objectType.costsheet%": "कॉस्टशीट",
+      "fields.objectType.note%": "नोट",
+      "fields.objectType.docRepo%": "डॉक्टर रिपो",
+      "fields.objectType.personAlias%": "व्यक्ति उपनाम",
+      "fields.objectType.timesheet%": "टाइम्सशीट",
+      "fields.objectType.subscription%": "सदस्यता",
+      "fields.objectType.user%": "उपयोगकर्ता",
+      "fields.objectType.objectLock%": "ऑब्जेक्ट लॉक",
+      "names.state%": "राज्य",
+      "names.parentType%": "जनक प्रकार",
+      "fields.parentType.container%": "कंटेनर",
+      "fields.parentType.caseFile%": "केस फ़ाइल",
+      "fields.parentType.complaint%": "शिकायत",
+      "fields.parentType.organization%": "संगठन",
+      "fields.parentType.person%": "व्यक्ति",
+      "fields.parentType.task%": "टास्क",
+      "fields.parentType.file%": "फ़ाइल",
+      "fields.parentType.group%": "समूह",
+      "fields.parentType.docRepo%": "डॉक्टर रिपो",
+      "fields.parentType.costsheet%": "कॉस्टशीट",
+      "fields.parentType.timesheet%": "टाइम्सशीट",
+      "names.owner%": "स्वामी",
+      "names.parentObjectType%": "जनक ऑब्जेक्ट प्रकार",
+      "fields.parentObjectType.container%": "कंटेनर",
+      "fields.parentObjectType.caseFile%": "केस फ़ाइल",
+      "fields.parentObjectType.complaint%": "शिकायत",
+      "fields.parentObjectType.organization%": "संगठन",
+      "fields.parentObjectType.person%": "व्यक्ति",
+      "fields.parentObjectType.task%": "टास्क",
+      "fields.parentObjectType.file%": "फ़ाइल",
+      "fields.parentObjectType.group%": "समूह",
+      "fields.parentObjectType.docRepo%": "डॉक्टर रिपो",
+      "fields.parentObjectType.costsheet%": "कॉस्टशीट",
+      "fields.parentObjectType.timesheet%": "टाइम्सशीट",
+      "names.personOrganization%": "व्यक्ति, संगठन प्रकार",
+      "names.city%": "शहर",
+      "names.createDate%": "तिथि बनाएं",
+      "fields.createDate.previousWeek%": "पिछला सप्ताह",
+      "fields.createDate.previousMonth%": "पिछला महीना",
+      "fields.createDate.previousYear%": "पिछला साल",
+      "names.dueDate%": "नियत दिनांक",
+      "fields.dueDate.previousWeek%": "पिछला सप्ताह",
+      "fields.dueDate.previousMonth%": "पिछला महीना",
+      "fields.dueDate.previousYear%": "पिछला वर्ष",
+      "names.incidentDate%": "घटना दिनांक",
+      "fields.incidentDate.previousWeek%": "पिछला सप्ताह",
+      "fields.incidentDate.previousMonth%": "पिछला महीना",
+      "fields.incidentDate.previousYear%": "पिछला वर्ष",
+      "names.modifyDate%": "तिथि संशोधित करें",
+      "fields.modifyDate.previousWeek%": "पिछला सप्ताह",
+      "fields.modifyDate.previousMonth%": "पिछला महीना",
+      "fields.modifyDate.previousYear%": "पिछला वर्ष"
+    }
   },
   "common.directive.coreNotes": {
     "title": "hi_Notes",
@@ -219,7 +370,13 @@
   "common.directive.coreCalendar": {
     "title": "hi_Calendar",
     "start.label": "hi_Start: ",
-    "end.label": "hi_End: "
+    "end.label": "hi_End: ",
+    "message": {
+      "error.accessDenied": "hi_Access denied to calendar service.",
+      "error.serviceConfiguration": "hi_Invalid calendar service configuration.",
+      "error.serviceCredentials": "hi_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "hi_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "hi_Participants",
@@ -247,6 +404,15 @@
   "common.directive.folderActions": {
     "button.addFile": "hi_Add File",
     "button.addFolder": "hi_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
   },
   "common.comp.acmLogin": {
     "confirmLogout": "hi_For your protection, application is about to logout. Click Cancel to stay logged in."

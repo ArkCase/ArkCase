@@ -1,33 +1,40 @@
 {
   "organizations": {
     "title": "Organizaciones",
-    "progressNoComplaint": "es_[ No organizations data ]",
-    "progressLoading": "es_Loading organization ",
-    "progressError": "es_Failed to load organization "
+    "progressNoComplaint": "[ Sin datos de organizaciones ]",
+    "progressLoading": "Organización de carga",
+    "progressError": "Error al cargar la organización",
+    "NoDataMessage": "Sin Datos"
   },
   "organizations.menus": {
     "leftnav.item": "Organizaciones",
     "topbar.item": "Organización"
   },
+  "organizations.comp.main": {
+    "title": "Descripción general"
+  },
   "organizations.comp.info": {
-    "phone.label": "es_Phone",
-    "email.label": "es_Email",
-    "status.label": "es_Status",
-    "identification.label": "es_ID",
-    "primary.label": "es_Primary Contact",
-    "parent.label": "es_Parent Organization",
-    "parent.placeholder": "es_Enter Parent Organization"
+    "title": "Información",
+    "phone.label": "Teléfono",
+    "email.label": "Email",
+    "status.label": "Estado",
+    "organization.label": "Organización",
+    "identification.label": "ID",
+    "primary.label": "Contacto principal",
+    "parent.label": "Organización principal",
+    "parent.placeholder": "Ingresar a la organización principal"
   },
   "organizations.comp.actions": {
-    "export.button": "es_Export",
-    "import.button": "es_Import",
-    "delete.button": "es_Delete",
-    "activate.button": "es_Activate",
-    "deactivate.button": "es_Deactivate",
-    "merge.button": "es_Merge"
+    "title": "Acciones",
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Borrar",
+    "activate.button": "Activar",
+    "deactivate.button": "Desactivar",
+    "merge.button": "Combinar"
   },
   "organizations.comp.details": {
-    "title": "es_Details",
+    "title": "Detalles",
     "informSaved": "es_Organization details saved",
     "table.columns": {
       "title": "es_Details",
@@ -36,7 +43,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "es_Locations",
+    "title": "Ubicaciones",
     "table.columns": {
       "type": "es_Type",
       "streetAddress": "es_Address 1",
@@ -82,7 +89,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "es_Phone Numbers",
+    "title": "Números de teléfono",
     "table.columns": {
       "type": "es_Phone Type",
       "value": "es_Phone Number",
@@ -114,7 +121,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "es_Fax Numbers",
+    "title": "Números de fax",
     "table.columns": {
       "type": "es_Fax Type",
       "value": "es_Fax Number",
@@ -146,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "es_Email Addresses",
+    "title": "Correo electrónico",
     "table.columns": {
       "type": "es_Email Address Type",
       "value": "es_Email Address",
@@ -178,7 +185,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "es_URLs",
+    "title": "URL",
     "table.columns": {
       "type": "es_Type",
       "value": "es_Url",
@@ -209,8 +216,30 @@
       "value.placeholder": "es_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
-    "title": "es_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "es_Delete",
       "setPrimary": "es_Set as Primary",
@@ -242,7 +271,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "es_IDs",
+    "title": "Identificación de organización",
     "table.columns": {
       "type": "es_Type",
       "id": "es_ID",
@@ -282,7 +311,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "es_People",
+    "title": "Personas",
     "table.columns": {
       "type": "es_Role",
       "firstName": "es_FirstName",
@@ -299,7 +328,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "es_Cases",
+    "title": "Casos",
     "table.columns": {
       "priority": "es_Priority",
       "id": "es_ID",
@@ -310,7 +339,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "es_Complaints",
+    "title": "Reclamaciones",
     "table.columns": {
       "priority": "es_Priority",
       "id": "es_ID",
@@ -321,7 +350,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "es_Related Organizations",
+    "title": "Organizaciones relacionadas",
     "table.columns": {
       "associationType": "es_Relationship",
       "type": "es_Type",
@@ -342,7 +371,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "es_History",
+    "title": "Historial",
     "table.columns": {
       "eventType": "es_Event Name",
       "eventDate": "es_Date",
@@ -408,11 +437,41 @@
       "identificationNumber.placeholder": "es_Enter Identification Number",
       "identificationIssuer": "es_Identification Issuer",
       "identificationIssuer.placeholder": "es_Enter Identification Issuer",
-      "identificationYearIssued": "es_Identification Issued",
+      "identificationYearIssued": "es_Identification Issued Date",
       "identificationYearIssued.placeholder": "es_Select Identification Issued",
       "identificationYearIssued.close.button": "es_Close"
     },
     "informCreated": "es_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "es_New Organization"
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "addresses.label": "Ubicaciones",
+      "phones.label": "Números de teléfono",
+      "faxes.label": "Números de fax",
+      "emails.label": "Correo electrónico",
+      "urls.label": "URL",
+      "participants.label": "Participantes",
+      "dbas.label": "DBA",
+      "people.label": "Personas",
+      "ids.label": "Identificación de organización",
+      "complaints.label": "Reclamaciones",
+      "cases.label": "Casos",
+      "related.label": "Organizaciones relacionadas",
+      "history.label": "Historia"
+    },
+    "filters": {
+      "iHaveCreated": "Todo lo que he creado",
+      "noFilter": "(Sin Filtro)"
+    },
+    "sorters": {
+      "createdDateAsc": "Ordenar Fecha Creciente",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Clasificar ID de organización ascendente",
+      "idDesc": "Clasificar ID de organización Descending",
+      "nameAsc": "Ordenar por nombre de organización A-Z",
+      "nameDesc": "Ordenar por nombre de organización Z-A",
+      "noSort": "(Sin clasificación)"
+    }
+  }
 }

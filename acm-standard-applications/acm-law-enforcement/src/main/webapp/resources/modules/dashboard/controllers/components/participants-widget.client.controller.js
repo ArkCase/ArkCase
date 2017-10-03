@@ -4,19 +4,18 @@ angular.module('dashboard.participants', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('participants', {
-                    title: 'Participants',
-                    description: 'Displays Participants',
-                    controller: 'Dashboard.ParticipantsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
-                    commonName: 'participants'
-                }
-            );
+                title: 'dashboard.widgets.participants.title',
+                description: 'dashboard.widgets.participants.description',
+                controller: 'Dashboard.ParticipantsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
+                commonName: 'participants'
+            });
     })
-    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', 'Case.InfoService'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'DocumentRepository.InfoService'
-        , function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, HelperUiGridService, DocumentRepositoryInfoService) {
+    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'DocumentRepository.InfoService', 'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                  CaseInfoService, ComplaintInfoService, DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
                 {
@@ -24,18 +23,30 @@ angular.module('dashboard.participants', ['adf.provider'])
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
                     validateInfo: CaseInfoService.validateCaseInfo
-                }
-                , {
+                },
+                {
                     name: "COMPLAINT",
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
-                }
-                , {
+                },
+                {
                     name: "DOC_REPO",
                     configName: "document-repository",
                     getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                     validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                },
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 
@@ -67,15 +78,14 @@ angular.module('dashboard.participants', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.gridOptions.data = objectInfo.participants ? objectInfo.participants : [];
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                gridHelper.setWidgetsGridData(objectInfo.participants);
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
                     return widget.id === "participants";
                 });
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
         }

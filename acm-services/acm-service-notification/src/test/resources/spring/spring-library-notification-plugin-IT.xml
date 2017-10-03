@@ -8,5 +8,11 @@
     <bean id="logoutUrl" class="java.lang.String" factory-method="valueOf">
         <constructor-arg value="logoutUrl"/>
     </bean>
-    
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list/>
+        </constructor-arg>
+    </bean>
+
 </beans>

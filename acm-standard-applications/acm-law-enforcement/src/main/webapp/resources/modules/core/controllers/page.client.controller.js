@@ -59,13 +59,15 @@ angular.module('core').controller('PageController', ['$scope', '$modal', '$sce',
 
         function showModalWarning(message, isLoginGlobalWarning) {
             var params = {
-                message: "<strong>" + message + "</strong>"
+                message: "<strong>" + message + "</strong>",
+                isLoginGlobalWarning: isLoginGlobalWarning
             };
 
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'modules/core/views/warning-modal.client.view.html',
                 controller: ['$scope', '$modalInstance', 'params', '$sce', function ($scope, $modalInstance, params, $sce) {
+                    $scope.isLoginGlobalWarning = params.isLoginGlobalWarning;
                     $scope.message = $sce.getTrustedHtml($sce.trustAsHtml(params.message));
                     $scope.onClickOk = function () {
                         $modalInstance.close({accepted: true});

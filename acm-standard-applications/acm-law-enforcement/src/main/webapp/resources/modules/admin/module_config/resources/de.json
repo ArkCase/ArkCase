@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "de_Application Role",
     "security.ldapConfig": "de_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "de_Add New Directory",
+    "security.ldapConfig.addNewMember": "de_Add New Member",
+    "security.ldapConfig.addMembers": "de_Add Members",
+    "security.ldapConfig.addSubgroup": "de_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "de_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "de_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "de_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "de_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "de_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "de_Edit Member",
+    "security.ldapConfig.removeMember": "de_Remove Member",
     "security.ldapConfig.table.ldapUrl": "de_LDAP Url",
     "security.ldapConfig.table.directoryName": "de_Directory Name",
     "security.ldapConfig.data": {
@@ -68,7 +78,9 @@
       "insert.success": "de_Successfully inserted new row.",
       "insert.error": "de_Error inserting new row.",
       "update.success": "de_Successfully updated row.",
-      "update.error": "de_Error updating row."
+      "update.error": "de_Error updating row.",
+      "insert.template.success": "de_Successfully created template",
+      "insert.template.error": "de_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "de_Cancel",
@@ -100,7 +112,7 @@
         "description": "de_Description",
         "descriptionPlaceholder": "de_Enter Description",
         "btn": {
-          "ok": "de_Add Ad-Hoc Group",
+          "ok": "de_Add Group",
           "cancel": "de_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "de_Enter last name",
           "email": "de_Enter email",
           "password": "de_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "de_7",
           "passwordRuleText": "de_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -217,15 +229,189 @@
     "security.selectPrivileges.name": "de_Name",
     "security.modules": "de_Modules",
     "security.modules.module": "de_Module",
+    "security.ldap.user.management": {
+      "title": "de_LDAP User Management",
+      "cloneButton": "de_Clone User",
+      "user": "de_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "de_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "de_Enter System Email Address",
+        "password.placeholder": "de_Enter System Password",
+        "purge.placeholder": "de_Choose Purge Option",
+        "purgeDays.placeholder": "de_Enter Days",
+        "save.button": "de_Save",
+        "validate.button": "de_Validate",
+        "purge.label": "de_Purge",
+        "email.label": "de_System Email Address",
+        "password.label": "de_System Password",
+        "purgeDays.label": "de_Days",
+        "emailValid": "de_System Email Address is valid",
+        "emailNotValid": "de_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "de_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "de_Retain Indefinitely",
+          "objectClosed": "de_Object = 'Closed'",
+          "objectClosedXDays": "de_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "de_Cases",
+          "complaints.label": "de_Complaints",
+          "tasks.label": "de_Tasks"
+        }
+      }
+    },
+    "security.calendarCredentialsConfiguration": {
+      "title": "de_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "de_System Email Address",
+        "password": "de_System Password",
+        "password.placeholder": "de_System Password",
+        "save.button": "de_Save",
+        "validate.button": "de_Validate"
+      },
+      "modal": {
+        "title": "de_Outlook folder override",
+        "message": "de_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "de_Confirm",
+        "cancel.button": "de_Cancel"
+      },
+      "message": {
+        "credentials.valid": "de_Credentials are valid",
+        "credentials.invalid": "de_Credentials are not valid",
+        "credentials.error": "de_An error has occurred while checking the credentials",
+        "save.successful": "de_Outlook folder creator saved successfully",
+        "save.fail": "de_Outlook folder creator not saved"
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "de_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "de_Save",
+        "deliveryMethods.label": "de_Delivery Methods",
+        "enableDocumentEmail.checkbox": "de_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "de_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "de_Documents can be sent as hyperlinks",
+        "serverSettings.label": "de_Server Settings",
+        "serverType.label": "de_Server Type",
+        "serverType.placeholder": "de_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "de_SMTP",
+          "outlook": "de_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "de_For details refer to Microsoft Exchange Configuration",
+        "server.label": "de_Server Address",
+        "server.placeholder": "de_Enter Server Address",
+        "port.label": "de_Port",
+        "port.placeholder": "de_Enter Port",
+        "encryption.label": "de_Encryption",
+        "encryption.placeholder": "de_Choose Encryption",
+        "encryptionOptions": {
+          "off": "de_OFF",
+          "ssl-tls": "de_SSL/TLS",
+          "starttls": "de_STARTTLS"
+        },
+        "username.label": "de_Username",
+        "username.placeholder": "de_Enter Username",
+        "password.label": "de_Password",
+        "password.placeholder": "de_Enter Password",
+        "userFrom.label": "de_From",
+        "userFrom.placeholder": "de_Enter Email From field",
+        "validate.label": "de_SMTP Validation",
+        "validate.button": "de_Validate",
+        "smtpValid": "de_SMTP settings are valid",
+        "smtpNotValid": "de_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "de_Email Templates",
+      "table.columns": {
+        "templateName": "de_Template Name",
+        "emailPattern": "de_Email Pattern",
+        "source": "de_Source",
+        "objectTypes": "de_Object Types",
+        "actions": "de_Actions",
+        "modified": "de_Modified Date",
+        "modifier": "de_Modified By"
+      },
+      "modal": {
+        "title": "de_Email Template",
+        "templateName.label": "de_Template Name",
+        "templateName.placeholder": "de_Enter Template Name",
+        "emailPattern.label": "de_Email Pattern",
+        "emailPattern.placeholder": "de_Enter Email Pattern",
+        "source.label": "de_Source",
+        "objectTypes.label": "de_Object Types",
+        "actions.label": "de_Actions",
+        "manual.label": "de_Manual",
+        "automated.label": "de_Automated",
+        "browse": "de_Browse",
+        "save": "de_Save",
+        "cancel": "de_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "de_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "de_Save",
+        "enableExchangeIntegration.checkbox": "de_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "de_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "de_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "de_Exchange2007",
+          "Exchange2007_SP1": "de_Exchange2007_SP1",
+          "Exchange2010": "de_Exchange2010",
+          "Exchange2010_SP1": "de_Exchange2010_SP1",
+          "Exchange2010_SP2": "de_Exchange2010_SP2",
+          "Exchange2013": "de_Exchange2013",
+          "Exchange2013_SP1": "de_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "de_Enable Autodiscovery",
+        "clientAccessServer.label": "de_Client Access Server",
+        "clientAccessServer.description": "de_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "de_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "de_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "de_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "de_None",
+          "Owner": "de_Owner",
+          "PublishingEditor": "de_PublishingEditor",
+          "Editor": "de_Editor",
+          "PublishingAuthor": "de_PublishingAuthor",
+          "Author": "de_Author",
+          "NoneditingAuthor": "de_NoneditingAuthor",
+          "Reviewer": "de_Reviewer",
+          "Contributor": "de_Contributor",
+          "FreeBusyTimeOnly": "de_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "de_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "de_Custom"
+        }
+      }
+    },
     "dashboard.title": "de_Dashboard",
     "dashboard.config": "de_Dashboard Configuration",
     "dashboard.widgets": "de_Widgets",
-    "reports.title": "de_Reports",
-    "reports.config": "de_Reports Configuration",
+    "reports": {
+      "title": "de_Reports",
+      "config": "de_Reports Configuration",
+      "btn": {
+        "reportDesigner": "de_Report Designer",
+        "sync": "de_Synchronise"
+      }
+    },
     "forms.title": "de_Forms",
     "forms.config": "de_Form Configuration",
     "workflows.title": "de_Workflows",
     "workflows.config": "de_Workflow Configuration",
+    "workflows.config.bpmn.upload": "de_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "de_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "de_Description",
+      "label.noFileSelected": "de_No File Selected",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "de_Cant make this process active!",
       "success": "de_Process succesfully activated."
@@ -272,26 +458,34 @@
     "formWorkflows.link.editRole.save.success": "de_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "de_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "de_Application",
+      "title": "Anwendung",
+      "locale.config": {
+        "title": "Gebietsschema-Konfiguration",
+        "defaultLabel": "Standard-Gebietsschema:"
+      },
       "labels.config": {
-        "defaultLabel": "de_Default",
-        "applyBtn": "de_Apply",
-        "resetModule": "de_Reset Module",
-        "resetModule.confirm": "de_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "de_Reset current module (delete custom resources)",
-        "resetAll": "de_Reset All",
-        "resetAll.confirm": "de_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "de_Reset all resources (delete all custom resources)",
-        "refreshAll": "de_Refresh All",
-        "refreshAll.title": "de_Refresh all resources (keep custom resources)",
-        "title": "de_Label Configuration",
-        "filterBy": "de_Filter By Id",
-        "filterByValue": "de_Filter By Value",
+        "title": "Label-Konfiguration",
+        "progressMessage": "Etiketten aktualisieren...",
         "data": {
-          "description": "de_Description",
-          "defaultValue": "de_Default Value",
-          "id": "de_ID",
-          "value": "de_Value"
+          "description": "Beschreibung",
+          "defaultValue": "Standardwert",
+          "id": "ID",
+          "value": "Wert"
+        },
+        "btnReset": {
+          "label": "Zurücksetzen...",
+          "title": "Label-Ressourcen auf Standard zurücksetzen"
+        },
+        "setToDefault": {
+          "dialog.title": "Etiketten auf Standard setzen",
+          "chkResetCustom.label": "Klare kundenspezifische Etiketten auch?",
+          "btnCancel.label": "Abbrechen",
+          "btnCancel.title": "Schließen Sie den Dialog ohne Aktion",
+          "btnReset.label": "Zurücksetzen",
+          "btnReset.title": "Individuelle Etiketten löschen und auf Standardwerte zurücksetzen",
+          "btnRefresh.label": "Zurücksetzen",
+          "btnRefresh.title": "Etiketten auf Standardwerte zurücksetzen, aber benutzerdefinierte Etiketten unverändert halten",
+          "resetCustom.confirm": "Sind Sie sicher, dass Sie ausgewählte benutzerdefinierte Ressourcen entfernen möchten?"
         }
       },
       "module.config": {
@@ -355,11 +549,11 @@
         "created": "de_Created",
         "modified": "de_Modified",
         "creator": "de_Creator",
-        "modifier": "de_Modifier",
+        "modifier": "de_Modified By",
         "activated": "de_Status",
         "objectType": "de_Object Type",
         "version": "de_Version",
-        "templateVersionActive" : "de_Active"
+        "templateVersionActive": "de_Active"
       },
       "templates.fieldNames.label": "de_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +563,7 @@
         "table.columns": {
           "beanId": "de_Bean ID",
           "jpaQuery": "de_JPA Query",
-          "queryType": "de_Query Type"
+          "objectType": "de_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +580,14 @@
       "mergefields.saveMergeFields": "de_Save",
       "mergefields.versionMergeFields": "de_Versions",
       "mergefields.grid": {
-      "fieldId": "de_ID",
-      "fieldValue": "de_Value",
-      "fieldDescription": "de_Description"
+        "fieldId": "de_ID",
+        "fieldValue": "de_Value",
+        "fieldDescription": "de_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "de_Version",
         "modified": "de_Modified",
-        "modifier": "de_Modifier",
+        "modifier": "de_Modified By",
         "mergingActiveVersion": "de_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +604,100 @@
       "target": "de_Target"
     },
     "forms.message.delete.success": "de_Successfully deleted row.",
-    "forms.message.delete.error": "de_Error deleting row."
+    "forms.message.delete.error": "de_Error deleting row.",
+    "documentManagement": {
+      "title": "de_Document Management",
+      "cmisConfiguration": "de_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "de_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "de_New CMIS Configuration",
+          "edit": "de_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "de_Cancel",
+          "ok": "de_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "de_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "de_CMIS ID",
+          "placeholder": "de_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "de_Base URL",
+          "placeholder": "de_Base URL"
+        },
+        "username": {
+          "label": "de_Username",
+          "placeholder": "de_Username"
+        },
+        "password": {
+          "label": "de_Password",
+          "placeholder": "de_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "de_Use Alfresco Extension",
+          "placeholder": "de_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "de_Endpoint",
+          "placeholder": "de_Endpoint"
+        },
+        "maxIdle": {
+          "label": "de_Maximum Idle",
+          "placeholder": "de_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "de_Maximum Active",
+          "placeholder": "de_Maximum Active"
+        },
+        "maxWait": {
+          "label": "de_Maximum Wait",
+          "placeholder": "de_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "de_Minimum Eviction Milliseconds",
+          "placeholder": "de_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "de_Eviction Check Interval Milliseconds",
+          "placeholder": "de_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "de_Reconnect Count",
+          "placeholder": "de_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "de_Reconnect Frequency",
+          "placeholder": "de_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "de_Repository Id",
+          "placeholder": "de_Repository Id"
+        },
+        "versioningState": {
+          "label": "de_Versioning State",
+          "placeholder": "de_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "de_Cancel",
+        "deleteBtn": "de_Cofirm Delete",
+        "headerText": "de_You are about to delete CMIS Configuration:",
+        "bodyText": "de_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "de_Successfully deleted configuration.",
+        "delete.error": "de_Error deleting configuration.",
+        "insert.success": "de_Successfully created new configuration row.",
+        "insert.error": "de_Error creating new configuration row.",
+        "update.success": "de_Successfully updated configuration row.",
+        "update.error": "de_Error updating configuration row."
+      }
+    }
   }
 }

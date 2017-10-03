@@ -130,5 +130,12 @@
 
     </changeSet>
 
+    <changeSet id="07-widen-dashboard_config-column" author="jovan.ivanovski" dbms="mysql">
+        <modifyDataType tableName="acm_dashboard" columnName="cm_dashboard_config" newDataType="TEXT"/>
+    </changeSet>
+
+    <changeSet id="07-widen-dashboard_config-column" author="jovan.ivanovski" dbms="mssql,oracle,postgresql">
+        <modifyDataType tableName="acm_dashboard" columnName="cm_dashboard_config" newDataType="VARCHAR(4000)"/>
+    </changeSet>
 </databaseChangeLog>
 

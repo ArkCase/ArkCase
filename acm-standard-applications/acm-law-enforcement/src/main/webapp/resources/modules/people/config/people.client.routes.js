@@ -28,7 +28,7 @@ angular.module('people').config(['$stateProvider',
                 url: '/:id/main',
                 templateUrl: 'modules/people/views/components/person-main.client.view.html',
                 params: {
-                    "type": "PEOPLE"
+                    "type": "PERSON"
                 }
             })
 
@@ -61,6 +61,11 @@ angular.module('people').config(['$stateProvider',
                 url: '/:id/urls',
                 templateUrl: 'modules/people/views/components/person-urls.client.view.html'
             })
+
+            .state('people.participants', {
+                url: '/:id/participants',
+                templateUrl: 'modules/people/views/components/person-participants.client.view.html'
+            })            
 
             .state('people.aliases', {
                 url: '/:id/aliases',
@@ -110,4 +115,7 @@ angular.module('people').config(['$stateProvider',
             })
 
     }
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

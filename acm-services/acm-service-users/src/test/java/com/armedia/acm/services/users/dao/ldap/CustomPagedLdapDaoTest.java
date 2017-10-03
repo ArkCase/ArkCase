@@ -1,12 +1,10 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.LdapGroup;
-import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
-import com.armedia.acm.services.users.model.ldap.AcmUserGroupsContextMapper;
+import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +15,14 @@ import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 import javax.naming.directory.SearchControls;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class CustomPagedLdapDaoTest extends EasyMockSupport
 {
@@ -28,7 +31,6 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     private AcmLdapSyncConfig syncConfig;
 
     private CustomPagedLdapDao unit;
-
 
     @Before
     public void setUp()
@@ -73,9 +75,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         List<LdapGroup> pageThree = new ArrayList<>();
         pageThree.add(buildGroup("cream"));
 
-
         syncConfig.setSyncPageSize(3);
-
 
         // first search returns a full page
         expect(mockLdapTemplate.search(
@@ -88,7 +88,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         // second search also returns a full page, but also returns the very last user
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getGroupSearchBase()),
-                eq(String.format(syncConfig.getGroupSearchPageFilter(), pageOne.get(pageOne.size() - 1).getGroupName())),
+                eq(String.format(syncConfig.getGroupSearchPageFilter(), pageOne.get(pageOne.size() - 1).getName())),
                 anyObject(SearchControls.class),
                 anyObject(AcmGroupContextMapper.class),
                 anyObject(AggregateDirContextProcessor.class))).andReturn(pageTwo);
@@ -97,24 +97,24 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         // entry from the previous search, but let's be defensive.
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getGroupSearchBase()),
-                eq(String.format(syncConfig.getGroupSearchPageFilter(), pageTwo.get(pageTwo.size() - 1).getGroupName())),
+                eq(String.format(syncConfig.getGroupSearchPageFilter(), pageTwo.get(pageTwo.size() - 1).getName())),
                 anyObject(SearchControls.class),
                 anyObject(AcmGroupContextMapper.class),
                 anyObject(AggregateDirContextProcessor.class))).andReturn(new ArrayList<>());
 
         replayAll();
 
-        List<LdapGroup> found = unit.findGroupsPaged(mockLdapTemplate, syncConfig);
+        List<LdapGroup> found = unit.findGroupsPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
         assertEquals(pageOne.size() + pageTwo.size() - 1, found.size());
 
-        assertTrue(found.stream().anyMatch(u -> u.getGroupName().equals("grateful dead")));
-        assertTrue(found.stream().anyMatch(u -> u.getGroupName().equals("allman brothers")));
-        assertTrue(found.stream().anyMatch(u -> u.getGroupName().equals("eagles")));
-        assertTrue(found.stream().anyMatch(u -> u.getGroupName().equals("fleetwood mac")));
-        assertTrue(found.stream().anyMatch(u -> u.getGroupName().equals("cream")));
+        assertTrue(found.stream().anyMatch(u -> u.getName().equals("grateful dead")));
+        assertTrue(found.stream().anyMatch(u -> u.getName().equals("allman brothers")));
+        assertTrue(found.stream().anyMatch(u -> u.getName().equals("eagles")));
+        assertTrue(found.stream().anyMatch(u -> u.getName().equals("fleetwood mac")));
+        assertTrue(found.stream().anyMatch(u -> u.getName().equals("cream")));
     }
 
     /**
@@ -124,7 +124,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     @Test
     public void findUsersPaged_lastUserFallsOnPageBoundary() throws Exception
     {
-        List<AcmUser> pageOne = new ArrayList<>();
+        List<LdapUser> pageOne = new ArrayList<>();
 
         pageOne.add(buildUser("jgarcia"));
         pageOne.add(buildUser("bweir"));
@@ -132,20 +132,19 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
         // second page starts with the last user from the first page, due the custom paging logic... since we have to
         // start from the last previously found user, to guarantee not to miss anybody
-        List<AcmUser> pageTwo = new ArrayList<>();
+        List<LdapUser> pageTwo = new ArrayList<>();
         pageTwo.add(buildUser("plesh"));
         pageTwo.add(buildUser("bkreutzmann"));
         pageTwo.add(buildUser("rmckernan"));
 
         syncConfig.setSyncPageSize(3);
 
-
         // first search returns a full page
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
+                anyObject(AcmUserContextMapper.class),
                 anyObject(AggregateDirContextProcessor.class))).andReturn(pageOne);
 
         // second search also returns a full page, but also returns the very last user
@@ -153,7 +152,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
                 eq(syncConfig.getUserSearchBase()),
                 eq(String.format(syncConfig.getAllUsersPageFilter(), pageOne.get(pageOne.size() - 1).getUserId())),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
+                anyObject(AcmUserContextMapper.class),
                 anyObject(AggregateDirContextProcessor.class))).andReturn(pageTwo);
 
         // last search returns an empty list.. actually it shouldn't happen, it should always return at least the last
@@ -162,12 +161,12 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
                 eq(syncConfig.getUserSearchBase()),
                 eq(String.format(syncConfig.getAllUsersPageFilter(), pageTwo.get(pageTwo.size() - 1).getUserId())),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
+                anyObject(AcmUserContextMapper.class),
                 anyObject(AggregateDirContextProcessor.class))).andReturn(new ArrayList<>());
 
         replayAll();
 
-        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
@@ -186,70 +185,69 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         // since we set this property, all the user ids should end with it
         syncConfig.setUserDomain("dead.net");
 
-        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+        ArrayList<LdapUser> ldapUsers = new ArrayList<>();
 
-        AcmUser jgarcia = new AcmUser();
+        LdapUser jgarcia = new LdapUser();
         jgarcia.setUserId("jgarcia");
-        acmUsers.add(jgarcia);
+        ldapUsers.add(jgarcia);
 
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
-                anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
+                anyObject(AcmUserContextMapper.class),
+                anyObject(PagedResultsDirContextProcessor.class))).andReturn(ldapUsers);
 
         replayAll();
 
-        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
-        assertEquals(acmUsers.size(), found.size());
+        assertEquals(ldapUsers.size(), found.size());
 
-        for (AcmUser user : found)
+        for (LdapUser user : found)
         {
             assertTrue(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
         }
 
     }
 
-
     @Test
     public void findUsersPaged_userDomainNotAppendedIfAbsent() throws Exception
     {
         syncConfig.setUserDomain(null);
 
-        ArrayList<AcmUser> acmUsers = new ArrayList<>();
+        ArrayList<LdapUser> ldapUsers = new ArrayList<>();
 
-        AcmUser jgarcia = new AcmUser();
+        LdapUser jgarcia = new LdapUser();
         jgarcia.setUserId("jgarcia");
-        acmUsers.add(jgarcia);
+        ldapUsers.add(jgarcia);
 
         expect(mockLdapTemplate.search(
                 eq(syncConfig.getUserSearchBase()),
                 eq(syncConfig.getAllUsersFilter()),
                 anyObject(SearchControls.class),
-                anyObject(AcmUserGroupsContextMapper.class),
-                anyObject(PagedResultsDirContextProcessor.class))).andReturn(acmUsers);
+                anyObject(AcmUserContextMapper.class),
+                anyObject(PagedResultsDirContextProcessor.class))).andReturn(ldapUsers);
 
         replayAll();
 
-        List<AcmUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig);
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.ofNullable(null));
 
         verifyAll();
 
-        assertEquals(acmUsers.size(), found.size());
+        assertEquals(ldapUsers.size(), found.size());
 
-        for (AcmUser user : found)
+        for (LdapUser user : found)
         {
             assertFalse(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
         }
     }
 
-    private AcmUser buildUser(String userid)
+    private LdapUser buildUser(String userid)
     {
-        AcmUser user = new AcmUser();
+        LdapUser user = new LdapUser();
         user.setUserId(userid);
         user.setDistinguishedName("dn: " + userid);
         user.setSortableValue(userid);
@@ -259,7 +257,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     private LdapGroup buildGroup(String groupName)
     {
         LdapGroup group = new LdapGroup();
-        group.setGroupName(groupName);
+        group.setName(groupName);
         group.setSortableValue(groupName);
         return group;
     }

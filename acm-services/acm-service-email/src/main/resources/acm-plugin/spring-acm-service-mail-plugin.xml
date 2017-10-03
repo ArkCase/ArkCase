@@ -30,6 +30,23 @@
                     <property name="requiredPrivilege" ref="acmEmailConfigurePrivilege"/>
                 </bean>
 
+                <!-- Sending API privileges. -->
+                <bean id="emailSenderUrlWithattachmentsPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/email/send/withattachments/{objectType}"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean id="emailSenderUrlWithembeddedlinksPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/email/send/withembeddedlinks/{objectType}"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+                <bean id="emailSenderUrlWithattachmentsandlinksPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="POST"/>
+                    <property name="url" value="/api/{version}/service/email/send/withattachmentsandlinks/{objectType}"/>
+                    <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
+                </bean>
+
             </list>
         </property>
     </bean>

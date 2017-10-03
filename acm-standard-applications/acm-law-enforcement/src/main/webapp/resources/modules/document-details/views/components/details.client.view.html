@@ -1,0 +1,196 @@
+<div ng-controller="Document.DetailsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>documentDetails.comp.details.title</span>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <!-- Details form -->
+            <div class="row">
+                <!-- Left column-->
+                <div class="col-sm-6">
+                    <!-- Assignee -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.modifier</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.modifier"
+                               ng-readonly="true">
+                    </div>
+
+                    <!-- Type -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.type</label>
+                        <select class="form-control"
+                                ng-model="details.ecmFile.fileType"
+                                ng-options="item.key as item.value | translate for item in fileTypes">
+                        </select>
+                    </div>
+
+                    <!-- Organization -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.organization</label>
+                        <p class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   ng-model="details.organization">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="addOrganization()">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- Person -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.person</label>
+                        <p class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   disabled
+                                   ng-model="details.person">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="addPerson()">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
+                    <!-- Owner -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.creator</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.creator"
+                               ng-readonly="true">
+                    </div>
+                </div>
+
+                <!-- Right column-->
+                <div class="col-sm-6">
+                    <!-- Creation date -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('audio/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('image/') == 0">
+                        <label translate>documentDetails.comp.details.label.created</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.mediaCreated"
+                               ng-readonly="true">
+                    </div>
+
+                    <!-- Modified date -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.modified</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.modified"
+                               ng-readonly="true">
+                    </div>
+
+                    <!-- Format -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.format</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.versionMimeType"
+                               ng-readonly="true">
+                    </div>
+
+                    <!-- Size -->
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.size</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.size"
+                               ng-readonly="true">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media -->
+            <div class="row">
+                <!-- Left column-->
+                <div class="col-sm-6">
+                    <!-- Camera Type -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0">
+                        <label translate>documentDetails.comp.details.label.camera.type</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.deviceMake"
+                               ng-readonly="true">
+                    </div>
+                    <!-- Camera Version -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0">
+                        <label translate>documentDetails.comp.details.label.camera.version</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.deviceModel"
+                               ng-readonly="true">
+                    </div>
+                    <!-- Width in pixels -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0 || details.activeVersion.versionMimeType.indexOf('video/') == 0">
+                        <label translate>documentDetails.comp.details.label.width</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.widthPixels"
+                               ng-readonly="true">
+                    </div>
+                    <!-- Height in pixels -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('image/') == 0 || details.activeVersion.versionMimeType.indexOf('video/') == 0">
+                        <label translate>documentDetails.comp.details.label.height</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.heightPixels"
+                               ng-readonly="true">
+                    </div>
+                </div>
+                <!-- Right column-->
+                <div class="col-sm-6">
+                    <!-- GPS -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('audio/') == 0 ||
+                    details.activeVersion.versionMimeType.indexOf('image/') == 0">
+                        <label translate>documentDetails.comp.details.label.gps</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.gpsReadable"
+                               ng-readonly="true">
+                    </div>
+                    <!-- Duration in seconds -->
+                    <div class="form-group" ng-show="details.activeVersion.versionMimeType.indexOf('video/') == 0 || details.activeVersion.versionMimeType.indexOf('audio/') == 0">
+                        <label translate>documentDetails.comp.details.label.duration</label>
+                        <input class="form-control"
+                               type="text"
+                               ng-model="details.activeVersion.durationSeconds"
+                               ng-readonly="true">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label translate>documentDetails.comp.details.label.description</label>
+                        <summernote config="options" ng-model="details.ecmFile.description"></summernote>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save panel -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary col-md-4 col-xs-12" ng-click="save()" ng-disabled="saveButton.disabled">
+                        <span translate="" class="ng-scope">{{saveButton.label}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.spring.SpringContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -26,7 +27,8 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword,
+                                                          String baseDC, String userDomain)
             throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
@@ -36,6 +38,11 @@ public class LdapEntryTransformer
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
+        String userId = user.getUserId();
+        if (StringUtils.isNotEmpty(userDomain) && userId.endsWith("@" + userDomain))
+        {
+            userId = userId.substring(0, userId.indexOf(userDomain) - 1);
+        }
 
         for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
         {
@@ -49,7 +56,7 @@ public class LdapEntryTransformer
                 context.setAttributeValues(attr, classes);
             } else if (key.equals(AcmLdapConstants.LDAP_USER_ID_ATTR))
             {
-                context.setAttributeValue(attr, user.getUserId());
+                context.setAttributeValue(attr, userId);
             } else if (key.equals(AcmLdapConstants.LDAP_FIRST_NAME_ATTR))
             {
                 context.setAttributeValue(attr, user.getFirstName());
@@ -77,10 +84,7 @@ public class LdapEntryTransformer
                 context.setAttributeValue(attr, Long.toString(timestamp));
             } else if (key.equals(AcmLdapConstants.LDAP_HOME_DIRECTORY_ATTR))
             {
-                context.setAttributeValue(attr, String.format("/home/%s", user.getUserId()));
-            } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_OF_ATTR))
-            {
-                user.getGroups().forEach(group -> context.addAttributeValue(attr, group.getDistinguishedName()));
+                context.setAttributeValue(attr, String.format("/home/%s", userId));
             } else
             {
                 context.setAttributeValue(attr, value);
@@ -125,7 +129,7 @@ public class LdapEntryTransformer
         return context;
     }
 
-    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String parentGroupName, String baseDC)
+    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String baseDC)
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC));
 
@@ -148,9 +152,6 @@ public class LdapEntryTransformer
             } else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
             {
                 context.setAttributeValue(attr, group.getName());
-            } else if (AcmLdapConstants.LDAP_MEMBER_OF_ATTR.equals(key))
-            {
-                context.setAttributeValue(attr, parentGroupName);
             } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
             {
                 // set member attribute which is required to create a group entry

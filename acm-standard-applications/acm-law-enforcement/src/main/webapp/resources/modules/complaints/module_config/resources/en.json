@@ -9,7 +9,11 @@
     "leftnav.item": "Complaints",
     "topbar.item": "Complaint"
   },
+  "complaints.comp.main": {
+    "title": "Overview"
+  },
   "complaints.comp.info": {
+    "title": "Info",
     "complaintId": "Complaint id:",
     "complaintNumber": "Complaint ID:",
     "courtRoomName": "Court Room Name:",
@@ -21,6 +25,7 @@
     "dueDate.label": "Due Date"
   },
   "complaints.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "new.button": "New Complaint",
     "close.button": "Close Complaint",
@@ -58,8 +63,9 @@
   "complaints.comp.organizations": {
     "title": "Organizations",
     "table.columns": {
+      "name": "Organization Name",
       "associationType": "Role",
-      "type": "Type",
+      "type": "Organization Type",
       "identification": "ID",
       "value": "Organization",
       "contact": "Primary Contact",
@@ -207,6 +213,9 @@
   "complaints.comp.calendar": {
     "title": "Calendar"
   },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "complaints.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
@@ -284,6 +293,43 @@
       "type": "Type",
       "title": "Title",
       "username": "Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "locations.label": "Locations",
+      "people.label": "People",
+      "organizations.label": "Organizations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tasks",
+      "references.label": "References",
+      "history.label": "History",
+      "time.label": "Time",
+      "cost.label": "Cost",
+      "tags.label": "Tags",
+      "calendar.label": "Calendar",
+      "approvalRouting.label": "Approval Routing"
+    },
+    "filters": {
+      "opened": "All Open Complaints",
+      "iHaveCreated": "All I've Created",
+      "iAmAssigned": "All I'm Assigned",
+      "iAmFollowing": "All I'm Following",
+      "closedNoFurtherAction": "All Closed No Further Action",
+      "closedReferExternal": "All Closed Refer External",
+      "closedOpenInvestigation": "All Closed Open Investigation",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Sort Incident Date Asc",
+      "incidentDateDesc": "Sort Incident Date Desc",
+      "createdDateAsc": "Sort Created Date Asc",
+      "createdDateDesc": "Sort Created Date Desc",
+      "nameAsc": "Sort By Name Asc",
+      "noSort": "(No Sort)"
     }
   }
 }

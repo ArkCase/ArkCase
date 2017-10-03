@@ -1,6 +1,8 @@
 {
   "common": {
-    "select.option.none": "es_(Select One)",
+    "select.option.none": "(Seleccionar uno)",
+    "value.unknown": "Desconocido",
+
     "defaultDateFormat": "es_MM/DD/YYYY",
     "defaultTimeFormat": "es_hh:mm:ss",
     "defaultDateTimeFormat": "es_MM/DD/YYYY hh:mm",
@@ -9,12 +11,12 @@
     "defaultDateTimeUIFormat": "es_MM/dd/yyyy HH:mm"
   },
   "common.service": {
-    "error.invalidData": "es_Invalid data"
+    "error.invalidData": "Datos no válidos"
   },
   "common.objects": {
-    "progressNoData": "es_[ No data ]",
-    "progressLoading": "es_Loading data ",
-    "progressError": "es_Failed to load data "
+    "progressNoData": "[ Sin datos ]",
+    "progressLoading": "Cargando datos ",
+    "progressError": "Error al cargar datos "
   },
   "common.frevvo": {
     "defaultDateFormat": "es_YYYY-MM-DD"
@@ -54,7 +56,7 @@
       "type": "es_Type",
       "created": "es_Created",
       "modified": "es_Modified",
-      "author": "es_Author",
+      "modifier": "es_Modified By",
       "version": "es_Version",
       "status": "es_Status"
     },
@@ -104,17 +106,17 @@
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "es_ records above...",
-    "btnPrev.toolTip": "es_Review previous records",
-    "btnNext.titleUnknownSize": "es_More records...",
-    "btnNext.title": "es_ more records...",
-    "btnNext.toolTip": "es_Load more records",
-    "edtQuery.placeHolder": "es_Search",
-    "btnQuery.text": "es_Go!",
-    "errorNode.title": "es_(Error)",
-    "errorNode.toolTip": "es_(Error)",
-    "noAccessNode.title": "es_(No Access)",
-    "noAccessNode.toolTip": "es_(No Access)"
+    "btnPrev.title": "eregistros anteriores...",
+    "btnPrev.toolTip": "Revisar registros anteriores",
+    "btnNext.titleUnknownSize": "más registros...",
+    "btnNext.title": "más registros...",
+    "btnNext.toolTip": "Cargar más registros",
+    "edtQuery.placeHolder": "Buscar",
+    "btnQuery.text": "Comenzar!",
+    "errorNode.title": "(Error)",
+    "errorNode.toolTip": "(Error)",
+    "noAccessNode.title": "(Sin acceso)",
+    "noAccessNode.toolTip": "(Sin acceso)"
   },
   "common.directive.simplePager": {
     "rowCountLabel": "es_items per page",
@@ -129,12 +131,141 @@
     "authorized": "es_Authorized"
   },
   "common.directive.searchModal": {
-    "header": "es_Search",
-    "btnSearch.text": "es_Search",
-    "btnOk.text": "es_OK",
-    "btnCancel.text": "es_Cancel",
-    "edtPlaceholder": "es_Type in to search",
-    "noData.text": "es_No Results"
+    "header": "Buscar",
+    "btnSearch.text": "Buscar",
+    "btnOk.text": "Aceptar",
+    "btnCancel.text": "Cancelar",
+    "edtPlaceholder": "Escriba para buscar",
+    "noData.text": "Sin resultados"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Mostrar más valores",
+    "showLess.button.text": "Mostrar menos valores",
+    "results.text": "Resultados",
+    "noResults.text": "No hay resultados",
+    "tooltip": {
+      "collapseFacetList": "Contraer lista de facetas",
+      "expandFacetList": "Expand Facet List"
+    },
+    "facet": {
+      "names.modifyUser%": "Modificar usuário",
+      "names.taskPriority%": "Prioridade da tarefa",
+      "fields.taskPriority.medium%": "Médio",
+      "fields.taskPriority.low%": "Baixo",
+      "fields.taskPriority.high%": "Alto",
+      "fields.taskPriority.expedite%": "Expedite",
+      "names.group%": "Grupo",
+      "name.tagToken%": "Token de etiquetas",
+      "names.documentRepository%": "Nome completo do destinatário",
+      "names.taskStatus%": "Status da Tarefa",
+      "fields.taskStatus.active%": "Ativo",
+      "fields.taskStatus.draft%": "Draft",
+      "fields.taskStatus.closed%": "Fechado",
+      "fields.taskStatus.record%": "Record",
+      "fields.taskStatus.inactive%": "Inativo",
+      "fields.taskStatus.inApproval%": "Em Aprovação",
+      "fields.taskStatus.delete%": "Excluir",
+      "fields.taskStatus.approved%": "Aprovado",
+      "fields.taskStatus.unclaimed%": "Não reclamado",
+      "fields.taskStatus.valid%": "Válido",
+      "names.documentLanguage%": "Idioma do documento",
+      "names.createUser%": "Criar Usuário",
+      "names.postalCode%": "Código postal",
+      "names.incidentType%": "Tipo de incidente",
+      "fields.incidentType.agricultural%": "Agrícola",
+      "fields.incidentType.arson%": "Incendio provocado",
+      "fields.incidentType.backgroundInvestigation%": "Investigación de Antecedentes",
+      "fields.incidentType.benefitsAppeal%": "Recurso de Benefícios",
+      "fields.incidentType.businessDispute%": "Better Business Dispute",
+      "fields.incidentType.clinicalFraud%": "Fraude do Investigador Clínico",
+      "fields.incidentType.congressional%": "Resposta do Congresso",
+      "fields.incidentType.disabilityWaiver%": "Solicitação de isenção de deficiência",
+      "fields.incidentType.domesticDispute%": "Dispute Doméstica",
+      "fields.incidentType.drugTrafficking%": "Tráfico de drogas",
+      "fields.incidentType.educationWaiver%": "Solicitação de isenção de educação",
+      "fields.incidentType.eeoHarassment%": "EEO / Assédio",
+      "fields.incidentType.embezzlement%": "Embraiamento",
+      "fields.incidentType.extortion%": "Extorção",
+      "fields.incidentType.fraud%": "Fraude",
+      "fields.incidentType.government%": "Governo",
+      "fields.incidentType.investorComplaint%": "Queixa do investidor",
+      "fields.incidentType.laborRacketeering%": "Trabalho Racketeering",
+      "fields.incidentType.local%": "Local",
+      "fields.incidentType.murder%": "Assassinato",
+      "fields.incidentType.newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+      "fields.incidentType.payoff%": "Ganancia",
+      "fields.incidentType.pensionWaiver%": "Pedido de isenção de pensão",
+      "fields.incidentType.pollution%": "Poluição",
+      "fields.incidentType.productTampering%": "Tampering do Produto",
+      "fields.incidentType.assetTheftMisuse%": "Roubo ou uso indevido de ativos",
+      "names.objectType%": "Tipo de objeto",
+      "fields.objectType.participant%": "Participante",
+      "fields.objectType.contactMethod%": "Método de contato",
+      "fields.objectType.task%": "Tarefa",
+      "fields.objectType.file%": "Arquivo",
+      "fields.objectType.person%": "Pessoa",
+      "fields.objectType.personAssociation%": "Asociación de Personas",
+      "fields.objectType.reference%": "Referência",
+      "fields.objectType.location%": "Ubicación",
+      "fields.objectType.organization%": "Organização",
+      "fields.objectType.organizationAssociation%": "Organização Associação",
+      "fields.objectType.caseFile%": "Arquivo de Casos",
+      "fields.objectType.complaint%": "Queixa",
+      "fields.objectType.associatedTag%": "Tag Associado",
+      "fields.objectType.group%": "Grupo",
+      "fields.objectType.costsheet%": "Hoja de coste",
+      "fields.objectType.note%": "Nota",
+      "fields.objectType.docRepo%": "Depósito de documentos",
+      "fields.objectType.personAlias%": "Person Alias",
+      "fields.objectType.timesheet%": "Hoja de tiempos",
+      "fields.objectType.subscription%": "Assinatura",
+      "fields.objectType.user%": "Usuário",
+      "fields.objectType.objectLock%": "ObjectLock",
+      "names.state%": "Estado",
+      "names.parentType%": "Tipo de padre",
+      "fields.parentType.container%": "Contenedor",
+      "fields.parentType.caseFile%": "Archivo de caso",
+      "fields.parentType.complaint%": "Queja",
+      "fields.parentType.organization%": "Organización",
+      "fields.parentType.person%": "Pessoa",
+      "fields.parentType.task%": "Tarea",
+      "fields.parentType.file%": "Archivo",
+      "fields.parentType.group%": "Grupo",
+      "fields.parentType.docRepo%": "Depósito de documentos",
+      "fields.parentType.costsheet%": "Hoja de coste",
+      "fields.parentType.timesheet%": "Hoja de tiempos",
+      "names.owner%": "Owner",
+      "names.parentObjectType%": "Tipo de objeto principal",
+      "fields.parentObjectType.container%": "Contenedor",
+      "fields.parentObjectType.caseFile%": "Archivo de caso",
+      "fields.parentObjectType.complaint%": "Queja",
+      "fields.parentObjectType.organization%": "Organización",
+      "fields.parentObjectType.person%": "Pessoa",
+      "fields.parentObjectType.task%": "Tarea",
+      "fields.parentObjectType.file%": "Archivo",
+      "fields.parentObjectType.group%": "Grupo",
+      "fields.parentObjectType.docRepo%": "Depósito de documentos",
+      "fields.parentObjectType.costsheet%": "Hoja de coste",
+      "fields.parentObjectType.timesheet%": "Hoja de tiempos",
+      "names.personOrganization%": "Persona, Tipo de organización",
+      "names.city%": "Ciudad",
+      "names.createDate%": "Crear fecha",
+      "fields.createDate.previousWeek%": "Semana anterior",
+      "fields.createDate.previousMonth%": "Mes anterior",
+      "fields.createDate.previousYear%": "Año anterior",
+      "names.dueDate%": "Fecha de vencimiento",
+      "fields.dueDate.previousWeek%": "Semana anterior",
+      "fields.dueDate.previousMonth%": "Mes anterior",
+      "fields.dueDate.previousYear%": "Año anterior",
+      "names.incidentDate%": "Fecha del incidente",
+      "fields.incidentDate.previousWeek%": "Semana anterior",
+      "fields.incidentDate.previousMonth%": "Mes anterior",
+      "fields.incidentDate.previousYear%": "Año anterior",
+      "names.modifyDate%": "Modificar fecha",
+      "fields.modifyDate.previousWeek%": "Semana anterior",
+      "fields.modifyDate.previousMonth%": "Mes anterior",
+      "fields.modifyDate.previousYear%": "Año anterior"
+    }
   },
   "common.directive.coreNotes": {
     "title": "es_Notes",
@@ -143,6 +274,25 @@
     "modal.notes.label": "es_Note",
     "modal.btnOk.text": "es_Save",
     "modal.btnCancel.text": "es_Cancel"
+  },
+  "common.addOrganization": {
+    "title": "es_Add Parent Organization",
+    "addNew.label": "es_Add new Organization",
+    "selectExisting.label": "es_Select existing organization",
+    "organization.label": "es_Organization",
+    "description": "es_Description",
+    "type.label": "es_Organization Association Type",
+    "type.label.default.text": "es_No parent Organization",
+    "type.label.text": "es_Parent Organization",
+    "btnCancel.text": "es_Cancel",
+    "btnOk.text": "es_Save Organization",
+    "setPrimary.label": "es_Set As Primary?",
+    "radioYes.text": "es_Yes",
+    "radioNo.text": "es_No",
+    "duplicateOrganizationRoleErrorMessage": "es_Organization already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "es_Edit Parent Organization"
   },
   "common.directive.corePeople": {
     "title": "es_People",
@@ -219,7 +369,13 @@
   "common.directive.coreCalendar": {
     "title": "es_Calendar",
     "start.label": "es_Start: ",
-    "end.label": "es_End: "
+    "end.label": "es_End: ",
+    "message": {
+      "error.accessDenied": "es_Access denied to calendar service.",
+      "error.serviceConfiguration": "es_Invalid calendar service configuration.",
+      "error.serviceCredentials": "es_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "es_Internal Server Error occurred."
+    }
   },
   "common.directive.coreParticipants": {
     "title": "es_Participants",
@@ -244,6 +400,15 @@
   "common.directive.folderActions": {
     "button.addFile": "es_Add File",
     "button.addFolder": "es_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
   },
   "common.comp.acmLogin": {
     "confirmLogout": "es_For your protection, application is about to logout. Click Cancel to stay logged in."

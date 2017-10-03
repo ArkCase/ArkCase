@@ -80,4 +80,7 @@ angular.module('document-repository').config(['$stateProvider',
             })
 
     }
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

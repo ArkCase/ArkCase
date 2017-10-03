@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.PeopleController', ['$scope', '$q', '$stateParams'
-    , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService'
-    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService'
-    , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService
-        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService) {
-
+    , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'MessageService'
+    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService', 'PermissionsService'
+    , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, MessageService
+        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService, PermissionsService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -40,8 +39,12 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "edit");
-            gridHelper.addButton(config, "delete", null, null, "isDefault");
+            PermissionsService.getActionPermission('editOrganization', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.ORGANIZATION}).then(function (result) {
+                if (result) {
+                    gridHelper.addButton(config, "edit");
+                    gridHelper.addButton(config, "delete", null, null, "isDefault");
+                }
+            });
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -53,13 +56,39 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             $scope.gridOptions.data = objectInfo.personAssociations;
         };
 
+        var validatePersonAssociation = function(data, rowEntity) {
+            var validationResult = { valid : true };
+            
+            $scope.objectInfo.personAssociations
+                .filter(function(association) {
+                    return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
+                })
+                .forEach(function(association) {
+                    if (association.person.id == data.personId) {
+                        if (data.key === association.organizationToPersonAssociationType) {
+                            validationResult.valid = false;
+                            validationResult.duplicatePersonRoleError = true;
+                        }
+                    }
+                });
+                
+            return validationResult;
+        }
+        
         ObjectLookupService.getOrganizationPersonRelationTypes().then(
             function (types) {
-                $scope.personAssociationTypes = types;
+                $scope.personAssociationTypes =[];
+                for (var i = 0; i < types.length; i++) {
+                    $scope.personAssociationTypes.push({"key": types[i].inverseKey, "value" : types[i].inverseValue, "inverseKey": types[i].key, "inverseValue": types[i].value});
+                }
                 return types;
             });
 
         $scope.editRow = function (rowEntity) {
+            var validateEditRow = function(data) {
+                return validatePersonAssociation(data, rowEntity);
+            };
+
             var params = {
                 showSetPrimary: true,
                 types: $scope.personAssociationTypes,
@@ -67,7 +96,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 person: rowEntity.person,
                 personName: rowEntity.person.givenName + ' ' + rowEntity.person.familyName,
                 type: rowEntity.organizationToPersonAssociationType,
-                isDefault: $scope.isDefault(rowEntity)
+                isDefault: $scope.isDefault(rowEntity),
+                returnValueValidationFunction : validateEditRow
             };
 
             var modalInstance = $modal.open({
@@ -106,8 +136,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         $scope.addPerson = function () {
             var params = {
                 showSetPrimary: true,
-                isDefault: false,
-                types: $scope.personAssociationTypes
+                isDefault: !hasPeople(),
+                types: $scope.personAssociationTypes,
+                returnValueValidationFunction: validatePersonAssociation,
+                hideNoField: !hasPeople()
             };
 
             var modalInstance = $modal.open({
@@ -143,11 +175,15 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             });
         };
 
+        function hasPeople() {
+            return $scope.gridOptions.data.length > 0 ? true : false;
+        }
+
         function savePersonAssociation(association, data) {
             association.organization = $scope.objectInfo;
             association.person = data.person;
-            association.organizationToPersonAssociationType = data.type;
-            association.personToOrganizationAssociationType = data.inverseType;
+            association.organizationToPersonAssociationType = data.inverseType;
+            association.personToOrganizationAssociationType = data.type;
 
             if (data.isDefault) {
                 //find and change previously primary contact
@@ -188,7 +224,8 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                         return objectInfo;
                     }
                     , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
+                        MessageService.errorAction();
+                        $scope.$emit('report-object-refreshed', $scope.objectInfo.organizationId);
                         return error;
                     }
                 );

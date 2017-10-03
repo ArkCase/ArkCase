@@ -1,22 +1,38 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.spring.SpringContextHolder;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 
 public class ObjectAssociationServiceImpl implements ObjectAssociationService
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
     private SpringContextHolder springContextHolder;
 
     private ObjectAssociationDao objectAssociationDao;
+    private ExecuteSolrQuery executeSolrQuery;
+    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
     @Override
     public void addReference(Long id, String number, String type, String title, String status, Long parentId, String parentType) throws Exception
@@ -82,6 +98,104 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         return getObjectAssociationDao().findByParentTypeAndId(type, id);
     }
 
+    @Override
+    public String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, String orderBy, int start, int limit) throws AcmObjectNotFoundException
+    {
+        if (StringUtils.isEmpty(orderBy))
+        {
+            orderBy = "id asc";
+        }
+
+        String associationsQueryString = String.format("object_type_s:REFERENCE AND parent_ref_s:%s", parentId + "-" + parentType);
+        if (StringUtils.isNotEmpty(targetType))
+        {
+            associationsQueryString += String.format(" AND target_type_s:%s", targetType);
+        }
+
+        String targetQuery = "{!join from=target_ref_s to=id}";
+        targetQuery += associationsQueryString;
+
+        log.debug("object associations query [{}]", associationsQueryString);
+        log.debug("target objects query [{}]", targetQuery);
+        try
+        {
+            //Execute all request in parallel to minimize chances for wrong responses
+            CompletableFuture<String> targetResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, targetQuery.toString(), start, limit, orderBy);
+            CompletableFuture<String> associationsResponse = executeSolrQuery.getResultsByPredefinedQueryAsync(auth, SolrCore.ADVANCED_SEARCH, associationsQueryString, start, limit, orderBy);
+            //wait all completable features to finish
+            CompletableFuture.allOf(targetResponse, associationsResponse);
+
+            return combineResults(targetResponse.get(), associationsResponse.get());
+        } catch (Exception e)
+        {
+            log.error("Error while executing Solr query: {}", targetQuery, e);
+            throw new AcmObjectNotFoundException("ObjectAssociation", null, String.format("Could not execute %s .", targetQuery.toString()), e);
+        }
+    }
+
+    @Override
+    public ObjectAssociation saveAssociation(ObjectAssociation objectAssociation, Authentication auth)
+    {
+        String associationState = (objectAssociation.getAssociationId() == null) ? "NEW" : "UPDATE";
+
+        ObjectAssociation association = objectAssociationDao.save(objectAssociation);
+        if(association != null)
+        {
+            getObjectAssociationEventPublisher().publishObjectAssociationEvent(association, auth, true, associationState);
+        }
+        return association;
+    }
+
+    @Override
+    public void deleteAssociation(Long id, Authentication auth)
+    {
+        ObjectAssociation objectAssociation = objectAssociationDao.find(id);
+        objectAssociationDao.delete(id);
+        getObjectAssociationEventPublisher().publishObjectAssociationEvent(objectAssociation, auth, true, "DELETE");
+    }
+
+    @Override
+    public ObjectAssociation getAssociation(Long id, Authentication auth)
+    {
+        return objectAssociationDao.find(id);
+    }
+
+    private String combineResults(String targetResult, String associationsResult) throws IOException, AcmObjectNotFoundException
+    {
+    ObjectMapper om = new ObjectMapper();
+    JsonNode targetNode = om.readTree(targetResult);
+    JsonNode associationsNode = om.readTree(associationsResult);
+
+    Map<String, JsonNode> targetObjects = new HashMap<>();
+    JsonNode associationsDocs = associationsNode.get("response").get("docs");
+    JsonNode targetDocs = targetNode.get("response").get("docs");
+
+    for (JsonNode targetObject : targetDocs)
+    {
+        targetObjects.put(targetObject.get("id").asText(), targetObject);
+    }
+
+    for (int i = 0; i < associationsDocs.size(); i++)
+    {
+        JsonNode associationDoc = associationsDocs.get(i);
+        String targetIdString = associationDoc.get("target_id_s").asText() + "-" + associationDoc.get("target_type_s").asText();
+        JsonNode targetSolrId = targetObjects.get(targetIdString);
+        if (targetSolrId != null)
+        {
+            //if doesn't have errors, add target object as part of the association
+            ((ObjectNode) associationDoc).set("target_object",
+                    targetSolrId);
+        } else
+        {
+            log.error("Responses doesn't match: associations response = {}, targets response {}", associationsResult, targetResult);
+            //TODO handle in another way, instead of creating new empty object
+            ((ObjectNode) associationDoc).set("target_object", om.createObjectNode());
+        }
+    }
+
+    return om.writeValueAsString(associationsNode);
+}
+
     private ObjectAssociation makeObjectAssociation(Long id, String number, String type, String title, String status)
     {
         ObjectAssociation oa = new ObjectAssociation();
@@ -90,7 +204,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         oa.setTargetType(type);
         oa.setTargetTitle(title);
         oa.setStatus(status);
-        oa.setAssociationType(ObjectAssociationConstants.OBJECT_TYPE);
+        oa.setAssociationType(ObjectAssociationConstants.REFFERENCE_TYPE);
         return oa;
     }
 
@@ -112,5 +226,20 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
     public void setObjectAssociationDao(ObjectAssociationDao objectAssociationDao)
     {
         this.objectAssociationDao = objectAssociationDao;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
+    public ObjectAssociationEventPublisher getObjectAssociationEventPublisher()
+    {
+        return objectAssociationEventPublisher;
+    }
+
+    public void setObjectAssociationEventPublisher(ObjectAssociationEventPublisher objectAssociationEventPublisher)
+    {
+        this.objectAssociationEventPublisher = objectAssociationEventPublisher;
     }
 }

@@ -1,21 +1,19 @@
-/**
- *
- */
 package com.armedia.acm.services.users.dao.group;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRoleState;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-import com.armedia.acm.services.users.model.group.GroupConstants;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -31,7 +29,6 @@ import java.util.Set;
  */
 public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 {
-
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Transactional
@@ -51,113 +48,85 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         TypedQuery<AcmGroup> dbQuery = getEm().createQuery(query);
 
-        AcmGroup retval = null;
+        AcmGroup acmGroup = null;
 
         try
         {
-            retval = dbQuery.getSingleResult();
+            acmGroup = dbQuery.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            LOG.warn("There is no group with name [{}]", name);
+        }
+        catch (NonUniqueResultException e)
+        {
+            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
         }
         catch (Exception e)
         {
-            if (e instanceof NoResultException)
-            {
-                LOG.info("There is no any group with name = " + name);
-            }
-            else if (e instanceof NonUniqueResultException)
-            {
-                LOG.info("There is no unique group found with name = " + name + ". More than one group has this name.");
-            }
-            else
-            {
-                LOG.error("Error while retrieving group by group name = " + name, e);
-            }
+            LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
 
-        return retval;
+        return acmGroup;
     }
 
     @Transactional
     public boolean deleteAcmGroupByName(String name)
     {
-        Query queryToDelete = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name = :groupName");
-        queryToDelete.setParameter("groupName", name);
-
-        AcmGroup groupToBeDeleted = (AcmGroup) queryToDelete.getSingleResult();
+        AcmGroup groupToBeDeleted = findByName(name);
         if (groupToBeDeleted != null)
         {
             getEm().remove(groupToBeDeleted);
             return true;
-        }
-        else
+        } else
         {
             return false;
         }
     }
 
     @Transactional
-    public AcmGroup markGroupDelete(String name)
+    public AcmGroup markGroupDeleted(String groupName)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name = :name");
-        query.setParameter("name", name);
+        AcmGroup acmGroup = findByName(groupName);
+        if (acmGroup == null) return null;
 
-        AcmGroup group = (AcmGroup) query.getSingleResult();
+        acmGroup.setAscendantsList(null);
+        acmGroup.setStatus(AcmGroupStatus.DELETE);
 
-        if (group != null)
-        {
-            group.setStatus(AcmGroupStatus.DELETE);
-            group.setParentGroup(null);
-            if (group.getChildGroups() != null)
-            {
-                List<AcmGroup> childGroups = group.getChildGroups();
-                group.setChildGroups(null);
-                group = removeMemebres(group);
+        acmGroup.getUserMembers()
+                .forEach(user -> user.getGroups().remove(acmGroup));
+        acmGroup.getMemberOfGroups()
+                .forEach(it -> it.getMemberGroups().remove(acmGroup));
+        acmGroup.getMemberGroups()
+                .forEach(it -> acmGroup.getMemberOfGroups().remove(acmGroup));
 
-                childGroups.forEach(cg -> markGroupDelete(cg.getName()));
-            }
-        }
-        return group;
+        acmGroup.setUserMembers(new HashSet<>());
+        acmGroup.setMemberOfGroups(new HashSet<>());
+        acmGroup.setMemberGroups(new HashSet<>());
+        return acmGroup;
     }
 
-    private AcmGroup removeMemebres(AcmGroup group)
+    public void markRolesByGroupInvalid(String groupName)
     {
-        if (group.getMembers() != null)
-        {
-            // Clone the members that should be removed because of
-            // concurrent modification exception
-            Set<AcmUser> clonedMembers = getClonedMembers(group.getMembers());
-            for (AcmUser member : clonedMembers)
-            {
-                group.removeMember(member);
-            }
-        }
-
-        return save(group);
+        Query markInvalid = getEm().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state "
+                + "WHERE aur.roleName = :groupName");
+        markInvalid.setParameter("state", AcmUserRoleState.INVALID.name());
+        markInvalid.setParameter("groupName", groupName);
+        markInvalid.executeUpdate();
     }
 
     @Transactional
     public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name = :name");
-        query.setParameter("name", name);
-
-        AcmGroup group = (AcmGroup) query.getSingleResult();
+        AcmGroup group = findByName(name);
 
         if (group != null)
         {
-            if (group.getMembers() != null)
-            {
-                for (AcmUser member : membersToRemove)
-                {
-                    if (group.getMembers().contains(member))
-                    {
-                        group.removeMember(member);
-                    }
-                }
-            }
+            membersToRemove.forEach(member -> member.getGroups().remove(group));
 
-            group = save(group);
+            Set<AcmUser> userMembers = group.getUserMembers();
+            userMembers.removeAll(membersToRemove);
         }
-
         return group;
     }
 
@@ -185,32 +154,27 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                         "WHERE user.userDirectoryName != :directoryName " +
                         "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
-        query.setParameter("groupStatus", AcmGroupStatus.DELETE);
-        query.setParameter("userRoleState", "VALID");
+        query.setParameter("groupStatus", AcmGroupStatus.DELETE.name());
+        query.setParameter("userRoleState", AcmUserRoleState.VALID);
         query.setParameter("directoryName", directoryName);
-        query.setParameter("userState", "VALID");
+        query.setParameter("userState", AcmUserState.VALID);
 
         List<AcmGroup> groups = query.getResultList();
 
-        if (groups != null && groups.size() > 0)
+        for (AcmGroup group : groups)
         {
-            for (AcmGroup group : groups)
-            {
-                group.setStatus(AcmGroupStatus.INACTIVE);
-                save(group);
-            }
+            group.setStatus(AcmGroupStatus.INACTIVE);
+            save(group);
         }
     }
 
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.members = :user");
+        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user");
         query.setParameter("user", user);
 
-        List<AcmGroup> groups = query.getResultList();
-
-        return groups;
+        return (List<AcmGroup>) query.getResultList();
     }
 
     private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
@@ -221,32 +185,27 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return clonedMembers;
     }
 
-
     public AcmGroup groupByUIName(AcmGroup group)
     {
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
                 "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
 
-        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
-        query.setParameter("status", AcmGroupStatus.DELETE);
+        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
+        query.setParameter("status", AcmGroupStatus.DELETE.name());
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);
     }
 
-    public AcmGroup subGroupByUIName(AcmGroup group)
-    {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
-                "group.parentGroup.name = :uuidName AND group.status <> :status", AcmGroup.class);
-
-        query.setParameter("name", group.getName() + GroupConstants.UUID_LIKE_STRING);
-        query.setParameter("uuidName", group.getParentGroup().getName());
-        query.setParameter("status", AcmGroupStatus.DELETE);
-        List<AcmGroup> result = query.getResultList();
-
-        return result.isEmpty() ? null : result.get(0);
-    }
-
+    /**
+     * Find ad-hoc group by matching name.
+     * <p>
+     * We need this since UI names and internal names of ad-hoc groups differ
+     * (ArkCase is adding `-UUID-...` suffix internally)
+     *
+     * @param name group name
+     * @return ad-hoc group if found, null otherwise
+     */
     @Transactional
     public AcmGroup findByMatchingName(String name)
     {
@@ -254,29 +213,38 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         CriteriaQuery query = builder.createQuery(AcmGroup.class);
         Root group = query.from(AcmGroup.class);
         query.select(group);
-        query.where(builder.and(new Predicate[]{builder.like(group.get("name"), name)}));
+        query.where(builder.and(new Predicate[] { builder.like(group.<String>get("name"), name + "-UUID-%") }));
 
         TypedQuery dbQuery = this.getEm().createQuery(query);
-        AcmGroup retval = null;
-
+        AcmGroup acmGroup = null;
 
         try
         {
-            retval = (AcmGroup) dbQuery.getSingleResult();
+            acmGroup = (AcmGroup) dbQuery.getSingleResult();
         }
         catch (NoResultException e)
         {
-            LOG.info("There is no any group with name = {}", name);
+            LOG.warn("There is no group with name [{}]", name);
         }
         catch (NonUniqueResultException e)
         {
-            LOG.info("There is no unique group found with name = {}. More than one group has this name.", name);
+            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
         }
         catch (Exception e)
         {
-            LOG.error("Error while retrieving group by group name = {}", name, e);
+            LOG.error("Error while retrieving group by group name [{}]", name, e);
         }
-        return retval;
+        return acmGroup;
+    }
+
+    public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
+    {
+        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
+                createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
+                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName", AcmGroup.class);
+        allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
+        allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
+        return allLdapGroupsInDirectory.getResultList();
     }
 
     @Override

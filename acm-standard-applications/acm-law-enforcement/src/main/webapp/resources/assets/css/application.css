@@ -54,6 +54,10 @@ h6 {
     box-shadow: none;
 }
 
+.pull-right.well {
+	margin-bottom: 0px;
+}
+
 .well {
     background: 0px;
     border: 0px;
@@ -456,6 +460,10 @@ span.fancytree-title {
     padding-top: 10px;
 }
 
+.dropdown-menu .btn-group {
+    padding-top: 0px !important;
+}
+
 /* This style fixes incorrect vertical alignment for btn-group  elements located int navbar */
 .module-content .content-body .well-sm .navbar .btn-group {
     padding-top: 0px;
@@ -550,23 +558,25 @@ span.fancytree-title {
 }
 
 /* Fix ui-grids to resize based on content. (Source: alangumer on https://github.com/angular-ui/ui-grid/issues/3239) */
+/* Hey guys, let's not override the default styles of these grids. I realize they look like innocent changes on the forums, but this has been causing a lot of havoc.
+
 [ui-grid-row] {
     display: table-row;
 }
 
 .ui-grid-row, .ui-grid-cell {
-    height: auto!important;
+    height: auto !important;
 }
 
 .ui-grid-cell {
     float: none;
     display: table-cell;
-}
+}*/
 
-.ui-grid-header-cell, .ui-grid-cell-contents {
+/*.ui-grid-header-cell, .ui-grid-cell-contents {
     white-space: normal;
     padding: 2px;
-}
+}*/
 
 .ui-grid-top-panel {
     width: 100%
@@ -678,7 +688,6 @@ thead {
 /* Hyperlinks Padding/Wrap Issues */
 
 .ui-grid a {
-	padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -688,6 +697,11 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
+	display: inherit;
+}
+
+.ui-grid a.btn {
+    display: initial;
 }
 
 /* Dates Padding Issues */
@@ -707,7 +721,7 @@ thead {
 }
 
 .ui-grid .ui-grid-cell div {
-	padding: 5px;
+	//padding: 5px;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -719,10 +733,10 @@ thead {
 	position: relative;
 }
 
-.ui-grid .ui-grid-cell div:hover {
+/*.ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
 	overflow: normal;
-}
+}*/
 
 .widget .ui-grid-cell:hover {
 	white-space: normal;
@@ -786,6 +800,10 @@ thead {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 270px;
+}
+
+.modal-backdrop {
+	z-index: -1;
 }
 
 /* Overriding of .form-inline class for the needs of the x-editable popup form. */
@@ -992,6 +1010,12 @@ a.editable.editable-click {
 
 }
 
+.analytics-iframe {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 60px;
+}
+
 .module-content .left-sidebar-lg .ui-grid-pinned-container .ui-grid-header-canvas {
     height: auto !important;
 }
@@ -1101,6 +1125,7 @@ div.tabbed-footer .overview-tabs li:hover span {
 	font-weight: bold;
 	color: #2d343e;
 	margin-left: -20px;
+	font-size: 12px;
 }
 
 div.tabbed-footer .overview-tabs li:hover:last-child span {
@@ -1115,7 +1140,7 @@ div.tabbed-footer .overview-tabs li:hover span:before {
     border-right: 10px solid transparent;
     border-bottom: 10px solid #2d343e;
     position: absolute;
-    top: 30px;
+    top: 20px;
     left: 15px;
 }
 
@@ -1308,11 +1333,11 @@ a.no-outline:hover, a.no-outline:focus {
     outline: none;
 }
 
-/* Fix selection */
+/* Fix selection
 .ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents,
 .ui-grid-pinned-container .ui-grid-cell .ui-grid-cell-contents .ui-grid-selection-row-header-buttons {
     padding: 0;
-}
+} */
 
 .ui-grid-cell.ui-grid-disable-selection.ui-grid-row-header-cell {
     pointer-events: all !important;
@@ -1466,4 +1491,9 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 @keyframes fadeIn {
     0% { opacity:0; }
     100% { opacity:100%; }
+}
+
+/* For [Primary] on grid cell*/
+a.primary {
+    display: inline;
 }

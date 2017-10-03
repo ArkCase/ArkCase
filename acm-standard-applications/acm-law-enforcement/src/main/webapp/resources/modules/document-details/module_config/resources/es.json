@@ -18,7 +18,9 @@
     "comp.tags": {
       "title": "es_Tags",
       "table.columns": {
-        "tag": "es_Tag"
+        "tag": "es_Tag",
+        "created": "es_Created",
+        "createdBy": "es_Created By"
       },
       "modal": {
         "title": "es_Tag",
@@ -39,14 +41,19 @@
         "name": "es_Name",
         "type": "es_Type"
       },
-      "message.delete.success": "es_Successfully deleted row.",
-      "message.delete.error": "es_Error deleting row.",
-      "role": {
-        "title": "es_Change participant Role",
-        "dropdownLabel": "es_Available Roles",
-        "buttons": {
-          "cancel": "es_Cancel",
-          "ok": "es_Change Role"
+      "dialogUserPicker": {
+        "header": "es_Choose User",
+        "table.columns": {
+          "name": "es_Name",
+          "type": "es_Type",
+          "title": "es_Title",
+          "id": "es_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "es_Choose Group",
+        "table.columns": {
+          "name": "es_Name"
         }
       }
     },
@@ -67,26 +74,32 @@
         "versionTag": "es_Version"
       }
     },
-    "userSearch": {
-      "id": "es_userSearch",
-      "title": "es_Add New Participant",
-      "search": {
-        "btn": "es_Go!",
-        "placeholder": "es_Enter to search for a participant"
-      },
-      "cancelButton": "es_Cancel",
-      "confirmButton": "es_Select",
-      "enabled": true,
-      "userFacetFilter": "es_\"Object Type\": USER",
-      "userGridColumns": {
-        "name": "es_Name",
+    "comp.details": {
+      "title": "es_Details",
+      "label": {
+        "creator": "es_Owner",
+        "modifier": "es_Author",
+        "created": "es_Creation Date",
+        "modified": "es_Modified Date",
+        "description": "es_Description",
         "type": "es_Type",
-        "title": "es_Title",
-        "parent": "es_Parent",
-        "assignee": "es_Assignee",
-        "modified": "es_Modified"
+        "organization": "es_Source Organization",
+        "person": "es_Source Entity",
+        "format": "es_Format",
+        "size": "es_Size",
+        "gps": "es_Location",
+        "duration": "es_Duration (seconds)",
+        "width": "es_Width (pixels)",
+        "height": "es_Height (pixels)",
+        "camera.type": "es_Camera Type",
+        "camera.version": "es_Camera Version",
+        "button.save": "es_Save",
+        "button.wait": "es_Please Wait"
       },
-      "dropdownLabel": "es_Participant Type"
+      "message": {
+        "save.success": "es_File metadata are successfully updated",
+        "save.error": "es_Unable to update file metadata"
+      }
     }
   }
 }

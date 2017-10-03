@@ -7,7 +7,6 @@ public class LoginEvent extends AcmAbstractAuthenticationEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.login";
 
-
     public LoginEvent(Authentication authentication)
     {
         super(authentication);
@@ -17,5 +16,10 @@ public class LoginEvent extends AcmAbstractAuthenticationEvent
     public String getEventType()
     {
         return EVENT_TYPE;
+    }
+
+    public Authentication getAuthentication()
+    {
+        return (Authentication) source;
     }
 }

@@ -1,33 +1,40 @@
 {
   "organizations": {
     "title": "संगठन",
-    "progressNoComplaint": "hi_[ No organizations data ]",
-    "progressLoading": "hi_Loading organization ",
-    "progressError": "hi_Failed to load organization "
+    "progressNoComplaint": "[ कोई संगठन डेटा नहीं ]",
+    "progressLoading": "संगठन लोड हो रहा है",
+    "progressError": "संगठन लोड करने में विफल",
+    "noDataMessage": "कोई डेटा नहीं"
   },
   "organizations.menus": {
     "leftnav.item": "संगठन",
     "topbar.item": "संगठन"
   },
+  "organizations.comp.main": {
+    "title": "अवलोकन"
+  },
   "organizations.comp.info": {
-    "phone.label": "hi_Phone",
-    "email.label": "hi_Email",
-    "status.label": "hi_Status",
-    "identification.label": "hi_ID",
-    "primary.label": "hi_Primary Contact",
-    "parent.label": "hi_Parent Organization",
-    "parent.placeholder": "hi_Enter Parent Organization"
+    "title": "जानकारी",
+    "phone.label": "फोन",
+    "email.label": "ईमेल",
+    "status.label": "स्थिति",
+    "organization.label": "संगठन",
+    "identification.label": "आईडी",
+    "primary.label": "प्राथमिक संपर्क",
+    "parent.label": "जनक संगठन",
+    "parent.placeholder": "अभिभावक संगठन दर्ज करें"
   },
   "organizations.comp.actions": {
-    "export.button": "hi_Export",
-    "import.button": "hi_Import",
-    "delete.button": "hi_Delete",
-    "activate.button": "hi_Activate",
-    "deactivate.button": "hi_Deactivate",
-    "merge.button": "hi_Merge"
+    "title": "क्रियाएं",
+    "export.button": "निर्यात",
+    "import.button": "आयात",
+    "delete.button": "हटाएं",
+    "activate.button": "सक्रिय",
+    "deactivate.button": "निष्क्रिय करें",
+    "merge.button": "मर्ज"
   },
   "organizations.comp.details": {
-    "title": "hi_Details",
+    "title": "विवरण",
     "informSaved": "hi_Organization details saved",
     "table.columns": {
       "title": "hi_Details",
@@ -36,7 +43,7 @@
     }
   },
   "organizations.comp.addresses": {
-    "title": "hi_Locations",
+    "title": "स्थान",
     "table.columns": {
       "type": "hi_Type",
       "streetAddress": "hi_Address 1",
@@ -82,7 +89,7 @@
     }
   },
   "organizations.comp.phones": {
-    "title": "hi_Phone Numbers",
+    "title": "फोन नंबर",
     "table.columns": {
       "type": "hi_Phone Type",
       "value": "hi_Phone Number",
@@ -114,7 +121,7 @@
     }
   },
   "organizations.comp.faxes": {
-    "title": "hi_Fax Numbers",
+    "title": "फैक्स नंबर",
     "table.columns": {
       "type": "hi_Fax Type",
       "value": "hi_Fax Number",
@@ -146,7 +153,7 @@
     }
   },
   "organizations.comp.emails": {
-    "title": "hi_Email Addresses",
+    "title": "ईमेल पते",
     "table.columns": {
       "type": "hi_Email Address Type",
       "value": "hi_Email Address",
@@ -178,7 +185,7 @@
     }
   },
   "organizations.comp.urls": {
-    "title": "hi_URLs",
+    "title": "यूआरएल",
     "table.columns": {
       "type": "hi_Type",
       "value": "hi_Url",
@@ -209,8 +216,30 @@
       "value.placeholder": "hi_Enter URL"
     }
   },
+  "organizations.comp.participants": {
+    "title": "प्रतिभागियों",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
   "organizations.comp.dbas": {
-    "title": "hi_DBAs",
+    "title": "DBA",
     "actions": {
       "delete": "hi_Delete",
       "setPrimary": "hi_Set as Primary",
@@ -242,7 +271,7 @@
     }
   },
   "organizations.comp.ids": {
-    "title": "hi_IDs",
+    "title": "संगठन संख्या",
     "table.columns": {
       "type": "hi_Type",
       "id": "hi_ID",
@@ -282,7 +311,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "hi_People",
+    "title": "लोग",
     "table.columns": {
       "type": "hi_Role",
       "firstName": "hi_FirstName",
@@ -299,7 +328,7 @@
     }
   },
   "organizations.comp.cases": {
-    "title": "hi_Cases",
+    "title": "मामले",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -310,7 +339,7 @@
     }
   },
   "organizations.comp.complaints": {
-    "title": "hi_Complaints",
+    "title": "शिकायतें",
     "table.columns": {
       "priority": "hi_Priority",
       "id": "hi_ID",
@@ -321,7 +350,7 @@
     }
   },
   "organizations.comp.related": {
-    "title": "hi_Related Organizations",
+    "title": "संबंधित संगठनों",
     "table.columns": {
       "associationType": "hi_Relationship",
       "type": "hi_Type",
@@ -342,7 +371,7 @@
     }
   },
   "organizations.comp.history": {
-    "title": "hi_History",
+    "title": "इतिहास",
     "table.columns": {
       "eventType": "hi_Event Name",
       "eventDate": "hi_Date",
@@ -408,11 +437,42 @@
       "identificationNumber.placeholder": "hi_Enter Identification Number",
       "identificationIssuer": "hi_Identification Issuer",
       "identificationIssuer.placeholder": "hi_Enter Identification Issuer",
-      "identificationYearIssued": "hi_Identification Issued",
+      "identificationYearIssued": "hi_Identification Issued Date",
       "identificationYearIssued.placeholder": "hi_Select Identification Issued",
       "identificationYearIssued.close.button": "hi_Close"
     },
     "informCreated": "hi_{{objectType}} {{organizationValue}} was created."
   },
-  "organizations.menus.topbar.item": "hi_New Organization"
+  "organizations.menus.topbar.item": "hi_New Organization",
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "addresses.label": "स्थान",
+      "phones.label": "फ़ोन नंबर",
+      "faxes.label": "फैक्स नंबर",
+      "emails.label": "ईमेल पते",
+      "urls.label": "यूआरएल",
+      "participants.label": "प्रतिभागियों को",
+      "dbas.label": "DBA",
+      "people.label": "लोग",
+      "ids.label": "संगठन संख्या",
+      "complaints.label": "शिकायतें",
+      "cases.label": "मामले",
+      "related.label": "संबंधित संगठनों",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "noFilter": "(नो फिटर)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
+      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
+      "idAsc": "संगठन आईडी बढ़ते क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध संगठन आईडी अवरोही",
+      "nameAsc": "संगठन द्वारा क्रमबद्ध करें नाम A-Z",
+      "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
 }

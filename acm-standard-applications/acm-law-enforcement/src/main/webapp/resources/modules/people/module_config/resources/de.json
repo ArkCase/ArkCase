@@ -1,31 +1,36 @@
 {
   "people": {
     "title": "Menschen",
-    "progressNoComplaint": "de_[ No people data ]",
-    "progressLoading": "de_Loading people ",
-    "progressError": "de_Failed to load people "
+    "progressNoComplaint": "[ Keine Personen Daten ]",
+    "progressLoading": "Leute laden",
+    "progressError": "Personen konnten nicht geladen werden"
   },
   "people.menus": {
     "leftnav.item": "Menschen",
     "topbar.item": "Person"
   },
+  "people.comp.main": {
+    "title": "Übersicht"
+  },
   "people.comp.info": {
-    "phone.label": "de_Phone",
-    "email.label": "de_Email",
-    "status.label": "de_Status",
-    "organization.label": "de_Organization",
-    "identification.label": "de_ID"
+    "title": "Informationen",
+    "phone.label": "Telefon",
+    "email.label": "E-Mail Adressen",
+    "status.label": "Status",
+    "organization.label": "Organisation",
+    "identification.label": "Identifizierung"
   },
   "people.comp.actions": {
-    "export.button": "de_Export",
-    "import.button": "de_Import",
-    "delete.button": "de_Delete",
-    "activate.button": "de_Activate",
-    "deactivate.button": "de_Deactivate",
-    "merge.button": "de_Merge"
+    "title": "Aktionen",
+    "export.button": "Exportieren",
+    "import.button": "importieren",
+    "delete.button": "Löschen",
+    "activate.button": "Aktivieren",
+    "deactivate.button": "Deaktivieren",
+    "merge.button": "Zusammenführen"
   },
   "people.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Person details saved",
     "table.columns": {
       "title": "de_Details",
@@ -34,7 +39,7 @@
     }
   },
   "people.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -42,7 +47,7 @@
     }
   },
   "people.comp.pictures": {
-    "title": "de_Pictures",
+    "title": "Bilder",
     "actions": {
       "delete": "de_Delete",
       "setPrimary": "de_Set as Primary",
@@ -67,10 +72,17 @@
       "noPictureSelected": "de_No Files Selected.",
       "browse": "de_Browse",
       "description": "de_Description"
+    },
+    "dialog.edit": {
+      "title": "de_Edit Picture",
+      "setPrimary": "de_Set as Primary?",
+      "yes": "de_Yes",
+      "change": "de_Change Picture",
+      "save": "de_Save changes"
     }
   },
   "people.comp.addresses": {
-    "title": "de_Locations",
+    "title": "Standorte",
     "table.columns": {
       "type": "de_Type",
       "streetAddress": "de_Address 1",
@@ -113,7 +125,7 @@
     }
   },
   "people.comp.phones": {
-    "title": "de_Phone Numbers",
+    "title": "Telefonnummern",
     "table.columns": {
       "type": "de_Type",
       "value": "de_Phone Number",
@@ -145,7 +157,7 @@
     }
   },
   "people.comp.emails": {
-    "title": "de_Email Addresses",
+    "title": "E-Mail-Adressen",
     "table.columns": {
       "type": "de_Type",
       "value": "de_Email Address",
@@ -177,7 +189,7 @@
     }
   },
   "people.comp.urls": {
-    "title": "de_URLs",
+    "title": "URL",
     "table.columns": {
       "value": "de_URL",
       "type": "de_Type",
@@ -208,8 +220,30 @@
       "value.placeholder": "de_Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "Teilnehmer",
+    "table.columns": {
+      "type": "de_Type",
+      "name": "de_Name"
+    },
+    "dialogUserPicker": {
+      "header": "de_Choose User",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "id": "de_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "de_Choose Group",
+      "table.columns": {
+        "name": "de_Name"
+      }
+    }
+  },
   "people.comp.aliases": {
-    "title": "de_Aliases",
+    "title": "Aliase",
     "actions": {
       "delete": "de_Delete",
       "setPrimary": "de_Set as Primary",
@@ -243,7 +277,7 @@
     }
   },
   "people.comp.ids": {
-    "title": "de_IDs",
+    "title": "Menschen ID",
     "table.columns": {
       "type": "de_Type",
       "id": "de_ID",
@@ -283,7 +317,7 @@
     }
   },
   "people.comp.organizations": {
-    "title": "de_Organizations",
+    "title": "Organisationen",
     "table.columns": {
       "type": "de_Type",
       "id": "de_ID",
@@ -305,7 +339,7 @@
     }
   },
   "people.comp.cases": {
-    "title": "de_Cases",
+    "title": "Falldateien",
     "table.columns": {
       "priority": "de_Priority",
       "id": "de_ID",
@@ -316,7 +350,7 @@
     }
   },
   "people.comp.complaints": {
-    "title": "de_Complaints",
+    "title": "Beschwerden",
     "table.columns": {
       "priority": "de_Priority",
       "id": "de_ID",
@@ -327,7 +361,7 @@
     }
   },
   "people.comp.related": {
-    "title": "de_Related People",
+    "title": "Verwandte Menschen",
     "table.columns": {
       "firstName": "de_First Name",
       "lastName": "de_Last Name",
@@ -348,7 +382,7 @@
     }
   },
   "people.comp.editPerson": {
-    "title": "de_Person",
+    "title": "Menschen",
     "addAnother": "de_Add Another",
     "remove": "de_Remove",
     "familyName": "de_Last Name",
@@ -411,6 +445,37 @@
       "identificationYearIssued": "de_Identification Issued",
       "identificationYearIssued.placeholder": "de_Select Identification Issued",
       "identificationYearIssued.close.button": "de_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "pictures.label": "Bilder",
+      "addresses.label": "Standorte",
+      "phones.label": "Telefonnummern",
+      "emails.label": "E-Mail-Adressen",
+      "urls.label": "URL",
+      "participants.label": "Teilnehmer",
+      "aliases.label": "Aliase",
+      "organizations.label": "Organisationen",
+      "ids.label": "Menschen ID",
+      "complaints.label": "Beschwerden",
+      "cases.label": "Falldateien",
+      "related.label": "Falldateien",
+      "history.label": "Geschichte"
+    },
+    "filters": {
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sortierung Datum Erstellt aufsteigend",
+      "createdDateDesc": "Sortierung Datum Erstellt absteigend",
+      "idAsc": "Personen-ID aufsteigend sortieren",
+      "idDesc": "Personen-ID absteigen",
+      "nameAsc": "Sortieren nach Personen Name A-Z",
+      "nameDesc": "Sortieren nach Personen Name Z-A",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

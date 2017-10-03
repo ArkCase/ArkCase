@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jun 6, 2017
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class AcmFilesystemMailTemplateConfigurationServiceTest
@@ -169,8 +168,6 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         // given
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         when(templateConfigurations.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[] {}));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN, Arrays.asList(CASE_FILE, COMPLAINT),
@@ -218,8 +215,6 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         // when(templateConfigurations.getOutputStream()).thenReturn(outputStream);
@@ -266,8 +261,6 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
         AcmFilesystemMailTemplateConfigurationService serviceSpy = spy(service);
         String fileName = getClass().getClassLoader().getResource("mailTemplatesConfiguration.json").getFile();
         when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
-        when(templateConfigurations.getFile()).thenReturn(mockedConfigurationsFile);
-        when(mockedConfigurationsFile.length()).thenReturn(0l);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         doReturn(outputStream).when(serviceSpy).getTemplateResourceOutputStream();
         EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN + EMAIL_PATTERN, Arrays.asList(CASE_FILE),
@@ -374,22 +367,18 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
         // when
         List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.com", CASE_FILE, EmailSource.MANUAL,
-                SEND_AS_ATTACHMENTS);
+                Arrays.asList(SEND_AS_ATTACHMENTS, SEND_AS_LINKS));
 
         // then
-        assertThat(candidates.size(), is(2));
+        assertThat(candidates.size(), is(1));
 
         // we don't have to always check all the properties, but since it's a small size collection and simple POJOs, it
         // is doable/acceptable
         assertThat(candidates,
-                containsInAnyOrder(
-                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
-                                hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
-                                hasProperty("objectTypes", containsInAnyOrder(CASE_FILE, COMPLAINT)),
-                                hasProperty("actions", containsInAnyOrder(SEND_AS_LINKS, SEND_AS_ATTACHMENTS))),
-                        allOf(hasProperty("emailPattern", is(EMAIL_PATTERN)), hasProperty("source", is(EmailSource.MANUAL)),
-                                hasProperty("templateName", is(TEMPLATE_NAME)), hasProperty("objectTypes", contains(CASE_FILE)),
-                                hasProperty("actions", contains(SEND_AS_ATTACHMENTS)))));
+                containsInAnyOrder(allOf(hasProperty("emailPattern", is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com")),
+                        hasProperty("source", is(EmailSource.MANUAL)), hasProperty("templateName", is(TEMPLATE_NAME + "_2")),
+                        hasProperty("objectTypes", containsInAnyOrder(CASE_FILE, COMPLAINT)),
+                        hasProperty("actions", containsInAnyOrder(SEND_AS_LINKS, SEND_AS_ATTACHMENTS)))));
     }
 
     /**
@@ -408,7 +397,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
         // when
         List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.com", COMPLAINT, EmailSource.MANUAL,
-                SEND_AS_ATTACHMENTS);
+                Arrays.asList(SEND_AS_ATTACHMENTS, SEND_AS_LINKS));
 
         // then
         assertThat(candidates.size(), is(1));
@@ -438,7 +427,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
         // when
         List<EmailTemplateConfiguration> candidates = service.getMatchingTemplates("test@armedia.mk", COMPLAINT, EmailSource.MANUAL,
-                SEND_AS_ATTACHMENTS);
+                Arrays.asList(SEND_AS_ATTACHMENTS));
 
         // then
         assertThat(candidates.size(), is(0));

@@ -4,19 +4,18 @@ angular.module('dashboard.locations', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('locations', {
-                    title: 'Locations',
-                    description: 'Displays locations',
-                    controller: 'Dashboard.LocationsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
-                    commonName: 'locations'
-                }
-            );
+                title: 'dashboard.widgets.locations.title',
+                description: 'dashboard.widgets.locations.description',
+                controller: 'Dashboard.LocationsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/location-widget.client.view.html',
+                commonName: 'locations'
+            });
     })
-    .controller('Dashboard.LocationsController', ['$scope', '$stateParams'
-        , 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
-        , function ($scope, $stateParams, ComplaintInfoService
-            , HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
+        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
+        function ($scope, $stateParams, $translate,
+                  ComplaintInfoService, PersonInfoService, OrganizationInfoService, ObjectService, HelperObjectBrowserService, HelperUiGridService, Util) {
 
             var modules = [
                 {
@@ -24,6 +23,18 @@ angular.module('dashboard.locations', ['adf.provider'])
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     validateInfo: ComplaintInfoService.validateComplaintInfo
+                },
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
                 }
             ];
 
@@ -55,35 +66,27 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
 
             var onObjectInfoRetrieved = function (objectInfo) {
-                if (objectInfo.location) {
-                    $scope.gridOptions.data = [objectInfo];
-                    var fullAddress = createFullAddress(objectInfo.location);
-                    $scope.gridOptions.data[0].location.fullAddress = fullAddress ? fullAddress : "Error creating full address";
-                } else {
-                    $scope.gridOptions.data = [];
+
+                $scope.objectInfo = objectInfo;
+                if((objectInfo.objectType != ObjectService.ObjectTypes.PERSON && objectInfo.objectType != ObjectService.ObjectTypes.ORGANIZATION) && objectInfo.container.containerObjectType == ObjectService.ObjectTypes.COMPLAINT) {
+                    var location = Util.goodMapValue($scope.objectInfo, "location", null);
+                    if(location != null){
+                        var locationArrayTransformer = [location];
+                        gridHelper.setWidgetsGridData(locationArrayTransformer);
+                    }
                 }
-                $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
+                else {
+                    gridHelper.setWidgetsGridData(objectInfo.addresses);
+                }
             };
 
             var onConfigRetrieved = function (componentConfig) {
                 var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "locations";
+                    return widget.id === "addresses";
                 });
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                $scope.gridOptions.columnDefs = widgetInfo ? widgetInfo.columnDefs : [];
+                gridHelper.setColumnDefs(widgetInfo);
             };
 
-            var createFullAddress = function (location) {
-                if (location) {
-                    var street = location.streetAddress;
-                    street += location.streetAddress2 ? " " + location.streetAddress2 : "";
-                    var city = location.city;
-                    var state = location.state;
-                    var zip = location.zip;
-                    var country = location.country ? location.country : "USA";
-                    return street + ", " + city + ", " + state + " " + zip + " " + country;
-                }
-                return undefined;
-            };
         }
     ]);

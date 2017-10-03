@@ -3,7 +3,7 @@ package com.armedia.acm.auth;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;

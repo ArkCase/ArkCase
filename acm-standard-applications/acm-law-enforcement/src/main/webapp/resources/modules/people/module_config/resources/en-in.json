@@ -9,7 +9,11 @@
     "leftnav.item": "People",
     "topbar.item": "Person"
   },
+  "people.comp.main": {
+    "title": "Overview"
+  },
   "people.comp.info": {
+    "title": "Info",
     "phone.label": "Phone",
     "email.label": "Email",
     "status.label": "Status",
@@ -17,6 +21,7 @@
     "identification.label": "ID"
   },
   "people.comp.actions": {
+    "title": "Actions",
     "export.button": "Export",
     "import.button": "Import",
     "delete.button": "Delete",
@@ -67,6 +72,13 @@
       "noPictureSelected": "No Files Selected.",
       "browse": "Browse",
       "description": "Description"
+    },
+    "dialog.edit": {
+      "title": "Edit Picture",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "change": "Change Picture",
+      "save": "Save changes"
     }
   },
   "people.comp.addresses": {
@@ -208,6 +220,28 @@
       "value.placeholder": "Enter URL"
     }
   },
+  "people.comp.participants": {
+    "title": "Participants",
+    "table.columns": {
+      "type": "Type",
+      "name": "Name"
+    },
+    "dialogUserPicker": {
+      "header": "Choose User",
+      "table.columns": {
+        "name": "Name",
+        "type": "Type",
+        "title": "Title",
+        "id": "Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "Choose Group",
+      "table.columns": {
+        "name": "Name"
+      }
+    }
+  },
   "people.comp.aliases": {
     "title": "Aliases",
     "actions": {
@@ -306,7 +340,9 @@
   },
   "people.comp.cases": {
     "title": "Cases",
+    "objectType.label": "Case File",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -317,7 +353,9 @@
   },
   "people.comp.complaints": {
     "title": "Complaints",
+    "objectType.label": "Complaint",
     "table.columns": {
+      "role": "Role",
       "priority": "Priority",
       "id": "ID",
       "title": "Title",
@@ -412,5 +450,37 @@
       "identificationYearIssued.placeholder": "Select Identification Issued",
       "identificationYearIssued.close.button": "Close"
     }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "pictures.label": "Pictures",
+      "addresses.label": "Locations",
+      "phones.label": "Phone Numbers",
+      "emails.label": "Email Addresses",
+      "urls.label": "URLs",
+      "participants.label": "Participants",
+      "aliases.label": "Aliases",
+      "organizations.label": "Organizations",
+      "ids.label": "IDs",
+      "complaints.label": "Complaints",
+      "cases.label": "Cases",
+      "related.label": "Related People",
+      "history.label": "History"
+    },
+    "filters": {
+      "iHaveCreated": "All I've Created",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sort Date Created Ascending",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Sort People ID Ascending",
+      "idDesc": "Sort People ID Descending",
+      "nameAsc": "Sort By People Name A-Z",
+      "nameDesc": "Sort By People Name Z-A",
+      "noSort": "(No Sort)"
+    }
   }
 }
+

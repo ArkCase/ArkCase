@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.18</version>
+        <version>3.1.25</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -127,8 +127,21 @@
 
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-email</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar-integration-exchange</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- bean validation -->
@@ -223,6 +236,16 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
         </dependency>
 
         <dependency>

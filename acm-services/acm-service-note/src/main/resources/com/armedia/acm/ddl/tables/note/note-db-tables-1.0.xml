@@ -92,4 +92,17 @@
         <sql>ALTER TABLE acm_note MODIFY cm_note_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
     </changeSet>
 
+    <!-- adding discriminator column for oracle,postgresql,mssql ... need for extensibility -->
+    <changeSet id="08-acm_note-add-class-name" author="riste.tutureski" dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_note">
+            <column name="cm_class_name" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+    <!-- adding discriminator column for mysql ... need for extensibility -->
+    <changeSet id="08-acm_note-add-class-name" author="riste.tutureski" dbms="mysql">
+        <addColumn tableName="acm_note">
+            <column name="cm_class_name" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -3,7 +3,7 @@
 angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope'
     , 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService'
     , 'UtilService', 'Admin.LdapConfigService',
-    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, modalDialogService, Util
+    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util
         , LdapConfigService) {
 
         var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
@@ -60,7 +60,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             //init children array
             if (!group.children)
                 group.children = [];
-            if (!group.parent_id_s) {
+            if (!group.ascendants_id_ss) {
                 //add group to root
                 if (top)
                     $scope.data.unshift(group);
@@ -78,7 +78,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             else {
                 groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []);
             }
-
 
             groupsPromise.then(function (payload) {
                 var tempGroups = [];
@@ -104,24 +103,16 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
-                    $scope.adHocGroup = {};
+                    $scope.group = {};
 
-                    //watch the input to enable/disable ok button
-                    $scope.$watch('adHocGroup.name', function (newValue) {
-                        if (newValue) {
-                            $scope.inputValid = false;
-                        } else {
-                            $scope.inputValid = true;
-                        }
-                    }, true);
                     $scope.ok = function () {
-                        $modalInstance.close($scope.adHocGroup);
+                        $modalInstance.close($scope.group);
                     };
                     $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
                     };
                 },
-                size: 'md'
+                size: 'sm'
             });
 
             //handle the result
@@ -139,23 +130,26 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
-                    newGroup.name = UUIDRegEx.test(newGroup.name) ? newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
+                    newGroup.name = UUIDRegEx.test(newGroup.name) ?
+                        newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
 
                     groupsMap[newGroup.object_id_s] = newGroup;
+
                     if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
                     }
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
 
+                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
                     addToTree(newGroup, true);
                     deferred.resolve(newGroup);
                 }, function () {
                     //error adding group
+                    messageService.error("Group name already exists.");
                     deferred.reject();
                 });
             }, function (result) {
                 //button cancel, nothing to do.
-                deferred.reject();
             });
             return deferred.promise;
         };
@@ -168,16 +162,15 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name,
                 bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
             };
-            modalDialogService.showModal({}, modalOptions).then(function () {
+            ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
+                organizationalHierarchyService.removeGroup(group).then(function (payload) {
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
                 });
             }, function () {
                 //cancel btn
-                deferred.reject();
             });
             return deferred.promise;
         };
@@ -192,7 +185,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.bodyText')
             };
 
-            modalDialogService.showModal({}, modalOptions).then(function () {
+            ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.removeMembers(group, members).then(function (payload) {
                     deferred.resolve(payload);
@@ -201,7 +194,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 //cancel btn
-                deferred.reject();
+                deferred.reject("cancel");
             });
             return deferred.promise;
         };
@@ -257,8 +250,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 // Cancel button was clicked
-                deferred.reject();
-                return [];
             });
             return deferred.promise;
         };
@@ -371,7 +362,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     });
             }, function () {
                 // Cancel button was clicked
-                deferred.reject();
+                deferred.reject("cancel");
                 return [];
             });
             return deferred.promise;
@@ -412,24 +403,24 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
 
-
-        $scope.onDeleteLdapMember = function (member) {
+        $scope.onDeleteLdapMember = function (data) {
             var deferred = $q.defer();
             var modalOptions = {
-                closeButtonText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.btn.cancel'),
-                actionButtonText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.btn.ok'),
-                headerText: $translate.instant('admin.security.organizationalHierarchy.createUserDialog.deleteLdapMember.title'),
+                closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.cancelBtn'),
+                actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.deleteBtn'),
+                headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.headerText'),
+                bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.member.confirm.delete.bodyText')
             };
-            modalDialogService.showModal({}, modalOptions).then(function () {
+            ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.deleteGroupMember(member).then(function (payload) {
+                organizationalHierarchyService.deleteLdapUserMember(data).then(function (payload) {
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
                 });
             }, function () {
                 //cancel btn
-                deferred.reject();
+                deferred.reject("cancel");
             });
             return deferred.promise;
         };
@@ -540,7 +531,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         $modalInstance.dismiss('cancel');
                     };
                 },
-                size: 'md'
+                size: 'sm'
             });
 
             //handle the result
@@ -557,9 +548,10 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     //name that should be displayed in UI should not be unique across different tree levels,
                     // so the UUID part is removed!
 
-                    newGroup.name = UUIDRegEx.test(payload.data.name) ? payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
+                    newGroup.name = UUIDRegEx.test(payload.data.name) ?
+                        payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
 
-                    groupsMap[payload.data.name] = newGroup;
+                    groupsMap[payload.data.object_id_s] = newGroup;
                     addToTree(newGroup, true);
                     messageService.succsessAction();
                 }, function () {
@@ -635,7 +627,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name,
                 bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
             };
-            modalDialogService.showModal({}, modalOptions).then(function () {
+            ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
                     deferred.resolve(payload);
@@ -644,7 +636,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 //cancel btn
-                deferred.reject();
+                deferred.reject("cancel");
             });
             return deferred.promise;
         };
@@ -778,8 +770,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
             }, function () {
                 // Cancel button was clicked
-                deferred.reject();
-                return [];
             });
             return deferred.promise;
         };

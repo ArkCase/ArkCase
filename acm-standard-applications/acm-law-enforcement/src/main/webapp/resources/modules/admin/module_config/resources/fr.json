@@ -6,6 +6,16 @@
     "security.functionalAccessControl.applicationRole": "fr_Application Role",
     "security.ldapConfig": "fr_LDAP Configuration",
     "security.ldapConfig.addNewDirectory": "fr_Add New Directory",
+    "security.ldapConfig.addNewMember": "fr_Add New Member",
+    "security.ldapConfig.addMembers": "fr_Add Members",
+    "security.ldapConfig.addSubgroup": "fr_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "fr_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "fr_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "fr_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "fr_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "fr_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "fr_Edit Member",
+    "security.ldapConfig.removeMember": "fr_Remove Member",
     "security.ldapConfig.table.ldapUrl": "fr_LDAP Url",
     "security.ldapConfig.table.directoryName": "fr_Directory Name",
     "security.ldapConfig.data": {
@@ -68,7 +78,9 @@
       "insert.success": "fr_Successfully inserted new row.",
       "insert.error": "fr_Error inserting new row.",
       "update.success": "fr_Successfully updated row.",
-      "update.error": "fr_Error updating row."
+      "update.error": "fr_Error updating row.",
+      "insert.template.success": "fr_Successfully created template",
+      "insert.template.error": "fr_Error creating the template"
     },
     "security.ldapConfig.dialog": {
       "cancel": "fr_Cancel",
@@ -100,7 +112,7 @@
         "description": "fr_Description",
         "descriptionPlaceholder": "fr_Enter Description",
         "btn": {
-          "ok": "fr_Add Ad-Hoc Group",
+          "ok": "fr_Add Group",
           "cancel": "fr_Cancel"
         }
       },
@@ -136,8 +148,8 @@
           "lastName": "fr_Enter last name",
           "email": "fr_Enter email",
           "password": "fr_Enter password",
-          "rulePattern": "^(?!.*?{{user.userId}})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^&+=]).*$",
-          "minLengthForPassword": "7",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "fr_7",
           "passwordRuleText": "fr_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
         "editLdapMember": {
@@ -217,15 +229,189 @@
     "security.selectPrivileges.name": "fr_Name",
     "security.modules": "fr_Modules",
     "security.modules.module": "fr_Module",
+    "security.ldap.user.management": {
+      "title": "fr_LDAP User Management",
+      "cloneButton": "fr_Clone User",
+      "user": "fr_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "fr_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "fr_Enter System Email Address",
+        "password.placeholder": "fr_Enter System Password",
+        "purge.placeholder": "fr_Choose Purge Option",
+        "purgeDays.placeholder": "fr_Enter Days",
+        "save.button": "fr_Save",
+        "validate.button": "fr_Validate",
+        "purge.label": "fr_Purge",
+        "email.label": "fr_System Email Address",
+        "password.label": "fr_System Password",
+        "purgeDays.label": "fr_Days",
+        "emailValid": "fr_System Email Address is valid",
+        "emailNotValid": "fr_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "fr_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "fr_Retain Indefinitely",
+          "objectClosed": "fr_Object = 'Closed'",
+          "objectClosedXDays": "fr_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "fr_Cases",
+          "complaints.label": "fr_Complaints",
+          "tasks.label": "fr_Tasks"
+        }
+      }
+    },
+    "security.calendarCredentialsConfiguration": {
+      "title": "fr_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "fr_System Email Address",
+        "password": "fr_System Password",
+        "password.placeholder": "fr_System Password",
+        "save.button": "fr_Save",
+        "validate.button": "fr_Validate"
+      },
+      "modal": {
+        "title": "fr_Outlook folder override",
+        "message": "fr_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "fr_Confirm",
+        "cancel.button": "fr_Cancel"
+      },
+      "message": {
+        "credentials.valid": "fr_Credentials are valid",
+        "credentials.invalid": "fr_Credentials are not valid",
+        "credentials.error": "fr_An error has occurred while checking the credentials",
+        "save.successful": "fr_Outlook folder creator saved successfully",
+        "save.fail": "fr_Outlook folder creator not saved"
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "fr_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "fr_Save",
+        "deliveryMethods.label": "fr_Delivery Methods",
+        "enableDocumentEmail.checkbox": "fr_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "fr_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "fr_Documents can be sent as hyperlinks",
+        "serverSettings.label": "fr_Server Settings",
+        "serverType.label": "fr_Server Type",
+        "serverType.placeholder": "fr_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "fr_SMTP",
+          "outlook": "fr_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "fr_For details refer to Microsoft Exchange Configuration",
+        "server.label": "fr_Server Address",
+        "server.placeholder": "fr_Enter Server Address",
+        "port.label": "fr_Port",
+        "port.placeholder": "fr_Enter Port",
+        "encryption.label": "fr_Encryption",
+        "encryption.placeholder": "fr_Choose Encryption",
+        "encryptionOptions": {
+          "off": "fr_OFF",
+          "ssl-tls": "fr_SSL/TLS",
+          "starttls": "fr_STARTTLS"
+        },
+        "username.label": "fr_Username",
+        "username.placeholder": "fr_Enter Username",
+        "password.label": "fr_Password",
+        "password.placeholder": "fr_Enter Password",
+        "userFrom.label": "fr_From",
+        "userFrom.placeholder": "fr_Enter Email From field",
+        "validate.label": "fr_SMTP Validation",
+        "validate.button": "fr_Validate",
+        "smtpValid": "fr_SMTP settings are valid",
+        "smtpNotValid": "fr_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "fr_Email Templates",
+      "table.columns": {
+        "templateName": "fr_Template Name",
+        "emailPattern": "fr_Email Pattern",
+        "source": "fr_Source",
+        "objectTypes": "fr_Object Types",
+        "actions": "fr_Actions",
+        "modified": "fr_Modified Date",
+        "modifier": "fr_Modified By"
+      },
+      "modal": {
+        "title": "fr_Email Template",
+        "templateName.label": "fr_Template Name",
+        "templateName.placeholder": "fr_Enter Template Name",
+        "emailPattern.label": "fr_Email Pattern",
+        "emailPattern.placeholder": "fr_Enter Email Pattern",
+        "source.label": "fr_Source",
+        "objectTypes.label": "fr_Object Types",
+        "actions.label": "fr_Actions",
+        "manual.label": "fr_Manual",
+        "automated.label": "fr_Automated",
+        "browse": "fr_Browse",
+        "save": "fr_Save",
+        "cancel": "fr_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "fr_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "fr_Save",
+        "enableExchangeIntegration.checkbox": "fr_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "fr_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "fr_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "fr_Exchange2007",
+          "Exchange2007_SP1": "fr_Exchange2007_SP1",
+          "Exchange2010": "fr_Exchange2010",
+          "Exchange2010_SP1": "fr_Exchange2010_SP1",
+          "Exchange2010_SP2": "fr_Exchange2010_SP2",
+          "Exchange2013": "fr_Exchange2013",
+          "Exchange2013_SP1": "fr_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "fr_Enable Autodiscovery",
+        "clientAccessServer.label": "fr_Client Access Server",
+        "clientAccessServer.description": "fr_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "fr_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "fr_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "fr_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "fr_None",
+          "Owner": "fr_Owner",
+          "PublishingEditor": "fr_PublishingEditor",
+          "Editor": "fr_Editor",
+          "PublishingAuthor": "fr_PublishingAuthor",
+          "Author": "fr_Author",
+          "NoneditingAuthor": "fr_NoneditingAuthor",
+          "Reviewer": "fr_Reviewer",
+          "Contributor": "fr_Contributor",
+          "FreeBusyTimeOnly": "fr_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "fr_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "fr_Custom"
+        }
+      }
+    },
     "dashboard.title": "fr_Dashboard",
     "dashboard.config": "fr_Dashboard Configuration",
     "dashboard.widgets": "fr_Widgets",
-    "reports.title": "fr_Reports",
-    "reports.config": "fr_Reports Configuration",
+    "reports": {
+      "title": "fr_Reports",
+      "config": "fr_Reports Configuration",
+      "btn": {
+        "reportDesigner": "fr_Report Designer",
+        "sync": "fr_Synchronise"
+      }
+    },
     "forms.title": "fr_Forms",
     "forms.config": "fr_Form Configuration",
     "workflows.title": "fr_Workflows",
     "workflows.config": "fr_Workflow Configuration",
+    "workflows.config.bpmn.upload": "fr_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "fr_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "fr_Description",
+      "label.noFileSelected": "fr_No File Selected",
+      "btnCancel.text": "fr_Cancel",
+      "btnOk.text": "fr_Upload Workflow"
+    },
     "workflows.config.activate": {
       "error": "fr_Cant make this process active!",
       "success": "fr_Process succesfully activated."
@@ -272,26 +458,34 @@
     "formWorkflows.link.editRole.save.success": "fr_Link Forms/Workflows configuration saved successfully",
     "formWorkflows.link.editRole.save.error": "fr_Can't save Link Forms/Workflows configuration",
     "application": {
-      "title": "fr_Application",
+      "title": "Application",
+      "locale.config": {
+        "title": "Configuration locale",
+        "defaultLabel": "Locale par défaut:"
+      },
       "labels.config": {
-        "defaultLabel": "fr_Default",
-        "applyBtn": "fr_Apply",
-        "resetModule": "fr_Reset Module",
-        "resetModule.confirm": "fr_Are you sure you want reset custom resources for current module?",
-        "resetModule.title": "fr_Reset current module (delete custom resources)",
-        "resetAll": "fr_Reset All",
-        "resetAll.confirm": "fr_Are you sure you want reset all custom resources for all modules?",
-        "resetAll.title": "fr_Reset all resources (delete all custom resources)",
-        "refreshAll": "fr_Refresh All",
-        "refreshAll.title": "fr_Refresh all resources (keep custom resources)",
-        "title": "fr_Label Configuration",
-        "filterBy": "fr_Filter By Id",
-        "filterByValue": "fr_Filter By Value",
+        "title": "Configuration de l'étiquette",
+        "progressMessage": "Mise à jour des étiquettes...",
         "data": {
-          "description": "fr_Description",
-          "defaultValue": "fr_Default Value",
-          "id": "fr_ID",
-          "value": "fr_Value"
+          "description": "Description",
+          "defaultValue": "Valeur par défaut",
+          "id": "ID",
+          "value": "Valeur"
+        },
+        "btnReset": {
+          "label": "Réinitialiser...",
+          "title": "Réinitialiser les ressources de l'étiquette par défaut"
+        },
+        "setToDefault": {
+          "dialog.title": "Réinitialiser les étiquettes par défaut",
+          "chkResetCustom.label": "Effacer les étiquettes personnalisées aussi?",
+          "btnCancel.label": "Annuler",
+          "btnCancel.title": "Fermez la boîte de dialogue sans action",
+          "btnReset.label": "Réinitialiser",
+          "btnReset.title": "Effacer les étiquettes personnalisées et les réinitialiser aux valeurs par défaut",
+          "btnRefresh.label": "Réinitialiser",
+          "btnRefresh.title": "Réinitialiser les étiquettes aux valeurs par défaut, mais garder les étiquettes personnalisées inchangées",
+          "resetCustom.confirm": "Êtes-vous sûr de vouloir supprimer les ressources personnalisées sélectionnées?"
         }
       },
       "module.config": {
@@ -355,11 +549,11 @@
         "created": "fr_Created",
         "modified": "fr_Modified",
         "creator": "fr_Creator",
-        "modifier": "fr_Modifier",
+        "modifier": "fr_Modified By",
         "activated": "fr_Status",
         "objectType": "fr_Object Type",
         "version": "fr_Version",
-        "templateVersionActive" : "fr_Active"
+        "templateVersionActive": "fr_Active"
       },
       "templates.fieldNames.label": "fr_Map fields to values from the template",
       "templates.querySelect": {
@@ -369,7 +563,7 @@
         "table.columns": {
           "beanId": "fr_Bean ID",
           "jpaQuery": "fr_JPA Query",
-          "queryType": "fr_Query Type"
+          "objectType": "fr_Query Type"
         }
       },
       "templates.modal": {
@@ -386,14 +580,14 @@
       "mergefields.saveMergeFields": "fr_Save",
       "mergefields.versionMergeFields": "fr_Versions",
       "mergefields.grid": {
-      "fieldId": "fr_ID",
-      "fieldValue": "fr_Value",
-      "fieldDescription": "fr_Description"
+        "fieldId": "fr_ID",
+        "fieldValue": "fr_Value",
+        "fieldDescription": "fr_Description"
       },
       "mergefields.version.grid": {
         "mergingVersion": "fr_Version",
         "modified": "fr_Modified",
-        "modifier": "fr_Modifier",
+        "modifier": "fr_Modified By",
         "mergingActiveVersion": "fr_Active"
       },
       "mergefields.version.modal": {
@@ -410,6 +604,100 @@
       "target": "fr_Target"
     },
     "forms.message.delete.success": "fr_Successfully deleted row.",
-    "forms.message.delete.error": "fr_Error deleting row."
+    "forms.message.delete.error": "fr_Error deleting row.",
+    "documentManagement": {
+      "title": "fr_Document Management",
+      "cmisConfiguration": "fr_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "fr_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "fr_New CMIS Configuration",
+          "edit": "fr_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "fr_Cancel",
+          "ok": "fr_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "fr_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "fr_CMIS ID",
+          "placeholder": "fr_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "fr_Base URL",
+          "placeholder": "fr_Base URL"
+        },
+        "username": {
+          "label": "fr_Username",
+          "placeholder": "fr_Username"
+        },
+        "password": {
+          "label": "fr_Password",
+          "placeholder": "fr_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "fr_Use Alfresco Extension",
+          "placeholder": "fr_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "fr_Endpoint",
+          "placeholder": "fr_Endpoint"
+        },
+        "maxIdle": {
+          "label": "fr_Maximum Idle",
+          "placeholder": "fr_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "fr_Maximum Active",
+          "placeholder": "fr_Maximum Active"
+        },
+        "maxWait": {
+          "label": "fr_Maximum Wait",
+          "placeholder": "fr_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "fr_Minimum Eviction Milliseconds",
+          "placeholder": "fr_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "fr_Eviction Check Interval Milliseconds",
+          "placeholder": "fr_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "fr_Reconnect Count",
+          "placeholder": "fr_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "fr_Reconnect Frequency",
+          "placeholder": "fr_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "fr_Repository Id",
+          "placeholder": "fr_Repository Id"
+        },
+        "versioningState": {
+          "label": "fr_Versioning State",
+          "placeholder": "fr_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "fr_Cancel",
+        "deleteBtn": "fr_Cofirm Delete",
+        "headerText": "fr_You are about to delete CMIS Configuration:",
+        "bodyText": "fr_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "fr_Successfully deleted configuration.",
+        "delete.error": "fr_Error deleting configuration.",
+        "insert.success": "fr_Successfully created new configuration row.",
+        "insert.error": "fr_Error creating new configuration row.",
+        "update.success": "fr_Successfully updated configuration row.",
+        "update.error": "fr_Error updating configuration row."
+      }
+    }
   }
 }

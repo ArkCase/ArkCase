@@ -19,10 +19,6 @@
                 <prop key="complaint.workflow.trigger.eventName">com.armedia.acm.complaint.submittedForReview</prop>
                 <prop key="complaint.workflow.activiti.inApproval.stateName">IN APPROVAL</prop>
                 <prop key="complaint.workflow.activiti.approved.stateName">ACTIVE</prop>
-                <prop key="complaint.complaint-types">Agricultural,Arson,Better Business Dispute,Domestic
-                    Dispute,Government,Local,Pollution
-                </prop>
-                <prop key="complaint.priorities">Low,Medium,High,Expedite</prop>
                 <prop key="ephesoft.load.documents.seconds">10</prop>
             </props>
         </property>
@@ -133,6 +129,7 @@
           class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintOutlookHandler">
         <property name="autoCreateFolderForComplaint" value="${complaint.auto_create_calendar_folder}"/>
         <property name="outlookContainerCalendarService" ref="outlookContainerService"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
 
     <bean id="complaintPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -181,29 +178,18 @@
 
     <bean id="complaintFactory" class="com.armedia.acm.plugins.complaint.service.ComplaintFactory">
         <property name="personDao" ref="acmPersonDao"/>
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
-    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" scope="prototype">
-        <property name="objectAssociationDao" ref="objectAssociationDao"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
-        <property name="ecmFileService" ref="ecmFileService"/>
+    <bean id="complaintService" class="com.armedia.acm.plugins.complaint.service.ComplaintService" parent="frevvoFormService" scope="prototype">
         <property name="complaintFactory" ref="complaintFactory"/>
-        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
-        <property name="properties" ref="acm-form-properties"/>
-        <property name="authenticationTokenService" ref="authenticationTokenService"/>
-        <property name="userDao" ref="userJpaDao"/>
-        <property name="userActionDao" ref="userActionDao"/>
-        <property name="userActionExecutor" ref="userActionExecutor"/>
-        <property name="acmPluginManager" ref="acmPluginManager"/>
         <property name="personDao" ref="acmPersonDao"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
-        <property name="functionalAccessService" ref="functionalAccessService"/>
-        <property name="searchResults" ref="searchResults"/>
         <property name="tagService" ref="tagService"/>
         <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
@@ -220,6 +206,7 @@
         <property name="calendarService" ref="outlookContainerService"/>
         <property name="shouldDeleteCalendarFolder" value="${complaint.delete_calendar_folder_after_complaint_closed}"/>
         <property name="complaintStatusClosed" value="${complaint.status.closed}"/>
+        <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
     </bean>
 
     <bean id="complaintDataAccessUpdateLocator"

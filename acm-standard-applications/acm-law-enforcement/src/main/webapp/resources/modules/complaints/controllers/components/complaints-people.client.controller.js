@@ -15,13 +15,9 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
         );
 
-        ObjectLookupService.getPersonTypes().then(
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (personTypes) {
-                var options = [];
-                _.forEach(personTypes, function (v, k) {
-                    options.push({type: v, name: v});
-                });
-                $scope.personTypes = options;
+                $scope.personTypes = personTypes;
                 return personTypes;
             });
 
@@ -46,7 +42,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-            gridHelper.addButton(config, "delete");
+            gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
+            gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -63,7 +60,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
                 id: null
                 , personType: ""
                 , parentId: $scope.objectInfo.complaintId
-                , parentType: $scope.objectInfo.complaintType
+                , parentType: ObjectService.ObjectTypes.COMPLAINT
                 , parentTitle: $scope.objectInfo.complaintNumber
                 , personDescription: ""
                 , notes: ""
@@ -73,9 +70,24 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         };
 
         $scope.addPerson = function () {
+            pickPerson(null);
+        };
+
+        function pickPerson(association) {
 
             var params = {};
             params.types = $scope.personTypes;
+
+            if (association) {
+                angular.extend(params, {
+                    personId: association.person.id,
+                    personName: association.person.givenName + ' ' + association.person.familyName,
+                    type: association.personType,
+                    description: association.personDescription
+                });
+            } else {
+                association = new newPersonAssociation();
+            }
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -93,31 +105,40 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    var association = new newPersonAssociation();
-                    association.person = data.person;
-                    association.personType = data.type;
-                    $scope.objectInfo.personAssociations.push(association);
-                    saveObjectInfoAndRefresh();
+                    PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                        data.person = response.data;
+                        updatePersonAssociationData(association, data.person, data);
+                    });
                 } else {
                     PersonInfoService.getPersonInfo(data.personId).then(function (person) {
-                        var association = new newPersonAssociation();
-                        association.person = person;
-                        association.personType = data.type;
-                        $scope.objectInfo.personAssociations.push(association);
-                        saveObjectInfoAndRefresh();
+                        updatePersonAssociationData(association, person, data);
                     })
                 }
             });
-        };
+        }
+
+        function updatePersonAssociationData(association, person, data) {
+            association.person = person;
+            association.personType = data.type;
+            association.personDescription = data.description;
+            if (!association.id) {
+                $scope.objectInfo.personAssociations.push(association);
+            }
+            saveObjectInfoAndRefresh();
+        }
 
         $scope.deleteRow = function (rowEntity) {
             var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.personAssociations = _.remove($scope.objectInfo.personAssociations, function (item) {
-                    return item.id != id;
-                });
-                saveObjectInfoAndRefresh()
+            _.remove($scope.objectInfo.personAssociations, function (item) {
+                return item === rowEntity;
+            });
+            if (rowEntity.id) {
+                saveObjectInfoAndRefresh();
             }
+        };
+
+        $scope.editRow = function (rowEntity) {
+            pickPerson(rowEntity);
         };
 
         function saveObjectInfoAndRefresh() {
@@ -138,5 +159,13 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             }
             return promiseSaveInfo;
         }
+
+        $scope.isEditDisabled = function (rowEntity) {
+            return rowEntity.personType == 'Initiator';
+        };
+
+        $scope.isDeleteDisabled = function (rowEntity) {
+            return rowEntity.personType == 'Initiator';
+        };
     }
 ]);

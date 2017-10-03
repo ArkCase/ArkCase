@@ -3,7 +3,6 @@
   "title": "Tasks",
   "configurable": true,
   "initialLinksShown": true,
-  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
@@ -26,42 +25,42 @@
     "pageSize": 32,
     "filters": [
       {
-        "desc": "Tasks for Me",
+        "desc": "tasks.tree.filters.myTasks",
         "name": "my-tasks",
         "value": "fq=assignee_s:${user}"
       },
       {
-        "desc": "All Open Tasks",
+        "desc": "tasks.tree.filters.opened",
         "name": "opened-tasks",
         "value": "fq=status_s:OPEN"
       },
       {
-        "desc": "All Completed Tasks",
+        "desc": "tasks.tree.filters.completed",
         "name": "completed-tasks",
         "value": "fq=status_s:COMPLETE"
       },
       {
-        "desc": "All Tasks Due Today",
+        "desc": "tasks.tree.filters.dueToday",
         "name": "tasks-due-today",
         "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
       },
       {
-        "desc": "All Tasks Due Today for Me",
+        "desc": "tasks.tree.filters.myDueToday",
         "name": "my-tasks-due-today",
         "value": "fq=due_tdt:[NOW/DAY TO NOW/DAY%2B1DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
       },
       {
-        "desc": "All Tasks Overdue",
+        "desc": "tasks.tree.filters.overdue",
         "name": "tasks-overdue",
         "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED"
       },
       {
-        "desc": "All Tasks Overdue for Me",
+        "desc": "tasks.tree.filters.myOverdue",
         "name": "my-tasks-overdue",
         "value": "fq=due_tdt:[* TO NOW/DAY] AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED AND assignee_s:${user}"
       },
       {
-        "desc": "(No Filter)",
+        "desc": "tasks.tree.filters.noFilter",
         "name": "",
         "value": "",
         "default": true
@@ -69,28 +68,28 @@
     ],
     "sorters": [
       {
-        "desc": "Sort Create Date Asc",
+        "desc": "tasks.tree.sorters.createdDateAsc",
         "name": "sort-date-asc",
         "value": "create_tdt ASC"
       },
       {
-        "desc": "Sort Create Date Desc",
+        "desc": "tasks.tree.sorters.createdDateDesc",
         "name": "sort-date-desc",
         "value": "create_tdt DESC",
         "default": true
       },
       {
-        "desc": "Sort Task Name Asc",
+        "desc": "tasks.tree.sorters.nameAsc",
         "name": "sort-by-name-asc",
         "value": "name ASC"
       },
       {
-        "desc": "Sort Task Name Desc",
+        "desc": "tasks.tree.sorters.nameDesc",
         "name": "sort-by-name-desc",
         "value": "name DESC"
       },
       {
-        "desc": "(No Sort)",
+        "desc": "tasks.tree.sorters.noSort",
         "name": "",
         "value": ""
       }
@@ -123,7 +122,7 @@
       },
       {
         "type": "p/TASK/det",
-        "label": "Details",
+        "label": "tasks.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -131,7 +130,7 @@
       },
       {
         "type": "p/TASK/rewk",
-        "label": "Rework Details",
+        "label": "tasks.tree.nodeTypes.reworkDetails.label",
         "icon": "fa fa-repeat",
         "components": [
           "reworkdetails"
@@ -139,7 +138,7 @@
       },
       {
         "type": "p/TASK/docrev",
-        "label": "Documents Under Review",
+        "label": "tasks.tree.nodeTypes.docReview.label",
         "icon": "fa fa-search-plus",
         "components": [
           "docsreview"
@@ -147,7 +146,7 @@
       },
       {
         "type": "p/TASK/patt",
-        "label": "Parent Documents",
+        "label": "tasks.tree.nodeTypes.parentDoc.label",
         "icon": "fa fa-file",
         "components": [
           "parentdocs"
@@ -155,7 +154,7 @@
       },
       {
         "type": "p/TASK/att",
-        "label": "Attachments",
+        "label": "tasks.tree.nodeTypes.attachments.label",
         "icon": "fa fa-file",
         "components": [
           "attachments"
@@ -163,7 +162,7 @@
       },
       {
         "type": "p/TASK/note",
-        "label": "Notes",
+        "label": "tasks.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -171,7 +170,7 @@
       },
       {
         "type": "p/TASK/ref",
-        "label": "References",
+        "label": "tasks.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -179,7 +178,7 @@
       },
       {
         "type": "p/TASK/wkfl",
-        "label": "Workflow Overview",
+        "label": "tasks.tree.nodeTypes.workflow.label",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -187,7 +186,7 @@
       },
       {
         "type": "p/TASK/his",
-        "label": "History",
+        "label": "tasks.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -195,7 +194,7 @@
       },
       {
         "type": "p/TASK/sig",
-        "label": "eSignatures",
+        "label": "tasks.tree.nodeTypes.eSignatures.label",
         "icon": "fa fa-certificate",
         "components": [
           "signatures"
@@ -203,7 +202,7 @@
       },
       {
         "type": "p/TASK/tags",
-        "label": "Tags",
+        "label": "tasks.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -227,7 +226,7 @@
       },
       {
         "type": "p/ADHOC/det",
-        "label": "Details",
+        "label": "tasks.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -235,7 +234,7 @@
       },
       {
         "type": "p/ADHOC/rej",
-        "label": "Reject Comments",
+        "label": "tasks.tree.nodeTypes.reject.label",
         "icon": "fa fa-hand-stop-o",
         "components": [
           "rejcomments"
@@ -243,7 +242,7 @@
       },
       {
         "type": "p/ADHOC/patt",
-        "label": "Parent Documents",
+        "label": "tasks.tree.nodeTypes.parentDoc.label",
         "icon": "fa fa-file",
         "components": [
           "parentdocs"
@@ -251,7 +250,7 @@
       },
       {
         "type": "p/ADHOC/att",
-        "label": "Attachments",
+        "label": "tasks.tree.nodeTypes.attachments.label",
         "icon": "fa fa-file",
         "components": [
           "attachments"
@@ -259,7 +258,7 @@
       },
       {
         "type": "p/ADHOC/note",
-        "label": "Notes",
+        "label": "tasks.tree.nodeTypes.notes.label",
         "icon": "fa fa-comments",
         "components": [
           "notes"
@@ -267,7 +266,7 @@
       },
       {
         "type": "p/ADHOC/ref",
-        "label": "References",
+        "label": "tasks.tree.nodeTypes.references.label",
         "icon": "fa fa-exchange",
         "components": [
           "references"
@@ -275,7 +274,7 @@
       },
       {
         "type": "p/ADHOC/wkfl",
-        "label": "Workflow Overview",
+        "label": "tasks.tree.nodeTypes.workflow.label",
         "icon": "fa fa-code-fork",
         "components": [
           "workflow"
@@ -283,7 +282,7 @@
       },
       {
         "type": "p/ADHOC/his",
-        "label": "History",
+        "label": "tasks.tree.nodeTypes.history.label",
         "icon": "fa fa-bell-o",
         "components": [
           "history"
@@ -291,7 +290,7 @@
       },
       {
         "type": "p/ADHOC/sig",
-        "label": "eSignatures",
+        "label": "tasks.tree.nodeTypes.eSignatures.label",
         "icon": "fa fa-certificate",
         "components": [
           "signatures"
@@ -299,7 +298,7 @@
       },
       {
         "type": "p/ADHOC/tags",
-        "label": "Tags",
+        "label": "tasks.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -310,9 +309,10 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "tasks.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -331,7 +331,7 @@
               "name": "createDate",
               "displayName": "tasks.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.createDate | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.createDate | date : 'shortDate' }}</div>"
             },
             {
               "width": 150,
@@ -374,21 +374,38 @@
             {
               "name": "fileName",
               "displayName": "tasks.comp.docsreview.table.columns.fileName",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "created",
               "displayName": "tasks.comp.docsreview.table.columns.created",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.createDate | date : 'shortDate' }}</div>"
             },
             {
               "name": "creator",
               "displayName": "tasks.comp.docsreview.table.columns.creator",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "enableCellEdit": false,
+              "fullNameField": "creator_full_name_lcs",
+              "cellTemplate": "<div ng-bind-html='row.entity.creator' title='{{row.entity.creator}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.docsreview.table.columns.status",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
+            }
+          ]
+        },
+        {
+          "id": "parentDocs",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "folderName",
+              "displayName": "tasks.comp.parentDocs.table.columns.folderName",
               "headerCellFilter": "translate"
             }
           ]
@@ -413,7 +430,7 @@
               "name": "created",
               "displayName": "tasks.comp.notes.table.columns.created",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -461,24 +478,27 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.participant' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
               "displayName": "tasks.comp.workflow.table.columns.role",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.role' title='{{row.entity.role}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "status",
               "displayName": "tasks.comp.workflow.table.columns.status",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.status' title='{{row.entity.status}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "startDateTime",
               "field": "startDate",
               "displayName": "tasks.comp.workflow.table.columns.startDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -486,7 +506,7 @@
               "field": "endDate",
               "displayName": "tasks.comp.workflow.table.columns.endDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             }
           ]
@@ -503,7 +523,7 @@
               "name": "signedDate",
               "displayName": "tasks.comp.signatures.table.columns.signedDate",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.signedDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.signedDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -517,7 +537,26 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "tasks.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ],
       "widgetsAdhoc": [
@@ -547,7 +586,7 @@
             {
               "name": "created",
               "displayName": "tasks.comp.notes.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -597,7 +636,8 @@
             {
               "name": "participant",
               "displayName": "tasks.comp.workflow.table.columns.participant",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div ng-bind-html='row.entity.note' title='{{row.entity.participant}}' class='ui-grid-cell-contents'></div>"
             },
             {
               "name": "role",
@@ -614,7 +654,7 @@
               "field": "startDate",
               "displayName": "tasks.comp.workflow.table.columns.startDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.startDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -622,7 +662,7 @@
               "field": "endDate",
               "displayName": "tasks.comp.workflow.table.columns.endDateTime",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.endDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             }
           ]
@@ -639,7 +679,7 @@
               "name": "signedDate",
               "displayName": "tasks.comp.signatures.table.columns.signedDate",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.signedDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.signedDate | date : 'shortDate' }}</div>",
               "enableCellEdit": false
             },
             {
@@ -653,13 +693,32 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "tasks.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "tasks.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "tasks.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "tasks.comp.info.title",
       "dialogUserPicker": {
         "enableFiltering": false,
         "multiSelect": false,
@@ -694,41 +753,58 @@
         ],
         "paginationPageSize": 10,
         "start": 0
+      },
+      "dialogGroupPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "tasks.comp.participants.dialogGroupPicker.table.columns.name",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
       }
     },
     {
       "id": "parentinfo",
-      "title": "Parent Info",
+      "title": "tasks.comp.parentinfo.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "tasks.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "tasks.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
       "id": "reworkdetails",
-      "title": "Rework Details",
+      "title": "tasks.comp.reworkdetails.title",
       "icon": "fa fa-repeat",
       "enabled": true,
-      "type": "empty"
-    },
-    {
-      "id": "docsreview",
-      "title": "Documents Under Review",
-      "icon": "fa fa-search-plus",
-      "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -740,11 +816,40 @@
       "paginationPageSize": 5,
       "columnDefs": [
         {
-          "name": "fileId",
-          "displayName": "tasks.comp.docsreview.table.columns.fileId",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.container.containerObjectId}}</a>"
+          "name": "title",
+          "displayName": "tasks.comp.reworkdetails.table.columns.title",
+          "headerCellFilter": "translate"
         },
+        {
+          "name": "modified",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+        },
+        {
+          "name": "modifier",
+          "displayName": "tasks.comp.reworkdetails.table.columns.modifier",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modifier | date : 'shortDate' }}</div>"
+        }
+      ]
+    },
+    {
+      "id": "docsreview",
+      "title": "tasks.comp.docsreview.title",
+      "icon": "fa fa-search-plus",
+      "enabled": true,
+      "configurable": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
         {
           "name": "fileName",
           "displayName": "tasks.comp.docsreview.table.columns.fileName",
@@ -755,7 +860,7 @@
           "name": "created",
           "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.createDate | date : 'shortDate' }}</div>"
         },
         {
           "name": "creator",
@@ -773,9 +878,10 @@
     },
     {
       "id": "rejcomments",
-      "title": "Reject Comments",
+      "title": "tasks.comp.rejcomments.title",
       "icon": "fa fa-hand-stop-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -795,7 +901,7 @@
           "name": "created",
           "displayName": "tasks.comp.rejcomments.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "enableCellEdit": false
         },
         {
@@ -809,9 +915,10 @@
     },
     {
       "id": "parentdocs",
-      "title": "Parent Documents",
+      "title": "tasks.comp.parentdocs.title",
       "icon": "fa fa-file",
       "enabled": true,
+      "configurable": true,
       "type": "empty",
       "docTree": {
         "email": {
@@ -823,9 +930,10 @@
     },
     {
       "id": "attachments",
-      "title": "Attachments",
+      "title": "tasks.comp.attachments.title",
       "icon": "fa fa-file",
       "enabled": true,
+      "configurable": true,
       "type": "empty",
       "docTree": {
         "email": {
@@ -838,9 +946,10 @@
     },
     {
       "id": "notes",
-      "title": "Notes",
+      "title": "tasks.comp.notes.title",
       "icon": "fa fa-comments",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "enableSorting": true,
@@ -862,7 +971,7 @@
         {
           "name": "created",
           "displayName": "tasks.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -879,9 +988,10 @@
     },
     {
       "id": "references",
-      "title": "References",
+      "title": "tasks.comp.references.title",
       "icon": "fa fa-exchange",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -908,7 +1018,7 @@
           "name": "modified",
           "displayName": "tasks.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "targetType",
@@ -924,9 +1034,10 @@
     },
     {
       "id": "workflow",
-      "title": "Workflow Overview",
+      "title": "tasks.comp.workflow.title",
       "icon": "fa fa-code-fork",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -957,7 +1068,7 @@
           "field": "startDate",
           "displayName": "tasks.comp.workflow.table.columns.startDateTime",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.startDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.startDate | date : 'shortDate' }}</div>",
           "enableCellEdit": false
         },
         {
@@ -965,16 +1076,17 @@
           "field": "endDate",
           "displayName": "tasks.comp.workflow.table.columns.endDateTime",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.endDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.endDate | date : 'shortDate' }}</div>",
           "enableCellEdit": false
         }
       ]
     },
     {
       "id": "history",
-      "title": "History",
+      "title": "tasks.comp.history.title",
       "icon": "fa fa-bell-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -995,7 +1107,7 @@
           "name": "eventDate",
           "displayName": "tasks.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
         },
         {
           "name": "userId",
@@ -1007,9 +1119,10 @@
     },
     {
       "id": "signatures",
-      "title": "eSignatures",
+      "title": "tasks.comp.signatures.title",
       "icon": "fa fa-certificate",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -1024,7 +1137,7 @@
           "name": "signedDate",
           "displayName": "tasks.comp.signatures.table.columns.signedDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.signedDate | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.signedDate | date : 'shortDate' }}</div>",
           "enableCellEdit": false
         },
         {
@@ -1038,9 +1151,10 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "tasks.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "autoSuggestObjectType": "TAG",
       "typeAheadColumn": "title_parseable",
@@ -1061,7 +1175,7 @@
         {
           "name": "created",
           "displayName": "tasks.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -1076,8 +1190,9 @@
     },
     {
       "id": "userSearch",
-      "title": "Select users",
+      "title": "tasks.userOrGroupSearch.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -1113,8 +1228,9 @@
     },
     {
       "id": "objectSearch",
-      "title": "Select object",
+      "title": "tasks.objectSearch.title",
       "enableFiltering": false,
+      "configurable": true,
       "multiSelect": false,
       "showFacets": false,
       "columnDefs": [
@@ -1151,8 +1267,9 @@
     },
     {
       "id": "referenceSearchGrid",
-      "title": "Reference Search",
+      "title": "tasks.referenceSearchGrid.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": false,
@@ -1196,7 +1313,7 @@
           "name": "modified_date_tdt",
           "displayName": "tasks.comp.addreference.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1286,11 +1403,12 @@
       }
     },
     {
-      "id": "approvalrouting",
-      "title": "Approval Routing",
+      "id": "approvalRouting",
+      "title": "tasks.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
       "addNewTooltip": "tasks.comp.approvalRouting.addNewTooltip",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1332,9 +1450,10 @@
     },
     {
       "id": "pastapprovals",
-      "title": "Past Approvals",
+      "title": "tasks.comp.pastApprovals.title",
       "icon": "fa fa-sort-amount-desc",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "paginationPageSizes": [
@@ -1349,7 +1468,7 @@
           "name": "approvalDate",
           "displayName": "tasks.comp.pastApprovals.table.columns.approvalDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : 'short' }}</div>",
           "cellEditableCondition": false
         },
         {

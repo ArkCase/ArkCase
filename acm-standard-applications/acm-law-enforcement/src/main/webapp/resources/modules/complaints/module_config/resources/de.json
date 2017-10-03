@@ -1,36 +1,41 @@
 {
   "complaints": {
     "title": "Beschwerden",
-    "progressNoComplaint": "de_[ No complaint data ]",
-    "progressLoading": "de_Loading complaint ",
-    "progressError": "de_Failed to load complaint "
+    "progressNoComplaint": "[Keine Reklamationsdaten]",
+    "ProgressLoading": "Beschwerde einlegen",
+    "ProgressError": "Fehler beim Laden der Beschwerde"
   },
   "complaints.menus": {
     "leftnav.item": "Beschwerden",
-    "topbar.item": "Beschwerden"
+    "topbar.item": "Beschwerde"
+  },
+  "complaints.comp.main": {
+    "title": "Übersicht"
   },
   "complaints.comp.info": {
-    "complaintId": "de_Complaint id:",
-    "complaintNumber": "de_Complaint ID:",
-    "courtRoomName": "de_Court Room Name:",
-    "type.label": "Type",
-    "created.label": "Created Date",
-    "priority.label": "Priority",
-    "assignee.label": "Assigned To",
-    "owningGroup.label": "Owning Group",
-    "dueDate.label": "Due Date"
+    "title": "Informationen",
+    "complaintId": "Beschwerde ID:",
+    "complaintNumber": "Beschwerde-Nummer:",
+    "courtRoomName": "Gericht Zimmer Name:",
+    "type.label": "Typ",
+    "created.label": "Erstellungsdatum",
+    "priority.label": "Priorität",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "dueDate.label": "Fälligkeitsdatum"
   },
   "complaints.comp.actions": {
-    "restrict": "de_Restrict?",
-    "new.button": "de_New Complaint",
-    "close.button": "de_Close Complaint",
-    "subscribe.button": "de_Subscribe",
-    "unsubscribe.button": "de_Unsubscribe",
-    "claim.button": "de_Claim",
-    "unclaim.button": "de_Unclaim"
+    "title": "Aktionen",
+    "restrict": "Einschränken?",
+    "new.button": "Neue Beschwerde",
+    "close.button": "Schließen Beschwerde",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung"
   },
   "complaints.comp.details": {
-    "title": "de_Details",
+    "title": "Details",
     "informSaved": "de_Complaint details saved",
     "table.columns": {
       "title": "de_Details",
@@ -39,13 +44,13 @@
     }
   },
   "complaints.comp.documents": {
-    "title": "de_Documents",
+    "title": "Dokumente",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
     "searchInputPlaceholder": "de_Search"
   },
   "complaints.comp.people": {
-    "title": "de_People",
+    "title": "Menschen",
     "table.columns": {
       "entity": "de_Entity",
       "type": "de_Type",
@@ -64,7 +69,7 @@
       }
     },
     "organizations": {
-      "title": "de_Organizations",
+      "title": "Organisationen",
       "table.columns": {
         "type": "de_Type",
         "value": "de_Value",
@@ -75,7 +80,7 @@
       }
     },
     "addresses": {
-      "title": "de_Locations",
+      "title": "Locaties",
       "table.columns": {
         "type": "de_Type",
         "streetAddress": "de_Address",
@@ -112,8 +117,27 @@
       }
     }
   },
+  "complaints.comp.organizations": {
+    "title": "Organisationen",
+    "table.columns": {
+      "name": "de_Organization Name",
+      "associationType": "de_Role",
+      "type": "de_Organization Type",
+      "identification": "de_ID",
+      "value": "de_Organization",
+      "contact": "de_Primary Contact",
+      "phone": "de_Phone",
+      "location": "de_Location"
+    },
+    "actions": {
+      "delete": "de_Delete",
+      "setPrimary": "de_Set as Primary",
+      "addNew": "de_Add New",
+      "addExisting": "de_Add New"
+    }
+  },
   "complaints.comp.participants": {
-    "title": "de_Participants",
+    "title": "Teilnehmer",
     "table.columns": {
       "type": "de_Type",
       "name": "de_Name"
@@ -135,7 +159,7 @@
     }
   },
   "complaints.comp.locations": {
-    "title": "de_Locations",
+    "title": "Standorte",
     "table.columns": {
       "address": "de_Address",
       "type": "de_Type",
@@ -158,7 +182,7 @@
     }
   },
   "complaints.comp.notes": {
-    "title": "de_Notes",
+    "title": "Notizen",
     "table.columns": {
       "note": "de_Note",
       "created": "de_Created",
@@ -166,7 +190,7 @@
     }
   },
   "complaints.comp.tasks": {
-    "title": "de_Tasks",
+    "title": "Aufgaben",
     "table.columns": {
       "title": "de_Title",
       "assignee": "de_Assignee",
@@ -179,7 +203,7 @@
     "table.deadline.tooltip": "de_Deadline is Approaching"
   },
   "complaints.comp.references": {
-    "title": "de_References",
+    "title": "Referenzen",
     "table.columns": {
       "targetName": "de_Number",
       "targetTitle": "de_Title",
@@ -190,7 +214,7 @@
     }
   },
   "complaints.comp.history": {
-    "title": "de_History",
+    "title": "Geschichte",
     "table.columns": {
       "eventType": "de_Event Name",
       "eventDate": "de_Date",
@@ -198,7 +222,7 @@
     }
   },
   "complaints.comp.time": {
-    "title": "de_Time",
+    "title": "Zeit",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -209,7 +233,7 @@
     "formNamePrefix": "de_Timesheet"
   },
   "complaints.comp.cost": {
-    "title": "de_Cost",
+    "title": "Kosten",
     "table.columns": {
       "name": "de_Form Name",
       "user": "de_User",
@@ -220,7 +244,7 @@
     "formNamePrefix": "de_Costsheet"
   },
   "complaints.comp.tags": {
-    "title": "de_Tags",
+    "title": "Etiketten",
     "table.columns": {
       "tag": "de_Tag",
       "created": "de_Created",
@@ -244,7 +268,10 @@
     }
   },
   "complaints.comp.calendar": {
-    "title": "de_Calendar"
+    "title": "Kalender"
+  },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Referenzsuche"
   },
   "complaints.comp.addreference": {
     "title": "de_Add Reference",
@@ -281,7 +308,7 @@
     "searchGroupHeader": "de_Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "de_Future Approvers",
+    "title": "Toekomstige Goedkeuringen",
     "addNewTooltip": "de_Add new approver",
     "noBuckslipMessage": "de_No Data",
     "button": {
@@ -298,7 +325,7 @@
     "state.label": "de_State"
   },
   "complaints.comp.pastApprovals": {
-    "title": "de_Past Approvers",
+    "title": "Vorige Goedkeuringen",
     "noBuckslipMessage": "de_No Data",
     "table.columns": {
       "approvalDate": "de_Approval Date",
@@ -323,6 +350,43 @@
       "type": "de_Type",
       "title": "de_Title",
       "username": "de_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "locations.label": "Standorte",
+      "people.label": "Menschen",
+      "organizations.label": "Organisationen",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "notes.label": "Notizen",
+      "tasks.label": "Aufgaben",
+      "references.label": "Referenzen",
+      "history.label": "Geschichte",
+      "time.label": "Zeit",
+      "cost.label": "Kosten",
+      "tags.label": "Etiketten",
+      "calendar.label": "Kalender",
+      "approvalRouting.label": "Toekomstige Goedkeuringen"
+    },
+    "filters": {
+      "opened": "Alle offenen Beschwerden",
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "iAmAssigned": "Alles, was ich zugewiesen bin",
+      "iAmFollowing": "Alles, was ich folge",
+      "closedNoFurtherAction": "Alle geschlossenen Keine weitere Aktion",
+      "closedReferExternal": "Alle Geschlossenen Siehe extern",
+      "closedOpenInvestigation": "Alle Geschlossenen Offene Untersuchung",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Vorlaufdatum Auf",
+      "incidentDateDesc": "Vorlaufdatum sortieren Dec",
+      "createdDateAsc": "ufSortieren Erstellungsdatum Auf",
+      "createdDateDesc": "Nach Name sortieren Dec",
+      "nameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
     }
   }
 }

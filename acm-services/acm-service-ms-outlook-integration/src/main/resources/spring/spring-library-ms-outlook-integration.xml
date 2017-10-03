@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns="http://www.springframework.org/schema/beans"
+       xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.1.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <bean id="outlookSpringConfiguration" class="com.armedia.acm.service.outlook.config.OutlookSpringConfiguration"/>
-    
+
     <bean id="outlookEventPublisher" class="com.armedia.acm.service.outlook.service.OutlookEventPublisher"/>
 
     <bean id="msOutlookIntegrationProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -24,25 +24,24 @@
                 <prop key="outlook.exchange.system_user_email">test@armedia.com</prop>
                 <prop key="outlook.exchange.system_user_email_password">testPass</prop>
                 <prop key="outlook.exchange.system_user_id">testId</prop>
-                
+
             </props>
         </property>
     </bean>
 
-
     <bean id="outlookService" class="com.armedia.acm.service.outlook.service.impl.OutlookServiceImpl">
         <property name="dao" ref="exchangeWebServicesOutlookDao"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
-        <property name="ecmFileService" ref="ecmFileService" />
-        <property name="outlookEventPublisher" ref="outlookEventPublisher" />
-        <property name="sendFromSystemUser" value="${notification.send.from.system.user}" />
-        <property name="systemUserEmail" value="${outlook.exchange.system_user_email}" />
-        <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}" />
-        <property name="systemUserId" value="${outlook.exchange.system_user_id}" />
-        <property name="authenticationTokenService" ref="authenticationTokenService" />
-        <property name="authenticationTokenDao" ref="authenticationTokenDao" />
+        <property name="ecmFileService" ref="ecmFileService"/>
+        <property name="outlookEventPublisher" ref="outlookEventPublisher"/>
+        <property name="sendFromSystemUser" value="${notification.send.from.system.user}"/>
+        <property name="systemUserEmail" value="${outlook.exchange.system_user_email}"/>
+        <property name="systemUserPass" value="${outlook.exchange.system_user_email_password}"/>
+        <property name="systemUserId" value="${outlook.exchange.system_user_id}"/>
         <property name="acmCryptoUtils" ref="acmCryptoUtils"/>
         <property name="outlookPasswordDao" ref="outlookPasswordDao"/>
+        <property name="acmEmailContentGeneratorService" ref="acmEmailContentGeneratorService"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
     <bean id="outlookCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
@@ -83,10 +82,58 @@
 
     <bean id="outlookPasswordDao" class="com.armedia.acm.service.outlook.dao.OutlookPasswordDao"/>
 
-    <bean id="exchangeConfigurationService" class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl">
-        <property name="exchangePropertiesResource" value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
+    <bean id="exchangeConfigurationService"
+          class="com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl">
+        <property name="exchangePropertiesResource"
+                  value="file:${user.home}/.arkcase/acm/msOutlookIntegration.properties"/>
     </bean>
 
+    <bean id="outlookFolderCreatorDao" class="com.armedia.acm.service.outlook.dao.impl.JPAAcmOutlookFolderCreatorDao">
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+    </bean>
+
+    <task:executor id="regenerateOutlookFoldersExecutor" pool-size="5"/>
+    
+    <bean id="caseFileCalendarFolderHandler" class="com.armedia.acm.service.outlook.service.impl.CalendarFolderHandler">
+        <property name="entityTypeForQuery" value="CaseFile"/>
+        <property name="entityIdForQuery" value="id"/>
+    </bean>
+
+    <bean id="complaintCalendarFolderHandler" class="com.armedia.acm.service.outlook.service.impl.CalendarFolderHandler">
+        <property name="entityTypeForQuery" value="Complaint"/>
+        <property name="entityIdForQuery" value="complaintId"/>
+    </bean>
+
+    <bean id="outlookCalendarAdminServiceExtension" class="com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService">
+        <property name="extendedService" ref="propertyFileCalendarAdminService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="outlookFolderService" ref="outlookService"/>
+        <property name="participantsTypesForOutlookFolder" value="${participants-types-as-outlook-permission}"/>
+        <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
+        <property name="approverAccess" value="${outlook.exchange.approver_access}"/>
+        <property name="assigneeAccess" value="${outlook.exchange.follower_access}"/>
+        <property name="followerAccess" value="${outlook.exchange.assignee_access}"/>
+        <property name="folderHandlers">
+            <map>
+                <entry key="CASE_FILE" value-ref="caseFileCalendarFolderHandler"/>
+                <entry key="COMPLAINT" value-ref="complaintCalendarFolderHandler"/>
+            </map>
+        </property>
+        <property name="recreateFoldersExecutor" ref="regenerateOutlookFoldersExecutor"/>
+        <property name="verifierService" ref="calendarServiceProvider"/>
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptionProperties" ref="acmEncryptablePropertyEncryptionProperties"/>
+        <property name="outlookFolderCreatorDao" ref="outlookFolderCreatorDao"/>
+    </bean>
+    
+    <bean id="outlookRecreatableCalendarService" class="com.armedia.acm.service.outlook.service.impl.OutlookRecreatableCalendarServiceImpl">
+        <property name="containerDao" ref="acmContainerFolderDao"/>
+    </bean>
+
+    <bean id="acmRecreateOutlookFoldersProgressNotifierMessageBuilder"
+          class="com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder"/>
+    
     <util:constant id="propertyDefinitionSubject"
                    static-field="microsoft.exchange.webservices.data.core.service.schema.ItemSchema.Subject"/>
     <util:constant id="propertyDefinitionDateTimeCreated"

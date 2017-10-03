@@ -2,21 +2,30 @@ package com.armedia.acm.plugins.person.service;
 
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
+import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
 import org.mule.api.MuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.TransactionException;
 
 public class PersonAssociationServiceImpl implements PersonAssociationService
 {
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     private SavePersonAssociationTransaction personAssociationTransaction;
 
     private PersonAssociationDao personAssociationDao;
 
     private PersonAssociationEventPublisher personAssociationEventPublisher;
+
+    SolrJoinDocumentsServiceImpl solrJoinDocumentsService;
 
     @Override
     public PersonAssociation savePersonAssociation(PersonAssociation personAssociation, Authentication authentication)
@@ -47,6 +56,39 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
         }
     }
 
+    @Override
+    public String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException
+    {
+        return solrJoinDocumentsService.getJoinedDocuments(
+                auth, personId, "child_id_s",
+                PersonOrganizationConstants.PERSON_OBJECT_TYPE, "child_type_s",
+                PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE,
+                parentType, "parent_type_s",
+                "parent_object",
+                "parent_ref_s", "id", start, limit, sort
+        );
+    }
+
+    @Override
+    public PersonAssociation getPersonAssociation(Long id, Authentication auth)
+    {
+        return personAssociationDao.find(id);
+    }
+
+    /**
+     * Delete Person association
+     *
+     * @param id   person association id
+     * @param auth Authentication
+     */
+    @Override
+    public void deletePersonAssociation(Long id, Authentication auth)
+    {
+        PersonAssociation pa = personAssociationDao.find(id);
+        personAssociationDao.deletePersonAssociationById(id);
+        getPersonAssociationEventPublisher().publishPersonAssociationDeletedEvent(pa);
+    }
+
     public SavePersonAssociationTransaction getPersonAssociationTransaction()
     {
         return personAssociationTransaction;
@@ -75,5 +117,10 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     public void setPersonAssociationEventPublisher(PersonAssociationEventPublisher personAssociationEventPublisher)
     {
         this.personAssociationEventPublisher = personAssociationEventPublisher;
+    }
+
+    public void setSolrJoinDocumentsService(SolrJoinDocumentsServiceImpl solrJoinDocumentsService)
+    {
+        this.solrJoinDocumentsService = solrJoinDocumentsService;
     }
 }

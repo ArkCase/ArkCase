@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.18</version>
+        <version>3.1.25</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -262,6 +262,11 @@
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-catalina</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>us.fatehi</groupId>
+            <artifactId>pointlocation6709</artifactId>
         </dependency>
 
     </dependencies>

@@ -12,16 +12,28 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -29,7 +41,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
-    private String complaintStatusClosed;
+    private List<String> complaintStatusClosed;
+
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -53,8 +67,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedComplaint);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().
-                        getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService()
+                        .getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
@@ -76,13 +90,17 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (Objects.equals(updatedComplaint.getStatus(), complaintStatusClosed) &&
-                                shouldDeleteCalendarFolder && calId != null)
+                        if (complaintStatusClosed.contains(updatedComplaint.getStatus()) && shouldDeleteCalendarFolder && calId != null)
                         {
 
-                            //delete shared calendar if complaint closed
-                            getCalendarService().deleteFolder(updatedComplaint.getContainer().getContainerObjectId(),
-                                    calId, DeleteMode.MoveToDeletedItems);
+                            // delete shared calendar if complaint closed
+                            Optional<AcmOutlookUser> user = calendarAdminService
+                                    .getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE);
+                            // if integration is not enabled the user will be null.
+                            if (user.isPresent())
+                            {
+                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(), DeleteMode.MoveToDeletedItems);
+                            }
                         }
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
                     }
@@ -251,13 +269,17 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
-    public String getComplaintStatusClosed()
-    {
-        return complaintStatusClosed;
-    }
-
     public void setComplaintStatusClosed(String complaintStatusClosed)
     {
-        this.complaintStatusClosed = complaintStatusClosed;
+        this.complaintStatusClosed = Arrays.asList(complaintStatusClosed.split(","));
+    }
+
+    /**
+     * @param calendarAdminService
+     *            the calendarAdminService to set
+     */
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 }

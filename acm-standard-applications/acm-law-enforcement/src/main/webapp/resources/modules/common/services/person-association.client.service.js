@@ -30,6 +30,10 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
             save: {
                 method: 'POST',
                 url: 'api/latest/plugin/person-associations',
+                transformRequest: function (data, headersGetter) {
+                    var encodedData = JSOG.encode(Util.omitNg(data));
+                    return angular.toJson(encodedData);
+                },
                 cache: false
             },
 
@@ -44,8 +48,36 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
              * @param {Object} params Map of input parameter.
              * @param {Number} params.personId  Person ID - parent associations for person
              * @param {String} params.parentType  Parent Type - filter by parent type (optional)
-             * @param {Number} params.parentId  Parent ID - filter by parent id (optional)
-             * @param {boolean} params.parentObjectsOnly  - display parent objects instead of person association (optional), false by default
+             * @param {Number} params.start  start row
+             * @param {Number} params.n  how many rows to return
+             * @param {String} params.sort sort field
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            list: {
+                method: 'GET',
+                url: 'api/latest/plugin/person-associations',
+                params: {
+                    'person-id': '@personId',
+                    'parent-type': '@parentType',
+                    'start': '@start',
+                    'n': '@n',
+                    'sort': '@sort'
+                },
+                cache: false
+            },
+            /**
+             * @ngdoc method
+             * @name get
+             * @methodOf services:PersonAssociation.Service
+             *
+             * @description
+             * Get person associations data
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Person Association ID
              * @param {Function} onSuccess (Optional)Callback function of success query.
              * @param {Function} onError (Optional) Callback function when fail.
              *
@@ -53,14 +85,31 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
              */
             get: {
                 method: 'GET',
-                url: 'api/latest/plugin/person-associations',
-                params: {
-                    'person-id': '@personId',
-                    'parent-type': '@parentType',
-                    'parent-id': '@parentId',
-                    'parent-objects-only': '@parentObjectOnly'
-                },
-                cache: false
+                url: 'api/latest/plugin/person-associations/:id',
+                cache: false,
+                isArray: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name delete
+             * @methodOf services:PersonAssociation.Service
+             *
+             * @description
+             * Delete person association
+             *
+             * @param {Object} params Map of input parameter.
+             * @param {Number} params.id  Person Association ID
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            delete: {
+                method: 'DELETE',
+                url: 'api/latest/plugin/person-associations/:id',
+                cache: false,
+                isArray: false
             }
 
         });
@@ -73,21 +122,47 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
          * @description
          * Query person data
          *
-         * @param {Number} personId  Person ID - parent associations for person
-         * @param {String} parentType  Parent Type - filter by parent type (optional)
-         * @param {Number} parentId  Parent ID - filter by parent id (optional)
-         * @param {boolean} parentObjectsOnly  - display parent objects instead of person association (optional), false by default
+         * @param {Number} personId  Person ID
+         * @param {String} parentType  Parent Type
+         * @param {Number} start  used for paging, from which row to start
+         * @param {Number} n  used for paging, how many rows to return
+         * @param {String} sort for which field sorting should be done, default is id
          *
          * @returns {Object} Promise
          */
-        Service.getPersonAssociations = function (personId, parentType, parentId, parentObjectOnly) {
+        Service.getPersonAssociations = function (personId, parentType, start, n, sort) {
             return Util.serviceCall({
-                service: Service.get,
+                service: Service.list,
                 data: {
                     personId: personId,
                     parentType: parentType,
-                    parentId: parentId,
-                    parentObjectOnly: parentObjectOnly
+                    start: start,
+                    n: n,
+                    sort: sort
+                },
+                onSuccess: function (data) {
+                    return data;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getPersonAssociation
+         * @methodOf services:PersonAssociation.Service
+         *
+         * @description
+         * Query person association data
+         *
+         * @param {Number} id  Person Association ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.getPersonAssociation = function (id) {
+            return Util.serviceCall({
+                service: Service.get,
+                param: {
+                    id: id
                 },
                 onSuccess: function (data) {
                     return data;
@@ -117,6 +192,28 @@ angular.module('services').factory('PersonAssociation.Service', ['$resource', '$
                 }
             });
         };
+
+        /**
+         * @ngdoc method
+         * @name deletePersonAssociationInfo
+         * @methodOf services:PersonAssociation.Service
+         *
+         * @description
+         * Delete person association
+         *
+         * @param {Number} id  Association ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.deletePersonAssociationInfo = function (id) {
+            return Util.serviceCall({
+                service: Service.delete
+                , param: {
+                    id: id
+                }
+            });
+        };
+
 
         return Service;
     }

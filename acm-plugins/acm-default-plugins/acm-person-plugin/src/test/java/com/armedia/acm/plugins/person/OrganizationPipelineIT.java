@@ -38,13 +38,16 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-object-history.xml"
-})
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class OrganizationPipelineIT
 {
@@ -71,7 +74,6 @@ public class OrganizationPipelineIT
         auditAdapter.setUserId("auditUser");
     }
 
-
     @Test
     @Transactional
     public void saveOrganization() throws Exception
@@ -81,7 +83,6 @@ public class OrganizationPipelineIT
 
         org.setOrganizationType("sample");
         org.setOrganizationValue("tech net");
-
 
         Identification i1 = new Identification();
         i1.setIdentificationIssuer("issuer1");

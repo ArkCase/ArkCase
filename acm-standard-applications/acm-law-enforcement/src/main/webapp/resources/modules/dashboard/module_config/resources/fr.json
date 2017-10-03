@@ -6,218 +6,325 @@
     },
     "widgets": {
       "casesByQueue": {
-        "title": "fr_Active Case Files by Queue",
-        "description": "fr_Displays active case files by queue",
-        "xAxis": "fr_Queues",
-        "yAxis": "fr_Number of Case Files",
-        "noDataMessage": "fr_Currently there are no cases info"
+        "title": "Active Case Files by Queue",
+        "description": "Affiche les fichiers de cas actifs par la file d'attente",
+        "xAxis": "Queues",
+        "yAxis": "Nombre de fichiers de cas",
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
       },
       "casesByStatus": {
-        "title": "fr_Cases By Status",
-        "description": "fr_Displays cases by status",
+        "title": "Cas par statut",
+        "description": "Affiche les cas par statut",
         "timePeriod": {
-          "label": "fr_Select Time Period",
-          "lastWeek": "fr_Last Week",
-          "lastMonth": "fr_Last Month",
-          "lastYear": "fr_Last Year",
-          "all": "fr_All"
+          "label": "Sélectionnez la période de temps",
+          "lastWeek": "La semaine dernière",
+          "lastMonth": "Dernier mois",
+          "lastYear": "L'année dernière",
+          "all": "Tous"
         },
-        "noDataMessage": "fr_Currently there are no cases info"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
       },
       "myCases": {
-        "title": "fr_My Cases",
-        "description": "fr_Displays my cases",
-        "noDataMessage": "fr_Currently there are no cases info",
+        "title": "Mes cas",
+        "description": "Affiche mes cas",
+        "noDataMessage": "Actuellement, il n'y a pas d'information sur les cas",
         "table": {
           "header": {
-            "caseId": "fr_ID",
-            "title": "fr_Title",
-            "priority": "fr_Priority",
-            "status": "fr_Status"
-          }
+            "caseId": "ID",
+            "title": "Titre",
+            "priority": "Priorité",
+            "created": "Créé",
+            "modified": "Modifié",
+            "dueDate": "Date d'échéance",
+            "status": "Statut",
+            "assignee": "Cessionnaire"
+          },
+          "overdue.tooltip": "L'affaire est en retard",
+          "deadline.tooltip": "La date limite est l'approche"
         }
       },
       "myComplaints": {
-        "title": "fr_My Complaints",
-        "description": "fr_Displays my complaints",
+        "title": "Mes plaintes",
+        "description": "Affiche mes plaintes",
         "table": {
           "header": {
-            "number": "fr_ID",
-            "title": "fr_Title",
-            "priority": "fr_Priority",
-            "created": "fr_Created",
-            "status": "fr_Status"
+            "number": "ID",
+            "title": "Titre",
+            "priority": "Priorité",
+            "created": "Créé",
+            "modified": "Modifié",
+            "dueDate": "Date d'échéance",
+            "status": "Statut",
+            "assignee": "Cessionnaire"
           },
-          "noDataMessage": "fr_Currently there are no complaints info"
+          "overdue.tooltip": "La plainte est en retard",
+          "deadline.tooltip": "La date limite est l'approche",
+          "noDataMessage": "Actuellement, il n'y a pas d'information sur les plaintes"
         }
       },
       "myTasks": {
-        "title": "fr_My Tasks",
-        "description": "fr_Displays my tasks",
-        "rowNumbers.label": "fr_Default Row Numbers",
-        "rowNumbers.placeholder": "fr_Enter Default Row Numbers",
+        "title": "Mes tâches",
+        "description": "Affiche mes tâches",
+        "rowNumbers.label": "Numéros de ligne par défaut",
+        "rowNumbers.placeholder": "Entrez les numéros de ligne par défaut",
         "table": {
           "header": {
-            "taskId": "fr_ID",
-            "title": "fr_Title",
-            "priority": "fr_Priority",
-            "dueDate": "fr_Due",
-            "status": "fr_Status",
-            "objectId": "fr_Object ID"
+            "taskId": "ID",
+            "title": "Titre",
+            "priority": "Priorité",
+            "dueDate": "Due",
+            "status": "Statut",
+            "objectId": "Object ID"
           },
-          "overdue.tooltip": "fr_Task is Overdue",
-          "deadline.tooltip": "fr_Deadline is Approaching"
+          "overdue.tooltip": "La tâche est en retard",
+          "deadline.tooltip": "La date limite est l'approche"
         },
-        "noDataMessage": "fr_Currently there are no tasks info"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches"
       },
       "newComplaints": {
-        "title": "fr_New Complaints",
-        "description": "fr_Displays new complaints",
+        "title": "Nouvelles plaintes",
+        "description": "Affiche de nouvelles plaintes",
         "dueDate": {
-          "label": "fr_Select Due Date Period",
-          "pastDue": "fr_Past Due",
-          "dueTomorrow": "fr_Due Tomorrow",
-          "dueWeek": "fr_Due in 7 Days",
-          "dueMonth": "fr_Due in Month",
-          "all": "fr_All"
+          "label": "Sélectionnez la période de la date d'échéance",
+          "pastDue": "passé dû",
+          "dueTomorrow": "Due Tomorrow",
+          "dueWeek": "Due in 7 Days",
+          "dueMonth": "Due in Month",
+          "all": "Tous"
         },
-        "noDataMessage": "fr_Currently there are no complaints info"
+        "noDataMessage": "Actuellement, il n'y a pas d'information sur les plaintes"
       },
       "newCases": {
-        "title": "fr_New Cases",
-        "description": "fr_Displays new cases",
-        "noDataMessage": "fr_Currently there are no cases info"
+        "title": "Nouveaux cas",
+        "description": "Affiche de nouveaux cas",
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
       },
       "teamWorkload": {
-        "title": "fr_Team Workload",
-        "description": "fr_Displays team workload",
+        "title": "Charge de travail de l'équipe",
+        "description": "Affiche la charge de travail de l'équipe",
         "dueDate": {
-          "label": "fr_Select Due Date Period",
-          "pastDue": "fr_Past Due",
-          "dueTomorrow": "fr_Due Tomorrow",
-          "dueWeek": "fr_Due in 7 Days",
-          "dueMonth": "fr_Due in Month",
-          "all": "fr_All"
+          "label": "Sélectionnez la période de la date d'échéance",
+          "pastDue": "passé dû",
+          "dueTomorrow": "Attendus Demain",
+          "dueWeek": "Attendus en 7 Jours",
+          "dueMonth": "Attendus en Mois",
+          "all": "Tous"
         },
-        "noDataMessage": "fr_Currently there are no team tasks info"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches de l'équipe"
+      },
+      "workflowReport": {
+        "title": "Rapport de flux de travail",
+        "description": "Affiche le rapport du flux de travail",
+        "rowNumbers.label": "Numéros de ligne par défaut",
+        "rowNumbers.placeholder": "Entrez les numéros de ligne par défaut",
+        "table": {
+          "header": {
+            "taskId": "ID de la tâche",
+            "taskParentType": "Type de parent",
+            "taskParentName": "Nom du parent",
+            "processName": "Nom du processus métier",
+            "taskName": "Nom de la tâche"
+          }
+        },
+        "noDataMessage": "Actuellement, il n'y a pas de rapport sur le flux de travail"
       },
       "weather": {
-        "description": "fr_Displays weather",
+        "description": "affiche la météo",
         "label": {
-          "current": "fr_Current:",
-          "enterLocation": "fr_Enter Location",
-          "description": "fr_Display the current temperature of a city",
-          "location": "fr_Location",
-          "insertLocationInConfiguration": "fr_Please insert a location in the widget configuration"
+          "current": "Courant:",
+          "enterLocation": "Entrez l'emplacement",
+          "description": "Afficher la température actuelle d'une ville",
+          "location": "Emplacement",
+          "insertLocationInConfiguration": "Veuillez insérer un emplacement dans la configuration du widget"
         },
-        "title": "fr_Weather",
-        "noDataMessage": "fr_Currently there are no weather info"
+        "title": "Météo",
+        "noDataMessage": "Actuellement, il n'y a pas de météo"
       },
       "news": {
-        "description": "fr_Displays news",
+        "description": "Afficher les nouvelles",
         "label": {
-          "enterFeedUrl": "fr_Enter Feed url",
-          "description": "fr_Displays a RSS/Atom feed",
-          "feedUrl": "fr_Feed Url",
-          "insertUrl": "fr_Please insert a feed url in the widget configuration"
+          "enterFeedUrl": "Entrez l'URL d'alimentation",
+          "description": "Affiche un flux RSS / Atom",
+          "feedUrl": "URL d'alimentation",
+          "insertUrl": "Veuillez insérer une URL d'alimentation dans la configuration du widget"
         },
-        "title": "fr_News",
-        "noDataMessage": "fr_Currently there is no RSS/info"
+        "title": "Nouvelles",
+        "noDataMessage": "Actuellement, il n'y a pas de RSS / info"
       },
       "details": {
-        "title": "fr_Details",
-        "description": "fr_Displays case details",
-        "noDataMessage": "fr_Currently there are no details"
+        "title": "Détails",
+        "description": "Affiche les détails du cas",
+        "noDataMessage": "Actuellement, il n'y a pas de détails"
       },
       "people": {
-        "title": "fr_People",
-        "description": "fr_Displays people details",
-        "noDataMessage": "fr_Currently there are no people to display"
+        "title": "Les gens",
+        "description": "Affiche les détails des personnes",
+        "noDataMessage": "Actuellement, il n'y a pas de personnes à afficher"
+      },
+      "ids": {
+        "title": "ID",
+        "description": "Affiche les détails des ID",
+        "noDataMessage": "Actuellement, il n'y a pas d'ID à afficher"
+      },
+      "complaints": {
+        "title": "Plaintes",
+        "description": "Affiche les détails de la plainte",
+        "noDataMessage": "Actuellement, il n'y a pas de plaintes à afficher"
+      },
+      "cases": {
+        "title": "Cas",
+        "description": "Affiche les détails du cas",
+        "noDataMessage": "Actuellement, il n'y a pas de cas à afficher"
       },
       "documents": {
-        "title": "fr_Documents",
-        "description": "fr_Displays chart of documents by folder",
-        "noDataMessage": "fr_Currently there are no documents to display"
+        "title": "Documents",
+        "description": "Affiche le tableau des documents par dossier",
+        "noDataMessage": "Actuellement, il n'y a pas de documents à afficher"
       },
       "locations": {
-        "title": "fr_Locations",
-        "description": "fr_Displays location details",
-        "noDataMessage": "fr_Currently there are no locations to display"
+        "title": "Emplacements",
+        "description": "Affiche les détails de l'emplacement",
+        "noDataMessage": "Actuellement, il n'y a aucun emplacement à afficher"
+      },
+      "phones": {
+        "title": "Numéros de téléphone",
+        "description": "Affiche les numéros de téléphone",
+        "noDataMessage": "Actuellement, il n'y a pas de numéro de téléphone à afficher"
+      },
+      "faxes": {
+        "title": "Numéros de fax",
+        "description": "Affiche les détails des télécopies",
+        "noDataMessage": "Actuellement, il n'y a pas de fax à afficher"
+      },
+      "emails": {
+        "title": "adresse e-mail",
+        "description": "Affiche les détails du courrier électronique",
+        "noDataMessage": "Actuellement, aucune adresse de messagerie ne s'affiche"
+      },
+      "urls": {
+        "title": "URL",
+        "description": "Affiche les détails des URL",
+        "noDataMessage": "Actuellement, il n'y a pas d'URL à afficher"
+      },
+      "dbas": {
+        "title": "DBA",
+        "description": "Affiche les détails DBA",
+        "noDataMessage": "Actuellement, il n'y a pas de DBA à afficher"
       },
       "tasks": {
-        "title": "fr_Tasks",
-        "description": "fr_Displays task details",
-        "noDataMessage": "fr_Currently there are no tasks to display"
+        "title": "Tâches",
+        "description": "Affiche les détails de la tâche",
+        "noDataMessage": "Actuellement, il n'y a pas de tâches à afficher"
       },
       "participants": {
-        "title": "fr_Participants",
-        "description": "fr_Displays participant details",
-        "noDataMessage": "fr_Currently there are no participant to display"
+        "title": "Participants",
+        "description": "Affiche les détails du participant",
+        "noDataMessage": "Actuellement, il n'y a aucun participant à afficher"
       },
       "references": {
-        "title": "fr_References",
-        "description": "fr_Displays reference details",
-        "noDataMessage": "fr_Currently there are no references to display"
+        "title": "Références",
+        "description": "Affiche les détails de référence",
+        "noDataMessage": "Actuellement, il n'y a pas de références à afficher"
+      },
+      "relOrganizations": {
+        "title": "Organisations associées",
+        "description": "Afficher les détails des organisations associées",
+        "noDataMessage": "Actuellement, il n'y a pas d'organisations associées à afficher"
       },
       "history": {
-        "title": "fr_History",
-        "description": "fr_Displays chart of history events",
-        "noDataMessage": "fr_Currently there are no events to display"
+        "title": "Histoire",
+        "description": "Affiche le graphique des événements historiques",
+        "noDataMessage": "Actuellement, il n'y a aucun événement à afficher"
       },
       "notes": {
-        "title": "fr_Notes",
-        "description": "fr_Displays note details",
-        "noDataMessage": "fr_Currently there are no notes to display"
+        "title": "Remarques",
+        "description": "Affiche les détails de la note",
+        "noDataMessage": "Actuellement, il n'y a pas de notes à afficher"
       },
       "time": {
-        "title": "fr_Time",
-        "description": "fr_Displays chart for hours per user",
-        "noDataMessage": "fr_Currently there is no time information to display"
+        "title": "Heure",
+        "description": "Affiche le graphique pour les heures par utilisateur",
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur l'heure à afficher"
       },
       "cost": {
-        "title": "fr_Cost",
-        "description": "fr_Displays chart for cost per user",
-        "noDataMessage": "fr_Currently there is no cost information to display"
+        "title": "Coût",
+        "description": "Affiche le graphique pour le coût par utilisateur",
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les coûts à afficher"
       },
       "calendar": {
-        "title": "fr_Calendar",
-        "description": "fr_Displays chart of scheduled events per day",
-        "noDataMessage": "fr_Currently there are no events to display"
+        "title": "Calendrier",
+        "description": "Affiche le tableau des événements programmés par jour",
+        "noDataMessage": "Actuellement, il n'y a aucun événement à afficher"
       },
       "reworkDetails": {
-        "title": "fr_Rework Details",
-        "description": "fr_Shows most recent rework details",
-        "noDataMessage": "fr_Currently there no are no rework details to display"
+        "title": "Détails de rétractation",
+        "description": "Affiche les détails de retraitement les plus récents",
+        "noDataMessage": "Actuellement, il n'y a pas de détails de retravailler à afficher"
       },
       "docReview": {
-        "title": "fr_Documents Under Review",
-        "description": "fr_Shows documents under review",
-        "noDataMessage": "fr_Currently there no are no documents under review to display"
+        "title": "Documents sous revue",
+        "description": "montre les documents à l'étude",
+        "noDataMessage": "Actuellement, aucun document n'a été examiné pour afficher"
+      },
+      "parentDocs": {
+        "title": "Documents parentaux",
+        "description": "montre les documents parents",
+        "noDataMessage": "Actuellement, aucun document parent ne s'affiche"
       },
       "workflow": {
-        "title": "fr_Workflow Overview",
-        "description": "fr_Overview of pending workflows",
-        "noDataMessage": "fr_Currently there are no workflows to display"
+        "title": "Aperçu du workflow",
+        "description": "Vue d'ensemble des flux de travail en attente",
+        "noDataMessage": "Actuellement, il n'y a pas de flux de travail à afficher"
       },
       "signature": {
-        "title": "fr_eSignature",
-        "description": "fr_eSignature widget",
-        "noDataMessage": "fr_Currently there are no eSignatures to display"
+        "title": "eSignature",
+        "description": "widget eSignature",
+        "noDataMessage": "Actuellement, il n'y a pas de signature électronique à afficher"
       },
       "person": {
-        "title": "fr_Person",
-        "description": "fr_Person widget for Cost and Time modules",
-        "noDataMessage": "fr_Currently there are no persons to display"
+        "title": "Personne",
+        "description": "Widget Personne pour les modules Cost and Time",
+        "noDataMessage": "Actuellement, il n'y a pas de personnes à afficher"
       },
       "hoursSummary": {
-        "title": "fr_Hours Summary",
-        "description": "fr_Displays a summary of hours worked",
-        "noDataMessage": "fr_Currently there is no summary to display"
+        "title": "Résumé des heures",
+        "description": "Affiche un résumé des heures travaillées",
+        "noDataMessage": "Actuellement, il n'y a pas de résumé à afficher"
       },
       "expenses": {
-        "title": "fr_Expenses",
-        "description": "fr_Displays a cost-to-user graph",
-        "noDataMessage": "fr_Currently no expense data to display"
+        "title": "Dépenses",
+        "description": "Affiche un graphique coût-utilisateur",
+        "noDataMessage": "Actuellement aucune donnée de dépenses à afficher"
+      },
+      "organizations": {
+        "title": "Organisations",
+        "description": "Présentation de l'organisation",
+        "noDataMessage": "Actuellement, il n'y a pas d'organisations à afficher"
+      },
+      "tags": {
+        "title": "Étiquettes",
+        "description": "Affiche les balises",
+        "noDataMessage": "Actuellement, il n'y a pas d'étiquettes à afficher"
+      },
+      "approvalRouting": {
+        "title": "Routage d'approbation",
+        "description": "Affiche les routages d'approbation",
+        "noDataMessage": "Actuellement, aucun approbateur pour afficher"
+      },
+      "pictures": {
+        "title": "Photos",
+        "description": "Afficher les images",
+        "noDataMessage": "Actuellement, aucune image à afficher"
+      },
+      "aliases": {
+        "title": "Alias",
+        "description": "Afficher les alias",
+        "noDataMessage": "Actuellement aucun alias à afficher"
+      },
+      "related": {
+        "title": "personnes apparentées",
+        "description": "Affichage des personnes liées",
+        "noDataMessage": "Actuellement, aucune personne liée à afficher"
       }
     }
   }
