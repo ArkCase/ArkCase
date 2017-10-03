@@ -11,10 +11,8 @@
         "xAxis": "Queues",
         "yAxis": "Number of Case Files",
         "noDataMessage": "Currently there are no cases info",
-        "label": {
-          "widgetDescription": "Description",
-          "enterWidgetDescription": "Enter widget description"
-        }
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "casesByStatus": {
         "title": "Cases By Status",
@@ -26,11 +24,9 @@
           "lastYear": "Last Year",
           "all": "All"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        },
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myCases": {
         "title": "My Cases",
@@ -50,10 +46,8 @@
           "overdue.tooltip": "Case is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        }
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myComplaints": {
         "title": "My Complaints",
@@ -73,10 +67,8 @@
           "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        }
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myTasks": {
         "title": "My Tasks",
@@ -95,11 +87,9 @@
           "overdue.tooltip": "Task is Overdue",
           "deadline.tooltip": "Deadline is Approaching"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        },
-        "noDataMessage": "Currently there are no tasks info"
+        "noDataMessage": "Currently there are no tasks info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "newComplaints": {
         "title": "New Complaints",
@@ -112,20 +102,16 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        },
-        "noDataMessage": "Currently there are no complaints info"
+        "noDataMessage": "Currently there are no complaints info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "newCases": {
         "title": "New Cases",
         "description": "Displays new cases",
         "noDataMessage": "Currently there are no cases info",
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        }
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "teamWorkload": {
         "title": "Team Workload",
@@ -138,11 +124,9 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        },
-        "noDataMessage": "Currently there are no team tasks info"
+        "noDataMessage": "Currently there are no team tasks info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "workflowReport": {
         "title": "Workflow Report",
@@ -158,11 +142,9 @@
             "taskName": "Task Name"
           }
         },
-        "label": {
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
-        },
-        "noDataMessage": "Currently there is no workflow report info"
+        "noDataMessage": "Currently there is no workflow report info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "weather": {
         "description": "Displays weather",
@@ -171,12 +153,12 @@
           "enterLocation": "Enter Location",
           "description": "Display the current temperature of a city",
           "location": "Location",
-          "insertLocationInConfiguration": "Please insert a location in the widget configuration",
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
+          "insertLocationInConfiguration": "Please insert a location in the widget configuration"
         },
         "title": "Weather",
-        "noDataMessage": "Currently there are no weather info"
+        "noDataMessage": "Currently there are no weather info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "news": {
         "description": "Displays news",
@@ -184,12 +166,12 @@
           "enterFeedUrl": "Enter Feed url",
           "description": "Displays a RSS/Atom feed",
           "feedUrl": "Feed Url",
-          "insertUrl": "Please insert a feed url in the widget configuration",
-          "widgetDescription":"Description",
-          "enterWidgetDescription": "Enter widget description"
+          "insertUrl": "Please insert a feed url in the widget configuration"
         },
         "title": "News",
-        "noDataMessage": "Currently there is no RSS/info"
+        "noDataMessage": "Currently there is no RSS/info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "details": {
         "title": "Details",
