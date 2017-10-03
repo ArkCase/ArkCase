@@ -322,7 +322,11 @@ public class PersonServiceImpl implements PersonService
 
         return personPipelineManager.executeOperation(in, pipelineContext, () -> {
             boolean isNew = in.getId() == null;
-            Person oldPerson = personDao.find(in.getId());
+            Person oldPerson = null;
+            if (!isNew)
+            {
+                oldPerson = personDao.find(in.getId());
+            }
             Person person = personDao.save(in);
             personEventPublisher.publishPersonUpsertEvents(person, oldPerson, isNew, true);
             return person;
