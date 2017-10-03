@@ -17,6 +17,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             return moduleConfig;
         });
 
+        $scope.accordionSuffix = Math.floor((Math.random() * 1000) + 1);
         //new organization with predefined values
         $scope.organization = {
             className: 'com.armedia.acm.plugins.person.model.Organization',
