@@ -10,14 +10,14 @@ import java.util.Date;
 public abstract class PersonPersistenceEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "PERSON";
-    
+
     public PersonPersistenceEvent(Person source)
     {
         super(source);
         setObjectId(source.getId());
         setEventDate(new Date());
-        setUserId(source.getModifier());
-               
+        //if modifier is null, event is for creating new person
+        setUserId(source.getModifier() != null ? source.getModifier() : source.getCreator());
     }
 
     @Override
@@ -26,5 +26,5 @@ public abstract class PersonPersistenceEvent extends AcmEvent
         return OBJECT_TYPE;
     }
 
-    
+
 }
