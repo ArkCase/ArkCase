@@ -8,7 +8,7 @@ public interface AcmUsersConstants {
     /**
      * The date format SOLR expects.  Any other date format causes SOLR to throw an exception.
      */
-    String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
 
     /**
