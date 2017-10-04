@@ -73,9 +73,13 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
         };
 
         function pickOrganization(association) {
-
-            var params = {};
-            params.types = $scope.organizationTypes;
+            $scope.isFirstOrganization = $scope.gridOptions.data.length == 0 ? true : false;
+            var params = {
+                types: $scope.organizationTypes,
+                showSetPrimary: true,
+                isDefault: false,
+                isFirstOrganization: $scope.isFirstOrganization
+            };
 
             if (association) {
                 angular.extend(params, {
