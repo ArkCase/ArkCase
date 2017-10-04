@@ -17,12 +17,21 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.editMode = !!params.organizationId;
             $scope.organizationId = params.organizationId;
             $scope.organizationValue = params.organizationValue;
+            $scope.organization = params.organization;
             $scope.isChanged = true;
             $scope.isDefault = params.isDefault;
             $scope.isSelectedParent = params.isSelectedParent;
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
+            if (!!params.isSelectedParent) {
+                $scope.organization = params.organization;
+                if (!!params.organization.parentOrganization) {
+                    $scope.isEditParent = !!params.organization.parentOrganization.organizationId;
+                    $scope.organizationId = params.organization.organizationId;
+                    $scope.organizationValue = params.organization.parentOrganization.organizationValue;
+                }
+            }
             if (!!params.isNewPerson) {
                 $scope.isNewPerson = params.isNewPerson;
                 $scope.isDefault = $scope.isNewPerson;
