@@ -332,13 +332,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
     }
 
-    public List<AcmUser> findValidUsersByDirectory(String directoryName)
+    public List<AcmUser> findByDirectory(String directoryName)
     {
         TypedQuery<AcmUser> allValidUsersInDirectory = getEm()
                 .createQuery("SELECT DISTINCT acmUser FROM AcmUser acmUser LEFT JOIN FETCH acmUser.groups "
-                        + "WHERE acmUser.userDirectoryName = :directoryName AND acmUser.userState = :userState", AcmUser.class);
+                        + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
         allValidUsersInDirectory.setParameter("directoryName", directoryName);
-        allValidUsersInDirectory.setParameter("userState", AcmUserState.VALID);
         return allValidUsersInDirectory.getResultList();
     }
 
