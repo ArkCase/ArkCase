@@ -86,8 +86,6 @@ public class LdapUserService
             AcmGroup group = groupDao.findByName(groupName);
             if (group != null)
             {
-                // using user.addGroup() here throws "detached object" error if a user with the same id already
-                // exists in the database (INVALID or DELETED)
                 groups.add(group);
                 group.addUserMember(user);
             }
