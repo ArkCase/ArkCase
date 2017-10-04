@@ -725,7 +725,8 @@
     }
   },
   "common.addOrganization": {
-    "title": "Add Parent Organization",
+    "title": "Add Organization",
+    "parentTitle": "Add Parent Organization",
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
@@ -754,7 +755,8 @@
     "radioNo.text": "No"
   },
   "common.editOrganization": {
-    "title": "Edit Parent Organization"
+    "title": "Edit Organization",
+    "parentTitle": "Edit Parent Organization"
   },
   "common.newOrganization": {
     "title": "Organization",
