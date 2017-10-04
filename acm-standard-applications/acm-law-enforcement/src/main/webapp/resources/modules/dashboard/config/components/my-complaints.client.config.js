@@ -7,6 +7,15 @@ angular.module('dashboard.my-complaints', ['adf.provider']).config(function (Ark
         controller: 'Dashboard.MyComplaintsController',
         controllerAs: 'myComplaints',
         reload: true,
-        templateUrl: 'modules/dashboard/views/components/my-complaints.client.view.html'
+        templateUrl: 'modules/dashboard/views/components/my-complaints.client.view.html',
+        resolve: {
+            params: function (config) {
+                return config;
+            }
+        },
+        edit: {
+            templateUrl: 'modules/dashboard/views/components/my-complaints-edit.client.view.html'
+        }
+
     });
 });

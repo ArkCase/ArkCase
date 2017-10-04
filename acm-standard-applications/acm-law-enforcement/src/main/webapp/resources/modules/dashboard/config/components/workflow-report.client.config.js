@@ -10,6 +10,11 @@ angular.module('dashboard.workflow-report', ['adf.provider'])
                 controllerAs: 'workflowReport',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/workflow-report.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
                 edit: {
                     templateUrl: 'modules/dashboard/views/components/workflow-report-edit.client.view.html'
                 }
