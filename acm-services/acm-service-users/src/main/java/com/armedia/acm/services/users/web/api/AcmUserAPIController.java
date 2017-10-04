@@ -74,19 +74,18 @@ public class AcmUserAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.createLdapUser(ldapUserCreateRequest.getAcmUser(), ldapUserCreateRequest.getGroupNames(),
-                    ldapUserCreateRequest.getPassword(), directory);
+            return ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
         }
         catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate username [{}]", ldapUserCreateRequest.getAcmUser().getUserId(), e);
+            log.error("Duplicate username [{}]", ldapUserCreateRequest.getUserId(), e);
             AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER", "username", e);
-            error.putExtra("user", ldapUserCreateRequest.getAcmUser());
+            error.putExtra("user", ldapUserCreateRequest);
             throw error;
         }
         catch (Exception e)
         {
-            log.error("Creating LDAP user [{}] failed!", ldapUserCreateRequest.getAcmUser().getUserId(), e);
+            log.error("Creating LDAP user [{}] failed!", ldapUserCreateRequest.getUserId(), e);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
     }
@@ -173,13 +172,13 @@ public class AcmUserAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest.getAcmUser(), ldapUserCloneRequest.getPassword(), directory);
+            return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
         }
         catch (NameAlreadyBoundException e)
         {
-            log.error("Duplicate username [{}]", ldapUserCloneRequest.getAcmUser().getUserId(), e);
+            log.error("Duplicate username [{}]", ldapUserCloneRequest.getUserId(), e);
             AcmAppErrorJsonMsg error = new AcmAppErrorJsonMsg("Username is already taken!", "USER", "username", e);
-            error.putExtra("user", ldapUserCloneRequest.getAcmUser());
+            error.putExtra("user", ldapUserCloneRequest);
             throw error;
         }
         catch (Exception e)

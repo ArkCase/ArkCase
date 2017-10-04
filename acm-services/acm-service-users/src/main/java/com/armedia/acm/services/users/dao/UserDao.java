@@ -85,8 +85,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
             }
         }
-
         return super.save(acmUser);
+    }
+
+    public String getDefaultUserLang()
+    {
+        return DEFAULT_LOCALE_CODE;
     }
 
     public AcmUser findByUserId(String userId)
