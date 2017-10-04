@@ -13,6 +13,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -44,16 +45,24 @@ public class LdapUserService
     private LdapEntryTransformer userTransformer;
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser createLdapUser(AcmUser user, List<String> groupNames, String password, String directoryName)
+    public AcmUser createLdapUser(UserDTO userDto, String directoryName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        checkExistingUser(user.getUserId());
+        AcmUser user = checkExistingUser(userDto.getUserId());
+
+        if (user == null)
+        {
+            user = userDto.toAcmUser(userDto.getUserId(), userDao.getDefaultUserLang());
+        } else
+        {
+            user = userDto.updateAcmUser(user);
+        }
+
+        String password = userDto.getPassword();
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userFullName = String.format("%s %s", user.getFirstName(), user.getLastName());
-        String dn = buildDnForUser(userFullName, user.getUserId(), ldapSyncConfig);
-        user.setFullName(userFullName);
+        String dn = buildDnForUser(user.getFullName(), userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
@@ -71,7 +80,8 @@ public class LdapUserService
         }
 
         Set<AcmGroup> groups = new HashSet<>();
-        groupNames.forEach(groupName ->
+
+        for (String groupName : userDto.getGroupNames())
         {
             AcmGroup group = groupDao.findByName(groupName);
             if (group != null)
@@ -82,9 +92,10 @@ public class LdapUserService
                 group.addUserMember(user);
             }
             log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group);
-        });
+        }
 
         log.debug("Saving new User [{}] with DN [{}] in database", user.getUserId(), user.getDistinguishedName());
+
         AcmUser acmUser = userDao.save(user);
         userDao.getEntityManager().flush();
 
@@ -93,12 +104,13 @@ public class LdapUserService
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
         {
-            DirContextAdapter context = userTransformer.createContextForNewUserEntry(directoryName, user, password,
+            DirContextAdapter context = userTransformer.createContextForNewUserEntry(directoryName, acmUser, password,
                     ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
             log.debug("Ldap User Context [{}]", context.getAttributes());
             log.debug("Save User [{}] with DN [{}] in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -112,14 +124,16 @@ public class LdapUserService
             userDao.getEntityManager().flush();
 
             setUserAsMemberToLdapGroups(acmUser, acmUser.getLdapGroups(), directoryName);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Adding User [{}] as member to groups in LDAP failed! Rollback changes.", acmUser.getUserId(), e);
             try
             {
                 new RetryExecutor().retry(() -> ldapTemplate
                         .unbind(MapperUtils.stripBaseFromDn(acmUser.getDistinguishedName(), ldapSyncConfig.getBaseDC())));
-            } catch (Exception ee)
+            }
+            catch (Exception ee)
             {
                 log.warn("Rollback failed", e);
             }
@@ -216,7 +230,8 @@ public class LdapUserService
                 groupContext.addAttributeValue("member", ldapUser.getDistinguishedName());
                 new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                 updatedGroups.add(group);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.debug("Adding user [{}] with DN [{}] to LDAP group(s) failed! Rollback changes on updated ldap groups",
                         ldapUser.getUserId(), ldapUser.getDistinguishedName());
@@ -232,7 +247,8 @@ public class LdapUserService
                         new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                         log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroup.getName(),
                                 updatedGroup.getDistinguishedName());
-                    } catch (Exception e1)
+                    }
+                    catch (Exception e1)
                     {
                         log.warn("Failed to rollback changes for Group [{}] with DN [{}]", updatedGroup.getName(),
                                 updatedGroup.getDistinguishedName(), e1);
@@ -272,7 +288,8 @@ public class LdapUserService
                 groupContext.removeAttributeValue("member", member);
                 new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                 updatedGroups.add(group);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.debug("Removing user [{}] with DN [{}] from LDAP group(s) failed! Rollback changes on updated ldap groups",
                         ldapUser.getUserId(), ldapUser.getDistinguishedName());
@@ -288,7 +305,8 @@ public class LdapUserService
                         new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                         log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroup.getName(),
                                 updatedGroup.getDistinguishedName());
-                    } catch (Exception e1)
+                    }
+                    catch (Exception e1)
                     {
                         log.warn("Failed to rollback changes for Group [{}] with DN [{}]", updatedGroup.getName(),
                                 updatedGroup.getDistinguishedName(), e1);
@@ -323,7 +341,8 @@ public class LdapUserService
             log.debug("Update User [{}] with DN [{}] in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(editContext));
             log.debug("User [{}] with DN [{}] successfully updated in DB and LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -331,13 +350,13 @@ public class LdapUserService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser cloneLdapUser(String userId, AcmUser acmUser, String password, String directory)
+    public AcmUser cloneLdapUser(String userId, UserDTO user, String directory)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        log.debug("Creating new user [{}] as a clone of [{}]", acmUser.getUserId(), userId);
+        log.debug("Creating new user [{}] as a clone of [{}]", user.getUserId(), userId);
         AcmUser existingUser = userDao.findByUserId(userId);
-        acmUser.setLang(existingUser.getLang());
-        return createLdapUser(acmUser, existingUser.getGroupNames().collect(Collectors.toList()), password, directory);
+        user.setGroupNames(existingUser.getGroupNames().collect(Collectors.toList()));
+        return createLdapUser(user, directory);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -369,7 +388,8 @@ public class LdapUserService
                         ldapGroup.getDistinguishedName(), savedUser.getUserId(), savedUser.getDistinguishedName());
                 new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(groupContext));
                 log.debug("Group [{}] with DN [{}] modified in LDAP", ldapGroup.getName(), ldapGroup.getDistinguishedName());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
             }
@@ -415,7 +435,8 @@ public class LdapUserService
                     .unbind(MapperUtils.stripBaseFromDn(existingUser.getDistinguishedName(), ldapSyncConfig.getBaseDC())));
             log.debug("User [{}] with DN [{}] successfully deleted in DB and LDAP", existingUser.getUserId(),
                     existingUser.getDistinguishedName());
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
@@ -444,28 +465,28 @@ public class LdapUserService
      * @param userId user identifier
      * @throws AcmLdapActionFailedException if a user exists and its status is "VALID"
      */
-    private void checkExistingUser(String userId) throws AcmLdapActionFailedException
+    private AcmUser checkExistingUser(String userId) throws AcmLdapActionFailedException
     {
         AcmUser existing = userDao.findByUserId(userId);
-        if (existing != null)
+        if (existing == null) return null;
+
+        if (AcmUserState.VALID == existing.getUserState())
         {
-            if (AcmUserState.VALID == existing.getUserState())
+            // FIXME: use some more appropriate exception here
+            throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", userId));
+        } else
+        {
+            // INVALID or DELETED user, remove current group membership
+            // we have to do this, otherwise new user will be associated with new groups,
+            // but also existing ones (which we do not want)
+            // TODO: AcmUser.setGroups() should take care of that
+            existing.getGroups().forEach(group ->
             {
-                // FIXME: use some more appropriate exception here
-                throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", userId));
-            } else
-            {
-                // INVALID or DELETED user, remove current group membership
-                // we have to do this, otherwise new user will be associated with new groups,
-                // but also existing ones (which we do not want)
-                // TODO: AcmUser.setGroups() should take care of that
-                existing.getGroups().forEach(group ->
-                {
-                    group.removeUserMember(existing);
-                    groupDao.save(group);
-                });
-            }
+                group.removeUserMember(existing);
+                groupDao.save(group);
+            });
         }
+        return existing;
     }
 
     public SpringLdapDao getLdapDao()

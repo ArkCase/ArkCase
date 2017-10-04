@@ -265,12 +265,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                     $scope.error = error;
                     $scope.user = user;
-                    $scope.data = {
-                        "acmUser": $scope.user,
-                        "groupNames": [group.object_id_s]
-                    };
+                    $scope.user.groupNames = [group.object_id_s];
                     $scope.ok = function () {
-                        $modalInstance.close($scope.data);
+                        $modalInstance.close($scope.user);
                     };
                 }],
                 size: 'sm'
