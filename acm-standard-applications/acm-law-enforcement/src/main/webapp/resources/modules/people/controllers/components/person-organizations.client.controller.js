@@ -133,7 +133,9 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         {
             var primaryContact = organizationAssiciation.organization.primaryContact;
             if (!!primaryContact) {
-                return (primaryContact.person.givenName.trim() + ' ' + primaryContact.person.familyName.trim()).trim();
+                var getPrimaryConactGivenName = Util.goodValue(primaryContact.person.givenName);
+                var getPrimaryConactFamilyName = Util.goodValue(primaryContact.person.familyName);
+                return (getPrimaryConactGivenName.trim() + ' ' + getPrimaryConactFamilyName.trim()).trim();
             }
 
             return '';
