@@ -9,6 +9,11 @@ angular.module('dashboard.new-cases', ['adf.provider'])
                 controller: 'Dashboard.NewCasesController',
                 controllerAs: 'newCases',
                 reload: true,
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
                 templateUrl: 'modules/dashboard/views/components/new-cases.client.view.html',
                 edit: {
                     templateUrl: 'modules/dashboard/views/components/new-cases-edit.client.view.html'

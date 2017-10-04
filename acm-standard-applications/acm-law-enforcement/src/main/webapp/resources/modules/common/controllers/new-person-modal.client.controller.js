@@ -16,6 +16,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             return moduleConfig;
         });
 
+        $scope.accordionSuffix = Math.floor((Math.random() * 10000) + 1);
         $scope.pictures = [{}];
         $scope.userPictures = [];
 

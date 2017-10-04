@@ -1,11 +1,16 @@
 'use strict';
 
-angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["$scope", "$window", "location"
+angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["$scope", "$window", "params"
     , "Dashboard.WidgetService", "ConfigService"
-    , function ($scope, $window, location
+    , function ($scope, $window, params
         , WidgetService, ConfigService
     ) {
         var vm = this;
+
+        if(params.description !== undefined) {
+            $scope.$parent.model.description = " - " + params.description;
+        }
+
         ConfigService.getComponentConfig("dashboard", "weather").then(function (config) {
             var url = $window.location.origin + '/arkcase/weather';
             var appid = config.APPID;
@@ -13,8 +18,8 @@ angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["
 
             vm.units = config.units;
 
-            if (location != null) {
-                WidgetService.getWeather(url, appid, location, units).then(function (weather) {
+            if (params.location != null) {
+                WidgetService.getWeather(url, appid, params.location, units).then(function (weather) {
                     var oldWeather = JSON.parse($window.localStorage['lastWeatherData'] || '{}');
                     weather != null ? weather : oldWeather;
 

@@ -10,6 +10,11 @@ angular.module('dashboard.cases-by-status', ['adf.provider'])
                 controllerAs: 'casesByStatus',
                 reload: true,
                 templateUrl: 'modules/dashboard/views/components/cases-by-status.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
                 edit: {
                     templateUrl: 'modules/dashboard/views/components/cases-by-status-edit.client.view.html'
                 }
