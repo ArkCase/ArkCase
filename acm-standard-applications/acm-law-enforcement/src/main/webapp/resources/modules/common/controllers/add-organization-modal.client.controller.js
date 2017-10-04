@@ -22,14 +22,15 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isSelectedParent = params.isSelectedParent;
             $scope.isEditParent = false;
             $scope.description = params.description;
-
-            if (!!params.isSelectedParent) {
-                $scope.organization = params.organization;
-                if (!!params.organization.parentOrganization) {
-                    $scope.isEditParent = !!params.organization.parentOrganization.organizationId;
-                    $scope.organizationId = params.organization.organizationId;
-                    $scope.organizationValue = params.organization.parentOrganization.organizationValue;
-                }
+            $scope.hideNoField = true;
+            if (!!params.isNewPerson) {
+                $scope.isNewPerson = params.isNewPerson;
+                $scope.isDefault = $scope.isNewPerson;
+                $scope.hideNoField = !(!!$scope.isNewPerson);
+            }
+            if (params.isFirstOrganization) {
+                $scope.isDefault = params.isFirstOrganization;
+                $scope.hideNoField = !params.isFirstOrganization;
             }
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;

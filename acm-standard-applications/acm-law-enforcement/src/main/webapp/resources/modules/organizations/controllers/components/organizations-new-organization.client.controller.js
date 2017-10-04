@@ -94,12 +94,13 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             }, 0);
         };
 
-        $scope.searchPerson = function (index) {
+        $scope.searchPerson = function (index, isNewOrganization) {
             var association = index > -1 ? $scope.organization.personAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.personAssociationTypes
+                types: $scope.personAssociationTypes,
+                isNewOrganization: isNewOrganization
             };
 
             //set this params for editing
