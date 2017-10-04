@@ -334,11 +334,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public List<AcmUser> findByDirectory(String directoryName)
     {
-        TypedQuery<AcmUser> allValidUsersInDirectory = getEm()
+        TypedQuery<AcmUser> allUsersInDirectory = getEm()
                 .createQuery("SELECT DISTINCT acmUser FROM AcmUser acmUser LEFT JOIN FETCH acmUser.groups "
                         + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
-        allValidUsersInDirectory.setParameter("directoryName", directoryName);
-        return allValidUsersInDirectory.getResultList();
+        allUsersInDirectory.setParameter("directoryName", directoryName);
+        return allUsersInDirectory.getResultList();
     }
 
     @Transactional
