@@ -1,14 +1,13 @@
 package com.armedia.acm.plugins.person.service;
 
+import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.model.AcmObjectChange;
-import com.armedia.acm.objectdiff.service.AcmObjectDiffUtils;
+import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class PersonDiffTest
 {
 
     @Autowired
-    private AcmObjectDiffUtils acmObjectDiffUtils;
+    private AcmDiffService acmDiffService;
     private Person oldPerson;
     private ContactMethod defaultUrl;
     private ContactMethod defaultEmail;
@@ -121,17 +120,18 @@ public class PersonDiffTest
         newPhone.setType("phone");
         newPerson.getContactMethods().add(newPhone);
 
-        AcmObjectChange objectChange = acmObjectDiffUtils.compareObjects(oldPerson, newPerson);
-        System.out.println(objectChange);
+        AcmDiff diff = acmDiffService.compareObjects(oldPerson, newPerson);
+        System.out.println(diff);
 
 
-        assertEquals("person", objectChange.getPath());
-        assertEquals(Long.valueOf(1l), objectChange.getAffectedObjectId());
-        assertEquals("PERSON", objectChange.getAffectedObjectType());
+        assertEquals("person", diff.getChangesAsTree().getPath());
+//        assertEquals(Long.valueOf(1l), diff.getChangesAsTree().getAffectedObjectId());
+//        assertEquals("PERSON", diff.getAffectedObjectType());
 
-        //assertEquals(3, objectChange.getChanges().size());
+        //assertEquals(3, diff.getChanges().size());
 
-        System.out.println(objectChange.getChangesAsJson());
+//        System.out.println(diff.getChangesAsTreeJson());
+        System.out.println(diff.getChangesAsListJson());
 
     }
 }

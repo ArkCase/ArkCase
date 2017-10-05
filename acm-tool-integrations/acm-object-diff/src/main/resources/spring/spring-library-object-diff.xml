@@ -12,7 +12,7 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
-    <bean id="acmObjectDiffUtils" class="com.armedia.acm.objectdiff.service.AcmObjectDiffUtils">
+    <bean id="acmDiffService" class="com.armedia.acm.objectdiff.service.AcmDiffService">
         <property name="configurationMap" ref="acmDiffBeanConfiguration"/>
     </bean>
 

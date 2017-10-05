@@ -2,8 +2,8 @@ package com.armedia.acm.objectdiff.model;
 
 public class AcmObjectReplaced extends AcmObjectChange
 {
-    private Object oldValue;
-    private Object newValue;
+    private Object oldObject;
+    private Object newObject;
 
     public AcmObjectReplaced(String path, String property)
     {
@@ -12,23 +12,29 @@ public class AcmObjectReplaced extends AcmObjectChange
         setAction(AcmDiffConstants.OBJECT_REPLACED);
     }
 
-    public Object getOldValue()
+    public Object getOldObject()
     {
-        return oldValue;
+        return oldObject;
     }
 
-    public void setOldValue(Object oldValue)
+    public void setOldObject(Object oldObject)
     {
-        this.oldValue = oldValue;
+        this.oldObject = oldObject;
     }
 
-    public Object getNewValue()
+    public Object getNewObject()
     {
-        return newValue;
+        return newObject;
     }
 
-    public void setNewValue(Object newValue)
+    public void setNewObject(Object newObject)
     {
-        this.newValue = newValue;
+        this.newObject = newObject;
+    }
+
+    @Override
+    public boolean isLeaf()
+    {
+        return true;
     }
 }

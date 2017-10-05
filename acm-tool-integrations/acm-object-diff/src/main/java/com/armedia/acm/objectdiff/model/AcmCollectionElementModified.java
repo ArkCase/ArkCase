@@ -1,34 +1,39 @@
 package com.armedia.acm.objectdiff.model;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class AcmCollectionElementModified extends AcmCollectionElementChange
 {
-    private List<AcmPropertyChange> changes = new LinkedList<>();
+    private AcmObjectModified acmObjectModified;
 
     public AcmCollectionElementModified(AcmObjectModified acmObjectModified)
     {
-        setChanges(acmObjectModified.getChanges());
+        this.acmObjectModified = acmObjectModified;
         setAction(AcmDiffConstants.COLLECTION_ELEMENT_MODIFIED);
         setAffectedObjectId(acmObjectModified.getAffectedObjectId());
         setAffectedObjectType(acmObjectModified.getAffectedObjectType());
         setPath(acmObjectModified.getPath());
     }
 
+    public AcmObjectModified getAcmObjectModified()
+    {
+        return acmObjectModified;
+    }
+
 
     public List<AcmPropertyChange> getChanges()
     {
-        return changes;
+        return acmObjectModified.getChanges();
     }
 
     public void addChange(AcmPropertyChange change)
     {
-        this.changes.add(change);
+        this.acmObjectModified.addChange(change);
     }
 
-    protected void setChanges(List<AcmPropertyChange> changes)
+    @Override
+    public boolean isLeaf()
     {
-        this.changes = changes;
+        return false;
     }
 }

@@ -19,4 +19,10 @@ public class AcmCollectionElementRemoved extends AcmCollectionElementChange
     {
         this.affectedObject = affectedObject;
     }
+
+    @Override
+    public boolean isLeaf()
+    {
+        return true;
+    }
 }

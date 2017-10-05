@@ -6,8 +6,10 @@ import com.armedia.acm.objectdiff.model.AcmCollectionElementAdded;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementChange;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementModified;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementRemoved;
+import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.model.AcmDiffBeanConfiguration;
 import com.armedia.acm.objectdiff.model.AcmObjectChange;
+import com.armedia.acm.objectdiff.model.AcmObjectDiff;
 import com.armedia.acm.objectdiff.model.AcmObjectModified;
 import com.armedia.acm.objectdiff.model.AcmObjectReplaced;
 import com.armedia.acm.objectdiff.model.AcmValueChanged;
@@ -29,7 +31,7 @@ import java.util.Map;
  * Util class for comparing two objects for changes. Produces diff tree of all changes that are found
  * Only primitive with their wrappers, Classes defined in the acmObjectDiffSettings.json are supported
  */
-public class AcmObjectDiffUtils
+public class AcmDiffService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private Map<String, AcmDiffBeanConfiguration> configurationMap = new HashMap<>();
@@ -101,11 +103,14 @@ public class AcmObjectDiffUtils
      *
      * @param oldObj Old object
      * @param newObj New object
-     * @return AcmObjectChange or null if there is no change
+     * @return AcmDiff
      */
-    public AcmObjectChange compareObjects(Object oldObj, Object newObj)
+    public AcmDiff compareObjects(Object oldObj, Object newObj)
     {
-        return compareObjects(null, null, oldObj, newObj);
+        AcmObjectChange acmObjectChange = compareObjects(null, null, oldObj, newObj);
+        AcmDiff diff = new AcmObjectDiff(acmObjectChange);
+
+        return diff;
     }
 
     /**
@@ -132,8 +137,8 @@ public class AcmObjectDiffUtils
         {
             AcmObjectReplaced acmObjectReplaced = new AcmObjectReplaced(parentPath + "." + property, property);
             updateChangeForAcmObjectInfo(oldObj != null ? oldObj : newObj, acmObjectReplaced);
-            acmObjectReplaced.setOldValue(oldObj);
-            acmObjectReplaced.setNewValue(newObj);
+            acmObjectReplaced.setOldObject(oldObj);
+            acmObjectReplaced.setNewObject(newObj);
             return acmObjectReplaced;
         }
 

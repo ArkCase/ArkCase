@@ -31,4 +31,10 @@ public class AcmValueChanged extends AcmPropertyChange
     {
         this.newValue = newValue;
     }
+
+    @Override
+    public boolean isLeaf()
+    {
+        return true;
+    }
 }
