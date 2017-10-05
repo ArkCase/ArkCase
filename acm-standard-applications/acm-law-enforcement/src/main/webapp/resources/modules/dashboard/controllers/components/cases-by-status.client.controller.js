@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.cases-by-status')
-    .controller('Dashboard.CasesByStatusController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params',
-        function ($scope, config, $translate, DashboardService, ConfigService, params) {
+    .controller('Dashboard.CasesByStatusController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService',
+        function ($scope, config, $translate, DashboardService, ConfigService, params, Util) {
 
             var vm = this;
 
@@ -10,8 +10,11 @@ angular.module('dashboard.cases-by-status')
                 config.period = 'all';
             }
 
-            if(params.description !== undefined) {
+            if(!Util.isEmpty( params.description)) {
                 $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
             }
 
             ConfigService.getComponentConfig("dashboard", "casesByStatus").then(function (configuration) {
