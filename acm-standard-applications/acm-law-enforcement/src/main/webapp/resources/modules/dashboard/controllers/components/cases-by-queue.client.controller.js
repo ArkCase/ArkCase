@@ -1,16 +1,19 @@
 'use strict';
 
 angular.module('dashboard.cases-by-queue')
-    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params',
-        function ($scope, config, $state, $translate, DashboardService, ConfigService, params) {
+    .controller('Dashboard.CasesByQueueController', ['$scope', 'config', '$state', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService',
+        function ($scope, config, $state, $translate, DashboardService, ConfigService, params, Util) {
 
             var vm = this;
 
             vm.chartClick = chartClick;
             var config = null;
 
-            if(params.description !== undefined) {
+            if(!Util.isEmpty( params.description)) {
                 $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
             }
 
             ConfigService.getComponentConfig("dashboard", "casesByQueue").then(function (cfg) {
