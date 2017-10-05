@@ -23,4 +23,10 @@ public class AcmCollectionChange extends AcmPropertyChange
     {
         changes.add(elementChange);
     }
+
+    @Override
+    public boolean isLeaf()
+    {
+        return false;
+    }
 }

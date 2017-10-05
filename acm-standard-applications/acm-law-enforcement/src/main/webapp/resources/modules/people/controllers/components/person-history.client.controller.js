@@ -28,6 +28,17 @@ angular.module('people').controller('People.HistoryController', ['$scope', '$sta
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            angular.extend($scope.gridOptions, {
+                expandableRowTemplate: 'modules/common/views/object-history-expandable-template.client.view.html',
+                expandableRowHeight: 140,
+                expandableRowScope: {
+                    subGridVariable: 'subGridScopeVariable'
+                },
+                onRegisterApi: function( gridApi ) {
+                    $scope.gridApi = gridApi;
+                    $scope.gridApi.core.handleWindowResize();
+                }
+            });
             retrieveGridData();
         };
 

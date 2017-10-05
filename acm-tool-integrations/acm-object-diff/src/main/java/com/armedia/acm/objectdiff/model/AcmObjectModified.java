@@ -49,4 +49,10 @@ public class AcmObjectModified extends AcmObjectChange
     {
         this.affectedObjectType = affectedObjectType;
     }
+
+    @Override
+    public boolean isLeaf()
+    {
+        return false;
+    }
 }

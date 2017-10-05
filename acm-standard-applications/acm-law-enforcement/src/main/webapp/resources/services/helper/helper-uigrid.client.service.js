@@ -280,7 +280,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Define ui-grid data
              */
             , setWidgetsGridData: function (widgetData) {
-                if(!Util.isArrayEmpty(widgetData)) {
+                if (!Util.isArrayEmpty(widgetData)) {
                     this.scope.gridOptions.data = widgetData;
                     this.scope.gridOptions.noData = false;
                     this.scope.gridOptions.totalItems = widgetData.length;
@@ -750,6 +750,20 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
                     $q.all([promiseQueryAudit]).then(function (data) {
                         var auditData = data[0];
+
+                        for (var i = 0; i < auditData.resultPage.length; i++) {
+                            auditData.resultPage[i].subGridOptions = {
+                                appScopeProvider: that.scope,
+                                columnDefs: [
+                                    {name: "Path", field: "path"},
+                                    {name: "Action", field: "action"},
+                                    {name: "Old Value", field: "oldValue"},
+                                    {name: "New value", field: "newValue"}
+                                ],
+                                data: auditData.resultPage[i].diffDetails ? auditData.resultPage[i].diffDetails : []
+                            }
+                        }
+
                         that.scope.gridOptions = that.scope.gridOptions || {};
                         that.scope.gridOptions.data = auditData.resultPage;
                         that.scope.gridOptions.totalItems = auditData.totalCount;

@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.objectdiff.model.AcmObjectChange;
-import com.armedia.acm.objectdiff.service.AcmObjectDiffUtils;
+import com.armedia.acm.objectdiff.model.AcmDiff;
+import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
@@ -18,7 +18,7 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
-    private AcmObjectDiffUtils acmObjectChangeUtils;
+    private AcmDiffService acmObjectChangeUtils;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -51,12 +51,12 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
             personPersistenceEvent.setEventAction("created");
         } else
         {
-            AcmObjectChange acmObjectModified = acmObjectChangeUtils.compareObjects(oldPerson, source);
-            if (acmObjectModified != null)
+            AcmDiff acmDiff = acmObjectChangeUtils.compareObjects(oldPerson, source);
+            if (acmDiff != null)
             {
                 try
                 {
-                    personPersistenceEvent.setDiffDetails(acmObjectModified.getChangesAsJson());
+                    personPersistenceEvent.setDiffDetails(acmDiff.getChangesAsListJson());
                 } catch (JsonProcessingException e)
                 {
                     log.warn("can't process diff details for [{}].", source, e);
@@ -77,7 +77,7 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
-    public void setAcmObjectChangeUtils(AcmObjectDiffUtils acmObjectChangeUtils)
+    public void setAcmObjectChangeUtils(AcmDiffService acmObjectChangeUtils)
     {
         this.acmObjectChangeUtils = acmObjectChangeUtils;
     }
