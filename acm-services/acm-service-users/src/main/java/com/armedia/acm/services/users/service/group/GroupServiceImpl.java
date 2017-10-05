@@ -173,8 +173,6 @@ public class GroupServiceImpl implements GroupService
         }
         members = updateMembersWithDatabaseInfo(members);
         members.forEach(group::addUserMember);
-        members.forEach(member ->
-                userRoleService.saveValidUserRolesPerAddedUserGroups(member.getUserId(), new HashSet<>(Arrays.asList(group))));
         return group;
     }
 
