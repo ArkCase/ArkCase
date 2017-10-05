@@ -1,9 +1,9 @@
 'use strict';
 angular.module('dashboard.my-complaints')
     .controller('Dashboard.MyComplaintsController', ['$scope', '$translate'
-        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params'
+        , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService'
         , function ($scope, $translate
-            , Authentication, DashboardService, ConfigService, params) {
+            , Authentication, DashboardService, ConfigService, params, Util) {
             var vm = this;
             vm.config = null;
             var userInfo = null;
@@ -46,8 +46,11 @@ angular.module('dashboard.my-complaints')
                 }
             };
 
-            if(params.description !== undefined) {
+            if(!Util.isEmpty( params.description)) {
                 $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
             }
 
             ConfigService.getComponentConfig("dashboard", "myComplaints").then(function (config) {

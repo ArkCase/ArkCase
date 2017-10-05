@@ -49,8 +49,11 @@ angular.module('dashboard.my-tasks')
                 }
             };
 
-            if(params.description !== undefined) {
+            if(!Util.isEmpty( params.description)) {
                 $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
             }
             
             ConfigService.getComponentConfig("dashboard", "myTasks").then(function (config) {
