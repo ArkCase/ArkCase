@@ -46,12 +46,12 @@ public class LdapSyncProcessor
         ldapDatabaseSyncService.saveGroups(acmGroupsSyncResult);
 
         List<String> applicationRoles = new ArrayList<>(roleToGroup.keySet());
-        ldapDatabaseSyncService.saveAcmRoles(applicationRoles, AcmRoleType.APPLICATION_ROLE.getRoleName());
+        ldapDatabaseSyncService.saveAcmRoles(applicationRoles, AcmRoleType.APPLICATION_ROLE);
 
         List<String> newAcmGroups = acmGroupsSyncResult.getNewGroups().stream()
                 .map(AcmGroup::getName)
                 .collect(Collectors.toList());
-        ldapDatabaseSyncService.saveAcmRoles(newAcmGroups, AcmRoleType.LDAP_GROUP.getRoleName());
+        ldapDatabaseSyncService.saveAcmRoles(newAcmGroups, AcmRoleType.LDAP_GROUP);
 
         ldapDatabaseSyncService.saveAcmUserRoles(acmUserRolesSyncResult.getAcmUserRoles());
     }

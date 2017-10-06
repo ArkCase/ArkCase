@@ -68,13 +68,13 @@ public class LdapDatabaseSyncService
     }
 
     @Transactional
-    public void saveAcmRoles(List<String> applicationRoles, String roleType)
+    public void saveAcmRoles(List<String> applicationRoles, AcmRoleType roleType)
     {
         log.info("Saving AcmRoles [{}]", applicationRoles.size());
         applicationRoles.forEach(role -> {
             AcmRole acmRole = new AcmRole();
             acmRole.setRoleName(role);
-            acmRole.setRoleType(AcmRoleType.valueOf(roleType));
+            acmRole.setRoleType(roleType);
             log.info("Saving AcmRole [{}]", role);
             getUserDao().saveAcmRole(acmRole);
         });
