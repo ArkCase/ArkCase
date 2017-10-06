@@ -244,7 +244,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query markInvalid = getEntityManager().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN "
                 + "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
-        markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }
@@ -254,6 +254,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
+            log.debug("Saving AcmRole [{}]", in.getRoleName());
             getEntityManager().persist(in);
         }
         return in;
@@ -261,6 +262,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
     {
+        log.debug("Saving AcmUserRole [{}] for User [{}]", userRole.getRoleName(), userRole.getUserId());
         AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
         key.setRoleName(userRole.getRoleName());
         key.setUserId(userRole.getUserId());

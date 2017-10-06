@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -73,7 +74,7 @@ public class LdapDatabaseSyncService
         applicationRoles.forEach(role -> {
             AcmRole acmRole = new AcmRole();
             acmRole.setRoleName(role);
-            acmRole.setRoleType(roleType);
+            acmRole.setRoleType(AcmRoleType.valueOf(roleType));
             log.info("Saving AcmRole [{}]", role);
             getUserDao().saveAcmRole(acmRole);
         });
