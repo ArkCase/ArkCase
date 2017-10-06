@@ -44,7 +44,7 @@
     "confirmation": "Enter your new password again.",
     "cancel": "Cancel",
     "outlookPassword": "Store Outlook Password",
-    "ldapPassword": "Change LDAP Password"
+    "ldapPassword": "Change Password"
   },
   "profile.picture": {
     "title": "Change Picture",

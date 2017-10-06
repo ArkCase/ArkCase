@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.team-workload').
-controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params',
-    function ($scope, config, $translate, DashboardService, ConfigService, params) {
+controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService',
+    function ($scope, config, $translate, DashboardService, ConfigService, params, Util) {
 
         var vm = this;
 
@@ -10,8 +10,11 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
             config.due = 'all';
         }
 
-        if(params.description !== undefined) {
+        if(!Util.isEmpty( params.description)) {
             $scope.$parent.model.description = " - " + params.description;
+        }
+        else {
+            $scope.$parent.model.description = "";
         }
 
         ConfigService.getComponentConfig("dashboard", "teamWorkload").then(function (config) {

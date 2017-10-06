@@ -11,8 +11,11 @@ angular.module('dashboard.workflow-report')
 
             vm.config = null;
 
-            if(params.description !== undefined) {
+            if(!Util.isEmpty( params.description)) {
                 $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
             }
 
             var paginationOptions = {
