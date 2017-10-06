@@ -26,10 +26,9 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
             $scope.hideNoField = true;
-            if (!!params.isNewOrganization) {
-                $scope.isNewOrganization = params.isNewOrganization;
-                $scope.isDefault = $scope.isNewOrganization;
-                $scope.hideNoField = !(!!$scope.isNewOrganization);
+            if (params.isFirstPerson) {
+                $scope.isDefault = params.isFirstPerson;
+                $scope.hideNoField = !params.isFirstPerson;
             }
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
