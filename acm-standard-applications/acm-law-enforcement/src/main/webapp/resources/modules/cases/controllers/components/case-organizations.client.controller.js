@@ -73,13 +73,8 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
         };
 
         function pickOrganization(association) {
-            $scope.isFirstOrganization = $scope.gridOptions.data.length == 0 ? true : false;
-            var params = {
-                types: $scope.organizationTypes,
-                showSetPrimary: true,
-                isDefault: false,
-                isFirstOrganization: $scope.isFirstOrganization
-            };
+            var params = {};
+            params.types = $scope.organizationTypes;
 
             if (association) {
                 angular.extend(params, {

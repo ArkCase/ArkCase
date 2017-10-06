@@ -31,11 +31,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationValue = params.organization.parentOrganization.organizationValue;
                 }
             }
-            if (!!params.isNewPerson) {
-                $scope.isNewPerson = params.isNewPerson;
-                $scope.isDefault = $scope.isNewPerson;
-                $scope.hideNoField = !(!!$scope.isNewPerson);
-            }
             if (params.isFirstOrganization) {
                 $scope.isDefault = params.isFirstOrganization;
                 $scope.hideNoField = !params.isFirstOrganization;
