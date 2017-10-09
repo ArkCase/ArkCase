@@ -190,7 +190,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.organizationTypes,
-                isFirstOrganization: associationFound === undefined ? true : false
+                isFirstOrganization: Util.isEmpty(associationFound) ? true : false
             };
             //set this params for editing
             if (association.organization) {
@@ -198,7 +198,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     organizationId: association.organization.organizationId,
                     organizationValue: association.organization.organizationValue,
                     type: association.personToOrganizationAssociationType,
-                    isDefault: !!association.defaultOrganization
+                    isDefault: Util.isEmpty(association.defaultOrganization) ? true : false
                 });
             }
 
