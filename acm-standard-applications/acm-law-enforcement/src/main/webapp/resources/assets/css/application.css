@@ -755,6 +755,12 @@ thead {
     color: #fff;
 }
 
+.ui-grid-cell div { padding: 5px; }
+
+.ui-grid-cell a { padding: 5px; }
+
+.ui-grid-cell div a { padding: 0px; }
+
 /* Modal Window Columns */
 
 .modal-search {
