@@ -9,6 +9,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -145,6 +147,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             if (!isInline)
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+                try
+                {
+                    // add file metadata so it can be displayed in Snowbound
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    response.setHeader("X-ArkCase-File-Metadata", objectMapper.writeValueAsString(ecmFile));
+                } catch (JsonProcessingException e)
+                {
+                    log.warn("Unable to serialize document metadata for [{}:{}]", ecmFile.getId(), version, e);
+                }
             }
             response.setContentType(mimeType);
             byte[] buffer = new byte[1024];

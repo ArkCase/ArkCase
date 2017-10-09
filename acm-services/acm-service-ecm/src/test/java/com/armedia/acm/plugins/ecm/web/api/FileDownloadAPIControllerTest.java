@@ -2,12 +2,17 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
+import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -228,6 +233,13 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         log.info("results: {}", returned);
 
         assertEquals(log4jsize, returned.length());
+
+        // assert file metadata header
+        JSONObject fileMetadata = new JSONObject(result.getResponse().getHeader("X-ArkCase-File-Metadata"));
+        assertEquals(ecmFileId.longValue(), fileMetadata.getLong("fileId"));
+        assertEquals(cmisId, fileMetadata.getString("versionSeriesId"));
+        assertEquals(mimeType, fileMetadata.getString("fileActiveVersionMimeType"));
+        assertEquals(fileNameExtension, fileMetadata.getString("fileActiveVersionNameExtension"));
     }
 
     @Test
