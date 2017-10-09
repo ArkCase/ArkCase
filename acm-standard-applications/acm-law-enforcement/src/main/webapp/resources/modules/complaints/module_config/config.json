@@ -716,7 +716,7 @@
           "name": "organization.defaultAddress.city",
           "displayName": "complaints.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
+          "cellTemplate": "<span class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
         }
       ]
     },
