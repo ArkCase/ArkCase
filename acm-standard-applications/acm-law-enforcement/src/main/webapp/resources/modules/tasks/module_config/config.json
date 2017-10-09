@@ -925,7 +925,8 @@
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
-        }
+        },
+        "hideMenu": true
       }
     },
     {
