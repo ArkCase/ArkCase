@@ -1364,9 +1364,9 @@
         },
         {
           "name": "location",
-          "field": "target_object.default_location_s",
           "displayName": "people.comp.related.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{grid.appScope.getLocation(row.entity.target_object.default_location_s)}}</span>"
         }
       ]
     },
