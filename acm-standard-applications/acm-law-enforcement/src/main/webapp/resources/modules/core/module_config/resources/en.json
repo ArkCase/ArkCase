@@ -490,7 +490,7 @@
       "new": "New",
       "toggle.btn": "Toggle navigation",
       "search.placeholder": "Search ArkCase",
-      "locale.updateList": "Update"
+      "locale.updateList": "Refresh above list"
     },
     "loginWarning": {
       "btnOK.text": "OK",
