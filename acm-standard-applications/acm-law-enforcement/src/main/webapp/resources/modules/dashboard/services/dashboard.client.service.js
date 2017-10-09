@@ -117,14 +117,12 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 }, 0);
             };
 
-            var userInfoPromise = Authentication.queryUserInfo();
-            var localeSettingsPromise = LocaleService.getSettings();
-            $q.all([userInfoPromise, localeSettingsPromise]).then(function(result) {
+            $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
                 var userInfo = result[0];
                 var userLocale = LocaleService.requestLocale(userInfo.langCode);
                 setLocale(userLocale.iso);
             });
-            
+
             scope.$bus.subscribe('$translateChangeSuccess', function (data) {
                 var userLocale = LocaleService.requestLocale(data.language);
                 setLocale(userLocale.iso);

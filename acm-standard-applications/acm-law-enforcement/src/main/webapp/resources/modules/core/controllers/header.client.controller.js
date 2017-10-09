@@ -6,12 +6,10 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
         , LocaleService, ConfigService, UserInfoService, MessageService) {
-        $scope.$emit('req-component-config', 'header');
+
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('topbar');
-
-        var config = null;
 
         $scope.config = null;
         $scope.start = '';
@@ -20,22 +18,12 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $scope.data = {};
         $scope.data.inputQuery = '';
 
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'header') {
-                $scope.config = config;
-                $scope.start = config.searchParams.start;
-                $scope.count = config.searchParams.n;
-                $scope.typeAheadColumn = config.typeAheadColumn;
-            }
-        }
-
-        // ConfigService.getComponentConfig("core", "header").then(function (config) {
-        //     $scope.config = config;
-        //     $scope.start = config.searchParams.start;
-        //     $scope.count = config.searchParams.n;
-        //     $scope.typeAheadColumn = config.typeAheadColumn;
-        // });
+        ConfigService.getComponentConfig("core", "header").then(function (config) {
+            $scope.config = config;
+            $scope.start = Util.goodMapValue(config, "searchProperties.start", 0);
+            $scope.count = Util.goodMapValue(config, "searchProperties.n", 10);
+            $scope.typeAheadColumn = config.typeAheadColumn;
+        });
 
         ServCommService.handleRequest();
 
@@ -87,10 +75,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         };
 
         // set application language for the user
-        var userInfoPromise = Authentication.queryUserInfo();
-        var localeSettingsPromise = LocaleService.getSettings();
-        
-        $q.all([userInfoPromise, localeSettingsPromise]).then(function(result) {
+        $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
             var userInfo = result[0];
             var localeData = result[1];
             $scope.localeDropdownOptions = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
