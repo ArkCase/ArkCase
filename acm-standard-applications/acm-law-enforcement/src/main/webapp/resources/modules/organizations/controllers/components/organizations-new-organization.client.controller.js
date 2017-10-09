@@ -103,7 +103,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.personAssociationTypes,
-                isFirstPerson: associationFound === undefined ? true : false
+                isFirstPerson: Util.isEmpty(associationFound) ? true : false
             };
 
             //set this params for editing
@@ -112,7 +112,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.organizationToPersonAssociationType,
-                    isDefault: !!association.primaryContact
+                    isDefault: Util.isEmpty(association.primaryContact) ? true : false
                 });
             }
 
