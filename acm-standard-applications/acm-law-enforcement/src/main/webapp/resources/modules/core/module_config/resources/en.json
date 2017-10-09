@@ -488,9 +488,9 @@
     },
     "topBar": {
       "new": "New",
-      "toggle.btn": "Toggle navigation",
+      "toggle.btn": "Toggle Navigation",
       "search.placeholder": "Search ArkCase",
-      "locale.updateList": "Refresh above list"
+      "locale.updateList": "Refresh Above List"
     },
     "loginWarning": {
       "btnOK.text": "OK",
