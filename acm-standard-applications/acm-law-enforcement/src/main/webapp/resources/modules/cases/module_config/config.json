@@ -640,7 +640,7 @@
           "name": "organization.defaultPerson.givenName",
           "displayName": "cases.comp.organizations.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName + ' ' + row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getPrimaryContact(row.entity)}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
