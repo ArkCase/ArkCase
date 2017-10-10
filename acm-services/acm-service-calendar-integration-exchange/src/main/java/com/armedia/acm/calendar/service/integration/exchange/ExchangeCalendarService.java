@@ -177,7 +177,7 @@ public class ExchangeCalendarService
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (!handler.checkPermission(user, objectType, objectId))
+        if (!handler.checkPermission(null, user, null, objectType, objectId, null))
         {
             log.warn("User [{}] does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
                     objectType);
@@ -257,7 +257,7 @@ public class ExchangeCalendarService
 
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (!handler.checkPermission(user, calendarEvent.getObjectType(), calendarEvent.getObjectId()))
+        if (!handler.checkPermission(null, user, null, calendarEvent.getObjectType(), calendarEvent.getObjectId(), null))
         {
             log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                     calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -324,7 +324,7 @@ public class ExchangeCalendarService
                     calendarEvent.getObjectType());
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (!handler.checkPermission(user, calendarEvent.getObjectType(), calendarEvent.getObjectId()))
+            if (!handler.checkPermission(null, user, null, calendarEvent.getObjectType(), calendarEvent.getObjectId(), null))
             {
                 log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -464,7 +464,7 @@ public class ExchangeCalendarService
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (!handler.checkPermission(user, objectType, objectId))
+            if (!handler.checkPermission(null, user, null, objectType, objectId, null))
             {
                 log.warn("User [{}] does not have DELETE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         objectId, objectType);
