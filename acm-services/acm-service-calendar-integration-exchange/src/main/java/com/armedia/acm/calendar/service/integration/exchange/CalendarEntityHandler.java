@@ -105,7 +105,7 @@ public class CalendarEntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    public boolean checkPermission(AcmUser user, String objectType, String objectId) throws CalendarServiceException
+    public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectType, String objectId, PermissionType permissionType) throws CalendarServiceException
     {
         AcmContainerEntity entity = getEntity(objectId, true);
         if (entity == null)
@@ -114,8 +114,7 @@ public class CalendarEntityHandler
         }
 
         Optional<AcmParticipant> participant = participantService.listAllParticipantsPerObjectTypeAndId(objectType, Long.valueOf(objectId))
-                .stream().filter(p -> p.getObjectType().equals(objectType)).filter(p -> p.getParticipantLdapId().equals(user.getUserId()))
-                .findAny();
+                .stream().filter(p -> p.getParticipantLdapId().equals(user.getUserId())).findAny();
 
         return participant.isPresent();
     }
