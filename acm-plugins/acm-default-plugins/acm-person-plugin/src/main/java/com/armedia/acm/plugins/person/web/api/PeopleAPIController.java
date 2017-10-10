@@ -9,6 +9,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.plugins.person.model.UploadImageRequest;
 import com.armedia.acm.plugins.person.service.PersonService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
@@ -221,14 +222,16 @@ public class PeopleAPIController
      * This method should be with identical query string as the call to faceted search that it forwards to.
      */
     @RequestMapping(value = "/search/{personId}", method = RequestMethod.GET)
-    public String searchOrganizations(@PathVariable("personId") Long personId, Authentication auth) throws UnsupportedEncodingException
+    public String searchPeople(@PathVariable("personId") Long personId, Authentication auth) throws UnsupportedEncodingException
     {
         List<ObjectAssociation> personAssociations = objectAssociationService.findByParentTypeAndId(PERSON_OBJECT_TYPE, personId);
 
         List<String> filteredPersons = new ArrayList<>();
         filteredPersons.add(Long.toString(personId));
 
-        filteredPersons.addAll(personAssociations.stream().map(oa -> Long.toString(oa.getTargetId())).collect(Collectors.toList()));
+        filteredPersons.addAll(
+                personAssociations.stream().filter(oa -> oa.getTargetType().equals(PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE))
+                        .map(oa -> Long.toString(oa.getTargetId())).collect(Collectors.toList()));
 
         String organizationFilter = URLEncoder.encode(
                 filteredPersons.stream().map(o -> String.format("fq=\"-object_id_s\":%s", o)).collect(Collectors.joining("&")), "UTF-8");
