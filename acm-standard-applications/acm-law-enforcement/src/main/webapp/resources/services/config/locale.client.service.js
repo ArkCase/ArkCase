@@ -298,9 +298,9 @@ angular.module('services').config(function ($provide) {
                 , result: localeSettings
                 , onSuccess: function (data) {
                     if (Service.validateSettings(data)) {
-                        var localeSettings = cacheLocale.get();
+                        var localeSettings = Service.getLocaleData();
                         localeSettings.locales = data.locales;
-                        cacheLocale.set(localeSettings);
+                        Service.setLocaleData(localeSettings);
                         return localeSettings;
                     }
                 }
