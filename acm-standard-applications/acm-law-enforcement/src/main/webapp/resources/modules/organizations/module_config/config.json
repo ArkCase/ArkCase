@@ -617,10 +617,10 @@
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.defaultPerson.givenName",
+              "name": "organization.defaultPerson.value",
               "displayName": "organizations.comp.related.table.columns.contact",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.primary_contact_s}}</div>"
             }
           ]
         },

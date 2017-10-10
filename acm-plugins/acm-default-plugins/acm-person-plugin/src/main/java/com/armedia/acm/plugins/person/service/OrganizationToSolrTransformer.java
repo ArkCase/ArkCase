@@ -66,7 +66,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        orgDoc.setAdditionalProperty("primary_contact_s", org.getPrimaryContact());
+        orgDoc.setAdditionalProperty("primary_contact_s", getPrimaryContact(org));
         orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
         orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
         orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
@@ -77,14 +77,42 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
-    private Object getDefaultIdentification(Organization org)
+    private String getPrimaryContact(Organization organization)
     {
-        if (org.getDefaultIdentification() == null)
+        if (organization.getPrimaryContact() == null)
         {
             return null;
         }
-        return org.getDefaultIdentification().getIdentificationNumber() + " [" + org.getDefaultIdentification().getIdentificationType()
-                + "]";
+        StringBuilder sb = new StringBuilder();
+        if (organization.getPrimaryContact().getPerson().getGivenName() != null && !organization.getPrimaryContact().getPerson().getGivenName().equals(""))
+        {
+            sb.append(organization.getPrimaryContact().getPerson().getGivenName());
+            if (organization.getPrimaryContact().getPerson().getFamilyName() != null && !organization.getPrimaryContact().getPerson().getFamilyName().equals(""))
+            {
+                if (sb.length() > 0)
+                {
+                    sb.append(" ");
+                    sb.append(organization.getPrimaryContact().getPerson().getFamilyName());
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    private String getDefaultIdentification(Organization organization) {
+        if (organization.getDefaultIdentification() == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (organization.getDefaultIdentification().getIdentificationNumber() != null && !organization.getDefaultIdentification().getIdentificationNumber().equals(""))
+        {
+            sb.append(organization.getDefaultIdentification().getIdentificationNumber());
+            if (organization.getDefaultIdentification().getIdentificationType() != null && !organization.getDefaultIdentification().getIdentificationType().equals(""))
+            {
+                sb.append(" [").append(organization.getDefaultIdentification().getIdentificationType()).append("]");
+            }
+        }
+        return sb.toString();
     }
 
     private String getDefaultPhone(Organization organization)
@@ -94,10 +122,13 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(organization.getDefaultPhone().getValue());
-        if (organization.getDefaultPhone().getSubType() != null)
+        if (organization.getDefaultPhone().getValue() != null && !organization.getDefaultPhone().getValue().equals(""))
         {
-            sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
+            sb.append(organization.getDefaultPhone().getValue());
+            if (organization.getDefaultPhone().getSubType() != null && !organization.getDefaultPhone().getSubType().equals(""))
+            {
+                sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
+            }
         }
         return sb.toString();
     }
@@ -110,17 +141,17 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         }
 
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultAddress().getCity() != null)
+        if (organization.getDefaultAddress().getCity() != null && !organization.getDefaultAddress().getCity().equals(""))
         {
             sb.append(organization.getDefaultAddress().getCity());
-        }
-        if (organization.getDefaultAddress().getState() != null)
-        {
-            if (sb.length() > 0)
+            if (organization.getDefaultAddress().getState() != null && !organization.getDefaultAddress().getState().equals(""))
             {
-                sb.append(", ");
+                if (sb.length() > 0)
+                {
+                    sb.append(", ");
+                    sb.append(organization.getDefaultAddress().getState());
+                }
             }
-            sb.append(organization.getDefaultAddress().getState());
         }
         return sb.toString();
     }
