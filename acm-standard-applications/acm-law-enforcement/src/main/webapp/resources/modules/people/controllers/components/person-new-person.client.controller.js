@@ -181,13 +181,16 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         };
 
 
-        $scope.searchOrganization = function (index, isNewPerson) {
+        $scope.searchOrganization = function (index) {
+            var associationFound = _.find($scope.person.organizationAssociations, function(item){
+                return !Util.isEmpty(item) && !Util.isEmpty(item.organization);
+            });
             var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.organizationTypes,
-                isNewPerson: isNewPerson
+                isFirstOrganization: Util.isEmpty(associationFound) ? true : false
             };
             //set this params for editing
             if (association.organization) {
@@ -195,7 +198,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     organizationId: association.organization.organizationId,
                     organizationValue: association.organization.organizationValue,
                     type: association.personToOrganizationAssociationType,
-                    isDefault: association === $scope.person.defaultOrganization
+                    isDefault: Util.isEmpty(association.defaultOrganization) ? true : false
                 });
             }
 
