@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
@@ -45,6 +46,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     private CmisConfigUtils cmisConfigUtils;
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
@@ -150,7 +153,6 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 try
                 {
                     // add file metadata so it can be displayed in Snowbound
-                    ObjectMapper objectMapper = new ObjectMapper();
                     response.setHeader("X-ArkCase-File-Metadata", objectMapper.writeValueAsString(ecmFile));
                 } catch (JsonProcessingException e)
                 {
