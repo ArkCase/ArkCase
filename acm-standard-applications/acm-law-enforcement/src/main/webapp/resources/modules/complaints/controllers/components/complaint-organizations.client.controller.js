@@ -73,7 +73,6 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
         };
 
         function pickOrganization(association) {
-
             var params = {};
             params.types = $scope.organizationTypes;
 

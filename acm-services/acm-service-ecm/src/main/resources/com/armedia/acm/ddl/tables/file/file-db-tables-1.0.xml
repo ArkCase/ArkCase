@@ -643,5 +643,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="58-acm_container-add-outlook-folder-recreated-column" author="lazo.lazarev" dbms="mysql">
+        <addColumn tableName="acm_container">
+            <column name="cm_outlook_folder_recreated" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="58-acm_container-add-outlook-folder-recreated-column" author="lazo.lazarev" dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_container">
+            <column name="cm_outlook_folder_recreated" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

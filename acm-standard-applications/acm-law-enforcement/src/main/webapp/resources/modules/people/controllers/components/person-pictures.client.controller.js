@@ -47,12 +47,6 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            var eventName = "object.changed/" + objectInfo.objectType + "/" + objectInfo.id;
-            //we want to subscribe to changes because the data is from solr and on edit it
-            //will take time to get it so we need to wait for message
-            $scope.$bus.subscribe(eventName, function (data) {
-                $scope.refresh();
-            });
             $scope.reloadGrid();
         };
 

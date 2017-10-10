@@ -5,7 +5,7 @@ import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.complaint.model.ComplaintConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import com.armedia.acm.services.users.dao.ldap.UserActionDao;
+import com.armedia.acm.services.users.dao.UserActionDao;
 import com.armedia.acm.services.users.model.AcmUserAction;
 import com.armedia.acm.services.users.model.AcmUserActionName;
 

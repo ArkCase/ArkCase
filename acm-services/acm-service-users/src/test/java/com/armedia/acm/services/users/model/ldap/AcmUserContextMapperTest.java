@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.model.ldap;
 
-import com.armedia.acm.services.users.model.LdapUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;

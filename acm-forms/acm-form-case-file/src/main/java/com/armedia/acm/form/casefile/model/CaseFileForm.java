@@ -12,11 +12,9 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
-import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 
 /**
  * @author riste.tutureski
@@ -37,8 +35,10 @@ public class CaseFileForm {
 	private Map<String, String> participantsPrivilegeTypes;
 	private OwningGroupItem owningGroup;
 	private List<String> owningGroupOptions;
-	private Person initiator;
-	private List<Person> people;
+	private Long initiatorId;
+	private String initiatorFullName;
+	private String initiatorType;
+	private List<PersonItem> people;
 	
 	@XmlElement(name="caseId")
 	public Long getId() {
@@ -149,22 +149,47 @@ public class CaseFileForm {
 		this.owningGroupOptions = owningGroupOptions;
 	}
 
-	@XmlElement(name="initiator", type=InitiatorPerson.class)
-	public Person getInitiator() {
-		return initiator;
+	@XmlElement(name="initiatorId")
+	public Long getInitiatorId()
+	{
+		return initiatorId;
 	}
 
-	public void setInitiator(Person initiator) {
-		this.initiator = initiator;
+	public void setInitiatorId(Long initiatorId)
+	{
+		this.initiatorId = initiatorId;
 	}
 
-	@XmlElement(name="people", type=PeoplePerson.class)
-	public List<Person> getPeople() {
+	@XmlElement(name="initiatorFullName")
+	public String getInitiatorFullName()
+	{
+		return initiatorFullName;
+	}
+
+	public void setInitiatorFullName(String initiatorFullName)
+	{
+		this.initiatorFullName = initiatorFullName;
+	}
+
+	@XmlElement(name="initiatorType")
+	public String getInitiatorType()
+	{
+		return initiatorType;
+	}
+
+	public void setInitiatorType(String initiatorType)
+	{
+		this.initiatorType = initiatorType;
+	}
+
+	@XmlElement(name="peopleItem", type=PersonItem.class)
+	public List<PersonItem> getPeople()
+	{
 		return people;
 	}
 
-	public void setPeople(List<Person> people) {
+	public void setPeople(List<PersonItem> people)
+	{
 		this.people = people;
 	}
-	
 }

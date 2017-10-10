@@ -2,10 +2,11 @@
 
 angular.module('cases').controller('Cases.CostController', ['$scope', '$stateParams', '$translate', '$state'
     , 'UtilService', 'ObjectService', 'ConfigService', 'Object.CostService', 'Case.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', "Config.LocaleService"
     , function ($scope, $stateParams, $translate, $state
         , Util, ObjectService, ConfigService, ObjectCostService, CaseInfoService
-        , HelperUiGridService, HelperObjectBrowserService) {
+        , HelperUiGridService, HelperObjectBrowserService, LocaleService
+    ) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -46,7 +47,7 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
             		objectId: objectInfo.id,
                     type: ObjectService.ObjectTypes.CASE_FILE,
                     objectNumber: objectInfo.caseNumber
-                }
+                };
                 ObjectCostService.queryCostsheets(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(
                     function (costsheets) {
                         for (var i = 0; i < costsheets.length; i++) {
@@ -67,6 +68,11 @@ angular.module('cases').controller('Cases.CostController', ['$scope', '$statePar
         };
         $scope.editRow = function(rowEntity){
         	$state.go('frevvo.edit-costsheet',{id: rowEntity.id});
-        }
+        };
+
+        $scope.currencySymbol = LocaleService.getCurrencySymbol();
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            $scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
+        });
     }
 ]);

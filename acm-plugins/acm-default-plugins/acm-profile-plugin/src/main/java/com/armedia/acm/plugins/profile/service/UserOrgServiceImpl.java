@@ -6,12 +6,11 @@ import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
-
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -223,8 +222,7 @@ public class UserOrgServiceImpl implements UserOrgService
             // update the user organization to it or create new organization and update the user organization relation
             Organization organization = organizationService.findOrCreateOrganization(companyName, user.getUserId());
             userOrg.setOrganization(organization);
-        }
-        else
+        } else
         {
             // companyName is blank, remove user's organization
             userOrg.setOrganization(null);

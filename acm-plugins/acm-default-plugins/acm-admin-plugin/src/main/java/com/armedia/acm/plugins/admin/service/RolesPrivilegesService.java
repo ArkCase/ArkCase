@@ -1,8 +1,9 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
@@ -182,7 +183,7 @@ public class RolesPrivilegesService
             saveRoles(roles);
             AcmRole acmRole = new AcmRole();
             acmRole.setRoleName(roleName);
-            acmRole.setRoleType("APPLICATION_ROLE");
+            acmRole.setRoleType(AcmRoleType.APPLICATION_ROLE);
             try
             {
                 userDao.saveAcmRole(acmRole);
