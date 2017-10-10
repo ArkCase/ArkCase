@@ -258,7 +258,7 @@
               "name": "modified",
               "displayName": "cases.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "width": 150,
@@ -351,7 +351,7 @@
             {
               "name": "created",
               "displayName": "cases.comp.notes.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate",
               "enableCellEdit": false,
               "width": 150
@@ -392,7 +392,7 @@
               "field": "due_tdt",
               "displayName": "cases.comp.tasks.table.columns.due",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
             }
           ]
         },
@@ -448,7 +448,7 @@
             {
               "name": "created",
               "displayName": "cases.comp.tags.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
               "headerCellFilter": "translate"
             },
             {
@@ -489,7 +489,7 @@
               "field": "due_tdt",
               "displayName": "cases.comp.approvalRouting.dueDate.label",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
             }
           ]
         }
@@ -770,7 +770,7 @@
         {
           "name": "created",
           "displayName": "cases.comp.notes.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
           "width": 150
@@ -829,7 +829,7 @@
           "field": "create_tdt",
           "displayName": "cases.comp.tasks.table.columns.created",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.create_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.create_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "priority",
@@ -842,7 +842,7 @@
           "field": "due_tdt",
           "displayName": "cases.comp.tasks.table.columns.due",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.due_tdt | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.due_tdt | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -894,7 +894,7 @@
           "field": "target_object.modified_date_tdt",
           "displayName": "cases.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "targetType",
@@ -936,7 +936,7 @@
           "name": "eventDate",
           "displayName": "cases.comp.history.table.columns.eventDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'shortDate' }}</div>"
         },
         {
           "name": "userId",
@@ -983,7 +983,7 @@
           "field": "modified",
           "displayName": "cases.comp.time.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -1032,7 +1032,7 @@
           "field": "modified",
           "displayName": "cases.comp.cost.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         },
         {
           "name": "status",
@@ -1068,7 +1068,7 @@
         {
           "name": "created",
           "displayName": "cases.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {
@@ -1129,7 +1129,7 @@
           "name": "modified_date_tdt",
           "displayName": "cases.comp.merge.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1190,7 +1190,7 @@
           "name": "modified_date_tdt",
           "displayName": "cases.comp.addreference.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'shortDate' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -1271,7 +1271,7 @@
           "name": "approvalDate",
           "displayName": "cases.comp.pastApprovals.table.columns.approvalDate",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.approvalDate | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.approvalDate | date : 'shortDate' }}</div>",
           "cellEditableCondition": false
         },
         {

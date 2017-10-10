@@ -2,21 +2,21 @@
   "search": {
     "title": "検索",
     "search.btn": "検索",
-    "export.btn": "ja_Export",
-    "search.placeholder": "ja_Type in to search",
+    "export.btn": "輸出",
+    "search.placeholder": "検索するには入力",
     "menus": {
       "leftnav.item": "検索"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "ja_ID",
-          "name": "ja_Name",
-          "type": "ja_Type",
-          "title": "ja_Title",
-          "parent": "ja_Parent",
-          "assignee": "ja_Assignee",
-          "modified": "ja_Modified"
+          "id": "ID",
+          "name": "名前",
+          "type": "種類",
+          "title": "表題",
+          "parent": "親",
+          "assignee": "譲受人",
+          "modified": "変更日"
         }
       }
     }

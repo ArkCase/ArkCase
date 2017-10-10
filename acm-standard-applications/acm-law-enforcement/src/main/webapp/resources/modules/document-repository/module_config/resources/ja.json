@@ -18,8 +18,8 @@
     "docRepoName": "文書保存名:",
     "modified.label": "変更日",
     "assignee.label": "割り当て先",
-    "owningGroup.label": "グループに所属",
-    "description.label": "ja_Description"
+    "owningGroup.label": "群に所属",
+    "description.label": "説明"
   },
   "document-repository.comp.actions": {
     "title": "操作",
@@ -39,7 +39,7 @@
     }
   },
   "document-repository.comp.documents": {
-    "title": "ファイル",
+    "title": "文書",
     "sendEmail": "ja_Send Email",
     "filterInputPlaceholder": "ja_Filter",
     "searchInputPlaceholder": "ja_Search"
@@ -67,7 +67,7 @@
     }
   },
   "document-repository.comp.notes": {
-    "title": "ノート",
+    "title": "注解",
     "table.columns": {
       "note": "ja_Note",
       "created": "ja_Created",
@@ -191,11 +191,11 @@
   "document-repository.tree": {
     "nodeTypes": {
       "details.label": "詳細",
-      "documents.label": "ファイル",
+      "documents.label": "文書",
       "participants.label": "参加者",
       "tags.label": "タグ",
       "references.label": "参照",
-      "notes.label": "ノート",
+      "notes.label": "注解",
       "history.label": "歴史"
     },
     "filters": {
@@ -206,8 +206,8 @@
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "日付で並べ替え降順",
-      "idAsc": "ファイル番号で並べ替え",
-      "idDesc": "ファイル番号で並べ替え降順",
+      "idAsc": "文書番号で並べ替え",
+      "idDesc": "文書番号で並べ替え降順",
       "nameAsc": "名で並べ替え",
       "noSort": "(注文しません)"
     }

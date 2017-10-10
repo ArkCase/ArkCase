@@ -755,6 +755,12 @@ thead {
     color: #fff;
 }
 
+.ui-grid-cell div { padding: 5px; }
+
+.ui-grid-cell a { padding: 5px; }
+
+.ui-grid-cell div a { padding: 0px; }
+
 /* Modal Window Columns */
 
 .modal-search {
@@ -800,6 +806,10 @@ thead {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 270px;
+}
+
+.modal-backdrop {
+	z-index: -1;
 }
 
 /* Overriding of .form-inline class for the needs of the x-editable popup form. */

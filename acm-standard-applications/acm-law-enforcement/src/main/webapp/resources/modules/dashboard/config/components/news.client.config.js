@@ -9,8 +9,8 @@ angular.module("dashboard.news", ["adf.provider"]).config(function (ArkCaseDashb
         controller: "Dashboard.NewsController",
         controllerAs: "dashboardNews",
         resolve: {
-            url: function (config) {
-                return config.url ? config.url : void 0
+            params: function (config) {
+                return config;
             }
         },
         edit: {

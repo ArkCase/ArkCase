@@ -58,15 +58,15 @@
                        placeholder="{{ 'common.newPerson.givenName.placeholder' | translate }}">
             </div>
         </div>
-        <div id="accordion" class="panel-group">
+        <div id="accordion{{accordionSuffix}}" class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseIdentification" translate>
+                        <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseIdentification{{accordionSuffix}}" translate>
                             common.newPerson.identification.title</a>
                     </h4>
                 </div>
-                <div id="collapseIdentification" class="panel-collapse collapse in">
+                <div id="collapseIdentification{{accordionSuffix}}" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-4 form-group">
@@ -214,10 +214,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapsePicture" translate>common.newPerson.picture.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapsePicture{{accordionSuffix}}" translate>common.newPerson.picture.title</a>
                 </h4>
             </div>
-            <div id="collapsePicture" class="panel-collapse collapse">
+            <div id="collapsePicture{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="panel-body" data-ng-repeat="picture in pictures">
                         <div class="row">
@@ -257,17 +257,17 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOrganizations" translate>common.newPerson.organizations.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseOrganizations{{accordionSuffix}}" translate>common.newPerson.organizations.title</a>
                 </h4>
             </div>
-            <div id="collapseOrganizations" class="panel-collapse collapse">
+            <div id="collapseOrganizations{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="panel-body">
                         <div ng-repeat="organizationAssociation in person.organizationAssociations">
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                     <label>&nbsp;</label>
-                                    <input type="text" ng-model="organizationAssociation.organization.organizationValue"
+                                    <input type="text" ng-model="organizationAssociation.organizationValue"
                                            ng-click="searchOrganization($index)"
                                            class="input-md form-control"
                                            placeholder="{{ 'common.newPerson.organizations.searchExisting.placeholder' | translate }}">
@@ -305,10 +305,10 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseLocations" translate>common.newPerson.locations.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseLocations{{accordionSuffix}}" translate>common.newPerson.locations.title</a>
                 </h4>
             </div>
-            <div id="collapseLocations" class="panel-collapse collapse">
+            <div id="collapseLocations{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4 form-group">
@@ -467,11 +467,11 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts"
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseCommunicationAccounts{{accordionSuffix}}"
                        translate>common.newPerson.communicationAccounts.title</a>
                 </h4>
             </div>
-            <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
+            <div id="collapseCommunicationAccounts{{accordionSuffix}}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div ng-repeat="caType in communicationAccountsTypes">
                         <div id="defaultPhone" class="row">

@@ -1,62 +1,65 @@
 <section class="scrollable">
-    <header class="dk header">
-        <div class="wrapper">
-            <div class="input-group">
-                <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
-                       placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
-            <span class="input-group-btn">
-            <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button" ng-click="onClickSearch()">
-                {{'common.directive.objectTree.btnQuery.text' | translate}}
-            </button>
-            </span>
-            </div>
-        </div>
+  <header class="dk header">
 
-        <div class="btn-group inline select pull-right">
-            <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
-                <span>
-                <i class="fa fa-refresh"></i>
-                </span>
-            </button>
-        </div>
-        <div class="btn-group inline select pull-right" ng-show="treeConfig.sorters">
-            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
-                <span class="dropdown-label"
-                      style="width: 65px;">
-                <i class="fa fa-sort"></i>
-                </span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu text-left text-sm treeSorter">
-                <li value="{{sorter.name}}" ng-repeat="sorter in sorters">
-                    <a ng-click="onSelectSort(sorter.name)">
-                        <span translate>{{sorter.desc}}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="btn-group select pull-right" ng-show="treeConfig.filters">
-            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
-                <span class="dropdown-label"
-                      style="width: 65px;">
-                <i class="fa fa-filter"></i>
-                </span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu text-left text-sm treeFilter">
-                <li value="{{filter.name}}" ng-repeat="filter in filters">
-                    <a ng-click="onSelectFilter(filter.name)">
-                        <span translate>{{filter.desc}}</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </header>
-    <div class="row m-b">
-        <div class="col-sm-12">
-            <div class="tree"></div>
-        </div>
+    <div ng-hide="!!treeConfig.search || treeConfig.search === false"> 
+      <div class="input-group">
+        <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
+               placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
+        <span class="input-group-btn">
+          <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button" ng-click="onClickSearch()">
+            {{'common.directive.objectTree.btnQuery.text' | translate}}
+          </button>
+        </span>
+      </div>
     </div>
+
+    <div class="btn-group inline select pull-right" ng-hide="!!treeConfig.refresh || treeConfig.refresh === false"> 
+      <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
+        <span>
+          <i class="fa fa-refresh"></i>
+        </span>
+      </button>
+    </div>
+
+    <div class="btn-group inline select pull-right" ng-show="treeConfig.sorters"> 
+      <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
+        <span class="dropdown-label"
+              style="width: 65px;">
+          <i class="fa fa-sort"></i>
+        </span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu text-left text-sm treeSorter">
+        <li value="{{sorter.name}}" ng-repeat="sorter in sorters">
+          <a ng-click="onSelectSort(sorter.name)">
+            <span translate>{{sorter.desc}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="btn-group select pull-right" ng-show="treeConfig.filters"> 
+      <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
+        <span class="dropdown-label"
+              style="width: 65px;">
+          <i class="fa fa-filter"></i>
+        </span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu text-left text-sm treeFilter">
+        <li value="{{filter.name}}" ng-repeat="filter in filters">
+          <a ng-click="onSelectFilter(filter.name)">
+            <span translate>{{filter.desc}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </header>
+  <div class="row m-b">
+    <div class="col-sm-12">
+      <div class="tree"></div>
+    </div>
+  </div>
 </section>
 
