@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRoleState;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,10 +48,14 @@ public class AcmUserRolesSyncResult
                             String userId = entry.getKey();
                             Set<String> removedGroups = entry.getValue();
                             Set<String> rolesToRemove = getRolesPerGroups(removedGroups, groupToRole);
-                            Set<String> userGroupsToRemain = userGroupsMap.get(userId).stream()
-                                    .filter(group -> !removedGroups.contains(group))
-                                    .collect(Collectors.toSet());
-                            Set<String> rolesToRemain = getRolesPerGroups(userGroupsToRemain, groupToRole);
+                            Set<String> rolesToRemain = new HashSet<>();
+                            if (userGroupsMap.containsKey(userId))
+                            {
+                                Set<String> userGroupsToRemain = userGroupsMap.get(userId).stream()
+                                        .filter(group -> !removedGroups.contains(group))
+                                        .collect(Collectors.toSet());
+                                rolesToRemain = getRolesPerGroups(userGroupsToRemain, groupToRole);
+                            }
                             return mapInvalidUserRoles(rolesToRemove, rolesToRemain, userId);
                         }
                 )
