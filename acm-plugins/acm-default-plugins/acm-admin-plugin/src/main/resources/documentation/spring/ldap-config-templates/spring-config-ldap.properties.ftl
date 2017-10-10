@@ -19,3 +19,4 @@ ldapConfig.userDomain=${userDomain}
 ldapConfig.syncPageSize=${syncPageSize}
 ldapConfig.groupSearchFilter=${groupSearchFilter}
 ldapConfig.groupSearchPageFilter=${groupSearchPageFilter}
+ldapConfig.allChangedUsersFilter=${allChangedUsersFilter}
