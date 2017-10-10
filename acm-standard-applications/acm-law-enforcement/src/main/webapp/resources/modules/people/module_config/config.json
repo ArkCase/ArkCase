@@ -1103,7 +1103,7 @@
           "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organization.defaultContact ? row.entity.organization.defaultContact.value + '[' + row.entity.organization.defaultContact.type + ']' : ''}}</span>"
+          "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
         },
         {
           "name": "phone",

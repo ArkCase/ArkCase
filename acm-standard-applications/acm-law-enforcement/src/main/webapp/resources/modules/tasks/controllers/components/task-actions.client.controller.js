@@ -176,6 +176,22 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         };
         $scope.onClickOutcome = function (name) {
             var taskInfo = Util.omitNg($scope.objectInfo);
+
+            //QUICK FIX TO BE REMOVED AFTER THE DEMO
+            //REMOVES THE MILLISECONDS AFTER THE DOT(.) AND ADD "Z" for UTC
+            //DATETIME BEFORE: "2017-10-04T22:00:00.000+0000" DATETIME AFTER: "2017-10-04T22Z"
+
+            if(!Util.isEmpty(taskInfo.buckslipFutureApprovers) && taskInfo.buckslipFutureApprovers.length > 0){
+                for(var i=0; i<taskInfo.buckslipFutureApprovers.length; i++){
+                    taskInfo.buckslipFutureApprovers[i].created = taskInfo.buckslipFutureApprovers[i].created.split('.')[0]+"Z";
+                    taskInfo.buckslipFutureApprovers[i].modified = taskInfo.buckslipFutureApprovers[i].modified.split('.')[0]+"Z";
+
+                    if (!Util.isEmpty(taskInfo.buckslipFutureApprovers[i].deleted)) {
+                        taskInfo.buckslipFutureApprovers[i].deleted = taskInfo.buckslipFutureApprovers[i].deleted.split('.')[0]+"Z";
+                    }
+                }
+            }
+
             if (TaskInfoService.validateTaskInfo(taskInfo)) {
                 TaskWorkflowService.completeTaskWithOutcome(taskInfo, name).then(
                     function (taskInfo) {

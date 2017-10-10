@@ -14,7 +14,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -32,11 +31,12 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -51,11 +51,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public void init()
     {
-        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst().get()
-                .getConfigAsJson();
-        Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
-                .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.defaultLocale").toString();
+        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
+                .findFirst();
+        if (localeSettings.isPresent())
+        {
+            String settings = localeSettings.get().getConfigAsJson();
+            Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
+                    .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
+            DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale").toString();
+        } else
+        {
+            DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
+        }
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -72,15 +79,18 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (existingUser != null)
             {
                 acmUser.setLang(existingUser.getLang());
-            }
-            else
+            } else
             {
                 // set default lang
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
             }
         }
-
         return super.save(acmUser);
+    }
+
+    public String getDefaultUserLang()
+    {
+        return DEFAULT_LOCALE_CODE;
     }
 
     public AcmUser findByUserId(String userId)
@@ -114,8 +124,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            }
-            else
+            } else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -210,8 +219,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         query.select(user);
 
-        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String> get("userState"), AcmUserState.VALID)));
+        query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
+                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
 
         query.orderBy(builder.asc(user.get("fullName")));
 
@@ -235,7 +244,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query markInvalid = getEntityManager().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN "
                 + "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
-        markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }
@@ -245,6 +254,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
+            log.debug("Saving AcmRole [{}]", in.getRoleName());
             getEntityManager().persist(in);
         }
         return in;
@@ -252,6 +262,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
     {
+        log.debug("Saving AcmUserRole [{}] for User [{}]", userRole.getRoleName(), userRole.getUserId());
         AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
         key.setRoleName(userRole.getRoleName());
         key.setUserId(userRole.getUserId());
@@ -289,6 +300,10 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         try
         {
             AcmUser user = findByUserIdAnyCase(principal);
+            if (user.getUserState() != AcmUserState.VALID)
+            {
+                return false;
+            }
             LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
             if (userPasswordExpirationDate != null)
             {
