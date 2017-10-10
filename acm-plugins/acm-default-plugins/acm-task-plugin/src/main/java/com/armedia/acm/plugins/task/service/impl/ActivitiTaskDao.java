@@ -262,6 +262,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
         if (in.getParticipants() != null)
         {
+
+            List<AcmParticipant> participantsToRemove = new ArrayList<>();
+
             for (AcmParticipant ap : in.getParticipants())
             {
                 if (ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
@@ -269,8 +272,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                     if (in.getAssignee() == null)
                     {
                         // task has no assignee so we need to remove this participant
-                        in.getParticipants().remove(ap);
-                    } else
+                        participantsToRemove.add(ap);
+                    }
+                    else
                     {
                         assigneeFound = true;
                         if (ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()))
@@ -281,6 +285,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                     }
 
                 }
+            }
+
+            if(participantsToRemove.size() > 0) {
+                participantsToRemove.forEach(acmParticipant -> in.getParticipants().remove(acmParticipant));
+                participantsToRemove.clear();
             }
         }
 

@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.1.19-SNAPSHOT</version>
+        <version>3.1.26-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -54,12 +54,19 @@
             <artifactId>acm-service-search</artifactId>
             <version>${acm.version}</version>
         </dependency>
-                <dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-    		<artifactId>acm-service-users</artifactId>
-    		<version>${acm.version}</version>
+            <artifactId>acm-service-users</artifactId>
+            <version>${acm.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-reload-properties</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

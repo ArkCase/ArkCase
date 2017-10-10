@@ -19,11 +19,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.organizationValue = params.organizationValue;
             $scope.isChanged = true;
             $scope.isDefault = params.isDefault;
-            $scope.isSelectedParent = params.isSelectedParent;
+            $scope.isSelectedParent = !!params.isSelectedParent;
             $scope.isEditParent = false;
             $scope.description = params.description;
-
-            if (!!params.isSelectedParent) {
+            $scope.hideNoField = true;
+            if (params.isSelectedParent) {
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
                     $scope.isEditParent = !!params.organization.parentOrganization.organizationId;
@@ -31,13 +31,17 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     $scope.organizationValue = params.organization.parentOrganization.organizationValue;
                 }
             }
+            if (params.isFirstOrganization) {
+                $scope.isDefault = params.isFirstOrganization;
+                $scope.hideNoField = !params.isFirstOrganization;
+            }
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
             });
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
-                if (!!$scope.isSelectedParent && $scope.organization.parentOrganization != null && !(!!$scope.organization.parentOrganization.organizationId)) {
+                if ($scope.isSelectedParent && !!$scope.organization.parentOrganization && !(!!$scope.organization.parentOrganization.organizationId)) {
                     $scope.organization.parentOrganization = null;
                 }
                 $modalInstance.dismiss('Cancel');

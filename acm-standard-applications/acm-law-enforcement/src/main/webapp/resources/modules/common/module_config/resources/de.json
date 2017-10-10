@@ -22,9 +22,24 @@
     "btnCancel.text": "de_Cancel",
     "btnOk.text": "de_Save Organization",
     "setPrimary.label": "de_Set As Primary?",
+    "radioName": "de_Choice primary",
     "radioYes.text": "de_Yes",
     "radioNo.text": "de_No",
     "duplicateOrganizationRoleErrorMessage": "de_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "de_Add person",
+    "addNew.label": "de_Add new Person",
+    "selectExisting.label": "de_Select existing person",
+    "person.label": "de_Person",
+    "type.label": "de_Person Association Type",
+    "btnCancel.text": "de_Cancel",
+    "btnOk.text": "de_Save Person",
+    "setPrimary.label": "de_Set As Primary?",
+    "radioName": "de_Choice primary",
+    "radioYes.text": "de_Yes",
+    "radioNo.text": "de_No",
+    "duplicatePersonRoleErrorMessage": "de_Person already has the selected association"
   },
   "common.editOrganization": {
     "title": "de_Edit Parent Organization"

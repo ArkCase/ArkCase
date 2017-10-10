@@ -1,12 +1,19 @@
 'use strict';
 
 angular.module('dashboard.new-complaints').controller('Dashboard.NewComplaintsController', ['$scope', '$translate'
-    , 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
+    , 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService'
     , function ($scope, $translate
-        , Authentication, DashboardService, ConfigService
+        , Authentication, DashboardService, ConfigService, params, Util
     ) {
         var vm = this;
         vm.config = null;
+
+        if(!Util.isEmpty( params.description)) {
+            $scope.$parent.model.description = " - " + params.description;
+        }
+        else {
+            $scope.$parent.model.description = "";
+        }
 
         ConfigService.getComponentConfig("dashboard", "newComplaints").then(function (config) {
             DashboardService.queryNewComplaints(function (solrData) {
