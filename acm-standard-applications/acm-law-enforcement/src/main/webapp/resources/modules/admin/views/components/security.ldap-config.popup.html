@@ -60,6 +60,12 @@
                    required>
         </div>
         <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.allChangedUsersFilter' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.allChangedUsersFilter"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allChangedUsersFilter' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.allUsersSortingAttribute' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.allUsersSortingAttribute"
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersSortingAttribute' | translate }}"
@@ -69,6 +75,12 @@
             <label>{{ 'admin.security.ldapConfig.data.allUsersPageFilter' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.allUsersPageFilter"
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allUsersPageFilter' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.allChangedUsersPageFilter' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.allChangedUsersPageFilter"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.allChangedUsersPageFilter' | translate }}"
                    required>
         </div>
         <div class="form-group">
@@ -109,6 +121,12 @@
                    required>
         </div>
         <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.changedGroupSearchFilter' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.changedGroupSearchFilter"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.changedGroupSearchFilter' | translate }}"
+                   required>
+        </div>
+        <div class="form-group">
             <label>{{ 'admin.security.ldapConfig.data.groupsSortingAttribute' | translate }}</label>
             <input class="form-control" type="text" ng-model="dir.groupsSortingAttribute"
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupsSortingAttribute' | translate }}"
@@ -120,11 +138,24 @@
                    placeholder="{{ 'admin.security.ldapConfig.data.placeholders.groupSearchPageFilter' | translate }}"
                    required>
         </div>
+        <div class="form-group">
+            <label>{{ 'admin.security.ldapConfig.data.changedGroupSearchPageFilter' | translate }}</label>
+            <input class="form-control" type="text" ng-model="dir.changedGroupSearchPageFilter"
+                   placeholder="{{ 'admin.security.ldapConfig.data.placeholders.changedGroupSearchPageFilter' | translate }}"
+                   required>
+        </div>
         <div class="form-check">
             <label class="form-check-label">
                 <input type="checkbox" class="form-check-input" ng-model="dir.enableEditingLdapUsers"
                        placeholder="{{ 'admin.security.ldapConfig.data.placeholders.enableEditingLdapUsers' | translate }}">
                 {{ 'admin.security.ldapConfig.data.enableEditingLdapUsers' | translate }}
+            </label>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" ng-model="dir.syncEnabled"
+                       placeholder="{{ 'admin.security.ldapConfig.data.placeholders.syncEnabled' | translate }}">
+                {{ 'admin.security.ldapConfig.data.syncEnabled' | translate }}
             </label>
         </div>
     </div>
