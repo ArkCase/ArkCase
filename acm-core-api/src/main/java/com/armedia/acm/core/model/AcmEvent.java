@@ -19,21 +19,21 @@ public abstract class AcmEvent extends ApplicationEvent
     private String parentObjectType;
     private String parentObjectName;
     private Map<String, Object> eventProperties;
-    private String diffDetails;
+    private String diffDetailsAsJson;
 
     public AcmEvent(Object source)
     {
         super(source);
     }
 
-    public String getDiffDetails()
+    public String getDiffDetailsAsJson()
     {
-        return diffDetails;
+        return diffDetailsAsJson;
     }
 
-    public void setDiffDetails(String diffDetails)
+    public void setDiffDetailsAsJson(String diffDetailsAsJson)
     {
-        this.diffDetails = diffDetails;
+        this.diffDetailsAsJson = diffDetailsAsJson;
     }
 
     public String getEventType()

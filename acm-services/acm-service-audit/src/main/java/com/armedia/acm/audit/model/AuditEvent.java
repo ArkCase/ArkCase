@@ -97,8 +97,8 @@ public class AuditEvent
 
     @JsonRawValue
     @Lob
-    @Column(name = "cm_diff_details")
-    private String diffDetails;
+    @Column(name = "cm_diff_details_json")
+    private String diffDetailsAsJson;
 
     public Date getEventDate()
     {
@@ -275,14 +275,14 @@ public class AuditEvent
     }
 
 
-    public String getDiffDetails()
+    public String getDiffDetailsAsJson()
     {
-        return diffDetails;
+        return diffDetailsAsJson;
     }
 
-    public void setDiffDetails(String diffDetails)
+    public void setDiffDetailsAsJson(String diffDetailsAsJson)
     {
-        this.diffDetails = diffDetails;
+        this.diffDetailsAsJson = diffDetailsAsJson;
     }
 
     @Override

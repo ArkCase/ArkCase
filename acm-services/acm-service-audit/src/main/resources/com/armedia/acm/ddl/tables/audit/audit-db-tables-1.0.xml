@@ -204,7 +204,7 @@
 
     <changeSet id="13-acm_audit-add-diff_details-column" author="nebojsha.davidovikj">
         <addColumn tableName="acm_audit_log">
-            <column name="cm_diff_details" type="CLOB"/>
+            <column name="cm_diff_details_json" type="CLOB"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

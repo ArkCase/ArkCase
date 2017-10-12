@@ -57,7 +57,7 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
                 try
                 {
                     String changesAsListJson = acmDiff.getChangesAsListJson();
-                    personPersistenceEvent.setDiffDetails(changesAsListJson);
+                    personPersistenceEvent.setDiffDetailsAsJson(changesAsListJson);
                 } catch (JsonProcessingException e)
                 {
                     log.warn("can't process diff details for [{}].", updatedPerson, e);

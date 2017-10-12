@@ -1,5 +1,6 @@
 package com.armedia.acm.objectdiff.model;
 
+import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -8,11 +9,12 @@ import java.util.List;
 
 public abstract class AcmDiff
 {
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper;
 
     AcmDiff()
     {
-        mapper = new ObjectMapper();
+        ObjectMapperFactory factory = new ObjectMapperFactory();
+        mapper = factory.createObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
