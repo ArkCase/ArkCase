@@ -95,6 +95,14 @@
         "subCompany":  "SubCompany",
         "parentCompany":  "ParentCompany"
       },
+      "documentPersonTypes": {
+        "defendent": "Defendant",
+        "witness": "Witness",
+        "was-officer": "WAS Officer",
+        "victim": "Victim",
+        "defense-dounsel": "Defense Counsel",
+        "forensic-scientist": "Forensic Scientist"
+      },
       "complaintPersonTypes": {
         "initiator":  "Initiator",
         "complaintant":  "Complaintant",
