@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(name = "spring", locations = {
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-property-file-manager.xml",

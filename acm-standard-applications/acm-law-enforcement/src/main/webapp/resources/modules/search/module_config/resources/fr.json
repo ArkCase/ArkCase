@@ -2,21 +2,21 @@
   "search": {
     "title": "Recherche",
     "search.btn": "Recherche",
-    "export.btn": "fr_Export",
-    "search.placeholder": "fr_Type in to search",
+    "export.btn": "Exporter",
+    "search.placeholder": "Entrez pour rechercher",
     "menus": {
       "leftnav.item": "Recherche"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "fr_ID",
-          "name": "fr_Name",
-          "type": "fr_Type",
-          "title": "fr_Title",
-          "parent": "fr_Parent",
-          "assignee": "fr_Assignee",
-          "modified": "fr_Modified"
+          "id": "ID",
+          "name": "Nom",
+          "type": "Type",
+          "titre": "titre",
+          "parent": "Parent",
+          "assignee": "Cessionnaire",
+          "modifié": "Modifié"
         }
       }
     }

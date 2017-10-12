@@ -54,6 +54,8 @@ document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/p
 // Frevvo Messaging
 var frevvoMessaging = null;
 
+var objectTypePicked;
+
 var CustomEventHandlers = {
     setup: function (el) {
         var elState = CustomView.getState(el);
@@ -67,6 +69,10 @@ var CustomEventHandlers = {
             FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
         } else if (isObjectPicker(el)) {
             FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
+        } else if(isCasePersonPicker(el)) {
+            FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'CASE_FILE'));
+        } else if(isComplaintPersonPicker(el)) {
+            FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'COMPLAINT'));
         }
     },
 
@@ -106,24 +112,19 @@ var CustomEventHandlers = {
                                 var pickedObject = e.data.data;
                                 // update charge code element
                                 updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
-                                
-                                if(pickedObject.title_parseable) {
-                                	var objectTitleHiddenField = document.getElementsByName("objectTitle");
-                                	
-                                	if(objectTitleHiddenField.length === 1) {
-                                		updateElementValue(pickedObject.title_parseable, 'input', objectTitleHiddenField[0].id, null); 
-                                	}
-                                	else if(objectTitleHiddenField.length > 1) {
-                                		var rowIndex = getParentByTagName(document.getElementById(e.data.elementId), "tr").rowIndex - 1;
-                                		updateElementValue(pickedObject.title_parseable, 'input', objectTitleHiddenField[rowIndex].id, null);
-                                	}                               	
-                                }
+                            }
+                        }
+                        if(e.data.action == "fill-person-picker-data") {
+                            var element = frevvoMessaging.elements[e.data.elementId];
+                            if (!isEmpty(element)) {
+                                updateElement(element, 'fullName', e.data.data.fullName);
+                                updateElement(element, 'id', e.data.data.personId);
+                                updateElement(element, 'personType', e.data.data.personType);
                             }
                         }
                     }
                 }
             }
-
             window.addEventListener('message', frevvoMessaging.receive);
         }
    },
@@ -209,16 +210,38 @@ var CustomEventHandlers = {
             }
             return itemsToExclude;
         }
+    },
 
-        function findObjectType(element) {
-            var $$ = frevvo_jQuery;
-            var tdElement = $$(element).closest('td');
-            var prevTdElement = $$(tdElement).prev().find('input')[0];
-            return $$(prevTdElement).attr('ovalue');
+    showPersonPicker: function (event, element, formType) {
+        if (!isEmpty(frevvoMessaging)) {
+            var message = {};
+            message.source = "frevvo";
+            message.data = "";
+            message.action = "open-person-picker";
+            message.elementId = element.id;
+            message.pickerType = "";
+            message.formType = formType;
+
+            var cssClassArray = cssClassToArray(element);
+            if (cssClassArray && cssClassArray.length > 1)
+            {
+                message.pickerType = cssClassArray[1];
+            }
+
+            frevvoMessaging.elements[element.id] = element;
+
+            // Open user picker
+            frevvoMessaging.send(message);
         }
     }
 };
 
+function findObjectType(element) {
+    var $$ = frevvo_jQuery;
+    var tdElement = $$(element).closest('td');
+    var prevTdElement = $$(tdElement).prev().find('input')[0];
+    return $$(prevTdElement).attr('ovalue');
+}
 /**
  * Get ArkCase window. Because Frevvo is adding one additional iframe, Frevvo form is shown in the second iframe (one iframe set by ArkCase and one by Frevvo itself)
  *
@@ -316,6 +339,16 @@ function isAdvancedUserPicker(element) {
 	}
 }
 
+function isCasePersonPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('casePersonPicker') > -1);
+}
+
+function isComplaintPersonPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('complaintPersonPicker') > -1);
+}
+
 /**
  * Taking CSS class from the element. This CSS class is the class entered in the Frevvo form while designing the form with Frevvo Engine.
  * It can be "userPickerSimple_<RECOGNITIONTEXT>_<FIELDNAME>" - for simple user picker or
@@ -344,6 +377,13 @@ function getCssClassDivided(element) {
 		}
 	}
 	return null;
+}
+
+function cssClassToArray(element) {
+    var cssClass = getCssClass(element);
+    if (cssClass != null) {
+        return cssClass.split('_');
+    }
 }
 
 /**
@@ -431,7 +471,7 @@ function getHtmlElementsByCssClass(cssClass, elementType) {
  * Returns html element value
  * @param cssClass Class of the html element to be used as selector
  * @param elementType Type of the html element to be used as selector
- * @param property Element's attribute
+ * @param property The element's attribute whose value will be returned
  */
 function getElementValue(cssClass, elementType, property) {
     var $$ = frevvo_jQuery;
@@ -462,46 +502,38 @@ function updateElementValue(value, elementType, elementId, cssClass, property) {
     }
 }
 
-/**
- * Get parent node for given tagname
- * @param  {Object} node    DOM node
- * @param  {String} tagname HTML tagName
- * @return {Object}         Parent node
- */
-function getParentByTagName(node, tagname) {
-	var parent;
-	if (node === null || tagname === '') return;
-	parent  = node.parentNode;
-	tagname = tagname.toUpperCase();
 
-	while (parent.tagName !== "HTML") {
-		if (parent.tagName === tagname) {
-			return parent;
-		}
-		parent = parent.parentNode;
-	}
-	
-	return parent;
+function createInfoMesssage(objectType, objectNumber, objectTitle) {
+    if (objectType == 'COMPLAINT') {
+        objectType = 'Complaint';
+    } else if (objectType == 'CASE_FILE') {
+        objectType = "Case";
+    }
+    var messageInfo = getElementValue('objectPicker_messageFormat', 'input');
+    messageInfo = messageInfo.replace("{objectType}", objectType);
+    messageInfo = messageInfo.replace("{objectNumber}", objectNumber);
+    messageInfo = messageInfo.replace("{objectTitle}", objectTitle);
+    return messageInfo;
 }
 
 /* Rich Text Area properties - START */
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
 
 var rtaSummernoteOptions = {
-							toolbar: [
-							  ['style', ['style']],
-							  ['font', ['bold', 'italic', 'underline', 'clear']],
-							  ['fontsize', ['fontsize']],
-							  ['color', ['color']],
-							  ['para', ['ul', 'ol', 'paragraph']],
-							  ['height', ['height']],
-							  ['table', ['table']],
-							  ['view', ['fullscreen', 'codeview']],
-							  ['help', ['help']]
-							],
+    toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'clear']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['table', ['table']],
+        ['view', ['fullscreen', 'codeview']],
+        ['help', ['help']]
+    ],
 
-							height: 280
-						};
+    height: 280
+};
 
 var rtaRefreshMilliseconds = 500;
 /* Rich Text Area properties - END */

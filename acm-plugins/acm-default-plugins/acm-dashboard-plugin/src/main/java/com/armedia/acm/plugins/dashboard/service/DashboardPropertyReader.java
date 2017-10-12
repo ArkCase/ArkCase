@@ -12,7 +12,7 @@ import com.armedia.acm.plugins.dashboard.model.module.Module;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;

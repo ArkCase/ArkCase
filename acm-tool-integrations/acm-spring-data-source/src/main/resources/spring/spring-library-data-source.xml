@@ -175,6 +175,9 @@
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
+    <bean id="acmProgressNotifierInitializer" class="com.armedia.acm.data.AcmProgressNotifierInitializer">
+        <property name="progressNotifier" ref="acmProgressNotifier"/>
+    </bean>
 
     <bean id="auditPropertyEntityAdapter" class="com.armedia.acm.data.AuditPropertyEntityAdapter"/>
 

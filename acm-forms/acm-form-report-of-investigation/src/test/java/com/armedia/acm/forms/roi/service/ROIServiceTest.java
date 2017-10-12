@@ -3,15 +3,12 @@
  */
 package com.armedia.acm.forms.roi.service;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.dao.UserDao;
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;

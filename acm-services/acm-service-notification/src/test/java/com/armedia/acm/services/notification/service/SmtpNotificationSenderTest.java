@@ -24,7 +24,7 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConst
 import com.armedia.acm.services.email.smtp.SmtpService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import org.easymock.Capture;

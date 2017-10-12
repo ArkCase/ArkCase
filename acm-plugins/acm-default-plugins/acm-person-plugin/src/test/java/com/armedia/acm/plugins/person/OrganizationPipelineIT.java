@@ -1,8 +1,5 @@
 package com.armedia.acm.plugins.person;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -10,7 +7,6 @@ import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationService;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -48,7 +46,8 @@ import java.util.Date;
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-object-history.xml",
         "/spring/spring-library-person-rules.xml",
-        "/spring/spring-library-organization-rules.xml" })
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
 public class OrganizationPipelineIT
 {
