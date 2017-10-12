@@ -88,7 +88,8 @@ public class AcmDiffService
                     {
                         sameObject = false;
                     }
-                } else if (field.get(oldObj) instanceof Comparable)
+                }
+                else if (field.get(oldObj) instanceof Comparable)
                 {
                     if (ObjectUtils.compare(Comparable.class.cast(field.get(oldObj)), Comparable.class.cast(field.get(newObj))) != 0)
                     {
@@ -167,7 +168,8 @@ public class AcmDiffService
         {
             acmObjectModified.setProperty(property);
             acmObjectModified.setPath(parentPath + "." + property);
-        } else
+        }
+        else
         {
             String path = cfg.getName();
             if (parentPath != null && parentPath.length() > 0)
@@ -195,7 +197,8 @@ public class AcmDiffService
                     {
                         //skip field comparision since both are null and are same
                         continue;
-                    } else
+                    }
+                    else
                     {
                         //doesn't matter which value is used for class descriptor
                         validValueClass = oldValue != null ? oldValue.getClass() : newValue.getClass();
@@ -208,14 +211,16 @@ public class AcmDiffService
                             AcmValueChanged valueChanged = createValueChange(acmObjectModified.getPath(), fieldName, oldValue, newValue);
                             acmObjectModified.addChange(valueChanged);
                         }
-                    } else if (oldValue instanceof Collection)//compare objects which are implementation of Collection
+                    }
+                    else if (oldValue instanceof Collection)//compare objects which are implementation of Collection
                     {
                         AcmCollectionChange collectionChange = compareCollections(acmObjectModified.getPath(), fieldName, Collection.class.cast(oldValue), Collection.class.cast(newValue));
                         if (collectionChange != null && !collectionChange.getChanges().isEmpty())
                         {
                             acmObjectModified.addChange(collectionChange);
                         }
-                    } else if (configurationMap.containsKey(validValueClass.getName()))//compare objects defined in the configuration
+                    }
+                    else if (configurationMap.containsKey(validValueClass.getName()))//compare objects defined in the configuration
                     {
                         AcmObjectChange objectChange = compareObjects(acmObjectModified.getPath(), fieldName, oldValue, newValue);
                         if (objectChange != null)
@@ -229,14 +234,16 @@ public class AcmDiffService
                 }
 
             }
-        } else
+        }
+        else
         {
             log.error("ID don't matched");
         }
         if (acmObjectModified.getChanges().isEmpty())
         {
             return null;
-        } else
+        }
+        else
         {
             return acmObjectModified;
         }
@@ -282,12 +289,14 @@ public class AcmDiffService
             if (oldObj != null)
             {
                 EvaluationContext oldObjContext = new StandardEvaluationContext(oldObj);
-                acmObjectReplaced.setOldValue(exp.getValue(oldObjContext).toString());
+                Object oldValue = exp.getValue(oldObjContext);
+                acmObjectReplaced.setOldValue(oldValue != null ? oldValue.toString() : null);
             }
             if (newObj != null)
             {
                 EvaluationContext newObjContext = new StandardEvaluationContext(newObj);
-                acmObjectReplaced.setNewValue(exp.getValue(newObjContext).toString());
+                Object newValue = exp.getValue(newObjContext);
+                acmObjectReplaced.setNewValue(newValue != null ? newValue.toString() : null);
             }
         } catch (ParseException e)
         {
@@ -325,7 +334,8 @@ public class AcmDiffService
         if (oldCollection instanceof List && oldCollection instanceof List)
         {
             return createListChange(parentPath, property, List.class.cast(oldCollection), List.class.cast(newCollection));
-        } else if (oldCollection instanceof Map && oldCollection instanceof Map)
+        }
+        else if (oldCollection instanceof Map && oldCollection instanceof Map)
         {
             return createMapChange(parentPath, property, Map.class.cast(oldCollection), Map.class.cast(newCollection));
         }
@@ -411,7 +421,8 @@ public class AcmDiffService
         if (acmListChange.getChanges().isEmpty())
         {
             return null;
-        } else
+        }
+        else
         {
             return acmListChange;
         }
@@ -431,7 +442,8 @@ public class AcmDiffService
         if (parentPath == null)
         {
             return pathSuffix;
-        } else
+        }
+        else
         {
             return parentPath + "." + pathSuffix;
         }
@@ -501,7 +513,8 @@ public class AcmDiffService
             if (clazz == null)
             {
                 clazz = obj.getClass();
-            } else if (!clazz.equals(obj.getClass()))
+            }
+            else if (!clazz.equals(obj.getClass()))
             {
                 return null;
             }
@@ -522,7 +535,8 @@ public class AcmDiffService
             change.setAffectedObjectId(AcmObject.class.cast(obj).getId());
             change.setAffectedObjectType(AcmObject.class.cast(obj).getObjectType());
 
-        } else
+        }
+        else
         {
             log.warn("Object [{}] is not AcmObject", obj);
         }
@@ -540,7 +554,8 @@ public class AcmDiffService
         {
             change.setAffectedObjectId(AcmObject.class.cast(obj).getId());
             change.setAffectedObjectType(AcmObject.class.cast(obj).getObjectType());
-        } else
+        }
+        else
         {
             log.warn("Object [{}] is not AcmObject", obj);
         }
