@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.objectdiff.model.AcmDiff;
-import com.armedia.acm.objectdiff.model.AcmObjectChange;
 import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -121,17 +120,8 @@ public class PersonDiffTest
         newPerson.getContactMethods().add(newPhone);
 
         AcmDiff diff = acmDiffService.compareObjects(oldPerson, newPerson);
-        System.out.println(diff);
 
 
         assertEquals("person", diff.getChangesAsTree().getPath());
-//        assertEquals(Long.valueOf(1l), diff.getChangesAsTree().getAffectedObjectId());
-//        assertEquals("PERSON", diff.getAffectedObjectType());
-
-        //assertEquals(3, diff.getChanges().size());
-
-//        System.out.println(diff.getChangesAsTreeJson());
-        System.out.println(diff.getChangesAsListJson());
-
     }
 }

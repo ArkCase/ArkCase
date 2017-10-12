@@ -26,40 +26,41 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishEvent(Person source)
+    public void publishEvent(Person updatedPerson)
     {
-        eventPublisher.publishEvent(source);
+        eventPublisher.publishEvent(updatedPerson);
     }
 
-    public void publishPersonViewedEvent(Person source, boolean succeeded)
+    public void publishPersonViewedEvent(Person updatedPerson, boolean succeeded)
     {
         log.debug("Publishing a Person viewed event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
-        PersonPersistenceEvent event = new PersonViewedEvent(source, ipAddress);
+        PersonPersistenceEvent event = new PersonViewedEvent(updatedPerson, ipAddress);
         event.setSucceeded(succeeded);
         eventPublisher.publishEvent(event);
     }
 
-    public void publishPersonUpsertEvents(Person source, Person oldPerson, boolean newPerson, boolean succeeded)
+    public void publishPersonUpsertEvents(Person updatedPerson, Person oldPerson, boolean newPerson, boolean succeeded)
     {
         log.debug("Publishing a person event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
 
-        PersonModifiedEvent personPersistenceEvent = new PersonModifiedEvent(source, ipAddress);
+        PersonModifiedEvent personPersistenceEvent = new PersonModifiedEvent(updatedPerson, ipAddress);
         if (newPerson)
         {
             personPersistenceEvent.setEventAction("created");
         } else
         {
-            AcmDiff acmDiff = acmObjectChangeUtils.compareObjects(oldPerson, source);
+            AcmDiff acmDiff = acmObjectChangeUtils.compareObjects(oldPerson, updatedPerson);
             if (acmDiff != null)
             {
                 try
                 {
-                    personPersistenceEvent.setDiffDetails(acmDiff.getChangesAsListJson());
+                    String changesAsListJson = acmDiff.getChangesAsListJson();
+                    personPersistenceEvent.setDiffDetails(changesAsListJson);
                 } catch (JsonProcessingException e)
                 {
-                    log.warn("can't process diff details for [{}].", source, e);
+                    log.warn("can't process diff details for [{}].", updatedPerson, e);
                 }
             }
             personPersistenceEvent.setEventAction("updated");
@@ -68,11 +69,11 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(personPersistenceEvent);
     }
 
-    public void publishPersonImageEvent(Person source, boolean succeeded)
+    public void publishPersonImageEvent(Person updatedPerson, boolean succeeded)
     {
         log.debug("Publishing a Person image upload event.");
         String ipAddress = AuthenticationUtils.getUserIpAddress();
-        PersonPersistenceEvent event = new PersonUpdatedImageEvent(source, ipAddress);
+        PersonPersistenceEvent event = new PersonUpdatedImageEvent(updatedPerson, ipAddress);
         event.setSucceeded(succeeded);
         eventPublisher.publishEvent(event);
     }

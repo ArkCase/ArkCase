@@ -23,6 +23,8 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -325,7 +327,18 @@ public class PersonServiceImpl implements PersonService
             Person oldPerson = null;
             if (!isNew)
             {
-                oldPerson = personDao.find(in.getId());
+                ObjectMapper om = new ObjectMapper();
+                try
+                {
+                    String old = om.writeValueAsString(personDao.find(in.getId()));
+                    oldPerson = om.readValue(old, Person.class);
+                } catch (JsonProcessingException e)
+                {
+                    e.printStackTrace();
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
             Person person = personDao.save(in);
             personEventPublisher.publishPersonUpsertEvents(person, oldPerson, isNew, true);

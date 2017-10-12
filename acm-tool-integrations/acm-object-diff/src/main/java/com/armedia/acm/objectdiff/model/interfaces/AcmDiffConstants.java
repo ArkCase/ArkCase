@@ -1,5 +1,8 @@
-package com.armedia.acm.objectdiff.model;
+package com.armedia.acm.objectdiff.model.interfaces;
 
+/**
+ * Constants for Acm Diff
+ */
 public interface AcmDiffConstants
 {
     String COLLECTION_CHANGED = "collection_changed";

@@ -147,7 +147,6 @@
           "participants"
         ]
       },
-      
       {
         "type": "p/PERSON/ali",
         "label": "people.tree.nodeTypes.aliases.label",
@@ -1012,7 +1011,7 @@
         "paginationPageSize": 10,
         "start": 0
       }
-    },    
+    },
     {
       "id": "aliases",
       "title": "people.comp.aliases.title",
@@ -1377,7 +1376,7 @@
       "enabled": true,
       "configurable": true,
       "type": "grid",
-      "enableFiltering": true,
+      "enableFiltering": false,
       "paginationPageSizes": [
         5,
         10,
@@ -1390,7 +1389,7 @@
           "name": "eventType",
           "displayName": "people.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'('+row.entity.diffDetails.length + ' Changes)'}}</div>"
         },
         {
           "name": "eventDate",
@@ -1403,6 +1402,11 @@
           "displayName": "people.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        },
+        {
+          "name": "details",
+          "displayName": "",
+          "cellTemplate": "<button ng-hide='!row.entity.diffDetails || row.entity.diffDetails.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetails)' translate>people.comp.history.table.columns.details.btn.text</button>"
         }
       ]
     }
