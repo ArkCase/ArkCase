@@ -2,13 +2,14 @@
 
 angular.module('welcome').controller(
     'WelcomeController', ['$state', '$window', '$translate'
-        , 'UtilService', 'Acm.LoginService', 'Acm.AppService'
+        , 'UtilService', 'Acm.LoginService', 'Acm.AppService', 'Config.LocaleService'
         , function ($state, $window, $translate
-            , Util, AcmLoginService, AcmAppService) {
+            , Util, AcmLoginService, AcmAppService, LocaleService) {
 
             AcmLoginService.setLogin(true);
             AcmLoginService.setLastIdle();
 
+            LocaleService.getLatestSettings();
 
             if (sessionStorage.redirectState) {
                 // redirect to the last remembered state
