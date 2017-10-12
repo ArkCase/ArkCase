@@ -1,8 +1,11 @@
 package com.armedia.acm.objectdiff.model;
 
+import com.armedia.acm.objectdiff.model.interfaces.AcmChangeContainer;
+import com.armedia.acm.objectdiff.model.interfaces.AcmDiffConstants;
+
 import java.util.List;
 
-public class AcmCollectionElementModified extends AcmCollectionElementChange
+public class AcmCollectionElementModified extends AcmCollectionElementChange implements AcmChangeContainer
 {
     private AcmObjectModified acmObjectModified;
 
@@ -21,7 +24,7 @@ public class AcmCollectionElementModified extends AcmCollectionElementChange
     }
 
 
-    public List<AcmPropertyChange> getChanges()
+    public List<AcmChange> getChanges()
     {
         return acmObjectModified.getChanges();
     }

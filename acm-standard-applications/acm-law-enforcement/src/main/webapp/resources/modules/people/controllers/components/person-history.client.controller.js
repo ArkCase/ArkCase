@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.HistoryController', ['$scope', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Person.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService', '$modal'
     , function ($scope, $stateParams, $q
         , Util, ConfigService, ObjectService, ObjectAuditService, PersonInfoService, HelperUiGridService
-        , HelperObjectBrowserService, Store) {
+        , HelperObjectBrowserService, Store, $modal) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -28,22 +28,33 @@ angular.module('people').controller('People.HistoryController', ['$scope', '$sta
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
-            angular.extend($scope.gridOptions, {
-                expandableRowTemplate: 'modules/common/views/object-history-expandable-template.client.view.html',
-                expandableRowHeight: 140,
-                expandableRowScope: {
-                    subGridVariable: 'subGridScopeVariable'
-                },
-                onRegisterApi: function( gridApi ) {
-                    $scope.gridApi = gridApi;
-                    $scope.gridApi.core.handleWindowResize();
-                }
-            });
             retrieveGridData();
         };
 
         function retrieveGridData() {
             gridHelper.retrieveAuditData(ObjectService.ObjectTypes.PERSON, $stateParams.id);
+        }
+
+        $scope.showDetails = function (objectHistoryDetails) {
+            var params = {};
+            params.details = objectHistoryDetails;
+
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'modules/common/views/object-history-details-modal.client.view.html',
+                controller: 'Common.ObjectHistoryDetailsController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+
+            });
         }
 
     }

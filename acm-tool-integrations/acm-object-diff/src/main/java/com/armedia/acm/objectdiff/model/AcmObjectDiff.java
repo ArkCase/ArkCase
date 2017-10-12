@@ -1,5 +1,7 @@
 package com.armedia.acm.objectdiff.model;
 
+import com.armedia.acm.objectdiff.model.interfaces.AcmChangeContainer;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,27 +26,29 @@ public class AcmObjectDiff extends AcmDiff
     {
         if (acmObjectChange instanceof AcmObjectModified)
         {
-            return getChangesForObjectModified((AcmObjectModified) acmObjectChange);
+            return getChangesForChangeContainer((AcmObjectModified) acmObjectChange);
         } else
         {
-            return new ArrayList<>();
+            ArrayList<AcmChange> acmChanges = new ArrayList<>();
+            if (acmObjectChange != null)
+            {
+                acmChanges.add(acmObjectChange);
+            }
+            return acmChanges;
         }
     }
 
-    private List<AcmChange> getChangesForObjectModified(AcmObjectModified objectModified)
+    private List<AcmChange> getChangesForChangeContainer(AcmChangeContainer acmChangeContainer)
     {
         List<AcmChange> changes = new LinkedList<>();
-        for (AcmChange change : objectModified.getChanges())
+        for (AcmChange change : acmChangeContainer.getChanges())
         {
             if (change.isLeaf())
             {
                 changes.add(change);
-            } else if (change instanceof AcmObjectModified)
+            } else if (change instanceof AcmChangeContainer)
             {
-                changes.addAll(getChangesForObjectModified((AcmObjectModified) change));
-            } else if (change instanceof AcmCollectionElementModified)
-            {
-                changes.addAll(getChangesForObjectModified(((AcmCollectionElementModified) change).getAcmObjectModified()));
+                changes.addAll(getChangesForChangeContainer((AcmChangeContainer) change));
             }
         }
         return changes;

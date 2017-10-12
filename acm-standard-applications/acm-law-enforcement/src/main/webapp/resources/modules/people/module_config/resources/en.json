@@ -28,7 +28,7 @@
     "activate.button": "Activate",
     "deactivate.button": "Deactivate",
     "merge.button": "Merge",
-    "restrict" : "Restrict?"    
+    "restrict": "Restrict?"
   },
   "people.comp.details": {
     "title": "Details",
@@ -44,7 +44,8 @@
     "table.columns": {
       "eventType": "Event Name",
       "eventDate": "Date",
-      "userId": "User"
+      "userId": "User",
+      "details.btn.text": "Details"
     }
   },
   "people.comp.pictures": {
@@ -222,8 +223,8 @@
     }
   },
   "people.comp.participants": {
-      "title": "Participants",
-      "table.columns": {
+    "title": "Participants",
+    "table.columns": {
       "type": "Type",
       "name": "Name"
     },
@@ -481,6 +482,61 @@
       "nameAsc": "Sort By People Name A-Z",
       "nameDesc": "Sort By People Name Z-A",
       "noSort": "(No Sort)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "person": {
+        "defaultPhone": "Default Phone Changed",
+        "defaultEmail": "Default Email Changed",
+        "defaultAddress": "Default Address Changed",
+        "defaultUrl": "Default Url Changed",
+        "defaultAlias": "Default Alias Changed",
+        "defaultIdentification": "Default Identification Changed",
+        "defaultPicture": "Default Picture Changed"
+      }
+    },
+    "value_changed": {
+      "person": {
+        "details": "Person Details Changed",
+        "title": "Person Details Changed",
+        "company": "Person Details Changed",
+        "status": "Person Details Changed",
+        "givenName": "Person Details Changed",
+        "middleName": "Person Details Changed",
+        "familyName": "Person Details Changed",
+        "hairColor": "Person Details Changed",
+        "eyeColor": "Person Details Changed",
+        "heightInInches": "Person Details Changed",
+        "weightInPounds": "Person Details Changed",
+        "dateOfBirth": "Person Details Changed",
+        "placeOfBirth": "Person Details Changed",
+        "dateMarried": "Person Details Changed"
+      }
+    },
+    "collection_element_added": {
+      "person": {
+        "identifications": "Identification Added",
+        "contactMethods": "Contact Method Added",
+        "personAliases": "Alias Added",
+        "addresses": "Address Added",
+        "organizations": "Organization Added",
+        "associationsToObjects": "Association Added",
+        "associationsFromObjects": "Association Added",
+        "organizationAssociations": "Organization Added"
+      }
+    },
+    "collection_element_removed": {
+      "person": {
+        "identifications": "Identification Removed",
+        "contactMethods": "Contact Method Removed",
+        "personAliases": "Alias Removed",
+        "addresses": "Address Removed",
+        "organizations": "Organization Removed",
+        "associationsToObjects": "Association Removed",
+        "associationsFromObjects": "Association Removed",
+        "organizationAssociations": "Organization Removed"
+      }
     }
   }
 }

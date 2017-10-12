@@ -2,13 +2,21 @@ package com.armedia.acm.plugins.person.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -172,12 +180,14 @@ public class Identification implements Serializable, AcmEntity, AcmObject
     }
 
     @Override
+    @JsonIgnore
     public String getObjectType()
     {
         return IdentificationConstants.OBJECT_TYPE;
     }
 
     @Override
+    @JsonIgnore
     public Long getId()
     {
         return getIdentificationID();

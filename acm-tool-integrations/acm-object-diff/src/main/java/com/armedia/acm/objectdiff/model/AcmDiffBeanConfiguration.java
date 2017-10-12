@@ -5,10 +5,29 @@ import java.util.List;
 
 public class AcmDiffBeanConfiguration implements Serializable
 {
+    /**
+     * which class should be processed
+     */
     private String className;
+    /**
+     * name in the path
+     */
     private String name;
+    /**
+     * Spring expression
+     */
+    private String displayExpression;
+    /**
+     * which fields should be included for comparing
+     */
     private List<String> includeFields;
+    /**
+     * which fields should be skipped for comparing
+     */
     private List<String> skipFields;
+    /**
+     * which fields are constructing the id
+     */
     private List<String> id;
 
     public String getClassName()
@@ -59,5 +78,15 @@ public class AcmDiffBeanConfiguration implements Serializable
     public void setId(List<String> id)
     {
         this.id = id;
+    }
+
+    public String getDisplayExpression()
+    {
+        return displayExpression;
+    }
+
+    public void setDisplayExpression(String displayExpression)
+    {
+        this.displayExpression = displayExpression;
     }
 }

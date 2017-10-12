@@ -1,8 +1,13 @@
 package com.armedia.acm.objectdiff.model;
 
-public class AcmCollectionElementAdded extends AcmCollectionElementChange
+import com.armedia.acm.objectdiff.model.interfaces.AcmChangeDisplayable;
+import com.armedia.acm.objectdiff.model.interfaces.AcmDiffConstants;
+
+public class AcmCollectionElementAdded extends AcmCollectionElementChange implements AcmChangeDisplayable
 {
     private Object affectedObject;
+    private String displayOldValue;
+    private String displayNewValue;
 
     public AcmCollectionElementAdded(Object object)
     {
@@ -20,9 +25,31 @@ public class AcmCollectionElementAdded extends AcmCollectionElementChange
         this.affectedObject = affectedObject;
     }
 
+    public void setOldValue(String displayOldValue)
+    {
+        this.displayOldValue = displayOldValue;
+    }
+
+    public void setNewValue(String displayNewValue)
+    {
+        this.displayNewValue = displayNewValue;
+    }
+
     @Override
     public boolean isLeaf()
     {
         return true;
+    }
+
+    @Override
+    public String getOldValue()
+    {
+        return displayOldValue;
+    }
+
+    @Override
+    public String getNewValue()
+    {
+        return displayNewValue;
     }
 }

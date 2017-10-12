@@ -1,6 +1,7 @@
 package com.armedia.acm.audit.model;
 
 import com.armedia.acm.data.converter.UUIDToStringConverter;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.google.common.base.Joiner;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -94,6 +95,7 @@ public class AuditEvent
     @JoinColumn(name = "cm_audit_activity", referencedColumnName = "cm_key", nullable = true, insertable = false, updatable = false)
     private AcmAuditLookup auditLookup;
 
+    @JsonRawValue
     @Lob
     @Column(name = "cm_diff_details")
     private String diffDetails;
@@ -271,6 +273,7 @@ public class AuditEvent
     {
         this.eventProperties = eventProperties;
     }
+
 
     public String getDiffDetails()
     {
