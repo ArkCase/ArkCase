@@ -2,6 +2,7 @@ package com.armedia.acm.services.labels.service;
 
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.model.ModuleConfig;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -256,7 +257,8 @@ public class LabelManagementService
             File resourceFile = new File(fileName);
             FileUtils.deleteQuietly(resourceFile);
             updateResource(moduleId, lang);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't reset resource file %s", fileName);
             log.error(msg);
@@ -300,18 +302,13 @@ public class LabelManagementService
 
         // 4. Save updated resource
         String fileName = String.format(resourcesLocation + resourceFile, moduleId, lang);
-        log.info("About to write the file [{}] with language [{}]", fileName, lang);
-        if (fileName.indexOf('"') > 0)
-        {
-            fileName = fileName.replace("\"", "");
-            log.info("About the write the file with the name [{}]", fileName);
-        }
         try
         {
             File resourceFile = new File(fileName);
             FileUtils.writeStringToFile(resourceFile, resource.toString(), "UTF-8");
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't write resource into the file %s", fileName);
             log.error(msg);
@@ -354,7 +351,8 @@ public class LabelManagementService
                 updateResource(moduleId, lang);
 
                 return customRes;
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 String msg = String.format("Can't write resource into the file %s", fileName);
                 log.error(msg);
@@ -375,7 +373,8 @@ public class LabelManagementService
         {
             File file = FileUtils.getFile(settingsFileLocation);
             FileUtils.writeStringToFile(file, objSettings.toString(), "UTF-8");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error(String.format("Can't write settings data in to the file %s", settingsFileLocation));
             throw new AcmLabelManagementException("Update settings error", e);
@@ -599,7 +598,8 @@ public class LabelManagementService
             String resource = FileUtils.readFileToString(file, "UTF-8");
             return new JSONObject(resource);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn(String.format("Can't read resource file %s", fileName));
             return null;
@@ -642,7 +642,8 @@ public class LabelManagementService
                             {
                                 JSONObject titleTranslatedObj = (JSONObject) moduleResource.get(menuItemTitle);
                                 menuItemTitle = (String) titleTranslatedObj.get("value");
-                            } catch (Exception e)
+                            }
+                            catch (Exception e)
                             {
                             }
                         }
