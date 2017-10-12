@@ -17,6 +17,10 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 return relationshipTypes;
             });
 
+        $scope.getLookupValue = function(value, key){
+          return ObjectLookupService.getLookupValue(value, key)
+        };
+
         $scope.gridOptions = {
             data: []
         };

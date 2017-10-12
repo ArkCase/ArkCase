@@ -13,9 +13,9 @@ angular.module('dashboard.emails', ['adf.provider'])
             });
     })
     .controller('Dashboard.EmailsController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService',
             function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService) {
 
             var modules = [
                 {
@@ -71,5 +71,18 @@ angular.module('dashboard.emails', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
-        }
+            ObjectLookupService.getContactMethodTypes(module.name).then(
+                    function (contactMethodTypes) {
+                        var found = _.find(contactMethodTypes, {key: 'email'});
+                        if(!Util.isArray(found)){
+                            $scope.emailTypes = found.subLookup;
+                        }
+                        return contactMethodTypes;
+                    });
+
+            $scope.getLookupValue = function(value, key){
+                    return ObjectLookupService.getLookupValue(value, key);
+                };
+
+            }
     ]);

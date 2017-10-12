@@ -677,6 +677,19 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             });
         };
 
+
+        Service.getLookupValue = function (objArray, key) {
+            if (!Util.isArrayEmpty(objArray)) {
+                for (var i = 0; i < objArray.length; i++) {
+                    if (objArray[i].key === key) {
+                        return objArray[i].value;
+                    }
+                }
+            }
+            // this should happen if the key is not found in the array. then return the key itself
+            return key;
+        };
+
         /**
          * @ngdoc method
          * @name validateLookup

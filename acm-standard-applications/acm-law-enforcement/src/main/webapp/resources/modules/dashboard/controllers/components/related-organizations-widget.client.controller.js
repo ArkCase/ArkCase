@@ -14,9 +14,9 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedOrganizationsController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Organization.InfoService', 'ObjectAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
         function ($scope, $stateParams, $translate,
-                  OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService) {
+                  OrganizationInfoService, ObjectAssociationService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
 
             var modules = [
                 {
@@ -69,6 +69,20 @@ angular.module('dashboard.relOrganizations', ['adf.provider'])
                     return widget.id === "relOrganizations";
                 });
                 gridHelper.setColumnDefs(widgetInfo);
+            };
+
+            $scope.relationshipTypes = [];
+            ObjectLookupService.getOrganizationRelationTypes().then(
+                function (relationshipTypes) {
+                    for (var i = 0; i < relationshipTypes.length; i++) {
+                        $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    }
+
+                    return relationshipTypes;
+                });
+
+            $scope.getLookupValue = function(value, key){
+                return ObjectLookupService.getLookupValue(value, key);
             };
         }
     ]);

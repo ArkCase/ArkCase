@@ -22,6 +22,10 @@ angular.module('organizations').controller('Organizations.CasesController', ['$s
                 return organizationTypes;
             });
 
+        $scope.getLookupValue = function(value, key){
+            return ObjectLookupService.getLookupValue(value, key);
+        };
+
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
