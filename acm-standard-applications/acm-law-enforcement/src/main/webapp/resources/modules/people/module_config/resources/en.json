@@ -498,29 +498,75 @@
     },
     "value_changed": {
       "person": {
-        "details": "Person Details Changed",
-        "title": "Person Details Changed",
-        "company": "Person Details Changed",
-        "status": "Person Details Changed",
-        "givenName": "Person Details Changed",
-        "middleName": "Person Details Changed",
-        "familyName": "Person Details Changed",
-        "hairColor": "Person Details Changed",
-        "eyeColor": "Person Details Changed",
-        "heightInInches": "Person Details Changed",
-        "weightInPounds": "Person Details Changed",
-        "dateOfBirth": "Person Details Changed",
-        "placeOfBirth": "Person Details Changed",
-        "dateMarried": "Person Details Changed"
+        "details": "Person - Details Changed",
+        "title": "Person - Title Changed",
+        "company": "Person - Company Changed",
+        "status": "Person - Status Changed",
+        "givenName": "Person - Given Name Changed",
+        "middleName": "Person - Middle Name Changed",
+        "familyName": "Person - Family Name Changed",
+        "hairColor": "Person - Hair Color Changed",
+        "eyeColor": "Person - Eye Color Changed",
+        "heightInInches": "Person - Height In Inches Changed",
+        "weightInPounds": "Person - Weight in Inches Changed",
+        "dateOfBirth": "Person - Date Of Birth Changed",
+        "placeOfBirth": "Person - Place Of Birth Changed",
+        "dateMarried": "Person - Date Married Changed",
+        "contactMethods.contactMethod": {
+          "subType": "Contact Method - Type Changed",
+          "value": "Contact Method - Value Changed"
+        },
+        "defaultPhone": {
+          "subType": "Default Phone - Type Changed",
+          "value": "Default Phone - Value Changed"
+        },
+        "defaultEmail": {
+          "subType": "Default Email - Type Changed",
+          "value": "Default Email - Value Changed"
+        },
+        "defaultUrl": {
+          "subType": "Default Url - Type Changed",
+          "value": "Default Url - Value Changed"
+        },
+        "contactMethods.addresses": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "defaultAddress": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        },
+        "defaultIdentification": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        }
       }
     },
     "collection_element_added": {
       "person": {
-        "identifications": "Identification Added",
-        "contactMethods": "Contact Method Added",
-        "personAliases": "Alias Added",
-        "addresses": "Address Added",
-        "organizations": "Organization Added",
+        "identifications.identification": "Identification Added",
+        "contactMethods.contactMethod": "Contact Method Added",
+        "personAliases.alias": "Alias Added",
+        "addresses.address": "Address Added",
+        "organizations.organization": "Organization Added",
         "associationsToObjects": "Association Added",
         "associationsFromObjects": "Association Added",
         "organizationAssociations": "Organization Added"
@@ -528,14 +574,19 @@
     },
     "collection_element_removed": {
       "person": {
-        "identifications": "Identification Removed",
-        "contactMethods": "Contact Method Removed",
-        "personAliases": "Alias Removed",
-        "addresses": "Address Removed",
-        "organizations": "Organization Removed",
+        "identifications.identification": "Identification Removed",
+        "contactMethods.contactMethod": "Contact Method Removed",
+        "personAliases.alias": "Alias Removed",
+        "addresses.address": "Address Removed",
+        "organizations.organization": "Organization Removed",
         "associationsToObjects": "Association Removed",
         "associationsFromObjects": "Association Removed",
         "organizationAssociations": "Organization Removed"
+      },
+      "personAliases.alias": {
+        "aliasType": "Alias - Type Changed",
+        "aliasValue": "Alias - Value Changed",
+        "description": "Alias - Description Changed"
       }
     }
   }

@@ -7,8 +7,19 @@ import java.io.Serializable;
 
 public abstract class AcmChange implements Serializable
 {
+    /**
+     * what action was performed. Constants are used from AcmDiffConstants
+     */
     private String action;
+    /**
+     * path from the root object
+     */
     private String path;
+    /**
+     * path of the parent object
+     */
+    private String shortPath;
+
 
     public String getAction()
     {
@@ -28,6 +39,16 @@ public abstract class AcmChange implements Serializable
     public void setPath(String path)
     {
         this.path = path;
+    }
+
+    public String getShortPath()
+    {
+        return shortPath;
+    }
+
+    public void setShortPath(String shortPath)
+    {
+        this.shortPath = shortPath;
     }
 
     @JsonIgnore
