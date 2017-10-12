@@ -1841,9 +1841,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return menuResource;
                 }
                 , makeContextMenu: function (menuResource, nodes) {
+                    var emptyArray = [];
                     if (DocTree.treeConfig.hideMenu)
                     {
-                        return null;
+                        return emptyArray;
                     }
                     var promiseArray = [];
                     var menuDeferred = $q.defer();
