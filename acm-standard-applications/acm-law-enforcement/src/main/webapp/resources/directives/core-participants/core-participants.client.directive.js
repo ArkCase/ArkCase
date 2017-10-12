@@ -176,10 +176,6 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     scope.gridOptions.data = objectInfo.participants;
                 };
 
-                scope.getLookupValue = function (objArray, key) {
-                    return ObjectLookupService.getLookupValue(objArray, key);
-                }
-
                 scope.addNew = function () {
                     var participant = {};
 
