@@ -23,6 +23,7 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -327,17 +328,18 @@ public class PersonServiceImpl implements PersonService
             Person oldPerson = null;
             if (!isNew)
             {
-                ObjectMapper om = new ObjectMapper();
+                ObjectMapperFactory factory = new ObjectMapperFactory();
+                ObjectMapper om = factory.createObjectMapper();
                 try
                 {
                     String old = om.writeValueAsString(personDao.find(in.getId()));
                     oldPerson = om.readValue(old, Person.class);
                 } catch (JsonProcessingException e)
                 {
-                    e.printStackTrace();
+                    log.error("JsonProcessingException ", e);
                 } catch (IOException e)
                 {
-                    e.printStackTrace();
+                    log.error("IOException ", e);
                 }
             }
             Person person = personDao.save(in);
