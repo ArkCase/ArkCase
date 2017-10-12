@@ -1389,7 +1389,7 @@
           "name": "eventType",
           "displayName": "people.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'('+row.entity.diffDetails.length + ' Changes)'}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'(' + (row.entity.diffDetailsAsJson ? row.entity.diffDetailsAsJson.length : '0') + ' Changes)'}}</div>"
         },
         {
           "name": "eventDate",
@@ -1406,7 +1406,7 @@
         {
           "name": "details",
           "displayName": "",
-          "cellTemplate": "<button ng-hide='!row.entity.diffDetails || row.entity.diffDetails.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetails)' translate>people.comp.history.table.columns.details.btn.text</button>"
+          "cellTemplate": "<button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)' translate>people.comp.history.table.columns.details.btn.text</button>"
         }
       ]
     }
