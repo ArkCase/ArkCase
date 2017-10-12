@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.EmailsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,19 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
             $scope.objectInfo = objectInfo;
             var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
             $scope.gridOptions.data = emails;
+        };
+
+        ObjectLookupService.getContactMethodTypes().then(
+            function (contactMethodTypes) {
+                var found = _.find(contactMethodTypes, {key: 'email'});
+                if(!Util.isArray(found)){
+                    $scope.emailTypes = found.subLookup;
+                }
+                return contactMethodTypes;
+            });
+
+        $scope.getLookupValue = function(value, key){
+            return ObjectLookupService.getLookupValue(value, key);
         };
 
         $scope.addNew = function () {
@@ -123,7 +136,7 @@ angular.module('organizations').controller('Organizations.EmailsController', ['$
                     email = _.find($scope.objectInfo.contactMethods, {id: data.email.id});
                 }
                 email.type = 'email';
-                email.subType = data.email.subType;
+                email.subType = data.email.subLookup;
                 email.value = data.email.value;
                 email.description = data.email.description;
 

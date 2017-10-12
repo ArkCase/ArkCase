@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,19 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             $scope.objectInfo = objectInfo;
             var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
             $scope.gridOptions.data = phones;
+        };
+
+        ObjectLookupService.getContactMethodTypes().then(
+            function (contactMethodTypes) {
+                var found =  _.find(contactMethodTypes, {key: 'phone'});
+                if (!Util.isEmpty(found)) {
+                    $scope.phoneTypes = found.subLookup;
+                }
+                return contactMethodTypes;
+            });
+
+        $scope.getLookupValue = function(value, key){
+            return ObjectLookupService.getLookupValue(value, key);
         };
 
         $scope.addNew = function () {

@@ -84,6 +84,10 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
                 return types;
             });
 
+        $scope.getLookupValue = function(value, key){
+            return ObjectLookupService.getLookupValue(value, key);
+        };
+
         $scope.editRow = function (rowEntity) {
             var validateEditRow = function(data) {
                 return validatePersonAssociation(data, rowEntity);

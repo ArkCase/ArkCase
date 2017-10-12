@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.IDsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -51,6 +51,16 @@ angular.module('organizations').controller('Organizations.IDsController', ['$sco
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.gridOptions.data = $scope.objectInfo.identifications;
+        };
+
+        ObjectLookupService.getOrganizationIdTypes().then(
+            function (identificationTypes) {
+                $scope.identificationTypes = identificationTypes;
+                return identificationTypes;
+            });
+
+        $scope.getLookupValue = function(value, key){
+            return ObjectLookupService.getLookupValue(value, key);
         };
 
         $scope.addNew = function () {

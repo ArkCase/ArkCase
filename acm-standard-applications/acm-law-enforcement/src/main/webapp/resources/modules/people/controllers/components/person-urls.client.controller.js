@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,19 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             $scope.objectInfo = objectInfo;
             var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
             $scope.gridOptions.data = urls;
+        };
+
+        ObjectLookupService.getContactMethodTypes().then(
+            function(contactMethodTypes){
+                var found = _.find(contactMethodTypes, {key: 'url'});
+                if(!Util.isArray(found)){
+                    $scope.urlTypes = found.subLookup;
+                }
+                return contactMethodTypes;
+            });
+
+        $scope.getLookupValue = function(value, key){
+          return ObjectLookupService.getLookupValue(value,key);
         };
 
         $scope.addNew = function () {
@@ -123,7 +136,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
                     url = _.find($scope.objectInfo.contactMethods, {id: data.url.id});
                 }
                 url.type = 'url';
-                url.subType = data.url.subType;
+                url.subType = data.url.subLookup;
                 url.value = data.url.value;
                 url.description = data.url.description;
 

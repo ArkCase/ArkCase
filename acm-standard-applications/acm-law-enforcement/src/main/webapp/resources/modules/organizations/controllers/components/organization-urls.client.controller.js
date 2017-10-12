@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.UrlsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -59,6 +59,21 @@ angular.module('organizations').controller('Organizations.UrlsController', ['$sc
             url.created = Util.dateToIsoString(new Date());
             url.creator = $scope.userId;
             url.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
+
+
+
+        ObjectLookupService.getContactMethodTypes().then(
+                function(contactMethodTypes){
+                    var found = _.find(contactMethodTypes, {key: 'url'});
+                    if(!Util.isArray(found)){
+                        $scope.urlTypes = found.subLookup;
+                    }
+                    return contactMethodTypes;
+                });
+
+        $scope.getLookupValue = function(value, key){
+                return ObjectLookupService.getLookupValue(value,key);
+            };
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.url = url;
@@ -123,7 +138,7 @@ angular.module('organizations').controller('Organizations.UrlsController', ['$sc
                     url = _.find($scope.objectInfo.contactMethods, {id: data.url.id});
                 }
                 url.type = 'url';
-                url.subType = data.url.subType;
+                url.subType = data.url.subLookup;
                 url.value = data.url.value;
                 url.description = data.url.description;
 
