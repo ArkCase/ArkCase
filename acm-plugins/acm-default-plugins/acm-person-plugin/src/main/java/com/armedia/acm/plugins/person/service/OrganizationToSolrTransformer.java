@@ -92,8 +92,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             {
                 if (sb.length() > 0)
                 {
-                    sb.append(" ");
-                    sb.append(organization.getPrimaryContact().getPerson().getFamilyName());
+                    sb.append(" " + organization.getPrimaryContact().getPerson().getFamilyName());
                 }
             }
         }
@@ -110,7 +109,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             sb.append(organization.getDefaultIdentification().getIdentificationNumber());
             if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationType().trim()))
             {
-                sb.append(" [").append(organization.getDefaultIdentification().getIdentificationType()).append("]");
+                sb.append(" [" + organization.getDefaultIdentification().getIdentificationType() + "]");
             }
         }
         return sb.toString();
@@ -128,7 +127,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             sb.append(organization.getDefaultPhone().getValue());
             if (!StringUtils.isEmpty(organization.getDefaultPhone().getSubType().trim()))
             {
-                sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
+                sb.append(" [" + organization.getDefaultPhone().getSubType() + "]");
             }
         }
         return sb.toString();
@@ -142,15 +141,14 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         }
 
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultAddress().getCity() != null && !organization.getDefaultAddress().getCity().trim().isEmpty())
+        if (!StringUtils.isEmpty(organization.getDefaultAddress().getCity().trim()))
         {
             sb.append(organization.getDefaultAddress().getCity());
-            if (organization.getDefaultAddress().getState() != null && !organization.getDefaultAddress().getState().trim().isEmpty())
+            if (!StringUtils.isEmpty(organization.getDefaultAddress().getState().trim()))
             {
                 if (sb.length() > 0)
                 {
-                    sb.append(", ");
-                    sb.append(organization.getDefaultAddress().getState());
+                    sb.append(", " + organization.getDefaultAddress().getState());
                 }
             }
         }
