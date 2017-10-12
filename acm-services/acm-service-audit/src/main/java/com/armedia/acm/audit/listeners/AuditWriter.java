@@ -49,7 +49,7 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
             auditEvent.setParentObjectType(acmEvent.getParentObjectType());
             auditEvent.setIpAddress(acmEvent.getIpAddress());
             auditEvent.setStatus("DRAFT");
-            auditEvent.setDiffDetails(acmEvent.getDiffDetails());
+            auditEvent.setDiffDetailsAsJson(acmEvent.getDiffDetailsAsJson());
 
             auditService.audit(auditEvent);
 

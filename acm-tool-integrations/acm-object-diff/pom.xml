@@ -21,6 +21,11 @@
             <artifactId>acm-core-api</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-search</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- json -->
         <dependency>
