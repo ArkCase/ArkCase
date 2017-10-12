@@ -18,7 +18,7 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
-    private AcmDiffService acmObjectChangeUtils;
+    private AcmDiffService acmDiffService;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -51,13 +51,12 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
             personPersistenceEvent.setEventAction("created");
         } else
         {
-            AcmDiff acmDiff = acmObjectChangeUtils.compareObjects(oldPerson, updatedPerson);
+            AcmDiff acmDiff = acmDiffService.compareObjects(oldPerson, updatedPerson);
             if (acmDiff != null)
             {
                 try
                 {
-                    String changesAsListJson = acmDiff.getChangesAsListJson();
-                    personPersistenceEvent.setDiffDetailsAsJson(changesAsListJson);
+                    personPersistenceEvent.setDiffDetailsAsJson(acmDiff.getChangesAsListJson());
                 } catch (JsonProcessingException e)
                 {
                     log.warn("can't process diff details for [{}].", updatedPerson, e);
@@ -78,8 +77,8 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(event);
     }
 
-    public void setAcmObjectChangeUtils(AcmDiffService acmObjectChangeUtils)
+    public void setAcmDiffService(AcmDiffService acmDiffService)
     {
-        this.acmObjectChangeUtils = acmObjectChangeUtils;
+        this.acmDiffService = acmDiffService;
     }
 }
