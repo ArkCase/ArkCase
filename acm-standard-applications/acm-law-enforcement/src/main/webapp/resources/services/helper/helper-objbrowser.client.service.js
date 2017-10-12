@@ -101,7 +101,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.componentsConfig = config.components;
 
                     var activeComponent = Service.getComponentByState(that.state);
-                    if ("main" != activeComponent) {
+                    if ("main" !== activeComponent) {
                         var nodeTypes = Util.goodArray(config.tree.nodeTypes);
                         var found = _.find(nodeTypes, function (nodeType) {
                             var comp = Util.goodArray(nodeType.components);
@@ -353,7 +353,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var leadComponent = selectedObject.leadComponent;
                     if (!leadComponent) {
                         var components = Util.goodArray(selectedObject.components);
-                        leadComponent = (1 == components.length) ? components[0] : "main";
+                        leadComponent = (1 === components.length) ? components[0] : "main";
                     }
                     that.scope.activeLinkId = leadComponent;
 
@@ -367,7 +367,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (!Util.goodPositive(id)) {
                         return;
                     }
-                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) != id) {
+                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) !== id) {
                         that.scope.objectInfo = null;
                     }
 
@@ -385,7 +385,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
 
                             //objectType fix for task
-                            if (objectType == 'ADHOC') {
+                            if (objectType === 'ADHOC') {
                                 objectType = 'TASK';
                             }
 
@@ -516,19 +516,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.previousId = null;
                 that.scope.$on('object-updated', function (e, objectInfo, objectId, reload) {
-                    if (reload || that.loaded != Service.getCurrentObjectId()) {
+                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
                         delete that.loaded;
                     } else {
                         return;
                     }
                     that.currentObjectId = Service.getCurrentObjectId();
-                    if (that.currentObjectId == objectId) {
+                    if (that.currentObjectId === objectId) {
                         onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo, reload) {
-                    if (reload || that.loaded != Service.getCurrentObjectId()) {
+                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
                         delete that.loaded;
                     } else {
                         return;
@@ -558,7 +558,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.deferConfigDone.promise.then(function (data) {
                         that.onObjectInfoRetrieved(objectInfo, e);
                     });
-                };
+                }
             }
         };
 
@@ -670,7 +670,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         }
                         , function (errorData) {
                             
-                            var nodeType = errorData.status == 403 ? "NO_ACCESS" : "ERROR";
+                            var nodeType = errorData.status === 403 ? "NO_ACCESS" : "ERROR";
 
                             that.scope.treeControl.select({
                                 pageStart: start
@@ -680,8 +680,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             });
 
                             var treeData = {docs: [], total: 0};
-                            var nodeTitle = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
-                            var nodeToolTip = errorData.status == 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");                          
+                            var nodeTitle = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
+                            var nodeToolTip = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");
                             
                             var errorNode = {
                                 nodeId: that.nodeId
@@ -720,7 +720,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 var componentType = selectedObject.leadComponent;
                 if (Util.isEmpty(componentType)) {
                     var components = Util.goodArray(selectedObject.components);
-                    componentType = (1 == components.length) ? components[0] : "main";
+                    componentType = (1 === components.length) ? components[0] : "main";
                 }
                 var stateName = that.moduleId + "." + componentType;
 
@@ -736,7 +736,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 //return _.find(docs, {nodeId: nodeId});   //somehow, _.find() does not always work
                 var found = null;
                 for (var i = 0; i < docs.length; i++) {
-                    if (docs[i].nodeId == nodeId) {
+                    if (docs[i].nodeId === nodeId) {
                         found = docs[i];
                         break;
                     }
@@ -775,8 +775,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             var comp = "main";
             var tokens = state.current.url.split("/");
             if (1 < tokens.length) {
-                if (":id" == tokens[tokens.length - 2]) {
-                    if ("main" != tokens[tokens.length - 1]) {
+                if (":id" === tokens[tokens.length - 2]) {
+                    if ("main" !== tokens[tokens.length - 1]) {
                         comp = tokens[tokens.length - 1];
                     }
                 }

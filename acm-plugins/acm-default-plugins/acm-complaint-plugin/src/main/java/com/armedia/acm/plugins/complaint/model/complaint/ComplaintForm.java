@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
+import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.frevvo.model.Strings;
@@ -42,8 +43,10 @@ public class ComplaintForm {
 	private String frequency;
 	private List<String> frequencies;
 	private PostalAddress location;
-	private Contact initiator;
-	private List<Contact> people;
+	private Long initiatorId;
+	private String initiatorFullName;
+	private String initiatorType;
+	private List<PersonItem> people;
     private String cmisFolderId;
     private List<ParticipantItem> participants;
     private List<String> participantsTypeOptions;
@@ -161,21 +164,47 @@ public class ComplaintForm {
 		this.location = location;
 	}
 
-	@XmlElement(name="initiator", type=InitiatorContact.class)
-	public Contact getInitiator() {
-		return initiator;
+	@XmlElement(name="initiatorId")
+	public Long getInitiatorId()
+	{
+		return initiatorId;
 	}
 
-	public void setInitiator(Contact initiator) {
-		this.initiator = initiator;
+	public void setInitiatorId(Long initiatorId)
+	{
+		this.initiatorId = initiatorId;
 	}
 
-	@XmlElement(name="people", type=PeopleContact.class)
-	public List<Contact> getPeople() {
+	@XmlElement(name="initiatorFullName")
+	public String getInitiatorFullName()
+	{
+		return initiatorFullName;
+	}
+
+	public void setInitiatorFullName(String initiatorFullName)
+	{
+		this.initiatorFullName = initiatorFullName;
+	}
+
+	@XmlElement(name="initiatorType")
+	public String getInitiatorType()
+	{
+		return initiatorType;
+	}
+
+	public void setInitiatorType(String initiatorType)
+	{
+		this.initiatorType = initiatorType;
+	}
+
+	@XmlElement(name="peopleItem", type=PersonItem.class)
+	public List<PersonItem> getPeople()
+	{
 		return people;
 	}
 
-	public void setPeople(List<Contact> people) {
+	public void setPeople(List<PersonItem> people)
+	{
 		this.people = people;
 	}
 

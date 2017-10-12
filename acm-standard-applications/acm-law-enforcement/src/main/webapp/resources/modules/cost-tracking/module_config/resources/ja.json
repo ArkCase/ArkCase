@@ -14,10 +14,10 @@
   },
   "costTracking.comp.info": {
     "title": "情報",
-    "incidentDate": "インシデントの日付",
+    "incidentDate": "事件の日付",
     "priority": "優先",
     "assignedTo": "割り当て先",
-    "subjectType": "サブジェクトタイプ",
+    "subjectType": "亜種類",
     "state": "状態"
   },
   "costTracking.comp.actions": {

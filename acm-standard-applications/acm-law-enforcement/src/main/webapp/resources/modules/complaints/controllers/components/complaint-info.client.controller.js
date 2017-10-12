@@ -3,11 +3,12 @@
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
     , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', '$filter', 'SearchService', 'Search.QueryBuilderService'
+    , 'Object.ParticipantService', '$q', 'SearchService', 'Search.QueryBuilderService', "Config.LocaleService"
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q, $filter
-        , SearchService, SearchQueryBuilder) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
+        , ObjectParticipantService, $q, SearchService, SearchQueryBuilder, LocaleService
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -187,7 +188,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
             $q.all([getComplaintTypesPromise, getPrioritiesPromise]).then(function() {
@@ -243,8 +244,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveComplaint();
         };
-        $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveComplaint();
         };
         
@@ -255,7 +257,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             } else {
                 $scope.complaintTypeValue = 'core.unknown';
             }
-        }
+        };
         
         var setPriorityValue = function() {
             var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
@@ -264,6 +266,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             } else {
                 $scope.priorityValue = 'core.unknown';
             }
-        }
+        };
+
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            $scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang)
+        });
     }
 ]);

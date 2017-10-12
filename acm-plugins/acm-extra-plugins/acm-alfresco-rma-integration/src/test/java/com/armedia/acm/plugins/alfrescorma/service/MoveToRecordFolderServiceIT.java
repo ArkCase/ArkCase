@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -32,6 +33,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-search.xml",

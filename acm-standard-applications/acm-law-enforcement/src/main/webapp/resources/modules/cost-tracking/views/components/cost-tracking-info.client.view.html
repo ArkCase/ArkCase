@@ -13,7 +13,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{(parentInfo.incidentDate | date: ('common.defaultDateUIFormat' | translate)) || 'Unknown'}}
+                    {{(parentInfo.incidentDate | date: 'shortDate' ) || 'Unknown'}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.incidentDate</span>

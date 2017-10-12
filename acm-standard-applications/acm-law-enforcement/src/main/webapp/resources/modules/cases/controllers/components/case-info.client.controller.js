@@ -68,12 +68,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         var lookupPriorities = function() {
             ObjectLookupService.getPriorities().then(
                 function (priorities) {
-                    var options = [];
-                    _.each(priorities, function (priority) {
-                        var text = $translate.data(priority, "cases.comp.info.priorities");
-                        options.push({value: priority, text: text});
-                    });
-                    $scope.priorities = options;
+                    $scope.priorities = priorities;
                     return priorities;
                 }
             );
@@ -82,7 +77,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         var lookupCaseTypes = function() {
             CaseLookupService.getCaseTypes().then(
                 function (caseTypes) {
-                    $scope.caseTypes = options;
+                    $scope.caseTypes = caseTypes;
                     return caseTypes;
                 }
             );
@@ -208,7 +203,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (data) {
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
             $q.all([getPrioritiesPromise, caseFileTypesPromise]).then(function() {
@@ -272,8 +267,9 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveCase();
         };
-        $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveCase();
         };
         

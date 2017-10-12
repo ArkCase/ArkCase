@@ -178,6 +178,7 @@
 
     <bean id="complaintFactory" class="com.armedia.acm.plugins.complaint.service.ComplaintFactory">
         <property name="personDao" ref="acmPersonDao"/>
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="fileService" ref="ecmFileService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>

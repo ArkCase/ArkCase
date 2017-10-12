@@ -9,6 +9,14 @@ angular.module('dashboard.my-cases', ['adf.provider'])
                 controller: 'Dashboard.MyCasesController',
                 controllerAs: 'myCases',
                 reload: true,
-                templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html'
+                templateUrl: 'modules/dashboard/views/components/my-cases.client.view.html',
+                resolve: {
+                    params: function (config) {
+                        return config;
+                    }
+                },
+                edit: {
+                    templateUrl: 'modules/dashboard/views/components/my-cases-edit.client.view.html'
+                }
             });
     });

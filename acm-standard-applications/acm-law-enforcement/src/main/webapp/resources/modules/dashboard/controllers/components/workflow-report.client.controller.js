@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('dashboard.workflow-report')
-    .controller('Dashboard.WorkflowReportController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'UtilService', 'Util.DateService',
-        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, Util, UtilDateService) {
+    .controller('Dashboard.WorkflowReportController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ObjectService', '$state', 'UtilService', 'Util.DateService', 'params',
+        function ($scope, $translate, Authentication, DashboardService, ObjectService, $state, Util, UtilDateService, params) {
 
             var vm = this;
 
@@ -10,6 +10,13 @@ angular.module('dashboard.workflow-report')
             $scope.$emit('req-component-config', 'workflowReport');
 
             vm.config = null;
+
+            if(!Util.isEmpty( params.description)) {
+                $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
+            }
 
             var paginationOptions = {
                 pageNumber: 1,

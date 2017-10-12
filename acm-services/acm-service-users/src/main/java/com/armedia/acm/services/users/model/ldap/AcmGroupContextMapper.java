@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.model.ldap;
 
-import com.armedia.acm.services.users.model.LdapGroup;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
@@ -36,14 +35,6 @@ public class AcmGroupContextMapper implements ContextMapper
         group.setDescription(MapperUtils.getAttribute(adapter, "description"));
         group.setDirectoryName(acmLdapSyncConfig.getDirectoryName());
 
-        if (adapter.attributeExists("memberOf"))
-        {
-            String[] groupIsMemberOf = adapter.getStringAttributes("memberOf");
-            Set<String> parentGroups = MapperUtils.mapAttributes(groupIsMemberOf, MapperUtils.getRdnMappingFunction("cn"))
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toSet());
-            group.setParentGroups(parentGroups);
-        }
         if (adapter.attributeExists("member"))
         {
             String[] members = adapter.getStringAttributes("member");

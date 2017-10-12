@@ -1,6 +1,12 @@
 <div class="modal-header">
-    <h3>
-        <ng-switch on="editMode">
+    <h3 ng-if="isSelectedParent">
+        <ng-switch on="editMode || isEditParent"">
+            <span ng-switch-when="true" translate>common.editOrganization.parentTitle</span>
+            <span ng-switch-default translate>common.addOrganization.parentTitle</span>
+        </ng-switch>
+    </h3>
+    <h3 ng-if="!isSelectedParent">
+        <ng-switch on="editMode || isEditParent"">
             <span ng-switch-when="true" translate>common.editOrganization.title</span>
             <span ng-switch-default translate>common.addOrganization.title</span>
         </ng-switch>
@@ -11,8 +17,7 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label>&nbsp;</label>
-                <button type="button" class="btn btn-primary"
-                        ng-show="!editMode"
+                <button type="button" class="btn btn-primary" ng-show="!editMode || isEditParent"
                         ng-click="addNewOrganization()" translate>
                     common.addOrganization.addNew.label
                 </button>
@@ -20,11 +25,11 @@
             <div class="col-sm-6 form-group" ng-show="showSetPrimary">
                 <label translate>common.addOrganization.setPrimary.label</label><span class="required-asterisk">*</span>
                 <label>
-                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <input type="radio" ng-model="isDefault" name="{{'common.addOrganization.radioName'}}" ng-value="true">
                     <translate>common.addOrganization.radioYes.text</translate>
                 </label>
-                <label>
-                    <input type="radio" ng-model="isDefault" ng-value="false">
+                <label ng-if="hideNoField">
+                    <input type="radio" ng-model="isDefault" name="{{'common.addOrganization.radioName'}}" ng-value="false">
                     <translate>common.addOrganization.radioNo.text</translate>
                 </label>
             </div>
@@ -35,15 +40,20 @@
                        translate>common.addOrganization.organization.label</label><span
                     class="required-asterisk">*</span>
                 <input id="organization" class="input-md form-control" type="text"
-                       ng-model="organizationValue" readonly ng-disabled="editMode"
+                       ng-model="organizationValue" readonly ng-disabled="editMode && !isEditParent"
                        placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
                        ng-click="pickOrganization()" required>
             </div>
             <div class="col-sm-6 form-group">
                 <label translate>common.addOrganization.type.label</label><span
                     class="required-asterisk">*</span>
-                <select class="input-md form-control" ng-model="type" ng-options="o.value | translate for o in types"
+                <select ng-if="!isSelectedParent" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in types"
                         required></select>
+
+                <ng-switch ng-if="isSelectedParent" on="!!organizationValue">
+                    <input translate ng-switch-when="true" class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.text' | translate}}"/>
+                    <input translate ng-switch-default class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.default.text' | translate}}"/>
+                </ng-switch>
             </div>
         </div>
         <div class="row">
@@ -67,7 +77,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>common.addOrganization.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isChanged">
         <span translate>common.addOrganization.btnOk.text</span>
     </button>
 </div>

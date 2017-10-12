@@ -1,7 +1,7 @@
 package com.armedia.acm.services.labels.service;
 
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 
@@ -35,6 +35,11 @@ public class TranslationService
     {
         String translatedValue = labelKey;
         JSONObject jsonObject = null;
+
+        if (!labelKey.contains("."))
+        {
+            return translatedValue;
+        }
 
         try
         {
