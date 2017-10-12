@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.mule.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -84,10 +85,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (organization.getPrimaryContact().getPerson().getGivenName() != null && !organization.getPrimaryContact().getPerson().getGivenName().equals(""))
+        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getGivenName().trim()))
         {
             sb.append(organization.getPrimaryContact().getPerson().getGivenName());
-            if (organization.getPrimaryContact().getPerson().getFamilyName() != null && !organization.getPrimaryContact().getPerson().getFamilyName().equals(""))
+            if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getFamilyName().trim()))
             {
                 if (sb.length() > 0)
                 {
@@ -104,10 +105,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultIdentification().getIdentificationNumber() != null && !organization.getDefaultIdentification().getIdentificationNumber().equals(""))
+        if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationNumber().trim()))
         {
             sb.append(organization.getDefaultIdentification().getIdentificationNumber());
-            if (organization.getDefaultIdentification().getIdentificationType() != null && !organization.getDefaultIdentification().getIdentificationType().equals(""))
+            if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationType().trim()))
             {
                 sb.append(" [").append(organization.getDefaultIdentification().getIdentificationType()).append("]");
             }
@@ -122,10 +123,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultPhone().getValue() != null && !organization.getDefaultPhone().getValue().equals(""))
+        if (!StringUtils.isEmpty(organization.getDefaultPhone().getValue().trim()))
         {
             sb.append(organization.getDefaultPhone().getValue());
-            if (organization.getDefaultPhone().getSubType() != null && !organization.getDefaultPhone().getSubType().equals(""))
+            if (!StringUtils.isEmpty(organization.getDefaultPhone().getSubType().trim()))
             {
                 sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
             }
@@ -141,10 +142,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         }
 
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultAddress().getCity() != null && !organization.getDefaultAddress().getCity().equals(""))
+        if (organization.getDefaultAddress().getCity() != null && !organization.getDefaultAddress().getCity().trim().isEmpty())
         {
             sb.append(organization.getDefaultAddress().getCity());
-            if (organization.getDefaultAddress().getState() != null && !organization.getDefaultAddress().getState().equals(""))
+            if (organization.getDefaultAddress().getState() != null && !organization.getDefaultAddress().getState().trim().isEmpty())
             {
                 if (sb.length() > 0)
                 {
