@@ -117,25 +117,15 @@ angular.module('dashboard').factory('Dashboard.DashboardService', ['$resource', 
                 }, 0);
             };
 
-            var localeSettingsPromise = LocaleService.getSettings()
-            var userInfoPromise = Authentication.queryUserInfo();
-            
-            $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
-                var locales = result[0].locales;
-                var userInfo = result[1];
-
-                var userLocale = _.findWhere(locales, {code: userInfo.langCode});
+            $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
+                var userInfo = result[0];
+                var userLocale = LocaleService.requestLocale(userInfo.langCode);
                 setLocale(userLocale.iso);
             });
-            
+
             scope.$bus.subscribe('$translateChangeSuccess', function (data) {
-                localeSettingsPromise.then(function(localeSettings) {
-                    var userLocale = _.findWhere(localeSettings.locales, {code: data.language});
-                    if (userLocale) {
-                        var iso = Util.goodMapValue(userLocale, "iso", LocaleService.DEFAULT_ISO);
-                        setLocale(iso);
-                    }
-                });
+                var userLocale = LocaleService.requestLocale(data.language);
+                setLocale(userLocale.iso);
             });
 
         };
