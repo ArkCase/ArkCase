@@ -1,0 +1,93 @@
+[
+  {
+    "className": "com.armedia.acm.plugins.person.model.Person",
+    "name": "person",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "title",
+      "company",
+      "status",
+      "givenName",
+      "middleName",
+      "familyName",
+      "hairColor",
+      "eyeColor",
+      "heightInInches",
+      "weightInPounds",
+      "dateOfBirth",
+      "placeOfBirth",
+      "dateMarried",
+      "details",
+      "restricted",
+      "addresses",
+      "participants",
+      "defaultPhone",
+      "defaultEmail",
+      "defaultAddress",
+      "defaultUrl",
+      "defaultAlias",
+      "defaultIdentification",
+      "defaultPicture",
+      "personAliases",
+      "identifications",
+      "securityTags",
+      "contactMethods"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.plugins.addressable.model.PostalAddress",
+    "name": "address",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "status",
+      "type",
+      "streetAddress",
+      "streetAddress2",
+      "city",
+      "state",
+      "zip",
+      "country"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.plugins.person.model.Identification",
+    "name": "identification",
+    "id": [
+      "identificationID"
+    ],
+    "includeFields": [
+      "identificationNumber",
+      "identificationIssuer",
+      "identificationType",
+      "identificationYearIssued"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.plugins.addressable.model.ContactMethod",
+    "name": "contactMethod",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "value",
+      "type",
+      "subType"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.plugins.person.model.PersonAlias",
+    "name": "personAlias",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "aliasType",
+      "aliasValue",
+      "description"
+    ]
+  }
+]

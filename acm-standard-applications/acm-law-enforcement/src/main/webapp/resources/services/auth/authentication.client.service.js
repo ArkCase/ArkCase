@@ -29,8 +29,7 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
         
             , _updateUserLang: {
                 method: 'POST',
-                url: 'api/v1/users/lang/:lang',
-                cache: false
+                url: 'api/v1/users/lang/:lang'
             }
         });
 
@@ -59,7 +58,6 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                     if (Service.validateUserInfo(data)) {
                         userInfo = data;
                         Store.fixOwner(userInfo.userId);
-                        cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
                         cacheUserInfo.set(userInfo);
                         return userInfo;
                     }
@@ -106,9 +104,25 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 service: Service._updateUserLang
                 , param: {lang: lang}
                 , data: {}
+                , onSuccess: function (data) {
+                    if (Service.validateUpdateUserLang(data)) {
+                        var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
+                        var userInfo = cacheUserInfo.get();
+                        userInfo.langCode = lang;
+                        cacheUserInfo.set(userInfo);
+                        return data;
+                    }
+                }
             });
         };
-        
+
+        Service.validateUpdateUserLang = function (data) {
+            if (Util.isEmpty(data)) {
+                return false;
+            }
+            return true;
+        };
+
         return Service;
     }
 ]);
