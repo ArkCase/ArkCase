@@ -31,6 +31,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-object-history.xml",
         "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-organization-rules.xml",
         "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = true)
