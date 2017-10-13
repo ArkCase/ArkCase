@@ -114,7 +114,7 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
 
         Capture<Organization> orgCapture = EasyMock.newCapture();
         Capture<Organization> orgCaptureOld = EasyMock.newCapture();
-        expect(mockOrganizationDao.find(-1L)).andReturn(body);
+        expect(mockOrganizationService.getOrganization(body.getOrganizationId())).andReturn(body);
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
         expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress))).andReturn(body);
         mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), capture(orgCaptureOld), eq(false), eq(true));
