@@ -14,6 +14,8 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
@@ -54,14 +56,10 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
     {
         in = new Organization();
         creator = new AcmUser();
-        creator.setUserId("creator");
-        creator.setFirstName("Create");
-        creator.setLastName("Creator");
+        setupCreator(creator);
 
         modifier = new AcmUser();
-        modifier.setUserId("modifier");
-        modifier.setFirstName("Modify");
-        modifier.setLastName("Modifier");
+        setupModifier(modifier);
 
         setupOrganization(in);
         mockSearchAccessControlFields = createMock(SearchAccessControlFields.class);
@@ -70,6 +68,18 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         unit = new OrganizationToSolrTransformer();
         unit.setSearchAccessControlFields(mockSearchAccessControlFields);
         unit.setUserDao(mockUserDao);
+    }
+
+    private void setupModifier(AcmUser modifier) {
+        modifier.setUserId("modifier");
+        modifier.setFirstName("Modify");
+        modifier.setLastName("Modifier");
+    }
+
+    private void setupCreator(AcmUser creator) {
+        creator.setUserId("creator");
+        creator.setFirstName("Create");
+        creator.setLastName("Creator");
     }
 
     private void setupOrganization(Organization in)
@@ -88,6 +98,7 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         in.setModified(now);
         in.setModifier("modifier");
 
+        /*      Set Identifications        */
         Identification identification = new Identification();
             identification.setIdentificationID(222L);
             identification.setIdentificationType("DUNS");
@@ -102,6 +113,7 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
 
         in.setIdentifications(identifications);
 
+        /*      Set Postal addresses        */
         PostalAddress postalAddress = new PostalAddress();
             postalAddress.setId(223L);
             postalAddress.setCreated(now);
@@ -121,70 +133,208 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
 
         in.setAddresses(postalAddresses);
 
-        /*PostalAddress postalAddressPerson = new PostalAddress();
-            postalAddressPerson.setId(6L);
-            postalAddressPerson.setCreated(now);
-            postalAddressPerson.setCreator(userId);
-            postalAddressPerson.setModified(now);
-            postalAddressPerson.setModifier(userId);
-            postalAddressPerson.setType("Home");
-            postalAddressPerson.setStreetAddress("address 1");
-            postalAddressPerson.setCity("Skopje");
-            postalAddressPerson.setState("Karposh");
-            postalAddressPerson.setContactMethods(new ArrayList<ContactMethod>());
-            postalAddressPerson.setCountry("MK");
-            postalAddressPerson.setStatus("Active");
+        /*      Set Participants        */
+        AcmParticipant acmParticipant = new AcmParticipant();
+            acmParticipant.setId(222L);
+            acmParticipant.setObjectType("objectTpye");
+            acmParticipant.setObjectId(223L);
+            acmParticipant.setParticipantType("participantType");
+            acmParticipant.setParticipantLdapId("ldapType");
 
-        List<PostalAddress> postalAddressesPerson = new ArrayList<>();
-            postalAddresses.add(postalAddressPerson);*/
+        List<AcmParticipant> acmParticipants = new ArrayList<>();
+            acmParticipants.add(acmParticipant);
 
+        in.setParticipants(acmParticipants);
+
+    }
+
+    private void setupOrganizationPersonAssociationPrimaryContactWithGivenName(Organization in)
+    {
+        ZonedDateTime nowUTC = ZonedDateTime.now(ZoneOffset.UTC);
+        Date now = Date.from(nowUTC.toInstant());
+        String userId = "user";
+        this.in.setPersonAssociations(new ArrayList<PersonOrganizationAssociation>());
+
+        /*      Set PersonAssociations      */
         Person person = new Person();
-            person.setId(131L);
-            person.setStatus("ACTIVE");
-            person.setGivenName("Test5");
-            person.setFamilyName("Test5");
-            person.setCreated(now);
-            person.setCreator(userId);
-            person.setModified(now);
-            person.setModifier(userId);
-            person.setAddresses(postalAddresses);
+        person.setId(131L);
+        person.setStatus("ACTIVE");
+        person.setGivenName("Test5");
+        person.setFamilyName("");
+        person.setCreated(now);
+        person.setCreator(userId);
+        person.setModified(now);
+        person.setModifier(userId);
 
         PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
-            personOrganizationAssociation.setId(225L);
+        personOrganizationAssociation.setId(225L);
+        personOrganizationAssociation.setPerson(person);
+        personOrganizationAssociation.setDescription("description");
+        personOrganizationAssociation.setPrimaryContact(true);
+
+        List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
+        personAssociations.add(personOrganizationAssociation);
+
+        this.in.setPersonAssociations(personAssociations);
+    }
+
+    private void setupOrganizationPersonAssociationPrimaryContactWithFamilyName (Organization in)
+    {
+        ZonedDateTime nowUTC = ZonedDateTime.now(ZoneOffset.UTC);
+        Date now = Date.from(nowUTC.toInstant());
+        String userId = "user";
+        this.in.setPersonAssociations(new ArrayList<PersonOrganizationAssociation>());
+
+        /*      Set PersonAssociations      */
+        Person person = new Person();
+        person.setId(131L);
+        person.setStatus("ACTIVE");
+        person.setGivenName("");
+        person.setFamilyName("Test6");
+        person.setCreated(now);
+        person.setCreator(userId);
+        person.setModified(now);
+        person.setModifier(userId);
+
+        PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
+        personOrganizationAssociation.setId(225L);
+        personOrganizationAssociation.setPerson(person);
+        personOrganizationAssociation.setDescription("description");
+        personOrganizationAssociation.setPrimaryContact(true);
+
+        List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
+        personAssociations.add(personOrganizationAssociation);
+
+        this.in.setPersonAssociations(personAssociations);
+    }
+
+    private void setupOrganizationPersonAssociationPrimaryContactWithFullName (Organization in)
+    {
+        ZonedDateTime nowUTC = ZonedDateTime.now(ZoneOffset.UTC);
+        Date now = Date.from(nowUTC.toInstant());
+        String userId = "user";
+        this.in.setPersonAssociations(new ArrayList<PersonOrganizationAssociation>());
+
+        /*      Set PersonAssociations      */
+        Person person = new Person();
+        person.setId(131L);
+        person.setStatus("ACTIVE");
+        person.setGivenName("Test5");
+        person.setFamilyName("Test6");
+        person.setCreated(now);
+        person.setCreator(userId);
+        person.setModified(now);
+        person.setModifier(userId);
+
+        PersonOrganizationAssociation personOrganizationAssociation = new PersonOrganizationAssociation();
+        personOrganizationAssociation.setId(225L);
+        personOrganizationAssociation.setPerson(person);
+        personOrganizationAssociation.setDescription("description");
+        personOrganizationAssociation.setPrimaryContact(true);
+
+        List<PersonOrganizationAssociation> personAssociations = new ArrayList<>();
+        personAssociations.add(personOrganizationAssociation);
+
+        this.in.setPersonAssociations(personAssociations);
     }
 
     @Test
     public void toContentFileIndex() throws Exception
     {
-//        assertNull(in);
+        // given
+
+        // when
+        SolrAdvancedSearchDocument result = unit.toContentFileIndex(in);
+
+        // then
+        assertNull(result);
     }
 
     @Test
     public void toSolrAdvancedSearch() throws Exception
     {
-        /*mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        // given
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
         expectLastCall();
-
-        expect(mockUserDao.quietFindByUserId(eq("user"))).andReturn(user).times(2);
-        expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
-
+        expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
+        expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
         replayAll();
+
+        // when
         SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
         verifyAll();
 
-        validateResult(result);*/
+        // then
+        validateResult(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearch_primaryContactWithGivenName() throws Exception
+    {
+        // given
+        setupOrganizationPersonAssociationPrimaryContactWithGivenName(in);
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        expectLastCall();
+        expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
+        expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
+        replayAll();
+
+        // when
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        // then
+        validateResultToSolrAdvancedSerach_primaryContactWithGivenName(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearch_primaryContactWithFamilyName() throws Exception
+    {
+        // given
+        setupOrganizationPersonAssociationPrimaryContactWithFamilyName(in);
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        expectLastCall();
+        expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
+        expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
+        replayAll();
+
+        // when
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        // then
+        validateResultToSolrAdvancedSerach_primaryContactWithFamilyName(result);
+    }
+
+    @Test
+    public void toSolrAdvancedSearch_primaryContactWithFullName() throws Exception
+    {
+        // given
+        setupOrganizationPersonAssociationPrimaryContactWithFullName(in);
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        expectLastCall();
+        expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
+        expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
+        replayAll();
+
+        // when
+        SolrAdvancedSearchDocument result = unit.toSolrAdvancedSearch(in);
+        verifyAll();
+
+        // then
+        validateResultToSolrAdvancedSerach_primaryContactWithFullName(result);
     }
 
     @Test
     public void toSolrQuickSearch() throws Exception
     {
         // given
-         mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
+        mockSearchAccessControlFields.setAccessControlFields(anyObject(SolrBaseDocument.class), anyObject(AcmAssignedObject.class));
         expectLastCall();
         expect(mockUserDao.quietFindByUserId("creator")).andReturn(creator);
         expect(mockUserDao.quietFindByUserId("modifier")).andReturn(modifier);
-
         replayAll();
+
         // when
         SolrDocument result = unit.toSolrQuickSearch(in);
 
@@ -192,30 +342,50 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
 
         // then
         validateResult(result);
+    }
 
+    private void validateResultToSolrAdvancedSerach_primaryContactWithGivenName(SolrAdvancedSearchDocument result)
+    {
+        assertThat(result.getAdditionalProperties().get("primary_contact_s"), is("Test5"));
+        assertNull(result.getAdditionalProperties().get("default_phone_s"));
+        assertNull(result.getAdditionalProperties().get("default_location_s"));
+        assertNull(result.getAdditionalProperties().get("default_identification_s"));
+    }
+
+    private void validateResultToSolrAdvancedSerach_primaryContactWithFamilyName(SolrAdvancedSearchDocument result)
+    {
+        assertThat(result.getAdditionalProperties().get("primary_contact_s"), is("Test6"));
+        assertNull(result.getAdditionalProperties().get("default_phone_s"));
+        assertNull(result.getAdditionalProperties().get("default_location_s"));
+        assertNull(result.getAdditionalProperties().get("default_identification_s"));
+    }
+
+    private void validateResultToSolrAdvancedSerach_primaryContactWithFullName(SolrAdvancedSearchDocument result)
+    {
+        assertThat(result.getAdditionalProperties().get("primary_contact_s"), is("Test5 Test6"));
+        assertNull(result.getAdditionalProperties().get("default_phone_s"));
+        assertNull(result.getAdditionalProperties().get("default_location_s"));
+        assertNull(result.getAdditionalProperties().get("default_identification_s"));
     }
 
     private void validateResult(SolrAdvancedSearchDocument result)
     {
-//        assertNotNull(result);
-//        assertEquals(result.getEcmFileId(), String.valueOf(in.getVersionSeriesId()));
-//        assertEquals("101-FILE", result.getId());
-//        assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
-//        assertEquals(in.getObjectType(), result.getObject_type_s());
-//        assertEquals(in.getFileName(), result.getName());
-//        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
-//        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
-//        assertEquals(in.getCreated(), result.getCreate_date_tdt());
-//        assertEquals(in.getCreator(), result.getCreator_lcs());
-//        assertEquals(in.getModified(), result.getModified_date_tdt());
-//        assertEquals(in.getModifier(), result.getModifier_lcs());
-//        assertEquals(in.getFileName(), result.getTitle_parseable());
-//        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
-//        assertEquals(in.getStatus(), result.getStatus_lcs());
-//        assertEquals(in.getFileType(), result.getType_lcs());
-//        assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
-//        assertEquals(in.getParentObjectType(), result.getParent_type_s());
-//        assertEquals(9, result.getAdditionalProperties().size());
+        assertNotNull(result);
+        assertThat(result.getId(), is(in.getId().toString()+"-ORGANIZATION"));
+        assertThat(result.getObject_id_s(), is(in.getId().toString()));
+        assertThat(result.getObject_type_s(), is(in.getObjectType()));
+        assertThat(result.getCreate_date_tdt(), is(in.getCreated()));
+        assertThat(result.getCreator_lcs(), is(in.getCreator()));
+        assertThat(result.getModified_date_tdt(), is(in.getModified()));
+        assertThat(result.getModifier_lcs(), is(in.getModifier()));
+        assertThat(result.getType_lcs(), is(in.getOrganizationType()));
+        assertThat(result.getName(), is(in.getOrganizationValue()));
+        assertThat(result.getTitle_parseable(), is(in.getOrganizationValue()));
+        assertThat(result.getTitle_parseable_lcs(), is(in.getOrganizationValue()));
+        assertThat(result.getStatus_lcs(), is(in.getStatus()));
+        assertThat(result.getAdditionalProperties().get("creator_full_name_lcs"), is("Create Creator"));
+        assertThat(result.getAdditionalProperties().get("modifier_full_name_lcs"), is("Modify Modifier"));
+        assertThat(result.getAdditionalProperties().get("acm_participants_lcs"), is("[{\"ldapId\":\"ldapType\", \"type\":\"participantType\"}]"));
     }
 
     private void validateResult(SolrDocument result)
@@ -233,11 +403,8 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         assertThat(result.getName(), is(in.getOrganizationValue()));
         assertThat(result.getTitle_parseable(), is(in.getOrganizationValue()));
         assertThat(result.getTitle_parseable_lcs(), is(in.getOrganizationValue()));
-
         assertThat(result.getAdditionalProperties().get("creator_full_name_lcs"), is("Create Creator"));
-
         assertThat(result.getAdditionalProperties().get("modifier_full_name_lcs"), is("Modify Modifier"));
-//        assertEquals(in., result.);
     }
 
 }

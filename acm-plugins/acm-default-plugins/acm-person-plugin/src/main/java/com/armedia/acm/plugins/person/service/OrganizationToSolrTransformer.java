@@ -88,15 +88,16 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getGivenName().trim()))
         {
             sb.append(organization.getPrimaryContact().getPerson().getGivenName());
-            if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getFamilyName().trim()))
-            {
-                if (sb.length() > 0)
-                {
-                    sb.append(" " + organization.getPrimaryContact().getPerson().getFamilyName());
-                }
-            }
         }
-        return sb.toString();
+        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getFamilyName().trim()))
+        {
+            if (sb.length() > 0)
+            {
+                sb.append(" ");
+            }
+            sb.append(organization.getPrimaryContact().getPerson().getFamilyName());
+        }
+        return sb.toString().trim();
     }
 
     private String getDefaultIdentification(Organization organization) {
