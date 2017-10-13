@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'CreateNewItemDialogService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService) {
+        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, CreateNewItemDialogService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -69,11 +69,12 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         };
 
         $scope.addNew = function () {
-            $state.go("newTaskFromParentObject", {
+            var modalParams = {
                 parentType: ObjectService.ObjectTypes.CASE_FILE,
                 parentObject: $scope.objectInfo.caseNumber,
                 parentTitle: $scope.objectInfo.title
-            });
+            };
+            CreateNewItemDialogService.createNewTask(modalParams);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

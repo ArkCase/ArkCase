@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'CreateNewItemDialogService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, CreateNewItemDialogService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -67,11 +67,12 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         $scope.addNew = function () {
-            $state.go("newTaskFromParentObject", {
+            var modalParams = {
                 parentType: ObjectService.ObjectTypes.COMPLAINT,
                 parentObject: $scope.objectInfo.complaintNumber,
                 parentTitle: $scope.objectInfo.title
-            });
+            };
+            CreateNewItemDialogService.createNewTask(modalParams);
 
         };
 

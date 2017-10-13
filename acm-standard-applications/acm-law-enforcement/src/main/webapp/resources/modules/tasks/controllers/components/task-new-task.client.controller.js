@@ -1,19 +1,21 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$stateParams', '$sce', '$q', '$modal'
+angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$sce', '$q', '$modal'
     , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
     , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService', 'Admin.FunctionalAccessControlService'
-    , function ($scope, $state, $stateParams, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
-        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService 
-        , AdminFunctionalAccessControlService) {
+    , 'modalParams'
+    , function ($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
+        , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService
+        , AdminFunctionalAccessControlService, modalParams) {
 
+        $scope.modalParams = modalParams;
         $scope.config = null;
         $scope.userSearchConfig = null;
         $scope.objectSearchConfig = null;
         $scope.isAssocType = false;
 
         $scope.groupTask = false;
-        $scope.chosenGroup = "";
+        $scope.chosenGroup = '';
 
         $scope.options = {
             focus: true,
@@ -54,11 +56,11 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.config.data.percentComplete = 0;
 
 
-            if (!Util.isEmpty($stateParams.parentObject) && !Util.isEmpty($stateParams.parentType)) {
-                $scope.config.data.attachedToObjectName = $stateParams.parentObject;
-                $scope.config.data.attachedToObjectType = $stateParams.parentType;
-                if (!Util.isEmpty($stateParams.parentTitle)) {
-                    $scope.config.data.parentObjectTitle = $stateParams.parentTitle;
+            if (!Util.isEmpty($scope.modalParams.parentObject) && !Util.isEmpty($scope.modalParams.parentType)) {
+                $scope.config.data.attachedToObjectName = $scope.modalParams.parentObject;
+                $scope.config.data.attachedToObjectType = $scope.modalParams.parentType;
+                if (!Util.isEmpty($scope.modalParams.parentTitle)) {
+                    $scope.config.data.parentObjectTitle = $scope.modalParams.parentTitle;
                 }
             }
             return moduleConfig;
@@ -71,14 +73,16 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
-            $scope.config.data.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
+            var taskData = angular.copy($scope.config.data);
+            taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
                 $scope.saved = false;
-                if ($stateParams.returnState != null && $stateParams.returnState != ":returnState") {
-                    $state.go($stateParams.returnState, {type: $stateParams.parentType, id: $stateParams.parentId});
+                if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ":returnState") {
+                    $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
                 } else {
                     ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
                 }
+                $scope.onModalSave();
             }, function (err) {
                 $scope.saved = false;
                 if (!Util.isEmpty(err)) {
@@ -95,7 +99,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.updateAssocParentType = function () {
             $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
         };
-        
+
         $scope.inputClear = function(){
             $scope.config.data.attachedToObjectName = null;
         }
@@ -139,15 +143,15 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                         $scope.userOrGroupName = chosenUserOrGroup.name;
                         $scope.pickOwningGroup(chosenUserOrGroup.object_id_s, chosenUserOrGroup.name);
 
-                       return; 
+                        return;
                     } else if (chosenUserOrGroup.object_type_s === 'GROUP') {
                         $scope.config.data.assignee = null;
                         $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
                         $scope.userOrGroupName = chosenUserOrGroup.name;
-                        
+
                         return;
                     }
-                } 
+                }
 
             }, function () {
                 // Cancel button was clicked.
@@ -156,7 +160,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         };
 
-        $scope.pickOwningGroup = function (assigneeLdapId, asigneeName) { 
+        $scope.pickOwningGroup = function (assigneeLdapId, asigneeName) {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-group-search.client.view.html',
@@ -185,8 +189,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 return [];
             });
 
-        }
-        
+        };
+
         $scope.objectSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -215,6 +219,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 return [];
             });
 
+        };
+
+        $scope.cancelModal = function() {
+            $scope.onModalCancel();
         };
     }
 ]);
