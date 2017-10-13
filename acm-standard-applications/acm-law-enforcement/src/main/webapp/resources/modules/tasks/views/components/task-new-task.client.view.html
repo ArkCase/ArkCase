@@ -1,127 +1,125 @@
-<div ng-controller="Tasks.NewTaskController" class="module-content">
-    <div class="content-body">
-        <form name="task" ng-submit="saveNewTask()">
-            <div class="module-header">
-                <h3><span translate>tasks.newTask.title</span></h3>
-            </div>
-            <div class="well-sm">
-                <div class="row">
-                    <div class="well-sm">
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="submit" ng-disabled="task.$invalid || saved"
-                                        class="btn btn-primary btn-sm" data-toggle="tooltip"
-                                        id="saveButton" data-title="Save">
-                                    <i class="fa fa-floppy-o"></i>
-                                    <span translate> tasks.newTask.saveButton </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+<div class="modal-header">
+    <h3><span translate>tasks.newTask.title</span></h3>
+</div>
+<div class="modal-body">
+    <form name="task">
+        <div class="well-sm">
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="assignee" translate> tasks.newTask.assignee.label </label>
+                    <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
+                           placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
+                           style="background-color: white;" ng-click="userOrGroupSearch()" readonly >
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <label for="assignee" translate> tasks.newTask.assignee.label </label>
-                        <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
-                               placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
-                               style="background-color: white;" ng-click="userOrGroupSearch()" readonly >
-                    </div>
-                    <div class="form-group col-sm-2">
-                        <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
-                           
-                        </label>
-                        <select ng-model="config.data.attachedToObjectType"
-                             		ng-change="updateAssocParentType()"
-                                    ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
-                                    class="form-control input-md"
-                                    ng-click="inputClear()">
-                        </select>
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
-                        <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
-                               class="input-md form-control"
-                               placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                               id="complaintId"
-                               ng-disabled="config.data.attachedToObjectType==='' "
-                               ng-click="objectSearch()">      
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <label for="subject" translate> tasks.newTask.subject.label </label>
-                        <span class="required-asterisk">*</span>
-                        <input type="text" id="subject" ng-required="true" ng-model="config.data.title"
-                               name="subject"
-                               class="input-md form-control"
-                               placeholder="{{ 'tasks.newTask.subject.label'  | translate }}"
-                               id="subject">
-                    </div>
-                </div>
+                <div class="form-group col-sm-2">
+                    <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label for="taskStartDate" translate> tasks.newTask.taskStartDate.label </label>
-                        <div>
-                            <div class="input-group">
-                                <input type="text" id="taskStartDate" ng-required="true" class="form-control"
-                                       name="taskStartDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="config.data.taskStartDate"
-                                       is-open="opened.openedStart" close-on-date-selection="true"
-                                       show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default"
-                      ng-click="opened.openedStart = !opened.openedStart"><i class="fa fa-calendar"></i></button>
-              </span></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="dueDate" translate> tasks.newTask.dueDate.label </label>
-                        <span class="required-asterisk">*</span>
-                        <div>
-                            <div class="input-group">
-                                <input type="text" id="dueDate" ng-required="true" class="form-control"
-                                       name="dueDate"
-                                       datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                       ng-model="config.data.dueDate"
-                                       is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true"
-                                       on-open-focus="false"
-                                       close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
-              <span class="input-group-btn">
-              <button type="button" class="btn btn-default"
-                      ng-click="opened.openedEnd = !opened.openedEnd"><i class="fa fa-calendar"></i></button>
-              </span></div>
-                        </div>
-                    </div>
-                    <div class="form-group col-sm-2">
-                        <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
-                        </label>
-                        <select ng-model="config.data.priority"
-                                    ng-options="priority.id as priority.name for priority in config.priority"
-                                    class="form-control input-md">
-                        </select>
-                    </div>
+                    </label>
+                    <select ng-model="config.data.attachedToObjectType"
+                            ng-change="updateAssocParentType()"
+                            ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
+                            class="form-control input-md"
+                            ng-click="inputClear()">
+                    </select>
                 </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <label for="percentComplete" translate> tasks.newTask.percentComplete.label </label>
-                        <input id="percentComplete" type="number" min="0" max="100"
-                               ng-model="config.data.percentComplete" class="input-md form-control"
-                               name="percentComplete"
-                               placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}"
-                               id="percentComplete">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <label translate> tasks.newTask.notes.label </label>
-                        <summernote config="options" ng-model="config.data.details"></summernote>
-                    </div>
+                <div class="col-sm-4 form-group">
+                    <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
+                    <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
+                           class="input-md form-control"
+                           placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
+                           id="complaintId"
+                           ng-disabled="config.data.attachedToObjectType==='' "
+                           ng-click="objectSearch()">
                 </div>
             </div>
-        </form>
-    </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label for="subject" translate> tasks.newTask.subject.label </label>
+                    <span class="required-asterisk">*</span>
+                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title"
+                           name="subject"
+                           class="input-md form-control"
+                           placeholder="{{ 'tasks.newTask.subject.label'  | translate }}"
+                           id="subject">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label for="taskStartDate" translate> tasks.newTask.taskStartDate.label </label>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="taskStartDate" ng-required="true" class="form-control"
+                                   name="taskStartDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="config.data.taskStartDate"
+                                   is-open="opened.openedStart" close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
+                            <span class="input-group-btn">
+          <button type="button" class="btn btn-default"
+                  ng-click="opened.openedStart = !opened.openedStart"><i class="fa fa-calendar"></i></button>
+          </span></div>
+                    </div>
+                </div>
+                <div class="col-sm-4 form-group">
+                    <label for="dueDate" translate> tasks.newTask.dueDate.label </label>
+                    <span class="required-asterisk">*</span>
+                    <div>
+                        <div class="input-group">
+                            <input type="text" id="dueDate" ng-required="true" class="form-control"
+                                   name="dueDate"
+                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   ng-model="config.data.dueDate"
+                                   is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
+                            <span class="input-group-btn">
+          <button type="button" class="btn btn-default"
+                  ng-click="opened.openedEnd = !opened.openedEnd"><i class="fa fa-calendar"></i></button>
+          </span></div>
+                    </div>
+                </div>
+                <div class="form-group col-sm-2 form-group">
+                    <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
+                    </label>
+                    <select ng-model="config.data.priority"
+                            ng-options="priority.id as priority.name for priority in config.priority"
+                            class="form-control input-md">
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 form-group">
+                    <label for="percentComplete" translate> tasks.newTask.percentComplete.label </label>
+                    <input id="percentComplete" type="number" min="0" max="100"
+                           ng-model="config.data.percentComplete" class="input-md form-control"
+                           name="percentComplete"
+                           placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}"
+                           id="percentComplete">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 form-group">
+                    <label translate> tasks.newTask.notes.label </label>
+                    <summernote config="options" ng-model="config.data.details"></summernote>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip"
+            data-title="Cancel"
+            ng-click="cancelModal()">
+        <span translate> tasks.newTask.cancelButton </span>
+    </button>
+    <button type="button" ng-disabled="task.$invalid || saved"
+            class="btn btn-primary btn-sm" data-toggle="tooltip"
+            id="saveButton" data-title="Save"
+            ng-click="saveNewTask()">
+        <i class="fa fa-floppy-o"></i>
+        <span translate> tasks.newTask.saveButton </span>
+    </button>
 </div>

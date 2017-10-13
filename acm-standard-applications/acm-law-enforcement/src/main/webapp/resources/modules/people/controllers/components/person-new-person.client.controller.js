@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('people').controller('People.NewPersonController', ['$scope', '$stateParams', '$translate'
-    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService'
-    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService) {
+    , 'Person.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Organization.InfoService', 'ObjectService', 'modalParams'
+    , function ($scope, $stateParams, $translate, PersonInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, OrganizationInfoService, ObjectService, modalParams) {
 
+        $scope.modalParams = modalParams;
         $scope.loading = false;
 
         //used for showing/hiding buttons in communication accounts
@@ -153,6 +154,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     });
                     MessageService.info(personWasCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
+                    $scope.onModalSave();
                     $scope.loading = false;
                 },
                 function (error) {
@@ -331,6 +333,10 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
          */
         $scope.capitalizeFirstLetter = function (input) {
             return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
-        }
+        };
+
+        $scope.cancelModal = function() {
+            $scope.onModalCancel();
+        };
     }
 ]);
