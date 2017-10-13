@@ -465,7 +465,7 @@ public class LdapUserService
      */
     private AcmUser checkExistingUser(String userId) throws AcmLdapActionFailedException
     {
-        AcmUser existing = userDao.findByUserId(userId);
+        AcmUser existing = userDao.findByUserIdAnyCase(userId);
         if (existing == null) return null;
 
         if (AcmUserState.VALID == existing.getUserState())
