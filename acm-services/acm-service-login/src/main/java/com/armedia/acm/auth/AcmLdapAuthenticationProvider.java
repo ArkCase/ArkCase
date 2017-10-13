@@ -37,7 +37,7 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
 
         Name dn = dirContextOperations.getDn();
 
-        AcmUser user = getUserDao().findByUserId(authentication.getName());
+        AcmUser user = getUserDao().findByUserIdAnyCase(authentication.getName());
 
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
