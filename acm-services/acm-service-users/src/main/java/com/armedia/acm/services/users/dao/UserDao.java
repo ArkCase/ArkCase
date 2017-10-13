@@ -118,7 +118,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NonUniqueResultException e)
         {
-            log.warn("There is no unique user found with iod [{}]. More than one user has this name", userIdLcs);
+            log.warn("There is no unique user found with userId [{}]. More than one user has this name", userIdLcs);
         }
         catch (Exception e)
         {
