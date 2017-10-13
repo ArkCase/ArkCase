@@ -67,6 +67,15 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
             return '';
         };
 
+        $scope.getDefaultAddress = function (defaultAddress) {
+            if(!!defaultAddress){
+                var getDefaultAddressState = Util.goodValue(defaultAddress.state);
+                var getDefaultAddressCity = Util.goodValue(defaultAddress.city);
+                return (getDefaultAddressState.trim() + ' ' + getDefaultAddressCity.trim()).trim();
+            }
+            return '';
+        };
+
         var newOrganizationAssociation = function () {
             return {
                 id: null,
