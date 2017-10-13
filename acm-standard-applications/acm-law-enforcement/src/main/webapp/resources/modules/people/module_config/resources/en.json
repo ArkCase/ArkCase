@@ -528,7 +528,7 @@
           "subType": "Default Url - Type Changed",
           "value": "Default Url - Value Changed"
         },
-        "contactMethods.addresses": {
+        "addresses.address": {
           "city": "Address - City Changed",
           "zip": "Address - Zip Code Changed",
           "streetAddress": "Address - Street Changed",
