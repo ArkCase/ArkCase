@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
@@ -36,6 +37,7 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
     private Authentication mockAuthentication;
     private MockHttpSession mockHttpSession;
     private OrganizationEventPublisher mockOrganizationEventPublisher;
+    private OrganizationDao mockOrganizationDao;
     private ExecuteSolrQuery mockExecuteSolrQuery;
     private OrganizationService mockOrganizationService;
 
@@ -45,6 +47,7 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockAuthentication = createMock(Authentication.class);
+        mockOrganizationDao = createMock(OrganizationDao.class);
         mockHttpSession = new MockHttpSession();
         mockOrganizationEventPublisher = createMock(OrganizationEventPublisher.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
@@ -72,10 +75,11 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
         body.setOrganizationValue("Armedia LLC.");
 
         Capture<Organization> orgCapture = EasyMock.newCapture();
+        Capture<Organization> orgCaptureOld = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
         expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress))).andReturn(body);
-        mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), eq(true), eq(true));
+        mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), capture(orgCaptureOld), eq(true), eq(true));
         expectLastCall();
 
         replayAll();
@@ -109,10 +113,11 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
         body.setOrganizationValue("Armedia LLC.");
 
         Capture<Organization> orgCapture = EasyMock.newCapture();
-
+        Capture<Organization> orgCaptureOld = EasyMock.newCapture();
+        expect(mockOrganizationDao.find(-1L)).andReturn(body);
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
         expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress))).andReturn(body);
-        mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), eq(false), eq(true));
+        mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), capture(orgCaptureOld), eq(false), eq(true));
         expectLastCall();
 
         replayAll();

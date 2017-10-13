@@ -2,6 +2,7 @@
   {
     "className": "com.armedia.acm.plugins.person.model.Person",
     "name": "person",
+    "displayExpression": "givenName + ' ' + familyName",
     "id": [
       "id"
     ],
@@ -39,6 +40,7 @@
   {
     "className": "com.armedia.acm.plugins.addressable.model.PostalAddress",
     "name": "address",
+    "displayExpression": "country + ', ' + state",
     "id": [
       "id"
     ],
@@ -56,6 +58,7 @@
   {
     "className": "com.armedia.acm.plugins.person.model.Identification",
     "name": "identification",
+    "displayExpression": "identification + ' ' + identificationType",
     "id": [
       "identificationID"
     ],
@@ -69,18 +72,21 @@
   {
     "className": "com.armedia.acm.plugins.addressable.model.ContactMethod",
     "name": "contactMethod",
+    "displayExpression": "value + ' ' + subType",
     "id": [
       "id"
     ],
     "includeFields": [
       "value",
       "type",
-      "subType"
+      "subType",
+      "description"
     ]
   },
   {
     "className": "com.armedia.acm.plugins.person.model.PersonAlias",
-    "name": "personAlias",
+    "name": "alias",
+    "displayExpression": "aliasValue + ' ' + aliasType",
     "id": [
       "id"
     ],
@@ -88,6 +94,30 @@
       "aliasType",
       "aliasValue",
       "description"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.plugins.person.model.Organization",
+    "name": "organization",
+    "displayExpression": "organizationType + ' ' + organizationValue",
+    "id": [
+      "organizationId"
+    ],
+    "includeFields": [
+      "company",
+      "status",
+      "details",
+      "restricted",
+      "addresses",
+      "participants",
+      "defaultPhone",
+      "defaultEmail",
+      "defaultAddress",
+      "defaultUrl",
+      "defaultFax",
+      "defaultIdentification",
+      "identifications",
+      "contactMethods"
     ]
   }
 ]
