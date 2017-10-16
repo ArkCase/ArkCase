@@ -885,184 +885,271 @@
       ]
     }
   ],
-  "adminTree": [
-    {
-      "title": "admin.security.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.security.functionalAccessControl",
-          "templateName": "security.functional-access-control"
-        },
-        {
-          "title": "admin.security.ldapConfig",
-          "templateName": "security.ldap-config"
-        },
-        {
-          "title": "admin.security.organizationalHierarchy.title",
-          "templateName": "security.organizational-hierarchy"
-        },
-        {
-          "title": "admin.security.ldap.user.management.title",
-          "templateName": "security.ldap-user-management"
-        },
-        {
-          "title": "admin.security.selectPrivileges",
-          "templateName": "security.select-privileges"
-        },
-        {
-          "title": "admin.security.modules",
-          "templateName": "security.modules"
-        },
-        {
-          "title": "admin.security.calendarConfiguration.title",
-          "templateName": "security-calendar-configuration"
-        },
-        {
-          "title": "admin.security.calendarCredentialsConfiguration.title",
-          "templateName": "security-calendar-credentials-configuration"
-        },
-        {
-          "title": "admin.security.emailConfiguration.title",
-          "templateName": "security-email-sender-configuration"
-        },
-        {
-          "title": "admin.security.emailTemplates.title",
-          "templateName": "security-email-templates"
-        },
-        {
-          "title": "admin.security.exchangeConfiguration.title",
-          "templateName": "security-exchange-configuration"
-        }
-      ]
-    },
-    {
-      "title": "admin.dashboard.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.dashboard.config",
-          "templateName": "dashboard.config"
-        }
-      ]
-    },
-    {
-      "title": "admin.reports.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.reports.config",
-          "templateName": "reports.config"
-        }
-      ]
-    },
-    {
-      "title": "admin.forms.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.forms.config",
-          "templateName": "forms.config"
-        }
-      ]
-    },
-    {
-      "title": "admin.workflows.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.workflows.config",
-          "templateName": "workflows.config"
-        }
-      ]
-    },
-    {
-      "title": "admin.formWorkflows.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.formWorkflows.link",
-          "templateName": "form-workflows.link"
-        }
-      ]
-    },
-    {
-      "title": "admin.application.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.application.labels.config.title",
-          "templateName": "application.labels.config"
-        },
-        {
-          "title": "admin.application.lookups.config.title",
-          "templateName": "application-lookups.config"
-        },
-        {
-          "title": "admin.application.module.config.title",
-          "templateName": "application.module.config"
-        },
-        {
-          "title": "admin.application.userName.config.title",
-          "templateName": "application-user-name.config"
-        },
-        {
-          "title": "admin.application.login.config.title",
-          "templateName": "application-login.config"
-        },
-        {
-          "title": "admin.application.auditHistory.config.title",
-          "templateName": "application-audit-history.config"
-        }
-      ]
-    },
-    {
-      "title": "admin.branding.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.branding.logo",
-          "templateName": "branding.logo"
-        },
-        {
-          "title": "admin.branding.customCss",
-          "templateName": "branding.custom-css"
-        }
-      ]
-    },
-    {
-      "title": "admin.correspondenceManagement.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.correspondenceManagement.mergefields",
-          "templateName": "correspondence-management-mergefields"
-        },
-        {
-          "title": "admin.correspondenceManagement.templates",
-          "templateName": "correspondence-management-templates"
-        }
-      ]
-    },
-    {
-      "title": "admin.documentManagement.title",
-      "folder": "true",
-      "expanded": "true",
-      "children": [
-        {
-          "title": "admin.documentManagement.cmisConfiguration",
-          "templateName": "cmis-configuration"
-        }
-      ]
-    }
-  ]
+
+  "tree": {
+    "pageSize": 32,
+    "filters": false,
+    "sorters": false,
+    "refresh": false,
+    "search": false,
+    "nodeTypes": [
+      {
+        "type": "prev",
+        "icon": "fa fa-arrow-up"
+      },
+      {
+        "type": "next",
+        "icon": "fa fa-arrow-down"
+      },
+      {
+        "type": "p/security",
+        "label": "admin.security.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/security/access",
+        "label": "admin.security.functionalAccessControl",
+        "components": [
+          "security.functional-access-control"
+        ]
+      },
+      {
+        "type": "p/security/ldap",
+        "label": "admin.security.ldapConfig",
+        "components": [
+          "security.ldap-config"
+        ]
+      },
+      {
+        "type": "p/security/org",
+        "label": "admin.security.organizationalHierarchy.title",
+        "components": [
+          "security.organizational-hierarchy"
+        ]
+      },
+      {
+        "type": "p/security/ldapUser",
+        "label": "admin.security.ldap.user.management.title",
+        "components": [
+          "security.ldap-user-management"
+        ]
+      },
+      {
+        "type": "p/security/priv",
+        "label": "admin.security.selectPrivileges",
+        "components": [
+          "security.select-privileges"
+        ]
+      },
+      {
+        "type": "p/security/modules",
+        "label": "admin.security.modules",
+        "components": [
+          "security.modules"
+        ]
+      },
+      {
+        "type": "p/security/calendar",
+        "label": "admin.security.calendarConfiguration.title",
+        "components": [
+          "security-calendar-configuration"
+        ]
+      },
+      {
+        "type": "p/security/calcred",
+        "label": "admin.security.calendarCredentialsConfiguration.title",
+        "components": [
+          "security-calendar-credentials-configuration"
+        ]
+      },
+      {
+        "type": "p/security/email",
+        "label": "admin.security.emailConfiguration.title",
+        "components": [
+          "security-email-sender-configuration"
+        ]
+      },
+      {
+        "type": "p/security/emailTmpl",
+        "label": "admin.security.emailTemplates.title",
+        "components": [
+          "security-email-templates"
+        ]
+      },
+      {
+        "type": "p/security/exchange",
+        "label": "admin.security.exchangeConfiguration.title",
+        "components": [
+          "security-exchange-configuration"
+        ]
+      },
+      {
+        "type": "p/dashboard",
+        "label": "admin.dashboard.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/dashboard/config",
+        "label": "admin.dashboard.config",
+        "components": [
+          "dashboard.config"
+        ]
+      },
+      {
+        "type": "p/reports",
+        "label": "admin.reports.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/reports/config",
+        "label": "admin.reports.config",
+        "components": [
+          "reports.config"
+        ]
+      },
+      {
+        "type": "p/forms",
+        "label": "admin.forms.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/forms/config",
+        "label": "admin.forms.config",
+        "components": [
+          "forms.config"
+        ]
+      },
+      {
+        "type": "p/workflows",
+        "label": "admin.workflows.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/workflows/config",
+        "label": "admin.workflows.config",
+        "components": [
+          "workflows.config"
+        ]
+      },
+      {
+        "type": "p/formWorkflows",
+        "label": "admin.formWorkflows.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/formWorkflows/link",
+        "label": "admin.formWorkflows.link",
+        "components": [
+          "form-workflows.link"
+        ]
+      },
+      {
+        "type": "p/application",
+        "label": "admin.application.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/application/labels",
+        "label": "admin.application.labels.config.title",
+        "components": [
+          "application.labels.config"
+        ]
+      },
+      {
+        "type": "p/application/lookups",
+        "label": "admin.application.lookups.config.title",
+        "components": [
+          "application-lookups.config"
+        ]
+      },
+      {
+        "type": "p/application/module",
+        "label": "admin.application.module.config.title",
+        "components": [
+          "application.module.config"
+        ]
+      },
+      {
+        "type": "p/application/user",
+        "label": "admin.application.userName.config.title",
+        "components": [
+          "application-user-name.config"
+        ]
+      },
+      {
+        "type": "p/application/login",
+        "label": "admin.application.login.config.title",
+        "components": [
+          "application-login.config"
+        ]
+      },
+      {
+        "type": "p/application/audit",
+        "label": "admin.application.auditHistory.config.title",
+        "components": [
+          "application-audit-history.config"
+        ]
+      },
+      {
+        "type": "p/branding",
+        "label": "admin.branding.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/branding/logo",
+        "label": "admin.branding.logo",
+        "components": [
+          "branding.logo"
+        ]
+      },
+      {
+        "type": "p/branding/css",
+        "label": "admin.branding.customCss",
+        "components": [
+          "branding.custom-css"
+        ]
+      },
+      {
+        "type": "p/correspondence",
+        "label": "admin.correspondenceManagement.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/correspondence/mergefields",
+        "label": "admin.correspondenceManagement.mergefields",
+        "components": [
+          "correspondence-management-mergefields"
+        ]
+      },
+      {
+        "type": "p/correspondence/templates",
+        "label": "admin.correspondenceManagement.templates",
+        "components": [
+          "correspondence-management-templates"
+        ]
+      },
+      {
+        "type": "p/document",
+        "label": "admin.documentManagement.title",
+        "icon": "fa fa-wrench",
+        "components": []
+      },
+      {
+        "type": "p/document/cmis",
+        "label": "admin.documentManagement.cmisConfiguration",
+        "components": [
+          "cmis-configuration"
+        ]
+      }
+    ]
+  }
 }

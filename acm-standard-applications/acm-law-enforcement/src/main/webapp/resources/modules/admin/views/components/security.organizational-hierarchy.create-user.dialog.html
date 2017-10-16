@@ -40,7 +40,7 @@
             </div>
             <input type="password" class="form-control" id="password" name="password"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
-                   ng-model="data.password" minlength="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.minLengthForPassword' | translate}}"
+                   ng-model="user.password" minlength="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.minLengthForPassword' | translate}}"
                    ng-pattern="{{'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.rulePattern' | translate}}"
                    pw-check="username"
                    required>

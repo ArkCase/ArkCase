@@ -3,7 +3,6 @@
 angular.module('profile').controller('Profile.PicController', ['$scope', '$rootScope', 'Profile.UserInfoService', 'Profile.ProfilePictureService','$log',
                                                                'Dialog.BootboxService','$translate',
     function ($scope, $rootScope, UserInfoService, ProfilePictureService,$log,DialogService,$translate) {
-        $scope.$emit('req-component-config', 'picture');
         $scope.changePic = function () {
             $("#file").click();
         };

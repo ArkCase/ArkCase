@@ -230,6 +230,18 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 Tree.onLoad()(treeInfo.start, treeInfo.n, treeInfo.sorter, treeInfo.filter, treeInfo.searchQuery);
             }
 
+            , expandAll: function() {
+                Tree.tree.visit(function(node){
+                    node.setExpanded();
+                });
+            }
+
+            , collapseAll: function() {
+                Tree.tree.visit(function(node){
+                    node.setExpanded(false);
+                });
+            }
+
             , _previousKey: null
             , _activeKey: null
             , getPreviousKey: function () {
@@ -427,6 +439,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         key: Tree.Key.NODE_TYPE_PART_PREV_PAGE
                         , title: treeInfo.start + $translate.instant("common.directive.objectTree.btnPrev.title")
                         , tooltip: $translate.instant("common.directive.objectTree.btnPrev.toolTip")
+                        , tooltipLabel: "common.directive.objectTree.btnPrev.toolTip"
                         , expanded: false
                         , folder: false
                     });
@@ -435,8 +448,10 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 _.each(objList, function (obj) {
                     var nodeId = obj.nodeId;
                     var nodeType = obj.nodeType;
-                    var nodeTitle = obj.nodeTitle;
-                    var nodeToolTip = obj.nodeToolTip;
+                    var nodeTitleLabel = obj.nodeTitleLabel;
+                    var nodeTitle = nodeTitleLabel? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
+                    var nodeToolTipLabel = obj.nodeToolTipLabel;
+                    var nodeToolTip = nodeToolTipLabel? $translate.instant(nodeToolTipLabel) : obj.nodeToolTip;
                     if (nodeId && nodeType) {
                         var objKey = Tree.Key.getKeyByObjWithPage(treeInfo.start, nodeType, nodeId);
                         var components = Tree.getComponentsByKey(objKey);
@@ -444,7 +459,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         builder.addLeaf({
                             key: objKey
                             , title: nodeTitle
+                            , label: nodeTitleLabel
                             , tooltip: nodeToolTip
+                            , tooltipLabel: nodeToolTipLabel
                             , expanded: false
                             , folder: true
                             , lazy: true
@@ -462,10 +479,12 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     || (treeInfo.total - treeInfo.n > treeInfo.start)) {    //more page
                     var title = (0 > treeInfo.total) ? $translate.instant("common.directive.objectTree.btnNext.titleUnknownSize")
                         : (treeInfo.total - treeInfo.start - treeInfo.n) + $translate.instant("common.directive.objectTree.btnNext.title");
+
                     builder.addLeafLast({
                         key: Tree.Key.NODE_TYPE_PART_NEXT_PAGE
                         , title: title
                         , tooltip: $translate.instant("common.directive.objectTree.btnNext.toolTip")
+                        , tooltipLabel: "common.directive.objectTree.btnNext.toolTip"
                         , expanded: false
                         , folder: false
                     });
@@ -789,6 +808,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     , select: Tree.select
                     , selectComponent: Tree.selectComponent
                     , refresh: Tree.refresh
+                    , expandAll: Tree.expandAll
+                    , collapseAll: Tree.collapseAll
                 };
 
                 Tree.create();

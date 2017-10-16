@@ -4,8 +4,8 @@ package com.armedia.acm.services.users.service.ldap;
  * Created by sharmilee.sivakumaran on 6/8/17.
  */
 
-import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.model.ldap.PasswordValidation;
+import com.armedia.acm.services.users.model.ldap.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -26,14 +26,13 @@ public class PasswordValidator implements ConstraintValidator<PasswordValidation
     @Override
     public boolean isValid(UserDTO user, ConstraintValidatorContext context)
     {
-        if (user == null || user.getAcmUser() == null) return false;
-        String userId = user.getAcmUser().getUserId();
+        String userId = user.getUserId();
         String userPassword = user.getPassword();
         if (userId == null || userPassword == null) return false;
 
         context.disableDefaultConstraintViolation();
 
-        List<String> errorMessages = passwordValidationService.validate(user.getAcmUser().getUserId(), user.getPassword());
+        List<String> errorMessages = passwordValidationService.validate(user.getUserId(), user.getPassword());
         for (String message : errorMessages)
         {
             context.buildConstraintViolationWithTemplate(message).addConstraintViolation();

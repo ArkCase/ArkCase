@@ -51,15 +51,12 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
             });
         }
 
-        function cloneUser(user) {
-            var url = 'api/latest/ldap/' + user.selectedUser.directory + '/users/' + user.selectedUser.key;
+        function cloneUser(data) {
+            var url = 'api/latest/ldap/' + data.selectedUser.directory + '/users/' + data.selectedUser.key;
             return $http({
                 method: 'POST',
                 url: url,
-                data: {
-                    acmUser: user.acmUser,
-                    password: user.password
-                }
+                data: data.user
             });
         }
 

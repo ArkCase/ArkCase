@@ -83,8 +83,8 @@ angular
 
                     if (localStorage.AcmLocale && "null" != localStorage.AcmLocale) {
                         var lastLocale = angular.fromJson(localStorage.AcmLocale);
-                        if (lastLocale && lastLocale.selected) {
-                            preferredLocale = lastLocale.selected;
+                        if (lastLocale && lastLocale.code) {
+                            preferredLocale = lastLocale.code;
                         }
                     }
 

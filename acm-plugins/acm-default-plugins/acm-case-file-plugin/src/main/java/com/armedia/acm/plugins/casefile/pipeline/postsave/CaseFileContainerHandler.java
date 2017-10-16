@@ -6,12 +6,12 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Ensure that Case File container exists..
- * Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
+ * Ensure that Case File container exists.. Created by Petar Ilin <petar.ilin@armedia.com> on 11.08.2015.
  */
 public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseFilePipelineContext>
 {
@@ -46,6 +46,7 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
             entity.getContainer().setFolder(folder);
             entity.getContainer().setAttachmentFolder(folder);
         }
+
         log.trace("CaseFile exiting CaseFileContainerHandler : [{}]", entity);
     }
 

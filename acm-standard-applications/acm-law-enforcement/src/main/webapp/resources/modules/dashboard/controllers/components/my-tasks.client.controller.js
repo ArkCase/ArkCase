@@ -2,9 +2,9 @@
 
 angular.module('dashboard.my-tasks')
     .controller('Dashboard.MyTasksController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService'
-        , 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService'
+        , 'ObjectService', '$state', 'Task.AlertsService', 'UtilService', 'Util.DateService', 'ConfigService', 'params'
         , function ($scope, $translate, Authentication, DashboardService
-            , ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService
+            , ObjectService, $state, TaskAlertsService, Util, UtilDateService, ConfigService, params
         ) {
             var vm = this;
             vm.config = null;
@@ -49,6 +49,13 @@ angular.module('dashboard.my-tasks')
                 }
             };
 
+            if(!Util.isEmpty( params.description)) {
+                $scope.$parent.model.description = " - " + params.description;
+            }
+            else {
+                $scope.$parent.model.description = "";
+            }
+            
             ConfigService.getComponentConfig("dashboard", "myTasks").then(function (config) {
                 vm.config = config;
                 vm.gridOptions.columnDefs = config.columnDefs;

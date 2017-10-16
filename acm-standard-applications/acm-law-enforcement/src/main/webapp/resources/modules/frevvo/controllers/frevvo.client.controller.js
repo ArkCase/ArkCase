@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope', '$stateParams', '$sce', '$q', '$modal', '$translate', '$interval'
-    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService'
+    , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService', 'Person.InfoService', 'Object.LookupService'
     , function ($rootScope, $scope, $stateParams, $sce, $q, $modal, $translate, $interval
-        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService) {
+        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService, PersonInfoService, ObjectLookupService) {
 
         var promiseConfig = ConfigService.getModuleConfig("frevvo");
         var promiseTicket = TicketService.getArkCaseTicket();
@@ -22,6 +22,16 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 ServCommService.request($scope, "frevvo", $stateParams.name, found);
             }
         });
+
+        ObjectLookupService.getPersonTypes("CASE_FILE")
+            .then(function response(personTypes) {
+                $scope.caseFilePersonTypes = personTypes;
+            });
+
+        ObjectLookupService.getPersonTypes("COMPLAINT")
+            .then(function response(personTypes) {
+                $scope.complaintPersonTypes = personTypes;
+            });
 
         $scope.iframeLoaded = function () {
             startInitFrevvoMessaging();
@@ -59,6 +69,9 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                             }
                             if (e.data.action == "open-object-picker") {
                                 pickObject(e.data);
+                            }
+                            if (e.data.action == "open-person-picker") {
+                                pickPerson(e.data);
                             }
                         }
                     };
@@ -232,5 +245,116 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 }
             });
         }
+
+        function addInitiatorToPersonTypes() {
+               if($scope.initiatorPersonType !== undefined) {
+                   var initiatorTypeExists = $scope.personTypes.find(function(el) {
+                        return el.key === $scope.initiatorPersonType.key && el.value === $scope.initiatorPersonType.value;
+                   });
+
+                   if(initiatorTypeExists === undefined) {
+                       $scope.personTypes.push($scope.initiatorPersonType);
+                   }
+               }
+        }
+
+        function removeInitiatorFromPersonTypes() {
+            var initiatorIndex = -1;
+            for(var i=0; i<$scope.personTypes.length; i++) {
+                if($scope.personTypes[i].key === "Initiator") {
+                    $scope.initiatorPersonType = $scope.personTypes[i];
+                    initiatorIndex = i;
+                    break;
+                }
+            }
+            if(initiatorIndex != -1) {
+                $scope.personTypes.splice(initiatorIndex, 1);
+            }
+        }
+
+        function saveNewPersonAndUpdateFrevvo(data, message) {
+            var returnMessage = {};
+
+            PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
+                returnMessage.personId = response.data.id;
+                returnMessage.fullName = (response.data.givenName + " " + response.data.familyName).trim();
+                returnMessage.personType = data.type;
+
+                message.data = returnMessage;
+                $scope.frevvoMessaging.send(message);
+            });
+        }
+
+        function retrieveExistingPersonAndUpdateFrevvo(data, message) {
+            var returnMessage = {};
+
+            PersonInfoService.getPersonInfo(data.personId).then(function (person) {
+                returnMessage.personId = person.id;
+                returnMessage.fullName = (person.givenName + " " + person.familyName).trim();
+                returnMessage.personType = data.type;
+
+                message.data = returnMessage;
+                $scope.frevvoMessaging.send(message);
+            });
+        }
+
+        function populatePersonTypesDropDown(data) {
+            $scope.personTypes = [];
+
+            if(data.formType === "CASE_FILE") {
+                $scope.personTypes = $scope.caseFilePersonTypes;
+            }
+            else if(data.formType === "COMPLAINT") {
+                $scope.personTypes = $scope.complaintPersonTypes;
+            }
+        }
+
+        function pickPerson(data) {
+            var params = {};
+            var message = {};
+
+            message.source = "arkcase";
+            message.action = "fill-person-picker-data";
+            message.elementId = data.elementId;
+            message.pickerType = data.pickerType;
+
+            populatePersonTypesDropDown(data);
+
+            if(message.pickerType === "initiator") {
+                addInitiatorToPersonTypes();
+                params.type = "Initiator";
+                params.typeDisabled = true;
+            }
+            else if(message.pickerType === "people") {
+                removeInitiatorFromPersonTypes();
+                params.typeDisabled = false;
+            }
+
+            params.pickerType = message.pickerType;
+            params.types = $scope.personTypes;
+
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'modules/common/views/add-person-modal.client.view.html',
+                controller: 'Common.AddPersonModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                 if (data.isNew) {
+                     saveNewPersonAndUpdateFrevvo(data, message);
+                 }
+                 else {
+                     retrieveExistingPersonAndUpdateFrevvo(data, message);
+                }
+            });
+        }
+
     }
 ]);

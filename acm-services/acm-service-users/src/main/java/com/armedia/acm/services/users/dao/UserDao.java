@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
+import com.armedia.acm.services.users.model.AcmUserRoleState;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -35,7 +36,9 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -48,16 +51,23 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     private static String DEFAULT_LOCALE_CODE = null;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     public void init()
     {
-        String localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings")).findFirst().get()
-                .getConfigAsJson();
-        Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
-                .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
-        DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(localeSettings).read("$.defaultLocale").toString();
+        Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
+                .findFirst();
+        if (localeSettings.isPresent())
+        {
+            String settings = localeSettings.get().getConfigAsJson();
+            Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
+                    .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
+            DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale", String.class);
+        } else
+        {
+            DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
+        }
     }
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -71,31 +81,51 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (existingUser != null)
             {
                 acmUser.setLang(existingUser.getLang());
-            }
-            else
+            } else
             {
                 // set default lang
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
             }
         }
-
         return super.save(acmUser);
+    }
+
+    public String getDefaultUserLang()
+    {
+        return DEFAULT_LOCALE_CODE;
     }
 
     public AcmUser findByUserId(String userId)
     {
+        userId = userId.toLowerCase();
         return getEntityManager().find(AcmUser.class, userId);
     }
 
     public AcmUser findByUserIdAnyCase(String userId)
     {
-        String jpql = "SELECT u " + "FROM AcmUser u " + "WHERE LOWER(u.userId) = :lowerUserId";
+        String jpql = "SELECT u FROM AcmUser u WHERE LOWER(u.userId) = :lowerUserId";
+
+        String userIdLcs = userId.toLowerCase();
         TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
+        query.setParameter("lowerUserId", userIdLcs);
 
-        query.setParameter("lowerUserId", userId.toLowerCase());
-
-        AcmUser user = query.getSingleResult();
-        return user;
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with id [{}]", userIdLcs);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with userId [{}]. More than one user has this name", userIdLcs);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by user id [{}]", userIdLcs, e);
+        }
+        return null;
     }
 
     @Cacheable(value = "quiet-user-cache")
@@ -113,8 +143,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            }
-            else
+            } else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -156,7 +185,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
                 + "AND userRole.userRoleState = :userRoleState)");
         roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("userRoleState", "VALID");
+        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -168,7 +197,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND userRole.userRoleState = :userRoleState) " + "AND acmRole.roleType = :roleType");
         roleQuery.setParameter("userId", userId);
         roleQuery.setParameter("roleType", acmRoleType.getRoleName());
-        roleQuery.setParameter("userRoleState", "VALID");
+        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
         List<AcmRole> retval = roleQuery.getResultList();
         return retval;
     }
@@ -180,7 +209,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
         usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleNames", roles);
-        usersWithRole.setParameter("userRoleState", "VALID");
+        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
 
         List<AcmUser> retval = usersWithRole.getResultList();
 
@@ -194,30 +223,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND role.roleName = :roleName " + "ORDER BY user.lastName, user.firstName");
         usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleName", role);
-        usersWithRole.setParameter("userRoleState", "VALID");
+        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
 
         List<AcmUser> retval = usersWithRole.getResultList();
 
         return retval;
-    }
-
-    public List<AcmUser> findByFullNameKeyword(String keyword)
-    {
-        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
-        Root<AcmUser> user = query.from(AcmUser.class);
-
-        query.select(user);
-
-        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String> get("userState"), AcmUserState.VALID)));
-
-        query.orderBy(builder.asc(user.get("fullName")));
-
-        TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
-        List<AcmUser> results = dbQuery.getResultList();
-
-        return results;
     }
 
     public void markAllUsersInvalid(String directoryName)
@@ -234,7 +244,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query markInvalid = getEntityManager().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN "
                 + "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
-        markInvalid.setParameter("state", "INVALID");
+        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }
@@ -244,6 +254,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         AcmRole existing = getEntityManager().find(AcmRole.class, in.getRoleName());
         if (existing == null)
         {
+            log.debug("Saving AcmRole [{}]", in.getRoleName());
             getEntityManager().persist(in);
         }
         return in;
@@ -251,6 +262,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
     {
+        log.debug("Saving AcmUserRole [{}] for User [{}]", userRole.getRoleName(), userRole.getUserId());
         AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
         key.setRoleName(userRole.getRoleName());
         key.setUserId(userRole.getUserId());
@@ -287,7 +299,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         log.debug("Check password expiration for user [{}]", principal);
         try
         {
-            AcmUser user = findByUserIdAnyCase(principal);
+            AcmUser user = findByUserId(principal);
+            if (user.getUserState() != AcmUserState.VALID)
+            {
+                return false;
+            }
             LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
             if (userPasswordExpirationDate != null)
             {

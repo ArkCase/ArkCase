@@ -56,6 +56,17 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
             $scope.gridOptions.data = $scope.objectInfo.organizationAssociations;
         };
 
+        $scope.getPrimaryContact = function(organizationAssiciation)
+        {
+            var primaryContact = organizationAssiciation.organization.primaryContact;
+            if (!!primaryContact) {
+                var getPrimaryConactGivenName = Util.goodValue(primaryContact.person.givenName);
+                var getPrimaryConactFamilyName = Util.goodValue(primaryContact.person.familyName);
+                return (getPrimaryConactGivenName.trim() + ' ' + getPrimaryConactFamilyName.trim()).trim();
+            }
+            return '';
+        };
+
         var newOrganizationAssociation = function () {
             return {
                 id: null
@@ -73,7 +84,6 @@ angular.module('cases').controller('Cases.OrganizationsController', ['$scope', '
         };
 
         function pickOrganization(association) {
-
             var params = {};
             params.types = $scope.organizationTypes;
 

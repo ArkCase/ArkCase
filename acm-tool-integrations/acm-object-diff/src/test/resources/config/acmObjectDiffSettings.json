@@ -1,0 +1,27 @@
+[
+  {
+    "className": "com.armedia.acm.objectdiff.model.TestPerson",
+    "name": "person",
+    "displayExpression": "name + ' ' + lastName",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "name",
+      "lastName",
+      "defaultAttribute",
+      "attributeList"
+    ]
+  },
+  {
+    "className": "com.armedia.acm.objectdiff.model.TestAttribute",
+    "name": "attribute",
+    "displayExpression": "value",
+    "id": [
+      "id"
+    ],
+    "includeFields": [
+      "value"
+    ]
+  }
+]
