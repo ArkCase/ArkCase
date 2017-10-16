@@ -1537,9 +1537,9 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             name: "file/",
                             getArgs: function (data) {
                                 return {
-                                		fileType: data.cmd.split("/")[1],
-                                		fileLang: data.cmd.split("/")[2]
-                                	};
+                                    fileType: data.cmd.split("/")[1],
+                                    fileLang: data.cmd.split("/")[2]
+                                };
                             },
                             execute: function (nodes, args) {
                                 var selectFiles = DocTree.Command.findHandler("selectFiles/");
@@ -1842,15 +1842,14 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 }
                 , makeContextMenu: function (menuResource, nodes) {
                     var emptyArray = [];
-                    if (DocTree.treeConfig.hideMenu)
-                    {
-                        return emptyArray;
-                    }
                     var promiseArray = [];
                     var menuDeferred = $q.defer();
                     var menu;
                     if (menuResource) {
                         menu = Util.goodMapValue(DocTree.treeConfig, menuResource, []);
+                        if(menuResource === "menu.basic.root" && DocTree.treeConfig.hideMenu){
+                            return emptyArray;
+                        }
                         menu = _.clone(menu);
                         var menuFileTypes = _.find(menu, {"cmd": "subMenuFileTypes"});
                         if (menuFileTypes) {
@@ -1984,7 +1983,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.data.uploadFile = true;
 
 // 											**DocTree language support for MVA demo**
-                                        
+
 //                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
 //                                        	var languages = [];
 //                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
@@ -2312,7 +2311,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             service: Ecm.uploadFiles
                             , data: formData
                             , param: {
-                            	fileLang: fileLang
+                                fileLang: fileLang
                             }
                             , onSuccess: function (data) {
                                 if (Validator.validateUploadInfo(data)) {
@@ -4752,6 +4751,3 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
         }
     ]
 );
-
-
-
