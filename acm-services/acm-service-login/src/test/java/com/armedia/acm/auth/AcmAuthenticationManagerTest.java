@@ -100,7 +100,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
         expect(mockFirstProvider.authenticate(mockAuthentication)).andReturn(successAuthentication);
         expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
-        expect(mockUserDao.findByUserIdAnyCase(user.getUserId())).andReturn(user);
+        expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
         expect(mockGroupService.findByUserMember(user)).andReturn(groups);
         expect(mockGroupService.isUUIDPresentInTheGroupName(ldapGroup.getName())).andReturn(false);
         expect(mockGroupService.isUUIDPresentInTheGroupName(adhocGroup.getName())).andReturn(false);

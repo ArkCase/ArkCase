@@ -113,7 +113,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                     $scope.user = {};
                     $scope.data = {
-                        "acmUser": $scope.user,
+                        "user": $scope.user,
                         "selectedUser": selectedUser
                     };
                     $scope.ok = function () {
@@ -123,8 +123,8 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                 size: 'sm'
             });
 
-            modalInstance.result.then(function (user) {
-                LdapUserManagementService.cloneUser(user).then(function (response) {
+            modalInstance.result.then(function (data) {
+                LdapUserManagementService.cloneUser(data).then(function (response) {
                     // add the new user to the list
                     var element = {};
                     element.name = response.data.fullName;

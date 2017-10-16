@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
 @Entity
 @Table(name = "acm_person_alias")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class PersonAlias implements Serializable, AcmEntity
+public class PersonAlias implements Serializable, AcmEntity,AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -70,6 +71,12 @@ public class PersonAlias implements Serializable, AcmEntity
 
     @Column(name = "cm_description")
     private String description;
+
+    @Override
+    public String getObjectType()
+    {
+        return PersonAliasConstants.OBJECT_TYPE;
+    }
 
     @XmlTransient
     public Long getId()

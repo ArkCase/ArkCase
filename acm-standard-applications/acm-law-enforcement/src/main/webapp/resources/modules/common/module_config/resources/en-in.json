@@ -22,6 +22,7 @@
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Organization",
     "setPrimary.label": "Set As Primary?",
+    "radioName": "Choice primary",
     "radioYes.text": "Yes",
     "radioNo.text": "No",
     "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
@@ -693,6 +694,7 @@
     "btnCancel.text": "Cancel",
     "btnOk.text": "Save Person",
     "setPrimary.label": "Set As Primary?",
+    "radioName": "Choice primary",
     "radioYes.text": "Yes",
     "radioNo.text": "No",
     "duplicatePersonRoleErrorMessage": "Person already has the selected association"

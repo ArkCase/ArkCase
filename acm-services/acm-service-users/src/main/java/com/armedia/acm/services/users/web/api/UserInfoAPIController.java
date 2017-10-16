@@ -66,7 +66,7 @@ public class UserInfoAPIController
 
     @RequestMapping(value = "/lang/{lang}", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String updateLang(@PathVariable("lang") String lang, Authentication authentication)
+    public String updateLang(@PathVariable("lang") String lang, Authentication authentication, HttpSession session)
     {
         // TODO validate lang supported
         log.debug("Setting '{}' language for user [{}]", lang, authentication.getName());
@@ -74,6 +74,10 @@ public class UserInfoAPIController
         AcmUser acmUser = userDao.findByUserId(authentication.getName());
         acmUser.setLang(lang);
         userDao.save(acmUser);
+
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        user.setLang(lang);
+        session.setAttribute("acm_user", user);
 
         return lang;
     }

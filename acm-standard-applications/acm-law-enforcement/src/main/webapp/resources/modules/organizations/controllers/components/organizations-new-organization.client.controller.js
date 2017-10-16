@@ -94,12 +94,16 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             }, 0);
         };
 
-        $scope.searchPerson = function (index) {
+        $scope.searchPerson = function (index, isNewOrganization) {
+            var associationFound = _.find($scope.organization.personAssociations, function(item){
+                return !Util.isEmpty(item) && !Util.isEmpty(item.organization);
+            });
             var association = index > -1 ? $scope.organization.personAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.personAssociationTypes
+                types: $scope.personAssociationTypes,
+                isFirstPerson: Util.isEmpty(associationFound) ? true : false
             };
 
             //set this params for editing
@@ -108,7 +112,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.organizationToPersonAssociationType,
-                    isDefault: association === $scope.organization.primaryContact
+                    isDefault: Util.isEmpty(association.primaryContact) ? true : false
                 });
             }
 

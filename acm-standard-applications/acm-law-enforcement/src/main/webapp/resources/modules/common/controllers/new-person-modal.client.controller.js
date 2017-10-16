@@ -16,8 +16,10 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             return moduleConfig;
         });
 
+        $scope.accordionSuffix = Math.floor((Math.random() * 10000) + 1);
         $scope.pictures = [{}];
         $scope.userPictures = [];
+        // $scope.isFristPerson = params.isFirstPerson;
 
         //new person with predefined values
         $scope.person = {
@@ -161,21 +163,25 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             }, 0);
         };
 
-
         $scope.searchOrganization = function (index) {
+            var associationFound = _.find($scope.person.organizationAssociations, function(item){
+                return !Util.isEmpty(item) && !Util.isEmpty(item.organization);
+            });
             var association = index > -1 ? $scope.person.organizationAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.organizationTypes
+                types: $scope.organizationTypes,
+                isFirstOrganization: Util.isEmpty(associationFound) ? true : false
             };
+
             //set this params for editing
-            if (association.organization) {
+            if (!!association && !!association.organization) {
                 angular.extend(params, {
                     organizationId: association.organization.organizationId,
                     organizationValue: association.organization.organizationValue,
                     type: association.personToOrganizationAssociationType,
-                    isDefault: association === $scope.person.defaultOrganization
+                    isDefault: Util.isEmpty(association.defaultOrganization) ? true : false
                 });
             }
 
@@ -208,6 +214,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         function setOrganizationAssociation(association, data) {
             association.person = {id: $scope.person.id};
             association.organization = data.organization;
+            association.organizationValue = data.organizationValue;
             association.personToOrganizationAssociationType = data.type;
             association.organizationToPersonAssociationType = data.inverseType;
 

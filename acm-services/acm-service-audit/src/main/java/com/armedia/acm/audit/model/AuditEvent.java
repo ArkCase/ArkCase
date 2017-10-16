@@ -1,6 +1,7 @@
 package com.armedia.acm.audit.model;
 
 import com.armedia.acm.data.converter.UUIDToStringConverter;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.google.common.base.Joiner;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
@@ -92,6 +94,11 @@ public class AuditEvent
     @ManyToOne(optional = true)
     @JoinColumn(name = "cm_audit_activity", referencedColumnName = "cm_key", nullable = true, insertable = false, updatable = false)
     private AcmAuditLookup auditLookup;
+
+    @JsonRawValue
+    @Lob
+    @Column(name = "cm_diff_details_json")
+    private String diffDetailsAsJson;
 
     public Date getEventDate()
     {
@@ -265,6 +272,17 @@ public class AuditEvent
     public void setEventProperties(Map<String, String> eventProperties)
     {
         this.eventProperties = eventProperties;
+    }
+
+
+    public String getDiffDetailsAsJson()
+    {
+        return diffDetailsAsJson;
+    }
+
+    public void setDiffDetailsAsJson(String diffDetailsAsJson)
+    {
+        this.diffDetailsAsJson = diffDetailsAsJson;
     }
 
     @Override
