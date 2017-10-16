@@ -211,7 +211,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID";
                     }
                 }
             });
@@ -324,7 +324,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s;
+                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s + "%26status_lcs:VALID";
                     }
                 }
             });
@@ -751,7 +751,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID" ;
                     }
                 }
             });
