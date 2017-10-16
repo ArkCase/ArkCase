@@ -70,7 +70,7 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
              */
             queryFilteredSearch: {
                 method: 'GET',
-                url: "api/v1/plugin/search/facetedSearch?q=:query",
+                url: "api/v1/plugin/organizations/search/:organizationId?q=:query",
                 cache: false,
                 isArray: false,
                 transformResponse: function (data, headerGetter) {

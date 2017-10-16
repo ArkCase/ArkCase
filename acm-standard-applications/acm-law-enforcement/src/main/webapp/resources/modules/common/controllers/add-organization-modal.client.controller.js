@@ -14,7 +14,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-            $scope.editMode = !!params.organizationId;
+            if(!!params.targetOrganizationId){
+                $scope.editMode = !!params.organizationId;
+            }else{
+                $scope.editMode = !!params.targetOrganizationId;
+            }
             $scope.organizationId = params.organizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isValid = true;
@@ -84,6 +88,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+                params.organizationId = $scope.organizationId;
 
                 var modalInstance = $modal.open({
                     templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -92,6 +97,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                         $scope.header = params.header;
                         $scope.filter = params.filter;
                         $scope.config = params.config;
+                        $scope.organizationId = params.organizationId;
                     }],
                     animation: true,
                     size: 'lg',

@@ -36,6 +36,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         });
 
+        $scope.organizationId = null;
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseUsers = gridHelper.getUsers();
@@ -56,6 +57,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.organizationId = objectInfo.organizationId;
             refreshGridData(objectInfo.organizationId, objectInfo.objectType);
         };
 
@@ -86,10 +88,14 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             };
             if (rowEntity) {
                 angular.extend(params, {
-                    organizationId: rowEntity.target_object.object_id_s,
+                    targetOrganizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
                     description: rowEntity.description_s
+                });
+            } else {
+                angular.extend(params, {
+                    organizationId: $scope.organizationId
                 });
             }
 

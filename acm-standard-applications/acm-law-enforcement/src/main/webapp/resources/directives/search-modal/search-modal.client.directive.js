@@ -123,7 +123,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         if (query) {
                             scope.showNoData = false;
                             SearchService.queryFilteredSearch({
-                                    query: query
+                                    query: query,
+                                    baseOrganizationId: baseOrganizationId
                                 },
                                 function (data) {
                                     updateFacets(data.facet_counts.facet_fields);
