@@ -17,7 +17,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.editMode = !!params.organizationId;
             $scope.organizationId = params.organizationId;
             $scope.organizationValue = params.organizationValue;
-            $scope.isChanged = true;
+            $scope.isValid = true;
             $scope.isDefault = params.isDefault;
             $scope.isSelectedParent = !!params.isSelectedParent;
             $scope.isEditParent = false;
@@ -103,12 +103,16 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     }
                 });
                 modalInstance.result.then(function (selected) {
-                    $scope.isChanged = false;
+                    $scope.isValid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
                     }
                 });
+            };
+            
+            $scope.isChanged = function () {
+                $scope.isValid = false;
             };
 
             $scope.addNewOrganization = function () {
@@ -131,7 +135,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.isChanged = false;
+                    $scope.isValid = false;
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
