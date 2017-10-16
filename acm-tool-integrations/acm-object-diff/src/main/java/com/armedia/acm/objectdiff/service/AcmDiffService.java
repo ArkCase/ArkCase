@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -88,8 +90,7 @@ public class AcmDiffService
                     {
                         sameObject = false;
                     }
-                }
-                else if (field.get(oldObj) instanceof Comparable)
+                } else if (field.get(oldObj) instanceof Comparable)
                 {
                     if (ObjectUtils.compare(Comparable.class.cast(field.get(oldObj)), Comparable.class.cast(field.get(newObj))) != 0)
                     {
@@ -168,8 +169,7 @@ public class AcmDiffService
         {
             acmObjectModified.setProperty(property);
             acmObjectModified.setPath(parentPath + "." + property);
-        }
-        else
+        } else
         {
             String path = cfg.getName();
             if (parentPath != null && parentPath.length() > 0)
@@ -186,6 +186,11 @@ public class AcmDiffService
             for (String fieldName : cfg.getIncludeFields())
             {
                 Field field = FieldUtils.getField(clazz, fieldName, true);
+                if (field == null)
+                {
+                    log.error("field [{}] not found for class [{}].", fieldName, clazz.getName());
+                    continue;
+                }
                 try
                 {
                     Object oldValue = field.get(oldObj);
@@ -193,15 +198,16 @@ public class AcmDiffService
 
                     //which object is not null
                     Class validValueClass;
+                    Object validValue;
                     if (oldValue == null && newValue == null)
                     {
                         //skip field comparision since both are null and are same
                         continue;
-                    }
-                    else
+                    } else
                     {
                         //doesn't matter which value is used for class descriptor
                         validValueClass = oldValue != null ? oldValue.getClass() : newValue.getClass();
+                        validValue = oldValue != null ? oldValue : newValue;
                     }
 
                     if (ClassUtils.isPrimitiveOrWrapper(validValueClass) || validValueClass.isAssignableFrom(String.class))//compare primitives or String
@@ -211,16 +217,14 @@ public class AcmDiffService
                             AcmValueChanged valueChanged = createValueChange(acmObjectModified.getPath(), fieldName, oldValue, newValue);
                             acmObjectModified.addChange(valueChanged);
                         }
-                    }
-                    else if (oldValue instanceof Collection)//compare objects which are implementation of Collection
+                    } else if (validValue instanceof Collection)//compare objects which are implementation of Collection
                     {
                         AcmCollectionChange collectionChange = compareCollections(acmObjectModified.getPath(), fieldName, Collection.class.cast(oldValue), Collection.class.cast(newValue));
                         if (collectionChange != null && !collectionChange.getChanges().isEmpty())
                         {
                             acmObjectModified.addChange(collectionChange);
                         }
-                    }
-                    else if (configurationMap.containsKey(validValueClass.getName()))//compare objects defined in the configuration
+                    } else if (configurationMap.containsKey(validValueClass.getName()))//compare objects defined in the configuration
                     {
                         AcmObjectChange objectChange = compareObjects(acmObjectModified.getPath(), fieldName, oldValue, newValue);
                         if (objectChange != null)
@@ -234,16 +238,14 @@ public class AcmDiffService
                 }
 
             }
-        }
-        else
+        } else
         {
             log.error("ID don't matched");
         }
         if (acmObjectModified.getChanges().isEmpty())
         {
             return null;
-        }
-        else
+        } else
         {
             return acmObjectModified;
         }
@@ -289,14 +291,12 @@ public class AcmDiffService
             if (oldObj != null)
             {
                 EvaluationContext oldObjContext = new StandardEvaluationContext(oldObj);
-                Object oldValue = exp.getValue(oldObjContext);
-                acmObjectReplaced.setOldValue(oldValue != null ? oldValue.toString() : null);
+                acmObjectReplaced.setOldValue(exp.getValue(oldObjContext).toString());
             }
             if (newObj != null)
             {
                 EvaluationContext newObjContext = new StandardEvaluationContext(newObj);
-                Object newValue = exp.getValue(newObjContext);
-                acmObjectReplaced.setNewValue(newValue != null ? newValue.toString() : null);
+                acmObjectReplaced.setNewValue(exp.getValue(newObjContext).toString());
             }
         } catch (ParseException e)
         {
@@ -331,19 +331,29 @@ public class AcmDiffService
      */
     private AcmCollectionChange compareCollections(String parentPath, String property, Collection oldCollection, Collection newCollection)
     {
-        if (oldCollection instanceof List && oldCollection instanceof List)
+        if ((oldCollection == null || oldCollection.size() < 1) && (newCollection == null || newCollection.size() < 1))
         {
-            return createListChange(parentPath, property, List.class.cast(oldCollection), List.class.cast(newCollection));
+            //they are same
+            return null;
         }
-        else if (oldCollection instanceof Map && oldCollection instanceof Map)
+        Collection validCollection = oldCollection != null ? oldCollection : newCollection;
+        Class collectionType = getCollectionsType(oldCollection, newCollection);
+        if (collectionType == null)
         {
-            return createMapChange(parentPath, property, Map.class.cast(oldCollection), Map.class.cast(newCollection));
+            return null;
+        }
+        if (validCollection instanceof List)
+        {
+            return createListChange(parentPath, property, List.class.cast(oldCollection), List.class.cast(newCollection), collectionType);
+        } else if (validCollection instanceof Map)
+        {
+            return createMapChange(parentPath, property, Map.class.cast(oldCollection), Map.class.cast(newCollection), collectionType);
         }
         //TODO create handling for additional implementations of Collection
         return null;
     }
 
-    private AcmCollectionChange createMapChange(String path, String property, Map oldMap, Map newMap)
+    private AcmCollectionChange createMapChange(String path, String property, Map oldMap, Map newMap, Class clazz)
     {
         log.error("createMapChange - Not implemented yet!!!!");
         //TODO implementation
@@ -360,14 +370,10 @@ public class AcmDiffService
      * @param newList    New Collection
      * @return AcmCollectionChange
      */
-    private AcmCollectionChange createListChange(String parentPath, String property, List oldList, List newList)
+    private AcmCollectionChange createListChange(String parentPath, String property, List oldList, List newList, Class clazz)
     {
-        if (oldList == null && newList == null)
-        {
-            //they are same
-            return null;
-        }
-        Class clazz = getTypeOfList(oldList != null ? oldList : newList);
+        oldList = oldList == null ? new LinkedList() : oldList;//create empty list for comparing
+        newList = newList == null ? new LinkedList() : newList;//create empty list for comparing
         if (clazz == null || !configurationMap.containsKey(clazz.getName()))
         {
             //can't determine type of objects in the list
@@ -421,11 +427,52 @@ public class AcmDiffService
         if (acmListChange.getChanges().isEmpty())
         {
             return null;
-        }
-        else
+        } else
         {
             return acmListChange;
         }
+    }
+
+    /**
+     * Tries to determin which type of objects are inside the collection which needs to be compared.
+     * If holds different objects or both collections are null or empty, null is returned, because there is no way to determine.
+     *
+     * @param oldCollection
+     * @param newCollection
+     * @return found object type which are elements in the collection
+     */
+    private Class getCollectionsType(Collection oldCollection, Collection newCollection)
+    {
+        if (oldCollection == null && newCollection == null)
+        {
+            //can't be determined
+            return null;
+        }
+
+        Collection validCollection = oldCollection != null && oldCollection.size() > 0 ? oldCollection : newCollection;
+        if (validCollection.size() < 1)
+        {
+            //can't be determined
+            return null;
+        }
+
+        Iterator it = validCollection.iterator();
+
+        Class collectionType = null;
+        while (it.hasNext())
+        {
+            Object obj = it.next();
+            if (collectionType == null)
+            {
+                collectionType = obj.getClass();
+            } else if (!collectionType.equals(obj.getClass()))
+            {
+                //contains different type of objects
+                return null;
+            }
+
+        }
+        return collectionType;
     }
 
     /**
@@ -442,8 +489,7 @@ public class AcmDiffService
         if (parentPath == null)
         {
             return pathSuffix;
-        }
-        else
+        } else
         {
             return parentPath + "." + pathSuffix;
         }
@@ -499,30 +545,6 @@ public class AcmDiffService
     }
 
     /**
-     * Determine which type are elements in the List.
-     * returns null if elements are not same or list is empty
-     *
-     * @param list
-     * @return
-     */
-    private Class getTypeOfList(List list)
-    {
-        Class clazz = null;
-        for (Object obj : list)
-        {
-            if (clazz == null)
-            {
-                clazz = obj.getClass();
-            }
-            else if (!clazz.equals(obj.getClass()))
-            {
-                return null;
-            }
-        }
-        return clazz;
-    }
-
-    /**
      * update objectId and objectType for AcmObjectChange
      *
      * @param obj    object which is affected
@@ -535,8 +557,7 @@ public class AcmDiffService
             change.setAffectedObjectId(AcmObject.class.cast(obj).getId());
             change.setAffectedObjectType(AcmObject.class.cast(obj).getObjectType());
 
-        }
-        else
+        } else
         {
             log.warn("Object [{}] is not AcmObject", obj);
         }
@@ -554,8 +575,7 @@ public class AcmDiffService
         {
             change.setAffectedObjectId(AcmObject.class.cast(obj).getId());
             change.setAffectedObjectType(AcmObject.class.cast(obj).getObjectType());
-        }
-        else
+        } else
         {
             log.warn("Object [{}] is not AcmObject", obj);
         }
