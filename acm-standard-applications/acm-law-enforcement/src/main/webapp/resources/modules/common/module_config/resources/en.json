@@ -547,6 +547,7 @@
       "error.accessDenied": "Access denied to calendar service.",
       "error.serviceConfiguration": "Invalid calendar service configuration.",
       "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.calendarIntegration": "Calendar Integration Configuration Problem.",
       "error.internalServerError": "Internal Server Error occurred."
     }
   },
