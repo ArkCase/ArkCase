@@ -1,9 +1,5 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -43,12 +39,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
@@ -65,6 +62,7 @@ import java.util.UUID;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-event.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-merge-case-test-IT.xml",
@@ -85,7 +83,11 @@ import java.util.UUID;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-email.xml",
-        "/spring/spring-library-email-smtp.xml"})
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-calendar-config-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {

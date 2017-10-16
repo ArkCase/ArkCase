@@ -14,7 +14,7 @@ angular.module('cases').config(['$stateProvider',
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('cases');
-                        $translate.buildDataLookups(LocaleService.getLabelResource("cases", "en"));
+                        $translate.buildDataLookups(LocaleService.getLabelResources(["cases"], "en"));
                         return $translate.refresh();
                     }]
                 }

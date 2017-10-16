@@ -171,7 +171,7 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         deferred.resolve(tags);
                     });
                     return deferred.promise;
-                }
+                };
 
                 scope.queryTypeahead = function (typeaheadQuery) {
                     if (!scope.hideTypeahead) {
@@ -261,13 +261,30 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                 hidden = _.includes(scope.config.hiddenFacets, key);
                             }
                             if (!hidden && value) {
-                                scope.facets.push({
+                                var fieldCategory = Util.goodValue($translate.getKey(key, "common.directive.search.facet.names"));
+                                var tokens = fieldCategory.split(".");
+                                fieldCategory = tokens.pop();
+                                fieldCategory = fieldCategory.replace(/%$/, "");
+                                //var nameTranslated = $translate.data(key, "common.directive.search.facet.names");
+                                var facet = {
                                     name: key,
                                     fields: value,
-                                    limit: scope.facetLimit
-                                });
+                                    limit: scope.facetLimit,
+                                    //nameTranslated: nameTranslated,
+                                    nameTranslated: key,
+                                    fieldCategory: fieldCategory
+                                };
+
+                                // _.each(facet.fields, function(field) {
+                                //     field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                                //         "common.directive.search.facet.fields." + fieldCategory);
+                                // });
+
+                                scope.facets.push(facet);
                             }
                         });
+
+                        _translateFacets(scope.facets);
 
                         //allow predetermined order of facets, defined in config
                         if (Util.goodMapValue(scope.config, 'preferredFacetOrder', false)
@@ -276,6 +293,28 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                 }
+
+                scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                    _translateFacets(scope.facets);
+                    // _.each(scope.facets, function(facet){
+                    //     facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
+                    //     _.each(facet.fields, function(field) {
+                    //         field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                    //             "common.directive.search.facet.fields." + facet.fieldCategory);
+                    //     });
+                    // });
+                });
+
+                var _translateFacets = function (facets) {
+                    _.each(facets, function(facet){
+                        facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
+                        _.each(facet.fields, function(field) {
+                            field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                                "common.directive.search.facet.fields." + facet.fieldCategory);
+                        });
+                    });
+                };
+
 
                 function sortFacets(facets, facetOrder) {
                     facets.sort(function (a, b) {

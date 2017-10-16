@@ -223,7 +223,7 @@
                                 <div class="col-sm-4 form-group">
                                     <label for="searchExisting">&nbsp;</label>
                                     <input id="searchExisting" type="text" ng-model="personAssociation.personFullName"
-                                           ng-click="searchPerson($index)"
+                                           ng-click="searchPerson($index, true)"
                                            class="input-md form-control"
                                            readonly
                                            placeholder="{{ 'organizations.comp.newOrganization.people.searchExisting.placeholder' | translate }}">
@@ -231,7 +231,7 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>organizations.comp.newOrganization.people.personType</label>
                                     <input class="form-control" readonly
-                                           ng-model="personAssociation.personToOrganizationAssociationTypeName.name">
+                                           ng-model="personAssociation.personToOrganizationAssociationType">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div class="pull-left">

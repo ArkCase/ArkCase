@@ -9,8 +9,8 @@ angular.module("dashboard.weather", ["adf.provider"]).config(function (ArkCaseDa
         controllerAs: 'dashboardWeather',
         reload: true,
         resolve: {
-            location: function (config) {
-                return config.location ? config.location : void 0
+            params: function (config) {
+                return config;
             }
         },
         edit: {

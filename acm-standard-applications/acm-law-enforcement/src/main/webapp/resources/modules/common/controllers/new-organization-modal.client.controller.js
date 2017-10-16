@@ -17,6 +17,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             return moduleConfig;
         });
 
+        $scope.accordionSuffix = Math.floor((Math.random() * 1000) + 1);
         //new organization with predefined values
         $scope.organization = {
             className: 'com.armedia.acm.plugins.person.model.Organization',
@@ -93,11 +94,15 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
         };
 
         $scope.searchPerson = function (index) {
+            var associationFound = _.find($scope.organization.personAssociations, function(item){
+                return !Util.isEmpty(item) && !Util.isEmpty(item.person);
+            });
             var association = index > -1 ? $scope.organization.personAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
-                types: $scope.personAssociationTypes
+                types: $scope.personAssociationTypes,
+                isFirstPerson: Util.isEmpty(associationFound) ? true : false
             };
 
             //set this params for editing
@@ -106,7 +111,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.organizationToPersonAssociationType,
-                    isDefault: association === $scope.organization.primaryContact
+                    isDefault: Util.isEmpty(association.primaryContact) ? true : false
                 });
             }
 

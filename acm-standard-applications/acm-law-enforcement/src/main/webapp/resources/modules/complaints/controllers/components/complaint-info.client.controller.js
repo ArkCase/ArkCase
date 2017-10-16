@@ -188,7 +188,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
             $q.all([getComplaintTypesPromise, getPrioritiesPromise]).then(function() {
@@ -244,8 +244,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveComplaint();
         };
-        $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveComplaint();
         };
         

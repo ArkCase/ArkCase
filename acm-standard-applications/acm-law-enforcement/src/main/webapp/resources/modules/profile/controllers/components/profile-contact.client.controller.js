@@ -1,7 +1,6 @@
 'use strict';
 angular.module('profile').controller('Profile.ContactController', ['$scope', 'ConfigService','Profile.UserInfoService',
     function ($scope, ConfigService,UserInfoService) {
-        $scope.$emit('req-component-config', 'contact');
         $scope.update=function(){
             var profileInfo;
             UserInfoService.getUserInfo().then(function(infoData) {

@@ -2,21 +2,21 @@
   "search": {
     "title": "खोज",
     "search.btn": "खोज",
-    "export.btn": "hi_Export",
-    "search.placeholder": "hi_Type in to search",
+    "export.btn": "निर्यात",
+    "search.placeholder": "खोज करने के लिए टाइप करें",
     "menus": {
       "leftnav.item": "खोज"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "hi_ID",
-          "name": "hi_Name",
-          "type": "hi_Type",
-          "title": "hi_Title",
-          "parent": "hi_Parent",
-          "assignee": "hi_Assignee",
-          "modified": "hi_Modified"
+          "id": "ID",
+          "name": "नाम",
+          "type": "प्रकार",
+          "title": "शीर्षक",
+          "parent": "अभिभावक",
+          "assignee": "नियुक्त",
+          "modified": "संशोधित"
         }
       }
     }

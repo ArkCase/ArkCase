@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,9 +44,11 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.PersistenceException;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -58,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 
 /**
  * Created by armdev on 5/1/14.
@@ -699,8 +703,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("File with id: {} does not exists", fileId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FILE_TYPE, fileId, "File not found", null);
-            }
-            else
+            } else
             {
                 if (!((EcmFileConstants.RECORD).equals(ecmFile.getStatus())))
                 {
@@ -724,8 +727,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             {
                 log.error("Folder with id: {} does not exists", folderId);
                 throw new AcmObjectNotFoundException(EcmFileConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
-            }
-            else
+            } else
             {
                 for (AcmCmisObject file : folder.getChildren())
                 {
@@ -1127,6 +1129,67 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         EcmFile saved = getEcmFileDao().save(file);
 
         return saved;
+    }
+
+    @Override
+    public List<EcmFile> saveFilesToTempDirectory(MultiValueMap<String, MultipartFile> files)
+    {
+        log.debug("Saving files to temp directory...");
+        List<EcmFile> uploadList = new ArrayList<>();
+
+        if (files != null)
+        {
+            String tempUploadFolderPath = FileUtils.getTempDirectoryPath();
+            for (Map.Entry<String, List<MultipartFile>> entry : files.entrySet())
+            {
+                List<MultipartFile> multipartFiles = entry.getValue();
+                for (MultipartFile file : multipartFiles)
+                {
+
+                    try
+                    {
+                        // This unique filename will allow the temp file to be tracked before it is saved to Alfresco
+                        UUID randomFileId = UUID.randomUUID();
+                        String uniqueTempFileName = randomFileId + "_" + file.getOriginalFilename();
+
+                        // Saves the file content to a temporary location
+                        File tempFileDestination = new File(tempUploadFolderPath + File.separator + uniqueTempFileName);
+                        log.debug("Saving file [{}] as [{}] to [{}]", file.getOriginalFilename(), uniqueTempFileName, tempFileDestination.getCanonicalPath());
+                        FileUtils.copyStreamToFile(file.getInputStream(), tempFileDestination);
+
+                        // The available file metadata will be returned as JSON to the caller
+                        EcmFile uploadedFile = new EcmFile();
+                        uploadedFile.setFileName(file.getOriginalFilename());
+                        uploadedFile.setStatus(uniqueTempFileName);
+                        uploadedFile.setFileActiveVersionMimeType(file.getContentType());
+                        uploadedFile.setCreated(new Date());
+                        uploadedFile.setModified(new Date());
+                        uploadList.add(uploadedFile);
+                    } catch (IOException e)
+                    {
+                        log.error("Failed to write temp file [{}]", e.getMessage(), e);
+                    }
+                }
+            }
+        }
+
+        log.debug("Saved [{}] to temp directory", uploadList);
+        return uploadList;
+    }
+
+    @Override
+    public boolean deleteTempFile(String uniqueFileName)
+    {
+        log.debug("Deleting temp file [{}]", uniqueFileName);
+        boolean fileDeleted = false;
+        String tmpDirectory = FileUtils.getTempDirectoryPath();
+        File file = new File(tmpDirectory + File.separator + uniqueFileName);
+        if (file.exists())
+        {
+            fileDeleted = FileUtils.deleteQuietly(file);
+            log.trace("File [{}] deleted? : [{}]", file.getAbsolutePath(), fileDeleted);
+        }
+        return fileDeleted;
     }
 
     private String createQueryFormListAndOperator(List<String> elements, String operator)

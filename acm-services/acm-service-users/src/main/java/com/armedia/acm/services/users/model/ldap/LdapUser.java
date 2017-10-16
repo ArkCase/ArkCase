@@ -30,42 +30,42 @@ public class LdapUser
     public AcmUser toAcmUser()
     {
         AcmUser acmUser = new AcmUser();
-        acmUser.setUserId(getUserId());
-        acmUser.setDistinguishedName(getDistinguishedName());
-        acmUser.setUid(getUid());
-        acmUser.setUserPrincipalName(getUserPrincipalName());
-        acmUser.setsAMAccountName(getsAMAccountName());
-        acmUser.setUserDirectoryName(getDirectoryName());
+        acmUser.setUserId(userId.toLowerCase());
+        acmUser.setDistinguishedName(distinguishedName);
+        acmUser.setUid(uid);
+        acmUser.setUserPrincipalName(userPrincipalName);
+        acmUser.setsAMAccountName(sAMAccountName);
+        acmUser.setUserDirectoryName(directoryName);
         return setAcmUserEditableFields(acmUser);
     }
 
     public AcmUser setAcmUserEditableFields(AcmUser acmUser)
     {
-        acmUser.setFirstName(getFirstName());
-        acmUser.setLastName(getLastName());
-        acmUser.setUserState(AcmUserState.valueOf(getState()));
-        acmUser.setMail(getMail());
-        acmUser.setFullName(getFullName());
-        acmUser.setCompany(getCompany());
-        acmUser.setCountry(getCountry());
-        acmUser.setCountryAbbreviation(getCountryAbbreviation());
-        acmUser.setPasswordExpirationDate(getPasswordExpirationDate());
+        acmUser.setFirstName(firstName);
+        acmUser.setLastName(lastName);
+        acmUser.setUserState(AcmUserState.valueOf(state));
+        acmUser.setMail(mail);
+        acmUser.setFullName(fullName);
+        acmUser.setCompany(company);
+        acmUser.setCountry(country);
+        acmUser.setCountryAbbreviation(countryAbbreviation);
+        acmUser.setPasswordExpirationDate(passwordExpirationDate);
         return acmUser;
     }
 
     public boolean isChanged(AcmUser acmUser)
     {
-        return !(Objects.equals(getDirectoryName(), acmUser.getUserDirectoryName()) &&
-                Objects.equals(getState(), acmUser.getUserState().name()) &&
-                Objects.equals(getTitle(), acmUser.getTitle()) &&
-                Objects.equals(getMail(), acmUser.getMail()) &&
-                Objects.equals(getFirstName(), acmUser.getFirstName()) &&
-                Objects.equals(getLastName(), acmUser.getLastName()) &&
-                Objects.equals(getCompany(), acmUser.getCompany()) &&
-                Objects.equals(getCountry(), acmUser.getCountry()) &&
-                Objects.equals(getCountryAbbreviation(), acmUser.getCountryAbbreviation()) &&
-                Objects.equals(getDepartment(), acmUser.getDepartment()) &&
-                Objects.equals(getPasswordExpirationDate(), acmUser.getPasswordExpirationDate()));
+        return !(Objects.equals(directoryName, acmUser.getUserDirectoryName()) &&
+                Objects.equals(state, acmUser.getUserState().name()) &&
+                Objects.equals(title, acmUser.getTitle()) &&
+                Objects.equals(mail, acmUser.getMail()) &&
+                Objects.equals(firstName, acmUser.getFirstName()) &&
+                Objects.equals(lastName, acmUser.getLastName()) &&
+                Objects.equals(company, acmUser.getCompany()) &&
+                Objects.equals(country, acmUser.getCountry()) &&
+                Objects.equals(countryAbbreviation, acmUser.getCountryAbbreviation()) &&
+                Objects.equals(department, acmUser.getDepartment()) &&
+                Objects.equals(passwordExpirationDate, acmUser.getPasswordExpirationDate()));
     }
 
     public String getUserId()

@@ -14,12 +14,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
@@ -124,6 +127,33 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     /*
      * (non-Javadoc)
      *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long)
+     */
+    @Override
+    @Transactional
+    public AcmOutlookFolderCreator getFolderCreator(Long creatorId) throws AcmOutlookFolderCreatorDaoException
+    {
+
+        if (creatorId == null)
+        {
+            throw new AcmOutlookFolderCreatorDaoException("Creator ID cannot be null.");
+        }
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
+                AcmOutlookFolderCreator.class);
+        query.setParameter("creatorId", creatorId);
+
+        try
+        {
+            return query.getSingleResult();
+        } catch (NoResultException | NonUniqueResultException e)
+        {
+            throw new AcmOutlookFolderCreatorDaoException(e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.Long,
      * java.lang.String)
      */
@@ -209,32 +239,61 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
      * (non-Javadoc)
      *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#updateFolderCreator(com.armedia.acm.service.
-     * outlook.model.AcmOutlookFolderCreator)
+     * outlook.model.AcmOutlookFolderCreator, com.armedia.acm.service. outlook.model.AcmOutlookFolderCreator)
      */
     @Override
     @Transactional
-    public void updateFolderCreator(AcmOutlookFolderCreator updatedCreator) throws AcmOutlookFolderCreatorDaoException
+    public void updateFolderCreator(AcmOutlookFolderCreator existing, AcmOutlookFolderCreator updatedCreator)
+            throws AcmOutlookFolderCreatorDaoException
     {
         log.debug("Updating folder creator with id [{}].", updatedCreator.getId());
 
-        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
-                AcmOutlookFolderCreator.class);
-        query.setParameter("creatorId", updatedCreator.getId());
-
         try
         {
-            AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
-            // TODO: updating system password, should actually trigger folder recreation! Should be addressed with
-            // AFDP-4017
-            retrievedCreator.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
-            retrievedCreator.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
+            existing.setSystemEmailAddress(updatedCreator.getSystemEmailAddress());
+            existing.setSystemPassword(encryptValue(updatedCreator.getSystemPassword()));
+
+            em.merge(existing);
+
         } catch (AcmEncryptionException e)
         {
             log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
                     updatedCreator.getId(), e);
             throw new AcmOutlookFolderCreatorDaoException(String.format(
-                    "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
+                    "Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [%s]. Cannot update it.",
                     updatedCreator.getId()), e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getObjectReferences(com.armedia.acm.service.
+     * outlook.model.AcmOutlookFolderCreator)
+     */
+    @Override
+    public Set<AcmOutlookObjectReference> getObjectReferences(AcmOutlookFolderCreator folderCreator)
+            throws AcmOutlookFolderCreatorDaoException
+    {
+        log.debug("Retrieving object references for folder creator with id: [{}].", folderCreator.getId());
+
+        TypedQuery<AcmOutlookFolderCreator> query = em.createQuery("SELECT ofc FROM AcmOutlookFolderCreator ofc WHERE ofc.id = :creatorId",
+                AcmOutlookFolderCreator.class);
+        query.setParameter("creatorId", folderCreator.getId());
+
+        try
+        {
+            AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
+
+            return retrievedCreator.getOutlookObjectReferences();
+        } catch (NoResultException e)
+        {
+            log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
+                    folderCreator.getId(), e);
+            throw new AcmOutlookFolderCreatorDaoException(
+                    String.format("There is no 'AcmOutlookFolderCreator' instance with id [%s] stored in the database. Cannot update it.",
+                            folderCreator.getId()),
+                    e);
         }
     }
 

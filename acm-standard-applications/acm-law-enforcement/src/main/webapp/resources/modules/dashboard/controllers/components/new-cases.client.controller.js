@@ -1,12 +1,19 @@
 'use strict';
 
 angular.module('dashboard.new-cases')
-    .controller('Dashboard.NewCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService',
-    function ($scope, $translate, Authentication, DashboardService, ConfigService) {
+    .controller('Dashboard.NewCasesController', ['$scope', '$translate', 'Authentication', 'Dashboard.DashboardService', 'ConfigService', 'params', 'UtilService',
+    function ($scope, $translate, Authentication, DashboardService, ConfigService, params, Util) {
 
         var vm = this;
 
         vm.config = null;
+
+        if(!Util.isEmpty( params.description)) {
+            $scope.$parent.model.description = " - " + params.description;
+        }
+        else {
+            $scope.$parent.model.description = "";
+        }
 
         ConfigService.getComponentConfig("dashboard", "newCases").then(function (config) {
             DashboardService.queryNewCases(function (solrData) {
