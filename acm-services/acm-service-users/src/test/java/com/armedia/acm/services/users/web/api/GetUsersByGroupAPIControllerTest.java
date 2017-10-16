@@ -53,7 +53,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
 
         String response = "response";
         String group = "Group1";
-        String expectedQuery = "object_type_s:USER AND groups_id_ss:" + group;
+        String expectedQuery = "object_type_s:USER AND status_lcs:VALID AND groups_id_ss:" + group;
         Capture<String> capturedSolrQuery = EasyMock.newCapture();
         expect(mockAuthentication.getName()).andReturn("USER");
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(eq(mockAuthentication), eq(SolrCore.ADVANCED_SEARCH), capture(capturedSolrQuery), eq(0), eq(1000), eq(""))).andReturn(response);
@@ -67,7 +67,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
                         .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-        log.info("results: " + result.getResponse().getContentAsString());
+        log.info("results: [{}]", result.getResponse().getContentAsString());
 
         verifyAll();
 
@@ -81,7 +81,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
 
         String response = "response";
         String group = "Group 1";
-        String expectedQuery = "object_type_s:USER AND groups_id_ss:\"" + group + "\"";
+        String expectedQuery = "object_type_s:USER AND status_lcs:VALID AND groups_id_ss:\"" + group + "\"";
         Capture<String> capturedSolrQuery = EasyMock.newCapture();
         expect(mockAuthentication.getName()).andReturn("USER");
         expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(eq(mockAuthentication), eq(SolrCore.ADVANCED_SEARCH), capture(capturedSolrQuery), eq(0), eq(1000), eq(""))).andReturn(response);
@@ -95,7 +95,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
                         .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
-        log.info("results: " + result.getResponse().getContentAsString());
+        log.info("results: [{}]", result.getResponse().getContentAsString());
 
         verifyAll();
 
