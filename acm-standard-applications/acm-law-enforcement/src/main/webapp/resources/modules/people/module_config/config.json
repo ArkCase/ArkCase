@@ -1114,7 +1114,7 @@
           "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
+          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
         }
       ]
     },
@@ -1363,9 +1363,9 @@
         },
         {
           "name": "location",
-          "field": "target_object.default_location_s",
           "displayName": "people.comp.related.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{grid.appScope.getLocation(row.entity.target_object.default_location_s)}}</span>"
         }
       ]
     },
