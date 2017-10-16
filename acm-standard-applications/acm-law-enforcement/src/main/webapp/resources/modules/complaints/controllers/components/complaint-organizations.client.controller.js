@@ -56,6 +56,26 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
             $scope.gridOptions.data = $scope.objectInfo.organizationAssociations;
         };
 
+        $scope.getPrimaryContact = function(organizationAssiciation)
+        {
+            var primaryContact = organizationAssiciation.organization.primaryContact;
+            if (!!primaryContact) {
+                var getPrimaryConactGivenName = Util.goodValue(primaryContact.person.givenName);
+                var getPrimaryConactFamilyName = Util.goodValue(primaryContact.person.familyName);
+                return (getPrimaryConactGivenName.trim() + ' ' + getPrimaryConactFamilyName.trim()).trim();
+            }
+            return '';
+        };
+
+        $scope.getDefaultAddress = function (defaultAddress) {
+            if(!!defaultAddress){
+                var getDefaultAddressState = Util.goodValue(defaultAddress.state);
+                var getDefaultAddressCity = Util.goodValue(defaultAddress.city);
+                return (getDefaultAddressState.trim() + ' ' + getDefaultAddressCity.trim()).trim();
+            }
+            return '';
+        };
+
         var newOrganizationAssociation = function () {
             return {
                 id: null,
@@ -73,7 +93,6 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
         };
 
         function pickOrganization(association) {
-
             var params = {};
             params.types = $scope.organizationTypes;
 

@@ -142,11 +142,13 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         };
 
         $scope.addOrganization = function () {
+            $scope.isFirstOrganization = $scope.gridOptions.data.length == 0 ? true : false;
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.organizationTypes,
-                returnValueValidationFunction : validateOrganizationAssociation
+                returnValueValidationFunction : validateOrganizationAssociation,
+                isFirstOrganization: $scope.isFirstOrganization
             };
 
             var modalInstance = $modal.open({
