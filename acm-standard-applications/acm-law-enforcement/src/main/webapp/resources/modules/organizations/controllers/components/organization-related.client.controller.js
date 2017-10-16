@@ -25,10 +25,6 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 return relationshipTypes;
             });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams

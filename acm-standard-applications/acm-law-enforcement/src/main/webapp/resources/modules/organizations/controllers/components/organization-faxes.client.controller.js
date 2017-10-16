@@ -54,19 +54,11 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
             $scope.gridOptions.data = faxes;
         };
 
-
-        ObjectLookupService.getContactMethodTypes().then(
+        ObjectLookupService.getSubContactMethodType('email').then(
             function (contactMethodTypes) {
-                var found = _.find(contactMethodTypes, {key: 'fax'});
-                if(!Util.isArray(found)){
-                    $scope.faxTypes = found.subLookup;
-                }
+                $scope.faxTypes = contactMethodTypes;
                 return contactMethodTypes;
             });
-
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
 
         $scope.addNew = function () {
             var fax = {};

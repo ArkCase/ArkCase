@@ -338,6 +338,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return Service.getLookupByLookupName("contactMethodTypes");
         };
 
+        Service.getSubContactMethodType = function(type){
+            return Service.getLookupByLookupName("contactMethodTypes").then(function (contactMethodTypes) {
+                var found = _.find(contactMethodTypes, {key: type});
+                if(!Util.isArray(found)){
+                    return found.subLookup;
+                }
+            });
+        };
+
         /**
          * @ngdoc method
          * @name getOrganizationTypes
@@ -675,19 +684,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     }
                 }
             });
-        };
-
-
-        Service.getLookupValue = function (objArray, key) {
-            if (!Util.isArrayEmpty(objArray)) {
-                for (var i = 0; i < objArray.length; i++) {
-                    if (objArray[i].key === key) {
-                        return objArray[i].value;
-                    }
-                }
-            }
-            // this should happen if the key is not found in the array. then return the key itself
-            return key;
         };
 
         /**

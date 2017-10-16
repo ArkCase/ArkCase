@@ -54,18 +54,11 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
             $scope.gridOptions.data = phones;
         };
 
-        ObjectLookupService.getContactMethodTypes().then(
+        ObjectLookupService.getSubContactMethodType('email').then(
             function (contactMethodTypes) {
-                var found =  _.find(contactMethodTypes, {key: 'phone'});
-                if (!Util.isEmpty(found)) {
-                    $scope.phoneTypes = found.subLookup;
-                }
+                $scope.phoneTypes = contactMethodTypes;
                 return contactMethodTypes;
             });
-
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
 
         $scope.addNew = function () {
             var phone = {};

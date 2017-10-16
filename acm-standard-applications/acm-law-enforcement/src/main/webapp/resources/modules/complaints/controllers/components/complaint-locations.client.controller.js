@@ -30,10 +30,6 @@ angular.module('complaints').controller('Complaints.LocationsController', ['$sco
             }
         );
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             gridHelper.addButton(config, "edit");

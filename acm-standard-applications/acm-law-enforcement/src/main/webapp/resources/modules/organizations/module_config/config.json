@@ -273,7 +273,7 @@
               "name": "subType",
               "displayName": "organizations.comp.phones.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -306,7 +306,7 @@
               "name": "subType",
               "displayName": "organizations.comp.faxes.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.faxTypes, row.entity.subType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.faxTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -338,7 +338,7 @@
               "name": "subType",
               "displayName": "organizations.comp.emails.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -370,7 +370,7 @@
               "name": "subType",
               "displayName": "organizations.comp.urls.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -402,7 +402,7 @@
               "name": "participantType",
               "displayName": "organizations.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -427,7 +427,7 @@
               "name": "subType",
               "displayName": "organizations.comp.dbas.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div title='{{row.entity.type}}' class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.dbasTypes, row.entity.type) | translate }}</div>"
+              "cellTemplate": "<div title='{{row.entity.type}}' class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.dbasTypes, row.entity.type) | translate }}</div>"
             },
             {
               "name": "modifier",
@@ -477,7 +477,7 @@
               "name": "identificationType",
               "displayName": "organizations.comp.ids.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.organizationIdTypes, row.entity.identificationType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationIdTypes, row.entity.identificationType) | translate }}</div>"
             },
             {
               "name": "identificationNumber",
@@ -604,7 +604,7 @@
               "displayName": "organizations.comp.related.table.columns.associationType",
               "headerCellFilter": "translate",
               "lookup": "organizationTypes",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
             },
             {
               "name": "organizationValue",
@@ -677,7 +677,7 @@
           "name": "type",
           "displayName": "organizations.comp.addresses.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
           "width": "*"
         },
         {
@@ -709,7 +709,7 @@
           "name": "country",
           "displayName": "organizations.comp.addresses.table.columns.country",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.countries, row.entity.country) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.countries, row.entity.country) | translate }}</div>"
         },
         {
           "name": "modified",
@@ -746,7 +746,7 @@
           "name": "subType",
           "displayName": "organizations.comp.phones.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -795,7 +795,7 @@
           "name": "subType",
           "displayName": "organizations.comp.faxes.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.faxTypes, row.entity.subType) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.faxTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -844,7 +844,7 @@
           "name": "subType",
           "displayName": "organizations.comp.emails.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -892,7 +892,7 @@
           "name": "subType",
           "displayName": "organizations.comp.urls.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -943,7 +943,7 @@
           "name": "participantType",
           "displayName": "organizations.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {
@@ -1036,7 +1036,7 @@
           "displayName": "organizations.comp.dbas.table.columns.type",
           "enableCellEdit": false,
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.getLookupValue(grid.appScope.dbasTypes, row.entity.type) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.dbasTypes, row.entity.type) | translate }}</div>"
         },
         {
           "name": "description",
@@ -1094,7 +1094,7 @@
           "field": "person.personToOrganizationAssociationType",
           "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{ grid.appScope.getLookupValue(grid.appScope.personAssociationTypes, row.entity.personToOrganizationAssociationType) | translate}}</span>"
+          "cellTemplate": "<span>{{ grid.appScope.utils.getLookupValue(grid.appScope.personAssociationTypes, row.entity.personToOrganizationAssociationType) | translate}}</span>"
         },
         {
           "name": "phone",
@@ -1130,7 +1130,7 @@
           "name": "identificationType",
           "displayName": "organizations.comp.ids.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
         },
         {
           "name": "identificationNumber",
@@ -1186,7 +1186,7 @@
           "field": "type_lcs",
           "displayName": "organizations.comp.cases.table.columns.role",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.organizationTypes, row.entity.type_lcs) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.type_lcs) | translate }}</div>"
         },
         {
           "name": "priority",
@@ -1255,7 +1255,7 @@
           "field": "type_lcs",
           "displayName": "organizations.comp.complaints.table.columns.role",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.organizationTypes, row.entity.type_lcs) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.type_lcs) | translate }}</div>"
         },
         {
           "name": "priority",
@@ -1324,7 +1324,7 @@
           "displayName": "organizations.comp.related.table.columns.associationType",
           "headerCellFilter": "translate",
           "lookup": "organizationTypes",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
         },
         {
           "name": "organizationValue",

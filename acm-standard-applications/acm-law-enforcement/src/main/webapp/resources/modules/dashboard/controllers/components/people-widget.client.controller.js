@@ -84,9 +84,5 @@ angular.module('dashboard.people', ['adf.provider'])
                     }
                 );
             }
-
-            $scope.getLookupValue = function(value, key){
-                    return ObjectLookupService.getLookupValue(value, key);
-                };
         }
     ]);

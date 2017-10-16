@@ -25,8 +25,8 @@
  <core-participants participants-init="participantsInit"/>
  </file>
  <file name="app.js">
- angular.module('cases').controller('Cases.ParticipantsController', ['$scope', 'Case.InfoService', 'ObjectService', 'Object.LookupService'
- , function ($scope, CaseInfoService, ObjectService, ObjectLookupService) {
+ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', 'Case.InfoService', 'ObjectService',
+ , function ($scope, CaseInfoService, ObjectService) {
 
         $scope.participantsInit = {
             moduleId: 'cases',
@@ -78,10 +78,6 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         return participantTypes;
                     }
                 );
-
-                scope.getLookupValue = function(value, key){
-                  return ObjectLookupService.getLookupValue(value, key);
-                };
 
                 var onConfigRetrieved = function (config) {
                     if (!scope.participantsInit.participantsTitle)

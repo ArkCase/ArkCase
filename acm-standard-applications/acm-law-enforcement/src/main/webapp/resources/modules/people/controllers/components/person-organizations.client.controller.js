@@ -63,10 +63,6 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
                 return organizationTypes;
             });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseUsers = gridHelper.getUsers();

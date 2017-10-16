@@ -62,10 +62,6 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
             $scope.aliasTypes = aliasTypes;
         });
 
-        $scope.getLookupValue = function(value, key){
-          return ObjectLookupService.getLookupValue(value, key);
-        };
-
         //Aliases
         $scope.addNew = function () {
 
