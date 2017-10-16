@@ -2,15 +2,24 @@
 
 angular.module('profile').controller('ProfileController', ['$scope', 'ConfigService'
     , 'Admin.OrganizationalHierarchyService', '$modal', 'Authentication',
-    function ($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication) {
-        $scope.config = ConfigService.getModule({moduleId: 'profile'});
+    function ($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication
+    ) {
+
+        //TODO: Remove following phased out code block
+        $scope._phaseout_config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
+            $scope._phaseout_config.$promise.then(function (config) {
                 var componentConfig = _.find(config.components, {id: componentId});
                 $scope.$broadcast('component-config', componentId, componentConfig);
             });
         }
+        //end of block
+
+        ConfigService.getModuleConfig("profile").then(function (moduleConfig) {
+            $scope.config = moduleConfig;
+            return moduleConfig;
+        });
 
         Authentication.queryUserInfo().then(function (userInfo) {
             var directoryName = userInfo.directoryName;
