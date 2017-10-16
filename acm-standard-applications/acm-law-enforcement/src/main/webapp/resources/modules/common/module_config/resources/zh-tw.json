@@ -22,9 +22,24 @@
     "btnCancel.text": "zh-tw_Cancel",
     "btnOk.text": "zh-tw_Save Organization",
     "setPrimary.label": "zh-tw_Set As Primary?",
+    "radioName": "zh-tw_Choice primary",
     "radioYes.text": "zh-tw_Yes",
     "radioNo.text": "zh-tw_No",
     "duplicateOrganizationRoleErrorMessage": "zh-tw_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "zh-tw_Add person",
+    "addNew.label": "zh-tw_Add new Person",
+    "selectExisting.label": "zh-tw_Select existing person",
+    "person.label": "zh-tw_Person",
+    "type.label": "zh-tw_Person Association Type",
+    "btnCancel.text": "zh-tw_Cancel",
+    "btnOk.text": "zh-tw_Save Person",
+    "setPrimary.label": "zh-tw_Set As Primary?",
+    "radioName": "zh-tw_Choice primary",
+    "radioYes.text": "zh-tw_Yes",
+    "radioNo.text": "zh-tw_No",
+    "duplicatePersonRoleErrorMessage": "zh-tw_Person already has the selected association"
   },
   "common.editOrganization": {
     "title": "zh-tw_Edit Parent Organization"

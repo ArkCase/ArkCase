@@ -6,12 +6,10 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
         , LocaleService, ConfigService, UserInfoService, MessageService) {
-        $scope.$emit('req-component-config', 'header');
+
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('topbar');
-
-        var config = null;
 
         $scope.config = null;
         $scope.start = '';
@@ -20,22 +18,12 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $scope.data = {};
         $scope.data.inputQuery = '';
 
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'header') {
-                $scope.config = config;
-                $scope.start = config.searchParams.start;
-                $scope.count = config.searchParams.n;
-                $scope.typeAheadColumn = config.typeAheadColumn;
-            }
-        }
-
-        // ConfigService.getComponentConfig("core", "header").then(function (config) {
-        //     $scope.config = config;
-        //     $scope.start = config.searchParams.start;
-        //     $scope.count = config.searchParams.n;
-        //     $scope.typeAheadColumn = config.typeAheadColumn;
-        // });
+        ConfigService.getComponentConfig("core", "header").then(function (config) {
+            $scope.config = config;
+            $scope.start = Util.goodMapValue(config, "searchProperties.start", 0);
+            $scope.count = Util.goodMapValue(config, "searchProperties.n", 10);
+            $scope.typeAheadColumn = config.typeAheadColumn;
+        });
 
         ServCommService.handleRequest();
 
@@ -87,47 +75,35 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         };
 
         // set application language for the user
-        var localeSettingsPromise = LocaleService.getSettings();
-        var userInfoPromise = Authentication.queryUserInfo();
-        
-        $q.all([localeSettingsPromise, userInfoPromise]).then(function(result) {
-            var userInfo = result[1];
-
-            var userLocale = _.findWhere(result[0].locales, {code: userInfo.langCode});
-
-            $scope.localeDropdownOptions = Util.goodMapValue(result[0], "locales", LocaleService.DEFAULT_LOCALES);
-            $scope.localeSelected = userLocale;
-
-            LocaleService.setLocaleData($scope.localeSelected);
+        $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
+            var userInfo = result[0];
+            var localeData = result[1];
+            $scope.localeDropdownOptions = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.localeSelected = LocaleService.requestLocale(userInfo.langCode);
             LocaleService.useLocale($scope.localeSelected.code);
         });
 
         $scope.changeLocale = function ($event, localeNew) {
             $event.preventDefault();
-            userInfoPromise.then(function (userInfo) {                
-                Authentication.updateUserLang(localeNew.code).then(function () {
-                    userInfo.langCode = localeNew.code;
-                    $scope.localeSelected = localeNew;
-                    LocaleService.setLocaleData(localeNew);
-                    LocaleService.useLocale(localeNew.code);
+
+            $scope.localeSelected = LocaleService.requestLocale(localeNew.code);
+            LocaleService.useLocale(localeNew.code);
+
+            Authentication.updateUserLang(localeNew.code).then(
+                function () {
                 }
                 , function (error) {
                     MessageService.error(error.data ? error.data : error);
                     return error;
-                });
-            });
+                }
+            );
         };
 
         // TODO delete UPDATE button and this function if not needed
-        //
-        // jwu: Update function is needed.
-        //      1. Very first time ArkCase user only see English locale until 'Update' button is pressed
-        //      2. New locale added may not show up in the list until updated
-        //      We may hide the button with some trick, like do it in background with timeout, for example.
-        //      I voted for simpler code to let user do it himself.
         $scope.updateLocales = function($event) {
             $event.preventDefault();
-            localeSettingsPromise.then(function(data) {
+
+            LocaleService.getLatestSettings().then(function(data) {
                 $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
                 return data;
             });

@@ -11,7 +11,12 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
         ObjectLookupService.getPersonRelationTypes().then(
             function (relationshipTypes) {
                 for (var i = 0; i < relationshipTypes.length; i++) {
-                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    $scope.relationshipTypes.push({
+                        "key": relationshipTypes[i].inverseKey,
+                        "value": relationshipTypes[i].inverseValue,
+                        "inverseKey": relationshipTypes[i].key,
+                        "inverseValue": relationshipTypes[i].value
+                    });
                 }
 
                 return relationshipTypes;
@@ -71,6 +76,19 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 $scope.gridOptions.data = response.response.docs;
             });
         }
+
+        $scope.getLocation = function (defaultLocation) {
+            if (!Util.isEmpty(defaultLocation)) {
+                var city = defaultLocation.split(", ")[0];
+                var state = defaultLocation.split(", ")[1];
+                if (!Util.isEmpty()) {
+                    return city + ", " + state;
+                } else {
+                    return city;
+                }
+            }
+            return "";
+        };
 
         $scope.addPersonAssociation = function () {
             personAssociationModal({});

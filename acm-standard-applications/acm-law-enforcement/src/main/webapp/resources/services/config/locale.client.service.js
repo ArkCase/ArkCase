@@ -108,8 +108,8 @@ angular.module('services').config(function ($provide) {
         var Service = $resource('api/latest/plugin', {}, {
             _getLabelResource: {
                 url: "api/latest/plugin/admin/labelmanagement/resource?ns=:part&lang=:lang"
-                    , method: "GET"
-                    , cache: false
+                , method: "GET"
+                , cache: false
             },
             _getLabelResources: {
                 url: "api/latest/plugin/admin/labelmanagement/resources?ns[]=:parts&lang=:lang"
@@ -271,12 +271,36 @@ angular.module('services').config(function ($provide) {
          * @returns {Object} Promise
          */
         Service.getSettings = function () {
+            return doGetSettings(false);
+        };
+
+        /**
+         * @ngdoc method
+         * @name getLatestSettings
+         * @methodOf services.service:Config.LocaleService
+         *
+         * @description
+         * Retrieve locale settings, similar to getSettings(), but ignore cached settings.
+         *
+         * @returns {Object} Promise
+         */
+        Service.getLatestSettings = function () {
+            return doGetSettings(true);
+        };
+
+        var doGetSettings = function (noCache) {
+            var cacheLocale = new Store.LocalData({name: "AcmLocale", noOwner: true, noRegistry: true});
+            var localeSettings = Util.goodValue(noCache, false)? null : cacheLocale.get();
+
             return Util.serviceCall({
                 service: LookupService._getConfig
                 , param: {name: "localeSettings"}
+                , result: localeSettings
                 , onSuccess: function (data) {
                     if (Service.validateSettings(data)) {
-                        var localeSettings = data;
+                        var localeSettings = Service.getLocaleData();
+                        localeSettings.locales = data.locales;
+                        Service.setLocaleData(localeSettings);
                         return localeSettings;
                     }
                 }
@@ -297,6 +321,9 @@ angular.module('services').config(function ($provide) {
          */
         Service.validateSettings = function (data) {
             if (!data) {
+                return false;
+            }
+            if (!Util.isArray(data.locales)) {
                 return false;
             }
             return true;
@@ -346,6 +373,38 @@ angular.module('services').config(function ($provide) {
             cacheLocale.set(localeData);
         };
 
+
+        /**
+         * @ngdoc method
+         * @name requestLocale
+         * @methodOf services.service:Config.LocaleService
+         *
+         * @description
+         * Request for given locale. User requested locale is usually honored unless LocaleService is not ready;
+         * in which case, a default is used.
+         *
+         * This function only registers the selected locale in the service. Need to call useLocale() function
+         * to actually make the locale change.
+         *
+         * @param {Object} localeData  Data to be cached
+         *
+         * @returns {Object} Locale adopted
+         */
+        Service.requestLocale = function (localeCode) {
+            var localeData = Service.getLocaleData();
+
+            var locale = _.find(localeData.locales, {code: localeCode});
+            if (!locale) {
+                locale = _.find(Service.DEFAULT_LOCALES, {code: Service.DEFAULT_CODE});
+            }
+
+            localeData.code = localeCode;
+            localeData.iso = locale.iso;
+            Service.setLocaleData(localeData);
+
+            return locale;
+        };
+
         /**
          * @ngdoc method
          * @name useLocale
@@ -377,6 +436,25 @@ angular.module('services').config(function ($provide) {
         Service.getCurrencySymbol = function (localeCode) {
             var locale = Service.findLocale(localeCode);
             return Util.goodMapValue(locale, "currencySymbol");
+        };
+
+
+
+        /**
+         * @ngdoc method
+         * @name getIso
+         * @methodOf services.service:Config.LocaleService
+         *
+         * @description
+         * Get current ISO locale code
+         *
+         * @param {String} (Optional)localeCode  Locale code. If not given, current locale code is used.
+         *
+         * @returns {String} Current ISO locale code
+         */
+        Service.getIso = function (localeCode) {
+            var locale = Service.findLocale(localeCode);
+            return Util.goodMapValue(locale, "iso");
         };
 
         /**
