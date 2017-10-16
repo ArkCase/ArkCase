@@ -36,6 +36,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
 
         $scope.editRow = function (rowEntity) {
             rowEntity.enableEditingLdapUsers = rowEntity.enableEditingLdapUsers === "true";
+            rowEntity.syncEnabled = rowEntity.syncEnabled === "true";
             showModal(angular.copy(rowEntity), true);
         };
 
@@ -107,6 +108,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             modalScope.isEdit = isEdit || false;
             if (!modalScope.isEdit) {
                 modalScope.dir.enableEditingLdapUsers = false;
+                modalScope.dir.syncEnabled = false;
             }
             modalScope.directoryTypes = $scope.directoryTypes;
 
@@ -120,7 +122,7 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
                     };
                     $scope.cancel = function () {
                         $modalInstance.dismiss('cancel');
-                    }
+                    };
                 }
             });
 

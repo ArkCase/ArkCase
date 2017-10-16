@@ -1,7 +1,9 @@
 package com.armedia.acm.services.users.service;
 
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRoleState;
@@ -25,8 +27,10 @@ public class AcmUserRoleService
     {
         Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
 
+        Set<String> addedGroups = groups.stream().map(AcmGroup::getName).collect(Collectors.toSet());
+
         Set<String> groupNames = Stream.concat(
-                groups.stream().map(AcmGroup::getName),
+                addedGroups.stream(),
                 groups.stream().flatMap(AcmGroup::getAscendants)
         ).collect(Collectors.toSet());
 
@@ -36,15 +40,20 @@ public class AcmUserRoleService
                 .collect(Collectors.toSet());
 
         // added groups are also valid AcmRoles
-        rolesToAdd.addAll(groups.stream().map(AcmGroup::getName).collect(Collectors.toSet()));
+        groups.forEach(group -> {
+            AcmRole role = new AcmRole();
+            role.setRoleType(AcmRoleType.valueOf(group.getType().name()));
+            role.setRoleName(group.getName());
+            userDao.saveAcmRole(role);
+        });
 
+        rolesToAdd.addAll(addedGroups);
         rolesToAdd.forEach(role ->
         {
             AcmUserRole userRole = new AcmUserRole();
             userRole.setUserId(userId);
             userRole.setRoleName(role);
             userRole.setUserRoleState(AcmUserRoleState.VALID);
-            log.debug("Saving AcmUserRole [{}] for User [{}]", role, userId);
             userDao.saveAcmUserRole(userRole);
         });
 

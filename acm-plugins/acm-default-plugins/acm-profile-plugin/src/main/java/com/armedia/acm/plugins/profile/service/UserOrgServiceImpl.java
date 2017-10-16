@@ -151,7 +151,7 @@ public class UserOrgServiceImpl implements UserOrgService
             }
         }
 
-        AcmUser user = userDao.findByUserIdAnyCase(userId);
+        AcmUser user = userDao.findByUserId(userId);
         return createProfileDTO(userOrg, user.getGroups());
     }
 
