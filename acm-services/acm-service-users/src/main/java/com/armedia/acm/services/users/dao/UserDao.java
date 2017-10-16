@@ -51,6 +51,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     private static String DEFAULT_LOCALE_CODE = null;
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     public void init()
     {
         Optional<AcmConfig> localeSettings = configList.stream().filter(config -> config.getConfigName().equals("languageSettings"))
@@ -61,14 +63,11 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
                     .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
             DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale", String.class);
-        }
-        else
+        } else
         {
             DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
         }
     }
-
-    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -82,8 +81,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (existingUser != null)
             {
                 acmUser.setLang(existingUser.getLang());
-            }
-            else
+            } else
             {
                 // set default lang
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
@@ -99,18 +97,35 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUser findByUserId(String userId)
     {
+        userId = userId.toLowerCase();
         return getEntityManager().find(AcmUser.class, userId);
     }
 
     public AcmUser findByUserIdAnyCase(String userId)
     {
-        String jpql = "SELECT u " + "FROM AcmUser u " + "WHERE LOWER(u.userId) = :lowerUserId";
+        String jpql = "SELECT u FROM AcmUser u WHERE LOWER(u.userId) = :lowerUserId";
+
+        String userIdLcs = userId.toLowerCase();
         TypedQuery<AcmUser> query = getEm().createQuery(jpql, AcmUser.class);
+        query.setParameter("lowerUserId", userIdLcs);
 
-        query.setParameter("lowerUserId", userId.toLowerCase());
-
-        AcmUser user = query.getSingleResult();
-        return user;
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with id [{}]", userIdLcs);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with userId [{}]. More than one user has this name", userIdLcs);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by user id [{}]", userIdLcs, e);
+        }
+        return null;
     }
 
     @Cacheable(value = "quiet-user-cache")
@@ -128,8 +143,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            }
-            else
+            } else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -216,25 +230,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmUser> findByFullNameKeyword(String keyword)
-    {
-        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
-        Root<AcmUser> user = query.from(AcmUser.class);
-
-        query.select(user);
-
-        query.where(builder.and(builder.like(builder.lower(user.<String> get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String> get("userState"), AcmUserState.VALID)));
-
-        query.orderBy(builder.asc(user.get("fullName")));
-
-        TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
-        List<AcmUser> results = dbQuery.getResultList();
-
-        return results;
-    }
-
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager()
@@ -304,7 +299,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         log.debug("Check password expiration for user [{}]", principal);
         try
         {
-            AcmUser user = findByUserIdAnyCase(principal);
+            AcmUser user = findByUserId(principal);
             if (user.getUserState() != AcmUserState.VALID)
             {
                 return false;
