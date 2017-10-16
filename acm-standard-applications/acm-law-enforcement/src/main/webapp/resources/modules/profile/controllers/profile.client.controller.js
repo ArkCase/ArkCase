@@ -5,7 +5,8 @@ angular.module('profile').controller('ProfileController', ['$scope', 'ConfigServ
     function ($scope, ConfigService, OrganizationalHierarchyService, $modal, Authentication
     ) {
 
-        //TODO: Remove following phased out code block
+        //TODO: Remove following phased out code block. Leave it just in case some extension are still using
+        //the 'req-component-config' and 'component-config' events to get config.
         $scope._phaseout_config = ConfigService.getModule({moduleId: 'profile'});
         $scope.$on('req-component-config', onConfigRequest);
         function onConfigRequest(e, componentId) {
