@@ -62,7 +62,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseIdentification{{accordionSuffix}}" translate>
+                        <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                           href="#collapseIdentification{{accordionSuffix}}" translate>
                             common.newPerson.identification.title</a>
                     </h4>
                 </div>
@@ -214,7 +215,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapsePicture{{accordionSuffix}}" translate>common.newPerson.picture.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                       href="#collapsePicture{{accordionSuffix}}" translate>common.newPerson.picture.title</a>
                 </h4>
             </div>
             <div id="collapsePicture{{accordionSuffix}}" class="panel-collapse collapse">
@@ -257,7 +259,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseOrganizations{{accordionSuffix}}" translate>common.newPerson.organizations.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                       href="#collapseOrganizations{{accordionSuffix}}"
+                       translate>common.newPerson.organizations.title</a>
                 </h4>
             </div>
             <div id="collapseOrganizations{{accordionSuffix}}" class="panel-collapse collapse">
@@ -282,7 +286,8 @@
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
                                         <button type="button" class="btn btn-link form-control"
-                                                ng-click="removeOrganization(organizationAssociation)" ng-show="!$first">
+                                                ng-click="removeOrganization(organizationAssociation)"
+                                                ng-show="!$first">
                                             <i class="fa fa-minus text-danger"></i><span translate>common.newPerson.remove</span>
                                         </button>
                                     </div>
@@ -305,7 +310,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseLocations{{accordionSuffix}}" translate>common.newPerson.locations.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                       href="#collapseLocations{{accordionSuffix}}" translate>common.newPerson.locations.title</a>
                 </h4>
             </div>
             <div id="collapseLocations{{accordionSuffix}}" class="panel-collapse collapse">
@@ -467,7 +473,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}" href="#collapseCommunicationAccounts{{accordionSuffix}}"
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                       href="#collapseCommunicationAccounts{{accordionSuffix}}"
                        translate>common.newPerson.communicationAccounts.title</a>
                 </h4>
             </div>
@@ -552,6 +559,19 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion{{accordionSuffix}}"
+                       href="#collapseDetails{{accordionSuffix}}" translate>people.comp.details.title</a>
+                </h4>
+            </div>
+            <div id="collapseDetails{{accordionSuffix}}" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <summernote config="options" id="details" ng-model="person.details"></summernote>
                 </div>
             </div>
         </div>
