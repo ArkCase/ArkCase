@@ -97,6 +97,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUser findByUserId(String userId)
     {
+        userId = userId.toLowerCase();
         return getEntityManager().find(AcmUser.class, userId);
     }
 
@@ -229,25 +230,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmUser> findByFullNameKeyword(String keyword)
-    {
-        CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<AcmUser> query = builder.createQuery(AcmUser.class);
-        Root<AcmUser> user = query.from(AcmUser.class);
-
-        query.select(user);
-
-        query.where(builder.and(builder.like(builder.lower(user.<String>get("fullName")), "%" + keyword.toLowerCase() + "%"),
-                builder.equal(user.<String>get("userState"), AcmUserState.VALID)));
-
-        query.orderBy(builder.asc(user.get("fullName")));
-
-        TypedQuery<AcmUser> dbQuery = getEntityManager().createQuery(query);
-        List<AcmUser> results = dbQuery.getResultList();
-
-        return results;
-    }
-
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager()
@@ -317,7 +299,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         log.debug("Check password expiration for user [{}]", principal);
         try
         {
-            AcmUser user = findByUserIdAnyCase(principal);
+            AcmUser user = findByUserId(principal);
             if (user.getUserState() != AcmUserState.VALID)
             {
                 return false;
