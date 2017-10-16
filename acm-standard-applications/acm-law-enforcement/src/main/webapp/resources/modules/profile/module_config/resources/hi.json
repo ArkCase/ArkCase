@@ -1,61 +1,78 @@
 {
   "profile": {
     "title": "उपयोगकर्ता प्रोफ़ाइल",
-    "unknown":"Unknown"
+    "unknown": "अनजान"
   },
   "profile.menus": {
-    "usermenu.item": "प्रोफ़ाइल"
+    "usermenu.item": "प्रोफाइल"
   },
-   "profile.subscriptions" : {
-    "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selected",
+  "profile.subscriptions": {
+    "title": "सदस्यता",
+    "unsubscribeSelect": "चयनित सदस्यता रद्द करें",
     "table.columns": {
-      "title": "hi_Title",
-      "created":"Created",
-      "parentId":"Parent ID",
-      "userId":"User ID"
+      "title": "शीर्षक",
+      "created": "बनाया था",
+      "parentId": "माता पिता की पहचान",
+      "userId": "यूज़र आईडी"
     }
-    },
-   "profile.company": {
-     "title":"Company Detail",
-     "name":"Company Name",
-     "address1":"Address 1",
-     "address2":"Address 2",
-     "city":"City",
-     "state":"State",
-     "zip":"Zip",
-     "mainPhone":"Main Office Phone",
-     "fax":"Fax",
-     "website":"Website"
-   },
-   "profile.contact":{
-       "title":"Contact Information",
-       "location":"Location",
-       "im":"IM Account",
-       "officePhone":"Office Phone",
-       "mobilePhone":"Mobile Phone"
-   },
-   "profile.groups":{
-       "title":"Groups"
-   },
-   "profile.buttons":{
-       "password":"Change Password",
-       "message":"Enter your new password.",
-       "confirmation":"Enter your new password again.",
-       "cancel":"Cancel",
-       "outlookPassword":"Store Outlook Password"
-   },
-   "profile.picture":{
-       "title":"Change Picture",
-       "email":"Email Address",
-       "uploadImgError": "hi_You have uploaded an invalid image file type"
-   },
-   "profile.modal":{
-       "title":"Info",
-       "emptyPassword":"Password Can not be Empty",
-       "comfirmation":"Please re-enter your password.",
-       "differentPasswords":"Passwords do not match. Please try again.",
-       "ok":"OK",
-       "success":"Successfully Changed Password"
-   }
+  },
+  "profile.company": {
+    "title": "कंपनी का विस्तार",
+    "name": "कंपनी का नाम",
+    "address1": "पता 1",
+    "address2": "पता द्वितीय",
+    "city": "शहर",
+    "state": "राज्य",
+    "zip": "पिन कोड",
+    "mainPhone": "मुख्य कार्यालय फोन",
+    "fax": "फैक्स",
+    "website": "वेबसाइट"
+  },
+  "profile.contact": {
+    "title": "संपर्क जानकारी",
+    "location": "स्थान",
+    "im": "आईएम अकाउंट",
+    "officePhone": "कार्यालय का फोन",
+    "mobilePhone": "मोबाइल फोन"
+  },
+  "profile.groups": {
+    "title": "समूह"
+  },
+  "profile.buttons": {
+    "save": "परिवर्तनों को सुरक्षित करें",
+    "message": "अपना नया पासवर्ड दर्ज करें।",
+    "confirmation": "अपना नया पासवर्ड दोबारा दर्ज करें।",
+    "cancel": "रद्द करना",
+    "outlookPassword": "आउटलुक पासवर्ड स्टोर करें",
+    "ldapPassword": "पासवर्ड बदलें"
+  },
+  "profile.picture": {
+    "title": "चित्र बदलो",
+    "email": "ईमेल पता",
+    "uploadImgError": "आपने एक अमान्य छवि फ़ाइल प्रकार को अपलोड किया है"
+  },
+  "profile.modal": {
+    "title": "जानकारी",
+    "emptyPassword": "पासवर्ड रिक्त नहीं हो सकता",
+    "comfirmation": "अपना पासवर्ड दोबारा दर्ज करें।",
+    "differentPasswords": "पासवर्ड मेल नहीं खाते। कृपया पुन: प्रयास करें।",
+    "ok": "ठीक",
+    "success": "पासवर्ड सफलतापूर्वक बदल गया",
+    "changePassword.header": "पासवर्ड बदलें"
+  },
+  "profile.comp.subscription": {
+    "title": "अंशदान"
+  },
+  "profile.comp.company": {
+    "title": "कंपनी"
+  },
+  "profile.comp.contact": {
+    "title": "संपर्क करें"
+  },
+  "profile.comp.group": {
+    "title": "समूह"
+  },
+  "profile.comp.picture": {
+    "title": "चित्र"
+  }
 }
