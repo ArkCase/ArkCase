@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -99,12 +101,31 @@ public class PersonDiffTest
     }
 
     @Test
-    public void compare() throws Exception
+    public void compareTestNewAddress() throws Exception
+    {
+        oldPerson.setAddresses(null);
+        oldPerson.setDefaultAddress(null);
+        Person newPerson = SerializationUtils.clone(oldPerson);
+        newPerson.setModified(new Date(System.currentTimeMillis()));
+        List<PostalAddress> addresses = new ArrayList<>();
+        PostalAddress address = new PostalAddress();
+        address.setId(1l);
+        address.setState("state");
+        address.setCity("city");
+        addresses.add(address);
+        newPerson.setAddresses(addresses);
+        newPerson.setDefaultAddress(address);
+
+        AcmDiff diff = acmDiffService.compareObjects(oldPerson, newPerson);
+        assertEquals(2, diff.getChangesAsList().size());
+    }
+
+    @Test
+    public void compareTest() throws Exception
     {
         Person newPerson = SerializationUtils.clone(oldPerson);
         newPerson.setModified(new Date(System.currentTimeMillis()));
 
-        //oldPerson.getDefaultEmail().setValue("13");
         newPerson.getIdentifications().get(0).setIdentificationNumber("11");
         newPerson.getIdentifications().get(0).setIdentificationYearIssued(new Date());
         newPerson.getIdentifications().get(0).setIdentificationType("blabla card");
