@@ -1,0 +1,90 @@
+{
+  "timeTracking": {
+    "title": "Rastreamento de tempo",
+    "progressNoTimesheet": "[ Nenhuma tabela de horário está selecionada ]",
+    "progressLoading": "Folha de tempo de carregamento",
+    "progressError": "Falha ao carregar a folha de tempo"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Rastreamento de tempo",
+    "topbar.item": "Folha de Horário"
+  },
+  "timeTracking.comp.main": {
+    "title": "Visão geral"
+  },
+  "timeTracking.comp.info": {
+    "title": "Informações",
+    "lastModified.label": "Última modificação"
+  },
+  "timeTracking.comp.actions": {
+    "title": "Ações",
+    "new.button": "Nova folha de hora",
+    "edit.button": "Editar folha de hora"
+  },
+  "timeTracking.comp.details": {
+    "title": "Detalhes",
+    "informSaved": "pt_Timesheet details saved",
+    "table.columns": {
+      "title": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "timeTracking.comp.person": {
+    "title": "Pessoas",
+    "table.columns": {
+      "fullName": "pt_Full Name",
+      "userId": "pt_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "pt_Hours Summary",
+    "table.columns": {
+      "code": "pt_Parent ID",
+      "type": "pt_Parent Type",
+      "value": "pt_Total Hours",
+      "date": "pt_Date Charged",
+      "modified": "pt_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "pt_Tag",
+      "created": "pt_Created",
+      "createdBy": "pt_Created By"
+    },
+    "modal": {
+      "title": "pt_Tag",
+      "search": "pt_Search for Tag",
+      "buttons": {
+        "cancel": "pt_Cancel",
+        "ok": "pt_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "pt_Tag with that name or description or text already exists",
+      "tagAssociated": "pt_already associated",
+      "delete": {
+        "success": "pt_Tag deleted successfully",
+        "error": "pt_Error deleting tag"
+      }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "person.label": "Pessoas",
+      "summary.label": "Despesa",
+      "tags.label": "Etiquetas"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Data Asc",
+      "dateDesc": "Ordenar Data Desc",
+      "idAsc": "Ordenar ID de hora Asc",
+      "idDesc": "Ordenar ID de hora Desc",
+      "nameDesc": "Classificar por nome",
+      "noSort": "(Não classificar)"
+    }
+  }
+}

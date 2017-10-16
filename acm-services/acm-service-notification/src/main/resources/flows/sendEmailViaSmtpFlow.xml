@@ -7,12 +7,17 @@
       xmlns:smtp="http://www.mulesoft.org/schema/mule/smtp"
       version="CE-3.7.0"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      
+
       xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/smtp http://www.mulesoft.org/schema/mule/smtp/current/mule-smtp.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+
+    <smtp:connector name="smtpConnector"
+                    validateConnections="true" contentType="text/html"/>
+    <smtp:gmail-connector name="smtpStartTLSConnector"
+                          validateConnections="true" contentType="text/html"/>
 
     <flow name="sendEmailViaSmtp" doc:name="Send notification to the user by email using Smtp protocol.">
 
@@ -21,21 +26,49 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 exchange-pattern="request-response"
                 doc:name="Send Email">
         </vm:inbound-endpoint>
+        <scripting:transformer name="urlEncodeTransformer">
+            <scripting:script engine="groovy">
+                <scripting:text><![CDATA[
+                    message.setInboundProperty("user", URLEncoder.encode(message.getInboundProperty("user"), "UTF-8"));
+                    message.setInboundProperty("password", URLEncoder.encode(message.getInboundProperty("password"), "UTF-8"));
 
-        <smtp:outbound-endpoint
-            host="#[message.inboundProperties.host]" 
-            port="#[message.inboundProperties.port]" 
-            user="#[message.inboundProperties.user]" 
-            password="#[message.inboundProperties.password]" 
-            from="#[message.inboundProperties.from]" 
-            to="#[message.inboundProperties.to]" 
-            subject="#[message.inboundProperties.subject]" 
-            responseTimeout="30000"/>
+                    return payload;
+                    ]]>
+                </scripting:text>
+            </scripting:script>
+        </scripting:transformer>
+        <choice>
+            <when expression="#[message.inboundProperties['encryption'] == 'starttls']">
+                <smtp:outbound-endpoint
+                        connector-ref="smtpStartTLSConnector"
+                        host="#[message.inboundProperties.host]"
+                        port="#[message.inboundProperties.port]"
+                        user="#[message.inboundProperties.user]"
+                        password="#[message.inboundProperties.password]"
+                        from="#[message.inboundProperties.from]"
+                        to="#[message.inboundProperties.to]"
+                        subject="#[message.inboundProperties.subject]"
+                        mimeType="text/html"
+                        responseTimeout="30000"/>
+            </when>
+            <otherwise>
+                <smtp:outbound-endpoint
+                        connector-ref="smtpConnector"
+                        host="#[message.inboundProperties.host]"
+                        port="#[message.inboundProperties.port]"
+                        user="#[message.inboundProperties.user]"
+                        password="#[message.inboundProperties.password]"
+                        from="#[message.inboundProperties.from]"
+                        to="#[message.inboundProperties.to]"
+                        subject="#[message.inboundProperties.subject]"
+                        mimeType="text/html"
+                        responseTimeout="30000"/>
+            </otherwise>
+        </choice>
 
         <catch-exception-strategy>
             <set-property propertyName="sendEmailException" value="#[exception]"/>
         </catch-exception-strategy>
-
     </flow>
 
 </mule>

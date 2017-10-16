@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h3>
+        <span translate>cases.comp.actions.buckslip.add.title</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <tree-table-view tree-data="data"
+                     on-select="onSelect"
+                     on-lazy-load="onLazyLoad"
+                     total-groups="totalGroups"
+                     config="cfg"
+                     on-load-more="onLoadMore"
+                     show-actions="false"
+                     show-supervisor="false"
+                     show-type="false"
+                     group-type-list="groupTypeList"
+                     groups-map="groupsMap"
+    />
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" ng-click="onClickCancel()" translate>
+        cases.comp.actions.buckslip.add.cancel
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" ng-disabled="disableOk()" translate>
+        cases.comp.actions.buckslip.add.confirm
+    </button>
+</div>

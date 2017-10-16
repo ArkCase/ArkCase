@@ -1,0 +1,33 @@
+{
+  "count": 2,
+  "entries": [
+    {
+      "id": 55,
+      "application": "AuditArkCaseCreate",
+      "user": "admin",
+      "time": "2017-05-12T23:09:36.860Z",
+      "values": {
+        "\/auditarkcasecreate\/create\/derived\/parent-node-name": "Documents",
+        "\/auditarkcasecreate\/create\/out\/a": "FileInfo[name=ArkCase - Infrastructure Team - Scrum - 2017-05-05.docx, isFolder=false, nodeRef=workspace:\/\/SpacesStore\/0af7fe58-885d-4f01-a9e6-0ebf994abb3f]",
+        "\/auditarkcasecreate\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcasecreate\/create\/in\/a": "workspace:\/\/SpacesStore\/4d1b5ed8-7544-4cf6-acc0-384756138f95",
+        "\/auditarkcasecreate\/create\/in\/b": "ArkCase - Infrastructure Team - Scrum - 2017-05-05.docx",
+        "\/auditarkcasecreate\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content"
+      }
+    },
+    {
+      "id": 91,
+      "application": "AuditArkCaseCreate",
+      "user": "admin",
+      "time": "2017-05-12T23:12:29.874Z",
+      "values": {
+        "\/auditarkcasecreate\/create\/derived\/parent-node-name": "Grateful Dead",
+        "\/auditarkcasecreate\/create\/out\/a": "FileInfo[name=ArkCase - Infrastructure Team - Scrum - 2017-05-03.docx, isFolder=false, nodeRef=workspace:\/\/SpacesStore\/0fd810e4-eb46-4b87-8951-8aa339dc150a]",
+        "\/auditarkcasecreate\/create\/derived\/parent-node-type": "{http:\/\/www.alfresco.org\/model\/content\/1.0}folder",
+        "\/auditarkcasecreate\/create\/in\/a": "workspace:\/\/SpacesStore\/78d7455d-c2d3-43f8-a160-94827e6b3c3a",
+        "\/auditarkcasecreate\/create\/in\/b": "ArkCase - Infrastructure Team - Scrum - 2017-05-03.docx",
+        "\/auditarkcasecreate\/create\/in\/c": "{http:\/\/www.alfresco.org\/model\/content\/1.0}content"
+      }
+    }
+  ]
+}

@@ -65,8 +65,8 @@ angular.module('admin').controller('Admin.ComponentsListController', ['$scope', 
             _.forEach(components, function(component){
                 component.isCollapsed = true;
             });
+            $scope.components = _.filter(components, {configurable: true});
 
-            $scope.components = components;
         }
 
         function selectComponent(newActive){

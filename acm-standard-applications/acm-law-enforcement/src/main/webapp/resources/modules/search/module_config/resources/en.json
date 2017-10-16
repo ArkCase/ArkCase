@@ -4,7 +4,13 @@
     "search.btn": "Search",
     "export.btn": "Export",
     "search.placeholder": "Type in to search",
+    "menus": {
+      "leftnav.item": "Search"
+    },
     "comp":{
+      "facetedSearch": {
+        "title": "Faceted Search"
+      },
       "grid": {
         "columns": {
           "id": "ID",

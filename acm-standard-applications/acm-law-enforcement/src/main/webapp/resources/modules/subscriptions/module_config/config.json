@@ -1,21 +1,23 @@
 {
   "id": "subscriptions",
   "title": "Subscriptions",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "subscriptions",
-      "menuItemTitle": "Subscriptions",
+      "menuItemTitle": "subscriptions.menus.leftnav.item",
       "moduleId": "subscription",
       "iconClass": "fa fa-bullhorn",
-      "position": 100
+      "position": 130
     }
   ],
   "components": [
     {
       "id": "subscriptionsFacetedSearch",
-      "title": "Subscriptions Faceted Search",
+      "title": "subscriptions.comp.subscriptionsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,
@@ -37,11 +39,12 @@
           "name": "parent_number_lcs",
           "displayName": "subscriptions.comp.grid.columns.parentName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity.parent_type_s, row.entity.parent_id_s)'>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true'>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "parent_type_s",
           "displayName": "subscriptions.comp.grid.columns.parentType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
@@ -49,7 +52,7 @@
           "type": "date",
           "displayName": "subscriptions.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -62,7 +65,13 @@
       "start": 0,
       "filter": "\"Object Type\": SUBSCRIPTION_EVENT & \"Owner\": userId",
       "filterName": "Object Type",
-      "reportFileName": "subscriptions"
+      "reportFileName": "subscriptions",
+      "isAutoSuggestActive": true,
+      "autoSuggestObjectType": "SUBSCRIPTION_EVENT",
+      "hiddenFacets": [
+        "Owner",
+        "Document Repository Name"
+      ]
     }
   ]
 }

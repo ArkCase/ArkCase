@@ -4,7 +4,10 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-object-association-table" author="dmiller">
+    <property name="objectAssociationDescriptionType" value="VARCHAR(512)" dbms="oracle,postgresql,mssql"/>
+    <property name="objectAssociationDescriptionType" value="TEXT" dbms="mysql"/>
+
+    <changeSet id="01-create-object-association-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_object_association">
             <column name="cm_association_id" type="${idType}">
                 <constraints
@@ -54,6 +57,56 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="01-create-object-association-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_object_association">
+            <column name="cm_association_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_object_association"/>
+            </column>
+            <column name="cm_association_status" type="VARCHAR(128)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_assn_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_parent_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_target_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_target_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_target_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_object_association" indexName="idx_object_assn_parent_id">
+            <column name="cm_parent_id"/>
+        </createIndex>
+        <createIndex tableName="acm_object_association" indexName="idx_object_assn_target_id">
+            <column name="cm_target_id"/>
+        </createIndex>
+    </changeSet>
+
     <changeSet id="02-widen-object-names" author="dmiller">
         <modifyDataType tableName="acm_object_association" columnName="cm_parent_name" newDataType="VARCHAR2(4000)"/>
         <modifyDataType tableName="acm_object_association" columnName="cm_target_name" newDataType="VARCHAR2(4000)"/>
@@ -64,7 +117,8 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="${fkIdType}"/>
     </changeSet>
 
-    <changeSet id="03-1-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql" failOnError="false">
+    <changeSet id="03-1-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql"
+               failOnError="false">
         <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
     </changeSet>
 
@@ -77,8 +131,10 @@
     </changeSet>
 
     <changeSet id="03-4-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql">
-        <addNotNullConstraint tableName="acm_object_association" columnName="cm_association_id" columnDataType="${fkIdType}"/>
-        <addPrimaryKey tableName="acm_object_association" columnNames="cm_association_id" constraintName="pk_object_association"/>
+        <addNotNullConstraint tableName="acm_object_association" columnName="cm_association_id"
+                              columnDataType="${fkIdType}"/>
+        <addPrimaryKey tableName="acm_object_association" columnNames="cm_association_id"
+                       constraintName="pk_object_association"/>
     </changeSet>
 
     <changeSet id="04-fix-object-id-type" author="dmiller">
@@ -122,11 +178,28 @@
             <column name="cm_seq_name" value="acm_object_association"></column>
         </insert>
     </changeSet>
-    
+
     <changeSet id="09-acm-object-association-add-target-title" author="tsedalu">
         <addColumn tableName="acm_object_association">
             <column name="cm_target_title" type="VARCHAR(1024)"/>
-     </addColumn>
+        </addColumn>
+    </changeSet>
+    <changeSet id="10-acm-object-association-add-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_inverse_association_id" type="${fkIdType}">
+                <constraints foreignKeyName="fk_inverse_object_association_id"
+                             referencedTableName="acm_object_association"
+                             referencedColumnNames="cm_association_id"
+                             deferrable="${deferrable}"
+                             initiallyDeferred="${initially.deferred}"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="12-acm-object-association-add-column" author="nebojsha.davidovikj">
+        <addColumn tableName="acm_object_association">
+            <column name="cm_description" type="${objectAssociationDescriptionType}"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
 

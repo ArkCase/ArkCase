@@ -10,8 +10,8 @@
 
  * Email service for ECM.
  */
-angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , function ($resource, Store, Util) {
+angular.module('services').factory('Ecm.EmailService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService'
+    , function ($resource, $translate, Store, Util, MessageService) {
 
         var Service = $resource('api/latest/service', {}, {
             /**
@@ -26,7 +26,7 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
              */
             _sendEmail: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email/withembeddedlinks'
+                url: 'api/latest/service/email/send/withembeddedlinks/:objectType'
             }
 
             /**
@@ -41,7 +41,21 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
              */
             , _sendEmailWithAttachments: {
                 method: 'POST',
-                url: 'api/latest/service/notification/email/withattachments'
+                url: 'api/latest/service/email/send/withattachments/:objectType'
+            }
+            /**
+             * @ngdoc method
+             * @name _sendEmailWithAttachmentsAndLinks
+             * @methodOf services:Ecm.EmailService
+             *
+             * @description
+             * Send email with attachments
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            , _sendEmailWithAttachmentsAndLinks: {
+                method: 'POST',
+                url: 'api/latest/service/email/send/withattachmentsandlinks/:objectType'
             }
         });
 
@@ -54,14 +68,15 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
          * Send email
          *
          * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sendEmail = function (emailData) {
+        Service.sendEmail = function (emailData, objectType) {
             var failed = "";
             return Util.serviceCall({
                 service: Service._sendEmail
-                , param: {}
+                , param: {objectType: objectType}
                 , data: emailData
                 , onSuccess: function (data) {
                     if (Service.validateSentEmails(data)) {
@@ -90,17 +105,50 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
          * Send email with attachments
          *
          * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
          *
          * @returns {Object} Object returned by $resource
          */
-        Service.sendEmailWithAttachments = function (emailData) {
+        Service.sendEmailWithAttachments = function (emailData, objectType) {
             var failed = "";
             return Util.serviceCall({
                 service: Service._sendEmailWithAttachments
-                , param: {}
+                , param: {objectType: objectType}
                 , data: emailData
                 , onSuccess: function (data) {
-                    if (Service.validateSentEmails(data)) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                    if (Service.validateSentEmail(data)) {
+                        return data;
+                    }
+                }
+                , onInvalid: function (data) {
+                    return failed;
+                }
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name sendEmailWithAttachmentsAndLinks
+         * @methodOf services:Ecm.EmailService
+         *
+         * @description
+         * Send email with attachments
+         *
+         * @param {Object} emailData Email data
+         * @param {String} objectType Type of the object
+         *
+         * @returns {Object} Object returned by $resource
+         */
+        Service.sendEmailWithAttachmentsAndLinks = function (emailData, objectType) {
+            var failed = "";
+            return Util.serviceCall({
+                service: Service._sendEmailWithAttachmentsAndLinks
+                , param: {objectType: objectType}
+                , data: emailData
+                , onSuccess: function (data) {
+                    MessageService.info($translate.instant("common.directive.docTree.email.successMessage"));
+                    if (Service.validateSentEmail(data)) {
                         return data;
                     }
                 }
@@ -150,6 +198,11 @@ angular.module('services').factory('Ecm.EmailService', ['$resource', 'Acm.StoreS
             if (Util.isEmpty(data)) {
                 return false;
             }
+
+            if (!Util.isEmpty(data.emailAddresses) && !Util.isArrayEmpty(data.emailAddresses)) {
+                return true;
+            }
+
             if (Util.isEmpty(data.state)) {
                 return false;
             }

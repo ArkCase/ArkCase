@@ -80,7 +80,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.corresponceWitnessInterview.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("Witness Interview Request.docx", "Witness Interview Request", "1.0",
+		documentsPage.verifySecondDocument("Witness Interview Request", ".docx", "Witness Interview Request", "1.0",
 				"ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
@@ -157,7 +157,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceNoticeOfInvestigation.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("Notice of Investigation.docx", "Notice Of Investigation", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Notice of Investigation", ".docx", "Notice Of Investigation", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -233,7 +233,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceClearanceDenide.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("Clearance Denied.docx", "Clearance Denied", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Clearance Denied", ".docx", "Clearance Denied", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -309,7 +309,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceClearanceGranted.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("Clearance Granted.docx", "Clearance Granted", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Clearance Granted", ".docx", "Clearance Granted", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -385,7 +385,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceMedicalRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("Medical Release.docx", "Medical Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("Medical Release", ".docx", "Medical Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -461,7 +461,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
@@ -537,7 +537,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -621,7 +621,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -705,7 +705,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -790,7 +790,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -892,7 +892,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(5000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -983,7 +983,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);
@@ -995,7 +995,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		documentsPage.documentsTableTitle.click();
 		Thread.sleep(3000);
-		documentsPage.verifySecondDocument("correspondence", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("correspondence", ".docx",  "General Release", "1.0", "ACTIVE");
 		documentsPage.chnageCaseStatusButton.click();
 		Thread.sleep(10000);
 		driver.switchTo().frame(cases.chnageCaseStausFrameOne);
@@ -1071,7 +1071,7 @@ public class CaseCorrespondenceTests extends ArkCaseTestBase {
 		documentsPage.correspondenceGeneralRelease.click();
 		Thread.sleep(4000);
 		documentsPage.verifyIfSecondRowDocumentIsPresent();
-		documentsPage.verifySecondDocument("General Release.docx", "General Release", "1.0", "ACTIVE");
+		documentsPage.verifySecondDocument("General Release", ".docx", "General Release", "1.0", "ACTIVE");
 		Thread.sleep(3000);
 		documentsPage.performRighClickOnSecondDocument();
 		Thread.sleep(3000);

@@ -1,13 +1,16 @@
 package com.armedia.acm.auth;
 
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
+
+import javax.naming.Name;
 
 /**
  * Created by riste.tutureski on 4/11/2016.
@@ -32,11 +35,13 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
     {
         DirContextOperations dirContextOperations = super.doAuthentication(authentication);
 
+        Name dn = dirContextOperations.getDn();
+
         AcmUser user = getUserDao().findByUserId(authentication.getName());
 
-        if (user == null || !"VALID".equalsIgnoreCase(user.getUserState()))
+        if (user == null || AcmUserState.VALID != user.getUserState())
         {
-            getLdapSyncService().ldapUserSync(authentication.getName());
+            getLdapSyncService().syncUserByDn(dn.toString());
         }
 
         return dirContextOperations;

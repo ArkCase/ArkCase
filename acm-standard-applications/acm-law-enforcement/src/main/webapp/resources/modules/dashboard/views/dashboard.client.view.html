@@ -3,7 +3,7 @@
         <div class="content-body">
             <div class="module-header">
                 <h3>
-                    <span translate>dashboard.title</span>
+                    <span translate>{{dashboard.model.title}}</span>
                     {{widgetFilter}}
                 </h3>
             </div>
@@ -15,9 +15,11 @@
                             maximizable="{{dashboard.maximizable}}"
                             structure="{{dashboard.structure}}"
                             adf-model="dashboard.model"
-                            adf-widget-filter="widgetFilter"/>
+                            adf-widget-filter="widgetFilter"
+                    />
                 </div>
             </div>
         </div>
     </div>
 </div>
+

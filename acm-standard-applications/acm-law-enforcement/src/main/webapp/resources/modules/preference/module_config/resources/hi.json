@@ -1,0 +1,8 @@
+{
+  "preference": {
+    "title": "प्राथमिकताएं",
+    "menus": {
+      "usermenu.item": "प्राथमिकताएं"
+    }
+  }
+}

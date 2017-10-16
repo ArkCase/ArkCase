@@ -42,13 +42,15 @@ public class CaseFileStartBusinessProcessIfNeededHandler implements PipelineHand
 
         if (processStarted)
         {
-            Map<String, Object> processVaribales = new HashMap<>();
-            processVaribales.put("OBJECT_TYPE", "CASE_FILE");
-            processVaribales.put("OBJECT_ID", entity.getId());
+            Map<String, Object> processVariables = new HashMap<>();
+            processVariables.put("OBJECT_TYPE", "CASE_FILE");
+            processVariables.put("OBJECT_ID", entity.getId());
+            processVariables.put("NEW_QUEUE_NAME", model.getBusinessObjectNewQueueName());
+            processVariables.put("NEW_OBJECT_STATUS", model.getBusinessObjectNewStatus());
 
             String processName = result.getProcessName();
 
-            getStartBusinessProcessService().startBusinessProcess(processName, processVaribales);
+            getStartBusinessProcessService().startBusinessProcess(processName, processVariables);
         }
     }
 

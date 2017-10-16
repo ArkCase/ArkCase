@@ -5,9 +5,8 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,10 +44,14 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setChild_type_s("PERSON");
         solrDoc.setParent_id_s(personAssociation.getParentId() + "");
         solrDoc.setParent_type_s(personAssociation.getParentType());
+        solrDoc.setParent_number_lcs(personAssociation.getParentTitle());
 
         solrDoc.setType_lcs(personAssociation.getPersonType());
 
         solrDoc.setName(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " ("
+                + personAssociation.getPersonType() + ")");
+
+        solrDoc.setTitle_parseable(personAssociation.getPerson().getGivenName() + " " + personAssociation.getPerson().getFamilyName() + " ("
                 + personAssociation.getPersonType() + ")");
 
         solrDoc.setParent_ref_s(personAssociation.getParentId() + "-" + personAssociation.getParentType());

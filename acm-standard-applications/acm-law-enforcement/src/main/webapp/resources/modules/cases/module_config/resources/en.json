@@ -5,15 +5,65 @@
     "progressLoading": "Loading case file ",
     "progressError": "Failed to load case file"
   },
+  "cases.menus": {
+    "leftnav.item": "Case Files",
+    "topbar.item": "Case"
+  },
   "cases.error": {
     "invalidData": ""
   },
+  "cases.comp.main": {
+    "title": "Overview"
+  },
   "cases.comp.info": {
+    "title": "Info",
     "caseId": "Case id:",
     "caseNumber": "Case Number:",
-    "courtRoomName": "Court Room Name:"
+    "courtRoomName": "Court Room Name:",
+    "type.label": "Type",
+    "created.label": "Created Date",
+    "priority.label": "Priority",
+    "assignee.label": "Assigned To",
+    "owningGroup.label": "Owning Group",
+    "dueDate.label": "Due Date",
+    "priorities": {
+      "low%": "Low",
+      "medium%": "Medium",
+      "high%": "High",
+      "expedite%": "Expedite",
+      "unknown%": "Unknown"
+    },
+    "caseTypes": {
+      "agricultural%": "Agricultural",
+      "arson%": "Arson",
+      "backgroundInvestigation%": "Background Investigation",
+      "benefitsAppeal%": "Benefits Appeal",
+      "businessDispute%": "Better Business Dispute",
+      "clinicalFraud%": "Clinical Investigator Fraud",
+      "congressional%": "Congressional Response",
+      "disabilityWaiver%": "Disability Waiver Request",
+      "domesticDispute%": "Domestic Dispute",
+      "drugTrafficking%": "Drug Trafficking",
+      "educationWaiver%": "Education Waiver Request",
+      "eeoHarassment%": "EEO/Harassment",
+      "embezzlement%": "Embezzlement",
+      "extortion%": "Extortion",
+      "fraud%": "Fraud",
+      "government%": "Government",
+      "investorComplaint%": "Investor Complaint",
+      "laborRacketeering%": "Labor Racketeering",
+      "local%": "Local",
+      "murder%": "Murder",
+      "newDrugFraud%": "New Drug Application Fraud",
+      "payoff%": "Payoff",
+      "pensionWaiver%": "Pension Waiver Request",
+      "pollution%": "Pollution",
+      "productTampering%": "Product Tampering",
+      "assetTheftMisuse%": "Theft or misuse of asset"
+    }
   },
   "cases.comp.actions": {
+    "title": "Actions",
     "restrict": "Restrict?",
     "new.button": "New",
     "edit.button": "Edit",
@@ -22,6 +72,8 @@
     "subscribe.button": "Subscribe",
     "unsubscribe.button": "Unsubscribe",
     "merge.button": "Merge",
+    "claim.button": "Claim",
+    "unclaim.button": "Unclaim",
     "split.button": "Split"
   },
   "cases.comp.details": {
@@ -34,64 +86,35 @@
     }
   },
   "cases.comp.documents": {
-    "title": "Documents"
+    "title": "Documents",
+    "sendEmail": "Send Email",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Search"
+
   },
   "cases.comp.people": {
     "title": "People",
     "table.columns": {
       "entity": "Entity",
-      "type": "Type",
+      "type": "Role",
       "firstName": "FirstName",
-      "lastName": "LastName"
-    },
-    "contactMethods": {
-      "title": "ContactMethods",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By"
-      }
-    },
-    "organizations": {
-      "title": "Organizations",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By"
-      }
-    },
-    "addresses": {
-      "title": "Locations",
-      "table.columns": {
-        "type": "Type",
-        "streetAddress": "Address",
-        "city": "City",
-        "state": "State",
-        "zip": "Zip",
-        "country": "Country",
-        "created": "Date Added",
-        "creator": "Added By"
-      }
-    },
-    "aliases": {
-      "title": "Aliases",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By"
-      }
-    },
-    "securityTags": {
-      "title": "Security Tags",
-      "table.columns": {
-        "type": "Type",
-        "value": "Value",
-        "created": "Date Added",
-        "creator": "Added By"
-      }
+      "lastName": "LastName",
+      "organization": "Organization",
+      "phone": "Phone",
+      "location": "Location"
+    }
+  },
+  "cases.comp.organizations": {
+    "title": "Organizations",
+    "table.columns": {
+      "name": "Organization Name",
+      "associationType": "Role",
+      "type": "Organization Type",
+      "identification": "ID",
+      "value": "Organization",
+      "contact": "Primary Contact",
+      "phone": "Phone",
+      "location": "Location"
     }
   },
   "cases.comp.participants": {
@@ -132,17 +155,19 @@
       "created": "Created",
       "priority": "Priority",
       "due": "Due",
-      "status": "Status",
-      "action": "Action"
-    }
+      "status": "Status"
+    },
+    "table.overdue.tooltip": "Task is Overdue",
+    "table.deadline.tooltip": "Deadline is Approaching"
   },
   "cases.comp.references": {
     "title": "References",
     "table.columns": {
       "targetName": "Number",
+      "parentName": "Parent",
       "targetTitle": "Title",
       "modified": "Modified",
-      "targetType": "Reference Type",
+      "targetType": "Type",
       "status": "Status"
     }
   },
@@ -184,12 +209,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",
@@ -203,7 +228,7 @@
   "cases.comp.calendar": {
     "title": "Calendar"
   },
-"cases.comp.merge": {
+  "cases.comp.merge": {
     "id": "merge",
     "title": "Merge",
     "cancel.btn": "Cancel",
@@ -212,25 +237,28 @@
     "search.btn": "Search",
     "enabled": true,
     "table.columns": {
-            "incident": "Type",
-            "name": "Name",
-            "assignee": "Assignee",
-            "title": "Title",
-            "parent": "Parent",
-            "modified": "Modified"
-     }
+      "incident": "Type",
+      "name": "Name",
+      "assignee": "Assignee",
+      "title": "Title",
+      "parent": "Parent",
+      "modified": "Modified"
+    }
   },
-  "cases.comp.split":{
-      "title": "Split",
-      "cancel": "Cancel",
-      "split": "Split"
+  "cases.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
+  "cases.comp.split": {
+    "title": "Split",
+    "cancel": "Cancel",
+    "split": "Split"
   },
   "cases.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
     "confirmButton": "Add",
     "search": {
-      "placeholder": "Search for case or complaint",
+      "placeholder": "Search for case, complaint, file, task",
       "btn": "Search"
     },
     "grid": {
@@ -244,5 +272,98 @@
         "modified": "Modified"
       }
     }
-  }    
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "Change Assignee",
+    "assigneeNamelabel": "Assignee Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchAssigneeHeader": "Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "Change Group",
+    "groupNamelabel": "Group Name",
+    "btnCancelText": "Cancel",
+    "btnSaveText": "Save",
+    "searchGroupHeader": "Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "Approvers",
+    "addNewTooltip": "Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "Save Changes"
+    },
+    "table.columns": {
+      "fullName": "Full Name"
+    },
+    "assignee.label": "Assignee",
+    "owningGroup.label": "Owning Group",
+    "priority.label": "Priority",
+    "startDate.label": "Start Date",
+    "dueDate.label": "Due Date",
+    "state.label": "State"
+  },
+  "cases.comp.pastApprovals": {
+    "title": "Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "Approval Date",
+      "approverId": "Approver",
+      "approverFullName": "Approver",
+      "approverDecision": "Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "userSearch",
+    "title": "User/Group Search",
+    "search": {
+      "btn": "Search",
+      "placeholder": "Search for the user or group."
+    },
+    "cancelButton": "Cancel",
+    "confirmButton": "Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Type",
+      "title": "Title",
+      "username": "Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "people.label": "People",
+      "organizations.label": "Organizations",
+      "documents.label": "Documents",
+      "participants.label": "Participants",
+      "notes.label": "Notes",
+      "tasks.label": "Tasks",
+      "references.label": "References",
+      "history.label": "History",
+      "time.label": "Time",
+      "cost.label": "Cost",
+      "tags.label": "Tags",
+      "calendar.label": "Calendar",
+      "approvalRouting.label": "Approval Routing"
+    },
+    "filters": {
+      "opened": "All Open Cases",
+      "iHaveCreated": "All I've Created",
+      "iAmAssigned": "All I'm Assigned",
+      "iAmFollowing": "All I'm Following",
+      "closed": "All Closed",
+      "noFilter": "(No Filter)"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Asc",
+      "dateDesc": "Sort Date Desc",
+      "idAsc": "Sort Case ID Asc",
+      "idDesc": "Sort Case ID Desc",
+      "nameAsc": "Sort By Case Name Asc",
+      "noSort": "(No Sort)"
+    }
+  }
 }

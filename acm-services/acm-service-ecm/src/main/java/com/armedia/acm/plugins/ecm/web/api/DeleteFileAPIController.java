@@ -32,8 +32,6 @@ public class DeleteFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    // FIXME: no order id available
-    //@PreAuthorize("hasPermission(#orderid, 'CASE_FILE', 'uploadOrReplaceFile')")
     @RequestMapping(value = "/id/{fileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteFile(
@@ -51,7 +49,7 @@ public class DeleteFileAPIController
         EcmFile source = getFileService().findById(objectId);
         try
         {
-            getFileService().deleteFile(objectId);
+            getFileService().deleteFile(objectId, source.getParentObjectId(), source.getParentObjectType());
             if (log.isInfoEnabled())
             {
                 log.info("File with id: " + objectId + " successfully deleted");

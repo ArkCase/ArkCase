@@ -15,7 +15,7 @@
                 doc:name="Create a folder"
                 address="vm://createFolder.in"
                 exchange-pattern="request-response"/>
-        <cmis:get-or-create-folder-by-path folderPath="#[payload]"/>
+        <cmis:get-or-create-folder-by-path config-ref="#[message.inboundProperties.configRef]" folderPath="#[payload]"/>
     </flow>
 
 </mule>

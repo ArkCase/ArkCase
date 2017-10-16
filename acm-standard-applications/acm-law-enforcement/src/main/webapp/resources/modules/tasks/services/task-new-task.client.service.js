@@ -46,18 +46,19 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
          * @returns {*}
          */
         Service.saveAdHocTask = function (taskData) {
-        	return Util.serviceCall({
+            return Util.serviceCall({
                 service: Service.createNewTask
                 , data: taskData
                 , onSuccess: function (data) {
                     if (TaskInfoService.validateTaskInfo(data)) {
-                        $state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
+                        //we shouldn't redirect here, caller of this method should decide to redirect or not
+                        //$state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
                         return data;
                     }
                 }
-        		, onError: function(errorData){
-        			return errorData;
-        		}
+                , onError: function (errorData) {
+                    return errorData;
+                }
             })
         };
 

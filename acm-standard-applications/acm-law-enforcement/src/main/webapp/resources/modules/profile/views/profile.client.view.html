@@ -1,31 +1,39 @@
 <section ng-controller="ProfileController">
-  <div class="module-content">
-    <div class="left-sidebar-lg">
-      <div class="module-header">
-        <h3>
-            <span translate>profile.title</span>
-        </h3>
-      </div>
-      <div class="well-sm">
-        <div class="scroll-body" ng-include="'modules/profile/views/components/profile-pic.client.view.html'"> </div>
-        <div class="scroll-body" ng-include="'modules/profile/views/components/profile-group.client.view.html'"> </div>
-        <div class="scroll-body" ng-include="'modules/profile/views/components/profile-subscriptions.client.view.html'"> </div>
-      </div>
-    </div>
-     <div class="content-body">
-        <div class="module-header">
-          <div class="pull-right">
-            <div class="btn-group">
-              <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i>
-                  <span translate>profile.buttons.password</span>
-              </button>
+    <div class="module-content">
+        <div class="left-sidebar-lg">
+            <div class="module-header">
+                <h3>
+                    <span translate>profile.title</span>
+                </h3>
             </div>
-          </div>
+            <div class="well-sm">
+                <div class="scroll-body"
+                     ng-include="'modules/profile/views/components/profile-pic.client.view.html'"></div>
+                <div class="scroll-body"
+                     ng-include="'modules/profile/views/components/profile-group.client.view.html'"></div>
+                <div class="scroll-body"
+                     ng-include="'modules/profile/views/components/profile-subscriptions.client.view.html'"></div>
+            </div>
         </div>
-        <div class="well-sm">
-          <div class="scroll-body" ng-include="'modules/profile/views/components/profile-contact.client.view.html'"> </div>
-          <div class="scroll-body" ng-include="'modules/profile/views/components/profile-company.client.view.html'"> </div>
+        <div class="content-body">
+            <div class="module-header">
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button class="btn btn-default btn-sm" ng-click="openPasswordDialog()"><i class="fa fa-key"></i>
+                            <span translate>profile.buttons.outlookPassword</span>
+                        </button>
+                        <button ng-if="exposeChangePassword" class="btn btn-default btn-sm" ng-click="openChangeLdapPasswordDialog()"><i class="fa fa-key"></i>
+                            <span translate>profile.buttons.ldapPassword</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="well-sm">
+                <div class="scroll-body"
+                     ng-include="'modules/profile/views/components/profile-contact.client.view.html'"></div>
+                <div class="scroll-body"
+                     ng-include="'modules/profile/views/components/profile-company.client.view.html'"></div>
+            </div>
         </div>
-      </div>
-  </div>
+    </div>
 </section>

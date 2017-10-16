@@ -44,12 +44,18 @@
     <bean id="subscriptionDao" class="com.armedia.acm.services.subscription.dao.SubscriptionDao"/>
 
     <bean id="subscriptionEventDao" class="com.armedia.acm.services.subscription.dao.SubscriptionEventDao"/>
+    
+    <bean id="notificationFormater" class="com.armedia.acm.services.notification.service.NotificationFormatter">
+    	<property name="notificationProperties" ref="notificationProperties"/>
+    </bean>
 
     <bean id="subscriptionEventToSolrTransformer"
           class="com.armedia.acm.services.subscription.service.SubscriptionEventToSolrTransformer">
         <property name="subscriptionEventDao" ref="subscriptionEventDao"/>
         <property name="subscriptionEventPlugin" ref="subscriptionPlugin"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="notificationFormater" ref="notificationFormater"/>
+        <property name="eventTypeProperties" ref="eventTypeProperties"/>
     </bean>
 
     <bean id="subscriptionToSolrTransformer"

@@ -77,7 +77,7 @@ angular.module('services').factory('TimeTracking.ListService', ['$resource', '$t
         Service.queryTimeTrackingTreeData = function (userId, start, n, sort, filters, query, nodeMaker) {
             var param = {};
             param.userId = Util.goodValue(userId);
-            param.ObjectType = "timesheet";
+            param.objectType = "timesheet";
             param.start = Util.goodValue(start, 0);
             param.n = Util.goodValue(n, 32);
             param.sort = Util.goodValue(sort);

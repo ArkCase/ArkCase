@@ -10,8 +10,8 @@
  *
  * The BuildUrl is used for building report url with given parameters.
  */
-angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService',
-    function ($sce, UtilDateService) {
+angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService', '$http', '$browser', '$location',
+    function ($sce, UtilDateService, $http, $browser, $location) {
         return {
 
             /**
@@ -34,19 +34,52 @@ angular.module('reports').factory('Reports.BuildUrl', ['$sce', 'Util.DateService
              * @param {String} params.stateSelected Represents report server date format
              * @returns {Object} Object assigned as trusted for angular to display the report in an iFrame
              */
-            getUrl: function (params) {
-
+            getUrl: function (params, xmlReport) {
+                
                 var reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + params.reports[params.reportSelected]
                     + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
                     + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
                     + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
-                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset())
-                    + "&userid=" + params.reportsUser
-                    + "&password=" + params.reportsPassword;
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                
+                if (xmlReport) {
+                    var xmlReportUri = params.reports[params.reportSelected];
+                    xmlReportUri = xmlReportUri.substring(0, xmlReportUri.indexOf('viewer')) + 'report';
+                    reportUrl = params.reportsHost + (params.reportsPort ? ":" + params.reportsPort : "") + xmlReportUri
+                    + "?startDate=" + UtilDateService.goodIsoDate(params.startDate)
+                    + "&endDate=" + UtilDateService.goodIsoDate(params.endDate)
+                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
+                    + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
+                }
+                
                 if (params.stateSelected) {
-                    reportUrl += "&caseStatus=" + params.stateSelected;
+                    reportUrl += "&status=" + params.stateSelected;
+                }
+                var absUrl = $location.absUrl();
+                var baseHref = $browser.baseHref();
+                var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                reportUrl += "&baseUrl=" + encodeURIComponent(appUrl);
+                if (xmlReport) {
+                    reportUrl += "&output-target=" + encodeURIComponent("table/xml");
                 }
                 return $sce.trustAsResourceUrl(reportUrl);
+            },
+
+            /**
+             * @ngdoc method
+             * @name getAuthorizedReports
+             * @methodOf reports.service:Reports.BuildUrl
+             *
+             * @description
+             * Performs retrieving all reports that particular user has authorized access
+             *
+             * @returns {HttpPromise} Future info about accessible reports
+             */
+            getAuthorizedReports: function () {
+                return $http({
+                    method: "GET",
+                    url: "api/latest/plugin/report/authorized"
+                });
             }
         }
     }

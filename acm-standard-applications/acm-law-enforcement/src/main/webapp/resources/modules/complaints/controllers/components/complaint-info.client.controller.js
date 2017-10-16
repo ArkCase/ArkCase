@@ -2,10 +2,13 @@
 
 angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
+    , 'Object.ParticipantService', '$q', 'SearchService', 'Search.QueryBuilderService', "Config.LocaleService"
     , function ($scope, $stateParams, $translate, $timeout
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService) {
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
+        , ObjectParticipantService, $q, SearchService, SearchQueryBuilder, LocaleService
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,14 +22,17 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         });
 
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
 
-        ObjectLookupService.getPriorities().then(
+        ConfigService.getComponentConfig("complaints", "participants").then(function (componentConfig) {
+            $scope.config = componentConfig;
+        });
+
+        var getPrioritiesPromise = ObjectLookupService.getPriorities();
+        getPrioritiesPromise.then(
             function (priorities) {
-                var options = [];
-                _.each(priorities, function (priority) {
-                    options.push({value: priority, text: priority});
-                });
-                $scope.priorities = options;
+                $scope.priorities = priorities;
                 return priorities;
             }
         );
@@ -42,13 +48,10 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-        ComplaintLookupService.getComplaintTypes().then(
+        var getComplaintTypesPromise = ObjectLookupService.getComplaintTypes();
+        getComplaintTypesPromise.then(
             function (complaintTypes) {
-                var options = [];
-                _.forEach(complaintTypes, function (item) {
-                    options.push({value: item, text: item});
-                });
-                $scope.complaintTypes = options;
+                $scope.complaintTypes = complaintTypes;
                 return complaintTypes;
             }
         );
@@ -56,15 +59,143 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
-        	$scope.picker.opened = true;
+            $scope.picker.opened = true;
+        };
+
+        $scope.openAssigneePickerModal = function () {
+            var participant = {
+                id: '',
+                participantLdapId: '',
+                config: $scope.config
+            };
+            showModal(participant, false);
+        };
+
+        var showModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/complaints/views/components/complaint-assignee-picker-modal.client.view.html",
+                controller: "Complaints.AssigneePickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                $scope.participant = {};
+                if (data.participant.participantLdapId != '' && data.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = data.participant.participantLdapId;
+                    $scope.assignee = data.participant.participantLdapId;
+                    $scope.updateAssignee();
+                }
+            }, function (error) {
+            });
+        };
+
+        $scope.openGroupPickerModal = function () {
+            var participant = {
+                id: '',
+                participantLdapId: '',
+                config: $scope.config
+            };
+            showGroupModal(participant, false);
+        };
+
+        var showGroupModal = function (participant, isEdit) {
+            var modalScope = $scope.$new();
+            modalScope.participant = participant || {};
+
+            var modalInstance = $modal.open({
+                scope: modalScope,
+                animation: true,
+                templateUrl: "modules/complaints/views/components/complaint-group-picker-modal.client.view.html",
+                controller: "Complaints.GroupPickerController",
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    owningGroup: function () {
+                        return $scope.owningGroup;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenGroup) {
+                $scope.participant = {};
+
+                if (chosenGroup.participant.participantLdapId != '' && chosenGroup.participant.participantLdapId != null) {
+                    $scope.participant.participantLdapId = chosenGroup.participant.participantLdapId;
+                    $scope.participant.object_type_s = chosenGroup.participant.object_type_s;
+
+                    var currentAssignee = $scope.assignee;
+                    var chosenOwningGroup = chosenGroup.participant.participantLdapId;
+                    $scope.assigneeOptions = [];
+                    $scope.iscurrentAssigneeInOwningGroup = false;
+                    var size = 20;
+                    var start = 0;
+                    var searchQuery = '*';
+                    var filter = 'fq=fq="object_type_s": USER' + '&fq="groups_id_ss": ' + chosenOwningGroup;
+
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(searchQuery, filter, size, start);
+                    if (query) {
+                        SearchService.queryFilteredSearch({
+                                query: query
+                            },
+                            function (data) {
+                                var returnedUsers = data.response.docs;
+                                // Going through th collection of returnedUsers to see if there is a match with the current assignee
+                                // if there is a match that means the current assignee is within that owning group hence no
+                                // changes to the current assignee is needed
+                                _.each(returnedUsers, function (returnedUser) {
+                                    if (currentAssignee === returnedUser.object_id_s) {
+                                        $scope.iscurrentAssigneeInOwningGroup = true;
+                                    }
+                                });
+
+                                if ($scope.participant.participantLdapId && $scope.iscurrentAssigneeInOwningGroup) {
+                                    $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                    $scope.updateOwningGroup();
+                                } else {
+                                    $scope.owningGroup = chosenGroup.participant.selectedAssigneeName;
+                                    $scope.assignee = '';
+
+                                    var assigneeParticipantType = 'assignee';
+                                    // Iterating through the array to find the participant with the ParticipantType eqaul assignee
+                                    // then setiing the participantLdapId to empty string
+                                    _.each($scope.objectInfo.participants, function (participant) {
+                                        if (participant.participantType == assigneeParticipantType) {
+                                            participant.participantLdapId = '';
+                                        }
+                                    });
+
+                                    $scope.updateOwningGroup();
+                                    $scope.updateAssignee();
+                                }
+                            });
+                    }
+                }
+            }, function (error) {
+            });
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
+            $q.all([getComplaintTypesPromise, getPrioritiesPromise]).then(function() {
+                setComplaintTypeValue();
+                setPriorityValue();
+            });
+            
             //if (previousId != objectId) {
             ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
@@ -83,6 +214,8 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
          */
         function saveComplaint() {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            setComplaintTypeValue();
+            setPriorityValue();
             if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
@@ -111,10 +244,32 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
             saveComplaint();
         };
-        $scope.updateDueDate = function (dueDate) {
-            $scope.objectInfo.dueDate = UtilDateService.dateToIso($scope.dateInfo.dueDate);
+        $scope.updateDueDate = function () {
+            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
             saveComplaint();
         };
+        
+        var setComplaintTypeValue = function() {
+            var complaintType = _.findWhere($scope.complaintTypes, {key : $scope.objectInfo.complaintType});
+            if (complaintType) {
+                $scope.complaintTypeValue = complaintType.value;
+            } else {
+                $scope.complaintTypeValue = 'core.unknown';
+            }
+        };
+        
+        var setPriorityValue = function() {
+            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
+            if (priority) {
+                $scope.priorityValue = priority.value;
+            } else {
+                $scope.priorityValue = 'core.unknown';
+            }
+        };
 
+        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+            $scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang)
+        });
     }
 ]);

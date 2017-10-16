@@ -1,36 +1,21 @@
 {
   "id": "common",
   "title": "Common settings",
+  "configurable": false,
   "notifyMessage": {
     "duration": 5000,
     "position": "right",
-    "maximumOpen": 5
+    "maximumOpen": 5,
+    "allowDuplicate": false
   },
   "docTree": {
-    "emailDialog": {
-      "enableFiltering": false,
-      "multiSelect": true,
-      "columnDefs": [
-        {
-          "name": "name",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.name",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "email_lcs",
-          "displayName": "common.directive.docTree.emailDialog.gridColumns.email",
-          "headerCellFilter": "translate"
-        }
-      ],
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 10,
-      "start": 0
-    },
+    "extensions": [
+      "DocTreeExt.Checkin",
+      "DocTreeExt.Email",
+      "DocTreeExt.WebDAV",
+      "DocTreeExt.Record",
+      "DocTreeExt.Template"
+    ],
     "columnDefs": [
       {
         "name": "checkbox",
@@ -48,6 +33,8 @@
       {
         "name": "title",
         "displayName": "common.directive.docTree.table.columns.title",
+        "headTemplate": "<label id='title' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw fa-sort-asc' data-sort='title' data-dir='DESC'></i>",
         "width": "30%",
         "index": 2
       },
@@ -60,29 +47,37 @@
       {
         "name": "type",
         "displayName": "common.directive.docTree.table.columns.type",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "headTemplate": "<label id='type' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='type' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "12%",
         "index": 4
       },
       {
         "name": "created",
         "displayName": "common.directive.docTree.table.columns.created",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "headTemplate": "<label id='created' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='created' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 5
       },
       {
         "name": "modified",
         "displayName": "common.directive.docTree.table.columns.modified",
-        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "headTemplate": "<label id='modified' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modified' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>",
         "width": "10%",
         "index": 6
       },
       {
-        "name": "author",
-        "field": "creator",
-        "displayName": "common.directive.docTree.table.columns.author",
-        "__todo__cellTemplate": "<div>{{ row.entity.creator }}</div>",
+        "name": "modifier",
+        "field": "modifier",
+        "displayName": "common.directive.docTree.table.columns.modifier",
+        "headTemplate": "<label id='modifier' class='doc-tree-header' style='cursor: pointer;'></label>",
+        "icon": "<i class='fa fa-fw' data-sort='modifier' data-dir='ASC'></i>",
+        "__todo__cellTemplate": "<div>{{ row.entity.modifier }}</div>",
         "__todo__lookup": "userFullNames",
         "width": "16%",
         "index": 7
@@ -90,7 +85,7 @@
       {
         "name": "version",
         "displayName": "common.directive.docTree.table.columns.version",
-        "__todo__cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+        "__todo__cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
         "width": "6%",
         "index": 8
       },
@@ -562,6 +557,258 @@
         "uiIcon": "ui-icon-pencil"
       }
     },
+    "emailDialog": {
+      "enableFiltering": false,
+      "multiSelect": true,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "email_lcs",
+          "displayName": "common.directive.docTree.recipientsDialog.gridColumns.email",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
+    "dialogUserPicker": {
+      "enableFiltering": false,
+      "multiSelect": false,
+      "showFacets": false,
+      "columnDefs": [
+        {
+          "name": "name",
+          "displayName": "frevvo.dialogUserPicker.table.columns.name",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_type_s",
+          "displayName": "frevvo.dialogUserPicker.table.columns.type",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "title",
+          "displayName": "frevvo.dialogUserPicker.table.columns.title",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "object_id_s",
+          "displayName": "frevvo.dialogUserPicker.table.columns.id",
+          "headerCellFilter": "translate"
+        }
+      ],
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 10,
+      "start": 0
+    },
     "fileExtensionRegex": "\\.(doc|dot|docx|dotx|docm|dotm|docb|pdf|xlsx|xls|ppt)$"
+  },
+  "coreCalendar": {
+    "chooseEventAttendeesDialog": {
+      "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": true,
+        "showFacets": false,
+        "columnDefs": [
+          {
+            "name": "name",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.name",
+            "headerCellFilter": "translate"
+          },
+          {
+            "name": "email_lcs",
+            "displayName": "common.directive.coreCalendar.chooseEventAttendeesDialog.table.columns.email",
+            "headerCellFilter": "translate"
+          }
+        ],
+        "paginationPageSizes": [
+          5,
+          10,
+          20,
+          50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
+      }
+    }
+  },
+  "coreCalendarErrorMessage": {
+    "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
+    "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
+    "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
+  },
+  "dialogPersonPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogPersonPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "first_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.givenName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "last_name_lcs",
+        "displayName": "common.dialogPersonPicker.table.columns.familyName",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_organization_s",
+        "displayName": "common.dialogPersonPicker.table.columns.organization",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogPersonPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogPersonPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "dialogOrganizationPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "name",
+        "displayName": "common.dialogOrganizationPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_identification_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.identification",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "type_lcs",
+        "displayName": "common.dialogOrganizationPicker.table.columns.type",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "primary_contact_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.contact",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_phone_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.phone",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "default_location_s",
+        "displayName": "common.dialogOrganizationPicker.table.columns.location",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "dialogObjectPicker": {
+    "enableFiltering": false,
+    "multiSelect": false,
+    "showFacets": false,
+    "columnDefs": [
+      {
+        "name": "object_id_s",
+        "displayName": "common.dialogObjectPicker.table.columns.id",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "name",
+        "displayName": "common.dialogObjectPicker.table.columns.name",
+        "headerCellFilter": "translate"
+      },
+      {
+        "name": "title_parseable",
+        "displayName": "common.dialogObjectPicker.table.columns.title",
+        "headerCellFilter": "translate"
+      }
+    ],
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "start": 0
+  },
+  "objectHistoryGrid": {
+    "id": "objectHistoryModalGrid",
+    "title": "common.objectHistory.modal.title",
+    "icon": "fa fa-bell-o",
+    "enabled": true,
+    "configurable": true,
+    "type": "grid",
+    "enableFiltering": false,
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "columnDefs": [
+      {
+        "name": "action",
+        "displayName": "common.objectHistory.modal.table.columns.action",
+        "headerCellFilter": "translate",
+        "enableCellEdit": false,
+        "cellTemplate": "<div translate>{{'changes.'+row.entity.action+'.'+row.entity.path}}</div>"
+      },
+      {
+        "name": "oldValue",
+        "displayName": "common.objectHistory.modal.table.columns.oldValue",
+        "headerCellFilter": "translate",
+        "field": "oldValue"
+      },
+      {
+        "name": "newValue",
+        "displayName": "common.objectHistory.modal.table.columns.newValue",
+        "headerCellFilter": "translate",
+        "field": "newValue"
+      }
+    ]
   }
 }

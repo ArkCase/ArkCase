@@ -1,0 +1,23 @@
+{
+  "tags": {
+    "title": "Tags",
+    "search.btn": "Search",
+    "search.placeholder": "Search for tags",
+    "menus": {
+      "leftnav.item": "Tags"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ID",
+          "name": "Name",
+          "type": "Type",
+          "title": "Title",
+          "parent": "Parent",
+          "assignee": "Assignee",
+          "modified": "Modified"
+        }
+      }
+    }
+  }
+}

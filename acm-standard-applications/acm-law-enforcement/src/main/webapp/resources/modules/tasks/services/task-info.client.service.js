@@ -10,8 +10,8 @@
  *
  * Task.InfoService provides functions for Task database data
  */
-angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService',
-    function ($resource, $translate, Store, Util, ObjectInfoService) {
+angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', 'Object.InfoService'
+    , function ($resource, $translate, Store, Util, ObjectInfoService) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * ngdoc method
@@ -75,6 +75,23 @@ angular.module('tasks').factory('Task.InfoService', ['$resource', '$translate', 
         Service.resetTaskInfo = function () {
             var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
             cacheInfo.reset();
+        };
+
+        /**
+         * @ngdoc method
+         * @name resetTaskCacheById
+         * @methodOf tasks.service:Task.InfoService
+         *
+         * @description
+         * Reset cached info for a certain task.
+         *
+         * @param taskId id of task to clear cache for
+         */
+        Service.resetTaskCacheById = function (taskId) {
+            if (Util.goodValue(taskId) && Util.goodPositive(taskId)) {
+                var cacheInfo = new Store.CacheFifo(Service.CacheNames.TASK_INFO);
+                cacheInfo.put(taskId, null);
+            }
         };
 
         /**

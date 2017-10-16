@@ -6,8 +6,8 @@ import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -29,10 +29,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -86,7 +87,7 @@ public class CreateCalendarAppointmentAPIControllerTest extends EasyMockSupport
         appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));// ends after 2 days
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String content = objectMapper.writeValueAsString(appointmentItem);
 
         expect(mockAuthentication.getName()).andReturn("user").times(2);

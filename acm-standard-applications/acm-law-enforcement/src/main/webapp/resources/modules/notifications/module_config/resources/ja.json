@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "通知",
+    "search.btn": "検索",
+    "export.btn": "ja_Export",
+    "search.placeholder": "ja_Search for notifications",
+    "menus": {
+      "leftnav.item": "通知"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ja_ID",
+          "description": "ja_Description",
+          "objNumber": "ja_Object Number",
+          "parentNumber": "ja_Parent Number",
+          "objType": "ja_Object Type",
+          "modified": "ja_Modified"
+        }
+      }
+    }
+  }
+}

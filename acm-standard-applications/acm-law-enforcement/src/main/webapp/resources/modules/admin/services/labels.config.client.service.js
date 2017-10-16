@@ -37,27 +37,6 @@ angular.module('admin').factory('Admin.LabelsConfigService', ['$resource',
 
             /**
              * @ngdoc method
-             * @name retrieveLanguages
-             * @methodOf admin.service:Admin.LabelsConfigService
-             *
-             * @description
-             * Performs retrieving all languages in label configuration for dropdown list
-             *
-             * @param {Object} params Map of input parameter.
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            retrieveLanguages: {
-                method: "GET",
-                url: "api/latest/plugin/admin/labelmanagement/languages",
-                cache: false,
-                isArray: true
-            },
-
-            /**
-             * @ngdoc method
              * @name retrieveResource
              * @methodOf admin.service:Admin.LabelsConfigService
              *

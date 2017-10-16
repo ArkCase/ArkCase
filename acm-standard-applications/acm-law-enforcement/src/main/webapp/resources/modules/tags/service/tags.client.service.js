@@ -31,7 +31,7 @@ angular.module('tags').factory('Tags.TagsService', ['$q', '$http', 'Search.Query
                 var deferred = $q.defer();
                 if (searchParams.query) {
                     var query = searchParams.query.replace('*', '');
-					query = '/' + query + '.*/';
+                    query = '/' + query + '.*/';
                     var filters = searchParams.filter
                     var start = 0;
                     var n = searchParams.n || 10;
@@ -49,7 +49,7 @@ angular.module('tags').factory('Tags.TagsService', ['$q', '$http', 'Search.Query
                             function (data) {
                                 deferred.resolve(data.response.docs);
                             },
-                            function(){
+                            function () {
                                 deferred.reject();
                             }
                         );

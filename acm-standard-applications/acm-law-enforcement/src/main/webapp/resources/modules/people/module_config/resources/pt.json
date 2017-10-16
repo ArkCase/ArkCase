@@ -1,0 +1,481 @@
+{
+  "people": {
+    "title": "Pessoas",
+    "progressNoComplaint": "[ Não há dados de pessoas ]",
+    "progressLoading": "Carregando pessoas",
+    "progressError": "Falha ao carregar pessoas"
+  },
+  "people.menus": {
+    "leftnav.item": "Pessoas",
+    "topbar.item": "Pessoa"
+  },
+  "people.comp.main": {
+    "title": "Visão geral"
+  },
+  "people.comp.info": {
+    "title": "Informações",
+    "phone.label": "Telefone",
+    "email.label": "Email",
+    "status.label": "Status",
+    "organization.label": "Organização",
+    "identification.label": "ID"
+  },
+  "people.comp.actions": {
+    "title": "Ações",
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Excluir",
+    "activate.button": "Ativar",
+    "deactivate.button": "Desativar",
+    "merge.button": "Mesclar"
+  },
+  "people.comp.details": {
+    "title": "Detalhes",
+    "informSaved": "pt_Person details saved",
+    "table.columns": {
+      "title": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "Histórico",
+    "table.columns": {
+      "eventType": "pt_Event Name",
+      "eventDate": "pt_Date",
+      "userId": "pt_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "Imagens",
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "upload": "pt_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "pt_Thumbnail",
+      "title": "pt_Filename",
+      "description": "pt_Description",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "dialog": {
+      "title": "pt_Upload Picture",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "cancel": "pt_Cancel",
+      "upload": "pt_Upload Picture",
+      "noPictureSelected": "pt_No Files Selected.",
+      "browse": "pt_Browse",
+      "description": "pt_Description"
+    },
+    "dialog.edit": {
+      "title": "pt_Edit Picture",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "change": "pt_Change Picture",
+      "save": "pt_Save changes"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "Localizações",
+    "table.columns": {
+      "type": "pt_Type",
+      "streetAddress": "pt_Address 1",
+      "streetAddress2": "pt_Address 2",
+      "city": "pt_City",
+      "state": "pt_State",
+      "zip": "pt_Zip",
+      "country": "pt_Country",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "addNew": "pt_Add New",
+      "map": "pt_Map"
+    },
+    "modal": {
+      "addAddress": "pt_Add Location",
+      "editAddress": "pt_Edit Record",
+      "type.label": "pt_Address Type",
+      "type.placeholder": "pt_Enter Address Type",
+      "streetAddress.label": "pt_Address 1",
+      "streetAddress.placeholder": "pt_Enter Address 1",
+      "streetAddress2.label": "pt_Address 2",
+      "streetAddress2.placeholder": "pt_Enter Address 2",
+      "city.label": "pt_City",
+      "city.placeholder": "pt_Enter City",
+      "zip.label": "pt_Zip",
+      "zip.placeholder": "pt_Enter Zip",
+      "state.label": "pt_State",
+      "state.placeholder": "pt_Enter State",
+      "country.label": "pt_Country",
+      "country.placeholder": "pt_Enter Country",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Location",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "Números de telefone",
+    "table.columns": {
+      "type": "pt_Type",
+      "value": "pt_Phone Number",
+      "description": "pt_Description",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New"
+    },
+    "modal": {
+      "addPhone": "pt_Add New Phone Number",
+      "editPhone": "pt_Edit Phone Number",
+      "title": "pt_Add New Phone Number",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "description": "pt_Description",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Phone Number",
+      "type.label": "pt_Phone Type",
+      "type.placeholder": "pt_Enter Phone Type",
+      "value.label": "pt_Phone Number",
+      "value.placeholder": "pt_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "E-mail",
+    "table.columns": {
+      "type": "pt_Type",
+      "value": "pt_Email Address",
+      "description": "pt_Description",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New"
+    },
+    "modal": {
+      "title": "pt_Add New Email Address",
+      "addEmail": "pt_Add New Email Address",
+      "editEmail": "pt_Edit Email Address",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "description": "pt_Description",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Email Address",
+      "type.label": "pt_Email Type",
+      "type.placeholder": "pt_Enter Email Type",
+      "value.label": "pt_Email Address",
+      "value.placeholder": "pt_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "URL",
+    "table.columns": {
+      "value": "pt_URL",
+      "type": "pt_Type",
+      "description": "pt_Description",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New"
+    },
+    "modal": {
+      "title": "pt_Add New URL",
+      "addUrl": "pt_Add New URL",
+      "editUrl": "pt_Edit URL",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "description": "pt_Description",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save URL",
+      "type.label": "pt_Type",
+      "type.placeholder": "pt_Enter Type",
+      "value.label": "pt_URL",
+      "value.placeholder": "pt_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "pt_Type",
+      "name": "pt_Name"
+    },
+    "dialogUserPicker": {
+      "header": "pt_Choose User",
+      "table.columns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "id": "pt_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "pt_Choose Group",
+      "table.columns": {
+        "name": "pt_Name"
+      }
+    }
+  },
+  "people.comp.aliases": {
+    "title": "Alias",
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "upload": "pt_New Alias"
+    },
+    "table.columns": {
+      "type": "pt_Type",
+      "aliasValue": "pt_Alias",
+      "description": "pt_Description",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "modal": {
+      "aliasValue": "pt_Alias Value",
+      "type": "pt_Type",
+      "addAlias": "pt_Add New Alias",
+      "editAlias": "pt_Edit Alias",
+      "title": "pt_Insert New Alias",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Alias",
+      "value.label": "pt_Alias",
+      "value.placeholder": "pt_Enter Alias",
+      "description": "pt_Description",
+      "aliasType.label": "pt_Alias Type",
+      "aliasType.placeholder": "pt_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "Identidade",
+    "table.columns": {
+      "type": "pt_Type",
+      "id": "pt_ID",
+      "number": "pt_Number",
+      "issuer": "pt_Issuer",
+      "yearIssued": "pt_Year Issued",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New"
+    },
+    "modal": {
+      "addID": "pt_Add New Identification",
+      "editID": "pt_Edit Identification",
+      "title": "pt_Add New Identification",
+      "setPrimary": "pt_Set as Primary?",
+      "yes": "pt_Yes",
+      "no": "pt_No",
+      "type.label": "pt_Type",
+      "type.placeholder": "pt_Enter Type",
+      "id.label": "pt_ID",
+      "id.placeholder": "pt_Enter ID",
+      "number.label": "pt_Number",
+      "number.placeholder": "pt_Enter Number",
+      "issuer.label": "pt_Issuer",
+      "issuer.placeholder": "pt_Enter Issuer",
+      "yearIssued.label": "pt_Year Issued",
+      "yearIssued.placeholder": "pt_Enter Year Issued",
+      "yearIssued.close.button": "pt_Close",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "Organizações",
+    "table.columns": {
+      "type": "pt_Type",
+      "id": "pt_ID",
+      "value": "pt_Organization",
+      "identification": "pt_ID",
+      "contact": "pt_Primary Contact",
+      "phone": "pt_Phone",
+      "location": "pt_Location",
+      "created": "pt_Date Added",
+      "creator": "pt_Added By",
+      "modified": "pt_Last Modified",
+      "modifier": "pt_Modified By"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New",
+      "addExisting": "pt_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "Casos",
+    "table.columns": {
+      "priority": "pt_Priority",
+      "id": "pt_ID",
+      "title": "pt_Title",
+      "status": "pt_Status",
+      "assignee": "pt_Assignee",
+      "modified": "pt_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "Reclamações",
+    "table.columns": {
+      "priority": "pt_Priority",
+      "id": "pt_ID",
+      "title": "pt_Title",
+      "status": "pt_Status",
+      "assignee": "pt_Assignee",
+      "modified": "pt_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "Pessoas Relacionadas",
+    "table.columns": {
+      "firstName": "pt_First Name",
+      "lastName": "pt_Last Name",
+      "type": "pt_Relationship",
+      "description": "pt_Description",
+      "organization": "pt_Organization",
+      "phone": "pt_Phone",
+      "location": "pt_Location"
+    },
+    "modal": {
+      "title": "pt_Add Related Person",
+      "type.label": "pt_Relationship",
+      "type.placeholder": "pt_Enter Relationship",
+      "person.label": "pt_Person",
+      "person.placeholder": "pt_Search People",
+      "btnCancel.text": "pt_Cancel",
+      "btnOk.text": "pt_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "pt_Person",
+    "addAnother": "pt_Add Another",
+    "remove": "pt_Remove",
+    "familyName": "pt_Last Name",
+    "familyName.placeholder": "pt_Enter Last Name",
+    "givenName": "pt_First Name",
+    "givenName.placeholder": "pt_Enter First Name",
+    "middleName": "pt_Middle Name",
+    "middleName.placeholder": "pt_Enter Middle Name",
+    "saveButton": "pt_Save Person",
+    "informCreated": "pt_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "pt_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "pt_Communication Accounts",
+      "phone": "pt_Phone",
+      "phone.placeholder": "pt_Enter Phone",
+      "phoneType": "pt_Phone Type",
+      "email": "pt_Email",
+      "email.placeholder": "pt_Enter Email",
+      "emailType": "pt_Email Type",
+      "url": "pt_URL",
+      "url.placeholder": "pt_Enter URL",
+      "removeContactMethod": "pt_Remove",
+      "urlType": "pt_URL Type"
+    },
+    "organizations": {
+      "title": "pt_Organizations",
+      "searchExisting.placeholder": "pt_Search Existing Organizations",
+      "organizationType": "pt_Relation Type"
+    },
+    "picture": {
+      "title": "pt_Picture"
+    },
+    "locations": {
+      "title": "pt_Locations",
+      "country": "pt_Country",
+      "country.placeholder": "pt_Select Country",
+      "state": "pt_State",
+      "state.placeholder": "pt_Enter State",
+      "zip": "pt_Zip",
+      "zip.placeholder": "pt_Enter Zip",
+      "city": "pt_City",
+      "city.placeholder": "pt_Enter City",
+      "type": "pt_Address Type",
+      "type.placeholder": "pt_Select Address Type",
+      "streetAddress": "pt_Street Address",
+      "streetAddress.placeholder": "pt_Enter Street Address",
+      "streetAddress2": "pt_Street Address2",
+      "streetAddress2.placeholder": "pt_Enter Street Address2"
+    },
+    "identification": {
+      "title": "pt_Identifications",
+      "identificationID": "pt_Identification ID",
+      "identificationID.placeholder": "pt_Enter Identification ID",
+      "identificationType": "pt_Identification Type",
+      "identificationType.placeholder": "pt_Select Identification Type",
+      "identificationNumber": "pt_Identification Number",
+      "identificationNumber.placeholder": "pt_Enter Identification Number",
+      "identificationIssuer": "pt_Identification Issuer",
+      "identificationIssuer.placeholder": "pt_Enter Identification Issuer",
+      "identificationYearIssued": "pt_Identification Issued",
+      "identificationYearIssued.placeholder": "pt_Select Identification Issued",
+      "identificationYearIssued.close.button": "pt_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "pictures.label": "Imagens",
+      "addresses.label": "Localizações",
+      "phones.label": "Números de telefone",
+      "emails.label": "E-mail",
+      "urls.label": "URL",
+      "participants.label": "Participantes",
+      "aliases.label": "Alias",
+      "organizations.label": "Organizações",
+      "ids.label": "Identidade",
+      "complaints.label": "Reclamações",
+      "cases.label": "Casos",
+      "related.label": "Pessoas Relacionadas",
+      "history.label": "Histórico"
+    },
+    "filters": {
+      "iHaveCreated": "Tudo o que eu criei",
+      "noFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "createdDateAsc": "Data de classificação criada ascendente",
+      "createdDateDesc": "Data de classificação criada decrescente",
+      "idAsc": "Classificar pessoa ID Ascendente",
+      "idDesc": "Classificar Identificação de Pessoas Descendente",
+      "nameAsc": "Classificar por pessoas Nome A-Z",
+      "nameDesc": "Classificar por nome da pessoa Z-A",
+      "noSort": "(Não classificar)"
+    }
+  }
+}

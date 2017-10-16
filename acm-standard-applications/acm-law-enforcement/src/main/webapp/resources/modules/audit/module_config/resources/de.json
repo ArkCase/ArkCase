@@ -1,0 +1,27 @@
+{
+  "audit": {
+    "title": "Untersuchen",
+    "menus": {
+      "leftnav.item": "Untersuchen"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "de_Report Name",
+        "inputID": "de_ID",
+        "dateFrom": "de_From",
+        "dateTo": "de_To"
+      },
+      "placeholder": {
+        "selectAudit": "de_ALL",
+        "inputId": "de_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "de_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "de_Done"
+    }
+  }
+}
+

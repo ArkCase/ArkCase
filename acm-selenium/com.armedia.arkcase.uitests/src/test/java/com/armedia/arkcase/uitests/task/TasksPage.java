@@ -16,6 +16,7 @@ import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
 import com.armedia.arkcase.uitests.base.ArkCaseTestUtils;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class TasksPage extends ArkCaseTestBase {
 
@@ -558,25 +559,28 @@ public class TasksPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
 	WebElement recordEmail;
 
-	public void taskSearchBox(String name) {
+	public TasksPage taskSearchBox(String name) {
 
 		Assert.assertTrue(serachInput.isDisplayed());
 		Assert.assertTrue(serachInput.isEnabled());
 		serachInput.click();
 		serachInput.sendKeys(name);
+		return this;
 	}
 
-	public void expandTask() {
+	public TasksPage expandTask() {
 		Assert.assertTrue(tasksTitle.getText().equals("Tasks"));
 		taskList.click();
 		expandTask.click();
+		return this;
 	}
 
-	public void detailTasksList() {
+	public TasksPage detailTasksList() {
 		detailsTaskList.click();
+		return this;
 	}
 
-	public void verifyDetailsTasksSection() {
+	public TasksPage verifyDetailsTasksSection() {
 
 		Assert.assertTrue(taskDetailsTitle.getText().equals("Task Details"));
 		Assert.assertTrue(detailsSaveButton.isDisplayed());
@@ -623,12 +627,14 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(detailsCodeView.isDisplayed());
 		Assert.assertTrue(detailsHelp.isEnabled());
 		Assert.assertTrue(detailsHelp.isDisplayed());
+		return this;
 
 	}
 
-	public void rejectComentList() {
+	public TasksPage rejectComentList() {
 
 		rejectCommentsList.click();
+		return this;
 
 	}
 
@@ -645,12 +651,13 @@ public class TasksPage extends ArkCaseTestBase {
 	 * }
 	 */
 
-	public void attachmentsList() {
+	public TasksPage attachmentsList() {
 
 		attachmentsList.click();
+		return this;
 	}
 
-	public void verifyAttachmentTable() {
+	public TasksPage verifyAttachmentTable() {
 
 		Assert.assertTrue(attachmentsTitle.getText().equals("Attachments"));
 		Assert.assertTrue(attachmentsRefreshButton.isDisplayed());
@@ -672,13 +679,15 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(attachmentUploadRow.isDisplayed());
 		Assert.assertTrue(attachmentUploadRow.isEnabled());
 		attachmentCheckBox.click();
+		return this;
 	}
 
-	public void noteListClick() {
+	public TasksPage noteListClick() {
 		notesList.click();
+		return this;
 	}
 
-	public void verifyNotesTable() throws InterruptedException, IOException {
+	public TasksPage verifyNotesTable() throws InterruptedException, IOException {
 
 		Assert.assertTrue(notesHeaderTitle.getText().equals("Notes"));
 		Assert.assertTrue(noteColumn.getText().equals("Note"));
@@ -686,10 +695,11 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(notesAuthorColumn.getText().equals("Author"));
 		Assert.assertTrue(addNewNoteButton.isDisplayed());
 		Assert.assertTrue(addNewNoteButton.isEnabled());
+		return this;
 
 	}
 
-	public void addNewNote(String note) throws InterruptedException {
+	public TasksPage addNewNote(String note) throws InterruptedException {
 		addNewNoteButton.click();
 		Thread.sleep(2000);
 
@@ -703,19 +713,21 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(newNoteCancelButton.isDisplayed());
 		Assert.assertTrue(newNoteCancelButton.isEnabled());
 		newNoteSubmit.click();
+		return this;
 
 	}
 
-	public void verifyAddedNote(String note, String Author) {
+	public TasksPage verifyAddedNote(String note, String Author) {
 
 		Assert.assertTrue(addedNoteNote.getText().equals(note));
 		Assert.assertTrue(addedNoteCreated.isDisplayed());
 		Assert.assertFalse(addedNoteCreated.getText().isEmpty());
 		Assert.assertTrue(addedNoteAuthor.isDisplayed());
 		Assert.assertTrue(addedNoteAuthor.getText().equals(Author));
+		return this;
 	}
 
-	public void editNote(String editnote) {
+	public TasksPage editNote(String editnote) {
 
 		Assert.assertTrue(editNoteButton.isDisplayed());
 		Assert.assertTrue(editNoteButton.isEnabled());
@@ -729,21 +741,24 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(editNoteSaveButton.isDisplayed());
 		Assert.assertTrue(editNoteSaveButton.isEnabled());
 		editNoteSaveButton.click();
+		return this;
 	}
 
-	public void deleteNote() {
+	public TasksPage deleteNote() {
 
 		Assert.assertTrue(deleteAddedNote.isDisplayed());
 		Assert.assertTrue(deleteAddedNote.isEnabled());
 		deleteAddedNote.click();
+		return this;
 
 	}
 
-	public void workFlowListClick() {
+	public TasksPage workFlowListClick() {
 		workOverviewList.click();
+		return this;
 	}
 
-	public void verifyWorkOverView(String participant) {
+	public TasksPage verifyWorkOverView(String participant) {
 
 		Assert.assertTrue(workTitleHeader.getText().equals("Workflow"));
 		Assert.assertTrue(workOverviewTable.isDisplayed());
@@ -756,13 +771,15 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(workParticipantData.getText().equals(participant));
 		Assert.assertTrue(workStatusData.getText().equals("ACTIVE"));
 		Assert.assertFalse(workStartData.getText().isEmpty());
+		return this;
 	}
 
-	public void historyListClick() {
+	public TasksPage historyListClick() {
 		historyList.click();
+		return this;
 	}
 
-	public void verifyHistorySection() {
+	public TasksPage verifyHistorySection() {
 
 		Assert.assertTrue(historyTitleHeader.getText().equals("History"));
 		Assert.assertTrue(historyTable.isEnabled());
@@ -771,9 +788,10 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(historyDate.getText().equals("Date"));
 		Assert.assertTrue(historyUser.getText().equals("User"));
 		Assert.assertFalse(historyTableData.getText().isEmpty());
+		return this;
 	}
 
-	public void verifyHistoryTableData(String eventName, String user) {
+	public TasksPage verifyHistoryTableData(String eventName, String user) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
@@ -783,27 +801,31 @@ public class TasksPage extends ArkCaseTestBase {
 		softAssert.assertEquals(historyDateValue.getText(), createdDate, "History date is wrong");
 		softAssert.assertEquals(historyUserValue.getText(), user, "History user is wrong");
 		softAssert.assertAll();
+		return this;
 
 	}
 
-	public void eSignaturesListClick() {
+	public TasksPage eSignaturesListClick() {
 		eSignaturesList.click();
+		return this;
 	}
 
-	public void verifyEsignature() {
+	public TasksPage verifyEsignature() {
 
 		Assert.assertTrue(eSignatureHeaderTitle.getText().equals("eSignatures"));
 		Assert.assertTrue(eSignatureTable.isDisplayed());
 		Assert.assertTrue(eSignatureTable.isEnabled());
 		Assert.assertTrue(eSignatureDate.getText().equals("Date"));
 		Assert.assertTrue(eSignatureSignBy.getText().equals("Signed By"));
+		return this;
 	}
 
-	public void tagsListClick() {
+	public TasksPage tagsListClick() {
 		tagsList.click();
+		return this;
 	}
 
-	public void verifyTagsTable() {
+	public TasksPage verifyTagsTable() {
 
 		Assert.assertTrue(tagsHeaderTitle.getText().equals("Tags"));
 		Assert.assertTrue(tagsTable.isDisplayed());
@@ -811,9 +833,10 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue(tagsNameColumn.getText().equals("Tag"));
 		Assert.assertTrue(tagsCreatedColumn.getText().equals("Created"));
 		Assert.assertTrue(tagsCreatedColumnBy.getText().equals("Created By"));
+		return this;
 	}
 
-	public void addNewTag(String tag) throws InterruptedException {
+	public TasksPage addNewTag(String tag) throws InterruptedException {
 
 		Assert.assertTrue(addNewTagButton.isDisplayed());
 		Assert.assertTrue(addNewTagButton.isEnabled());
@@ -826,9 +849,10 @@ public class TasksPage extends ArkCaseTestBase {
 		tagPopUpTitle.click();
 		Thread.sleep(2000);
 		addTagButton.click();
+		return this;
 	}
 
-	public void addSearchedNewTag(String name) throws InterruptedException {
+	public TasksPage addSearchedNewTag(String name) throws InterruptedException {
 
 		Assert.assertTrue(addNewTagButton.isDisplayed());
 		Assert.assertTrue(addNewTagButton.isEnabled());
@@ -840,87 +864,93 @@ public class TasksPage extends ArkCaseTestBase {
 		searchedTag.click();
 		Thread.sleep(2000);
 		addTagButton.click();
+		return this;
 	}
 
-	public void verifyAddedTag(String tag, String user) {
+	public TasksPage verifyAddedTag(String tag, String user) {
 
 		Assert.assertEquals("Added tag name is wrong", tag, addedTagName.getText());
 		Assert.assertFalse(addedTagDate.getText().isEmpty());
 		Assert.assertTrue(addedTagUser.getText().equals(user));
+		return this;
 
 	}
 
-	public void deleteAddedTag() {
-
+	public TasksPage deleteAddedTag() {
 		deleteAddedTag.click();
-
+        return this;
 	}
 
-	public void overviewLinkClick() {
-
+	public TasksPage overviewLinkClick() {
 		Assert.assertTrue(overviewLink.isDisplayed());
 		Assert.assertTrue(overviewLink.isEnabled());
 		overviewLink.click();
+		return this;
 	}
 
-	public void detailsLinkClick() {
-
+	public TasksPage detailsLinkClick() {
 		Assert.assertTrue(detailsLink.isDisplayed());
 		Assert.assertTrue(detailsLink.isEnabled());
 		detailsLink.click();
+		return this;
 	}
 
-	public void rejectCommentLink() {
-
+	public TasksPage rejectCommentLink() {
 		Assert.assertTrue(rejectCommentLink.isDisplayed());
 		Assert.assertTrue(rejectCommentLink.isEnabled());
 		rejectCommentLink.click();
+		return this;
 	}
 
-	public void attachmentLinkClick() {
-
+	public TasksPage attachmentLinkClick() {
 		Assert.assertTrue(attachmentsLink.isDisplayed());
 		Assert.assertTrue(attachmentsLink.isEnabled());
 		attachmentsLink.click();
+		return this;
 	}
 
-	public void notestLinkClick() {
+	public TasksPage notestLinkClick() {
 
 		Assert.assertTrue(notesLink.isDisplayed());
 		Assert.assertTrue(notesLink.isEnabled());
 		notesLink.click();
+		return this;
 	}
 
-	public void workflowLinkClick() {
+	public TasksPage workflowLinkClick() {
 
 		Assert.assertTrue(workflowLink.isDisplayed());
 		Assert.assertTrue(workflowLink.isEnabled());
 		workflowLink.click();
+		return this;
 	}
 
-	public void historyLinkClick() {
+	public TasksPage historyLinkClick() {
 
 		Assert.assertTrue(historyLink.isDisplayed());
 		Assert.assertTrue(historyLink.isEnabled());
 		historyLink.click();
+		return this;
 
 	}
 
-	public void esignatureLinkClick() {
+	public TasksPage esignatureLinkClick() {
 
 		Assert.assertTrue(esignatureLink.isDisplayed());
 		Assert.assertTrue(esignatureLink.isEnabled());
 		esignatureLink.click();
+		return this;
 	}
 
-	public void tagsLinkClick() {
+	public TasksPage tagsLinkClick() {
 
 		Assert.assertTrue(tagsLink.isDisplayed());
 		Assert.assertTrue(tagsLink.isEnabled());
 		tagsLink.click();
+		return this;
 	}
 
-	public void clearInsertedLInk() throws InterruptedException {
+	public TasksPage clearInsertedLInk() throws InterruptedException {
 
 		insertedLink.click();
 		Thread.sleep(2000);
@@ -929,9 +959,10 @@ public class TasksPage extends ArkCaseTestBase {
 		taskdetailsPanel.clear();
 		Thread.sleep(2000);
 		detailsSaveButton.click();
+		return this;
 	}
 
-	public void insertLink(String link, String url) {
+	public TasksPage insertLink(String link, String url) {
 
 		detailsInsertLink.click();
 		detailsLinkTextToDisplay.click();
@@ -941,9 +972,10 @@ public class TasksPage extends ArkCaseTestBase {
 		detailsLinkUrl.clear();
 		detailsLinkUrl.sendKeys(url);
 		detailsLinkInsertButton.click();
+		return this;
 	}
 
-	public void editInsertedLInk() throws InterruptedException {
+	public TasksPage editInsertedLInk() throws InterruptedException {
 
 		insertedLink.click();
 		Thread.sleep(2000);
@@ -953,26 +985,29 @@ public class TasksPage extends ArkCaseTestBase {
 		detailsLinkTextToDisplay.clear();
 		detailsLinkTextToDisplay.sendKeys("ArkCase1");
 		detailsLinkInsertButton.click();
+		return this;
 	}
 
-	public void detailsInsertPicture() throws InterruptedException, IOException, AWTException {
+	public TasksPage detailsInsertPicture() throws InterruptedException, IOException, AWTException {
 
 		detailsPicture.click();
 		Thread.sleep(2000);
 		detailsPictureBrowse.click();
 		ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(2000);
+		return this;
 	}
 
-	public void detailsRemovePicture() throws InterruptedException {
+	public TasksPage detailsRemovePicture() throws InterruptedException {
 
 		insertedImage.click();
 		Thread.sleep(2000);
 		removeInsertedImage.click();
 		detailsSaveButton.click();
+		return this;
 	}
 
-	public void editSubjectClickCncel() throws InterruptedException {
+	public TasksPage editSubjectClickCncel() throws InterruptedException {
 
 		String verify = subject.getText();
 		subject.click();
@@ -982,10 +1017,10 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(subject.getText().equals(verify));
-
+		return this;
 	}
 
-	public void editSubjectClickConfirm(String subjectText) {
+	public TasksPage editSubjectClickConfirm(String subjectText) {
 
 		subject.click();
 		subjectInput.click();
@@ -994,9 +1029,10 @@ public class TasksPage extends ArkCaseTestBase {
 		subjectConfirm.click();
 		refreshButton.click();
 		Assert.assertTrue(subjectText.equals(subject.getText()));
+		return this;
 	}
 
-	public void editPercentClickCancel() {
+	public TasksPage editPercentClickCancel() {
 
 		String percentText = percentOfCompletition.getText();
 		percentOfCompletition.click();
@@ -1004,9 +1040,10 @@ public class TasksPage extends ArkCaseTestBase {
 		percentCancel.click();
 		refreshButton.click();
 		Assert.assertTrue(percentText.equals(percentOfCompletition.getText()));
+		return this;
 	}
 
-	public void editPercentClickConfirm(String percent) throws InterruptedException {
+	public TasksPage editPercentClickConfirm(String percent) throws InterruptedException {
 
 		percentOfCompletition.click();
 		percentInput.click();
@@ -1017,9 +1054,10 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(3000);
 		Assert.assertTrue(percentOfCompletition.getText().equals(percent));
+		return this;
 	}
 
-	public void editStartDateClickCancel() throws InterruptedException {
+	public TasksPage editStartDateClickCancel() throws InterruptedException {
 
 		startDate.click();
 		startDateInput.click();
@@ -1027,10 +1065,11 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(2000);
 		Assert.assertEquals("Start date is wrong", "03/17/2016", startDate.getText());
+		return this;
 
 	}
 
-	public void editStartDateClickConfirm(String startDateText) throws InterruptedException {
+	public TasksPage editStartDateClickConfirm(String startDateText) throws InterruptedException {
 
 		startDate.click();
 		startDateInput.click();
@@ -1040,10 +1079,10 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(3000);
 		Assert.assertEquals("Start date is wrong", startDateText, startDate.getText());
-
+        return this;
 	}
 
-	public void editDueDateClickCancel() throws InterruptedException {
+	public TasksPage editDueDateClickCancel() throws InterruptedException {
 
 		dueDate.click();
 		dueDateInput.click();
@@ -1051,9 +1090,10 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(dueDate.getText().equals("03/19/2016"));
+		return this;
 	}
 
-	public void editDueDateClickConfirm(String dueDateText) throws InterruptedException {
+	public TasksPage editDueDateClickConfirm(String dueDateText) throws InterruptedException {
 
 		dueDate.click();
 		dueDateInput.click();
@@ -1063,9 +1103,10 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(dueDate.getText().equals(dueDateText));
+		return this;
 	}
 
-	public void editAssigneeCancelButton() throws InterruptedException {
+	public TasksPage editAssigneeCancelButton() throws InterruptedException {
 
 		String assigneText = assignee.getText();
 		assignee.click();
@@ -1073,35 +1114,39 @@ public class TasksPage extends ArkCaseTestBase {
 		refreshButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(assignee.getText().equals(assigneText));
+		return this;
 	}
 
-	public void editAssigneeCheckButtonsIfDisabled() throws InterruptedException {
+	public TasksPage editAssigneeCheckButtonsIfDisabled() throws InterruptedException {
 
 		Assert.assertTrue(refreshButton.isDisplayed());
 		Assert.assertTrue(refreshButton.isEnabled());
 		Assert.assertFalse(completeButton.isDisplayed());
 		Assert.assertFalse(deleteButton.isDisplayed());
 		Assert.assertTrue(subscribeButton.isDisplayed());
+		return this;
 	}
 
-	public void editAssigneeCheckButtonsIfEnabled() throws InterruptedException {
+	public TasksPage editAssigneeCheckButtonsIfEnabled() throws InterruptedException {
 
 		Assert.assertTrue(refreshButton.isDisplayed());
 		Assert.assertTrue(refreshButton.isEnabled());
 		Assert.assertTrue(completeButton.isDisplayed());
 		Assert.assertTrue(deleteButton.isDisplayed());
 		Assert.assertTrue(subscribeButton.isDisplayed());
+		return this;
 	}
 
-	public void EditPriorityCancelButton() {
+	public TasksPage EditPriorityCancelButton() {
 
 		String priorityText = priority.getText();
 		priority.click();
 		priorityCancelButton.click();
 		Assert.assertTrue(priorityText.equals(priority.getText()));
+		return this;
 	}
 
-	public void SubscribeButton() throws InterruptedException {
+	public TasksPage SubscribeButton() throws InterruptedException {
 
 		refreshButton.click();
 		Thread.sleep(2000);
@@ -1113,15 +1158,17 @@ public class TasksPage extends ArkCaseTestBase {
 		unsucribeButton.click();
 		Thread.sleep(2000);
 		Assert.assertTrue(subscribeButton.getText().equals("Subscribe"));
+		return this;
 	}
 
-	public void completeButtonClick() throws InterruptedException {
+	public TasksPage completeButtonClick() throws InterruptedException {
 
 		refreshButton.click();
 		Assert.assertEquals("Task State should be ACTIVE", "ACTIVE", stateTask.getText());
 		completeButton.click();
 		Thread.sleep(4000);
 		Assert.assertEquals("Task State should be CLOSED", "CLOSED", stateTask.getText());
+		return this;
 	}
 
 	public void workFlowData(String participant) {
@@ -1135,7 +1182,7 @@ public class TasksPage extends ArkCaseTestBase {
 		softAssert.assertEquals(workflowStatus.getText(), "ACTIVE", "Worklfow status is wrong");
 		softAssert.assertEquals(workFLowStart.getText(), createdDate, "Workflow start date is wrong");
 		softAssert.assertEquals(workFlowEnd.getText(), "", "Workflow end date is wrong");
-		softAssert.assertAll();
+		softAssert.assertAll();		
 	}
 
 	public void verifyWorkflowTableStatusClosed(String participant) {
@@ -1150,8 +1197,7 @@ public class TasksPage extends ArkCaseTestBase {
 		softAssert.assertEquals(workFLowStart.getText(), createdDate, "Workflow start date is wrong");
 		softAssert.assertEquals(workFlowEnd.getText(), createdDate, "Workflow end date is wrong");
 		softAssert.assertAll();
-
-	}
+   	}
 
 	public void verifyAddDocumentAsignOtherUser() {
 
@@ -1160,10 +1206,10 @@ public class TasksPage extends ArkCaseTestBase {
 						.xpath("/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[4]/div/div/div/div[2]/doc-tree/table/tbody/tr[2]/td[3]/span/span[3]"))
 				.size();
 		Assert.assertTrue("Other user is sigh in, can not be added document", i == 0);
-
+        
 	}
 
-	public void verifyAddingDocumentIfTaskIsClosed() throws InterruptedException {
+	public TasksPage verifyAddingDocumentIfTaskIsClosed() throws InterruptedException {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(root).build();
@@ -1172,17 +1218,17 @@ public class TasksPage extends ArkCaseTestBase {
 		newDocument.click();
 		Assert.assertFalse("Adding new document should not be enabled, task state is CLOSED",
 				otherDocument.isDisplayed());
-
+        return this;
 	}
 
 	public void verifyAddingNoteIfDifrentUserAsignTo() {
 
-		Assert.assertTrue("Note is added, it shouldnt", noterow.getText().isEmpty());
-
+		Assert.assertTrue("Note is added, it shouldnt", noterow.getText().isEmpty());        
 	}
 
-	public void detailsSaveButtonClick() {
+	public TasksPage detailsSaveButtonClick() {
 		detailsSaveButton.click();
+		return this;
 	}
 
 	public void verifyIfTagIsDeleted() {
@@ -1214,11 +1260,12 @@ public class TasksPage extends ArkCaseTestBase {
 		Thread.sleep(2000);
 	}
 
-	public void performRightClickOnRoot() {
+	public TasksPage performRightClickOnRoot() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(root).build();
 		action.perform();
+		return this;
 
 	}
 
@@ -1229,11 +1276,12 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void performRightClickOnFirstRow() {
+	public TasksPage performRightClickOnFirstRow() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(firstRowDocumentTitle).build();
 		action.perform();
+		return this;
 
 	}
 
@@ -1244,11 +1292,12 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void performRightClickOnSecondRow() {
+	public TasksPage performRightClickOnSecondRow() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(secondRowDocumentTitle).build();
 		action.perform();
+		return this;
 
 	}
 
@@ -1259,11 +1308,12 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void performRightClickOnThirdRow() {
+	public TasksPage performRightClickOnThirdRow() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(thirdRowDocumentTitle).build();
 		action.perform();
+		return this;
 	}
 
 	public void verifyIfRightClickWorksOnThirdRow() {
@@ -1272,11 +1322,12 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue("Right click on third row is not working", i != 0);
 	}
 
-	public void performRightClickOnForthRow() {
+	public TasksPage performRightClickOnForthRow() {
 
 		Actions actions = new Actions(driver);
 		Action action = actions.contextClick(forthRowDocumentTitle).build();
 		action.perform();
+		return this;
 	}
 
 	public void verifyIfRightClickWorksOnForthRow() {
@@ -1286,17 +1337,18 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void newFolderClick() {
+	public TasksPage newFolderClick() {
 
 		Assert.assertEquals("New folder label name is wrong", "New Folder", newFolder.getText());
 		newFolder.click();
+		return this;
 
 	}
 
-	public void nameTheFirstFolder(String name) {
+	public TasksPage nameTheFirstFolder(String name) {
 
 		firtsRowInput.sendKeys(name);
-
+        return this;
 	}
 
 	public void verifyFirstFolderName(String name) {
@@ -1304,10 +1356,10 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertEquals("First folder name is wrong", name, firstRowDocumentTitle.getText());
 	}
 
-	public void nameTheSecondFolder(String name) {
+	public TasksPage nameTheSecondFolder(String name) {
 
 		secondRowInput.sendKeys(name);
-
+		return this;
 	}
 
 	public void verifySecondFolderName(String name) {
@@ -1322,17 +1374,19 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickNewDocument() {
+	public TasksPage clickNewDocument() {
 
 		Assert.assertEquals("New Document label name is wrong", "New Document", newDocument.getText());
 		newDocument.click();
+		return this;
 
 	}
 
-	public void clickOtherDocument() {
+	public TasksPage clickOtherDocument() {
 
 		Assert.assertEquals("Other document name is wrong", "Other", otherDocument.getText());
 		otherDocument.click();
+		return this;
 	}
 
 	public void verifySecondRowDocument(String title, String type, String author, String version, String status) {
@@ -1386,18 +1440,20 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void cutDocument() {
+	public TasksPage cutDocument() {
 
 		Assert.assertEquals("Cut label name is wrong", "Cut", cutDocument.getText());
 		cutDocument.click();
+		return this;
 
 	}
 
-	public void pasteDocument() {
+	public TasksPage pasteDocument() {
 
 		Assert.assertTrue("Paste is not enabled", pasteDocument.isEnabled());
 		Assert.assertEquals("Paste label name is wrong", "Paste", pasteDocument.getText());
 		pasteDocument.click();
+		return this;
 	}
 
 	public void verifyIfCutDocumentDisapierd() {
@@ -1406,15 +1462,17 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void copyDocument() {
+	public TasksPage copyDocument() {
 		Assert.assertEquals("Copy label name is wrong", "Copy", copyDocument.getText());
 		copyDocument.click();
+		return this;
 	}
 
-	public void deleteDocument() {
+	public TasksPage deleteDocument() {
 
 		Assert.assertEquals("Delete document label name is wrong", "Delete", deleteDocument.getText());
 		deleteDocument.click();
+		return this;
 	}
 
 	public void verifyIfDocumentIsDeletedStateDelete() {
@@ -1435,21 +1493,24 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue("The document should not be added, state task is CLOSED", i == 0);
 	}
 
-	public void renameDocument() {
+	public TasksPage renameDocument() {
 
 		Assert.assertEquals("Rename document label name is wrong", "Rename", renameDocument.getText());
 		renameDocument.click();
+		return this;
 	}
 
-	public void renameFolder() {
+	public TasksPage renameFolder() {
 
 		Assert.assertEquals("Rename folder  label name is wrong", "Rename", renameFolder.getText());
 		renameFolder.click();
+		return this;
 	}
 
-	public void deleteFolder() {
+	public TasksPage deleteFolder() {
 		Assert.assertEquals("Delete folder label name is wrong", "Delete", deleteFolder.getText());
 		deleteFolder.click();
+		return this;
 	}
 
 	public void verifyIfFolderIsDeleted() {
@@ -1462,10 +1523,11 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickeDelivery() {
+	public TasksPage clickeDelivery() {
 
 		Assert.assertEquals("Edelivery label name is wrong", "eDelivery", eDelivery.getText());
 		eDelivery.click();
+		return this;
 	}
 
 	public void verifyAddedDocumentAfterRefresh() {
@@ -1478,41 +1540,47 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickSfSignature() {
+	public TasksPage clickSfSignature() {
 
 		Assert.assertEquals("Sfsignature label name is wrong", "SF86 Signature", sfSignature.getText());
 		sfSignature.click();
+		return this;
 	}
 
-	public void clickNoticeOfInvestigation() {
+	public TasksPage clickNoticeOfInvestigation() {
 
 		Assert.assertEquals("Notice of Investigation label name is wrong", "Notice of Investigation",
 				noticeOfInvestigation.getText());
 		noticeOfInvestigation.click();
+		return this;
 	}
 
-	public void clickMedicalRelease() {
+	public TasksPage clickMedicalRelease() {
 
 		Assert.assertEquals("Medical Release label name is wrong", "Medical Release", medicalRelease.getText());
 		medicalRelease.click();
+		return this;
 	}
 
-	public void clickGeneralRelease() {
+	public TasksPage clickGeneralRelease() {
 
 		Assert.assertEquals("General Release label name is wrong", "General Release", generalRelease.getText());
 		generalRelease.click();
+		return this;
 	}
 
-	public void clickDeclareAsRecord() {
+	public TasksPage clickDeclareAsRecord() {
 
 		Assert.assertEquals("Declare as recoerd label name is wrong", "Declare as Record(s)",
 				declareAsRecord.getText());
 		declareAsRecord.click();
+		return this;
 	}
 
-	public void nameTheFirstDocument(String name) {
+	public TasksPage nameTheFirstDocument(String name) {
 
 		firtsRowInput.sendKeys(name);
+		return this;
 	}
 
 	public void verifyFirstRowDocumentAfterRefresh(String title, String type, String author, String version,
@@ -1538,16 +1606,18 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void replaceDocument() {
+	public TasksPage replaceDocument() {
 
 		Assert.assertEquals("Replace document label name is wrong", "Replace", replaceDocment.getText());
 		replaceDocment.click();
+		return this;
 	}
 
-	public void emailDocument() {
+	public TasksPage emailDocument() {
 
 		Assert.assertEquals("Email label name is wrong", "Email", email.getText());
 		email.click();
+		return this;
 
 	}
 
@@ -1555,14 +1625,16 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertEquals("Email popup title is wrong", "Email", emailTitle.getText());
 	}
 
-	public void searchUserEmailInput(String user) {
+	public TasksPage searchUserEmailInput(String user) {
 
 		emailInput.click();
 		emailInput.sendKeys(user);
+		return this;
 	}
 
-	public void clickSearchEmailBtn() {
+	public TasksPage clickSearchEmailBtn() {
 		searchEmail.click();
+		return this;
 	}
 
 	public void verifySearchedUserEmail(String userName, String email) {
@@ -1574,21 +1646,24 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void clickSendEmailBtn() {
+	public TasksPage clickSendEmailBtn() {
 		sendEmail.click();
+		return this;
 	}
 
-	public void downlaodDocument() {
+	public TasksPage downlaodDocument() {
 
 		Assert.assertEquals("Download document label name is wrong ", "Download", downloadDocument.getText());
 		downloadDocument.click();
+		return this;
 
 	}
 
-	public void checkOutDocument() {
+	public TasksPage checkOutDocument() {
 
 		Assert.assertEquals("Checkout label name is wrong", "Checkout", checkOutDocument.getText());
 		checkOutDocument.click();
+		return this;
 	}
 
 	public void verifyLockedIcon() {
@@ -1601,10 +1676,11 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void cancelEditingDocument() {
+	public TasksPage cancelEditingDocument() {
 
 		Assert.assertEquals("Cancel Editing label name is wrong", "Cancel Editing", cancelEditing.getText());
 		cancelEditing.click();
+		return this;
 	}
 
 	public void verifyIfLockedIconIsDissapierd() {
@@ -1616,11 +1692,11 @@ public class TasksPage extends ArkCaseTestBase {
 		Assert.assertTrue("Locked icon should not be  displayed", i == 0);
 	}
 
-	public void editWithWord() {
+	public TasksPage editWithWord() {
 
 		Assert.assertEquals("Edit with word label name is wrong", "Edit With Word", editWithWord.getText());
 		editWithWord.click();
-
+		return this;
 	}
 
 	public void verifyFirstRowDocumentModified(String title, String type, String author, String version,
@@ -1651,10 +1727,11 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void downloadRecord() {
+	public TasksPage downloadRecord() {
 
 		Assert.assertEquals("Record download label name is wrong", "Download", recordDownload.getText());
 		recordDownload.click();
+		return this;
 	}
 
 	public void verifyIfRecordRightClickMenuIsDisplayed() {
@@ -1664,9 +1741,16 @@ public class TasksPage extends ArkCaseTestBase {
 
 	}
 
-	public void emailRecord() {
+	public TasksPage emailRecord() {
 		Assert.assertEquals("Email record label name is wrong", "Email", recordEmail.getText());
 		recordEmail.click();
+		return this;
+	}
+	
+	public TasksPage deleteTask() {
+		WaitHelper.waitForElement(deleteButton, driver);
+		deleteButton.click();
+		return this;
 	}
 
 }

@@ -12,6 +12,11 @@
 -->
 <Context sessionCookiePathUsesTrailingSlash="false">
     <Resources className="org.apache.catalina.webresources.StandardRoot">
+        <!-- main log4j configuration, extensions can customize it -->
+        <PreResources className="org.apache.catalina.webresources.FileResourceSet"
+                      base="${user.home}/.arkcase/acm/log4j2.xml"
+                      internalPath="/"
+                      webAppMount="/WEB-INF/classes/log4j2.xml"/>
         <!-- map $HOME/.arkcase/custom to the root of web application -->
         <PostResources className="org.apache.catalina.webresources.DirResourceSet"
                        base="${user.home}/.arkcase/custom/"

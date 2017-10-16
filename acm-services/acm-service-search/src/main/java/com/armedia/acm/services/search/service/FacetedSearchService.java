@@ -457,7 +457,9 @@ public class FacetedSearchService
             // {!field f=object_type_facet}NOTIFICATION - meaning to include objects of type NOTIFICATION. The
             // URL-encoded version of this search term is "%21field+f%3Dobject_type_facet%7DNOTIFICATION"... so that's
             // what we exclude from the results of this stream.
-            subQuery = Arrays.stream(objectsToExcludeArray).filter((String element) -> !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element))
+            subQuery = Arrays.stream(objectsToExcludeArray).filter((String element) -> 
+                    !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element) &&
+                    !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
                     .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element).reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
                     .orElse("");
         }

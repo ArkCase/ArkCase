@@ -1,14 +1,4 @@
-/* @override http://dev.jsapn.armedianet.com/arkcase/modules/core/css/core.css
-	http://localhost:8080/arkcase/modules/core/css/core.css
-	http://10.21.4.149/arkcase/modules/core/css/core.css
-	https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
-
-/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
-
-/* @override http://10.21.4.149/arkcase/modules/core/css/core.css
-	http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
-
-/* @override http://sharecaredev.armedianet.com/arkcase/modules/core/css/core.css */
+/* @override https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
 
 html {
     height: 100%;
@@ -97,9 +87,14 @@ body {
 }
 
 .navbar-arkcase .dropdown-menu {
-    text-align: center;
+    text-align: left;
     width: 275px;
     z-index: 3001 !important;
+}
+
+.navbar-arkcase .dropdown-menu li a {
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 .navbar-arkcase .dropdown-menu .col-xs-4 {
@@ -113,7 +108,7 @@ body {
     text-align: center;
 }
 
-.navbar-arkcase .dropdown-menu span {
+.navbar-arkcase .dropdown-menu {
     text-align: center;
 }
 
@@ -134,19 +129,23 @@ body {
     color: #3c4144;
     height: 100%;
     width: 200px;
-    border-right: 1px solid #e1e6ef;
+    /*border-right: 1px solid #e1e6ef;*/
     position: absolute;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 1;
     top: 60px;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 60px;
+    /*padding-bottom: 100px;*/
 }
 
 .leftnav-menu .user-info {
     background-color: #242a31;
     padding: 10px 0 10px 5px;
+}
+
+.leftnav-menu .user-info .fullname {
+    font-size: 12px;
 }
 
 .leftnav-menu .user-info .user-pic img {
@@ -182,7 +181,7 @@ body {
 }
 
 .leftnav-menu a.dropdown-toggle .glyphicon {
-    margin-left: 4px;
+    margin-left: 2px;
 }
 
 .leftnav-menu ul.dropdown-menu {
@@ -238,22 +237,19 @@ body {
 
 .leftnav-menu footer {
     text-align: right;
-    position: absolute;
-    bottom: 60px;
-    padding: 10px;
+    position: fixed;
+    bottom: 0px;
+    padding: 5px;
     width: 198px;
+    background-color: #2d343e;
+    z-index: 2;
+    overflow: none;
+    -webkit-transform: translateZ(0);
 }
 
-
-.leftnav-menu footer::before {
-	content: "Powered by ArkCase.com";
-	color: #ccc;
-	font-size: 10px;
-	text-align: center;
-	position: absolute;
-	bottom: 0px;
-	left: 0px;
-	width: 150px;
+.leftnav-menu footer small, .leftnav-menu footer small a {
+	font-size: 10px !important;
+	color: #efefef;
 }
 
 .leftnav-menu footer .btn-icon {
@@ -311,6 +307,14 @@ body {
     width: 65px;
 }
 
+.page-wrapper.collapsed .leftnav-menu footer::before {
+    display: none;
+}
+
+.page-wrapper.collapsed .leftnav-menu footer small {
+	display: none;
+}
+
 /* Page Content (Right Column) */
 
 .page-content {
@@ -366,6 +370,10 @@ body {
     width: 200px;
 }
 
+.module-content .left-sidebar-sm.collapsed {
+    width: 75px;
+}
+
 .module-content .left-sidebar-lg {
     width: 50%;
 }
@@ -408,18 +416,18 @@ body {
 }
 
 .module-content .right-sidebar footer {
-	position: fixed;
-	bottom: -16px;
-	right: 0;
-	padding: 0;
-	margin: 0;
-	width: 480px;
-	min-height: 60px;
-	margin-left: 10px;
-	margin-right: 10px;
-	z-index: 1001;
-	border: 1px solid #ddd;
-	border-bottom: 0px;
+    position: fixed;
+    bottom: -16px;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    width: 480px;
+    min-height: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    z-index: 1001;
+    border: 1px solid #ddd;
+    border-bottom: 0px;
 }
 
 body.fullscreen header.navbar-arkcase {

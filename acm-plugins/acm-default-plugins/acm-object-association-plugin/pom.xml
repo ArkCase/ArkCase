@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -26,7 +26,11 @@
             <artifactId>acm-spring-data-source</artifactId>
             <version>${acm.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-search</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
@@ -34,7 +38,7 @@
             <artifactId>liquibase-core</artifactId>
             <scope>runtime</scope>
         </dependency>
-        
+
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -44,14 +48,53 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-        
+
         <dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-		</dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
 
-        
+
+        <!-- testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <!-- apache commons -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.voodoodyne.jackson.jsog</groupId>
+            <artifactId>jackson-jsog</artifactId>
+        </dependency>
     </dependencies>
-
-
 </project>

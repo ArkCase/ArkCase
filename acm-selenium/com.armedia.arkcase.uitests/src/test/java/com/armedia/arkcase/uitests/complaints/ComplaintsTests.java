@@ -93,7 +93,7 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		Thread.sleep(4000);
 		complaints.verifyAddNotePopUpDisapierd();
 		complaints.verifyIfNoteIsCreated();
-		complaints.verifyCreatedNote("note", "samuel-acm");
+		complaints.verifyCreatedNote("note", "Samuel Supervisor");
 		ArkCaseAuthentication.logOut(driver);
 
 	}
@@ -258,7 +258,8 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		Thread.sleep(3000);
 		complaints.clickBrowseButton();
 		Thread.sleep(3000);
-		ArkCaseTestUtils.uploadPNGPicture();
+		ArkCaseTestUtils.uploadFile("png");
+		//ArkCaseTestUtils.uploadPNGPicture();
 		Thread.sleep(5000);
 		complaints.verifyUploadedImage();
 		complaints.detailsSaveBtn.click();
@@ -350,8 +351,8 @@ public class ComplaintsTests extends ArkCaseTestBase {
 		complaints.clickComplaintTitleInTasksPage();
 		Thread.sleep(7000);
 		complaints.clickTaskLink();
-		Thread.sleep(5000);
-		complaints.verifyIfTaskIsCredated();
+		complaints.refreshPageBtn.click();
+		complaints.verifyIfTaskIsCreated();
 		ArkCaseAuthentication.logOut(driver);
 
 	}

@@ -26,7 +26,7 @@
     <property name="cmAccessorIdLength" value="255" dbms="mysql,mssql"/>
 
 
-    <changeSet id="01-data-access-acl-table" author="dmiller" dbms="${excludeMSSQL}">
+    <changeSet id="01-data-access-acl-table" author="dmiller" dbms="oracle,postgresql">
         <createTable tableName="acm_boolean_lu">
             <column name="cm_id" type="${idType}">
                 <constraints
@@ -50,6 +50,38 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-data-access-acl-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_boolean_lu">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_boolean"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">

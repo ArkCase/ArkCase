@@ -1,0 +1,78 @@
+{
+  "profile": {
+    "title": "Perfil del usuario",
+    "unknown": "Desconocido"
+  },
+  "profile.menus": {
+    "usermenu.item": "Perfil"
+  },
+  "profile.subscriptions": {
+    "title": "Suscripciones",
+    "unsubscribeSelect": "Anular suscripción seleccionados",
+    "table.columns": {
+      "title": "Título",
+      "created": "Creado",
+      "parentId": "Identificación de los padres",
+      "userId": "Identidad de usuario"
+    }
+  },
+  "profile.company": {
+    "title": "Detalle de empresa",
+    "name": "nombre de empresa",
+    "address1": "Dirección 1",
+    "address2": "Dirección 2",
+    "city": "Ciudad",
+    "state": "Estado",
+    "zip": "Código postal",
+    "mainPhone": "Teléfono de la oficina principal",
+    "fax": "Fax",
+    "website": "Sitio web"
+  },
+  "profile.contact": {
+    "title": "Información del contacto",
+    "location": "Ubicación",
+    "im": "Cuenta IM",
+    "officePhone": "Telefono de oficina",
+    "mobilePhone": "Teléfono móvil"
+  },
+  "profile.groups": {
+    "title": "Grupos"
+  },
+  "profile.buttons": {
+    "save": "Guardar cambios",
+    "message": "Introduzca su nueva contraseña.",
+    "confirmation": "Ingrese su nueva contraseña nuevamente.",
+    "cancel": "Cancelar",
+    "outlookPassword": "Almacenar la contraseña de Outlook",
+    "ldapPassword": "Cambia la contraseña"
+  },
+  "profile.picture": {
+    "title": "Cambiar imagen",
+    "email": "Dirección de correo electrónico",
+    "uploadImgError": "Has cargado un tipo de archivo de imagen no válido."
+  },
+  "profile.modal": {
+    "title": "Info",
+    "emptyPassword": "La contraseña no puede estar vacía",
+    "comfirmation": "Por favor re ingrese su contraseña.",
+    "differentPasswords": "Las contraseñas no coinciden. Inténtalo de nuevo.",
+    "ok": "DE ACUERDO",
+    "success": "Contraseña modificada con éxito",
+    "changePassword.header": "Cambia la contraseña"
+  },
+  "profile.comp.subscription": {
+    "title": "Suscripción"
+  },
+  "profile.comp.company": {
+    "title": "Empresa"
+  },
+  "profile.comp.contact": {
+    "title": "Contacto"
+  },
+  "profile.comp.group": {
+    "title": "Grupo"
+  },
+  "profile.comp.picture": {
+    "title": "Imagen"
+  }
+}

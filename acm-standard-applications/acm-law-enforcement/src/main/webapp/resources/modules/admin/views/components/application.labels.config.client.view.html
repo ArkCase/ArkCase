@@ -12,55 +12,23 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <select ng-model="selectedLanguage" class="form-control input-sm"
-                                    ng-options="lang for lang in languagesDropdownOptions"
+                            <select ng-model="selectedLocale" class="form-control input-sm"
+                                    ng-options="item as item.native for item in languagesDropdownOptions track by item.code"
                                     ng-change="reloadGrid()"
                                     ng-disabled="disabledInputs">
                             </select>
                         </div>
                     </form>
 
+                    <span class="navbar-form navbar-left" translate ng-show="disabledInputs">admin.application.labels.config.progressMessage</span>
 
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span translate>admin.application.labels.config.defaultLabel</span>
-                                ({{settings.defaultLang}})
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li ng-repeat="lang in languagesDropdownOptions">
-                                    <a href="#" ng-click="changeDefaultLng($event, lang)">{{lang}}</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
                     <form class="navbar-form navbar-right ">
-                        <!-- Refresh resources button -->
-                        <button class="btn btn-sm btn-info"
-                                ng-click="refreshAllResources()"
+                        <button class="btn btn-sm btn-danger"
+                                ng-click="resetToDefault()"
                                 ng-disabled="disabledInputs"
-                                title="{{'admin.application.labels.config.refreshAll.title' | translate}}">
+                                title="{{'admin.application.labels.config.btnReset.title' | translate}}">
                             <i class="fa fa-refresh"></i>
-                            <span translate>admin.application.labels.config.refreshAll</span>
-                        </button>
-
-                        <!-- Current module reset button -->
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetCurrentModuleResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetModule.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetModule.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetModule</span>
-                        </button>
-
-                        <!-- All modules reset button -->
-                        <button class="btn btn-sm btn-danger"
-                                ng-bootbox-confirm-action="resetAllResources()"
-                                ng-bootbox-confirm="<i class='fa fa-exclamation-triangle text-danger'></i> {{'admin.application.labels.config.resetAll.confirm' | translate}}"
-                                title="{{'admin.application.labels.config.resetAll.title' | translate}}">
-                            <i class="fa fa-trash-o"></i>
-                            <span translate>admin.application.labels.config.resetAll</span>
+                            <span translate>admin.application.labels.config.btnReset.label</span>
                         </button>
                     </form>
                 </div>

@@ -6,9 +6,9 @@ import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -31,9 +31,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.Date;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -84,7 +85,7 @@ public class CreateTaskItemAPIControllerTest extends EasyMockSupport
         assertNull(taskItem.getId());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         String content = objectMapper.writeValueAsString(taskItem);
 
         expect(mockAuthentication.getName()).andReturn("user").times(2);

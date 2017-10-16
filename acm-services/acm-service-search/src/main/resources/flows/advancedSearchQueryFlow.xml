@@ -14,13 +14,13 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
     <https:endpoint name="advancedSearchQuerySolrEndpoint"
-                   address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}"
-                   contentType="application/x-www-form-urlencoded; charset=UTF-8"
-                   mimeType="application/json"
-                   encoding="UTF-8"
-                   method="POST"
-                   exchange-pattern="request-response"
-                   doc:name="Issue an advanced search request to SOLR">
+                    address="https://${solr.host}:${solr.port}/${solr.contextRoot}/${solr.advancedsearch.core}/${solr.searchHandler}"
+                    contentType="application/x-www-form-urlencoded; charset=UTF-8"
+                    mimeType="application/json"
+                    encoding="UTF-8"
+                    method="POST"
+                    exchange-pattern="request-response"
+                    doc:name="Issue an advanced search request to SOLR">
     </https:endpoint>
 
 
@@ -37,9 +37,10 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
             <scripting:script engine="groovy" file="scripts/dataAccessFilter.groovy"/>
         </scripting:transformer>
 
-        <set-payload value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;indent=true&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]"/>
+        <set-payload
+                value="q=#[message.inboundProperties['query']]&amp;fq=#[message.inboundProperties['dataAccessFilter']]&amp;fq=#[message.inboundProperties['denyAccessFilter']]&amp;fq=#[message.inboundProperties['childObjectFilterQuery']]&amp;topLevel=#[message.inboundProperties['isTopLevelObjectFilter']]&amp;dac=#[message.inboundProperties['childObjectDacFilter']]&amp;fq=#[message.inboundProperties['isSubscribed']]&amp;start=#[message.inboundProperties['firstRow']]&amp;rows=#[message.inboundProperties['maxRows']]&amp;wt=json&amp;sort=#[message.inboundProperties['sort']]&amp;facet=true&amp;#[message.inboundProperties['rowQueryParametars']]&amp;indent=#[message.inboundProperties['indent']]"/>
 
-        <logger category="com.armedia.acm.plugins.search" level="DEBUG" />
+        <logger category="com.armedia.acm.plugins.search" level="DEBUG"/>
 
         <https:outbound-endpoint ref="advancedSearchQuerySolrEndpoint">
             <response>

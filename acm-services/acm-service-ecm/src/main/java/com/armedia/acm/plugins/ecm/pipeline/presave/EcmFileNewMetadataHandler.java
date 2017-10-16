@@ -7,9 +7,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.service.PageCountService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,6 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
 
             entity.setVersionSeriesId(cmisDocument.getVersionSeriesId());
             entity.setActiveVersionTag(cmisDocument.getVersionLabel());
-            entity.setFileName(pipelineContext.getOriginalFileName());
 
             // Sets the versioning of the file
             EcmFileVersion version = new EcmFileVersion();
@@ -56,6 +55,19 @@ public class EcmFileNewMetadataHandler implements PipelineHandler<EcmFile, EcmFi
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
+            int fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
+                    pipelineContext.getMergedFileByteArray().length > 0 ?
+                    pipelineContext.getMergedFileByteArray().length :
+                    pipelineContext.getFileByteArray() != null ? pipelineContext.getFileByteArray().length : 0;
+            version.setFileSizeBytes(Long.valueOf(fileSizeBytes));
+
+            // file metadata
+            if (pipelineContext.getDetectedFileMetadata() != null)
+            {
+                EcmTikaFile etf = pipelineContext.getDetectedFileMetadata();
+                etf.stampVersionInfo(version);
+            }
+
             entity.getVersions().add(version);
 
             // Determines the folder and container in which the file should be saved

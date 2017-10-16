@@ -1,0 +1,481 @@
+{
+  "people": {
+    "title": "成员",
+    "progressNoComplaint": "[ 无成员数据 ]",
+    "progressLoading": "加载成员数据",
+    "progressError": "无法加载成员数据"
+  },
+  "people.menus": {
+    "leftnav.item": "成员",
+    "topbar.item": "成员"
+  },
+  "people.comp.main": {
+    "title": "概述"
+  },
+  "people.comp.info": {
+    "title": "信息",
+    "phone.label": "电话",
+    "email.label": "电子邮箱",
+    "status.label": "状态",
+    "organization.label": "组织",
+    "identification.label": "身份号码"
+  },
+  "people.comp.actions": {
+    "title": "行动",
+    "export.button": "输出",
+    "import.button": "输入",
+    "delete.button": "删除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合并"
+  },
+  "people.comp.details": {
+    "title": "详情",
+    "informSaved": "zh-cn_Person details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "历史",
+    "table.columns": {
+      "eventType": "zh-cn_Event Name",
+      "eventDate": "zh-cn_Date",
+      "userId": "zh-cn_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "相片",
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "upload": "zh-cn_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "zh-cn_Thumbnail",
+      "title": "zh-cn_Filename",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "dialog": {
+      "title": "zh-cn_Upload Picture",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "cancel": "zh-cn_Cancel",
+      "upload": "zh-cn_Upload Picture",
+      "noPictureSelected": "zh-cn_No Files Selected.",
+      "browse": "zh-cn_Browse",
+      "description": "zh-cn_Description"
+    },
+    "dialog.edit": {
+      "title": "zh-cn_Edit Picture",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "change": "zh-cn_Change Picture",
+      "save": "zh-cn_Save changes"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "地点",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "streetAddress": "zh-cn_Address 1",
+      "streetAddress2": "zh-cn_Address 2",
+      "city": "zh-cn_City",
+      "state": "zh-cn_State",
+      "zip": "zh-cn_Zip",
+      "country": "zh-cn_Country",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "addNew": "zh-cn_Add New",
+      "map": "zh-cn_Map"
+    },
+    "modal": {
+      "addAddress": "zh-cn_Add Location",
+      "editAddress": "zh-cn_Edit Record",
+      "type.label": "zh-cn_Address Type",
+      "type.placeholder": "zh-cn_Enter Address Type",
+      "streetAddress.label": "zh-cn_Address 1",
+      "streetAddress.placeholder": "zh-cn_Enter Address 1",
+      "streetAddress2.label": "zh-cn_Address 2",
+      "streetAddress2.placeholder": "zh-cn_Enter Address 2",
+      "city.label": "zh-cn_City",
+      "city.placeholder": "zh-cn_Enter City",
+      "zip.label": "zh-cn_Zip",
+      "zip.placeholder": "zh-cn_Enter Zip",
+      "state.label": "zh-cn_State",
+      "state.placeholder": "zh-cn_Enter State",
+      "country.label": "zh-cn_Country",
+      "country.placeholder": "zh-cn_Enter Country",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Location",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "电话号码",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "value": "zh-cn_Phone Number",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "addPhone": "zh-cn_Add New Phone Number",
+      "editPhone": "zh-cn_Edit Phone Number",
+      "title": "zh-cn_Add New Phone Number",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Phone Number",
+      "type.label": "zh-cn_Phone Type",
+      "type.placeholder": "zh-cn_Enter Phone Type",
+      "value.label": "zh-cn_Phone Number",
+      "value.placeholder": "zh-cn_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "电子邮箱",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "value": "zh-cn_Email Address",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "title": "zh-cn_Add New Email Address",
+      "addEmail": "zh-cn_Add New Email Address",
+      "editEmail": "zh-cn_Edit Email Address",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Email Address",
+      "type.label": "zh-cn_Email Type",
+      "type.placeholder": "zh-cn_Enter Email Type",
+      "value.label": "zh-cn_Email Address",
+      "value.placeholder": "zh-cn_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "网址",
+    "table.columns": {
+      "value": "zh-cn_URL",
+      "type": "zh-cn_Type",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "title": "zh-cn_Add New URL",
+      "addUrl": "zh-cn_Add New URL",
+      "editUrl": "zh-cn_Edit URL",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save URL",
+      "type.label": "zh-cn_Type",
+      "type.placeholder": "zh-cn_Enter Type",
+      "value.label": "zh-cn_URL",
+      "value.placeholder": "zh-cn_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
+  "people.comp.aliases": {
+    "title": "别名",
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "upload": "zh-cn_New Alias"
+    },
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "aliasValue": "zh-cn_Alias",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "modal": {
+      "aliasValue": "zh-cn_Alias Value",
+      "type": "zh-cn_Type",
+      "addAlias": "zh-cn_Add New Alias",
+      "editAlias": "zh-cn_Edit Alias",
+      "title": "zh-cn_Insert New Alias",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Alias",
+      "value.label": "zh-cn_Alias",
+      "value.placeholder": "zh-cn_Enter Alias",
+      "description": "zh-cn_Description",
+      "aliasType.label": "zh-cn_Alias Type",
+      "aliasType.placeholder": "zh-cn_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "成员号码",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "id": "zh-cn_ID",
+      "number": "zh-cn_Number",
+      "issuer": "zh-cn_Issuer",
+      "yearIssued": "zh-cn_Year Issued",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "addID": "zh-cn_Add New Identification",
+      "editID": "zh-cn_Edit Identification",
+      "title": "zh-cn_Add New Identification",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "type.label": "zh-cn_Type",
+      "type.placeholder": "zh-cn_Enter Type",
+      "id.label": "zh-cn_ID",
+      "id.placeholder": "zh-cn_Enter ID",
+      "number.label": "zh-cn_Number",
+      "number.placeholder": "zh-cn_Enter Number",
+      "issuer.label": "zh-cn_Issuer",
+      "issuer.placeholder": "zh-cn_Enter Issuer",
+      "yearIssued.label": "zh-cn_Year Issued",
+      "yearIssued.placeholder": "zh-cn_Enter Year Issued",
+      "yearIssued.close.button": "zh-cn_Close",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "组织",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "id": "zh-cn_ID",
+      "value": "zh-cn_Organization",
+      "identification": "zh-cn_ID",
+      "contact": "zh-cn_Primary Contact",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New",
+      "addExisting": "zh-cn_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "案件",
+    "table.columns": {
+      "priority": "zh-cn_Priority",
+      "id": "zh-cn_ID",
+      "title": "zh-cn_Title",
+      "status": "zh-cn_Status",
+      "assignee": "zh-cn_Assignee",
+      "modified": "zh-cn_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "投诉",
+    "table.columns": {
+      "priority": "zh-cn_Priority",
+      "id": "zh-cn_ID",
+      "title": "zh-cn_Title",
+      "status": "zh-cn_Status",
+      "assignee": "zh-cn_Assignee",
+      "modified": "zh-cn_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "相关人士",
+    "table.columns": {
+      "firstName": "zh-cn_First Name",
+      "lastName": "zh-cn_Last Name",
+      "type": "zh-cn_Relationship",
+      "description": "zh-cn_Description",
+      "organization": "zh-cn_Organization",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location"
+    },
+    "modal": {
+      "title": "zh-cn_Add Related Person",
+      "type.label": "zh-cn_Relationship",
+      "type.placeholder": "zh-cn_Enter Relationship",
+      "person.label": "zh-cn_Person",
+      "person.placeholder": "zh-cn_Search People",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "zh-cn_Person",
+    "addAnother": "zh-cn_Add Another",
+    "remove": "zh-cn_Remove",
+    "familyName": "zh-cn_Last Name",
+    "familyName.placeholder": "zh-cn_Enter Last Name",
+    "givenName": "zh-cn_First Name",
+    "givenName.placeholder": "zh-cn_Enter First Name",
+    "middleName": "zh-cn_Middle Name",
+    "middleName.placeholder": "zh-cn_Enter Middle Name",
+    "saveButton": "zh-cn_Save Person",
+    "informCreated": "zh-cn_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "zh-cn_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "zh-cn_Communication Accounts",
+      "phone": "zh-cn_Phone",
+      "phone.placeholder": "zh-cn_Enter Phone",
+      "phoneType": "zh-cn_Phone Type",
+      "email": "zh-cn_Email",
+      "email.placeholder": "zh-cn_Enter Email",
+      "emailType": "zh-cn_Email Type",
+      "url": "zh-cn_URL",
+      "url.placeholder": "zh-cn_Enter URL",
+      "removeContactMethod": "zh-cn_Remove",
+      "urlType": "zh-cn_URL Type"
+    },
+    "organizations": {
+      "title": "zh-cn_Organizations",
+      "searchExisting.placeholder": "zh-cn_Search Existing Organizations",
+      "organizationType": "zh-cn_Relation Type"
+    },
+    "picture": {
+      "title": "zh-cn_Picture"
+    },
+    "locations": {
+      "title": "zh-cn_Locations",
+      "country": "zh-cn_Country",
+      "country.placeholder": "zh-cn_Select Country",
+      "state": "zh-cn_State",
+      "state.placeholder": "zh-cn_Enter State",
+      "zip": "zh-cn_Zip",
+      "zip.placeholder": "zh-cn_Enter Zip",
+      "city": "zh-cn_City",
+      "city.placeholder": "zh-cn_Enter City",
+      "type": "zh-cn_Address Type",
+      "type.placeholder": "zh-cn_Select Address Type",
+      "streetAddress": "zh-cn_Street Address",
+      "streetAddress.placeholder": "zh-cn_Enter Street Address",
+      "streetAddress2": "zh-cn_Street Address2",
+      "streetAddress2.placeholder": "zh-cn_Enter Street Address2"
+    },
+    "identification": {
+      "title": "zh-cn_Identifications",
+      "identificationID": "zh-cn_Identification ID",
+      "identificationID.placeholder": "zh-cn_Enter Identification ID",
+      "identificationType": "zh-cn_Identification Type",
+      "identificationType.placeholder": "zh-cn_Select Identification Type",
+      "identificationNumber": "zh-cn_Identification Number",
+      "identificationNumber.placeholder": "zh-cn_Enter Identification Number",
+      "identificationIssuer": "zh-cn_Identification Issuer",
+      "identificationIssuer.placeholder": "zh-cn_Enter Identification Issuer",
+      "identificationYearIssued": "zh-cn_Identification Issued",
+      "identificationYearIssued.placeholder": "zh-cn_Select Identification Issued",
+      "identificationYearIssued.close.button": "zh-cn_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "pictures.label": "相片",
+      "addresses.label": "地点",
+      "phones.label": "电话号码",
+      "emails.label": "电子邮箱",
+      "urls.label": "网址",
+      "participants.label": "参与成员",
+      "aliases.label": "别名",
+      "organizations.label": "组织",
+      "ids.label": "成员号码",
+      "complaints.label": "投诉",
+      "cases.label": "案件",
+      "related.label": "相关人士",
+      "history.label": "历史"
+    },
+    "filters": {
+      "iHaveCreated": "我创建的所有",
+      "noFilter": "(无限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "idAsc": "按成员号排序",
+      "idDesc": "按成员号反排序",
+      "nameAsc": "按成员名排序",
+      "nameDesc": "按成员名反排序",
+      "noSort": "(不排序)"
+    }
+  }
+}

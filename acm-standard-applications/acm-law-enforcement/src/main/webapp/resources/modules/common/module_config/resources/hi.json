@@ -1,0 +1,453 @@
+{
+  "common": {
+    "select.option.none": "(एक चुनें)",
+    "value.unknown": "अज्ञात",
+
+    "defaultDateFormat": "hi_MM/DD/YYYY",
+    "defaultTimeFormat": "hi_hh:mm:ss",
+    "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "hi_MM/dd/yyyy",
+    "defaultDateUIFormat": "hi_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
+  },
+  "common.addOrganization": {
+    "title": "hi_Add Parent Organization",
+    "addNew.label": "hi_Add new Organization",
+    "selectExisting.label": "hi_Select existing organization",
+    "organization.label": "hi_Organization",
+    "description": "hi_Description",
+    "type.label": "hi_Organization Association Type",
+    "type.label.default.text": "hi_No parent Organization",
+    "type.label.text": "hi_Parent Organization",
+    "btnCancel.text": "hi_Cancel",
+    "btnOk.text": "hi_Save Organization",
+    "setPrimary.label": "hi_Set As Primary?",
+    "radioName": "hi_Choice primary",
+    "radioYes.text": "hi_Yes",
+    "radioNo.text": "hi_No",
+    "duplicateOrganizationRoleErrorMessage": "hi_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "hi_Add person",
+    "addNew.label": "hi_Add new Person",
+    "selectExisting.label": "hi_Select existing person",
+    "person.label": "hi_Person",
+    "type.label": "hi_Person Association Type",
+    "btnCancel.text": "hi_Cancel",
+    "btnOk.text": "hi_Save Person",
+    "setPrimary.label": "hi_Set As Primary?",
+    "radioName": "hi_Choice primary",
+    "radioYes.text": "hi_Yes",
+    "radioNo.text": "hi_No",
+    "duplicatePersonRoleErrorMessage": "hi_Person already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "hi_Edit Parent Organization"
+  },
+  "common.service": {
+    "error.invalidData": "अमान्य डेटा"
+  },
+  "common.objects": {
+    "progressNoData": "[ कोई डेटा नहीं ]",
+    "progressLoading": "डेटा लोड करना ",
+    "progressError": "डेटा लोड करने में विफल "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "hi_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "hi_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "hi_Action was successful",
+      "error": "hi_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "hi_Refresh",
+    "waitUploading": "hi_Uploading...",
+    "confirmVersion": "hi_Are you sure to set back to older version?",
+    "declareSuccessful": "hi_Declare successful. Refreshing Document Tree...",
+    "prevItems": "hi_ items above...",
+    "prevItemsTooltip": "hi_Review previous items",
+    "moreItems": "hi_ more items...",
+    "moreItemsTooltip": "hi_Load more items",
+    "moreItemsBegin": "hi_More items...",
+    "email": {
+      "defaultTitle": "hi_ArkCase Documents",
+      "headerForLinks": "hi_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "hi_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "hi_Documents from ArkCase",
+      "bodyForAttachment": "hi_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "hi_Hello,",
+      "footerForAttachment": "hi_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "hi_(Select Item)",
+      "editWithWebDAV": "hi_Edit"
+    },
+    "table.columns": {
+      "title": "hi_Title",
+      "type": "hi_Type",
+      "created": "hi_Created",
+      "modified": "hi_Modified",
+      "modifier": "hi_Modified By",
+      "version": "hi_Version",
+      "status": "hi_Status"
+    },
+    "dndDialog": {
+      "title": "hi_Drag and Drop",
+      "radReplace.text": "hi_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "hi_Create document(s) in parent folder",
+      "selFileTypes.label": "hi_File Type:",
+      "optFileType.prompt": "hi_[choose file type]",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_OK"
+    },
+    "emailDialog": {
+      "title": "hi_Email",
+      "recipients": "hi_Recipients:",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Send Email",
+      "gridColumns": {
+        "name": "hi_Name",
+        "email": "hi_Email"
+      }
+    },
+    "comment": {
+      "title": "hi_Checkin New Document",
+      "addComent": "hi_Detailed Note",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Checkin",
+      "chooseFiles": "hi_Choose Files",
+      "noFiles": "hi_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "hi_(Error)"
+    },
+    "lockedTitle": "hi_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "hi_Are you sure you want to delete this folder?",
+      "body.message": "hi_The folder contains:",
+      "body.content.files": "hi_files",
+      "body.content.folders": "hi_folders",
+      "btn.delete.folder": "hi_Yes",
+      "btn.cancel.delete.folder": "hi_No"
+    },
+    "fileTypesDialog": {
+      "header": "hi_Please select type of the Document",
+      "btnOK": "hi_OK",
+      "btnCancel": "hi_Cancel"
+    }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "ऊपर रिकॉर्ड...",
+    "btnPrev.toolTip": "पिछला रिकॉर्ड की समीक्षा करें",
+    "btnNext.titleUnknownSize": "अधिक अभिलेख...",
+    "btnNext.title": "अधिक अभिलेख...",
+    "btnNext.toolTip": "अधिक अभिलेख लोड करें",
+    "edtQuery.placeHolder": "खोज",
+    "btnQuery.text": "जाओ!",
+    "errorNode.title": "(त्रुटि)",
+    "errorNode.toolTip": "(त्रुटि)",
+    "noAccessNode.title": "(प्रवेश नहीं)",
+    "noAccessNode.toolTip": "(प्रवेश नहीं)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "hi_items per page",
+    "pagerCountMiddleLabel": "hi_ of ",
+    "pagerCountLabel": "hi_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "hi_Choose",
+    "not_authorized": "hi_Not Authorized",
+    "tooltip.move_right": "hi_Move Right",
+    "tooltip.move_left": "hi_Move Left",
+    "authorized": "hi_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "खोज",
+    "btnSearch.text": "खोज",
+    "btnOk.text": "ओके",
+    "btnCancel.text": "रद्द करें",
+    "edtPlaceholder": "खोज में टाइप करें",
+    "noData.text": "कोई परिणाम नहीं"
+  },
+  "common.directive.search": {
+    "showmore.button.text": "अधिक मान दिखाएँ",
+    "showLess.button.text": "कम मूल्य दिखाएं",
+    "results.text": "परिणाम",
+    "noResults.text": "कोई परिणाम नहीं",
+    "tooltip": {
+      "collapseFacetList": "संकुचित फ़ैकेट सूची",
+      "expandFacetList": "वैपेट सूची का विस्तार करें"
+    },
+    "facet": {
+      "names.modifyUser%": "उपयोगकर्ता संशोधित करें",
+      "names.taskPriority%": "कार्य प्राथमिकता",
+      "fields.taskPriority.medium%": "मध्यम",
+      "fields.taskPriority.low%": "कम",
+      "fields.taskPriority.high%": "उच्च",
+      "fields.taskPriority.expedite%": "एक्साइडिट",
+      "names.group%": "समूह",
+      "names.tagToken%": "टैग टोकन",
+      "names.assignee%": "नियुक्त पूर्ण नाम",
+      "names.documentRepository%": "दस्तावेज़ रिपॉजिटरी नाम",
+      "names.taskStatus%": "कार्य स्थिति",
+      "fields.taskStatus.active%": "सक्रिय",
+      "fields.taskStatus.draft%": "ड्राफ्ट",
+      "fields.taskStatus.closed%": "बंद",
+      "fields.taskStatus.record%": "रिकॉर्ड",
+      "fields.taskStatus.inactive%": "निष्क्रिय",
+      "fields.taskStatus.inApproval%": "अनुमोदन में",
+      "fields.taskStatus.delete%": "हटाएं",
+      "fields.taskStatus.approved%": "स्वीकृत",
+      "fields.taskStatus.unclaimed%": "दावा नहीं किया गया",
+      "fields.taskStatus.valid%": "मान्य",
+      "names.documentLanguage%": "दस्तावेज़ भाषा",
+      "names.createUser%": "उपयोगकर्ता बनाएं",
+      "names.postalCode%": "डाक कोड",
+      "names.incidentType%": "घटना प्रकार",
+      "fields.incidentType.agricultural%": "कृषि",
+      "fields.incidentType.arson%": "आगजनी",
+      "fields.incidentType.backgroundInvestigation%": "पृष्ठभूमि की जांच",
+      "fields.incidentType.benefitsAppeal%": "लाभ अपील",
+      "fields.incidentType.businessDispute%": "बेहतर व्यवसाय विवाद",
+      "fields.incidentType.clinicalFraud%": "नैदानिक ​​अन्वेषक धोखाधड़ी",
+      "fields.incidentType.congressional%": "कांग्रेस प्रतिक्रिया",
+      "fields.incidentType.disabilityWaiver%": "विकलांगता छूट अनुरोध",
+      "fields.incidentType.domesticDispute%": "घरेलू विवाद",
+      "fields.incidentType.drugTrafficking%": "ड्रग ट्रैफिकिंग",
+      "fields.incidentType.educationWaiver%": "शिक्षा छूट अनुरोध",
+      "fields.incidentType.eeoHarassment%": "ईईओ / उत्पीड़न",
+      "fields.incidentType.embezzlement%": "एम्बज़ेलमेंट",
+      "fields.incidentType.extortion%": "जबरन",
+      "fields.incidentType.fraud%": "धोखाधड़ी",
+      "fields.incidentType.government%": "सरकार",
+      "fields.incidentType.investorComplaint%": "निवेशक शिकायत",
+      "fields.incidentType.laborRacketeering%": "लेबर रैकेटिटेरिंग",
+      "fields.incidentType.local%": "स्थानीय",
+      "fields.incidentType.murder%": "मर्डर",
+      "fields.incidentType.newDrugFraud%": "न्यू ड्रग एप्लिकेशन फ्रॉड",
+      "fields.incidentType.payoff%": "भुगतान",
+      "fields.incidentType.pensionWaiver%": "पेंशन छूट अनुरोध",
+      "fields.incidentType.pollution%": "प्रदूषण",
+      "fields.incidentType.productTampering%": "उत्पाद छेड़छाड़",
+      "fields.incidentType.assetTheftMisuse%": "परिसंपत्ति की चोरी या दुरुपयोग",
+      "names.objectType%": "ऑब्जेक्ट प्रकार",
+      "fields.objectType.participant%": "सहभागी",
+      "fields.objectType.contactMethod%": "संपर्क विधि",
+      "fields.objectType.task%": "टास्क",
+      "fields.objectType.file%": "फ़ाइल",
+      "fields.objectType.person%": "व्यक्ति",
+      "fields.objectType.personAssociation%": "पर्सन एसोसिएशन",
+      "fields.objectType.reference%": "संदर्भ",
+      "fields.objectType.location%": "स्थान",
+      "fields.objectType.organization%": "संगठन",
+      "fields.objectType.organizationAssociation%": "संगठन एसोसिएशन",
+      "fields.objectType.caseFile%": "केस फ़ाइल",
+      "fields.objectType.complaint%": "शिकायत",
+      "fields.objectType.associatedTag%": "एसोसिएटेड टैग",
+      "fields.objectType.group%": "समूह",
+      "fields.objectType.costsheet%": "कॉस्टशीट",
+      "fields.objectType.note%": "नोट",
+      "fields.objectType.docRepo%": "डॉक्टर रिपो",
+      "fields.objectType.personAlias%": "व्यक्ति उपनाम",
+      "fields.objectType.timesheet%": "टाइम्सशीट",
+      "fields.objectType.subscription%": "सदस्यता",
+      "fields.objectType.user%": "उपयोगकर्ता",
+      "fields.objectType.objectLock%": "ऑब्जेक्ट लॉक",
+      "names.state%": "राज्य",
+      "names.parentType%": "जनक प्रकार",
+      "fields.parentType.container%": "कंटेनर",
+      "fields.parentType.caseFile%": "केस फ़ाइल",
+      "fields.parentType.complaint%": "शिकायत",
+      "fields.parentType.organization%": "संगठन",
+      "fields.parentType.person%": "व्यक्ति",
+      "fields.parentType.task%": "टास्क",
+      "fields.parentType.file%": "फ़ाइल",
+      "fields.parentType.group%": "समूह",
+      "fields.parentType.docRepo%": "डॉक्टर रिपो",
+      "fields.parentType.costsheet%": "कॉस्टशीट",
+      "fields.parentType.timesheet%": "टाइम्सशीट",
+      "names.owner%": "स्वामी",
+      "names.parentObjectType%": "जनक ऑब्जेक्ट प्रकार",
+      "fields.parentObjectType.container%": "कंटेनर",
+      "fields.parentObjectType.caseFile%": "केस फ़ाइल",
+      "fields.parentObjectType.complaint%": "शिकायत",
+      "fields.parentObjectType.organization%": "संगठन",
+      "fields.parentObjectType.person%": "व्यक्ति",
+      "fields.parentObjectType.task%": "टास्क",
+      "fields.parentObjectType.file%": "फ़ाइल",
+      "fields.parentObjectType.group%": "समूह",
+      "fields.parentObjectType.docRepo%": "डॉक्टर रिपो",
+      "fields.parentObjectType.costsheet%": "कॉस्टशीट",
+      "fields.parentObjectType.timesheet%": "टाइम्सशीट",
+      "names.personOrganization%": "व्यक्ति, संगठन प्रकार",
+      "names.city%": "शहर",
+      "names.createDate%": "तिथि बनाएं",
+      "fields.createDate.previousWeek%": "पिछला सप्ताह",
+      "fields.createDate.previousMonth%": "पिछला महीना",
+      "fields.createDate.previousYear%": "पिछला साल",
+      "names.dueDate%": "नियत दिनांक",
+      "fields.dueDate.previousWeek%": "पिछला सप्ताह",
+      "fields.dueDate.previousMonth%": "पिछला महीना",
+      "fields.dueDate.previousYear%": "पिछला वर्ष",
+      "names.incidentDate%": "घटना दिनांक",
+      "fields.incidentDate.previousWeek%": "पिछला सप्ताह",
+      "fields.incidentDate.previousMonth%": "पिछला महीना",
+      "fields.incidentDate.previousYear%": "पिछला वर्ष",
+      "names.modifyDate%": "तिथि संशोधित करें",
+      "fields.modifyDate.previousWeek%": "पिछला सप्ताह",
+      "fields.modifyDate.previousMonth%": "पिछला महीना",
+      "fields.modifyDate.previousYear%": "पिछला वर्ष"
+    }
+  },
+  "common.directive.coreNotes": {
+    "title": "hi_Notes",
+    "modal.addNote": "hi_Add Note",
+    "modal.editNote": "hi_Edit Record",
+    "modal.notes.label": "hi_Note",
+    "modal.btnOk.text": "hi_Save",
+    "modal.btnCancel.text": "hi_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "hi_People",
+    "contactMethods": {
+      "title": "hi_Contact Methods",
+      "modal": {
+        "addContactMethod": "hi_Add Contact Method",
+        "editContactMethod": "hi_Edit Record",
+        "contactMethodTypes.label": "hi_Contact Method Types",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "organizations": {
+      "title": "hi_Organizations",
+      "modal": {
+        "addOrganization": "hi_Add Organization",
+        "editOrganization": "hi_Edit Record",
+        "organizationTypes.label": "hi_Organization Types",
+        "selectExisting.label": "hi_Select Existing",
+        "addNew.label": "hi_Add New",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save",
+        "dialogOrganizationPicker": {
+          "header": "hi_Choose Organization",
+          "table.columns": {
+            "type": "hi_Organization Type",
+            "name": "hi_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "hi_Addresses",
+      "modal": {
+        "addAddress": "hi_Add Address",
+        "editAddress": "hi_Edit Record",
+        "addressTypes.label": "hi_Address Types",
+        "street.label": "hi_Street",
+        "city.label": "hi_City",
+        "zip.label": "hi_Zip",
+        "state.label": "hi_State",
+        "country.label": "hi_Country",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "aliases": {
+      "title": "hi_Aliases",
+      "modal": {
+        "addAlias": "hi_Add Alias",
+        "editAlias": "hi_Edit Record",
+        "aliasTypes.label": "hi_Alias Types",
+        "value.label": "hi_Value",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    },
+    "people": {
+      "title": "hi_People",
+      "modal": {
+        "addPeople": "hi_Add Person",
+        "editPeople": "hi_Edit Record",
+        "personTypes.label": "hi_Person Types",
+        "givenName.label": "hi_First Name",
+        "familyName.label": "hi_Last Name",
+        "btnCancel.text": "hi_Cancel",
+        "btnOk.text": "hi_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "hi_Calendar",
+    "start.label": "hi_Start: ",
+    "end.label": "hi_End: ",
+    "message": {
+      "error.accessDenied": "hi_Access denied to calendar service.",
+      "error.serviceConfiguration": "hi_Invalid calendar service configuration.",
+      "error.serviceCredentials": "hi_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "hi_Internal Server Error occurred."
+    }
+  },
+  "common.directive.coreParticipants": {
+    "title": "hi_Participants",
+    "modal.addParticipant.label": "hi_Add Participant",
+    "modal.editParticipant.label": "hi_Edit Record",
+    "modal.participantType.label": "hi_Participant Type ",
+    "modal.participantName.label": "hi_Participant Name",
+    "modal.btnOk.text": "hi_Save",
+    "modal.btnCancel.text": "hi_Cancel",
+    "modal.dialogUserPicker.header": "hi_Search User",
+    "modal.dialogGroupPicker.header": "hi_Search Group",
+    "message": {
+      "error.groupType": "hi_The owning group cannot be a person.",
+      "error.userType": "hi_ User type cannot be a group.",
+      "error.assigneeUnique": "hi_Only one assignee is allowed.",
+      "error.owninggroupUnique": "hi_Only one owning group is allowed.",
+      "error.noAccessCombo": "hi_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+    }
+  },
+  "common.directive.progressIndicator": {
+    "progressCompletion": "hi_% Complete"
+  },
+  "common.directive.folderActions": {
+    "button.addFile": "hi_Add File",
+    "button.addFolder": "hi_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "hi_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "hi_Case File",
+    "COMPLAINT": "hi_Complaint",
+    "TASK": "hi_Task",
+    "TIMESHEET": "hi_Timesheet",
+    "COSTSHEET": "hi_Costsheet",
+    "FILE": "hi_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "hi_Choose User",
+    "table.columns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "id": "hi_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "hi_{{objectTypeString}} with id {{objectId}} was created."
+}

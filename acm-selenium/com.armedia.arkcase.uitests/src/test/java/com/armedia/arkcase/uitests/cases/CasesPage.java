@@ -1,6 +1,7 @@
 package com.armedia.arkcase.uitests.cases;
 
 import java.awt.AWTException;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/div/div[2]/div/object-tree/section/div/div/div/ul/li[1]/span/span[3]")
 	public WebElement firstCaseInCaseList;
 	// frames
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
+	@FindBy(how = How.XPATH, using = ".//iframe[@ng-if='frevvoFormUrl']")
 	public WebElement frameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement frameTwo;
@@ -139,9 +140,9 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = ".//*[@ng-if='linksShown']/li[13]/a")
 	public WebElement caseCalendar;
 	// change case status
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/input[1]")
+	@FindBy(how = How.XPATH, using = ".//input[@role='combobox']")
 	public WebElement changeCaseStatus;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[5]/a")
+	@FindBy(how = How.XPATH, using = ".//a[@ovalue='DELETED']")
 	public WebElement caseStatusDelete;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[4]/div[1]/ul/li[2]/a")
 	public WebElement caseStatusActive;
@@ -155,23 +156,23 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement closedStatusFull;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[2]/div[2]/div[5]/fieldset/div[3]/input")
 	public WebElement closedStatusPartial;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[8]/div/input")
+	@FindBy(how = How.XPATH, using = ".//input[@value='Submit']")
 	public WebElement changeCaseStatusSubmit;
 	@FindBy(how = How.XPATH, using = ".//*[@class='col-xs-6']/h4")
 	public WebElement caseTitleDraft;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/iframe")
+	@FindBy(how = How.XPATH, using = "//iframe")
 	public WebElement chnageCaseStausFrameOne;
 	@FindBy(how = How.XPATH, using = "/html/body/iframe")
 	public WebElement chnageCaseStatusFrameTwo;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[4]/div[2]/div/div[2]/table/tbody/tr")
+	@FindBy(how = How.XPATH, using = ".//*[@aria-label='Approver']/tbody/tr")
 	public WebElement caseSelectAprover;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/input")
+	@FindBy(how = How.ID, using = "edtPoSearch")
 	public WebElement searchForUsersInput;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/header/div/div/div/span/button")
+	@FindBy(how = How.XPATH, using = ".//button[@class='btn btn-md']")
 	public WebElement GoSearch;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[2]/div/div[2]/section/div/div/table/tbody/tr/td[2]/a")
+	@FindBy(how = How.XPATH, using = ".//tr[@data-record-key='samuel-acm']/td[2]/a")
 	public WebElement SearchedUser;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/div/div/div/div/div[3]/button[2]")
+	@FindBy(how = How.XPATH, using = "//button[contains(text(),'Add')]")
 	public WebElement addUser;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[2]/table/tbody/tr/td[2]/div/div/table/tbody/tr/td/div/form/div[2]/div/div/div[6]/a")
 	public WebElement chnageCaseStatusAddFilesBtn;
@@ -180,9 +181,9 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[4]/div[2]/div/div[2]/div/div/a")
 	public WebElement changeCaseStatusUploadBtn;
 	// Cases tasks
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@ui-grid-row='row']/div[1]")
 	public WebElement ReviewREquestToChange;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[7]")
+	@FindBy(how = How.XPATH, using = "//*[contains(text(),'Approve Document')]")
 	public WebElement approveDocumenButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[5]")
 	public WebElement refreshbuttons;
@@ -194,12 +195,11 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement detailsText;
 	@FindBy(how = How.XPATH, using = ".//*[@class='panel-title']/span")
 	public WebElement detailsTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
-
+	@FindBy(how = How.XPATH, using = ".//button[@ng-click='saveDetails()']")
 	public WebElement detailsSaveButton;
 	@FindBy(how = How.XPATH, using = " /html/body/div[5]/div[1]")
 	public WebElement caseDetailsSavedPopup;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]")
+	@FindBy(how = How.XPATH, using = ".//a[@ui-sref='frevvo.change-case-status(changeCaseStatusParams)']")
 	public WebElement detailChangeStatusButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[2]/div[9]/button[1]")
 	public WebElement detailsInsertLink;
@@ -215,19 +215,18 @@ public class CasesPage extends ArkCaseTestBase {
 	public WebElement editInsertedLink;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[2]/div[1]/div[2]/div/button[2]")
 	public WebElement unlink;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[2]/div[9]/button[2]")
-
+	@FindBy(how = How.XPATH, using = ".//button[@data-name='picture']")
 	public WebElement insertPicture;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[1]/div/div/div[1]/h4")
 	public WebElement picturePopUpTitle;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[1]/div/div/div[2]/div[1]/input")
+	@FindBy(how = How.NAME, using = "files")
 
 	public WebElement browsePictureButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div[1]/div/div/div[3]/button")
 	public WebElement insertImageButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[4]/p/img")
+	@FindBy(how = How.XPATH, using = ".//div[@contenteditable='true'][2]/p/img")
 	public WebElement insertedImage;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div[2]/div[3]/div[2]/div[2]/div[2]/div[4]/button")
+	@FindBy(how = How.XPATH, using = ".//button[@data-original-title='Remove Image']")
 	public WebElement deleteImageIcon;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
 	public WebElement refreshDetails;
@@ -754,7 +753,7 @@ public class CasesPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[1]/div/div/button")
 
 	public WebElement taskAddButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[1]/div[1]/div[1]/span[1]")
+	@FindBy(how = How.XPATH, using = ".//*[@class='ui-grid-header-cell-row']/div[1]/div[1]/div[1]/span[1]")
 	public WebElement taskTitleColumn;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[1]/div/div/div/div/div/div[2]/div[2]/div[1]/span[1]")
 	public WebElement assigneeCoumnName;
@@ -959,12 +958,13 @@ public class CasesPage extends ArkCaseTestBase {
 	}
 	
 	public String readCreatedCaseTitleText(){
-		WebElement el = WaitHelper.getWhenElementIsVisible(createdCaseTitle, 30, driver);	
+		WebElement el = WaitHelper.getWhenElementIsPresent(createdCaseTitle, 60, driver);	
 		String createdCaseTitleText = el.getText();
 		return createdCaseTitleText;
 	}
 	
 	public String readCreatedCaseTitleListText(){
+		WaitHelper.waitUntilElementisPresent(createdCaseTitleList, 60, driver);
 		String createdCaseTitleListText = createdCaseTitleList.getText();
 		return createdCaseTitleListText;
 	}
@@ -1628,14 +1628,15 @@ public class CasesPage extends ArkCaseTestBase {
 		responseCode.checkHttpResponse(
 				"/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/div/div[1]/div[1]/div[2]/div/div/div/div[1]");
 		Thread.sleep(10000);
-		WebElement el = WaitHelper.getWhenElementIsVisible(approveDocumenButton, 30, driver);	
-		el.click();		
-		//Assert.assertTrue(reviewRequestStateEqualsClosed());
+		WaitHelper.waitForElement(approveDocumenButton, driver);	
+		approveDocumenButton.click();		
+		WaitHelper.waitUntilTextIsChanged(reviewRequestState, driver);
+		Assert.assertTrue("Automatic task status is not change into closed", reviewRequestStateEqualsClosed());
 		return this;
 	}
 	public boolean reviewRequestStateEqualsClosed(){
-		WebElement el = WaitHelper.getWhenElementIsVisible(reviewRequestState, 30, driver);	
-		boolean reviewRequestStateEqualsClosed = el.getText().equals("CLOSED");
+		WaitHelper.waitUntilElementIsVisible(reviewRequestState, driver);
+		boolean reviewRequestStateEqualsClosed = reviewRequestState.getText().equals("CLOSED");
 		if (reviewRequestStateEqualsClosed == true )
 		{
 		return true;
@@ -3140,12 +3141,14 @@ public class CasesPage extends ArkCaseTestBase {
 	}
 	
 	public CasesPage caseDocumentsclick(){
+		WaitHelper.waitForElementFindInCache(caseDocuments, driver);
 		caseDocuments.click();
 		return this;
 	}
 	
 	public CasesPage detailsSaveButtonClick(){
-		WaitHelper.clickWhenElelementIsClickable(detailsSaveButton, 30, driver);		
+		WaitHelper.waitForElement(detailsSaveButton, driver);		
+		WaitHelper.ClickElementAtPoint(detailsSaveButton, driver);
 		return this;
 	}
 	
@@ -3175,7 +3178,8 @@ public class CasesPage extends ArkCaseTestBase {
 	}
 	
 	public CasesPage browsePictureButtonClick(){
-		browsePictureButton.click();
+		WaitHelper.waitForElement(browsePictureButton, driver);
+		WaitHelper.clickWhenElelementIsClickable(browsePictureButton, 30, driver);		
 		return this;
 	}
 	
@@ -3200,6 +3204,16 @@ public class CasesPage extends ArkCaseTestBase {
 		{
 			return false;
 		}
+	}
+	
+	public CasesPage UploadPicture(String file)
+	{
+		String home = System.getProperty("user.home");
+		String filepath = home + "/.arkcase/seleniumTests/filesForUpload/" + file;
+		WaitHelper.waitForElement(browsePictureButton, driver);
+		WaitHelper.waitUntilElementIsVisible(browsePictureButton, driver);
+		browsePictureButton.sendKeys(filepath);		
+		return this;
 	}
 	
 	

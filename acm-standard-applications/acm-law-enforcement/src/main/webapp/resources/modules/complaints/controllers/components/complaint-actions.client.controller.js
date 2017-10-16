@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Complaint.LookupService'
-    , 'Object.SubscriptionService', 'Object.ModelService', 'Complaint.InfoService', 'Helper.ObjectBrowserService'
+    , 'Object.SubscriptionService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService'
     , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, ComplaintLookupService
-        , ObjectSubscriptionService, ObjectModelService, ComplaintInfoService, HelperObjectBrowserService) {
+        , ObjectSubscriptionService, ComplaintInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,28 +19,23 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             }
         });
 
-        var promiseQueryUser = Authentication.queryUserInfo();
-        var promiseGetGroups = ObjectLookupService.getGroups();
+        $scope.showBtnChildOutcomes = false;
+        $scope.availableChildOutcomes = [];
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-
+            $scope.restricted = objectInfo.restricted;
             $scope.showCreateAndClose = ($scope.objectInfo.status !== "CLOSED");
-
+            $scope.showBtnChildOutcomes = false;
             var group = ObjectModelService.getGroup(objectInfo);
+            $scope.owningGroup = group;
             var assignee = ObjectModelService.getAssignee(objectInfo);
-            var promiseGetApprovers = ComplaintLookupService.getApprovers(group, assignee);
-            $q.all([promiseQueryUser, promiseGetGroups, promiseGetApprovers]).then(function (data) {
-                var userInfo = data[0];
-                var groups = data[1];
-                var assignees = data[2];
-                $scope.restricted = ObjectModelService.checkRestriction(userInfo.userId, assignee, group, assignees, groups);
-            });
+            $scope.assignee = assignee;
 
-
-            promiseQueryUser.then(function (userInfo) {
+            Authentication.queryUserInfo().then(function (userInfo) {
                 $scope.userId = userInfo.userId;
-                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT, $scope.objectInfo.complaintId).then(function (subscriptions) {
+                ObjectSubscriptionService.getSubscriptions(userInfo.userId, ObjectService.ObjectTypes.COMPLAINT
+                    , $scope.objectInfo.complaintId).then(function (subscriptions) {
                     var found = _.find(subscriptions, {
                         userId: userInfo.userId,
                         subscriptionObjectType: ObjectService.ObjectTypes.COMPLAINT,
@@ -55,16 +50,18 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
                 complaintId: objectInfo.complaintId
                 , complaintNumber: objectInfo.complaintNumber
             };
-
         };
 
-        $scope.restricted = false;
         $scope.onClickRestrict = function ($event) {
             if ($scope.restricted != $scope.objectInfo.restricted) {
                 $scope.objectInfo.restricted = $scope.restricted;
 
                 var complaintInfo = Util.omitNg($scope.objectInfo);
-                ComplaintInfoService.saveComplaintInfo(complaintInfo);
+                ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function () {
+
+                }, function () {
+                    $scope.restricted = !$scope.restricted;
+                });
             }
         };
 
@@ -83,9 +80,39 @@ angular.module('complaints').controller('Complaints.ActionsController', ['$scope
             });
         };
 
+        UserInfoService.getUserInfo().then(function (infoData) {
+            $scope.currentUserProfile = infoData;
+        });
+
         $scope.refresh = function () {
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
+        $scope.claim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, $scope.currentUserProfile.userId);
+            var complaintInfo = Util.omitNg(objectInfo);
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
+
+        $scope.unclaim = function (objectInfo) {
+            ObjectModelService.setAssignee(objectInfo, "");
+            var complaintInfo = Util.omitNg(objectInfo);
+            ComplaintInfoService.saveComplaintInfo(complaintInfo).then(function (response) {
+                //success
+                $scope.refresh();
+            });
+        };
+
+        $scope.onClickChildOutcome = function (name) {
+            $scope.$bus.publish('CHILD_OBJECT_OUTCOME_CLICKED', name);
+        };
+
+        $scope.$bus.subscribe('CHILD_OBJECT_OUTCOMES_FOUND', function (outcomes) {
+            $scope.availableChildOutcomes = outcomes;
+            $scope.showBtnChildOutcomes = true;
+        });
     }
 ]);

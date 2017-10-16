@@ -1,0 +1,363 @@
+{
+  "tasks": {
+    "title": "Задачи",
+    "progressNoTask": "[ Нет данных задачи ]",
+    "progressLoading": "Загрузка задачи",
+    "progressError": "Не удалось загрузить задачу"
+  },
+  "tasks.menus": {
+    "leftnav.item": "Задачи",
+    "topbar.item": "Задача"
+  },
+  "tasks.comp.main": {
+    "title": "Обзор"
+  },
+  "tasks.comp.info": {
+    "title": "Информация",
+    "taskId": "Идентификатор задачи:",
+    "percentage.label": "% от завершения",
+    "assignee.label": "Правообладатель",
+    "priority.label": "Приоритет",
+    "startDate.label": "rДата начала",
+    "dueDate.label": "Дата погашения",
+    "state.label": "Состояние",
+    "overdue.tooltip": "Задача просрочена",
+    "deadline.tooltip": "Крайний срок приближается",
+    "owningGroup.label": "Собственная группа"
+  },
+  "tasks.comp.parentinfo": {
+    "title": "Родительская информация",
+    "taskId": "Идентификатор задачи:",
+    "case": {
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
+    },
+    "complaint": {
+      "subjectType.label": "Тип объекта",
+      "incidentDate.label": "Дата инцидента",
+      "priority.label": "Приоритет",
+      "assignee.label": "Назначено",
+      "owningGroup.label": "Собственная группа"
+    },
+    "costsheet": {
+      "approver.label": "Приверженец"
+    },
+    "timesheet": {
+      "approver.label": "Приверженец"
+    }
+  },
+  "tasks.comp.actions": {
+    "title": "Действия",
+    "diagram.button": "Технологическая схема",
+    "eSignature.button": "Подписать",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "reject.button": "Отклонить",
+    "delete.button": "Удалить",
+    "complete.button": "Полный",
+    "approve.button": "Утвердить документ",
+    "rework.button": "Отправить для исправления",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование",
+    "error.outcomeFieldMissing": "Не удается выполнить задачу из-за отсутствия требуемого значения",
+    "modal": {
+      "errorHeaderText": "Ошибка",
+      "btnOk.text": "Хорошо",
+      "btnClose.text": "Закрыть"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "Детали",
+    "informSaved": "ru_Task details saved",
+    "table.columns": {
+      "details": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "Детали исправления",
+    "informSaved": "ru_Rework details saved",
+    "table.columns": {
+      "title": "ru_Rework Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "Родительские документы",
+    "noParentDataMessage": "ru_No parent documents for standalone task",
+    "sendEmail": "ru_Send Email",
+    "filterInputPlaceholder": "ru_Filter",
+    "searchInputPlaceholder": "ru_Search"
+  },
+  "tasks.comp.attachments": {
+    "title": "Вложения",
+    "sendEmail": "ru_Send Email",
+    "filterInputPlaceholder": "ru_Filter",
+    "searchInputPlaceholder": "ru_Search"
+  },
+  "tasks.comp.notes": {
+    "title": "Заметки",
+    "table.columns": {
+      "note": "ru_Note",
+      "created": "ru_Created",
+      "creator": "ru_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "Ссылки ",
+    "table.columns": {
+      "targetName": "ru_Number",
+      "targetTitle": "ru_Title",
+      "modified": "ru_Modified",
+      "targetType": "ru_Reference Type",
+      "status": "ru_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "Отклонить комментарии",
+    "table.columns": {
+      "note": "ru_Comment",
+      "created": "ru_Created",
+      "creator": "ru_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "рабочего процесса",
+    "table.columns": {
+      "participant": "ru_Participant",
+      "role": "ru_Role",
+      "status": "ru_Status",
+      "startDateTime": "ru_Start",
+      "endDateTime": "ru_End"
+    }
+  },
+  "tasks.comp.diagram": {
+    "title": "ru_Process Diagram",
+    "error.loading": "ru_Diagram can't be loaded"
+  },
+  "tasks.comp.signatures": {
+    "title": "Электронные подписи",
+    "table.columns": {
+      "signedDate": "ru_Date",
+      "signedBy": "ru_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "находящиеся на рассмотрении",
+    "table.columns": {
+      "fileId": "ru_ID",
+      "fileName": "ru_Title",
+      "created": "ru_Created",
+      "creator": "ru_Author",
+      "status": "ru_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "История",
+    "table.columns": {
+      "eventType": "ru_Event Name",
+      "eventDate": "ru_Date",
+      "userId": "ru_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "Теги",
+    "table.columns": {
+      "tag": "ru_Tag",
+      "created": "ru_Created",
+      "createdBy": "ru_Created By"
+    },
+    "modal": {
+      "title": "ru_Tag",
+      "search": "ru_Search for Tag",
+      "buttons": {
+        "cancel": "ru_Cancel",
+        "ok": "ru_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ru_Tag with that name or description or text already exists",
+      "tagAssociated": "ru_already associated",
+      "delete": {
+        "success": "ru_Tag deleted successfully",
+        "error": "ru_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "ru_New Task",
+    "assignee.button": "ru_Choose Assignee",
+    "assignee.label": "ru_Assign To",
+    "assignee.placeholder": "ru_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "ru_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "ru_Select Priority",
+    "priority.label": "ru_Priority",
+    "status.placeholder": "ru_Select Status",
+    "status.label": "ru_Status",
+    "associateNumber.label": "ru_Associate with Complaint or Case",
+    "associateNumber.placeholder": "ru_Complaint or Case #",
+    "associateType.label": "ru_Parent Type",
+    "subject.label": "ru_Subject",
+    "taskStartDate.label": "ru_Start Date",
+    "dueDate.label": "ru_Due Date",
+    "datepicker.close": "ru_Done",
+    "percentComplete.label": "ru_% Complete",
+    "notes.label": "ru_Notes",
+    "saveButton": "ru_Save",
+    "overdue.tooltip": "ru_Task is Overdue",
+    "deadline.tooltip": "ru_Deadline is Approaching",
+    "groupToggle.label": "ru_Group Task?",
+    "group.placeholder": "ru_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "ru_userSearch",
+    "title": "ru_User/Group Search",
+    "search": {
+      "btn": "ru_Search",
+      "placeholder": "ru_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ru_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ru_Name",
+      "type": "ru_Type",
+      "title": "ru_Title",
+      "username": "ru_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "ru_objectSearch",
+    "title": "ru_Object Search",
+    "search": {
+      "btn": "ru_Search",
+      "placeholder": "ru_Search for the case or complaint to this task."
+    },
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Confirm",
+    "enabled": true,
+    "userFacetFilter": "ru_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "ru_Number",
+      "type": "ru_Type",
+      "title": "ru_Title",
+      "username": "ru_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "ru_Add Reference",
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Add",
+    "search": {
+      "placeholder": "ru_Search for case, complaint, file, task",
+      "btn": "ru_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ru_Id",
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "ru_Participants",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "ru_Change Assignee",
+    "assigneeNamelabel": "ru_Assignee Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchAssigneeHeader": "ru_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "ru_Change Group",
+    "groupNamelabel": "ru_Group Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchGroupHeader": "ru_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "ru_Future Approvers",
+    "addNewTooltip": "ru_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "ru_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ru_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "ru_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "ru_Approval Date",
+      "approverId": "ru_Approver",
+      "approverFullName": "ru_Full Name",
+      "approverDecision": "ru_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "reworkDetails.label": "Детали исправления",
+      "docReview.label": "находящиеся на рассмотрении",
+      "parentDoc.label": "Родительские документы",
+      "attachments.label": "Вложения",
+      "references.label": "Ссылки",
+      "notes.label": "Заметки",
+      "workflow.label": "Рабочего процесса",
+      "history.label": "История",
+      "eSignatures.label": "Электронные подписи",
+      "tags.label": "Теги",
+      "reject.label": "Отклонить комментарии"
+    },
+    "filters": {
+      "myTasks": "Мои задачи",
+      "opened": "Все открытые задачи",
+      "completed": "Все завершенные задачи",
+      "dueToday": "Все задачи, которые нужно сегодня",
+      "myDueToday": "Все Мои задачи, необходимые сегодня",
+      "overdue": "Все задачи просрочены",
+      "myOverdue": "Все Мои задачи, просроченные",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "createdDateAsc": "Сортировка Дата создания Asc",
+      "createdDateDesc": "Сортировка даты создания Desc",
+      "nameAsc": "Сортировать имя задачи Asc",
+      "nameDesc": "Сортировать имя задачи Desc",
+      "noSort": "(Нет сортировки)"
+    }
+  }
+}

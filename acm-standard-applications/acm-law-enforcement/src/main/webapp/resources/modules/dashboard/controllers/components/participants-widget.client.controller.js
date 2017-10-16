@@ -4,26 +4,50 @@ angular.module('dashboard.participants', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('participants', {
-                    title: 'Participants',
-                    description: 'Displays Participants',
-                    controller: 'Dashboard.ParticipantsController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
-                    commonName: 'participants'
-                }
-            );
+                title: 'dashboard.widgets.participants.title',
+                description: 'dashboard.widgets.participants.description',
+                controller: 'Dashboard.ParticipantsController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/participants-widget.client.view.html',
+                commonName: 'participants'
+            });
     })
-    .controller('Dashboard.ParticipantsController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
+    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'DocumentRepository.InfoService', 'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                  CaseInfoService, ComplaintInfoService, DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
-            var promiseConfig;
-            var promiseInfo;
             var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
+                {
+                    name: "CASE_FILE",
+                    configName: "cases",
+                    getInfo: CaseInfoService.getCaseInfo,
+                    validateInfo: CaseInfoService.validateCaseInfo
+                },
+                {
+                    name: "COMPLAINT",
+                    configName: "complaints",
+                    getInfo: ComplaintInfoService.getComplaintInfo,
+                    validateInfo: ComplaintInfoService.validateComplaintInfo
+                },
+                {
+                    name: "DOC_REPO",
+                    configName: "document-repository",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                },
+                {
+                    name: "PERSON",
+                    configName: "people",
+                    getInfo: PersonInfoService.getPersonInfo,
+                    validateInfo: PersonInfoService.validatePersonInfo
+                },
+                {
+                    name: "ORGANIZATION",
+                    configName: "organizations",
+                    getInfo: OrganizationInfoService.getOrganizationInfo,
+                    validateInfo: OrganizationInfoService.validateOrganizationInfo
+                }
             ];
 
             var module = _.find(modules, function (module) {
@@ -35,30 +59,35 @@ angular.module('dashboard.participants', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
-                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-                var promiseUsers = gridHelper.getUsers();
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+            var promiseUsers = gridHelper.getUsers();
 
-                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "participants";
-                        });
-                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                        $scope.gridOptions.data = info.participants;
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                    },
-                    function (err) {
+            var onObjectInfoRetrieved = function (objectInfo) {
+                gridHelper.setWidgetsGridData(objectInfo.participants);
+            };
 
-                    }
-                );
-            }
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "participants";
+                });
+                gridHelper.setColumnDefs(widgetInfo);
+                gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+            };
         }
+
     ]);

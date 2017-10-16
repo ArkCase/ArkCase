@@ -4,7 +4,13 @@
     "search.btn": "Search",
     "export.btn": "Export",
     "search.placeholder": "Search for subscriptions",
+    "menus": {
+      "leftnav.item": "Subscriptions"
+    },
     "comp":{
+      "subscriptionsFacetedSearch": {
+        "title": "Subscriptions Faceted Search"
+      },
       "grid": {
         "columns": {
           "id": "ID",

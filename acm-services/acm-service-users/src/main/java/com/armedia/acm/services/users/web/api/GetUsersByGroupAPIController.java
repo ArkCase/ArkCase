@@ -35,6 +35,8 @@ public class GetUsersByGroupAPIController
         {
             group = "\"" + group + "\"";
         }
+        group = group.replace("&", "%26"); // instead of URL encoding
+        group = group.replace("?", "%3F"); // instead of URL encoding
         StringBuilder query = new StringBuilder();
         query.append("object_type_s").append(":").append("USER");
         query.append(" AND ").append("groups_id_ss").append(":").append(group);

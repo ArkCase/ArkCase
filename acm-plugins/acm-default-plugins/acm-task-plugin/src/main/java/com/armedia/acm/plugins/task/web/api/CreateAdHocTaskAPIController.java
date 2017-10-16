@@ -12,6 +12,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
@@ -67,9 +68,9 @@ public class CreateAdHocTaskAPIController
                     parentObjectType = getSearchResults().extractString(result, SearchConstants.PROPERTY_OBJECT_TYPE_S);
                 } else
                 {
-                    throw new AcmAppErrorJsonMsg(String.format("Task failed to create. Associated object" +
-                            " with name [%s] not found.", attachedToObjectName)
-                            , TaskConstants.OBJECT_TYPE, "associated-object", null);
+                    throw new AcmAppErrorJsonMsg(
+                            String.format("Task failed to create. Associated object" + " with name [%s] not found.", attachedToObjectName),
+                            TaskConstants.OBJECT_TYPE, "associated-object", null);
                 }
             }
 
@@ -77,11 +78,14 @@ public class CreateAdHocTaskAPIController
             {
                 in.setAttachedToObjectId(objectId);
                 in.setAttachedToObjectType(parentObjectType);
+                in.setAttachedToObjectName(attachedToObjectName);
                 in.setParentObjectId(objectId);
                 in.setParentObjectType(parentObjectType);
+                in.setParentObjectName(attachedToObjectName);
             } else
             {
                 in.setAttachedToObjectId(null);
+                in.setAttachedToObjectType(null);
                 in.setAttachedToObjectName(null);
             }
 
@@ -112,7 +116,7 @@ public class CreateAdHocTaskAPIController
     }
 
     public String getObjectsFromSolr(String objectType, String objectName, Authentication authentication, int startRow, int maxRows,
-                                     String sortParams, String userId)
+            String sortParams, String userId)
     {
         String retval = null;
 

@@ -1,0 +1,478 @@
+{
+  "organizations": {
+    "title": "संगठन",
+    "progressNoComplaint": "[ कोई संगठन डेटा नहीं ]",
+    "progressLoading": "संगठन लोड हो रहा है",
+    "progressError": "संगठन लोड करने में विफल",
+    "noDataMessage": "कोई डेटा नहीं"
+  },
+  "organizations.menus": {
+    "leftnav.item": "संगठन",
+    "topbar.item": "संगठन"
+  },
+  "organizations.comp.main": {
+    "title": "अवलोकन"
+  },
+  "organizations.comp.info": {
+    "title": "जानकारी",
+    "phone.label": "फोन",
+    "email.label": "ईमेल",
+    "status.label": "स्थिति",
+    "organization.label": "संगठन",
+    "identification.label": "आईडी",
+    "primary.label": "प्राथमिक संपर्क",
+    "parent.label": "जनक संगठन",
+    "parent.placeholder": "अभिभावक संगठन दर्ज करें"
+  },
+  "organizations.comp.actions": {
+    "title": "क्रियाएं",
+    "export.button": "निर्यात",
+    "import.button": "आयात",
+    "delete.button": "हटाएं",
+    "activate.button": "सक्रिय",
+    "deactivate.button": "निष्क्रिय करें",
+    "merge.button": "मर्ज"
+  },
+  "organizations.comp.details": {
+    "title": "विवरण",
+    "informSaved": "hi_Organization details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "organizations.comp.addresses": {
+    "title": "स्थान",
+    "table.columns": {
+      "type": "hi_Type",
+      "streetAddress": "hi_Address 1",
+      "streetAddress2": "hi_Address 2",
+      "city": "hi_City",
+      "state": "hi_State",
+      "zip": "hi_Zip",
+      "country": "hi_Country",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No"
+    },
+    "actions": {
+      "addNew": "hi_Add New",
+      "map": "hi_Map"
+    },
+    "modal": {
+      "addAddress": "hi_Add Location",
+      "editAddress": "hi_Edit Record",
+      "type.label": "hi_Address Type",
+      "type.placeholder": "hi_Enter Address Type",
+      "streetAddress.label": "hi_Address 1",
+      "streetAddress.placeholder": "hi_Enter Address 1",
+      "streetAddress2.label": "hi_Address 2",
+      "streetAddress2.placeholder": "hi_Enter Address 2",
+      "city.label": "hi_City",
+      "city.placeholder": "hi_Enter City",
+      "zip.label": "hi_Zip",
+      "zip.placeholder": "hi_Enter Zip",
+      "state.label": "hi_State",
+      "state.placeholder": "hi_Enter State",
+      "country.label": "hi_Country",
+      "country.placeholder": "hi_Enter Country",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Location",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No"
+    }
+  },
+  "organizations.comp.phones": {
+    "title": "फोन नंबर",
+    "table.columns": {
+      "type": "hi_Phone Type",
+      "value": "hi_Phone Number",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "addPhone": "hi_Add New Phone Number",
+      "editPhone": "hi_Edit Phone Number",
+      "title": "hi_Add New Phone Number",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Phone Number",
+      "type.label": "hi_Phone Type",
+      "type.placeholder": "hi_Enter Phone Type",
+      "value.label": "hi_Phone Number",
+      "value.placeholder": "hi_Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "फैक्स नंबर",
+    "table.columns": {
+      "type": "hi_Fax Type",
+      "value": "hi_Fax Number",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "addFax": "hi_Add New Fax Number",
+      "editFax": "hi_Edit Fax Number",
+      "title": "hi_Add New Fax Number",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Fax Number",
+      "type.label": "hi_Fax Type",
+      "type.placeholder": "hi_Enter Fax Type",
+      "value.label": "hi_Fax Number",
+      "value.placeholder": "hi_Enter Fax Number"
+    }
+  },
+  "organizations.comp.emails": {
+    "title": "ईमेल पते",
+    "table.columns": {
+      "type": "hi_Email Address Type",
+      "value": "hi_Email Address",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "title": "hi_Add New Email Address",
+      "addEmail": "hi_Add New Email Address",
+      "editEmail": "hi_Edit Email Address",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Email Address",
+      "type.label": "hi_Email Type",
+      "type.placeholder": "hi_Enter Email Type",
+      "value.label": "hi_Email Address",
+      "value.placeholder": "hi_Enter Email Address"
+    }
+  },
+  "organizations.comp.urls": {
+    "title": "यूआरएल",
+    "table.columns": {
+      "type": "hi_Type",
+      "value": "hi_Url",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "title": "hi_Add New URL",
+      "addUrl": "hi_Add New URL",
+      "editUrl": "hi_Edit URL",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save URL",
+      "type.label": "hi_Type",
+      "type.placeholder": "hi_Enter Type",
+      "value.label": "hi_URL",
+      "value.placeholder": "hi_Enter URL"
+    }
+  },
+  "organizations.comp.participants": {
+    "title": "प्रतिभागियों",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "DBA",
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "upload": "hi_New DBA"
+    },
+    "table.columns": {
+      "value": "hi_DBA",
+      "type": "hi_Type",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "modal": {
+      "addDBA": "hi_Add New DBA",
+      "editDBA": "hi_Edit DBA",
+      "title": "hi_Insert New DBA",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save DBA",
+      "value.label": "hi_DBA",
+      "value.placeholder": "hi_Enter DBA",
+      "description": "hi_Description",
+      "aliasType.label": "hi_DBA Type",
+      "aliasType.placeholder": "hi_Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "संगठन संख्या",
+    "table.columns": {
+      "type": "hi_Type",
+      "id": "hi_ID",
+      "number": "hi_Number",
+      "issuer": "hi_Issuer",
+      "yearIssued": "hi_Year Issued",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "addID": "hi_Add New Identification",
+      "editID": "hi_Edit Identification",
+      "title": "hi_Add New Identification",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "type.label": "hi_Type",
+      "type.placeholder": "hi_Enter Type",
+      "id.label": "hi_ID",
+      "id.placeholder": "hi_Enter ID",
+      "number.label": "hi_Number",
+      "number.placeholder": "hi_Enter Number",
+      "issuer.label": "hi_Issuer",
+      "issuer.placeholder": "hi_Enter Issuer",
+      "yearIssued.label": "hi_Year Issued",
+      "yearIssued.placeholder": "hi_Enter Year Issued",
+      "yearIssued.close.button": "hi_Close",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "लोग",
+    "table.columns": {
+      "type": "hi_Role",
+      "firstName": "hi_FirstName",
+      "lastName": "hi_LastName",
+      "organization": "hi_Organization",
+      "phone": "hi_Phone",
+      "location": "hi_Location"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New",
+      "addExisting": "hi_Add Existing"
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "मामले",
+    "table.columns": {
+      "priority": "hi_Priority",
+      "id": "hi_ID",
+      "title": "hi_Title",
+      "status": "hi_Status",
+      "assignee": "hi_Assignee",
+      "modified": "hi_Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "शिकायतें",
+    "table.columns": {
+      "priority": "hi_Priority",
+      "id": "hi_ID",
+      "title": "hi_Title",
+      "status": "hi_Status",
+      "assignee": "hi_Assignee",
+      "modified": "hi_Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "संबंधित संगठनों",
+    "table.columns": {
+      "associationType": "hi_Relationship",
+      "type": "hi_Type",
+      "identification": "hi_ID",
+      "value": "hi_Organization",
+      "contact": "hi_Primary Contact",
+      "phone": "hi_Phone",
+      "location": "hi_Location"
+    },
+    "modal": {
+      "title": "hi_Add Related Organization",
+      "type.label": "hi_Relationship",
+      "type.placeholder": "hi_Enter Relationship",
+      "organization.label": "hi_Organization",
+      "organization.placeholder": "hi_Search Organizations",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Related Organization"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "इतिहास",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "organizations.comp.newOrganization": {
+    "title": "hi_Organization",
+    "addAnother": "hi_Add Another",
+    "remove": "hi_Remove",
+    "name": "hi_Organization Name",
+    "name.placeholder": "hi_Enter Organization Name",
+    "type": "hi_Organization Type",
+    "type.placeholder": "hi_Select Organization Type",
+    "saveButton": "hi_Save Organization",
+    "parentOrganization": "hi_Parent organization",
+    "searchParentOrganization.placeholder": "hi_Search Parent Organization",
+    "communicationAccounts": {
+      "title": "hi_Communication Accounts",
+      "phone": "hi_Phone",
+      "phone.placeholder": "hi_Enter Phone",
+      "phoneType": "hi_Phone Type",
+      "email": "hi_Email",
+      "email.placeholder": "hi_Enter Email",
+      "emailType": "hi_Email Type",
+      "fax": "hi_Fax",
+      "fax.placeholder": "hi_Enter Fax",
+      "faxType": "hi_Fax Type",
+      "url": "hi_URL",
+      "url.placeholder": "hi_Enter URL",
+      "removeContactMethod": "hi_Remove",
+      "urlType": "hi_URL Type"
+    },
+    "people": {
+      "title": "hi_People",
+      "searchExisting.placeholder": "hi_Search Existing Person",
+      "personType": "hi_Person Type"
+    },
+    "locations": {
+      "title": "hi_Locations",
+      "country": "hi_Country",
+      "country.placeholder": "hi_Select Country",
+      "state": "hi_State",
+      "state.placeholder": "hi_Enter State",
+      "zip": "hi_Zip",
+      "zip.placeholder": "hi_Enter Zip",
+      "city": "hi_City",
+      "city.placeholder": "hi_Enter City",
+      "type": "hi_Address Type",
+      "type.placeholder": "hi_Select Address Type",
+      "streetAddress": "hi_Street Address",
+      "streetAddress.placeholder": "hi_Enter Street Address",
+      "streetAddress2": "hi_Street Address2",
+      "streetAddress2.placeholder": "hi_Enter Street Address2"
+    },
+    "identification": {
+      "title": "hi_Identifications",
+      "identificationID": "hi_Identification ID",
+      "identificationID.placeholder": "hi_Enter Identification ID",
+      "identificationType": "hi_Identification Type",
+      "identificationType.placeholder": "hi_Select Identification Type",
+      "identificationNumber": "hi_Identification Number",
+      "identificationNumber.placeholder": "hi_Enter Identification Number",
+      "identificationIssuer": "hi_Identification Issuer",
+      "identificationIssuer.placeholder": "hi_Enter Identification Issuer",
+      "identificationYearIssued": "hi_Identification Issued Date",
+      "identificationYearIssued.placeholder": "hi_Select Identification Issued",
+      "identificationYearIssued.close.button": "hi_Close"
+    },
+    "informCreated": "hi_{{objectType}} {{organizationValue}} was created."
+  },
+  "organizations.menus.topbar.item": "hi_New Organization",
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "addresses.label": "स्थान",
+      "phones.label": "फ़ोन नंबर",
+      "faxes.label": "फैक्स नंबर",
+      "emails.label": "ईमेल पते",
+      "urls.label": "यूआरएल",
+      "participants.label": "प्रतिभागियों को",
+      "dbas.label": "DBA",
+      "people.label": "लोग",
+      "ids.label": "संगठन संख्या",
+      "complaints.label": "शिकायतें",
+      "cases.label": "मामले",
+      "related.label": "संबंधित संगठनों",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "noFilter": "(नो फिटर)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
+      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
+      "idAsc": "संगठन आईडी बढ़ते क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध संगठन आईडी अवरोही",
+      "nameAsc": "संगठन द्वारा क्रमबद्ध करें नाम A-Z",
+      "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
+}

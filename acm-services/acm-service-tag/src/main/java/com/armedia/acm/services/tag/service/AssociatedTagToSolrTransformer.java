@@ -5,7 +5,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.dao.AssociatedTagDao;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -44,6 +44,8 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setParent_type_s(in.getParentType());
         solr.setParent_id_s(Long.toString(in.getParentId()));
+        solr.setParent_ref_s(Long.toString(in.getParentId()) + "-" + in.getParentType());
+        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
 
         solr.setTag_token_lcs(in.getTag().getTagToken());
 
@@ -59,6 +61,8 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
+
+        solr.setAdditionalProperty("title_parseable", in.getTag().getTagText() + " on object of type " + in.getParentType() + " and ID: " + in.getParentId());
 
         return solr;
     }
@@ -82,7 +86,13 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setParent_object_type_s(in.getParentType());
 
+        solr.setParent_ref_s(Long.toString(in.getParentId()) + "-" + in.getParentType());
+
+        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
+
         solr.setTag_token_lcs(in.getTag().getTagToken());
+
+        solr.setAdditionalProperty("title_parseable", in.getTag().getTagText() + " on object of type " + in.getParentType() + " and ID: " + in.getParentId());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

@@ -1,0 +1,105 @@
+{
+  "documentDetails": {
+    "title": "hi_Document details",
+    "creator": "hi_Creator",
+    "created": "hi_Created",
+    "assignee": "hi_Assignee",
+    "fileType": "hi_File type",
+    "status": "hi_Status",
+    "name": "hi_Name",
+    "comp.eventHistory": {
+      "title": "hi_Event History",
+      "table.columns": {
+        "eventType": "hi_Event Name",
+        "eventDate": "hi_Created",
+        "userId": "hi_User"
+      }
+    },
+    "comp.tags": {
+      "title": "hi_Tags",
+      "table.columns": {
+        "tag": "hi_Tag",
+        "created": "hi_Created",
+        "createdBy": "hi_Created By"
+      },
+      "modal": {
+        "title": "hi_Tag",
+        "search": "hi_Search for Tag",
+        "buttons": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add Tag"
+        }
+      },
+      "message.tagExists": "hi_Tag with that name or description or text already exists",
+      "message.tagAssociated": "hi_already associated",
+      "message.delete.success": "hi_Tag deleted successfully",
+      "message.delete.error": "hi_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "hi_Participants",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type"
+      },
+      "dialogUserPicker": {
+        "header": "hi_Choose User",
+        "table.columns": {
+          "name": "hi_Name",
+          "type": "hi_Type",
+          "title": "hi_Title",
+          "id": "hi_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "hi_Choose Group",
+        "table.columns": {
+          "name": "hi_Name"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "hi_Notes",
+      "table.columns": {
+        "note": "hi_Note",
+        "tag": "hi_Document Version",
+        "created": "hi_Created",
+        "creator": "hi_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "hi_Version History",
+      "table.columns": {
+        "creator": "hi_User",
+        "created": "hi_Created",
+        "versionTag": "hi_Version"
+      }
+    },
+    "comp.details": {
+      "title": "hi_Details",
+      "label": {
+        "creator": "hi_Owner",
+        "modifier": "hi_Author",
+        "created": "hi_Creation Date",
+        "modified": "hi_Modified Date",
+        "description": "hi_Description",
+        "type": "hi_Type",
+        "organization": "hi_Source Organization",
+        "person": "hi_Source Entity",
+        "format": "hi_Format",
+        "size": "hi_Size",
+        "gps": "hi_Location",
+        "duration": "hi_Duration (seconds)",
+        "width": "hi_Width (pixels)",
+        "height": "hi_Height (pixels)",
+        "camera.type": "hi_Camera Type",
+        "camera.version": "hi_Camera Version",
+        "button.save": "hi_Save",
+        "button.wait": "hi_Please Wait"
+      },
+      "message": {
+        "save.success": "hi_File metadata are successfully updated",
+        "save.error": "hi_Unable to update file metadata"
+      }
+    }
+  }
+}

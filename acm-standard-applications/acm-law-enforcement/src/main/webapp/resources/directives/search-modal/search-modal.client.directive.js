@@ -17,6 +17,9 @@
  * @param {String} ok - (Optional)label for the add button. If not specified, default value is used
  * @param {String} searchPlaceholder - (Optional)label for the input placeholder. If not specified, default value is used
  * @param {Object} filter - filter required to send to the faceted search by default (e.g. for client : "\"Object Sub Type\":CLIENT")
+ * @param {Object} extraFilter - (Optional) extra filter to send to the faceted search if search against the "name" property
+ * @param {Object} searchQuery - (Optional) Used in the scenario where the search string is pre-populated or determined before the Modal opens
+ * @param {Object} findGroups - (Optional) Used in the scenario where the solr search for for the Owning Group(s) a user is a member of
  * @param {String} defaultFilter  - (Optional) Used to  retrieve data by default.
  * @param {Boolean} disableSearch  - (Optional) Used to disable search controls (input, filter and search button).
  * @param {Object} config - config of the parent scope used mostly for the UI-grid and to retrieve other params
@@ -43,6 +46,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 ok: '@',
                 searchPlaceholder: '@',
                 filter: '@',
+                extraFilter: '@',
+                searchQuery: '@',
+                findGroups: '@',
                 defaultFilter: '@',
                 disableSearch: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
@@ -50,7 +56,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 searchControl: '=?',    //=? : two way binding but property is optional
                 onItemsSelected: '=?',   //=? : two way binding but property is optional
                 onNoDataMessage: '@',
-                draggable: '@'
+                draggable: '@',
+                onDblClickRow: '=?',
+                customization: '=?'
             },
 
             link: function (scope, el, attrs) {
@@ -66,7 +74,12 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
-                scope.searchQuery = '';
+                scope.findGroups = scope.findGroups === 'true';
+                if (scope.searchQuery) {
+                    scope.searchQuery = scope.searchQuery;
+                } else {
+                    scope.searchQuery = '';
+                }
                 scope.minSearchLength = 3;
                 if (typeof(scope.config().showFacets) === 'undefined') {
                     scope.config.showFacets = true;
@@ -93,21 +106,34 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.currentFacetSelection = [];
                 scope.selectedItem = null;
                 scope.selectedItems = [];
+                var filterInitialValue = scope.filter;
                 scope.queryExistingItems = function () {
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start);
-                    if (query) {
-                        scope.showNoData = false;
-                        SearchService.queryFilteredSearch({
-                                query: query
-                            },
-                            function (data) {
-                                updateFacets(data.facet_counts.facet_fields);
-                                scope.gridOptions.data = data.response.docs;
-                                if (scope.gridOptions.data.length < 1) {
-                                    scope.showNoData = true;
-                                }
-                                scope.gridOptions.totalItems = data.response.numFound;
-                            });
+                    if (!Util.isEmpty(scope.searchQuery)) {
+                        var query = '';
+                        if (scope.extraFilter) {
+                            scope.filters = filterInitialValue + scope.extraFilter + '*' + scope.searchQuery + '*';
+                        }
+
+                        if (scope.findGroups) {
+                            query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                        } else {
+                            query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.filters, scope.pageSize, scope.start, scope.sort);
+                        }
+
+                        if (query) {
+                            scope.showNoData = false;
+                            SearchService.queryFilteredSearch({
+                                    query: query
+                                },
+                                function (data) {
+                                    updateFacets(data.facet_counts.facet_fields);
+                                    scope.gridOptions.data = data.response.docs;
+                                    if (scope.gridOptions.data.length < 1) {
+                                        scope.showNoData = true;
+                                    }
+                                    scope.gridOptions.totalItems = data.response.numFound;
+                                });
+                        }
                     }
                 };
 
@@ -171,6 +197,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 if (scope.config()) {
                     scope.pageSize = scope.config().paginationPageSize;
                     scope.start = scope.config().start;
+                    scope.sort = Util.goodValue(scope.config().sort, "");
                     scope.gridOptions = {
                         enableColumnResizing: true,
                         enableRowSelection: true,
@@ -204,6 +231,20 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 }
                             });
 
+                            // Get the sorting info from UI grid
+                            gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                                if (sortColumns.length > 0) {
+                                    var sortColArr = [];
+                                    _.each(sortColumns, function (col) {
+                                        sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
+                                    });
+                                    scope.sort = sortColArr.join(',');
+                                }
+                                else {
+                                    scope.sort = "";
+                                }
+                                scope.queryExistingItems();
+                            });
 
                             gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                 scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
@@ -212,6 +253,21 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             });
                         }
                     };
+
+                    /* Allows for overriding the default row template
+                     * Used to add ng-dblClick etc properties to the template
+                     * Default rowTemplate =
+                     * "<div ng-repeat=\"(colRenderIndex, col) in colContainer.renderedColumns track by col.uid\"
+                     *       ui-grid-one-bind-id-grid=\"rowRenderIndex + '-' + col.uid + '-cell'\"
+                     *       class=\"ui-grid-cell\"
+                     *       ng-class=\"{ 'ui-grid-row-header-cell': col.isRowHeader }\"
+                     *       role=\"{{col.isRowHeader ? 'rowheader' : 'gridcell'}}\" ui-grid-cell>
+                     *  </div>"
+                     */
+                    if (scope.config().rowTemplate) {
+                        scope.gridOptions.rowTemplate = scope.config().rowTemplate;
+                    }
+
                     if (scope.gridOptions) {
                         if (scope.filter) {
                             scope.filters = 'fq=' + scope.filter;
@@ -224,7 +280,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 // Perform initial request to get list of documents if defaultFilter is defined
                 if (scope.defaultFilter) {
-                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0);
+                    var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted(scope.searchQuery + '*', scope.defaultFilter, scope.pageSize, 0, scope.sort);
                     if (query) {
                         scope.showNoData = true;
                         SearchService.queryFilteredSearch({

@@ -4,27 +4,27 @@
             <div class="well-sm clearfix">
                 <div class="row">
                     <div class="col-sm-6 col-md-12">
-                    	<div class="h4 font-bold">{{ecmFile.fileName || 'Unknown'}}</div>
+                    	<div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
                     	<!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</div>
+                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate)  || 'Unknown'}}</div>
+                        <div class="h4 font-bold">{{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate)  || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
                     <!--<div class="col-sm-3">
-                        <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'Unknown'}}</div>
+                        <div class="h4 font-bold">{{::assignee | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.assignee</small>
                     </div>-->
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{fileType || 'Unknown'}}</div>
+                        <div class="h4 font-bold">{{fileType || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.name</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{ecmFile.status || 'Unknown'}}</div>
+                        <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
                     </div>
                     
@@ -39,6 +39,9 @@
         <div class="right-sidebar well-sm documentDetails">
             <ng-form name="docDetails" novalidate>
                 <tabset>
+                    <tab heading="{{'documentDetails.comp.details.title' | translate}}">
+                        <div ng-include="'modules/document-details/views/components/details.client.view.html'"></div>
+                    </tab>
                     <tab heading="{{'documentDetails.comp.versionHistory.title' | translate}}">
                         <div ng-include="'modules/document-details/views/components/version-history.client.view.html'"></div>
                     </tab>

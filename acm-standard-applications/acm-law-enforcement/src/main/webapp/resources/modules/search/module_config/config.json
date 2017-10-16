@@ -1,14 +1,15 @@
 {
   "id": "search",
   "title": "Search",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "search",
-      "menuItemTitle": "Search",
+      "menuItemTitle": "search.menus.leftnav.item",
       "moduleId": "search",
       "iconClass": "fa fa-search",
-      "position": 70
+      "position": 100
     }
   ],
   "components": [
@@ -19,7 +20,8 @@
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": false,
-      "hideTypeahead": true,
+      "typeAheadColumn": "title_parseable",
+      "hideTypeahead": false,
       "columnDefs": [
         {
           "name": "object_id_s",
@@ -31,7 +33,7 @@
           "name": "name",
           "displayName": "search.comp.grid.columns.name",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.name}}>{{row.entity.name}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}}>{{row.entity.name}}</a>"
         },
         {
           "name": "object_type_s",
@@ -43,13 +45,14 @@
           "name": "title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "search.comp.grid.columns.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
         },
         {
           "name": "parent_number_lcs",
           "displayName": "search.comp.grid.columns.parent",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickParentObjLink($event, row.entity)' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "assignee_full_name_lcs",
@@ -60,7 +63,7 @@
           "name": "modified_date_tdt",
           "displayName": "search.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -73,7 +76,8 @@
       "start": 0,
       "filter": "",
       "filterName": "",
-      "reportFileName": "search"
+      "reportFileName": "search",
+      "isAutoSuggestActive": true
     }
   ]
 }

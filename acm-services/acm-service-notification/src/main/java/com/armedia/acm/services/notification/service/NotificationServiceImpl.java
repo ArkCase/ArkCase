@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -11,7 +8,6 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author riste.tutureski
- */
+
 public class NotificationServiceImpl implements NotificationService
 {
 
@@ -80,7 +74,7 @@ public class NotificationServiceImpl implements NotificationService
         }
         catch (Exception e)
         {
-            LOG.error("Cannot send notifications to the users: " + e.getMessage(), e);
+            LOG.error("Cannot send notifications to the users: {}", e.getMessage(), e);
         }
     }
 

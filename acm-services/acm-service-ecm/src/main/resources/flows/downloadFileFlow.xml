@@ -13,8 +13,8 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
     <flow name="downloadFileFlow" doc:name="Get the file content stream from the ECM repository">
         <description>
-            The incoming payload must be a CMIS object ID of a document object.  This flow returns an Apache
-            Chemistry content stream.  If the object ID does not represent a CMIS document, the flow returns the
+            The incoming payload must be a CMIS object ID of a document object. This flow returns an Apache
+            Chemistry content stream. If the object ID does not represent a CMIS document, the flow returns the
             Mule NullPayload.
         </description>
 
@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <timer-interceptor/>
 
-        <cmis:get-content-stream objectId="#[message.payload]"/>
+        <cmis:get-content-stream config-ref="#[message.inboundProperties.configRef]" objectId="#[message.payload]"/>
 
 
     </flow>

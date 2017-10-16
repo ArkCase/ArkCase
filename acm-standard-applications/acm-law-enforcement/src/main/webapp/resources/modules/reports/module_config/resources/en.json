@@ -1,7 +1,9 @@
 {
   "reports": {
     "title": "Reports",
-
+    "menus": {
+      "leftnav.item": "Reports"
+    },
     "selectReport" : {
       "label": "Report",
       "placeholder": "Select Report"
@@ -31,6 +33,15 @@
     },
     "btn": {
       "generateReport": "Generate report"
+    },
+    "checkBox": {
+      "xmlReport": "Show as XML"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "Datepickers"
+  },
+  "reports.comp.reportselection": {
+    "title": "Reports"
   }
 }

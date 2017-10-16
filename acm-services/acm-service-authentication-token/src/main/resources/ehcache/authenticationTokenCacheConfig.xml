@@ -9,7 +9,7 @@
            eternal="false"
            overflowToDisk="true"
            diskSpoolBufferSizeMB="20"
-           timeToIdleSeconds="3600"
+           timeToIdleSeconds="1800"
            timeToLiveSeconds="0"
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off" />

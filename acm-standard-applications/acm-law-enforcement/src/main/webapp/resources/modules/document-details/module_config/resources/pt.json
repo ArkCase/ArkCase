@@ -1,0 +1,105 @@
+{
+  "documentDetails": {
+    "title": "pt_Document details",
+    "creator": "pt_Creator",
+    "created": "pt_Created",
+    "assignee": "pt_Assignee",
+    "fileType": "pt_File type",
+    "status": "pt_Status",
+    "name": "pt_Name",
+    "comp.eventHistory": {
+      "title": "pt_Event History",
+      "table.columns": {
+        "eventType": "pt_Event Name",
+        "eventDate": "pt_Created",
+        "userId": "pt_User"
+      }
+    },
+    "comp.tags": {
+      "title": "pt_Tags",
+      "table.columns": {
+        "tag": "pt_Tag",
+        "created": "pt_Created",
+        "createdBy": "pt_Created By"
+      },
+      "modal": {
+        "title": "pt_Tag",
+        "search": "pt_Search for Tag",
+        "buttons": {
+          "cancel": "pt_Cancel",
+          "ok": "pt_Add Tag"
+        }
+      },
+      "message.tagExists": "pt_Tag with that name or description or text already exists",
+      "message.tagAssociated": "pt_already associated",
+      "message.delete.success": "pt_Tag deleted successfully",
+      "message.delete.error": "pt_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "pt_Participants",
+      "table.columns": {
+        "name": "pt_Name",
+        "type": "pt_Type"
+      },
+      "dialogUserPicker": {
+        "header": "pt_Choose User",
+        "table.columns": {
+          "name": "pt_Name",
+          "type": "pt_Type",
+          "title": "pt_Title",
+          "id": "pt_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "pt_Choose Group",
+        "table.columns": {
+          "name": "pt_Name"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "pt_Notes",
+      "table.columns": {
+        "note": "pt_Note",
+        "tag": "pt_Document Version",
+        "created": "pt_Created",
+        "creator": "pt_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "pt_Version History",
+      "table.columns": {
+        "creator": "pt_User",
+        "created": "pt_Created",
+        "versionTag": "pt_Version"
+      }
+    },
+    "comp.details": {
+      "title": "pt_Details",
+      "label": {
+        "creator": "pt_Owner",
+        "modifier": "pt_Author",
+        "created": "pt_Creation Date",
+        "modified": "pt_Modified Date",
+        "description": "pt_Description",
+        "type": "pt_Type",
+        "organization": "pt_Source Organization",
+        "person": "pt_Source Entity",
+        "format": "pt_Format",
+        "size": "pt_Size",
+        "gps": "pt_Location",
+        "duration": "pt_Duration (seconds)",
+        "width": "pt_Width (pixels)",
+        "height": "pt_Height (pixels)",
+        "camera.type": "pt_Camera Type",
+        "camera.version": "pt_Camera Version",
+        "button.save": "pt_Save",
+        "button.wait": "pt_Please Wait"
+      },
+      "message": {
+        "save.success": "pt_File metadata are successfully updated",
+        "save.error": "pt_Unable to update file metadata"
+      }
+    }
+  }
+}

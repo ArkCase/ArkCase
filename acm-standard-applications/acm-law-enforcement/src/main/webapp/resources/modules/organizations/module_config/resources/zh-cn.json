@@ -1,0 +1,412 @@
+{
+  "organizations": {
+    "title": "组织",
+    "progressNoComplaint": "[ 无组织数据 ]",
+    "progressLoading": "加载组织数据",
+    "progressError": "加载组织数据失败",
+    "noDataMessage": "无数据"
+  },
+  "organizations.menus": {
+    "leftnav.item": "组织",
+    "topbar.item": "组织"
+  },
+  "organizations.comp.main": {
+    "title": "概述"
+  },
+  "organizations.comp.info": {
+    "title": "信息",
+    "phone.label": "电话",
+    "email.label": "电子邮箱",
+    "status.label": "状态",
+    "organization.label": "组织",
+    "identification.label": "身份号码",
+    "primary.label": "主要联系人",
+    "parent.label": "上层组织",
+    "parent.placeholder": "输入上层组织"
+  },
+  "organizations.comp.actions": {
+    "title": "行动",
+    "export.button": "输出",
+    "import.button": "输入",
+    "delete.button": "删除",
+    "activate.button": "激活",
+    "deactivate.button": "停用",
+    "merge.button": "合并"
+  },
+  "organizations.comp.details": {
+    "title": "详情",
+    "informSaved": "zh-cn_Organization details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "organizations.comp.addresses": {
+    "title": "地点",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "streetAddress": "zh-cn_Address 1",
+      "streetAddress2": "zh-cn_Address 2",
+      "city": "zh-cn_City",
+      "state": "zh-cn_State",
+      "zip": "zh-cn_Zip",
+      "country": "zh-cn_Country",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No"
+    },
+    "actions": {
+      "addNew": "zh-cn_Add New",
+      "map": "zh-cn_Map"
+    },
+    "modal": {
+      "addAddress": "zh-cn_Add Location",
+      "editAddress": "zh-cn_Edit Record",
+      "type.label": "zh-cn_Address Type",
+      "type.placeholder": "zh-cn_Enter Address Type",
+      "streetAddress.label": "zh-cn_Address 1",
+      "streetAddress.placeholder": "zh-cn_Enter Address 1",
+      "streetAddress2.label": "zh-cn_Address 2",
+      "streetAddress2.placeholder": "zh-cn_Enter Address 2",
+      "city.label": "zh-cn_City",
+      "city.placeholder": "zh-cn_Enter City",
+      "zip.label": "zh-cn_Zip",
+      "zip.placeholder": "zh-cn_Enter Zip",
+      "state.label": "zh-cn_State",
+      "state.placeholder": "zh-cn_Enter State",
+      "country.label": "zh-cn_Country",
+      "country.placeholder": "zh-cn_Enter Country",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Location",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No"
+    }
+  },
+  "organizations.comp.phones": {
+    "title": "电话号码",
+    "table.columns": {
+      "type": "zh-cn_Phone Type",
+      "value": "zh-cn_Phone Number",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "addPhone": "zh-cn_Add New Phone Number",
+      "editPhone": "zh-cn_Edit Phone Number",
+      "title": "zh-cn_Add New Phone Number",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Phone Number",
+      "type.label": "zh-cn_Phone Type",
+      "type.placeholder": "zh-cn_Enter Phone Type",
+      "value.label": "zh-cn_Phone Number",
+      "value.placeholder": "zh-cn_Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "传真号码",
+    "table.columns": {
+      "type": "zh-cn_Fax Type",
+      "value": "zh-cn_Fax Number",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "addFax": "zh-cn_Add New Fax Number",
+      "editFax": "zh-cn_Edit Fax Number",
+      "title": "zh-cn_Add New Fax Number",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Fax Number",
+      "type.label": "zh-cn_Fax Type",
+      "type.placeholder": "zh-cn_Enter Fax Type",
+      "value.label": "zh-cn_Fax Number",
+      "value.placeholder": "zh-cn_Enter Fax Number"
+    }
+  },
+  "organizations.comp.emails": {
+    "title": "电子邮箱",
+    "table.columns": {
+      "type": "zh-cn_Email Address Type",
+      "value": "zh-cn_Email Address",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "title": "zh-cn_Add New Email Address",
+      "addEmail": "zh-cn_Add New Email Address",
+      "editEmail": "zh-cn_Edit Email Address",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Email Address",
+      "type.label": "zh-cn_Email Type",
+      "type.placeholder": "zh-cn_Enter Email Type",
+      "value.label": "zh-cn_Email Address",
+      "value.placeholder": "zh-cn_Enter Email Address"
+    }
+  },
+  "organizations.comp.urls": {
+    "title": "网址",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "value": "zh-cn_Url",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "title": "zh-cn_Add New URL",
+      "addUrl": "zh-cn_Add New URL",
+      "editUrl": "zh-cn_Edit URL",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "description": "zh-cn_Description",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save URL",
+      "type.label": "zh-cn_Type",
+      "type.placeholder": "zh-cn_Enter Type",
+      "value.label": "zh-cn_URL",
+      "value.placeholder": "zh-cn_Enter URL"
+    }
+  },
+  "organizations.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "DBA",
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "upload": "zh-cn_New DBA"
+    },
+    "table.columns": {
+      "value": "zh-cn_DBA",
+      "type": "zh-cn_Type",
+      "description": "zh-cn_Description",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "modal": {
+      "addDBA": "zh-cn_Add New DBA",
+      "editDBA": "zh-cn_Edit DBA",
+      "title": "zh-cn_Insert New DBA",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save DBA",
+      "value.label": "zh-cn_DBA",
+      "value.placeholder": "zh-cn_Enter DBA",
+      "description": "zh-cn_Description",
+      "aliasType.label": "zh-cn_DBA Type",
+      "aliasType.placeholder": "zh-cn_Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "组织号码",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "id": "zh-cn_ID",
+      "number": "zh-cn_Number",
+      "issuer": "zh-cn_Issuer",
+      "yearIssued": "zh-cn_Year Issued",
+      "created": "zh-cn_Date Added",
+      "creator": "zh-cn_Added By",
+      "modified": "zh-cn_Last Modified",
+      "modifier": "zh-cn_Modified By"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New"
+    },
+    "modal": {
+      "addID": "zh-cn_Add New Identification",
+      "editID": "zh-cn_Edit Identification",
+      "title": "zh-cn_Add New Identification",
+      "setPrimary": "zh-cn_Set as Primary?",
+      "yes": "zh-cn_Yes",
+      "no": "zh-cn_No",
+      "type.label": "zh-cn_Type",
+      "type.placeholder": "zh-cn_Enter Type",
+      "id.label": "zh-cn_ID",
+      "id.placeholder": "zh-cn_Enter ID",
+      "number.label": "zh-cn_Number",
+      "number.placeholder": "zh-cn_Enter Number",
+      "issuer.label": "zh-cn_Issuer",
+      "issuer.placeholder": "zh-cn_Enter Issuer",
+      "yearIssued.label": "zh-cn_Year Issued",
+      "yearIssued.placeholder": "zh-cn_Enter Year Issued",
+      "yearIssued.close.button": "zh-cn_Close",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "成员",
+    "table.columns": {
+      "type": "zh-cn_Role",
+      "firstName": "zh-cn_FirstName",
+      "lastName": "zh-cn_LastName",
+      "organization": "zh-cn_Organization",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location"
+    },
+    "actions": {
+      "delete": "zh-cn_Delete",
+      "setPrimary": "zh-cn_Set as Primary",
+      "addNew": "zh-cn_Add New",
+      "addExisting": "zh-cn_Add Existing"
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "案件",
+    "table.columns": {
+      "priority": "zh-cn_Priority",
+      "id": "zh-cn_ID",
+      "title": "zh-cn_Title",
+      "status": "zh-cn_Status",
+      "assignee": "zh-cn_Assignee",
+      "modified": "zh-cn_Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "投诉",
+    "table.columns": {
+      "priority": "zh-cn_Priority",
+      "id": "zh-cn_ID",
+      "title": "zh-cn_Title",
+      "status": "zh-cn_Status",
+      "assignee": "zh-cn_Assignee",
+      "modified": "zh-cn_Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "相关组织",
+    "table.columns": {
+      "associationType": "zh-cn_Relationship",
+      "type": "zh-cn_Type",
+      "identification": "zh-cn_ID",
+      "value": "zh-cn_Organization",
+      "contact": "zh-cn_Primary Contact",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location"
+    },
+    "modal": {
+      "title": "zh-cn_Add Related Organization",
+      "type.label": "zh-cn_Relationship",
+      "type.placeholder": "zh-cn_Enter Relationship",
+      "organization.label": "zh-cn_Organization",
+      "organization.placeholder": "zh-cn_Search Organizations",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Save Related Organization"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "历史",
+    "table.columns": {
+      "eventType": "zh-cn_Event Name",
+      "eventDate": "zh-cn_Date",
+      "userId": "zh-cn_User"
+    }
+  },
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "addresses.label": "地点",
+      "phones.label": "电话号码",
+      "faxes.label": "传真号码",
+      "emails.label": "电子邮箱",
+      "urls.label": "网址",
+      "participants.label": "参与成员",
+      "dbas.label": "DBA",
+      "people.label": "成员",
+      "ids.label": "组织号码",
+      "complaints.label": "投诉",
+      "cases.label": "案件",
+      "related.label": "相关组织",
+      "history.label": "历史"
+    },
+    "filters": {
+      "iHaveCreated": "我创建的所有",
+      "noFilter": "(无限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按创建日期排序",
+      "createdDateDesc": "按创建日期反排序",
+      "idAsc": "按组织号排序",
+      "idDesc": "按组织号反排序",
+      "nameAsc": "按组织名排序",
+      "nameDesc": "按组织名反排序",
+      "noSort": "(不排序)"
+    }
+  }
+}

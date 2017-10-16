@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -100,6 +100,21 @@
             <artifactId>acm-service-object-lock</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-module-cmis</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-cmis-configuration</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-scheduler</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>
@@ -157,10 +172,6 @@
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-vm</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-cmis</artifactId>
-        </dependency>
         <!-- The Mule CMIS module depends on an outdated version of some OSGi OGNL library. If the core ECM service
              specifically depends on mule-module-ognl, then that forces Maven to use the right version of the library,
              and extensions will build OK. Without a specific dependency, extensions may pull the older version. -->
@@ -172,6 +183,13 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
+        </dependency>
+
+        <!-- Chemistry API -->
+        <dependency>
+            <groupId>org.apache.chemistry.opencmis</groupId>
+            <artifactId>chemistry-opencmis-client-api</artifactId>
+            <version>${chemistry.version}</version>
         </dependency>
 
         <!-- apache libraries -->
@@ -191,10 +209,6 @@
 
         <!-- json -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>compile</scope>
@@ -202,6 +216,10 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.voodoodyne.jackson.jsog</groupId>
+            <artifactId>jackson-jsog</artifactId>
         </dependency>
 
         <!-- servlet -->
@@ -224,11 +242,6 @@
             <artifactId>easymock</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <!-- h2 is the in-memory database used for Activiti tests -->
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -245,6 +258,15 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>us.fatehi</groupId>
+            <artifactId>pointlocation6709</artifactId>
         </dependency>
 
     </dependencies>

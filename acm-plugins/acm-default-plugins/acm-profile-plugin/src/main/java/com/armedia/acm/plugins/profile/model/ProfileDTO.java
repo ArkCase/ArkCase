@@ -1,7 +1,10 @@
 package com.armedia.acm.plugins.profile.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.List;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class", defaultImpl = ProfileDTO.class)
 public class ProfileDTO
 {
 
@@ -28,6 +31,7 @@ public class ProfileDTO
     private String title;
     private List<String> groups;
     private Long userOrgId;
+    private String langCode;
 
     public String getUserId()
     {
@@ -258,4 +262,15 @@ public class ProfileDTO
     {
         this.userOrgId = userOrgId;
     }
+
+    public String getLangCode()
+    {
+        return langCode;
+    }
+
+    public void setLangCode(String langCode)
+    {
+        this.langCode = langCode;
+    }
+
 }

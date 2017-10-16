@@ -28,14 +28,14 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <timer-interceptor/>
 
 
-        <cmis:update-object-properties objectId="#[message.inboundProperties.ecmFileId]">
+        <cmis:update-object-properties config-ref="#[message.inboundProperties.configRef]" objectId="#[message.inboundProperties.ecmFileId]">
             <cmis:properties>
                 <cmis:property key="cmis:name" value-ref="#[message.inboundProperties.newFileName]"/>
             </cmis:properties>
         </cmis:update-object-properties>
 
 
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception renaming: #[exception.message]"/>
             <set-property propertyName="renameException" value="#[exception]"/>
         </catch-exception-strategy>

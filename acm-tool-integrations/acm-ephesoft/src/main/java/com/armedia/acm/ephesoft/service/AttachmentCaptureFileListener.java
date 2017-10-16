@@ -7,6 +7,7 @@ import com.armedia.acm.files.capture.CaptureConstants;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.web.api.MDCConstants;
 import liquibase.util.file.FilenameUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -14,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 
@@ -24,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -48,7 +51,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
     {
         FileInfo fileInfo = null;
 
-        if ((fileInfo = getSupported(event)) != null)
+        if ( (fileInfo = getSupported(event)) != null )
         {
             log.debug("File {} is supported for attachment processing!", event.getBaseFileName());
 
@@ -66,10 +69,10 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
         auditPropertyEntityAdapter.setUserId(CaptureConstants.PROCESS_ATTACHMENTS_USER);
         EcmFile file = ecmFileService.findById(fileInfo.getFileId());
 
-        if (file != null)
+        if ( file != null )
         {
             //verify that all information is correct
-            if (fileInfo.getParentObjectType() != null && !file.getContainer().getContainerObjectType().equalsIgnoreCase(fileInfo.getParentObjectType()))
+            if ( fileInfo.getParentObjectType() != null && !file.getContainer().getContainerObjectType().equalsIgnoreCase(fileInfo.getParentObjectType()) )
             {
                 log.warn("unable to process File {}, reason: parent object type doesn't match. Contains in file name:{}, but should be {}.",
                         event.getBaseFileName(),
@@ -78,7 +81,7 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                 moveToFolder(event.getConvertedFile(), errorFolder);
                 return;
             }
-            if (fileInfo.getParentObjectId() != null && !file.getContainer().getContainerObjectId().equals(fileInfo.getParentObjectId()))
+            if ( fileInfo.getParentObjectId() != null && !file.getContainer().getContainerObjectId().equals(fileInfo.getParentObjectId()) )
             {
                 log.warn("unable to process File {}, reason: parent object id doesn't match. Contains in file name:{}, but should be {}.",
                         event.getBaseFileName(),
@@ -132,26 +135,26 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
 
 
         //checks for null and empty string
-        if (StringUtils.isEmpty(fileName))
+        if ( StringUtils.isEmpty(fileName) )
             return null;
 
-        if (!fileName.toLowerCase().endsWith(".pdf"))
+        if ( !fileName.toLowerCase().endsWith(".pdf") )
             return null;
 
         //remove extension in file name
-        if (fileName.contains("."))
+        if ( fileName.contains(".") )
             fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
         //ephesoft processing always adds _DOC1 at the end, so we are removing just to extract the information about object and his parent.
-        if (fileName.endsWith("_DOC1"))
+        if ( fileName.endsWith("_DOC1") )
             fileName = fileName.substring(0, fileName.lastIndexOf('_'));
 
         //matches files with name like 123123_case_file_123 OR 12313_123 or 123
-        if (Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName))
+        if ( Pattern.matches(PARENT_ID_PARENT_TYPE_FILE_ID_PATTERN, fileName) )
             return parseParentIdParentTypeFileIdPattern(fileName);
-        else if (Pattern.matches(PARENT_ID_FILE_ID_PATTERN, fileName))
+        else if ( Pattern.matches(PARENT_ID_FILE_ID_PATTERN, fileName) )
             return parseParentIdFileIdPattern(fileName);
-        else if (Pattern.matches(FILE_ID_PATTERN, fileName))
+        else if ( Pattern.matches(FILE_ID_PATTERN, fileName) )
             return parseFileIdPattern(fileName);
         else
             return null;
@@ -221,6 +224,10 @@ public class AttachmentCaptureFileListener implements ApplicationListener<Abstra
                     bytes,
                     cloneIS,
                     true);
+
+            // set the Alfresco user name, so we can upload the files.
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
             // Upload file
             getEcmFileService().upload(fileName,

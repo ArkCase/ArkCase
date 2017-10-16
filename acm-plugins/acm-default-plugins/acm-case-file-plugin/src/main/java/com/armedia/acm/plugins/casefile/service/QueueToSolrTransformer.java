@@ -6,7 +6,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -46,7 +46,7 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
         properties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
         properties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
-        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER_S, in.getDisplayOrder());
+        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER, in.getDisplayOrder());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
@@ -83,7 +83,7 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
         properties.put(SearchConstants.PROPERTY_QUEUE_ID_S, in.getId().toString());
         properties.put(SearchConstants.PROPERTY_QUEUE_NAME_S, in.getName());
-        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER_S, in.getDisplayOrder());
+        properties.put(SearchConstants.PROPERTY_QUEUE_ORDER, in.getDisplayOrder());
 
         return solr;
     }

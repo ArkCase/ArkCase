@@ -1,7 +1,8 @@
 package com.armedia.acm.plugins.admin.web.api;
 
-import com.armedia.acm.plugins.admin.exception.AcmLabelManagementException;
-import com.armedia.acm.plugins.admin.service.LabelManagementService;
+import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
+import com.armedia.acm.services.labels.service.LabelManagementService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -21,15 +22,17 @@ import java.util.List;
  * Created by sergey on 3/2/16.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({
+        "/api/v1/plugin/admin",
+        "/api/latest/plugin/admin" })
 public class LabelManagementRefreshResource
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private LabelManagementService labelManagementService;
 
     @RequestMapping(value = "/labelmanagement/admin-resource/refresh", method = RequestMethod.POST, produces = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
-    })
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public String updateResource(@RequestBody String resource) throws IOException, AcmLabelManagementException
     {
@@ -50,7 +53,8 @@ public class LabelManagementRefreshResource
             {
                 langs.add(langJsonArray.getString(i));
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error(String.format("Wrong refresh parameter '%s' ", resource));
             throw new AcmLabelManagementException("Reset resource error", e);

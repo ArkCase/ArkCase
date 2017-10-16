@@ -21,6 +21,8 @@ public class AccessControlRule
 
     private List<String> userRolesAny;
 
+    private List<String> userIsParticipantTypeAny;
+
     public String getActionName()
     {
         return actionName;
@@ -79,5 +81,15 @@ public class AccessControlRule
     public void setUserRolesAny(List<String> userRolesAny)
     {
         this.userRolesAny = userRolesAny;
+    }
+
+    public List<String> getUserIsParticipantTypeAny()
+    {
+        return userIsParticipantTypeAny;
+    }
+
+    public void setUserIsParticipantTypeAny(List<String> userIsParticipantTypeAny)
+    {
+        this.userIsParticipantTypeAny = userIsParticipantTypeAny;
     }
 }

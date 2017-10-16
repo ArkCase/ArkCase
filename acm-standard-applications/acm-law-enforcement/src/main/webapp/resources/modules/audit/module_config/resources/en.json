@@ -1,6 +1,9 @@
 {
   "audit": {
     "title": "Audit",
+    "menus": {
+      "leftnav.item": "Audit"
+    },
     "navigation": {
       "label": {
         "reportName": "Report Name",
@@ -12,6 +15,9 @@
         "selectAudit": "ALL",
         "inputId": "#"
       },
+      "checkBox": {
+        "xmlReport": "Show as XML"
+      },
       "button": {
         "generateAuditReport.btn": "Generate Audit Report"
       }
@@ -19,5 +25,11 @@
     "datepickers":{
       "close": "Done"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "Audit"
+  },
+  "audit.comp.datepickers": {
+    "title": "Audits"
   }
 }

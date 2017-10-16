@@ -1,0 +1,5 @@
+<!--
+        This file no longer represents Log4j configuration,
+        the configuration is externalized in configuration folder
+        $HOME/.arkcase/acm/log4j2.xml (see context.xml)
+-->

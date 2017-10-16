@@ -5,9 +5,19 @@
     "progressLoading": "Loading timesheet ",
     "progressError": "Failed to load timesheet"
   },
-  "timeTracking.tree": {
+  "timeTracking.menus": {
+    "leftnav.item": "Time Tracking",
+    "topbar.item": "Timesheet"
+  },
+  "timeTracking.comp.main": {
+    "title": "Overview"
+  },
+  "timeTracking.comp.info": {
+    "title": "Info",
+    "lastModified.label": "Last Modified"
   },
   "timeTracking.comp.actions": {
+    "title": "Actions",
     "new.button": "New Timesheet",
     "edit.button": "Edit Timesheet"
   },
@@ -20,7 +30,7 @@
       "modifier": "User Last Modified"
     }
   },
-  "timeTracking.comp.people": {
+  "timeTracking.comp.person": {
     "title": "Person",
     "table.columns": {
       "fullName": "Full Name",
@@ -28,7 +38,7 @@
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Hours Summary",
+    "title": "Hours",
     "table.columns": {
       "code": "Parent ID",
       "type": "Parent Type",
@@ -45,12 +55,12 @@
       "createdBy": "Created By"
     },
     "modal": {
-    "title": "Tag",
-    "search": "Search for Tag",
-    "buttons": {
-          "cancel": "Cancel",
-          "ok": "Add Tag"
-     }
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",
@@ -59,6 +69,22 @@
         "success": "Tag deleted successfully",
         "error": "Error deleting tag"
       }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Person",
+      "summary.label": "Hours",
+      "tags.label": "Tags"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Ascending",
+      "dateDesc": "Sort Date Descending",
+      "idAsc": "Sort Timesheet ID Ascending",
+      "idDesc": "Sort Timesheet ID Descending",
+      "nameDesc": "Sort By Timesheet Name",
+      "noSort": "(No Sort)"
     }
   }
 }

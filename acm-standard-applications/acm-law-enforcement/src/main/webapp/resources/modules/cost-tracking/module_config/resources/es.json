@@ -1,0 +1,95 @@
+{
+  "costTracking": {
+    "title": "Seguimiento de Costos",
+    "progressNoCostsheet": "[ No hay datos de la hoja de ]",
+    "progressLoading": "Hoja de costo de carga",
+    "progressError": "Error al cargar la hoja de o"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "Seguimiento de Costos",
+    "topbar.item": "Hoja de costo"
+  },
+  "costTracking.comp.main": {
+    "title": "Descripción general"
+  },
+  "costTracking.comp.info": {
+    "title": "Información",
+    "incidentDate": "Fecha del incidente",
+    "priority": "Prioridad",
+    "assignedTo": "Asignado a",
+    "subjectType": "Tipo de asunto",
+    "state": "Estado"
+  },
+  "costTracking.comp.actions": {
+    "title": "Acciones",
+    "new.button": "Nueva Hoja de costo",
+    "edit.button": "Editar Hoja de costo"
+  },
+  "costTracking.comp.details": {
+    "title": "Detalles",
+    "informSaved": "es_Costsheet details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "costTracking.comp.person": {
+    "title": "Personas",
+    "table.columns": {
+      "fullName": "es_Full Name",
+      "userId": "es_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "Costo total",
+    "table.columns": {
+      "parentId": "es_ID",
+      "parentNumber": "es_Parent ID",
+      "parentType": "es_Parent Type",
+      "value": "es_Total Cost",
+      "title": "es_Title",
+      "description": "es_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+    "title": "es_Tag",
+    "search": "es_Search for Tag",
+    "buttons": {
+          "cancel": "es_Cancel",
+          "ok": "es_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "person.label": "Personas",
+      "summary.label": "Gastos",
+      "tags.label": "Etiquetas"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "idAsc": "Ordenar coste de la identificación Asc",
+      "idDesc": "Ordenar coste de la identificación Dec",
+      "nameDesc": "Ordenar por nombre Dec",
+      "noSort": "(Sin Clasificar)"
+    }
+  }
+}

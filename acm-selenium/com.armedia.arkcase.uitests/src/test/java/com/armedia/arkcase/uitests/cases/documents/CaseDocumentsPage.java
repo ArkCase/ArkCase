@@ -12,6 +12,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
+import java.util.List;
 
 public class CaseDocumentsPage extends ArkCaseTestBase {
 
@@ -52,25 +54,27 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	WebElement firstDocumentStatus;
 	// second row
 
-	@FindBy(how = How.XPATH, using = "//*[@title='imageprofile.png']")
+	@FindBy(how = How.XPATH, using = "//*[@title='imageprofile']")
 	public WebElement secondDocumentTitle;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[4]")
-	WebElement secondDocumentType;
+	WebElement secondDocumentExtension;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[5]")
-	WebElement secondDocumentCreated;
+	WebElement secondDocumentType;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[6]")
-	WebElement secondDocumentModified;
+	WebElement secondDocumentCreated;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[7]")
-	WebElement secondDocumentAuthor;
+	WebElement secondDocumentModified;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[8]")
-	WebElement secondDocumentVersion;
+	WebElement secondDocumentAuthor;
 	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[9]")
+	WebElement secondDocumentVersion;
+	@FindBy(how = How.XPATH, using = "//*[@class='fancytree-lastsib fancytree-exp-nl fancytree-ico-c']/td[10]")
 	WebElement secondDocumentStatus;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/button[9]")
 	WebElement clearCachButton;
 	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[2]/div/div/div[2]/div/a[3]/span")
 	public WebElement chnageCaseStatusButton;
-	@FindBy(how = How.XPATH, using = "/html/body/div[1]/div/div[2]/section/div/div/section[1]/div[3]/div/div/div/div[2]/doc-tree/table/tbody/tr[1]/td[3]")
+	@FindBy(how = How.XPATH, using = ".//tr[@class='fancytree-folder fancytree-has-children fancytree-lastsib fancytree-lazy fancytree-exp-cdl fancytree-ico-cf']/td[3]")
 	WebElement root;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[2]")
 	WebElement newDocument;
@@ -241,7 +245,7 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	WebElement correspondenceMedicalRelease;
 	@FindBy(how = How.XPATH, using = "/html/body/ul/li[3]/ul/li[1]")
 	WebElement correspondenceGeneralRelease;
-
+	
 	public CaseDocumentsPage verifyDocumentsTable() {
 
 		SoftAssert softAssert = new SoftAssert();
@@ -282,28 +286,76 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 		return this;
 	}
 
-	public CaseDocumentsPage verifySecondDocument(String title, String type, String version, String status) {
+	public CaseDocumentsPage verifySecondDocument(String title, String extension, String type, String version, String status) {
 
 		Date date = new Date(System.currentTimeMillis());
 		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		String createdDate = formatter.format(date);
+		Assert.assertTrue("The doc is not uploaded succesfully", pictureUploaded());
 		SoftAssert softAssert = new SoftAssert();		
-		softAssert.assertEquals(secondDocumentTitle.getText(), title, "Second Document title is wrong");
-		softAssert.assertEquals(secondDocumentType.getText(), type, "Second Document type is wrong");
-		softAssert.assertEquals(secondDocumentCreated.getText(), createdDate, "Second Document created date is wrong");
-		softAssert.assertEquals(secondDocumentModified.getText(), createdDate,
+		softAssert.assertEquals(readSecondDocumenttTitle(), title, "Second Document title is wrong");
+		softAssert.assertEquals(readSecondDocumentExtension(), extension, "Second Document extension is wrong");
+		softAssert.assertEquals(readSecondDocumentType(), type, "Second Document type is wrong");
+		softAssert.assertEquals(readSecondDocumentCreated(), createdDate, "Second Document created date is wrong");
+		softAssert.assertEquals(readSecondDocumentModified(), createdDate,
 				"Second document modified date is wrong");
-		softAssert.assertEquals(secondDocumentAuthor.getText(), "Samuel Supervisor", "Second Docuemnt author is wrong");
-		softAssert.assertEquals(secondDocumentVersion.getText(), version, "Second Document version is worng");
-		softAssert.assertEquals(secondDocumentStatus.getText(), status, "Second Document status is wrong");
+		softAssert.assertEquals(readSecondDocumentAuthor(), "Samuel Supervisor", "Second Docuemnt author is wrong");
+		softAssert.assertEquals(readSecondDocVersion(), version, "Second Document version is worng");
+		softAssert.assertEquals(readSecondDocStatus(), status, "Second Document status is wrong");
 		softAssert.assertAll();
 		return this;
 
 	}
+	
+	public String readSecondDocumenttTitle(){
+		WaitHelper.waitForElement(secondDocumentTitle, driver);
+		String secondDocTitle = secondDocumentTitle.getText();
+		return secondDocTitle;
+	}
+	
+	public String readSecondDocumentExtension(){
+		WaitHelper.waitForElement(secondDocumentExtension, driver);
+		String secondDocExtension = secondDocumentExtension.getText();
+		return secondDocExtension;
+	}
+	
+	public String readSecondDocumentType(){
+		WaitHelper.waitForElement(secondDocumentType, driver);
+		String secondDocType = secondDocumentType.getText();
+		return secondDocType;
+	}
+	
+	public String readSecondDocumentCreated(){
+		WaitHelper.waitForElement(secondDocumentCreated, driver);
+		String secondDocCreated = secondDocumentCreated.getText();
+		return secondDocCreated;
+	}
+	
+	public String readSecondDocumentModified(){
+		WaitHelper.waitForElement(secondDocumentModified, driver);
+		String secondDocModified = secondDocumentModified.getText();
+	    return secondDocModified;	
+	}
+	
+	public String readSecondDocumentAuthor(){
+	    String secondDocAuthor = secondDocumentAuthor.getText();
+	    return secondDocAuthor;
+	}
+	
+	public String readSecondDocVersion(){
+		WaitHelper.waitForElement(secondDocumentVersion, driver);
+		String secondDocVersion = secondDocumentVersion.getText();
+		return secondDocVersion;
+	}
+	
+	public String readSecondDocStatus(){
+		String secondDocStatus = secondDocumentStatus.getText();
+		return secondDocStatus;
+	}	
 
 	public CaseDocumentsPage performRightClickOnRoot() {
-
-		Actions actions = new Actions(driver);
+		WaitHelper.waitForElement(root, driver);
+		Actions actions = new Actions(driver);		
 		Action action = actions.contextClick(root).build();
 		action.perform();
 		return this;
@@ -328,7 +380,7 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 	}
 
 	public CaseDocumentsPage clickDocumentOther() {
-
+        WaitHelper.waitForElement(documentOther, driver);
 		documentOther.click();
 		return this;
 
@@ -1051,5 +1103,23 @@ public class CaseDocumentsPage extends ArkCaseTestBase {
 				correspondenceGeneralRelease.getText());
 		return this;
 	}
+	
+    public Boolean pictureUploaded(){	
+		
+		Boolean pictureUploaded = false;
+		if (driver.findElements(By.xpath("//*[@title='imageprofile']")).size() > 0)
+		{
+			pictureUploaded = true;
+		}
+		else 
+		{
+			pictureUploaded = false;
+		}
+		
+		return pictureUploaded;
+	}
+
+	
+	
 
 }

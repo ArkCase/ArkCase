@@ -1,0 +1,477 @@
+{
+  "organizations": {
+    "title": "Organizaciones",
+    "progressNoComplaint": "[ Sin datos de organizaciones ]",
+    "progressLoading": "Organización de carga",
+    "progressError": "Error al cargar la organización",
+    "NoDataMessage": "Sin Datos"
+  },
+  "organizations.menus": {
+    "leftnav.item": "Organizaciones",
+    "topbar.item": "Organización"
+  },
+  "organizations.comp.main": {
+    "title": "Descripción general"
+  },
+  "organizations.comp.info": {
+    "title": "Información",
+    "phone.label": "Teléfono",
+    "email.label": "Email",
+    "status.label": "Estado",
+    "organization.label": "Organización",
+    "identification.label": "ID",
+    "primary.label": "Contacto principal",
+    "parent.label": "Organización principal",
+    "parent.placeholder": "Ingresar a la organización principal"
+  },
+  "organizations.comp.actions": {
+    "title": "Acciones",
+    "export.button": "Exportar",
+    "import.button": "Importar",
+    "delete.button": "Borrar",
+    "activate.button": "Activar",
+    "deactivate.button": "Desactivar",
+    "merge.button": "Combinar"
+  },
+  "organizations.comp.details": {
+    "title": "Detalles",
+    "informSaved": "es_Organization details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "organizations.comp.addresses": {
+    "title": "Ubicaciones",
+    "table.columns": {
+      "type": "es_Type",
+      "streetAddress": "es_Address 1",
+      "streetAddress2": "es_Address 2",
+      "city": "es_City",
+      "state": "es_State",
+      "zip": "es_Zip",
+      "country": "es_Country",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No"
+    },
+    "actions": {
+      "addNew": "es_Add New",
+      "map": "es_Map"
+    },
+    "modal": {
+      "addAddress": "es_Add Location",
+      "editAddress": "es_Edit Record",
+      "type.label": "es_Address Type",
+      "type.placeholder": "es_Enter Address Type",
+      "streetAddress.label": "es_Address 1",
+      "streetAddress.placeholder": "es_Enter Address 1",
+      "streetAddress2.label": "es_Address 2",
+      "streetAddress2.placeholder": "es_Enter Address 2",
+      "city.label": "es_City",
+      "city.placeholder": "es_Enter City",
+      "zip.label": "es_Zip",
+      "zip.placeholder": "es_Enter Zip",
+      "state.label": "es_State",
+      "state.placeholder": "es_Enter State",
+      "country.label": "es_Country",
+      "country.placeholder": "es_Enter Country",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save Location",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No"
+    }
+  },
+  "organizations.comp.phones": {
+    "title": "Números de teléfono",
+    "table.columns": {
+      "type": "es_Phone Type",
+      "value": "es_Phone Number",
+      "description": "es_Description",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New"
+    },
+    "modal": {
+      "addPhone": "es_Add New Phone Number",
+      "editPhone": "es_Edit Phone Number",
+      "title": "es_Add New Phone Number",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "description": "es_Description",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save Phone Number",
+      "type.label": "es_Phone Type",
+      "type.placeholder": "es_Enter Phone Type",
+      "value.label": "es_Phone Number",
+      "value.placeholder": "es_Enter Phone Number"
+    }
+  },
+  "organizations.comp.faxes": {
+    "title": "Números de fax",
+    "table.columns": {
+      "type": "es_Fax Type",
+      "value": "es_Fax Number",
+      "description": "es_Description",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New"
+    },
+    "modal": {
+      "addFax": "es_Add New Fax Number",
+      "editFax": "es_Edit Fax Number",
+      "title": "es_Add New Fax Number",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "description": "es_Description",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save Fax Number",
+      "type.label": "es_Fax Type",
+      "type.placeholder": "es_Enter Fax Type",
+      "value.label": "es_Fax Number",
+      "value.placeholder": "es_Enter Fax Number"
+    }
+  },
+  "organizations.comp.emails": {
+    "title": "Correo electrónico",
+    "table.columns": {
+      "type": "es_Email Address Type",
+      "value": "es_Email Address",
+      "description": "es_Description",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New"
+    },
+    "modal": {
+      "title": "es_Add New Email Address",
+      "addEmail": "es_Add New Email Address",
+      "editEmail": "es_Edit Email Address",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "description": "es_Description",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save Email Address",
+      "type.label": "es_Email Type",
+      "type.placeholder": "es_Enter Email Type",
+      "value.label": "es_Email Address",
+      "value.placeholder": "es_Enter Email Address"
+    }
+  },
+  "organizations.comp.urls": {
+    "title": "URL",
+    "table.columns": {
+      "type": "es_Type",
+      "value": "es_Url",
+      "description": "es_Description",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New"
+    },
+    "modal": {
+      "title": "es_Add New URL",
+      "addUrl": "es_Add New URL",
+      "editUrl": "es_Edit URL",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "description": "es_Description",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save URL",
+      "type.label": "es_Type",
+      "type.placeholder": "es_Enter Type",
+      "value.label": "es_URL",
+      "value.placeholder": "es_Enter URL"
+    }
+  },
+  "organizations.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
+  "organizations.comp.dbas": {
+    "title": "DBA",
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "upload": "es_New DBA"
+    },
+    "table.columns": {
+      "value": "es_DBA",
+      "type": "es_Type",
+      "description": "es_Description",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "modal": {
+      "addDBA": "es_Add New DBA",
+      "editDBA": "es_Edit DBA",
+      "title": "es_Insert New DBA",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save DBA",
+      "value.label": "es_DBA",
+      "value.placeholder": "es_Enter DBA",
+      "description": "es_Description",
+      "aliasType.label": "es_DBA Type",
+      "aliasType.placeholder": "es_Enter DBA Type"
+    }
+  },
+  "organizations.comp.ids": {
+    "title": "Identificación de organización",
+    "table.columns": {
+      "type": "es_Type",
+      "id": "es_ID",
+      "number": "es_Number",
+      "issuer": "es_Issuer",
+      "yearIssued": "es_Year Issued",
+      "created": "es_Date Added",
+      "creator": "es_Added By",
+      "modified": "es_Last Modified",
+      "modifier": "es_Modified By"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New"
+    },
+    "modal": {
+      "addID": "es_Add New Identification",
+      "editID": "es_Edit Identification",
+      "title": "es_Add New Identification",
+      "setPrimary": "es_Set as Primary?",
+      "yes": "es_Yes",
+      "no": "es_No",
+      "type.label": "es_Type",
+      "type.placeholder": "es_Enter Type",
+      "id.label": "es_ID",
+      "id.placeholder": "es_Enter ID",
+      "number.label": "es_Number",
+      "number.placeholder": "es_Enter Number",
+      "issuer.label": "es_Issuer",
+      "issuer.placeholder": "es_Enter Issuer",
+      "yearIssued.label": "es_Year Issued",
+      "yearIssued.placeholder": "es_Enter Year Issued",
+      "yearIssued.close.button": "es_Close",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save ID"
+    }
+  },
+  "organizations.comp.people": {
+    "title": "Personas",
+    "table.columns": {
+      "type": "es_Role",
+      "firstName": "es_FirstName",
+      "lastName": "es_LastName",
+      "organization": "es_Organization",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New",
+      "addExisting": "es_Add Existing"
+    }
+  },
+  "organizations.comp.cases": {
+    "title": "Casos",
+    "table.columns": {
+      "priority": "es_Priority",
+      "id": "es_ID",
+      "title": "es_Title",
+      "status": "es_Status",
+      "assignee": "es_Assignee",
+      "modified": "es_Modified"
+    }
+  },
+  "organizations.comp.complaints": {
+    "title": "Reclamaciones",
+    "table.columns": {
+      "priority": "es_Priority",
+      "id": "es_ID",
+      "title": "es_Title",
+      "status": "es_Status",
+      "assignee": "es_Assignee",
+      "modified": "es_Modified"
+    }
+  },
+  "organizations.comp.related": {
+    "title": "Organizaciones relacionadas",
+    "table.columns": {
+      "associationType": "es_Relationship",
+      "type": "es_Type",
+      "identification": "es_ID",
+      "value": "es_Organization",
+      "contact": "es_Primary Contact",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    },
+    "modal": {
+      "title": "es_Add Related Organization",
+      "type.label": "es_Relationship",
+      "type.placeholder": "es_Enter Relationship",
+      "organization.label": "es_Organization",
+      "organization.placeholder": "es_Search Organizations",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Save Related Organization"
+    }
+  },
+  "organizations.comp.history": {
+    "title": "Historial",
+    "table.columns": {
+      "eventType": "es_Event Name",
+      "eventDate": "es_Date",
+      "userId": "es_User"
+    }
+  },
+  "organizations.comp.newOrganization": {
+    "title": "es_Organization",
+    "addAnother": "es_Add Another",
+    "remove": "es_Remove",
+    "name": "es_Organization Name",
+    "name.placeholder": "es_Enter Organization Name",
+    "type": "es_Organization Type",
+    "type.placeholder": "es_Select Organization Type",
+    "saveButton": "es_Save Organization",
+    "parentOrganization": "es_Parent organization",
+    "searchParentOrganization.placeholder": "es_Search Parent Organization",
+    "communicationAccounts": {
+      "title": "es_Communication Accounts",
+      "phone": "es_Phone",
+      "phone.placeholder": "es_Enter Phone",
+      "phoneType": "es_Phone Type",
+      "email": "es_Email",
+      "email.placeholder": "es_Enter Email",
+      "emailType": "es_Email Type",
+      "fax": "es_Fax",
+      "fax.placeholder": "es_Enter Fax",
+      "faxType": "es_Fax Type",
+      "url": "es_URL",
+      "url.placeholder": "es_Enter URL",
+      "removeContactMethod": "es_Remove",
+      "urlType": "es_URL Type"
+    },
+    "people": {
+      "title": "es_People",
+      "searchExisting.placeholder": "es_Search Existing Person",
+      "personType": "es_Person Type"
+    },
+    "locations": {
+      "title": "es_Locations",
+      "country": "es_Country",
+      "country.placeholder": "es_Select Country",
+      "state": "es_State",
+      "state.placeholder": "es_Enter State",
+      "zip": "es_Zip",
+      "zip.placeholder": "es_Enter Zip",
+      "city": "es_City",
+      "city.placeholder": "es_Enter City",
+      "type": "es_Address Type",
+      "type.placeholder": "es_Select Address Type",
+      "streetAddress": "es_Street Address",
+      "streetAddress.placeholder": "es_Enter Street Address",
+      "streetAddress2": "es_Street Address2",
+      "streetAddress2.placeholder": "es_Enter Street Address2"
+    },
+    "identification": {
+      "title": "es_Identifications",
+      "identificationID": "es_Identification ID",
+      "identificationID.placeholder": "es_Enter Identification ID",
+      "identificationType": "es_Identification Type",
+      "identificationType.placeholder": "es_Select Identification Type",
+      "identificationNumber": "es_Identification Number",
+      "identificationNumber.placeholder": "es_Enter Identification Number",
+      "identificationIssuer": "es_Identification Issuer",
+      "identificationIssuer.placeholder": "es_Enter Identification Issuer",
+      "identificationYearIssued": "es_Identification Issued Date",
+      "identificationYearIssued.placeholder": "es_Select Identification Issued",
+      "identificationYearIssued.close.button": "es_Close"
+    },
+    "informCreated": "es_{{objectType}} {{organizationValue}} was created."
+  },
+  "organizations.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "addresses.label": "Ubicaciones",
+      "phones.label": "Números de teléfono",
+      "faxes.label": "Números de fax",
+      "emails.label": "Correo electrónico",
+      "urls.label": "URL",
+      "participants.label": "Participantes",
+      "dbas.label": "DBA",
+      "people.label": "Personas",
+      "ids.label": "Identificación de organización",
+      "complaints.label": "Reclamaciones",
+      "cases.label": "Casos",
+      "related.label": "Organizaciones relacionadas",
+      "history.label": "Historia"
+    },
+    "filters": {
+      "iHaveCreated": "Todo lo que he creado",
+      "noFilter": "(Sin Filtro)"
+    },
+    "sorters": {
+      "createdDateAsc": "Ordenar Fecha Creciente",
+      "createdDateDesc": "Sort Date Created Descending",
+      "idAsc": "Clasificar ID de organización ascendente",
+      "idDesc": "Clasificar ID de organización Descending",
+      "nameAsc": "Ordenar por nombre de organización A-Z",
+      "nameDesc": "Ordenar por nombre de organización Z-A",
+      "noSort": "(Sin clasificación)"
+    }
+  }
+}

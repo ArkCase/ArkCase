@@ -1,0 +1,421 @@
+{
+  "cases": {
+    "title": "案件",
+    "progressNoCase": "[ 无案件文件 ]",
+    "progressLoading": "装载文件",
+    "progressError": "加载案例文件失败"
+  },
+  "cases.menus": {
+    "leftnav.item": "案件",
+    "topbar.item": "案件"
+  },
+  "cases.error": {
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "概述"
+  },
+  "cases.comp.info": {
+    "title": "信息",
+    "caseId": "案件识别号:",
+    "caseNumber": "案件号码:",
+    "courtRoomName": "法庭名称:",
+    "type.label": "种类",
+    "created.label": "创建日期",
+    "priority.label": "优先级别",
+    "assignee.label": "指定人员",
+    "owningGroup.label": "所属群体",
+    "dueDate.label": "到期日期",
+    "priorities": {
+      "low%": "低级",
+      "medium%": "中级",
+      "high%": "高级",
+      "expedite%": "加急",
+      "unknown%": "未选"
+    },
+    "caseTypes": {
+      "agricultural%": "农业",
+      "arson%": "纵火",
+      "backgroundInvestigation%": "背景调查",
+      "benefitsAppeal%": "福利上诉",
+      "businessDispute%": "更好商业的纠纷",
+      "clinicalFraud%": "临床调查员欺诈",
+      "congressional%": "国会响应",
+      "disabilityWaiver%": "残疾豁免请求",
+      "domesticDispute%": "家庭纠纷",
+      "drugTrafficking%": "贩毒运毒",
+      "educationWaiver%": "教育豁免申请书",
+      "eeoHarassment%": "EEO/骚扰",
+      "embezzlement%": "贪污",
+      "extortion%": "勒索",
+      "fraud%": "欺诈",
+      "government%": "政府",
+      "investorComplaint%": "投资者投诉",
+      "laborRacketeering%": "劳工敲诈",
+      "local%": "当地",
+      "murder%": "谋杀",
+      "newDrugFraud%": "新药申请欺诈",
+      "payoff%": "行贿",
+      "pensionWaiver%": "退休金申请",
+      "pollution%": "污染",
+      "productTampering%": "产品篡改",
+      "assetTheftMisuse%": "盗用或滥用资产"
+    }
+  },
+  "cases.comp.actions": {
+    "title": "行动",
+    "restrict": "受限制?",
+    "new.button": "创建",
+    "edit.button": "更改",
+    "status.button": "更改案例状态",
+    "reinvestigate.button": "重新调查",
+    "subscribe.button": "订阅",
+    "unsubscribe.button": "取消订阅",
+    "claim.button": "申明权益",
+    "unclaim.button": "取消申权",
+    "merge.button": "合并",
+    "split.button": "分开"
+  },
+  "cases.comp.details": {
+    "title": "详情",
+    "informSaved": "zh-cn_Case details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "文件",
+    "sendEmail": "zh-cn_Send Email",
+    "filterInputPlaceholder": "zh-cn_Filter",
+    "searchInputPlaceholder": "zh-cn_Search"
+  },
+  "cases.comp.people": {
+    "title": "成员",
+    "table.columns": {
+      "entity": "zh-cn_Entity",
+      "type": "zh-cn_Type",
+      "firstName": "zh-cn_FirstName",
+      "lastName": "zh-cn_LastName"
+    },
+    "contactMethods": {
+      "title": "zh-cn_ContactMethods",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "组织",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "地点",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "streetAddress": "zh-cn_Address",
+        "city": "zh-cn_City",
+        "state": "zh-cn_State",
+        "zip": "zh-cn_Zip",
+        "country": "zh-cn_Country",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "zh-cn_Aliases",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "zh-cn_Security Tags",
+      "table.columns": {
+        "type": "zh-cn_Type",
+        "value": "zh-cn_Value",
+        "created": "zh-cn_Date Added",
+        "creator": "zh-cn_Added By",
+        "modified": "zh-cn_Last Modified",
+        "modifier": "zh-cn_Modified By"
+      }
+    }
+  },
+  "cases.comp.organizations": {
+    "title": "组织",
+    "table.columns": {
+      "name": "zh-cn_Organization Name",
+      "associationType": "zh-cn_Role",
+      "type": "zh-cn_Organization Type",
+      "identification": "zh-cn_ID",
+      "value": "zh-cn_Organization",
+      "contact": "zh-cn_Primary Contact",
+      "phone": "zh-cn_Phone",
+      "location": "zh-cn_Location"
+    }
+  },
+  "cases.comp.participants": {
+    "title": "参与成员",
+    "table.columns": {
+      "type": "zh-cn_Type",
+      "name": "zh-cn_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-cn_Choose User",
+      "table.columns": {
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "id": "zh-cn_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-cn_Choose Group",
+      "table.columns": {
+        "name": "zh-cn_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "注释",
+    "table.columns": {
+      "note": "zh-cn_Note",
+      "created": "zh-cn_Created",
+      "creator": "zh-cn_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "任务",
+    "table.columns": {
+      "title": "zh-cn_Title",
+      "assignee": "zh-cn_Assignee",
+      "created": "zh-cn_Created",
+      "priority": "zh-cn_Priority",
+      "due": "zh-cn_Due",
+      "status": "zh-cn_Status"
+    },
+    "table.overdue.tooltip": "zh-cn_Task is Overdue",
+    "table.deadline.tooltip": "zh-cn_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "参考",
+    "table.columns": {
+      "targetName": "zh-cn_Number",
+      "parentName": "zh-cn_Parent",
+      "targetTitle": "zh-cn_Title",
+      "modified": "zh-cn_Modified",
+      "targetType": "zh-cn_Reference Type",
+      "status": "zh-cn_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "历史",
+    "table.columns": {
+      "eventType": "zh-cn_Event Name",
+      "eventDate": "zh-cn_Date",
+      "userId": "zh-cn_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "时间",
+    "table.columns": {
+      "name": "zh-cn_Form Name",
+      "user": "zh-cn_User",
+      "tally": "zh-cn_Total Hours",
+      "modified": "zh-cn_Modified Date",
+      "status": "zh-cn_Status"
+    },
+    "formNamePrefix": "zh-cn_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "成本",
+    "table.columns": {
+      "name": "zh-cn_Form Name",
+      "user": "zh-cn_User",
+      "tally": "zh-cn_Total Cost",
+      "modified": "zh-cn_Modified Date",
+      "status": "zh-cn_Status"
+    },
+    "formNamePrefix": "zh-cn_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "标签",
+    "table.columns": {
+      "tag": "zh-cn_Tag",
+      "created": "zh-cn_Created",
+      "createdBy": "zh-cn_Created By"
+    },
+    "modal": {
+      "title": "zh-cn_Tag",
+      "search": "zh-cn_Search for Tag",
+      "buttons": {
+        "cancel": "zh-cn_Cancel",
+        "ok": "zh-cn_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-cn_already associated",
+      "delete": {
+        "success": "zh-cn_Tag deleted successfully",
+        "error": "zh-cn_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "日历"
+  },
+  "cases.comp.merge": {
+    "id": "zh-cn_merge",
+    "title": "zh-cn_Merge",
+    "cancel.btn": "zh-cn_Cancel",
+    "merge.btn": "zh-cn_Merge",
+    "search.placeholder": "zh-cn_Search for case file.",
+    "search.btn": "zh-cn_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "zh-cn_Type",
+      "name": "zh-cn_Name",
+      "assignee": "zh-cn_Assignee",
+      "title": "zh-cn_Title",
+      "parent": "zh-cn_Parent",
+      "modified": "zh-cn_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "zh-cn_Split",
+    "cancel": "zh-cn_Cancel",
+    "split": "zh-cn_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "zh-cn_Add Reference",
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Add",
+    "search": {
+      "placeholder": "zh-cn_Search for case, complaint, file, task",
+      "btn": "zh-cn_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "zh-cn_Id",
+        "name": "zh-cn_Name",
+        "type": "zh-cn_Type",
+        "title": "zh-cn_Title",
+        "parent": "zh-cn_Parent",
+        "assignee": "zh-cn_Assignee",
+        "modified": "zh-cn_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "zh-cn_Change Assignee",
+    "assigneeNamelabel": "zh-cn_Assignee Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchAssigneeHeader": "zh-cn_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "zh-cn_Change Group",
+    "groupNamelabel": "zh-cn_Group Name",
+    "btnCancelText": "zh-cn_Cancel",
+    "btnSaveText": "zh-cn_Save",
+    "searchGroupHeader": "zh-cn_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "批准流程",
+    "addNewTooltip": "zh-cn_Add new approver",
+    "noBuckslipMessage": "zh-cn_No Data",
+    "button": {
+      "save.tooltip": "zh-cn_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "zh-cn_Full Name"
+    },
+    "assignee.label": "zh-cn_Assignee",
+    "owningGroup.label": "zh-cn_Owning Group",
+    "priority.label": "zh-cn_Priority",
+    "startDate.label": "zh-cn_Start Date",
+    "dueDate.label": "zh-cn_Due Date",
+    "state.label": "zh-cn_State"
+  },
+  "cases.comp.pastApprovals": {
+    "title": "过去批准",
+    "noBuckslipMessage": "zh-cn_No Data",
+    "table.columns": {
+      "approvalDate": "zh-cn_Approval Date",
+      "approverId": "zh-cn_Approver",
+      "approverFullName": "zh-cn_Approver",
+      "approverDecision": "zh-cn_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "选择用户",
+    "title": "zh-cn_User/Group Search",
+    "search": {
+      "btn": "zh-cn_Search",
+      "placeholder": "zh-cn_Search for the user or group."
+    },
+    "cancelButton": "zh-cn_Cancel",
+    "confirmButton": "zh-cn_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "zh-cn_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "zh-cn_Name",
+      "type": "zh-cn_Type",
+      "title": "zh-cn_Title",
+      "username": "zh-cn_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "people.label": "成员",
+      "organizations.label": "组织",
+      "documents.label": "文件",
+      "participants.label": "参与成员",
+      "notes.label": "注释",
+      "tasks.label": "任务",
+      "references.label": "参考",
+      "history.label": "历史",
+      "time.label": "时间",
+      "cost.label": "成本",
+      "tags.label": "标签",
+      "calendar.label": "日历",
+      "approvalRouting.label": "批准流程"
+    },
+    "filters": {
+      "opened": "所有打开的",
+      "iHaveCreated": "我所创建的",
+      "iAmAssigned": "指定给我的",
+      "iAmFollowing": "我关注的",
+      "closedNoFurtherAction": "所有关闭的",
+      "noFilter": "(无限制)"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按案件号排序",
+      "idDesc": "按案件号反排序",
+      "nameAsc": "按名称排序",
+      "noSort": "(不排序)"
+    }
+  }
+}

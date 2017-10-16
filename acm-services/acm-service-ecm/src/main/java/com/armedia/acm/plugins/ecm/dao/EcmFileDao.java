@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class EcmFileDao extends AcmAbstractDao<EcmFile>
 {
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
-	
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
+
     @Override
     protected Class<EcmFile> getPersistenceClass()
     {
@@ -62,7 +62,9 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         if (!excludeDocumentTypes.isEmpty())
             query.setParameter("fileTypes", excludeDocumentTypes);
 
-        return query.executeUpdate();
+        int retval = query.executeUpdate();
+
+        return retval;
     }
 
     public EcmFile findForContainerAttachmentFolderAndFileType(Long containerId, Long folderId, String fileType)
@@ -70,31 +72,31 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         String jpql = "SELECT e " +
                 "FROM EcmFile e " +
                 "WHERE e.container.id = :containerId " +
-                "AND e.container.attachmentFolder.id = :folderId " + 
+                "AND e.container.attachmentFolder.id = :folderId " +
                 "AND e.fileType = :fileType";
 
         return executeJpqlForContainerIdFolderIdAndFileType(jpql, containerId, folderId, fileType);
     }
-    
+
     private EcmFile executeJpqlForContainerIdFolderIdAndFileType(String jpql, Long containerId, Long folderId, String fileType)
     {
         Query query = getEm().createQuery(jpql);
-        
+
         query.setParameter("containerId", containerId);
         query.setParameter("folderId", folderId);
         query.setParameter("fileType", fileType);
 
         EcmFile result = null;
-        
+
         try
         {
         	result = (EcmFile) query.getSingleResult();
         }
         catch(NoResultException e)
         {
-        	LOG.error("Cannot find EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType, e);
+            LOG.debug("Cannot find EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]", containerId, folderId, fileType, e);
         }
-        catch (NonUniqueResultException e1) 
+        catch (NonUniqueResultException e1)
         {
         	LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType + ". Multiple files found ...", e1);
 		}
@@ -103,7 +105,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     }
 
 
-    public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId) {
+    public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId)
+    {
 
         String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId and e.folder.id=:folderId";
 
@@ -116,13 +119,27 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         return file;
     }
+
+    public List<EcmFile> findByCmisFileId(String cmisFileId)
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.versionSeriesId = :cmisFileId";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        query.setParameter("cmisFileId", cmisFileId);
+
+        return query.getResultList();
+    }
+
     @Transactional
-    public void deleteFile(Long id) {
+    public void deleteFile(Long id)
+    {
         EcmFile file = getEm().find(getPersistenceClass(),id);
         getEm().remove(file);
     }
 
-    public List<EcmFile> findByFolderId(Long folderId) {
+    public List<EcmFile> findByFolderId(Long folderId)
+    {
         String jpql = "SELECT e FROM EcmFile e WHERE e.folder.id=:folderId";
 
         TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -130,7 +147,6 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         query.setParameter("folderId", folderId);
 
         return query.getResultList();
-
 
     }
 }

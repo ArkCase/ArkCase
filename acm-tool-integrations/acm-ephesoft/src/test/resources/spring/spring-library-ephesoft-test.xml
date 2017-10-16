@@ -21,11 +21,6 @@
         <constructor-arg value="Not really an activiti bean"/>
     </bean>
 
-    <!-- dummy bean for the drools deployer -->
-    <bean id="drlDeployer" class="java.lang.String">
-        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
-    </bean>
-
     <bean id="vfsManager" class="org.apache.commons.vfs2.VFS" factory-method="getManager"/>
 
     <!-- Capture File -->

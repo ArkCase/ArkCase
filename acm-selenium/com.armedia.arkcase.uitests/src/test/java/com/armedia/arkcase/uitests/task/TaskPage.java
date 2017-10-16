@@ -8,6 +8,7 @@ import org.openqa.selenium.support.How;
 import org.testng.asserts.SoftAssert;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
 
 public class TaskPage extends ArkCaseTestBase {
 	
@@ -36,7 +37,7 @@ public class TaskPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[2]/label/select")
 	@CacheLookup
 	WebElement statusDropDown;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[2]/label/select/option[1]")
+	@FindBy(how = How.ID, using = "subject")
 	@CacheLookup
 	WebElement statusActive;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[2]/label/select/option[2]")
@@ -45,28 +46,28 @@ public class TaskPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[2]/label/select/option[3]")
 	@CacheLookup
 	WebElement statusClosed;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[3]/label")
+	@FindBy(how = How.XPATH, using = ".//label[@for='dueDate']")
 	@CacheLookup
 	WebElement dueDateLabel;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[3]/div/div/input")
+	@FindBy(how = How.ID, using = "dueDate")
 	@CacheLookup
 	WebElement dueDateInput;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[3]/div/div/span/button")
+	@FindBy(how = How.XPATH, using = "html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[2]/div/div/span/button")
 	@CacheLookup
 	WebElement dueDateCalendar;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select")
+	@FindBy(how = How.XPATH, using = ".//select[@ng-model='config.data.priority']")
 	@CacheLookup
 	WebElement priorityDropDown;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select/option[1]")
+	@FindBy(how = How.XPATH, using = ".//option[@label='Low']")
 	@CacheLookup
 	WebElement priorityLow;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select/option[2]")
+	@FindBy(how = How.XPATH, using = ".//option[@label='Medium']")
 	@CacheLookup
 	WebElement priorityMedium;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select/option[3]")
+	@FindBy(how = How.XPATH, using = ".//option[@label='High']")
 	@CacheLookup
 	WebElement priorityHigh;
-	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[4]/div[4]/label/select/option[4]")
+	@FindBy(how = How.XPATH, using = ".//option[@label='Expedite']")
 	@CacheLookup
 	WebElement priorityExpedite;
 	@FindBy(how = How.XPATH, using = "/html/body/div[2]/div/div[2]/section/div/div/form/div[2]/div[5]/div/label")
@@ -375,10 +376,10 @@ public class TaskPage extends ArkCaseTestBase {
 	}
 
 	public void typeStartDate(String startdate) {
-
-		startDateInput.click();
-		startDateInput.clear();
-		startDateInput.sendKeys(startdate);
+        WebElement el = WaitHelper.getWhenElementIsVisible(startDateInput, 60, driver);
+		el.click();
+		el.clear();
+		el.sendKeys(startdate);
 	}
 
 	public void selectStatusClosed() {

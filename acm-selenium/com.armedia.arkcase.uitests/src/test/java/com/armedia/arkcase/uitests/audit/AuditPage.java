@@ -7,6 +7,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
 
 import com.armedia.arkcase.uitests.base.ArkCaseTestBase;
+import com.armedia.arkcase.uitests.base.WaitHelper;
+import com.thoughtworks.selenium.webdriven.commands.WaitForPageToLoad;
 
 public class AuditPage extends ArkCaseTestBase {
 
@@ -46,7 +48,7 @@ public class AuditPage extends ArkCaseTestBase {
 	@FindBy(how = How.XPATH, using ="//table/tbody/tr[2]/td[8]")
     WebElement objectTypeColumnHeader;	
 	public AuditPage ReportsMenuClick() {
-
+		WaitHelper.getWhenElementIsVisible(ReportsLink, 60, driver);
 		ReportsLink.click();
 		return this;
 	}
@@ -87,12 +89,12 @@ public class AuditPage extends ArkCaseTestBase {
 		return this;
 	}
 
-	public AuditPage generateAuditReport(String report, String idvalue, String datefrom, String dateto) {
+	public AuditPage generateAuditReport(String report, String idvalue, String datefrom, String dateto) {		
 		selectReportName(report);
 		insertId(idvalue);
 		insertDateFrom(datefrom);
 		insertDateTo(dateto);
-		generateAuditReportButtonClick();
+		generateAuditReportButtonClick();		
 		return this;
 	}
 	
@@ -112,6 +114,7 @@ public class AuditPage extends ArkCaseTestBase {
 	
 	public String readDateColumnHeader()
 	{
+		WaitHelper.waitForElement(dateColumnHeader, driver);
 		return dateColumnHeader.getText();
 	}
 	

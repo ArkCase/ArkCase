@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "Audit",
+    "menus": {
+      "leftnav.item": "Audit"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "Report Name",
+        "inputID": "ID",
+        "dateFrom": "From",
+        "dateTo": "To"
+      },
+      "placeholder": {
+        "selectAudit": "ALL",
+        "inputId": "#"
+      },
+      "button": {
+        "generateAuditReport.btn": "Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "Done"
+    }
+  }
+}

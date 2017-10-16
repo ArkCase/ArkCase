@@ -142,8 +142,82 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
                         return searchObj;
                     }
                 }
+            },
+
+            /**
+             * @ngdoc method
+             * @name queryAutoSuggestSearch
+             * @methodOf services:Search.SearchService
+             *
+             * @description
+             * Performs "Auto-Suggest Search" REST call by supplying default filters
+             *
+             * @param {String} query Query to send to the server
+             * @returns {HttpPromise} Future info about auto-suggest search
+             */
+            queryAutoSuggestSearch: {
+                method: 'GET',
+                url: "api/v1/plugin/search/suggest?q=:query&core=:core&filter=:filter",
+                cache: false,
+                isArray: false,
+                transformResponse: function (data, headerGetter) {
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
+                        return searchObj;
+                    }
+                }
+            },
+
+            /**
+             * @ngdoc method
+             * @name queryAutoSuggestSearch
+             * @methodOf services:Search.SearchService
+             *
+             * @description
+             * Performs "Auto-Suggest Search" REST call by supplying default filters
+             *
+             * @param {String} query Query to send to the server
+             * @returns {HttpPromise} Future info about auto-suggest search
+             */
+            queryAutoSuggestSearchNoFilters: {
+                method: 'GET',
+                url: "api/v1/plugin/search/suggest?q=:query&core=:core",
+                cache: false,
+                isArray: false,
+                transformResponse: function (data, headerGetter) {
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
+                        return searchObj;
+                    }
+                }
+            },
+
+            /**
+             * @ngdoc method
+             * @name querySimpleSearch
+             * @methodOf services:Search.SearchService
+             *
+             * @description
+             * Performs a very basic search with a simple query call to the advancedSearch API
+             * Good for simple queries
+             *
+             * @param {String} query Query to send to the server, no added facets
+             * @returns {HttpPronmise} Future info about advanced search
+             */
+            querySimpleSearch: {
+                method: 'GET',
+                url: "api/v1/plugin/search/advancedSearch?q=:query",
+                cache: false,
+                isArray: false,
+                transformResponse: function (data, headerGetter) {
+                    var searchObj = JSON.parse(data);
+                    if (Service.validateSolrData(searchObj)) {
+                        return searchObj;
+                    }
+                }
             }
         });
+
 
         /**
          * @ngdoc method
@@ -170,12 +244,14 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
             //            if (0 != responseHeader.status) {
             //                return false;
             //            }
+            /*
             if (Util.isEmpty(data.responseHeader.params)) {
                 return false;
             }
             if (Util.isEmpty(data.responseHeader.params.q)) {
                 return false;
             }
+            */
 
             if (Util.isEmpty(data.response.numFound) || Util.isEmpty(data.response.start)) {
                 return false;

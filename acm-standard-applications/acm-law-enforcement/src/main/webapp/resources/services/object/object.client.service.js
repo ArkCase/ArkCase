@@ -23,6 +23,11 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , COSTSHEET: "COSTSHEET"
                 , DOCUMENT: "DOCUMENT"
                 , FILE: "FILE"
+                , DOC_REPO: "DOC_REPO"
+                , MY_DOC_REPO: "MY_DOC_REPO"
+                , PERSON: "PERSON"
+                , ORGANIZATION: "ORGANIZATION"
+
             }
 
             , LockTypes: {
@@ -60,10 +65,9 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                     function (objectTypes) {
                         var found = _.find(objectTypes, {key: objTypeKey});
                         var objType = Util.goodMapValue(found, "type");
-
                         if (Util.goodMapValue(found, "state", false)) {
-                            var params = { id : objId, type : objType };
-                            $state.go(found.state, params);
+                            var params = {id: objId, type: objType};
+                            $state.transitionTo(found.state, params, {reload: true, notify: true});
 
                         } else if (Util.goodMapValue(found, "url", false)) {
                             var url = found.url;
@@ -74,13 +78,34 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                             } else {
                                 $window.location.href = url;
                             }
-                            
+
                         } else {
                             $log.warn("No state or url specified in object type lookup");
                         }
                         return objectTypes;
                     }
                 );
+            }
+
+            /**
+             * @ngdoc method
+             * @name openObject
+             * @methodOf services:Object.ObjectService
+             *
+             * @param {String} parentType, Lookup parent Type of the file.
+             * @param {String} fileName, Lookup name.
+             * @param {Number} targetId, target id of the file.
+             * @param {Number} parentId,  parent id of the file.
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer
+             * from referenced files from Case, Complain or Task.
+             */
+            , openObject: function (targetId, parentId, parentType, fileName) {
+                var baseUrl = window.location.href.split('!')[0];
+                var urlArgs = targetId + "/" + parentId + "/" + parentType + "/" + fileName + "/" + targetId;
+
+                window.open(baseUrl + '!/viewer/' + urlArgs);
             }
 
         };

@@ -13,7 +13,7 @@
     <property name="cmOrderLength" value="NUMBER(32,0)" dbms="postgresql,oracle"/>
     <property name="cmOrderLength" value="BIGINT" dbms="mysql,mssql"/>
 
-    <changeSet id="01-create-complaint-table" author="dmiller">
+    <changeSet id="01-create-complaint-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_complaint">
             <column name="cm_complaint_id" type="${idType}">
                 <constraints
@@ -33,6 +33,60 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_complaint_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_title" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_details" type="CLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_originator_id" type="${fkIdType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_target_name" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_complaint_incident_date" type="${timestampType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_complaint_priority" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="acm_complaint" indexName="idx_complaint_originator_id">
+            <column name="cm_originator_id"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="01-create-complaint-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_complaint">
+            <column name="cm_complaint_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_complaint"/>
+            </column>
+            <column name="cm_complaint_status" type="VARCHAR(128)" defaultValue="DRAFT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_number" type="VARCHAR(${complaintNumberLength})">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_complaint_number"/>
+            </column>
+            <column name="cm_complaint_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_complaint_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_complaint_modifier" type="VARCHAR(1024)">
@@ -143,7 +197,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller">
+    <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_close_complaint_request">
             <column name="cm_close_complaint_id" type="${idType}">
                 <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
@@ -164,6 +218,43 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_close_complaint_request" baseColumnNames="cm_complaint_id"
+                                 constraintName="fk_close_complaint_cmplnt_id"
+                                 referencedTableName="acm_complaint"
+                                 referencedColumnNames="cm_complaint_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_close_complaint_request">
+            <column name="cm_close_complaint_id" type="${idType}">
+                <constraints primaryKeyName="pk_close_complaint_request" primaryKey="true"/>
+            </column>
+            <column name="cm_complaint_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_disposition_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_created" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_close_complaint_modified" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_modifier" type="VARCHAR(1024)">

@@ -6,7 +6,7 @@ import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -35,6 +35,7 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solr.setObject_type_s(NoteConstants.OBJECT_TYPE);
 
         solr.setDescription_parseable(in.getNote());
+        solr.setTitle_parseable(in.getNote());
         solr.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
 
         solr.setCreate_date_tdt(in.getCreated());
@@ -54,8 +55,15 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+        AcmUser author = getUserDao().quietFindByUserId(in.getAuthor());
+        if (author != null)
+        {
+            solr.setAdditionalProperty("author_full_name_lcs", author.getFirstName() + " " + author.getLastName());
+        }
+
         solr.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solr.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solr.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
         solr.setAdditionalProperty("type_s", in.getType());
         solr.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
 
@@ -71,12 +79,15 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
         solrDoc.setName(String.format("%s_%d", NoteConstants.OBJECT_TYPE, in.getId()));
         solrDoc.setObject_id_s(in.getId() + "");
         solrDoc.setCreate_tdt(in.getCreated());
-        solrDoc.setAuthor(in.getCreator());
+        solrDoc.setAuthor(in.getAuthor());
         solrDoc.setLast_modified_tdt(in.getModified());
         solrDoc.setType_s(in.getType());
         solrDoc.setAdditionalProperty("parent_object_type_s", in.getParentType());
         solrDoc.setAdditionalProperty("parent_object_id_i", in.getParentId());
+        solrDoc.setAdditionalProperty("parent_number_lcs", in.getParentTitle());
         solrDoc.setParent_ref_s(String.format("%d-%s", in.getParentId(), in.getParentType()));
+        solrDoc.setTitle_parseable(in.getNote());
+        solrDoc.setAdditionalProperty("creator_s", in.getCreator());
 
         return solrDoc;
     }

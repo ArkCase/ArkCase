@@ -43,12 +43,11 @@ public class NewTaskTests extends ArkCaseTestBase {
 	@Test
 	@Category({ SmokeTests.class })
 	public void createNewTaskStatusActive() throws IOException, InterruptedException {
-
+        
 		task.newTask();
 		task.assignTo("sam");
 		task.typeSubject("MilanActiveMIlan");
-		task.typeStartDate("03/18/2016");
-		task.selectStatusActive();
+		task.typeStartDate("03/18/2016");		
 		task.typeDuedate("03/19/2016");
 		Thread.sleep(2000);
 		task.typeComplete("20");
@@ -59,7 +58,7 @@ public class NewTaskTests extends ArkCaseTestBase {
 		Thread.sleep(2000);
 		Assert.assertEquals("Task status is not active", "ACTIVE", tasks.stateTask.getText());
 		Thread.sleep(3000);
-		tasks.deleteButton.click();
+		tasks.deleteTask();
 		Thread.sleep(4000);
 		Assert.assertEquals("After delete button is clicked, task state should be DELETE", "DELETE", tasks.stateTask.getText());
 		ArkCaseAuthentication.logOut(driver);

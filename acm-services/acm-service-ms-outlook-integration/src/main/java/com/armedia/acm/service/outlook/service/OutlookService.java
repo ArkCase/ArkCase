@@ -8,9 +8,6 @@ import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
@@ -18,20 +15,21 @@ import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookPassword;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
-import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
-import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+import com.armedia.acm.services.email.service.AcmEmailSenderService;
+
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import microsoft.exchange.webservices.data.property.definition.ExtendedPropertyDefinition;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 /**
  * Created by armdev on 4/20/15.
  */
-public interface OutlookService
+public interface OutlookService extends AcmEmailSenderService
 {
     @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
     OutlookResults<OutlookMailItem> findMailItems(AcmOutlookUser user, int start, int maxItems, String sortField, boolean sortAscending,
@@ -69,17 +67,6 @@ public interface OutlookService
 
     @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
     void deleteAppointmentItem(AcmOutlookUser user, String itemId, Boolean recurring, DeleteMode deleteMode);
-
-    @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
-    void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication)
-            throws Exception;
-
-    @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
-    void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication) throws Exception;
-
-    @Retryable(maxAttempts = 3, value = AcmOutlookException.class, backoff = @Backoff(delay = 500))
-    List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO, AcmOutlookUser outlookUser,
-            Authentication authentication) throws Exception;
 
     OutlookDTO retrieveOutlookPassword(Authentication authentication) throws AcmEncryptionException;
 

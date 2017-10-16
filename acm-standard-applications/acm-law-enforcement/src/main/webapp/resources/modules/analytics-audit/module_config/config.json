@@ -1,0 +1,15 @@
+{
+  "id": "analytics-audit",
+  "title": "Audit Analytics",
+  "configurable": false,
+  "menus": [
+    {
+      "menuId": "leftnav",
+      "menuItemURL": "analytics-audit",
+      "menuItemTitle": "analytics-audit.menus.leftnav.item",
+      "moduleId": "analytics-audit",
+      "iconClass": "fa fa-bar-chart",
+      "position": 190
+    }
+  ]
+}

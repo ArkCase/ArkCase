@@ -2,8 +2,8 @@ package com.armedia.acm.plugins.ecm.pipeline;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
-
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.security.core.Authentication;
 
@@ -16,11 +16,14 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     private String originalFileName;
     private Authentication authentication;
     private byte[] fileByteArray;
+    private String cmisRepositoryId;
     private String cmisFolderId;
     private AcmContainer container;
     private Document cmisDocument;
     private EcmFile ecmFile;
     private boolean isAppend;
+    private boolean fileAlreadyInEcmSystem;
+    private EcmTikaFile detectedFileMetadata;
 
     private byte[] mergedFileByteArray;
 
@@ -52,6 +55,16 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setFileByteArray(byte[] fileByteArray)
     {
         this.fileByteArray = fileByteArray;
+    }
+
+    public String getCmisRepositoryId()
+    {
+        return cmisRepositoryId;
+    }
+
+    public void setCmisRepositoryId(String cmisRepositoryId)
+    {
+        this.cmisRepositoryId = cmisRepositoryId;
     }
 
     public String getCmisFolderId()
@@ -112,5 +125,25 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setMergedFileByteArray(byte[] mergedFileByteArray)
     {
         this.mergedFileByteArray = mergedFileByteArray;
+    }
+
+    public boolean isFileAlreadyInEcmSystem()
+    {
+        return fileAlreadyInEcmSystem;
+    }
+
+    public void setFileAlreadyInEcmSystem(boolean fileAlreadyInEcmSystem)
+    {
+        this.fileAlreadyInEcmSystem = fileAlreadyInEcmSystem;
+    }
+
+    public EcmTikaFile getDetectedFileMetadata()
+    {
+        return detectedFileMetadata;
+    }
+
+    public void setDetectedFileMetadata(EcmTikaFile detectedFileMetadata)
+    {
+        this.detectedFileMetadata = detectedFileMetadata;
     }
 }

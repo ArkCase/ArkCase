@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -25,10 +26,11 @@ import java.util.Map;
 public class ChangeCaseStatusWorkflowListener implements ApplicationListener<ChangeCaseStatusFormEvent>
 {
 
-
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
     private RuntimeService activitiRuntimeService;
+
+    private String changeCaseStatusTaskName;
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -51,7 +53,11 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         LOG.debug("Calling business rules");
 
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-
+        if (configuration.isBuckslipProcess())
+        {
+            //ChangeCaseStatusWorkflowListener is not handling buckslip process
+            return;
+        }
         LOG.debug("Start process? [{}]", configuration.isStartProcess());
 
         if (configuration.isStartProcess())
@@ -67,7 +73,14 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         String author = event.getUserId();
         List<String> reviewers = findReviewers(event);
 
-        String taskName = "Request to Change Case Status '" + event.getCaseNumber() + "'";
+        // Default one if "changeCaseStatusTaskName" is null or empty
+        String taskName = "Task " + event.getCaseNumber();
+
+        // Overwrite "taskName" with "changeCaseStatusTaskName" value
+        if (getChangeCaseStatusTaskName() != null && !getChangeCaseStatusTaskName().isEmpty())
+        {
+            taskName = String.format(getChangeCaseStatusTaskName(), event.getCaseNumber());
+        }
 
         Map<String, Object> pvars = new HashMap<>();
 
@@ -85,6 +98,8 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         pvars.put("CASE_FILE", event.getCaseId());
         pvars.put("REQUEST_TYPE", "CHANGE_CASE_STATUS");
         pvars.put("REQUEST_ID", event.getRequest().getId());
+        pvars.put("IP_ADDRESS", event.getIpAddress());
+        pvars.put("PENDING_STATUS", event.getRequest().getStatus());
 
         LOG.debug("Starting process: [{}]", processName);
 
@@ -113,8 +128,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         return fileWorkflowBusinessRule;
     }
 
-    public void setFileWorkflowBusinessRule(
-            FileWorkflowBusinessRule fileWorkflowBusinessRule)
+    public void setFileWorkflowBusinessRule(FileWorkflowBusinessRule fileWorkflowBusinessRule)
     {
         this.fileWorkflowBusinessRule = fileWorkflowBusinessRule;
     }
@@ -129,4 +143,13 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         this.activitiRuntimeService = activitiRuntimeService;
     }
 
+    public String getChangeCaseStatusTaskName()
+    {
+        return changeCaseStatusTaskName;
+    }
+
+    public void setChangeCaseStatusTaskName(String changeCaseStatusTaskName)
+    {
+        this.changeCaseStatusTaskName = changeCaseStatusTaskName;
+    }
 }

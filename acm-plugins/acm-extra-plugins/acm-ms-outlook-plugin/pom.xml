@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-extra-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -61,10 +61,6 @@
             <artifactId>easymock</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
@@ -82,11 +78,6 @@
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-encryption</artifactId>
-            <version>${acm.version}</version>
         </dependency>
 
     </dependencies>

@@ -1,7 +1,6 @@
 package com.armedia.acm.services.participants.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
 import com.armedia.acm.services.participants.service.AcmParticipantEventPublisher;
@@ -22,8 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/participant","/api/latest/service/participant"})
-public class AddParticipantAPIController {
+@RequestMapping({"/api/v1/service/participant", "/api/latest/service/participant"})
+public class AddParticipantAPIController
+{
 
     private AcmParticipantService acmParticipantService;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;
@@ -38,46 +38,56 @@ public class AddParticipantAPIController {
             @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
             Authentication authentication
-    ) throws AcmCreateObjectFailedException {
-        if ( log.isInfoEnabled() ) {
-            log.info("Participant "+userId+" with participant type:" + participantType +" will be added on object['" + objectType + "]:[" + objectId + "]" );
-        }
-        AcmParticipant returnedParticipant = getAcmParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(userId,participantType,objectType,objectId);
+    ) throws AcmCreateObjectFailedException
+    {
+        log.info("Participant {} with participant type {} will be added on object [{}]:[{}]", userId, participantType, objectType, objectId);
 
-        if(returnedParticipant !=null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Participant: " + userId + "  already exists and is added on object['" + objectType + "]:[" + objectId + "] as a "+participantType);
-            }
+        AcmParticipant returnedParticipant = getAcmParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(userId, participantType, objectType, objectId);
+
+        if (returnedParticipant != null)
+        {
+            log.debug("Participant {} already exists and is added on object [{}]:[{}] as a {}", userId, objectType, objectId, participantType);
+
             return returnedParticipant;
-        } else {
+        } else
+        {
             AcmParticipant addedParticipant = null;
-            try {
+            try
+            {
                 addedParticipant = getAcmParticipantService().saveParticipant(userId, participantType, objectId, objectType);
                 getAcmParticipantEventPublisher().publishParticipantCreatedEvent(addedParticipant, authentication, true);
                 return addedParticipant;
-            } catch ( Exception e ) {
-                if ( log.isErrorEnabled() )
-                    log.error("Exception occurred while trying to add the Participant "+userId+" on object['" + objectType + "]:[" + objectId + "] as a "+participantType,e);
+            } catch (Exception e)
+            {
+                log.error("Exception occurred while trying to add the Participant {} on object [{}]:[{}] as a {}", userId, objectType, objectId, participantType, e);
                 getAcmParticipantEventPublisher().publishParticipantCreatedEvent(addedParticipant, authentication, false);
-                throw new AcmCreateObjectFailedException(ParticipantConstants.OBJECT_TYPE, "Participant "+ userId +" was not added on object['" + objectType + "]:[" + objectId + "] as a "+participantType+" and there is no row inserted into DB due to exception: ", e);
+                /*if (e instanceof AcmAccessControlException)
+                {
+                    throw new AcmAccessControlException()
+                }*/
+                throw new AcmCreateObjectFailedException(ParticipantConstants.OBJECT_TYPE, "Participant " + userId + " was not added on object['" + objectType + "]:[" + objectId + "] as a " + participantType + " and there is no row inserted into DB due to exception: ", e);
             }
         }
 
     }
 
-    public AcmParticipantEventPublisher getAcmParticipantEventPublisher() {
+    public AcmParticipantEventPublisher getAcmParticipantEventPublisher()
+    {
         return acmParticipantEventPublisher;
     }
 
-    public void setAcmParticipantEventPublisher(AcmParticipantEventPublisher acmParticipantEventPublisher) {
+    public void setAcmParticipantEventPublisher(AcmParticipantEventPublisher acmParticipantEventPublisher)
+    {
         this.acmParticipantEventPublisher = acmParticipantEventPublisher;
     }
 
-    public AcmParticipantService getAcmParticipantService() {
+    public AcmParticipantService getAcmParticipantService()
+    {
         return acmParticipantService;
     }
 
-    public void setAcmParticipantService(AcmParticipantService acmParticipantService) {
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService)
+    {
         this.acmParticipantService = acmParticipantService;
     }
 }

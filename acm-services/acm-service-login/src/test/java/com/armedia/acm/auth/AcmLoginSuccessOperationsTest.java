@@ -2,7 +2,7 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -120,5 +121,37 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         verifyAll();
 
+    }
+
+    @Test
+    public void addUserLoginMessageToSessionTest() throws Exception
+    {
+        AcmUser mockUser = new AcmUser();
+        mockUser.setPasswordExpirationDate(LocalDate.now().plusDays(3));
+        expect(mockRequest.getSession(false)).andReturn(mockSession);
+        expect(mockSession.getAttribute("acm_user")).andReturn(mockUser);
+        mockSession.setAttribute("acm_user_message",
+                "Your password expires in 3 day(s), please change it before expiration date.");
+
+        replayAll();
+
+        unit.setPasswordExpirationSessionAttribute(mockRequest);
+
+        verifyAll();
+    }
+
+    @Test
+    public void noUserLoginMessageToSessionTest() throws Exception
+    {
+        AcmUser mockUser = new AcmUser();
+        mockUser.setPasswordExpirationDate(LocalDate.now().plusDays(11));
+        expect(mockRequest.getSession(false)).andReturn(mockSession);
+        expect(mockSession.getAttribute("acm_user")).andReturn(mockUser);
+
+        replayAll();
+
+        unit.setPasswordExpirationSessionAttribute(mockRequest);
+
+        verifyAll();
     }
 }

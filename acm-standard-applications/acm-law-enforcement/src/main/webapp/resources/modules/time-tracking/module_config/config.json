@@ -1,48 +1,48 @@
 {
   "id": "time-tracking",
   "title": "Time Tracking",
+  "configurable": true,
   "initialLinksShown": true,
-  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "time-tracking.main",
-      "menuItemTitle": "Time Tracking",
+      "menuItemTitle": "timeTracking.menus.leftnav.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
-      "position": 130
+      "position": 160
     },
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-timesheet",
-      "menuItemTitle": "Timesheet",
+      "menuItemTitle": "timeTracking.menus.topbar.item",
       "moduleId": "time",
       "iconClass": "fa fa-clock-o",
-      "position": 40
+      "position": 80
     }
   ],
   "tree": {
     "pageSize": 32,
     "sorters": [
       {
-        "desc": "Sort Date Ascending",
+        "desc": "timeTracking.tree.sorters.dateAsc",
         "name": "create_tdt ASC",
         "default": true
       },
       {
-        "desc": "Sort Date Decending",
+        "desc": "timeTracking.tree.sorters.dateDesc",
         "name": "create_tdt DESC"
       },
       {
-        "desc": "Sort Timesheet ID Ascending",
+        "desc": "timeTracking.tree.sorters.idAsc",
         "name": "id ASC"
       },
       {
-        "desc": "Sort Timesheet ID Decending",
+        "desc": "timeTracking.tree.sorters.idDesc",
         "name": "id DESC"
       },
       {
-        "desc": "Sort By Timesheet Name",
+        "desc": "timeTracking.tree.sorters.nameDesc",
         "name": "name DESC"
       }
     ],
@@ -68,7 +68,7 @@
       {
         "type": "p/TIMESHEET/detail",
         "icon": "fa fa-info-circle",
-        "label": "Details",
+        "label": "timeTracking.tree.nodeTypes.details.label",
         "components": [
           "details"
         ]
@@ -76,7 +76,7 @@
       {
         "type": "p/TIMESHEET/person",
         "icon": "fa fa-user",
-        "label": "Person",
+        "label": "timeTracking.tree.nodeTypes.person.label",
         "components": [
           "person"
         ]
@@ -84,14 +84,14 @@
       {
         "type": "p/TIMESHEET/summary",
         "icon": "fa fa-clock-o",
-        "label": "Hour Summary",
+        "label": "timeTracking.tree.nodeTypes.summary.label",
         "components": [
           "summary"
         ]
       },
       {
         "type": "p/TIMESHEET/tags",
-        "label": "Tags",
+        "label": "timeTracking.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -102,9 +102,10 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "timeTracking.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -122,7 +123,7 @@
               "name": "modified",
               "displayName": "timeTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "name": "modifier",
@@ -138,12 +139,12 @@
           "columnDefs": [
             {
               "name": "fullName",
-              "displayName": "timeTracking.comp.people.table.columns.fullName",
+              "displayName": "timeTracking.comp.person.table.columns.fullName",
               "headerCellFilter": "translate"
             },
             {
               "name": "userId",
-              "displayName": "timeTracking.comp.people.table.columns.userId",
+              "displayName": "timeTracking.comp.person.table.columns.userId",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
             }
@@ -155,36 +156,59 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "timeTracking.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "timeTracking.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "timeTracking.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "timeTracking.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "timeTracking.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "timeTracking.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
       "id": "person",
-      "title": "Person",
+      "title": "timeTracking.comp.person.title",
       "icon": "fa fa-user",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -198,12 +222,12 @@
       "columnDefs": [
         {
           "name": "fullName",
-          "displayName": "timeTracking.comp.people.table.columns.fullName",
+          "displayName": "timeTracking.comp.person.table.columns.fullName",
           "headerCellFilter": "translate"
         },
         {
           "name": "userId",
-          "displayName": "timeTracking.comp.people.table.columns.userId",
+          "displayName": "timeTracking.comp.person.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         }
@@ -211,9 +235,10 @@
     },
     {
       "id": "summary",
-      "title": "Hour Summary",
+      "title": "timeTracking.comp.summary.title",
       "icon": "fa fa-clock-o",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -234,6 +259,7 @@
         {
           "name": "type",
           "displayName": "timeTracking.comp.summary.table.columns.type",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
@@ -245,23 +271,25 @@
           "name": "date",
           "displayName": "timeTracking.comp.summary.table.columns.date",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.date | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.date | date : 'shortDate' }}</div>"
         },
         {
           "name": "modified",
           "displayName": "timeTracking.comp.summary.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
         }
       ]
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "timeTracking.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
-      "typeAheadColumn": "tags_s",
+      "autoSuggestObjectType": "TAG",
+      "typeAheadColumn": "title_parseable",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -279,7 +307,7 @@
         {
           "name": "created",
           "displayName": "timeTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {

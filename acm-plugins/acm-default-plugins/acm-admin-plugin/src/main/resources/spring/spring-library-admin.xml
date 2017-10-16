@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
@@ -26,36 +26,66 @@
         <property name="pluginProperties" ref="adminPluginProperties"/>
     </bean>
 
-
-    <bean id="labelManagementService" class="com.armedia.acm.plugins.admin.service.LabelManagementService">
-        <property name="modulesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/"/>
-        <property name="moduleConfigLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/config.json"/>
-        <property name="moduleResourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/custom/modules/%s/module_config/resources/%s.json"/>
-        <property name="customResourceFile" value="%s.%s.json"/>
-        <property name="customResourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/custom/"/>
-        <property name="resourceFile" value="%s.%s.json"/>
-        <property name="resourcesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/resources/"/>
-        <property name="settingsFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/resources/settings/settings.json"/>
-        <property name="baseLanguage" value="en"/>
-        <property name="languages">
-            <list>
-                <value>en</value>
-            </list>
+    <!-- LDAP configuration API -->
+    <bean id="ldapConfigurationService" class="com.armedia.acm.plugins.admin.service.LdapConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="ldapDirectoryConfig" ref="ldapDirectoryConfig"/>
+        <property name="templatesConfigMap">
+            <map>
+                <entry key="openldap" value-ref="openLdapTemplateConfig"/>
+                <entry key="activedirectory" value-ref="adTemplateConfig"/>
+            </map>
         </property>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
-    <bean id="angularPropertiesManagementService" class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
+    <bean id="workflowConfigurationService" class="com.armedia.acm.plugins.admin.service.WorkflowConfigurationService">
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="temporaryFolder" value="#{ systemProperties ['user.home'] }/.arkcase/acm/activiti/temp/"/>
+    </bean>
+
+    <bean id="linkFormsWorkflowsService" class="com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService">
+        <property name="configurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/rules/"/>
+        <property name="configurationFile" value="drools-form-business-process-rules.xlsx"/>
+        <property name="configurationFileBackupTemplate" value="drools-form-business-process-rules.xlsx.%s.backup"/>
+        <property name="configurationFileBackupRegex"
+                  value="^drools[-d]form[-d]business[-d]process[-d]rules.xlsx.[0-9]+.backup$"/>
+
+        <property name="acmBpmnService" ref="processDefinitionManagementService"/>
+        <property name="acmFileTypesService" ref="acmFileTypesService"/>
+    </bean>
+
+    <bean id="customCssService" class="com.armedia.acm.plugins.admin.service.CustomCssService">
+        <property name="customCssFile" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/custom.css"/>
+    </bean>
+
+    <bean id="customLogoService" class="com.armedia.acm.plugins.admin.service.CustomLogoService">
+        <property name="brandingFilesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/branding/"/>
+        <property name="headerLogoFile" value="header-logo.png"/>
+        <property name="loginLogoFile" value="login-logo.png"/>
+    </bean>
+
+    <bean id="moduleConfigurationService" class="com.armedia.acm.plugins.admin.service.ModuleConfigurationService">
+        <property name="appConfigPropertiesFile"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-config.properties/"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigurationFile" class="java.io.File">
+        <constructor-arg value="${user.home}/.arkcase/acm/googleAnalytics.properties"/>
+    </bean>
+
+    <bean id="googleAnalyticsConfigService" class="com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService">
+        <property name="configFile" ref="googleAnalyticsConfigurationFile"/>
+    </bean>
+
+    <bean id="angularPropertiesManagementService"
+          class="com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService">
         <property name="propertiesFileLocation"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/app-properties/properties.json"/>
     </bean>
 
-    <!-- Roles Priveleges API-->
-    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesService">
+    <!-- Roles Privileges API-->
+    <bean id="rolesPrivilegesService" class="com.armedia.acm.plugins.admin.service.RolesPrivilegesService">
         <property name="applicationRolesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/applicationRoles.properties"/>
         <property name="applicationPrivilegesFile"
@@ -67,9 +97,83 @@
         <property name="applicationRolesPrivilegesTemplateFile" value="spring-acm-global-privileges.xml.ftl"/>
         <property name="applicationRolesPrivilegesFile"
                   value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/spring-config-acm-plugins/spring-acm-global-privileges.xml"/>
-        <property name="userDao" ref="acmUserDao"/>
+        <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <task:scheduler id="historyCleanScheduler" pool-size="1"/>
+
+    <!-- How often to purge older history events. -->
+    <task:scheduled-tasks scheduler="historyCleanScheduler">
+        <task:scheduled ref="historyCleanJob" method="cleanHistory" cron="0 0 0/6 * * *"/>
+    </task:scheduled-tasks>
+
+    <bean id="historyCleanJob" class="com.armedia.acm.plugins.admin.service.HistoryCleanService">
+        <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
+        <property name="auditDao" ref="auditDao"/>
+        <property name="notificationDao" ref="notificationDao"/>
+    </bean>
+
+    <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">
+        <property name="ldapConfigurationTemplatesLocation"
+                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/ldap-config-templates/"/>
+        <property name="ldapTemplateFile" value="spring-config-ldap.xml.ftl"/>
+        <property name="ldapTemplatePropertiesFile" value="spring-config-ldap.properties.ftl"/>
+        <property name="ldapConfigurationLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/spring/"/>
+        <property name="ldapFile" value="spring-config-%s-ldap.xml"/>
+        <property name="ldapPropertiesFile" value="spring-config-%s-ldap.properties"/>
+        <property name="ldapPropertiesFileRegex" value="^spring[-d]config[-d][a-zA-Z0-9.]+[-d]ldap.properties$"/>
+        <property name="ldapUserPropertiesFile" ref="ldapAddUserPropertiesFile"/>
+        <property name="ldapUserPropertiesFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.properties$"/>
+        <property name="ldapUserFileRegex" value="^spring[-d]config[-d]user[-d][a-zA-Z0-9-.]+.xml$"/>
+        <property name="ldapGroupPropertiesFile" ref="ldapAddGroupPropertiesFile"/>
+        <property name="ldapGroupPropertiesFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.properties$"/>
+        <property name="ldapGroupFileRegex" value="^spring[-d]config[-d]group[-d][a-zA-Z0-9-.]+.xml$"/>
+    </bean>
+
+    <bean id="openLdapTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
+        <property name="userPropertiesTemplate" value="spring-config-user-openldap.properties.ftl"/>
+        <property name="userPropertiesTemplateName" value="spring-config-user-%s-openldap.properties"/>
+        <property name="userFileTemplate" value="spring-config-user-openldap.xml.ftl"/>
+        <property name="userFileTemplateName" value="spring-config-user-%s-openldap.xml"/>
+        <property name="groupPropertiesTemplate" value="spring-config-group-openldap.properties.ftl"/>
+        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-openldap.properties"/>
+        <property name="groupFileTemplate" value="spring-config-group-openldap.xml.ftl"/>
+        <property name="groupFileTemplateName" value="spring-config-group-%s-openldap.xml"/>
+    </bean>
+
+    <bean id="adTemplateConfig" class="com.armedia.acm.plugins.admin.model.LdapTemplateConfig">
+        <property name="userPropertiesTemplate" value="spring-config-user-ad.properties.ftl"/>
+        <property name="userFileTemplate" value="spring-config-user-ad.xml.ftl"/>
+        <property name="userPropertiesTemplateName" value="spring-config-user-%s-ad.properties"/>
+        <property name="userFileTemplateName" value="spring-config-user-%s-ad.xml"/>
+        <property name="groupPropertiesTemplate" value="spring-config-group-ad.properties.ftl"/>
+        <property name="groupFileTemplate" value="spring-config-group-ad.xml.ftl"/>
+        <property name="groupPropertiesTemplateName" value="spring-config-group-%s-ad.properties"/>
+        <property name="groupFileTemplateName" value="spring-config-group-%s-ad.xml"/>
+    </bean>
+    <bean id="cmisConfigurationService" class="com.armedia.acm.plugins.admin.service.CmisConfigurationService">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="cmisConfigurationTemplatesLocation"
+                  value="${user.home}/.arkcase/acm/cmis/cmis-config-templates/"/>
+        <property name="cmisTemplateXmlFile" value="mule-config-cmis.xml.ftl"/>
+        <property name="cmisTemplatePropertiesFile" value="mule-config-cmis.properties.ftl"/>
+        <property name="cmisConfigurationLocation" value="${user.home}/.arkcase/acm/cmis/"/>
+        <property name="cmisFile" value="mule-config-%s-cmis.xml"/>
+        <property name="cmisPropertiesFile" value="mule-config-%s-cmis.properties"/>
+        <property name="cmisIdPattern" ref="cmisIdPattern"/>
+        <property name="cmisPropertiesPattern" ref="cmisPropertiesPattern"/>
+    </bean>
+
+    <bean id="cmisPropertiesPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="^mule[-d]config[-d][a-zA-Z0-9]+[-d]cmis.properties$"/>
+    </bean>
+    <bean id="cmisIdPattern" class="java.util.regex.Pattern" factory-method="compile">
+        <constructor-arg value="^[a-zA-Z0-9.]+$"/>
+    </bean>
+
+    <bean id="cmisConfigurationPropertiesService"
+          class="com.armedia.acm.plugins.admin.service.CmisConfigurationPropertiesService">
+        <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+    </bean>
 
 </beans>

@@ -25,12 +25,12 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
         <enricher target="#[flowVars['parentObject']]">
-            <cmis:folder get="PARENT" folderId="#[message.inboundProperties.acmFolderId]"/>
+            <cmis:folder config-ref="#[message.inboundProperties.configRef]" get="PARENT" folderId="#[message.inboundProperties.acmFolderId]"/>
         </enricher>
 
         <set-payload value="#[flowVars['parentObject']]"/>
 
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="returnParentException" value="#[exception]"/>
         </catch-exception-strategy>

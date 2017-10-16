@@ -11,8 +11,8 @@
  * Helper.UiGridService has functions for typical usage in ArCase of 'ui-grid' directive
  */
 angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '$translate'
-    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants'
-    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants) {
+    , 'UtilService', 'LookupService', 'ApplicationConfigService', 'Object.LookupService', 'ObjectService', 'uiGridConstants', 'Object.AuditService'
+    , function ($resource, $q, $translate, Util, LookupService, ApplicationConfigService, ObjectLookupService, ObjectService, uiGridConstants, ObjectAuditService) {
         var Service = {
             Lookups: {
                 USER_FULL_NAMES: "userFullNames"
@@ -103,10 +103,11 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 that.scope.config = config;
 
                 that.scope.gridOptions.enableColumnResizing = true;
-                that.scope.gridOptions.enableRowSelection = false;
-                that.scope.gridOptions.enableRowHeaderSelection = false;
-                that.scope.gridOptions.multiSelect = false;
-                that.scope.gridOptions.noUnselect = false;
+                that.scope.gridOptions.enableRowSelection = config.enableRowSelection;
+                that.scope.gridOptions.enableRowHeaderSelection = config.enableRowHeaderSelection;
+                that.scope.gridOptions.enableFullRowSelection = config.enableFullRowSelection;
+                that.scope.gridOptions.multiSelect = config.multiSelect;
+                that.scope.gridOptions.noUnselect = config.noUnselect;
 
                 that.scope.gridOptions.paginationPageSizes = config.paginationPageSizes;
                 that.scope.gridOptions.paginationPageSize = config.paginationPageSize;
@@ -270,6 +271,29 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name setWidgetsGridData
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {Object} widgetData Widgets data object with grid options
+             *
+             * @description
+             * Define ui-grid data
+             */
+            , setWidgetsGridData: function (widgetData) {
+                if (!Util.isArrayEmpty(widgetData)) {
+                    this.scope.gridOptions.data = widgetData;
+                    this.scope.gridOptions.noData = false;
+                    this.scope.gridOptions.totalItems = widgetData.length;
+                }
+                else {
+                    this.scope.gridOptions.data = [];
+                    this.scope.gridOptions.noData = true;
+                    this.scope.gridOptions.totalItems = 0;
+                }
+            }
+
+            /**
+             * @ngdoc method
              * @name getUsers
              * @methodOf services:Helper.UiGridService
              *
@@ -317,43 +341,41 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                 $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME), promiseUsers]).then(function (data) {
                     var userNamePop = data[0];
 
-                    if (userNamePop == "userName" && _.get(config, 'columnDefs'))
-                    {
+                    if (userNamePop == "userName" && _.get(config, 'columnDefs')) {
                         for (var i = 0; i < config.columnDefs.length; i++) {
                             if (Service.Lookups.USER_FULL_NAMES == config.columnDefs[i].lookup || Service.Lookups.PARTICIPANT_NAMES == config.columnDefs[i].lookup) {
                                 var tempColumn = angular.copy(config.columnDefs[i]);
                                 tempColumn.cellFilter = "mapKeyValue: grid.appScope.userFullNames:'id':'name'";
-                                config.columnDefs.splice(i,1, tempColumn);
+                                config.columnDefs.splice(i, 1, tempColumn);
                             }
                         }
                     }
                 });
             }
 
-                    /**
-                     * @ngdoc method
-                     * @name showUserFullNames
-                     * @methodOf services:Helper.UiGridService
-                     *
-                     * @description
-                     * Replace user id with user full name.
-                     */
-                    , showUserFullNames: function () {
-                    var that = this;
-                    $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result)
-                    {
-                        var userNamePop = result[0];
+            /**
+             * @ngdoc method
+             * @name showUserFullNames
+             * @methodOf services:Helper.UiGridService
+             *
+             * @description
+             * Replace user id with user full name.
+             */
+            , showUserFullNames: function () {
+                var that = this;
+                $q.all([ApplicationConfigService.getProperty(ApplicationConfigService.PROPERTIES.DISPLAY_USERNAME)]).then(function (result) {
+                    var userNamePop = result[0];
 
-				        if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
-					        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
-                                if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
-								    var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
-								    tempColumn.field = tempColumn.fullNameField;
-								    that.scope.config.columnDefs.splice(i,1, tempColumn);
-							    }
-						    }
-					    }
-                    });
+                    if (userNamePop == "userName" && _.get(that, 'scope.config.columnDefs')) {
+                        for (var i = 0; i < that.scope.config.columnDefs.length; i++) {
+                            if (that.scope.config.columnDefs[i].hasOwnProperty('fullNameField')) {
+                                var tempColumn = angular.copy(that.scope.config.columnDefs[i]);
+                                tempColumn.field = tempColumn.fullNameField;
+                                that.scope.config.columnDefs.splice(i, 1, tempColumn);
+                            }
+                        }
+                    }
+                });
             }
 
             /**
@@ -476,6 +498,23 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
             /**
              * @ngdoc method
+             * @name openObject
+             * @methodOf services:Helper.UiGridService
+             *
+             * @param {String} parentType, Lookup parent Type of the file.
+             * @param {String} fileName Lookup name.
+             * @param {Number} targetId, target id of the file.
+             * @param {Number} parentId,  parent id of the file.
+             *
+             * @description
+             * Go to a page state that show the specified ArkCase File viewer.
+             */
+            , openObject: function (targetId, parentId, parentType, fileName) {
+                return ObjectService.openObject(targetId, parentId, parentType, fileName);
+            }
+
+            /**
+             * @ngdoc method
              * @name addEditButton
              * @methodOf services:Helper.UiGridService
              *
@@ -514,14 +553,18 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
                 var columnDef = {
                     name: "act"
-                    , cellEditableCondition: false
+                    ,
+                    cellEditableCondition: false
                     //, enableFiltering: false
                     //, enableHiding: false
                     //, enableSorting: false
                     //, enableColumnResizing: false
-                    , width: 40
-                    , headerCellTemplate: "<span></span>"
-                    , cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
+                    ,
+                    width: 40
+                    ,
+                    headerCellTemplate: "<span></span>"
+                    ,
+                    cellTemplate: "<span><i class='fa fa-trash-o fa-lg' style='cursor :pointer' ng-hide='grid.appScope.isReadOnly(row.entity)' ng-click='" + onClickDelete + "'></i></span>"
                 };
                 columnDefs.push(columnDef);
             }
@@ -612,7 +655,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              *                  contained within config. Calls were structured this way for code readability
              */
 
-            , addConfigurableButton: function(config, button) {
+            , addConfigurableButton: function (config, button) {
                 var icon, clickFn, readOnlyFn;
                 // if the config file was missing a button parameter, search the predefined buttons for the missing params
                 if (Util.isEmpty(button.icon) || Util.isEmpty(button.clickFn) || Util.isEmpty(button.readOnlyFn)) {
@@ -683,43 +726,44 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
                     that.scope.gridOptions.data.splice(idx, 1);
                 }
             }
-            
+
             /**
              * @ngdoc method
              * @name retrieveAuditData
              * @methodOf services:Helper.UiGridService
              *
              * @param {String} objectType query audit for given object type
-             *            
+             *
              * @description
              * Retrieves audit data for current grid context (objectType, objectId)
              */
             , retrieveAuditData: function (objectType, objectId) {
-                  var that = this;
-                  if (Util.goodPositive(objectId, false)) {
-                      var promiseQueryAudit = ObjectAuditService.queryAudit(
-                            objectType, objectId
-                          , Util.goodValue(this.scope.start, 0)
-                          , Util.goodValue(this.scope.pageSize, 10)
-                          , Util.goodMapValue(this.scope.sort, "by")
-                          , Util.goodMapValue(this.scope.sort, "dir")
-                      );
-     
-                      $q.all([promiseQueryAudit]).then(function (data) {
-                          var auditData = data[0];
-                          that.scope.gridOptions = that.scope.gridOptions || {};
-                          that.scope.gridOptions.data = auditData.resultPage;
-                          that.scope.gridOptions.totalItems = auditData.totalCount;
-                      });
-                  }
-                  // subscribe for update, reload data
-                  var eventName = "object.changed/" + objectType + "/" + objectId;
-                  var subscription = this.scope.subscription;
-                  if (subscription) {
-                      this.scope.$bus.unsubscribe(subscription);
-                  }
-                  subscription = this.scope.$bus.subscribe(eventName, function(data) {
-                      that.retrieveAuditData(objectType, objectId);
+                var that = this;
+                if (Util.goodPositive(objectId, false)) {
+                    var promiseQueryAudit = ObjectAuditService.queryAudit(
+                        objectType, objectId
+                        , Util.goodValue(this.scope.start, 0)
+                        , Util.goodValue(this.scope.pageSize, 10)
+                        , Util.goodMapValue(this.scope.sort, "by")
+                        , Util.goodMapValue(this.scope.sort, "dir")
+                    );
+
+                    $q.all([promiseQueryAudit]).then(function (data) {
+                        var auditData = data[0];
+
+                        that.scope.gridOptions = that.scope.gridOptions || {};
+                        that.scope.gridOptions.data = auditData.resultPage;
+                        that.scope.gridOptions.totalItems = auditData.totalCount;
+                    });
+                }
+                // subscribe for update, reload data
+                var eventName = "object.changed/" + objectType + "/" + objectId;
+                var subscription = this.scope.subscription;
+                if (subscription) {
+                    this.scope.$bus.unsubscribe(subscription);
+                }
+                this.scope.subscription = this.scope.$bus.subscribe(eventName, function (data) {
+                    that.retrieveAuditData(objectType, objectId);
                 });
             }
 

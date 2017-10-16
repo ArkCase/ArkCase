@@ -1,0 +1,452 @@
+{
+  "common": {
+    "select.option.none": "(Seleccionar uno)",
+    "value.unknown": "Desconocido",
+
+    "defaultDateFormat": "es_MM/DD/YYYY",
+    "defaultTimeFormat": "es_hh:mm:ss",
+    "defaultDateTimeFormat": "es_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "es_MM/dd/yyyy",
+    "defaultDateUIFormat": "es_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "es_MM/dd/yyyy HH:mm"
+  },
+  "common.service": {
+    "error.invalidData": "Datos no válidos"
+  },
+  "common.objects": {
+    "progressNoData": "[ Sin datos ]",
+    "progressLoading": "Cargando datos ",
+    "progressError": "Error al cargar datos "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "es_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "es_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "es_Action was successful",
+      "error": "es_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "es_Refresh",
+    "waitUploading": "es_Uploading...",
+    "confirmVersion": "es_Are you sure to set back to older version?",
+    "declareSuccessful": "es_Declare successful. Refreshing Document Tree...",
+    "prevItems": "es_ items above...",
+    "prevItemsTooltip": "es_Review previous items",
+    "moreItems": "es_ more items...",
+    "moreItemsTooltip": "es_Load more items",
+    "moreItemsBegin": "es_More items...",
+    "email": {
+      "defaultTitle": "es_ArkCase Documents",
+      "headerForLinks": "es_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "es_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "es_Documents from ArkCase",
+      "bodyForAttachment": "es_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "es_Hello,",
+      "footerForAttachment": "es_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "es_(Select Item)",
+      "editWithWebDAV": "es_Edit"
+    },
+    "table.columns": {
+      "title": "es_Title",
+      "type": "es_Type",
+      "created": "es_Created",
+      "modified": "es_Modified",
+      "modifier": "es_Modified By",
+      "version": "es_Version",
+      "status": "es_Status"
+    },
+    "dndDialog": {
+      "title": "es_Drag and Drop",
+      "radReplace.text": "es_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "es_Create document(s) in parent folder",
+      "selFileTypes.label": "es_File Type:",
+      "optFileType.prompt": "es_[choose file type]",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_OK"
+    },
+    "emailDialog": {
+      "title": "es_Email",
+      "recipients": "es_Recipients:",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Send Email",
+      "gridColumns": {
+        "name": "es_Name",
+        "email": "es_Email"
+      }
+    },
+    "comment": {
+      "title": "es_Checkin New Document",
+      "addComent": "es_Detailed Note",
+      "btnCancel.text": "es_Cancel",
+      "btnOk.text": "es_Checkin",
+      "chooseFiles": "es_Choose Files",
+      "noFiles": "es_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "es_(Error)"
+    },
+    "lockedTitle": "es_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "es_Are you sure you want to delete this folder?",
+      "body.message": "es_The folder contains:",
+      "body.content.files": "es_files",
+      "body.content.folders": "es_folders",
+      "btn.delete.folder": "es_Yes",
+      "btn.cancel.delete.folder": "es_No"
+    },
+    "fileTypesDialog": {
+      "header": "es_Please select type of the Document",
+      "btnOK": "es_OK",
+      "btnCancel": "es_Cancel"
+    }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "eregistros anteriores...",
+    "btnPrev.toolTip": "Revisar registros anteriores",
+    "btnNext.titleUnknownSize": "más registros...",
+    "btnNext.title": "más registros...",
+    "btnNext.toolTip": "Cargar más registros",
+    "edtQuery.placeHolder": "Buscar",
+    "btnQuery.text": "Comenzar!",
+    "errorNode.title": "(Error)",
+    "errorNode.toolTip": "(Error)",
+    "noAccessNode.title": "(Sin acceso)",
+    "noAccessNode.toolTip": "(Sin acceso)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "es_items per page",
+    "pagerCountMiddleLabel": "es_ of ",
+    "pagerCountLabel": "es_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "es_Choose",
+    "not_authorized": "es_Not Authorized",
+    "tooltip.move_right": "es_Move Right",
+    "tooltip.move_left": "es_Move Left",
+    "authorized": "es_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "Buscar",
+    "btnSearch.text": "Buscar",
+    "btnOk.text": "Aceptar",
+    "btnCancel.text": "Cancelar",
+    "edtPlaceholder": "Escriba para buscar",
+    "noData.text": "Sin resultados"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Mostrar más valores",
+    "showLess.button.text": "Mostrar menos valores",
+    "results.text": "Resultados",
+    "noResults.text": "No hay resultados",
+    "tooltip": {
+      "collapseFacetList": "Contraer lista de facetas",
+      "expandFacetList": "Expand Facet List"
+    },
+    "facet": {
+      "names.modifyUser%": "Modificar usuário",
+      "names.taskPriority%": "Prioridade da tarefa",
+      "fields.taskPriority.medium%": "Médio",
+      "fields.taskPriority.low%": "Baixo",
+      "fields.taskPriority.high%": "Alto",
+      "fields.taskPriority.expedite%": "Expedite",
+      "names.group%": "Grupo",
+      "name.tagToken%": "Token de etiquetas",
+      "names.documentRepository%": "Nome completo do destinatário",
+      "names.taskStatus%": "Status da Tarefa",
+      "fields.taskStatus.active%": "Ativo",
+      "fields.taskStatus.draft%": "Draft",
+      "fields.taskStatus.closed%": "Fechado",
+      "fields.taskStatus.record%": "Record",
+      "fields.taskStatus.inactive%": "Inativo",
+      "fields.taskStatus.inApproval%": "Em Aprovação",
+      "fields.taskStatus.delete%": "Excluir",
+      "fields.taskStatus.approved%": "Aprovado",
+      "fields.taskStatus.unclaimed%": "Não reclamado",
+      "fields.taskStatus.valid%": "Válido",
+      "names.documentLanguage%": "Idioma do documento",
+      "names.createUser%": "Criar Usuário",
+      "names.postalCode%": "Código postal",
+      "names.incidentType%": "Tipo de incidente",
+      "fields.incidentType.agricultural%": "Agrícola",
+      "fields.incidentType.arson%": "Incendio provocado",
+      "fields.incidentType.backgroundInvestigation%": "Investigación de Antecedentes",
+      "fields.incidentType.benefitsAppeal%": "Recurso de Benefícios",
+      "fields.incidentType.businessDispute%": "Better Business Dispute",
+      "fields.incidentType.clinicalFraud%": "Fraude do Investigador Clínico",
+      "fields.incidentType.congressional%": "Resposta do Congresso",
+      "fields.incidentType.disabilityWaiver%": "Solicitação de isenção de deficiência",
+      "fields.incidentType.domesticDispute%": "Dispute Doméstica",
+      "fields.incidentType.drugTrafficking%": "Tráfico de drogas",
+      "fields.incidentType.educationWaiver%": "Solicitação de isenção de educação",
+      "fields.incidentType.eeoHarassment%": "EEO / Assédio",
+      "fields.incidentType.embezzlement%": "Embraiamento",
+      "fields.incidentType.extortion%": "Extorção",
+      "fields.incidentType.fraud%": "Fraude",
+      "fields.incidentType.government%": "Governo",
+      "fields.incidentType.investorComplaint%": "Queixa do investidor",
+      "fields.incidentType.laborRacketeering%": "Trabalho Racketeering",
+      "fields.incidentType.local%": "Local",
+      "fields.incidentType.murder%": "Assassinato",
+      "fields.incidentType.newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+      "fields.incidentType.payoff%": "Ganancia",
+      "fields.incidentType.pensionWaiver%": "Pedido de isenção de pensão",
+      "fields.incidentType.pollution%": "Poluição",
+      "fields.incidentType.productTampering%": "Tampering do Produto",
+      "fields.incidentType.assetTheftMisuse%": "Roubo ou uso indevido de ativos",
+      "names.objectType%": "Tipo de objeto",
+      "fields.objectType.participant%": "Participante",
+      "fields.objectType.contactMethod%": "Método de contato",
+      "fields.objectType.task%": "Tarefa",
+      "fields.objectType.file%": "Arquivo",
+      "fields.objectType.person%": "Pessoa",
+      "fields.objectType.personAssociation%": "Asociación de Personas",
+      "fields.objectType.reference%": "Referência",
+      "fields.objectType.location%": "Ubicación",
+      "fields.objectType.organization%": "Organização",
+      "fields.objectType.organizationAssociation%": "Organização Associação",
+      "fields.objectType.caseFile%": "Arquivo de Casos",
+      "fields.objectType.complaint%": "Queixa",
+      "fields.objectType.associatedTag%": "Tag Associado",
+      "fields.objectType.group%": "Grupo",
+      "fields.objectType.costsheet%": "Hoja de coste",
+      "fields.objectType.note%": "Nota",
+      "fields.objectType.docRepo%": "Depósito de documentos",
+      "fields.objectType.personAlias%": "Person Alias",
+      "fields.objectType.timesheet%": "Hoja de tiempos",
+      "fields.objectType.subscription%": "Assinatura",
+      "fields.objectType.user%": "Usuário",
+      "fields.objectType.objectLock%": "ObjectLock",
+      "names.state%": "Estado",
+      "names.parentType%": "Tipo de padre",
+      "fields.parentType.container%": "Contenedor",
+      "fields.parentType.caseFile%": "Archivo de caso",
+      "fields.parentType.complaint%": "Queja",
+      "fields.parentType.organization%": "Organización",
+      "fields.parentType.person%": "Pessoa",
+      "fields.parentType.task%": "Tarea",
+      "fields.parentType.file%": "Archivo",
+      "fields.parentType.group%": "Grupo",
+      "fields.parentType.docRepo%": "Depósito de documentos",
+      "fields.parentType.costsheet%": "Hoja de coste",
+      "fields.parentType.timesheet%": "Hoja de tiempos",
+      "names.owner%": "Owner",
+      "names.parentObjectType%": "Tipo de objeto principal",
+      "fields.parentObjectType.container%": "Contenedor",
+      "fields.parentObjectType.caseFile%": "Archivo de caso",
+      "fields.parentObjectType.complaint%": "Queja",
+      "fields.parentObjectType.organization%": "Organización",
+      "fields.parentObjectType.person%": "Pessoa",
+      "fields.parentObjectType.task%": "Tarea",
+      "fields.parentObjectType.file%": "Archivo",
+      "fields.parentObjectType.group%": "Grupo",
+      "fields.parentObjectType.docRepo%": "Depósito de documentos",
+      "fields.parentObjectType.costsheet%": "Hoja de coste",
+      "fields.parentObjectType.timesheet%": "Hoja de tiempos",
+      "names.personOrganization%": "Persona, Tipo de organización",
+      "names.city%": "Ciudad",
+      "names.createDate%": "Crear fecha",
+      "fields.createDate.previousWeek%": "Semana anterior",
+      "fields.createDate.previousMonth%": "Mes anterior",
+      "fields.createDate.previousYear%": "Año anterior",
+      "names.dueDate%": "Fecha de vencimiento",
+      "fields.dueDate.previousWeek%": "Semana anterior",
+      "fields.dueDate.previousMonth%": "Mes anterior",
+      "fields.dueDate.previousYear%": "Año anterior",
+      "names.incidentDate%": "Fecha del incidente",
+      "fields.incidentDate.previousWeek%": "Semana anterior",
+      "fields.incidentDate.previousMonth%": "Mes anterior",
+      "fields.incidentDate.previousYear%": "Año anterior",
+      "names.modifyDate%": "Modificar fecha",
+      "fields.modifyDate.previousWeek%": "Semana anterior",
+      "fields.modifyDate.previousMonth%": "Mes anterior",
+      "fields.modifyDate.previousYear%": "Año anterior"
+    }
+  },
+  "common.directive.coreNotes": {
+    "title": "es_Notes",
+    "modal.addNote": "es_Add Note",
+    "modal.editNote": "es_Edit Record",
+    "modal.notes.label": "es_Note",
+    "modal.btnOk.text": "es_Save",
+    "modal.btnCancel.text": "es_Cancel"
+  },
+  "common.addOrganization": {
+    "title": "es_Add Parent Organization",
+    "addNew.label": "es_Add new Organization",
+    "selectExisting.label": "es_Select existing organization",
+    "organization.label": "es_Organization",
+    "description": "es_Description",
+    "type.label": "es_Organization Association Type",
+    "type.label.default.text": "es_No parent Organization",
+    "type.label.text": "es_Parent Organization",
+    "btnCancel.text": "es_Cancel",
+    "btnOk.text": "es_Save Organization",
+    "setPrimary.label": "es_Set As Primary?",
+    "radioName": "es_Choice primary",
+    "radioYes.text": "es_Yes",
+    "radioNo.text": "es_No",
+    "duplicateOrganizationRoleErrorMessage": "es_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "es_Add person",
+    "addNew.label": "es_Add new Person",
+    "selectExisting.label": "es_Select existing person",
+    "person.label": "es_Person",
+    "type.label": "es_Person Association Type",
+    "btnCancel.text": "es_Cancel",
+    "btnOk.text": "es_Save Person",
+    "setPrimary.label": "es_Set As Primary?",
+    "radioName": "es_Choice primary",
+    "radioYes.text": "es_Yes",
+    "radioNo.text": "es_No",
+    "duplicatePersonRoleErrorMessage": "es_Person already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "es_Edit Parent Organization"
+  },
+  "common.directive.corePeople": {
+    "title": "es_People",
+    "contactMethods": {
+      "title": "es_Contact Methods",
+      "modal": {
+        "addContactMethod": "es_Add Contact Method",
+        "editContactMethod": "es_Edit Record",
+        "contactMethodTypes.label": "es_Contact Method Types",
+        "value.label": "es_Value",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Save"
+      }
+    },
+    "organizations": {
+      "title": "es_Organizations",
+      "modal": {
+        "addOrganization": "es_Add Organization",
+        "editOrganization": "es_Edit Record",
+        "organizationTypes.label": "es_Organization Types",
+        "selectExisting.label": "es_Select Existing",
+        "addNew.label": "es_Add New",
+        "value.label": "es_Value",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Save",
+        "dialogOrganizationPicker": {
+          "header": "es_Choose Organization",
+          "table.columns": {
+            "type": "es_Organization Type",
+            "name": "es_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "es_Addresses",
+      "modal": {
+        "addAddress": "es_Add Address",
+        "editAddress": "es_Edit Record",
+        "addressTypes.label": "es_Address Types",
+        "street.label": "es_Street",
+        "city.label": "es_City",
+        "zip.label": "es_Zip",
+        "state.label": "es_State",
+        "country.label": "es_Country",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Save"
+      }
+    },
+    "aliases": {
+      "title": "es_Aliases",
+      "modal": {
+        "addAlias": "es_Add Alias",
+        "editAlias": "es_Edit Record",
+        "aliasTypes.label": "es_Alias Types",
+        "value.label": "es_Value",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Save"
+      }
+    },
+    "people": {
+      "title": "es_People",
+      "modal": {
+        "addPeople": "es_Add Person",
+        "editPeople": "es_Edit Record",
+        "personTypes.label": "es_Person Types",
+        "givenName.label": "es_First Name",
+        "familyName.label": "es_Last Name",
+        "btnCancel.text": "es_Cancel",
+        "btnOk.text": "es_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "es_Calendar",
+    "start.label": "es_Start: ",
+    "end.label": "es_End: ",
+    "message": {
+      "error.accessDenied": "es_Access denied to calendar service.",
+      "error.serviceConfiguration": "es_Invalid calendar service configuration.",
+      "error.serviceCredentials": "es_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "es_Internal Server Error occurred."
+    }
+  },
+  "common.directive.coreParticipants": {
+    "title": "es_Participants",
+    "modal.addParticipant.label": "es_Add Participant",
+    "modal.editParticipant.label": "es_Edit Record",
+    "modal.participantType.label": "es_Participant Type ",
+    "modal.participantName.label": "es_Participant Name",
+    "modal.btnOk.text": "es_Save",
+    "modal.btnCancel.text": "es_Cancel",
+    "modal.dialogUserPicker.header": "es_Search User",
+    "modal.dialogGroupPicker.header": "es_Search Group",
+    "message": {
+      "error.groupType": "es_The owning group cannot be a person.",
+      "error.userType": "es_ User type cannot be a group.",
+      "error.assigneeUnique": "es_Only one assignee is allowed.",
+      "error.owninggroupUnique": "es_Only one owning group is allowed.",
+      "error.noAccessCombo": "es_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+    }
+  },
+  "common.directive.folderActions": {
+    "button.addFile": "es_Add File",
+    "button.addFolder": "es_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "es_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.directive.progressIndicator": {
+    "progressCompletion": "es_% Complete"
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "es_Case File",
+    "COMPLAINT": "es_Complaint",
+    "TASK": "es_Task",
+    "TIMESHEET": "es_Timesheet",
+    "COSTSHEET": "es_Costsheet",
+    "FILE": "es_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "es_Choose User",
+    "table.columns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "id": "es_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "es_{{objectTypeString}} with id {{objectId}} was created."
+}

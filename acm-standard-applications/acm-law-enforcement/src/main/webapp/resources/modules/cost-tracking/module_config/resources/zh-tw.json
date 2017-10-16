@@ -1,0 +1,95 @@
+{
+  "costTracking": {
+    "title": "成本跟踪",
+    "progressNoCostsheet": "[ 無成本數據 ]",
+    "progressLoading": "加載成本數據",
+    "progressError": "無法加載成本數據"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "成本跟踪",
+    "topbar.item": "成本項目"
+  },
+  "costTracking.comp.main": {
+    "title": "概述"
+  },
+  "costTracking.comp.info": {
+    "title": "信息",
+    "incidentDate": "事件日期",
+    "priority": "優先級別",
+    "assignedTo": "指定人員",
+    "subjectType": "對像類型",
+    "state": "狀態"
+  },
+  "costTracking.comp.actions": {
+    "title": "行動",
+    "new.button": "新成本項目",
+    "edit.button": "更改成本項目"
+  },
+  "costTracking.comp.details": {
+    "title": "詳情",
+    "informSaved": "zh-tw_Costsheet details saved",
+    "table.columns": {
+      "title": "zh-tw_Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "costTracking.comp.person": {
+    "title": "成員",
+    "table.columns": {
+      "fullName": "zh-tw_Full Name",
+      "userId": "zh-tw_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "成本總結",
+    "table.columns": {
+      "parentId": "zh-tw_ID",
+      "parentNumber": "zh-tw_Parent ID",
+      "parentType": "zh-tw_Parent Type",
+      "value": "zh-tw_Total Cost",
+      "title": "zh-tw_Title",
+      "description": "zh-tw_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "標籤",
+    "table.columns": {
+      "tag": "zh-tw_Tag",
+      "created": "zh-tw_Created",
+      "createdBy": "zh-tw_Created By"
+    },
+    "modal": {
+    "title": "zh-tw_Tag",
+    "search": "zh-tw_Search for Tag",
+    "buttons": {
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "zh-tw_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-tw_already associated",
+      "delete": {
+        "success": "zh-tw_Tag deleted successfully",
+        "error": "zh-tw_Error deleting tag"
+      }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "person.label": "成員",
+      "summary.label": "費用",
+      "tags.label": "標籤"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按成本表格號排序",
+      "idDesc": "按成本表格號反排序",
+      "nameAsc": "按名稱排序",
+      "noSort": "(不排序)"
+    }
+  }
+}

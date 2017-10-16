@@ -427,6 +427,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              *
              * var myCache = new CacheFifo("MyCache");
              * var myCache2 = new CacheFifo({name: "MyCache2", maxSize: 16});
+             * var myCache3 = new CacheFifo({name: "MyCache3", timeToLive: 8000});  //8 seconds
              */
             , CacheFifo: function (arg) {
                 if ("string" == typeof arg) {

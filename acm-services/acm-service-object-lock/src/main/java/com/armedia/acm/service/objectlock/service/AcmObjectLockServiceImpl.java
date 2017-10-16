@@ -7,7 +7,6 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -28,6 +27,12 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     private AcmObjectLockDao acmObjectLockDao;
     private ExecuteSolrQuery executeSolrQuery;
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Override
+    public AcmObjectLock findLock(Long objectId, String objectType)
+    {
+        return acmObjectLockDao.findLock(objectId, objectType);
+    }
 
     @Override
     @Transactional
@@ -51,7 +56,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             if (existingLock.getCreator().equals(auth.getName()))
             {
                 return existingLock;
-            } else
+            }
+            else
             {
                 log.warn(
                         "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
@@ -67,12 +73,14 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
         if (lockInDB)
         {
+            log.info("Saving lock [{}] for object [{}:{}]", ol.getLockType(), ol.getObjectType(), ol.getObjectId());
             AcmObjectLock lock = acmObjectLockDao.save(ol);
             AcmObjectLockEvent event = new AcmObjectLockEvent(lock, auth.getName(), true);
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
-        } else
+        }
+        else
         {
             return ol;
         }
@@ -83,9 +91,14 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     public void removeLock(Long objectId, String objectType, String lockType, Authentication auth)
     {
         AcmObjectLock ol = acmObjectLockDao.findLock(objectId, objectType);
+
         if (ol == null)
-            throw new AcmObjectLockException(
-                    "Error removing. Lock for [objectId, objectType] = [" + objectId + ", " + objectType + "] doesn't exists!");
+        {
+            // it is not an exception - the caller wanted the lock to be removed - and there is no lock to remove.
+            // the object is no longer locked, so we have success.
+            log.info("[{}] with id [{}] is already unlocked, no need to unlock it.", objectType, objectId);
+            return;
+        }
 
         acmObjectLockDao.remove(ol);
 
@@ -110,7 +123,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                       String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -131,7 +144,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-            String sort, String fqParams) throws MuleException
+                                 String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");
@@ -154,10 +167,10 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             throws MuleException
     {
         if (!StringUtils.isEmpty(fqParams))
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, firstRow, maxRows,
                     sort, fqParams);
         else
-            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query.toString(), firstRow, maxRows,
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, firstRow, maxRows,
                     sort);
     }
 

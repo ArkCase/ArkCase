@@ -9,12 +9,6 @@
         <constructor-arg value="0"/>
     </bean>
 
-    <!-- fake drlDeployer bean for testing.  Needed because the folder watcher has a
-         depends-on reference to drlDeployer -->
-    <bean id="drlDeployer" class="java.lang.Integer">
-        <constructor-arg value="0"/>
-    </bean>
-
     <!-- need a bean named "springEntityListenerConfigurer" but it doesn't have to be a real bean -->
     <bean id="springEntityListenerConfigurer" class="java.lang.Integer">
         <constructor-arg value="1"/>

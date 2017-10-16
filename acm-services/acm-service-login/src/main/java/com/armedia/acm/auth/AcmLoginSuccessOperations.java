@@ -3,21 +3,26 @@ package com.armedia.acm.auth;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.armedia.acm.web.api.MDCConstants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Created by armdev on 6/3/14.
@@ -30,13 +35,15 @@ public class AcmLoginSuccessOperations
     private AcmApplication acmApplication;
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
 
-    public void onSuccessfulAuthentication(HttpServletRequest request,
-                                           Authentication authentication)
+    public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
         String internalUserId = addAcmUserToSession(request, authentication);
 
         addUserIdToSession(request, internalUserId);
+
+        addAlfrescoUserIdToSession(request);
 
         addPrivilegesToSession(request, authentication);
 
@@ -45,6 +52,27 @@ public class AcmLoginSuccessOperations
         addAcmApplicationToSession(request);
 
         recordAuditPropertyUser(internalUserId);
+
+        setPasswordExpirationSessionAttribute(request);
+    }
+
+    protected void setPasswordExpirationSessionAttribute(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(false);
+        AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
+
+        LocalDate passwordExpirationDate = acmUser.getPasswordExpirationDate();
+        LocalDate today = LocalDate.now();
+        if (passwordExpirationDate != null)
+        {
+            long daysBetween = DAYS.between(today, passwordExpirationDate);
+            if (daysBetween <= DAYS_TO_PASSWORD_EXPIRATION)
+            {
+                String daysToExpiration = daysBetween == 0 ? "today" : String.format("in %d day(s)", daysBetween);
+                session.setAttribute("acm_user_message",
+                        "Your password expires " + daysToExpiration + ", please change it before expiration date.");
+            }
+        }
     }
 
     private void recordAuditPropertyUser(String userId)
@@ -57,9 +85,40 @@ public class AcmLoginSuccessOperations
         HttpSession session = request.getSession(true);
         session.setAttribute("acm_username", userId);
 
-        if ( log.isDebugEnabled() )
+        log.debug("Session 'acm_username' set to '{}'", userId);
+
+        // after successful login set the MDC variable (needed for API calls)
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, userId);
+    }
+
+    private void addAlfrescoUserIdToSession(HttpServletRequest request)
+    {
+        HttpSession session = request.getSession(true);
+        AcmUser acmUser = (AcmUser) session.getAttribute("acm_user");
+
+        String alfrescoUserId = getAlfrescoUserIdLdapAttributeValue(acmUser);
+        session.setAttribute("acm_alfresco_username", alfrescoUserId);
+
+        log.debug("Session 'acm_alfresco_username' set to '{}'", alfrescoUserId);
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, alfrescoUserId);
+    }
+
+    private String getAlfrescoUserIdLdapAttributeValue(AcmUser acmUser)
+    {
+        switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
-            log.debug("Session 'acm_username' set to '" + userId + "'");
+        case "samaccountname":
+            return acmUser.getsAMAccountName();
+        case "userprincipalname":
+            return acmUser.getUserPrincipalName();
+        case "uid":
+            return acmUser.getUid();
+        case "dn":
+        case "distinguishedname":
+            return acmUser.getDistinguishedName();
+        default:
+            return acmUser.getsAMAccountName();
         }
     }
 
@@ -69,36 +128,33 @@ public class AcmLoginSuccessOperations
 
         HttpSession session = request.getSession(true);
 
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
         session.setAttribute("acm_ip_address", ipAddress);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Session 'acm_ip_address' set to '" + ipAddress + "'");
-        }
+        log.debug("Session 'acm_ip_address' set to '{}'", ipAddress);
     }
 
     protected void addPrivilegesToSession(HttpServletRequest request, Authentication authentication)
     {
         List<String> allPrivileges = new ArrayList<>();
 
-        if ( authentication.getAuthorities() != null )
+        if (authentication.getAuthorities() != null)
         {
-            for ( GrantedAuthority authority : authentication.getAuthorities() )
+            for (GrantedAuthority authority : authentication.getAuthorities())
             {
                 List<String> privileges = getAcmPluginManager().getPrivilegesForRole(authority.getAuthority());
                 allPrivileges.addAll(privileges);
             }
         }
 
-        // we have to put a map in the session because of how JSTL works.  It's easier to check for
+        // we have to put a map in the session because of how JSTL works. It's easier to check for
         // a map entry than to see if an element exists in a list.
         Map<String, Boolean> privilegeMap = new HashMap<>();
-        for ( String privilege : allPrivileges )
+        for (String privilege : allPrivileges)
         {
             privilegeMap.put(privilege, Boolean.TRUE);
         }
@@ -107,10 +163,7 @@ public class AcmLoginSuccessOperations
 
         session.setAttribute("acm_privileges", privilegeMap);
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Added " + privilegeMap.size() + " privileges to user session.");
-        }
+        log.debug("Added {} privileges to user session.", privilegeMap.size());
 
     }
 
@@ -124,20 +177,16 @@ public class AcmLoginSuccessOperations
         ObjectMapper om = new ObjectMapper();
         try
         {
-            json =  om.writeValueAsString(getAcmApplication().getObjectTypes());
+            json = om.writeValueAsString(getAcmApplication().getObjectTypes());
             json = json == null || "null".equals(json) ? "[]" : json;
             session.setAttribute("acm_object_types", json);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             log.error(e.getMessage());
             session.setAttribute("acm_object_types", "[]");
         }
 
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Added ACM application named '" + getAcmApplication().getApplicationName() + "' to user session.");
-        }
+        log.debug("Added ACM application named '{}' to user session.", getAcmApplication().getApplicationName());
 
     }
 

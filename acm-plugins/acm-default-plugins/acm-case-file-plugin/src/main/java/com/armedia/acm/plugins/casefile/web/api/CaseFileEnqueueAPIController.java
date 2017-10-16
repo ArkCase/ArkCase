@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.service.EnqueueCaseFileService;
+import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.armedia.acm.services.users.service.tracker.UserTrackerService;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 @Controller
 @RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
@@ -24,6 +26,8 @@ public class CaseFileEnqueueAPIController
     private EnqueueCaseFileService enqueueCaseFileService;
     private UserTrackerService userTrackerService;
     private CaseFileDao caseFileDao;
+
+    private CaseFileEventUtility caseFileEventUtility;
 
     @RequestMapping(value = "/enqueue/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -41,12 +45,14 @@ public class CaseFileEnqueueAPIController
 
         CaseFileEnqueueResponse response = getEnqueueCaseFileService().enqueueCaseFile(caseId, nextQueue, context);
 
+
         if (response.isSuccess())
         {
             // be sure to send back the updated case file - the service does not flush the SQL and might not know
             // about any changes made in the Activiti layer
             CaseFile updated = getCaseFileDao().find(caseId);
             response.setCaseFile(updated);
+            caseFileEventUtility.raiseEvent(updated, "updated", new Date(), ipAddress, auth.getName(), auth);
         }
 
         return response;
@@ -81,4 +87,15 @@ public class CaseFileEnqueueAPIController
     {
         this.caseFileDao = caseFileDao;
     }
+
+    public CaseFileEventUtility getCaseFileEventUtility()
+    {
+        return caseFileEventUtility;
+    }
+
+    public void setCaseFileEventUtility(CaseFileEventUtility caseFileEventUtility)
+    {
+        this.caseFileEventUtility = caseFileEventUtility;
+    }
+
 }

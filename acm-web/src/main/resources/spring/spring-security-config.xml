@@ -55,6 +55,12 @@
         <http
                 security="none"
                 pattern="/login.jsp"/>
+        <http
+                security="none"
+                pattern="/views/reset-password.jsp" />
+        <http
+                security="none"
+                pattern="/reset-password" />
     </beans:beans>
 
 

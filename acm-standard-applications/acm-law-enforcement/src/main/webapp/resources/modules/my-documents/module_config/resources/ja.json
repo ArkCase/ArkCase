@@ -1,0 +1,8 @@
+{
+  "my-documents": {
+    "title": "私の文書"
+  },
+  "my-documents.menus": {
+    "leftnav.item": "私の文書"
+  }
+}

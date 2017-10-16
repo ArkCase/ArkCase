@@ -3,24 +3,22 @@ package com.armedia.acm.services.note.model;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "acm_note")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Note.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.services.note.model.Note")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObjectInfo
 {
     private static final long serialVersionUID = -1154137631399833851L;
@@ -57,6 +55,9 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     @Column(name = "cm_parent_object_type")
     private String parentType;
 
+    @Column(name = "cm_parent_object_title")
+    private String parentTitle;
+
     @Column(name = "cm_note_tag")
     private String tag;
 
@@ -66,6 +67,12 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     @Column(name = "cm_note_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
+
+    @Column(name = "cm_note_author")
+    private String author;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @PrePersist
     public void beforeInsert()
@@ -209,4 +216,28 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
         return parentType;
     }
 
+    public String getParentTitle() {return parentTitle; }
+
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
 }

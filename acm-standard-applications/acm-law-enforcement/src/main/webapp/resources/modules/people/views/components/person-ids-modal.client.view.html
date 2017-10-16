@@ -1,0 +1,82 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>people.comp.ids.modal.addID</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>people.comp.ids.modal.editID</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="idForm">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="identificationNumber" translate>people.comp.ids.modal.number.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="identificationNumber" class="input-md form-control" type="text" required="required"
+                       ng-model="identification.identificationNumber"
+                       placeholder="{{ 'people.comp.ids.modal.number.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="idTypes"
+                       translate>people.comp.ids.modal.type.label</label><span class="required-asterisk">*</span>
+                <select id="idTypes" class="input-md form-control" required="required"
+                        ng-model="identification.identificationType"
+                        ng-options="item.key as item.value | translate for item in identificationTypes"></select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="identificationIssuer" translate>people.comp.ids.modal.issuer.label</label>
+                <input id="identificationIssuer" type="text" class="input-md form-control"
+                       ng-model="identification.identificationIssuer"
+                       placeholder="{{ 'people.comp.ids.modal.issuer.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="identificationYearIssued" translate>people.comp.ids.modal.yearIssued.label</label>
+                <p class="input-group">
+                    <input id="identificationYearIssued" type="text"
+                           class="form-control"
+                           placeholder="{{'people.comp.ids.modal.yearIssued.placeholder' | translate}}"
+                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           datepicker-append-to-body="false"
+                           ng-model="identification.identificationYearIssued"
+                           is-open="opened"
+                           close-on-date-selection="true"
+                           show-button-bar="true"
+                           on-open-focus="false"
+                           close-text="{{'people.comp.ids.modal.yearIssued.close.button' | translate}}"/>
+                    <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default"
+                                            ng-click="opened = !opened">
+                                        <i class="fa fa-calendar"></i>
+                                    </button>
+                                </span>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>people.comp.ids.modal.setPrimary</label><span class="required-asterisk">*</span><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>people.comp.ids.modal.yes</translate>
+                </label>
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>people.comp.ids.modal.no</translate>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>people.comp.ids.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="idForm.$invalid">
+        <span translate>people.comp.ids.modal.btnOk.text</span>
+    </button>
+</div>

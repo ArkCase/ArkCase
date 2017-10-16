@@ -130,6 +130,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract date part from an ISO Datetime in default format.
              */
             , getDatePart: function (isoDateTime, replacement) {
+                console.log("WARNING: Util.DateService.getDatePart() is obsolete, because it is not i18n compliant.");
                 return Service.goodIsoDate(isoDateTime, Service.defaultDateFormat, replacement);
             }
 
@@ -145,6 +146,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * Extract time part from an ISO Datetime in default format.
              */
             , getTimePart: function (isoDateTime, replacement) {
+                console.log("WARNING: Util.DateService.getTimePart() is obsolete, because it is not i18n compliant.");
                 return Service.goodIsoDate(isoDateTime, Service.defaultTimeFormat, replacement);
             }
 
@@ -182,6 +184,22 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 currentTimeZoneOffsetInMinutes = Math.abs(currentTimeZoneOffsetInMinutes % 60);
                 var currentTimeZoneOffset = "UTC" + currentTimeZoneOffsetInHours + ":" + currentTimeZoneOffsetInMinutes;
                 return currentTimeZoneOffset;
+            }
+
+            /**
+             * @ngdoc method
+             * @name convertToCurrentTime
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Computates the time difference between UTC time and local time
+             *
+             * @Returns {Date} Date object
+             */
+            , convertToCurrentTime: function (date) {
+                var now = new Date();
+                var convertedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+                return convertedTime;
             }
 
         };

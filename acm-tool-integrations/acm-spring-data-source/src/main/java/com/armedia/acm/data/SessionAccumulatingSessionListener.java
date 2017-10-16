@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by armdev on 10/21/14.
@@ -20,17 +23,11 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    @Override
     public void postAcquireClientSession(SessionEvent event)
     {
         super.postAcquireClientSession(event);
         String name = UUID.randomUUID().toString();
-        log.trace("acquiring session: set session name to: " + name);
+        log.trace("acquiring session: set session name to: {}", name);
 
         event.getSession().setName(name);
         descriptorListener.getChangesBySession().put(name, new AcmObjectChangelist());
@@ -40,7 +37,7 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postReleaseClientSession(SessionEvent event)
     {
         super.postReleaseClientSession(event);
-        log.trace("releasing session: " + event.getSession().getName());
+        log.trace("releasing session: {}", event.getSession().getName());
 
         descriptorListener.getChangesBySession().remove(event.getSession().getName());
     }
@@ -49,17 +46,20 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postCommitTransaction(SessionEvent event)
     {
         super.postCommitTransaction(event);
-        log.trace("Session committed: " + event.getSession().getName());
-        log.trace("Raising database event: " +
-                getDescriptorListener().getChangesBySession().get(event.getSession().getName()));
 
-        AcmObjectChangelist changelist = getDescriptorListener().getChangesBySession().get(event.getSession().getName());
+        String sessionName = event.getSession().getName();
 
-        if ( changelist != null )
+        log.trace("Session committed: {}", sessionName);
+        log.trace("Raising database event: {}",
+                getDescriptorListener().getChangesBySession().get(sessionName));
+
+        AcmObjectChangelist changelist = getDescriptorListener().getChangesBySession().get(sessionName);
+
+        if (changelist != null)
         {
             boolean raiseEvent = !changelist.getAddedObjects().isEmpty() || !changelist.getDeletedObjects().isEmpty()
                     || !changelist.getUpdatedObjects().isEmpty();
-            if ( raiseEvent )
+            if (raiseEvent)
             {
                 getApplicationEventPublisher().publishEvent(new AcmDatabaseChangesEvent(changelist));
             }
@@ -70,8 +70,8 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     public void postRollbackTransaction(SessionEvent event)
     {
         super.postRollbackTransaction(event);
-        log.trace("Rollback: " + event.getSession().getName());
-        log.debug("Not raising database event: " +
+        log.trace("Rollback: {}", event.getSession().getName());
+        log.debug("Not raising database event: {}",
                 getDescriptorListener().getChangesBySession().get(event.getSession().getName()));
     }
 
@@ -89,4 +89,11 @@ public class SessionAccumulatingSessionListener extends SessionEventAdapter impl
     {
         return applicationEventPublisher;
     }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
 }

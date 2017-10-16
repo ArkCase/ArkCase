@@ -12,9 +12,11 @@ public class ApplicationSignatureEvent extends AcmEvent
 	public ApplicationSignatureEvent(Signature source, String signatureEvent, boolean succeeded, String ipAddress)
     {
         super(source);
-        
-        setObjectId(source.getObjectId());
-        setObjectType(source.getObjectType());
+
+        setObjectId(source.getSignatureId());
+        setObjectType("SIGNATURE");
+        setParentObjectId(source.getObjectId());
+        setParentObjectType(source.getObjectType());
         setEventDate(source.getSignedDate());
         setUserId(source.getSignedBy());
         setEventType(signatureEvent);

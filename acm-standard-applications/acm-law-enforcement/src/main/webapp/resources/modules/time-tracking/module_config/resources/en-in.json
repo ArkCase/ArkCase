@@ -1,0 +1,90 @@
+{
+  "timeTracking": {
+    "title": "Time Tracking",
+    "progressNoTimesheet": "[ No timesheet is selected ]",
+    "progressLoading": "Loading timesheet ",
+    "progressError": "Failed to load timesheet"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Time Tracking",
+    "topbar.item": "Timesheet"
+  },
+  "timeTracking.comp.main": {
+    "title": "Overview"
+  },
+  "timeTracking.comp.info": {
+    "title": "Info",
+    "lastModified.label": "Last Modified"
+  },
+  "timeTracking.comp.actions": {
+    "title": "Actions",
+    "new.button": "New Timesheet",
+    "edit.button": "Edit Timesheet"
+  },
+  "timeTracking.comp.details": {
+    "title": "Details",
+    "informSaved": "Timesheet details saved",
+    "table.columns": {
+      "title": "Details",
+      "modified": "Date Last Modified",
+      "modifier": "User Last Modified"
+    }
+  },
+  "timeTracking.comp.person": {
+    "title": "Person",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "Hours Summary",
+    "table.columns": {
+      "code": "Parent ID",
+      "type": "Parent Type",
+      "value": "Total Hours",
+      "date": "Date Charged",
+      "modified": "Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "Tags",
+    "table.columns": {
+      "tag": "Tag",
+      "created": "Created",
+      "createdBy": "Created By"
+    },
+    "modal": {
+      "title": "Tag",
+      "search": "Search for Tag",
+      "buttons": {
+        "cancel": "Cancel",
+        "ok": "Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "Tag with that name or description or text already exists",
+      "tagAssociated": "already associated",
+      "delete": {
+        "success": "Tag deleted successfully",
+        "error": "Error deleting tag"
+      }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Person",
+      "summary.label": "Hours Summary",
+      "tags.label": "Tags"
+    },
+    "sorters": {
+      "dateAsc": "Sort Date Ascending",
+      "dateDesc": "Sort Date Descending",
+      "idAsc": "Sort Timesheet ID Ascending",
+      "idDesc": "Sort Timesheet ID Descending",
+      "nameDesc": "Sort By Timesheet Name",
+      "noSort": "(No Sort)"
+    }
+  }
+}

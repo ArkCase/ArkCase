@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -70,6 +70,11 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-extra-plugins</groupId>
             <artifactId>acm-ms-outlook-plugin</artifactId>
             <version>${acm.version}</version>
@@ -105,6 +110,12 @@
             <version>${acm.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-object-diff</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
             <artifactId>acm-business-process-plugin</artifactId>
             <version>${acm.version}</version>
@@ -114,6 +125,12 @@
             <artifactId>acm-service-users</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <!-- JSON -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -179,13 +196,6 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
 
     </dependencies>
 

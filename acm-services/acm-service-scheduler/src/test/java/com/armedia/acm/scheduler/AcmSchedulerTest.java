@@ -1,16 +1,8 @@
 package com.armedia.acm.scheduler;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -31,9 +23,12 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Map;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.*;
+
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 29, 2016
- *
  */
 @RunWith(EasyMockRunner.class)
 public class AcmSchedulerTest extends EasyMockSupport
@@ -65,10 +60,10 @@ public class AcmSchedulerTest extends EasyMockSupport
     public void setUp() throws IOException
     {
         acmScheduler = new AcmScheduler(mockedTaskScheduler, mockedTaskExecutor, mockedSpringContextHolder);
-        getClass().getClassLoader();
         schedulerConfiguration = new ClassPathResource("scheduledTasks.json").getFile();
         noSchedulerConfiguration = new ClassPathResource("someConfiguration.json").getFile();
         assertNotNull(schedulerConfiguration);
+        assertNotNull(noSchedulerConfiguration);
     }
 
     @Test
@@ -103,7 +98,7 @@ public class AcmSchedulerTest extends EasyMockSupport
     @Test
     public void testOnApplicationEventMonitoredFileModified() throws IOException
     {
-        expect(mockedSpringContextHolder.getBeanByName("scheduledBillingQueuePurger", AcmSchedulableBean.class))
+        expect(mockedSpringContextHolder.getBeanByNameIncludingChildContexts("scheduledBillingQueuePurger", AcmSchedulableBean.class))
                 .andReturn(mockedSchedulableBean);
 
         replay(mockedSpringContextHolder);

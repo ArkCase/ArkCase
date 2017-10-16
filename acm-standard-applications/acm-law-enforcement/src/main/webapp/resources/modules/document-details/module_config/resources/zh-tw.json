@@ -1,0 +1,105 @@
+{
+  "documentDetails": {
+    "title": "zh-tw_Document details",
+    "creator": "zh-tw_Creator",
+    "created": "zh-tw_Created",
+    "assignee": "zh-tw_Assignee",
+    "fileType": "zh-tw_File type",
+    "status": "zh-tw_Status",
+    "name": "zh-tw_Name",
+    "comp.eventHistory": {
+      "title": "zh-tw_Event History",
+      "table.columns": {
+        "eventType": "zh-tw_Event Name",
+        "eventDate": "zh-tw_Created",
+        "userId": "zh-tw_User"
+      }
+    },
+    "comp.tags": {
+      "title": "zh-tw_Tags",
+      "table.columns": {
+        "tag": "zh-tw_Tag",
+        "created": "zh-tw_Created",
+        "createdBy": "zh-tw_Created By"
+      },
+      "modal": {
+        "title": "zh-tw_Tag",
+        "search": "zh-tw_Search for Tag",
+        "buttons": {
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add Tag"
+        }
+      },
+      "message.tagExists": "zh-tw_Tag with that name or description or text already exists",
+      "message.tagAssociated": "zh-tw_already associated",
+      "message.delete.success": "zh-tw_Tag deleted successfully",
+      "message.delete.error": "zh-tw_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "zh-tw_Participants",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type"
+      },
+      "dialogUserPicker": {
+        "header": "zh-tw_Choose User",
+        "table.columns": {
+          "name": "zh-tw_Name",
+          "type": "zh-tw_Type",
+          "title": "zh-tw_Title",
+          "id": "zh-tw_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "zh-tw_Choose Group",
+        "table.columns": {
+          "name": "zh-tw_Name"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "zh-tw_Notes",
+      "table.columns": {
+        "note": "zh-tw_Note",
+        "tag": "zh-tw_Document Version",
+        "created": "zh-tw_Created",
+        "creator": "zh-tw_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "zh-tw_Version History",
+      "table.columns": {
+        "creator": "zh-tw_User",
+        "created": "zh-tw_Created",
+        "versionTag": "zh-tw_Version"
+      }
+    },
+    "comp.details": {
+      "title": "zh-tw_Details",
+      "label": {
+        "creator": "zh-tw_Owner",
+        "modifier": "zh-tw_Author",
+        "created": "zh-tw_Creation Date",
+        "modified": "zh-tw_Modified Date",
+        "description": "zh-tw_Description",
+        "type": "zh-tw_Type",
+        "organization": "zh-tw_Source Organization",
+        "person": "zh-tw_Source Entity",
+        "format": "zh-tw_Format",
+        "size": "zh-tw_Size",
+        "gps": "zh-tw_Location",
+        "duration": "zh-tw_Duration (seconds)",
+        "width": "zh-tw_Width (pixels)",
+        "height": "zh-tw_Height (pixels)",
+        "camera.type": "zh-tw_Camera Type",
+        "camera.version": "zh-tw_Camera Version",
+        "button.save": "zh-tw_Save",
+        "button.wait": "zh_tw_Please Wait"
+      },
+      "message": {
+        "save.success": "zh-tw_File metadata are successfully updated",
+        "save.error": "zh-tw_Unable to update file metadata"
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;

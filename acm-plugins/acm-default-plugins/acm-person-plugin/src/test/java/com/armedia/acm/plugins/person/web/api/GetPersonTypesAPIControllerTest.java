@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-person-plugin-test.xml"
 })
-public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
+public class GetPersonTypesAPIControllerTest extends EasyMockSupport
+{
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
 
@@ -49,7 +50,8 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
 
         personPluginProperties = new Properties();
         personPluginProperties.setProperty("person.types", "one,two,three,four,five");
@@ -63,7 +65,8 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void getPersonTypes() throws Exception {
+    public void getPersonTypes() throws Exception
+    {
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");
@@ -97,7 +100,8 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport {
     }
 
     @Test
-    public void getPersonTypes_exception() throws Exception {
+    public void getPersonTypes_exception() throws Exception
+    {
         unit.setPersonProperties(wrongPersonPluginProperties);
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user");

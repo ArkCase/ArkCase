@@ -19,12 +19,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation" })
+@RequestMapping({"/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation"})
 public class DeletePersonAssocByIdAPIController
 {
     private PersonAssociationDao personAssociationDao;
     private PersonAssociationEventPublisher personAssociationEventPublisher;
-    
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/delete/{personAssocId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,36 +33,28 @@ public class DeletePersonAssocByIdAPIController
             @PathVariable("personAssocId") Long personAssocId
     ) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
-        {
-            log.info("Finding person association by id '" + personAssocId + "'");
-        }
-        
-        if ( personAssocId != null )
+        log.info("Finding person association by id:'{}'", personAssocId);
+
+        if (personAssocId != null)
         {
             try
             {
-
                 JSONObject objectToReturnJSON = new JSONObject();
                 PersonAssociation source = getPersonAssociationDao().find(personAssocId);
                 getPersonAssociationDao().deletePersonAssociationById(personAssocId);
-                log.info("Deleting person association by id '" + personAssocId + "'");
-               
-                getPersonAssociationEventPublisher().publishPersonAssociationDeletedEvent(source);
-                
-                objectToReturnJSON.put("deletedPersonAssociationId", personAssocId);
-                String objectToReturn;
-                objectToReturn = objectToReturnJSON.toString();
+                log.info("Deleting person association by id:'{}'", personAssocId);
 
-                return objectToReturn;
-            }
-            catch (PersistenceException e)
+                getPersonAssociationEventPublisher().publishPersonAssociationDeletedEvent(source);
+
+                objectToReturnJSON.put("deletedPersonAssociationId", personAssocId);
+                return objectToReturnJSON.toString();
+            } catch (PersistenceException e)
             {
                 throw new AcmUserActionFailedException("Delete", "personAssoc", personAssocId, e.getMessage(), e);
-            } 
+            }
         }
-        
-       throw new AcmObjectNotFoundException("couldn't find", personAssocId, "person association with this id", null);
+
+        throw new AcmObjectNotFoundException("couldn't find", personAssocId, "person association with this id", null);
     }
 
     public PersonAssociationDao getPersonAssociationDao()
@@ -70,11 +62,11 @@ public class DeletePersonAssocByIdAPIController
         return personAssociationDao;
     }
 
-    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao) 
+    public void setPersonAssociationDao(PersonAssociationDao personAssociationDao)
     {
         this.personAssociationDao = personAssociationDao;
     }
-    
+
     public PersonAssociationEventPublisher getPersonAssociationEventPublisher()
     {
         return personAssociationEventPublisher;

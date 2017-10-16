@@ -1,14 +1,27 @@
 package com.armedia.acm.plugins.addressable.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -21,6 +34,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "acm_postal_address")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "className", defaultImpl = PostalAddress.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.addressable.model.PostalAddress")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PostalAddress implements Serializable, AcmEntity
 {
 
@@ -80,6 +98,16 @@ public class PostalAddress implements Serializable, AcmEntity
 
     @Column(name = "cm_country")
     private String country;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "acm_address_contact_method", joinColumns = {
+            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}, inverseJoinColumns = {
+            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+    @OrderBy(value = "id")
+    private List<ContactMethod> contactMethods;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @XmlTransient
     public Long getId()
@@ -248,7 +276,28 @@ public class PostalAddress implements Serializable, AcmEntity
         return this;
     }
 
-    @Override public boolean equals(Object o)
+    public List<ContactMethod> getContactMethods()
+    {
+        return contactMethods;
+    }
+
+    public void setContactMethods(List<ContactMethod> contactMethods)
+    {
+        this.contactMethods = contactMethods;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
+
+    @Override
+    public boolean equals(Object o)
     {
         if (this == o)
             return true;
@@ -287,7 +336,8 @@ public class PostalAddress implements Serializable, AcmEntity
 
     }
 
-    @Override public int hashCode()
+    @Override
+    public int hashCode()
     {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (created != null ? created.hashCode() : 0);

@@ -3,16 +3,18 @@
 //Setting up route
 angular.module('cases').config(['$stateProvider',
     function ($stateProvider) {
-
         // Project state routing
         $stateProvider
             .state('cases', {
                 url: '/cases',
                 templateUrl: 'modules/cases/views/cases.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                        , function ($translate, $translatePartialLoader, LocaleService) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('cases');
+                        $translate.buildDataLookups(LocaleService.getLabelResources(["cases"], "en"));
                         return $translate.refresh();
                     }]
                 }
@@ -71,6 +73,11 @@ angular.module('cases').config(['$stateProvider',
                 templateUrl: 'modules/cases/views/components/case-people.client.view.html'
             })
 
+            .state('cases.organizations', {
+                url: '/:id/organizations',
+                templateUrl: 'modules/cases/views/components/case-organizations.client.view.html'
+            })
+
             .state('cases.references', {
                 url: '/:id/references',
                 templateUrl: 'modules/cases/views/components/case-references.client.view.html'
@@ -91,5 +98,13 @@ angular.module('cases').config(['$stateProvider',
                 templateUrl: 'modules/cases/views/components/case-tags.client.view.html'
             })
 
+            .state('cases.approvalRouting', {
+                url: '/:type/:id/approvals',
+                templateUrl: 'modules/cases/views/components/case-approval-routing.client.view.html'
+            })
+
     }
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

@@ -2,7 +2,9 @@ package com.armedia.acm.services.notification.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,13 +22,11 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by armdev on 10/08/14.
- */
+
 @Entity
 @Table(name = "acm_notification")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Notification implements Serializable, AcmObject, AcmEntity
-
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -100,6 +100,12 @@ public class Notification implements Serializable, AcmObject, AcmEntity
 
     @Column(name = "cm_related_object_type")
     private String relatedObjectType;
+
+    @Column(name = "cm_related_object_number")
+    private String relatedObjectNumber;
+
+    @Column(name = "cm_notification_action_date")
+    private Date actionDate;
 
     @Transient
     private String userEmail;
@@ -305,6 +311,26 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         this.relatedObjectType = relatedObjectType;
     }
 
+    public String getRelatedObjectNumber()
+    {
+        return relatedObjectNumber;
+    }
+
+    public void setRelatedObjectNumber(String relatedObjectNumber)
+    {
+        this.relatedObjectNumber = relatedObjectNumber;
+    }
+
+    public Date getActionDate()
+    {
+        return actionDate;
+    }
+
+    public void setActionDate(Date actionDate)
+    {
+        this.actionDate = actionDate;
+    }
+
     public String getUserEmail()
     {
         return userEmail;
@@ -321,6 +347,7 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     {
         return NotificationConstants.OBJECT_TYPE;
     }
+
 }
 
 

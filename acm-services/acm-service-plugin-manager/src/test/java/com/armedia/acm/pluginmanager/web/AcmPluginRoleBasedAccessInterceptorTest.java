@@ -18,8 +18,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static junit.framework.TestCase.fail;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by armdev on 5/14/14.
@@ -77,15 +78,14 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         try
         {
             unit.preHandle(mockRequest, mockResponse, null);
-            fail("Should have gotten an unauthorized exception");
+            fail("Expecting AcmNotAuthorizedException but did not happen");
         }
-        catch (AcmNotAuthorizedException e)
+        catch (AcmNotAuthorizedException exception)
         {
-            // ok - expected
+            // do nothing, should throw exception
         }
 
         verifyAll();
-
     }
 
     @Test
@@ -102,12 +102,13 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         try
         {
             unit.preHandle(mockRequest, mockResponse, null);
-            fail("Should have gotten an unauthorized exception");
+            fail("Expecting AcmNotAuthorizedException but did not happen");
         }
-        catch (AcmNotAuthorizedException e)
+        catch (AcmNotAuthorizedException exception)
         {
-            // ok - expected
+            // do nothing, should throw exception
         }
+
 
         verifyAll();
     }
@@ -141,15 +142,15 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
         try
         {
             unit.preHandle(mockRequest, mockResponse, null);
-            fail("Should have gotten an unauthorized exception");
+            fail("Expecting AcmNotAuthorizedException but did not happen");
         }
-        catch (AcmNotAuthorizedException e)
+        catch (AcmNotAuthorizedException exception)
         {
-            // ok - expected
+            // do nothing, should throw exception
         }
+
 
         verifyAll();
-
 
     }
 
@@ -185,6 +186,5 @@ public class AcmPluginRoleBasedAccessInterceptorTest extends EasyMockSupport
 
         assertTrue(proceed);
     }
-
 
 }

@@ -1,14 +1,49 @@
 'use strict';
 
-angular.module('admin').controller('Admin.FormWorkflowsLinkController', ['$scope', 'Admin.FormWorkflowsLinkService', 'hotRegisterer', 'MessageService', '$translate',
-    function ($scope, formWorkflowsLinkService, hotRegisterer, messageService, $translate) {
+angular.module('admin').controller('Admin.FormWorkflowsLinkController', ['$scope', '$element', '$interval', 'Admin.FormWorkflowsLinkService', 'hotRegisterer', 'MessageService', '$translate',
+    function ($scope, $element, $interval, formWorkflowsLinkService, hotRegisterer, messageService, $translate) {
         $scope.tableValues = [];
         $scope.data = {};
         $scope.columnsWidths = [];
 
+        $scope.tableSettings = {
+            height: 750
+        };
+
+        // We have to display whole table without vertical scroll.
+        // This is HACK, because on some reason we can't get rows heights.
+        // That's why we compare visible and total rows number every 100 msec and increase table's height if it is required
+        // (skolomiets)
+        var intervalId = $interval(function () {
+                var instance = hotRegisterer.getInstance('formWorkflowsLink');
+                if (!instance) {
+                    return;
+                }
+                var totalRows = instance.countRows();
+                var visibleRows = instance.countVisibleRows();
+
+                if (visibleRows < totalRows) {
+                    $scope.tableSettings.height += 100;
+                    instance.updateSettings($scope.tableSettings);
+                }
+            }, 100
+        );
+
         //retrieve all data
         formWorkflowsLinkService.getFormWorkflowsData().then(function (payload) {
-            $scope.data = payload.data;
+            //$scope.data = payload.data;
+
+            // Add 50 empty rows at the end of file
+            var data = angular.copy(payload.data)
+            var emptyRow = angular.copy(payload.data.cells[payload.data.cells.length - 1]);
+            for (var i = 0; i < emptyRow.length; i++) {
+                emptyRow.value = "";
+            }
+            for (var i = 0; i < 50; i++) {
+                data.cells.push(angular.copy(emptyRow));
+            }
+
+            $scope.data = data;
 
             var cells = [];
             for (var i = 0; i < $scope.data.cells.length; i++) {
@@ -84,12 +119,17 @@ angular.module('admin').controller('Admin.FormWorkflowsLinkController', ['$scope
             var handsontableInstance = hotRegisterer.getInstance('formWorkflowsLink');
             formWorkflowsLinkService.saveData(handsontableInstance.getData()).then(function () {
                 //success saved
-                messageService.info($translate.instant('admin.form-workflows.link.edit-role.save.success'));
+                messageService.info($translate.instant('admin.formWorkflows.link.editRole.save.success'));
             }, function (payload) {
                 //error saving
-                messageService.error($translate.instant('admin.form-workflows.link.edit-role.save.error'));
+                messageService.error($translate.instant('admin.formWorkflows.link.editRole.save.error'));
             });
         };
 
+
+        // Stop interval timer before component destroyed
+        $scope.$on('$destroy', function () {
+            $interval.cancel(intervalId);
+        });
     }
 ]);

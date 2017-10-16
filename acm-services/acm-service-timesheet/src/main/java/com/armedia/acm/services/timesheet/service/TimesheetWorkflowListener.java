@@ -55,7 +55,11 @@ public class TimesheetWorkflowListener implements ApplicationListener<AcmTimeshe
 		LOG.debug("Calling business rules");
 		
 		configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-		
+		if (configuration.isBuckslipProcess())
+		{
+			//TimesheetWorkflowListener is not handling buckslip process
+			return;
+		}
 		LOG.debug("Start process? " + configuration.isStartProcess());
 		
 		if ( configuration.isStartProcess() )

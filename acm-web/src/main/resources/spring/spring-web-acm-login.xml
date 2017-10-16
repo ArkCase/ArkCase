@@ -6,6 +6,7 @@
 
     <bean id="loginController" class="com.armedia.acm.web.api.LoginController">
         <property name="loginWarningMessageService" ref="loginWarningMessageService"/>
+        <property name="applicationMetaInfoService" ref="applicationMetaInfoService"/>
     </bean>
 
 </beans>

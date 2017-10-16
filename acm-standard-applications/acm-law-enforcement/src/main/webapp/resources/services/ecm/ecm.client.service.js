@@ -10,13 +10,19 @@
 
  * EcmService contains functions to related to document management.
  */
-angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , function ($resource, StoreService, Util) {
+angular.module('services').factory('EcmService', ['$resource', 'UtilService'
+    , function ($resource, Util) {
 
         var Service = $resource('api/latest/service', {}, {
             retrieveFolderList: {
                 method: 'GET',
                 url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId?start=:start&n=:n&s=:sortBy&dir=:sortDir',
+                cache: false,
+                isArray: false
+            }
+            , retrieveFlatSearchResultList: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:objType/:objId/:folderId/search?fq=:filter&start=:start&n=:n&s=:sortBy&dir=:sortDir',
                 cache: false,
                 isArray: false
             }
@@ -27,6 +33,10 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
             , deleteFolder: {
                 method: 'DELETE',
                 url: 'api/latest/service/ecm/folder/:folderId'
+            }
+            , getDeleteFolderInfo: {
+                method: 'GET',
+                url: 'api/latest/service/ecm/folder/:folderId/count'
             }
             , uploadFiles: {
                 method: 'POST',
@@ -87,11 +97,6 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
                 method: 'GET',
                 url: 'api/latest/plugin/audit/FILE/:fileId'
             }
-            , getFileNotes: {
-                method: 'GET',
-                url: 'api/latest/plugin/note/file/:fileId',
-                isArray: true
-            }
             , getFileParticipants: {
                 method: 'GET',
                 url: 'api/v1/service/participant/FILE/:fileId',
@@ -108,8 +113,25 @@ angular.module('services').factory('EcmService', ['$resource', 'Acm.StoreService
                 url: 'api/latest/service/ecm/file/:fileId/type/:fileType',
                 cache: false
             }
-
+            , updateFile: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/file/metadata/:fileId'
+            }
         });
+
+        Service._getFolderDocumentCounts = function(params){
+            return Util.serviceCall({
+                service: Service.getFolderDocumentCounts
+                ,param: params
+                , onSuccess: function(data){
+                    return data;
+                }
+                , onError: function(errData){
+                    alert("Error.");
+                }
+            });
+        };
+
 
         return Service;
     }

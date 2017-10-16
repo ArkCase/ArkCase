@@ -1,0 +1,105 @@
+{
+  "documentDetails": {
+    "title": "de_Document details",
+    "creator": "de_Creator",
+    "created": "de_Created",
+    "assignee": "de_Assignee",
+    "fileType": "de_File type",
+    "status": "de_Status",
+    "name": "de_Name",
+    "comp.eventHistory": {
+      "title": "de_Event History",
+      "table.columns": {
+        "eventType": "de_Event Name",
+        "eventDate": "de_Created",
+        "userId": "de_User"
+      }
+    },
+    "comp.tags": {
+      "title": "de_Tags",
+      "table.columns": {
+        "tag": "de_Tag",
+        "created": "de_Created",
+        "createdBy": "de_Created By"
+      },
+      "modal": {
+        "title": "de_Tag",
+        "search": "de_Search for Tag",
+        "buttons": {
+          "cancel": "de_Cancel",
+          "ok": "de_Add Tag"
+        }
+      },
+      "message.tagExists": "de_Tag with that name or description or text already exists",
+      "message.tagAssociated": "de_already associated",
+      "message.delete.success": "de_Tag deleted successfully",
+      "message.delete.error": "de_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "de_Participants",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type"
+      },
+      "dialogUserPicker": {
+        "header": "de_Choose User",
+        "table.columns": {
+          "name": "de_Name",
+          "type": "de_Type",
+          "title": "de_Title",
+          "id": "de_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "de_Choose Group",
+        "table.columns": {
+          "name": "de_Name"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "de_Notes",
+      "table.columns": {
+        "note": "de_Note",
+        "tag": "de_Document Version",
+        "created": "de_Created",
+        "creator": "de_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "de_Version History",
+      "table.columns": {
+        "creator": "de_User",
+        "created": "de_Created",
+        "versionTag": "de_Version"
+      }
+    },
+    "comp.details": {
+      "title": "de_Details",
+      "label": {
+        "creator": "de_Owner",
+        "modifier": "de_Author",
+        "created": "de_Creation Date",
+        "modified": "de_Modified Date",
+        "description": "de_Description",
+        "type": "de_Type",
+        "organization": "de_Source Organization",
+        "person": "de_Source Entity",
+        "format": "de_Format",
+        "size": "de_Size",
+        "gps": "de_Location",
+        "duration": "de_Duration (seconds)",
+        "width": "de_Width (pixels)",
+        "height": "de_Height (pixels)",
+        "camera.type": "de_Camera Type",
+        "camera.version": "de_Camera Version",
+        "button.save": "de_Save",
+        "button.wait": "de_Please Wait"
+      },
+      "message": {
+        "save.success": "de_File metadata are successfully updated",
+        "save.error": "de_Unable to update file metadata"
+      }
+    }
+  }
+}

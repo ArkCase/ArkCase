@@ -17,7 +17,7 @@
 
     <bean id="getCasesByStatusAPIController"
           class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
-        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="listCaseFilesByUserAPIController"
@@ -33,7 +33,7 @@
     </bean>
 
     <bean id="getCaseTypesAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCaseTypesAPIController">
-        <property name="caseFileProperties" ref="caseFilePluginProperties"/>
+        <property name="lookupDao" ref="lookupDao"/>
     </bean>
 
     <bean id="mergeCaseFileAPIController" class="com.armedia.acm.plugins.casefile.web.api.MergeCaseFilesAPIController">
@@ -63,6 +63,7 @@
         <property name="enqueueCaseFileService" ref="enqueueCaseFileService"/>
         <property name="userTrackerService" ref="userTrackerService"/>
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
 </beans>

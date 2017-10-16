@@ -6,25 +6,25 @@
                 </h4></div>
             <div class="col-xs-6  text-right">
                 <h4>
-                    <span>{{parentCaseInfo.caseNumber || 'Unknown'}}</span>
+                    <span>{{parentCaseInfo.caseNumber || 'common.value.unknown' | translate}}</span>
                 </h4>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.caseType || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.caseType || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.subjectType.label</span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.created | date: ('common.defaultDateUIFormat' | translate)}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.created | date: 'shortDate' }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.incidentDate.label</span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.priority || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.priority || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.priority.label</span>
                 </small>
@@ -32,7 +32,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentCaseInfo.creator || 'Unknown'}}</div>-->
+                <!--<div class="h4 font-bold">{{parentCaseInfo.creator || 'common.value.unknown' | translate}}</div>-->
                 <div class="h4 font-bold">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' ||
                     'Unknown'}}
                 </div>
@@ -41,7 +41,7 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{owningGroup || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.owningGroup.label</span>
                 </small>
@@ -62,20 +62,19 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentComplaintInfo.complaintType || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.complaintType || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.subjectType.label</span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentComplaintInfo.created | date: "MM/dd/yyyy"}}</div>-->
-                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: ('common.defaultDateUIFormat' | translate)}}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.incidentDate | date: 'shortDate' }}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.incidentDate.label</span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentComplaintInfo.priority || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{parentComplaintInfo.priority || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.priority.label</span>
                 </small>
@@ -83,14 +82,14 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentComplaintInfo.creator || 'Unknown'}}</div>-->
-                <div class="h4 font-bold">{{assignee || 'Unknown'}}</div>
+                <!--<div class="h4 font-bold">{{parentComplaintInfo.creator || 'common.value.unknown' | translate}}</div>-->
+                <div class="h4 font-bold">{{assignee || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.assignee.label</span>
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{owningGroup || 'Unknown'}}</div>
+                <div class="h4 font-bold">{{owningGroup || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.owningGroup.label</span>
                 </small>

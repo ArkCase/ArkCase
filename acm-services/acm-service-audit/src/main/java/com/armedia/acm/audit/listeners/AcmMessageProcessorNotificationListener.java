@@ -66,6 +66,8 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                         event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
                 event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY,
                         event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+                event.setSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                        event.getMessage().getInboundProperty(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
             }
 
             // set MDC variables from message session properties
@@ -73,6 +75,8 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY,
                     event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY));
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY,
+                    event.getSessionVariable(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY));
         }
 
         if (notification.getAction() == MessageProcessorNotification.MESSAGE_PROCESSOR_POST_INVOKE)

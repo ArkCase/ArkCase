@@ -1,0 +1,8 @@
+Implementation-Title: ${project.name}
+Implementation-Version: ${project.version}
+Implementation-Vendor-Id: ${project.groupId}
+Implementation-Vendor: ${project.organization.name}
+Implementation-URL: ${project.url}
+Specification-Title: ${project.name}
+Specification-Version: ${project.artifact.selectedVersion.majorVersion}.${project.artifact.selectedVersion.minorVersion}
+Specification-Vendor: ${project.organization.name}

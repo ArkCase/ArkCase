@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "Abonnements",
+    "search.btn": "de_Search",
+    "export.btn": "de_Export",
+    "search.placeholder": "de_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "Abonnements"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "de_ID",
+          "event": "de_Event",
+          "parentName": "de_Parent Name",
+          "parentType": "de_Parent Type",
+          "modified": "de_Modified"
+        }
+      }
+    }
+  }
+}

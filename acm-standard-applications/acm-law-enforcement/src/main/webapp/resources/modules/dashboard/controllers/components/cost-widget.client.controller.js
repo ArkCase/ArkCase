@@ -4,8 +4,8 @@ angular.module('dashboard.cost', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('cost', {
-                title: 'Cost',
-                description: 'Displays cases files by queue',
+                title: 'dashboard.widgets.cost.title',
+                description: 'dashboard.widgets.cost.description',
                 controller: 'Dashboard.CostController',
                 controllerAs: 'cost',
                 reload: true,
@@ -14,9 +14,10 @@ angular.module('dashboard.cost', ['adf.provider'])
             });
     })
     .controller('Dashboard.CostController', ['$scope', 'config', '$state', '$stateParams', '$translate'
-        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService',
-        function ($scope, config, $state, $stateParams, $translate, DashboardService, HelperObjectBrowserService, Util
-            , ObjectCostService) {
+        , 'Dashboard.DashboardService', 'Helper.ObjectBrowserService', 'UtilService', 'Object.CostService'
+        , function ($scope, config, $state, $stateParams, $translate
+            , DashboardService, HelperObjectBrowserService, Util, ObjectCostService
+        ) {
 
             var vm = this;
 

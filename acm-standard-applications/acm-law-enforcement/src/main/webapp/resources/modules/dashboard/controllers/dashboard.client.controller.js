@@ -1,32 +1,34 @@
 'use strict';
 
-angular.module('dashboard').controller('DashboardController', ['$scope', '$translate', 'dashboard', 'ConfigService', 'Dashboard.DashboardService',
-    function ($scope, $translate, dashboard, ConfigService, DashboardService) {
-        $scope.config = ConfigService.getModule({moduleId: 'dashboard'});
-        $scope.$on('req-component-config', onConfigRequest);
+angular.module('dashboard').controller('DashboardController', ['$rootScope', '$scope'
+    , 'ConfigService', 'Dashboard.DashboardService', 'Helper.DashboardService'
+    , function ($rootScope, $scope
+        , ConfigService, DashboardService, DashboardHelper
+    ) {
 
-
-        //Update all dashboard widget titles and descriptions
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
+        new DashboardHelper.Dashboard({
+            scope: $scope
+            , moduleId: "dashboard"
+            , dashboardName: "DASHBOARD"
+            , dashboard: {
+                structure: '6-6',
+                collapsible: false,
+                maximizable: false,
+                model: {
+                    titleTemplateUrl: 'modules/dashboard/templates/dashboard-title.html',
+                    editTemplateUrl: 'modules/dashboard/templates/dashboard-edit.html',
+                    addTemplateUrl : "modules/dashboard/templates/widget-add.html",
+                    title: ' '
+                }
+            }
+            , onDashboardConfigRetrieved: function(data) {
+                onDashboardConfigRetrieved(data);
+            }
         });
 
+
         var widgetsPerRoles;
-
-        $scope.dashboard = {
-            structure: '6-6',
-            collapsible: false,
-            maximizable: false,
-            model: {
-                titleTemplateUrl: 'modules/dashboard/views/dashboard-title.client.view.html',
-                editTemplateUrl: 'modules/dashboard/views/dashboard-edit.client.view.html'
-            }
-        };
-
-        DashboardService.getConfig({moduleName: "DASHBOARD"}, function (data) {
-            $scope.dashboard.model = angular.fromJson(data.dashboardConfig);
-
+        var onDashboardConfigRetrieved = function(data) {
             DashboardService.getWidgetsPerRoles(function (widgets) {
                 widgetsPerRoles = widgets;
             });
@@ -40,32 +42,15 @@ angular.module('dashboard').controller('DashboardController', ['$scope', '$trans
                 });
                 return result;
             };
-
-            // Set Dashboard custom title
-            $scope.dashboard.model.titleTemplateUrl = 'modules/dashboard/views/dashboard-title.client.view.html';
-
-            // Set Dashboard custom editor
-            $scope.dashboard.model.editTemplateUrl = 'modules/dashboard/views/dashboard-edit.client.view.html';
-        });
-
+        };
 
         $scope.$on('adfDashboardChanged', function (event, name, model) {
             DashboardService.saveConfig({
                 dashboardConfig: angular.toJson(model),
                 module: "DASHBOARD"
             });
+            $scope.dashboard.model = model;
         });
 
-        /**
-         * Handles 'req-component-config' event
-         * @param e
-         * @param componentId
-         */
-        function onConfigRequest(e, componentId) {
-            $scope.config.$promise.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-            });
-        }
     }
 ]);

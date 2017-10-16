@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
-  User: riste.tutureski
-  Date: 8/5/2015
-  Time: 12:44
+User: riste.tutureski
+Date: 8/5/2015
+Time: 12:44
 --%>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,19 +23,18 @@
     <script type="text/javascript">
         function addUrlHashToLocalStorage() {
             if (window.location.hash != '#!/welcome' && window.location.hash != '#!/goodbye') {
-                //localStorage.redirectURL = window.location.hash;
                 sessionStorage.redirectURL = window.location.hash;
             } else {
-                //localStorage.removeItem('redirectURL');
                 sessionStorage.removeItem('redirectURL');
             }
         }
         window.onload = addUrlHashToLocalStorage;
-
     </script>
 
     <link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+    <!-- custom css-->
+    <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
 <div class="login-wrapper">
@@ -48,7 +47,27 @@
     <p></p>
 
     <c:if test='${not empty sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}'>
-        <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+
+        <c:choose>
+            <c:when test='${"BadCredentialsException: Empty Username".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Must enter user name</div>
+            </c:when>
+
+            <c:when test='${"BadCredentialsException: Empty Password".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Must enter a password</div>
+            </c:when>
+
+            <c:when test='${"BadCredentialsException: Bad credentials".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
+                <div class="alert alert-danger">Bad credentials. Please try again</div>
+            </c:when>
+
+            <c:otherwise>
+                <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
+            </c:otherwise>
+        </c:choose>
+
+        <c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session"/>
+
     </c:if>
 
     <c:if test="${'1'.equals(param.login_error)}">
@@ -64,10 +83,9 @@
     </c:if>
 
     <c:if test="${warningEnabled}">
-
         <div id="dialog" class="content-one"><p class="modal-body">${warningMessage}</p></div>
-
     </c:if>
+
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
             <div class="list-group-item">
@@ -103,7 +121,10 @@
 <footer id="footer">
     <div class="text-center padder">
         <p>
-            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016</span></small>
+            <small><a href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
+        </p>
+        <p>
+            Version: ${version}
         </p>
     </div>
 </footer>

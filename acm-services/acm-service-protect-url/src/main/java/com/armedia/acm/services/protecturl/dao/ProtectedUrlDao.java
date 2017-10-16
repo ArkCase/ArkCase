@@ -5,6 +5,7 @@ import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 
 import javax.persistence.Query;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -50,7 +51,7 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
     public int removeExpired()
     {
         Query query = getEm().createQuery("DELETE FROM ProtectedUrl pu WHERE pu.validTo < :givenDate");
-        query.setParameter("givenDate", LocalDateTime.now());
+        query.setParameter("givenDate", LocalDateTime.now(ZoneId.of("UTC")));
         return query.executeUpdate();
     }
 }

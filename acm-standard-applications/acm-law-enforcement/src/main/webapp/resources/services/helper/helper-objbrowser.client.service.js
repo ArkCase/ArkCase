@@ -12,9 +12,39 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService'
-    , function ($q, $resource, $translate, Store, Util, ConfigService, ServCommService, MessageService) {
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService'
+    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService, ObjectService) {
+
+        var SyncDataLoader = {
+            data: {},
+            getKey: function (moduleId, args) {
+                return moduleId + "_" + args.join("_");
+            },
+            load: function (moduleId, dataLoadFunc, args, success, error) {
+                var that = this;
+                var key = this.getKey(moduleId, args);
+                var entry = this.data[key];
+                if (entry) {
+                    if (entry.then) {
+                        entry.then(success, error);
+                    } else {
+                        success.apply(this, [entry]);
+                    }
+                } else {
+                    entry = that.data[key] = dataLoadFunc.apply(this, args);
+                    entry.then(function (data) {
+                        entry = that.data[key] = data;
+                        return entry;
+                    }).then(success, error);
+                }
+                return entry;
+            },
+            reset: function (moduleId, args) {
+                var key = this.getKey(moduleId, args);
+                this.data[key] = null;
+            }
+        };
 
         var Service = {
             VariableNames: {
@@ -71,7 +101,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.componentsConfig = config.components;
 
                     var activeComponent = Service.getComponentByState(that.state);
-                    if ("main" != activeComponent) {
+                    if ("main" !== activeComponent) {
                         var nodeTypes = Util.goodArray(config.tree.nodeTypes);
                         var found = _.find(nodeTypes, function (nodeType) {
                             var comp = Util.goodArray(nodeType.components);
@@ -161,7 +191,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.scope.$on('req-switch-object', function (e, eventData) {
                     if (that.scope.treeControl) {
                         var nodeId = eventData.objectId;
-                        var nodeType = (eventData.objectSubtype)? eventData.objectSubtype : eventData.objectType;
+                        var nodeType = (eventData.objectSubtype) ? eventData.objectSubtype : eventData.objectType;
                         that.scope.treeControl.select({
                             nodeId: nodeId
                             , nodeType: nodeType
@@ -201,11 +231,11 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.resetObjectInfo = arg.resetObjectInfo;
                 that.getObjectInfo = arg.getObjectInfo;
                 that.updateObjectInfo = arg.updateObjectInfo;
-                that.initComponentLinks = (arg.initComponentLinks)? arg.initComponentLinks : function (config) {
+                that.initComponentLinks = (arg.initComponentLinks) ? arg.initComponentLinks : function (config) {
                     var nodeType = Service.getCurrentObjectType();
                     return Service.createComponentLinks(config, nodeType);
                 };
-                that.selectComponentLinks = (arg.selectComponentLinks)? arg.selectComponentLinks : function (selectedObject) {
+                that.selectComponentLinks = (arg.selectComponentLinks) ? arg.selectComponentLinks : function (selectedObject) {
                     if (!Util.isArrayEmpty(that.scope.componentLinks)) {
                         return that.scope.componentLinks;
                     } else if (that.initComponentLinks) {
@@ -266,19 +296,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.scope.$on('report-object-refreshed', function (e, objectId) {
                     that.resetObjectInfo();
+                    SyncDataLoader.reset(that.moduleId, [objectId]);
+                    SyncDataLoader.load(that.moduleId, that.getObjectInfo, [objectId], function (objectInfo) {
+                        that.scope.objectInfo = objectInfo;
+                        that.scope.$broadcast('object-refreshed', objectInfo, true);
+                        return objectInfo;
+                    }, function (error) {
+                        that.scope.objectInfo = null;
+                        //todo: display error
+                        return error;
+                    })
 
-                    that.getObjectInfo(objectId).then(
-                        function (objectInfo) {
-                            that.scope.objectInfo = objectInfo;
-                            that.scope.$broadcast('object-refreshed', objectInfo);
-                            return objectInfo;
-                        }
-                        , function (error) {
-                            that.scope.objectInfo = null;
-                            //todo: display error
-                            return error;
-                        }
-                    );
                 });
 
                 that.scope.$on('report-tree-updated', function (e, objectInfo) {
@@ -289,7 +317,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.currentObjectId = Service.getCurrentObjectId();
                     var objectId = that.getObjectIdFromInfo(objectInfo);
                     that.scope.objectInfo = objectInfo;
-                    that.scope.$broadcast('object-updated', objectInfo, objectId);
+                    that.scope.$broadcast('object-updated', objectInfo, objectId, true);
                 });
 
                 that.scope.$on('report-object-update-failed', function (e, objectInfo) {
@@ -325,7 +353,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     var leadComponent = selectedObject.leadComponent;
                     if (!leadComponent) {
                         var components = Util.goodArray(selectedObject.components);
-                        leadComponent = (1 == components.length) ? components[0] : "main";
+                        leadComponent = (1 === components.length) ? components[0] : "main";
                     }
                     that.scope.activeLinkId = leadComponent;
 
@@ -333,56 +361,75 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 });
 
                 ServCommService.handleResponse(that.scope);
-                //that.scope.$on('rootScope:servcomm-response', function (event, data) {
-                //    console.log("Help.objbrowser, rootScope:servcomm-response");
-                //    //that.scope.$emit('report-object-refreshed', that.stateParams.id);
-                //});
 
                 that.scope.progressMsg = $translate.instant("common.objects.progressNoData");
                 var loadObject = function (id) {
-                    if (Util.goodPositive(id)) {
-                        if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) != id) {
-                            that.scope.objectInfo = null;
-                        }
-                        that.scope.progressMsg = $translate.instant("common.objects.progressLoading") + " " + id + "...";
-                        that.getObjectInfo(id).then(
-                            function (objectInfo) {
-                                that.scope.progressMsg = null;
-                                that.scope.objectInfo = objectInfo;
-                                that.scope.$broadcast('object-updated', objectInfo, id);
-
-                                //when object is loaded we want to subscribe to change events
-                                var objectId = id;
-                                var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
-
-                                //objectType fix for task
-                                if (objectType == 'ADHOC') {
-                                    objectType = 'TASK';
-                                }
-
-                                var eventName = "object.changed/" + objectType + "/" + objectId;
-
-                                //if there is subscription from other object we want to unsubscribe
-                                //we want to have only one subscription from the current object
-                                if (that.scope.subscription) {
-                                    that.scope.$bus.unsubscribe(that.scope.subscription);
-                                }
-                                that.scope.subscription = that.scope.$bus.subscribe(eventName, function (data) {
-                                    //when we receive message that object was changed show it
-                                    //we can change to show other popups with generated links etc...
-                                    MessageService.info(objectType + " with ID " + objectId + " was updated.");
-                                });
-
-                                return objectInfo;
-                            }
-                            , function (error) {
-                                that.scope.objectInfo = null;
-                                that.scope.progressMsg = $translate.instant("common.objects.progressError") + " " + id;
-                                that.scope.$broadcast('object-update-failed', error);
-                                return error;
-                            }
-                        );
+                    if (!Util.goodPositive(id)) {
+                        return;
                     }
+                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) !== id) {
+                        that.scope.objectInfo = null;
+                    }
+
+                    that.scope.progressMsg = $translate.instant("common.objects.progressLoading") + " " + id + "...";
+                    SyncDataLoader.load(that.moduleId, that.getObjectInfo, [id], function (objectInfo) {
+                            that.scope.progressMsg = null;
+                            that.scope.objectInfo = objectInfo;
+                            $timeout(function () {
+                                that.scope.$broadcast('object-updated', objectInfo, id);
+                            }, 0);
+
+
+                            //when object is loaded we want to subscribe to change events
+                            var objectId = id;
+                            var objectType = that.getObjectTypeFromInfo(that.scope.objectInfo);
+
+                            //objectType fix for task
+                            if (objectType === 'ADHOC') {
+                                objectType = 'TASK';
+                            }
+
+                            var eventName = "object.changed/" + objectType + "/" + objectId;
+
+                            //if there is subscription from other object we want to unsubscribe
+                            //we want to have only one subscription from the current object
+                            if (that.scope.subscription) {
+                                that.scope.$bus.unsubscribe(that.scope.subscription);
+                            }
+                            that.scope.subscription = that.scope.$bus.subscribe(eventName, function (data) {
+                                //when we receive message that object was changed show it
+                                //we can change to show other popups with generated links etc...
+                                var objectTypeString = $translate.instant('common.objectTypes.' + objectType);
+                                if (!objectTypeString) {
+                                    objectTypeString = objectType;
+                                }
+                                MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+
+                                var frevvoRequest = null;
+                                switch (objectType) {
+                                    case ObjectService.ObjectTypes.COMPLAINT:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "close-complaint");
+                                        break;
+                                    case ObjectService.ObjectTypes.TIMESHEET:
+                                        frevvoRequest = ServCommService.popRequest("frevvo", "edit-timesheet") || ServCommService.popRequest("frevvo", "new-timesheet");
+                                        break;
+                                }
+                                
+                                if (frevvoRequest) {
+                                    that.scope.$emit('report-object-refreshed', objectId);
+                                }                                
+                            });
+
+                            return objectInfo;
+                        }
+                        , function (error) {
+                            that.scope.objectInfo = null;
+                            that.scope.progressMsg = $translate.instant("common.objects.progressError") + " " + id;
+                            that.scope.$broadcast('object-update-failed', error);
+                            return error;
+                        }
+                    );
+
                 };
 
                 var objectSetting = Service.updateObjectSetting(that.moduleId, null, that.stateParams.id, that.stateParams.type);
@@ -435,13 +482,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.moduleId = arg.moduleId;
                 that.componentId = arg.componentId;
                 that.retrieveObjectInfo = arg.retrieveObjectInfo;
+                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
+
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
                 };
-                that.onObjectInfoRetrieved = function (objectInfo) {
+                that.onObjectInfoRetrieved = function (objectInfo, e) {
+                    if (that.loaded) {
+                        return;
+                    }
+                    that.loaded = that.currentObjectId;
                     that.scope.objectInfo = objectInfo;
                     if (arg.onObjectInfoRetrieved) {
-                        arg.onObjectInfoRetrieved(objectInfo);
+                        arg.onObjectInfoRetrieved(objectInfo, e);
                     }
                 };
                 that.onConfigRetrieved = function (componentConfig) {
@@ -461,55 +514,51 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     return componentConfig;
                 });
 
-
                 that.previousId = null;
-                that.scope.$on('object-updated', function (e, objectInfo, objectId) {
+                that.scope.$on('object-updated', function (e, objectInfo, objectId, reload) {
+                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
+                        delete that.loaded;
+                    } else {
+                        return;
+                    }
                     that.currentObjectId = Service.getCurrentObjectId();
-                    if (that.currentObjectId == objectId) {
-                        onObjectInfoUpdated(objectInfo, objectId);
+                    if (that.currentObjectId === objectId) {
+                        onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
-                that.scope.$on('object-refreshed', function (e, objectInfo) {
+                that.scope.$on('object-refreshed', function (e, objectInfo, reload) {
+                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
+                        delete that.loaded;
+                    } else {
+                        return;
+                    }
                     that.previousId = null;
                     that.currentObjectId = Service.getCurrentObjectId();
-                    onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                    onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
-                that.currentObjectId = Service.getCurrentObjectId();
-                if (Util.goodPositive(that.currentObjectId, false)) {
-                    if (!Util.compare(that.previousId, that.currentObjectId)) {
-                        that.retrieveObjectInfo(that.currentObjectId).then(function (objectInfo) {
-                            onObjectInfoUpdated(objectInfo, that.currentObjectId);
-                            return objectInfo;
-                        });
-                    }
+                if (that.currentObjectId) {
+                    SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
+                        onObjectInfoUpdated(objectInfo, that.currentObjectId);
+                        return objectInfo;
+                    });
                 }
 
-                var onObjectInfoUpdated = function (objectInfo, objectId) {
+                function onObjectInfoUpdated(objectInfo, objectId, e) {
                     if (!that.validateObjectInfo(objectInfo)) {
                         return;
                     }
                     if (!Util.goodPositive(objectId, false)) {
                         return;
                     }
-                    // EDTRM-491 Delete Adhoc task doesn't do anything: The fix is to remove the below block.
-                    //
-                    // With the below code, then when we re-load the same object, for example because we acted on
-                    // it (deleted it, completed it etc etc), the new state of the object will not be displayed.
-                    // So I have commented this code out, and added this warning comment, so nobody will try to add it
-                    // back in later..... Of course I am open to better ideas.  --DGM
-                    //if (Util.compare(that.previousId, objectId)) {
-                    //    return;   NOTE do not enable this code, or re-add similar code somewhere else, until
-                    //              you have read and understood the above comment.
-                    //}
+
                     that.previousId = objectId;
 
                     that.deferConfigDone.promise.then(function (data) {
-                        that.onObjectInfoRetrieved(objectInfo);
+                        that.onObjectInfoRetrieved(objectInfo, e);
                     });
-                };
-
+                }
             }
         };
 
@@ -589,7 +638,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
 
                 if (that.firstLoad && Util.goodPositive(that.nodeId)) {
-                    that.getNodeData(that.nodeId).then(
+                    SyncDataLoader.load(that.moduleId, that.getNodeData, [that.nodeId],
                         function (objectInfo) {
                             var treeNode = that.makeTreeNode(objectInfo);
                             that.scope.treeControl.select({
@@ -620,21 +669,27 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             return objectInfo;
                         }
                         , function (errorData) {
+                            
+                            var nodeType = errorData.status === 403 ? "NO_ACCESS" : "ERROR";
+
                             that.scope.treeControl.select({
                                 pageStart: start
-                                , nodeType: "ERROR"
+                                , nodeType: nodeType
                                 , nodeId: that.nodeId
                                 , subKey: that.subKey
                             });
 
-
                             var treeData = {docs: [], total: 0};
+                            var nodeTitle = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
+                            var nodeToolTip = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");
+                            
                             var errorNode = {
                                 nodeId: that.nodeId
-                                , nodeType: "ERROR"
-                                , nodeTitle: $translate.instant("common.directive.objectTree.errorNode.title")
-                                , nodeToolTip: $translate.instant("common.directive.objectTree.errorNode.toolTip")
+                                , nodeType: nodeType
+                                , nodeTitle: nodeTitle
+                                , nodeToolTip: nodeToolTip
                             };
+                            
                             if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
                                 var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
                                 if (!found) {
@@ -665,7 +720,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 var componentType = selectedObject.leadComponent;
                 if (Util.isEmpty(componentType)) {
                     var components = Util.goodArray(selectedObject.components);
-                    componentType = (1 == components.length) ? components[0] : "main";
+                    componentType = (1 === components.length) ? components[0] : "main";
                 }
                 var stateName = that.moduleId + "." + componentType;
 
@@ -681,7 +736,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 //return _.find(docs, {nodeId: nodeId});   //somehow, _.find() does not always work
                 var found = null;
                 for (var i = 0; i < docs.length; i++) {
-                    if (docs[i].nodeId == nodeId) {
+                    if (docs[i].nodeId === nodeId) {
                         found = docs[i];
                         break;
                     }
@@ -720,8 +775,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             var comp = "main";
             var tokens = state.current.url.split("/");
             if (1 < tokens.length) {
-                if (":id" == tokens[tokens.length - 2]) {
-                    if ("main" != tokens[tokens.length - 1]) {
+                if (":id" === tokens[tokens.length - 2]) {
+                    if ("main" !== tokens[tokens.length - 1]) {
                         comp = tokens[tokens.length - 1];
                     }
                 }

@@ -9,9 +9,9 @@
  *
  * The Permissions service. Performs checking user permissions for action depends on user roles, and objectProperties, like orderInfo, queueInfo
  */
-angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication',
-    function ($q, $http, $log, $interpolate, Authentication) {
-        // Iniital rules loading
+angular.module('services').factory('PermissionsService', ['$q', '$http', '$log', '$interpolate', 'Authentication', 'Object.ModelService',
+    function ($q, $http, $log, $interpolate, Authentication, ObjectModelService) {
+        // Initial rules loading
         var rules = queryRules();
         var userProfile = Authentication.queryUserInfo();
 
@@ -23,36 +23,36 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
              *
              * @param {String} actionName Name of action, for example 'printOrderUI'
              * @param {Object} objectProperties Object representing current state of application, like orderInfo, queueInfo
+             * @param {Object} opts other info to be passed to permission checker e.g, objectType, objectSubType
              *
              * @returns {Promise} Future result of permission : true (enabled) or false (disabled)
              * @description
              * Retrieves a new acm authentication ticket for the currently logged in user
              */
-            getActionPermission: function (actionName, objectProperties) {
+            getActionPermission: function (actionName, objectProperties, opts) {
                 if (!actionName) {
                     $log.error('Permission Action name is undefined');
                     return $q.resolve(null);
                 }
 
                 if (rules && rules.data && rules.data.accessControlRuleList && userProfile && userProfile.$resolved) {
-                    return $q.resolve(processAction(actionName, objectProperties));
+                    return $q.resolve(processAction(actionName, objectProperties, opts));
                 } else {
                     var deferred = $q.defer();
-                    var rulesPromise = queryRules();
                     var userProfilePromise = Authentication.queryUserInfo();
 
                     $q.all([rules, userProfilePromise])
                         .then(
-                        function success(result) {
-                            rules = result[0];
-                            userProfile = result[1];
-                            var permissionResult = processAction(actionName, objectProperties)
-                            deferred.resolve(permissionResult);
-                        },
-                        function error() {
-                            deferred.reject();
-                        }
-                    );
+                            function success(result) {
+                                rules = result[0];
+                                userProfile = result[1];
+                                var permissionResult = processAction(actionName, objectProperties, opts);
+                                deferred.resolve(permissionResult);
+                            },
+                            function error() {
+                                deferred.reject();
+                            }
+                        );
                     return deferred.promise;
                 }
             },
@@ -79,21 +79,20 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     return $q.resolve(processActionsByRoles(actionName, roles));
                 } else {
                     var deferred = $q.defer();
-                    var rulesPromise = queryRules();
                     var userProfilePromise = Authentication.queryUserInfo();
 
                     $q.all([rules, userProfilePromise])
                         .then(
-                        function success(result) {
-                            rules = result[0];
-                            userProfile = result[1];
-                            var actionsList = (processActionsByRoles(actionName, roles));
-                            deferred.resolve(actionsList);
-                        },
-                        function error() {
-                            deferred.reject();
-                        }
-                    );
+                            function success(result) {
+                                rules = result[0];
+                                userProfile = result[1];
+                                var actionsList = (processActionsByRoles(actionName, roles));
+                                deferred.resolve(actionsList);
+                            },
+                            function error() {
+                                deferred.reject();
+                            }
+                        );
                     return deferred.promise;
                 }
             }
@@ -104,11 +103,18 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
          *
          * @param {String }actionName
          * @param {Object} objectProperties
+         * @param {Obejct} opts Other info to be passed to permission checker e.g, objectType, objectSubType
          * @returns {Boolean} true if action is enabled, or false if action is disabled
          */
-        function processAction(actionName, objectProperties) {
+        function processAction(actionName, objectProperties, opts) {
             var isEnabled = true;
-            var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
+            if (opts && opts.objectType)
+                var actions = _.filter(rules.data.accessControlRuleList, {
+                    actionName: actionName,
+                    objectType: opts.objectType
+                });
+            else
+                var actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
             // If actions found
             if (actions.length > 0) {
                 // Process all found actions objects
@@ -121,27 +127,46 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                         _.forEach(action.userRolesAll, function (role) {
                             var processedRole = processRole(role, objectProperties);
                             isEnabled = (_.indexOf(userProfile.authorities, processedRole) != -1);
-                            return isEnabled
+                            return isEnabled;
                         });
                     }
 
                     // Check ANY authorities
                     if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAny) {
-                        var anyEnabled = false;
-                        _.forEach(action.userRolesAny, function (role) {
-                            var processedRole = processRole(role, objectProperties);
-                            anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
-                        });
-                        isEnabled = anyEnabled;
+                        if (action.userRolesAny.length > 0) {
+                            var anyEnabled = false;
+                            _.forEach(action.userRolesAny, function (role) {
+                                var processedRole = processRole(role, objectProperties);
+                                anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
+                            });
+                            isEnabled = anyEnabled;
+                        }
                     }
 
                     // Check objectProperties
                     if (isEnabled && action.objectProperties) {
                         _.forEach(action.objectProperties, function (value, key) {
-                            isEnabled = isEnabled && (_.get(objectProperties, key) === value );
+                            isEnabled = isEnabled && ((_.indexOf(value, _.get(objectProperties, key)) != -1) || (_.get(objectProperties, key) === value));
                             // exit from loop if properties are not equal
                             return isEnabled;
                         });
+                    }
+
+                    // Check userIsParticipantTypeAny
+                    if (isEnabled && action.userIsParticipantTypeAny
+                        && action.userIsParticipantTypeAny.length > 0) {
+                        var isUserParticipant = false;
+                        _.forEach(action.userIsParticipantTypeAny, function (value) {
+                            var participant = ObjectModelService.getParticipantByType(objectProperties, value);
+                            if (participant) {
+                                isUserParticipant = (participant == userProfile.userId) || (_.includes(userProfile.authorities, participant));
+                                if (isUserParticipant) {
+                                    // user found in participant's types
+                                    return false;
+                                }
+                            }
+                        });
+                        isEnabled = isEnabled && isUserParticipant;
                     }
                     // Return if action object passed
                     if (isEnabled) {
@@ -164,10 +189,10 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
         function processActionsByRoles(actionName, roles) {
             var actionsList = [];
             var actions = [];
-            if(actionName){
+            if (actionName) {
                 actions = _.filter(rules.data.accessControlRuleList, {actionName: actionName});
-            }else{
-                if(rules.data && rules.data.accessControlRuleList){
+            } else {
+                if (rules.data && rules.data.accessControlRuleList) {
                     actions = rules.data.accessControlRuleList;
                 }
             }
@@ -180,8 +205,8 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check ALL authorities
                     if (action.userRolesAll) {
                         _.forEach(action.userRolesAll, function (role) {
-                            if(_.indexOf(roles, role) != -1){
-                                if(_.indexOf(actionsList, action) == -1){
+                            if (_.indexOf(roles, role) != -1) {
+                                if (_.indexOf(actionsList, action) == -1) {
                                     actionsList.push(action);
                                 }
                             }
@@ -191,8 +216,8 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check ANY authorities
                     if (action.userRolesAny) {
                         _.forEach(action.userRolesAny, function (role) {
-                            if(_.indexOf(roles, role) != -1){
-                                if(_.indexOf(actionsList, action) == -1){
+                            if (_.indexOf(roles, role) != -1) {
+                                if (_.indexOf(actionsList, action) == -1) {
                                     actionsList.push(action);
                                 }
                             }
@@ -220,7 +245,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
         }
 
         /**
-         * Inerpolate ROLE name if required
+         * Interpolate ROLE name if required
          * @param role
          * @param objectProperties
          * @returns {*}

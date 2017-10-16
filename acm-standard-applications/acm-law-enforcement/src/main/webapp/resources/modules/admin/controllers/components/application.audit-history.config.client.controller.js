@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('admin').controller('Admin.AuditHistoryController', ['$scope', '$q', '$modal', '$translate'
-    , 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService'
+    , 'UtilService', 'Admin.ApplicationSettingsService', 'Dialog.BootboxService', 'MessageService'
     , function ($scope, $q, $modal, $translate
-        , Util, ApplicationSettingsService, DialogService
+        , Util, ApplicationSettingsService, DialogService, messageService
     ) {
         var saved = {};
         ApplicationSettingsService.getProperty(ApplicationSettingsService.PROPERTIES.HISTORY_DAYS).then(function (response) {
@@ -20,7 +20,10 @@ angular.module('admin').controller('Admin.AuditHistoryController', ['$scope', '$
                 saved.historyDays = $scope.historyDays;
 
                 // Replace with "successfully saved" message.
-                DialogService.alert($translate.instant("admin.application.auditHistory.config.inform"));
+                DialogService.alert($translate.instant("admin.application.auditHistory.config.inform")).then(function () {
+                    //success
+                    messageService.succsessAction();
+                });
             }
         }
     }

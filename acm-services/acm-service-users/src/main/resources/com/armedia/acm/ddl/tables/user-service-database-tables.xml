@@ -1,6 +1,6 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -27,23 +27,25 @@
     <property name="cmRoleNameLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmRoleNameLength" value="255" dbms="mysql,mssql"/>
 
+    <property name="currentTime" value="now()" dbms="postgresql,oracle, mssql"/>
+
 
     <changeSet id="01-user-service-tables" author="dmiller">
         <createTable tableName="acm_user">
             <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="cm_user_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="cm_full_name" type="VARCHAR(1024)"/>
             <column name="cm_user_created" type="DATE">
             </column>
             <column name="cm_user_modified" type="DATE">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
             <column name="cm_user_state" type="VARCHAR(256)">
-                <constraints nullable="false" />
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
@@ -98,7 +100,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller">
+    <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_role_type_lu">
             <column name="cm_id" type="${idType}">
                 <constraints
@@ -106,7 +108,7 @@
                         primaryKey="true"
                         primaryKeyName="pk_role_type"/>
             </column>
-            <column name="cm_value" type="VARCHAR(${cmValueLength})" >
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_role_type"/>
             </column>
             <column name="cm_order" type="NUMBER(32,0)">
@@ -131,17 +133,51 @@
 
     </changeSet>
 
-    <changeSet id="06-role-type-notnull" author="dmiller">
-        <addNotNullConstraint tableName="acm_role" columnName="cm_role_type" defaultNullValue="APPLICATION_ROLE" columnDataType="VARCHAR(${cmValueLength})"/>
+    <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller" dbms="mysql">
+        <createTable tableName="acm_role_type_lu">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_role_type"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_role_type"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uk_role_type_order"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
     </changeSet>
 
-     <changeSet id="08-add-email-column-to-user-table" author="marst">
-         <addColumn tableName="acm_user">
-             <column name="cm_mail" type="VARCHAR(512)"/>
-         </addColumn>
-     </changeSet>
-     
-     <changeSet id="09-users-add-user-action-table" author="riste.tutureski">
+    <changeSet id="06-role-type-notnull" author="dmiller">
+        <addNotNullConstraint tableName="acm_role" columnName="cm_role_type" defaultNullValue="APPLICATION_ROLE"
+                              columnDataType="VARCHAR(${cmValueLength})"/>
+    </changeSet>
+
+    <changeSet id="08-add-email-column-to-user-table" author="marst">
+        <addColumn tableName="acm_user">
+            <column name="cm_mail" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="09-users-add-user-action-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_user_action">
             <column name="cm_user_action_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_user_action"/>
@@ -175,8 +211,43 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
-    <changeSet id="10-create-group-table" author="riste.tutureski">
+
+    <changeSet id="09-users-add-user-action-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_user_action">
+            <column name="cm_user_action_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_user_action"/>
+            </column>
+            <column name="cm_user_action_user_id" type="VARCHAR(${cmUserIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_name" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_user_action_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_user_action" baseColumnNames="cm_user_action_user_id"
+                                 constraintName="fk_user_action_user_id"
+                                 referencedTableName="acm_user"
+                                 referencedColumnNames="cm_user_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="10-create-group-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_group">
             <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength})">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_group_name"/>
@@ -213,13 +284,51 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
+    <changeSet id="10-create-group-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_group">
+            <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_group_name"/>
+            </column>
+            <column name="cm_group_parent_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_group_description" type="VARCHAR(4000)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_group_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_group_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name"
+                                 constraintName="fk_group_parent_name"
+                                 referencedTableName="acm_group"
+                                 referencedColumnNames="cm_group_name"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
     <changeSet id="12-create-group-member-table" author="riste.tutureski">
         <createTable tableName="acm_group_member">
             <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength})">
                 <constraints nullable="false"/>
             </column>
-             <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
+            <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -229,7 +338,7 @@
                                  referencedColumnNames="cm_group_name"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
-                                 
+
         <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_user_id"
                                  constraintName="fk_group_member_user_id"
                                  referencedTableName="acm_user"
@@ -237,14 +346,14 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
     <changeSet id="14-add-column-to-group-table" author="riste.tutureski">
-    	<addColumn tableName="acm_group">
-	    	<column name="cm_group_supervisor_id" type="VARCHAR(${cmGroupSupervisorIdLength})">
-	                <constraints nullable="true"/>
-	        </column>
-    	</addColumn>
-    	<addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_supervisor_id"
+        <addColumn tableName="acm_group">
+            <column name="cm_group_supervisor_id" type="VARCHAR(${cmGroupSupervisorIdLength})">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_supervisor_id"
                                  constraintName="fk_group_supervisor_id"
                                  referencedTableName="acm_user"
                                  referencedColumnNames="cm_user_id"
@@ -256,8 +365,15 @@
         <addPrimaryKey tableName="acm_group_member" columnNames="cm_group_name, cm_user_id"/>
     </changeSet>
 
-    <changeSet id="user-tables-16-add-user-id-index" author="dmiller">
+    <changeSet id="user-tables-16-add-user-id-index" author="dmiller" dbms="oracle,postgresql,mssql">
         <createIndex tableName="ACM_USER" indexName="idx_lower_user_id">
+            <column name="${lowerUserId}"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="user-tables-16-add-user-id-index" author="dmiller" dbms="mysql">
+        <!-- it seems MySQL table names are case sensitive :-( -->
+        <createIndex tableName="acm_user" indexName="idx_lower_user_id">
             <column name="${lowerUserId}"/>
         </createIndex>
     </changeSet>
@@ -282,4 +398,130 @@
             <column name="cm_seq_name" value="acm_user_action"></column>
         </insert>
     </changeSet>
+
+    <changeSet id="19-add-ldap-columns-to-user-table" author="bojan.milenkoski">
+        <addColumn tableName="acm_user">
+            <column name="cm_samaccountname" type="VARCHAR(20)"/>
+            <column name="cm_user_principal_name" type="VARCHAR(255)"/>
+            <column name="cm_distinguished_name" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="20-add-uid-to-acm-user" author="david.miller">
+        <addColumn tableName="acm_user">
+            <column name="cm_uid" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="21-add-ldap-columns-to-group-table" author="nadica.cuculova">
+        <addColumn tableName="acm_group">
+            <column name="cm_distinguished_name" type="VARCHAR(255)"/>
+            <column name="cm_directory_name" type="VARCHAR(${cmUserDirectoryNameLength})" defaultValue="armedia">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="mysql">
+        <comment>Directory name is not applicable to ad-hoc groups</comment>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"
+                               columnDataType="VARCHAR(${cmUserDirectoryNameLength})"/>
+    </changeSet>
+
+    <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="oracle,postgresql,mssql">
+        <comment>Directory name is not applicable to ad-hoc groups</comment>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
+    </changeSet>
+
+
+    <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mssql,oracle,postgresql">
+        <addColumn tableName="acm_user">
+            <column name="cm_country" type="VARCHAR(255)"/>
+            <column name="cm_department" type="VARCHAR(255)"/>
+            <column name="cm_country_abbreviation" type="VARCHAR(255)"/>
+            <column name="cm_company" type="VARCHAR(255)"/>
+            <column name="cm_title" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mysql">
+        <addColumn tableName="acm_user">
+            <column name="cm_country" type="TEXT"/>
+            <column name="cm_department" type="TEXT"/>
+            <column name="cm_country_abbreviation" type="TEXT"/>
+            <column name="cm_company" type="TEXT"/>
+            <column name="cm_title" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
+
+    <changeSet id="24-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="24-added-deleted-at-column" author="jovan.ivanovski" dbms="mssql,oracle,postgresql">
+        <comment>New column for tracking when an AcmUser has been deleted</comment>
+        <addColumn tableName="acm_user">
+            <column name="cm_user_deleted_at" type="TIMESTAMP" defaultValueComputed="${currentTime}">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski">
+        <comment>Removed not null constraint on cm_user_deleted_at</comment>
+        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"
+                               columnDataType="${timestampType}"/>
+    </changeSet>
+
+    <changeSet id="26-add-password-expiration-date-column" author="ncuculova">
+        <addColumn tableName="acm_user">
+            <column name="cm_pwd_ex_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="27-add-reset-password-token-column" author="ncuculova">
+        <addColumn tableName="acm_user">
+            <column name="cm_token_ex_date" type="${timestampType}"/>
+            <column name="cm_token" type="VARCHAR(255)">
+                <constraints unique="true" uniqueConstraintName="uk_token"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="28-add-user-lang-column" author="bojan.milenkoski">
+        <addColumn tableName="acm_user">
+            <column name="cm_lang" type="VARCHAR(10)" defaultValue="en">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="29-add-group-membership-table" author="ncuculova">
+        <createTable tableName="acm_group_membership">
+            <column name="cm_group_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_member_group_name" type="VARCHAR(${cmGroupNameLength})">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="30-rename_acm_group_member_table" author="ncuculova">
+        <renameTable oldTableName="acm_group_member" newTableName="acm_user_membership"/>
+    </changeSet>
+
+    <changeSet id="31-add-group-ascendants-column" author="ncuculova">
+        <addColumn tableName="acm_group">
+            <column name="cm_ascendants" type="VARCHAR(4000)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

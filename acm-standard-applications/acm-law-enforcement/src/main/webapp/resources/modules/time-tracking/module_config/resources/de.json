@@ -1,0 +1,91 @@
+{
+  "timeTracking": {
+    "title": "Zeiterfassung",
+    "progressNoTimesheet": "[ Keine Daten der Zeiterfassung ]",
+    "progressLoading": "Laden der Arbeitszeitblatt",
+    "progressError": "Fehler beim Laden der Arbeitszeitblatt"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Zeiterfassung",
+    "topbar.item": "Arbeitszeitblatt"
+  },
+  "timeTracking.comp.main": {
+    "title": "Übersicht"
+  },
+  "timeTracking.comp.info": {
+    "title": "Informationen",
+    "lastModified.label": "Zuletzt geändertes"
+  },
+  "timeTracking.comp.actions": {
+    "title": "Aktionen",
+    "new.button": "Neues Arbeitsblatt",
+    "edit.button": "Arbeitsblatt bearbeiten"
+  },
+  "timeTracking.comp.details": {
+    "title": "Details",
+    "informSaved": "de_Timesheet details saved",
+    "table.columns": {
+      "title": "de_Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "timeTracking.comp.person": {
+    "title": "Menschen",
+    "table.columns": {
+      "fullName": "de_Full Name",
+      "userId": "de_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "Stunde Zusammenfassung",
+    "table.columns": {
+      "code": "de_Parent ID",
+      "type": "de_Parent Type",
+      "value": "de_Total Hours",
+      "date": "de_Date Charged",
+      "modified": "de_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "Etiketten",
+    "table.columns": {
+      "tag": "de_Tag",
+      "created": "de_Created",
+      "createdBy": "de_Created By"
+    },
+    "modal": {
+      "title": "de_Tag",
+      "search": "de_Search for Tag",
+      "buttons": {
+        "cancel": "de_Cancel",
+        "ok": "de_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "de_Tag with that name or description or text already exists",
+      "tagAssociated": "de_already associated",
+      "delete": {
+        "success": "de_Tag deleted successfully",
+        "error": "de_Error deleting tag"
+      }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "person.label": "Menschen",
+      "summary.label": "Stunde Zusammenfassung",
+      "tags.label": "Etiketten"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "idAsc": "Sortieren Zeiterzeugung-ID Auf",
+      "idDesc": "Sortieren Zeiterzeugung-ID Dec",
+      "nameDesc": "Nach Name sortieren",
+      "noSort": "(Keine Sortierung)"
+    }
+  }
+}
+

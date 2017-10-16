@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
 
@@ -18,6 +18,7 @@
                 <prop key="ecm.defaultPath.COMPLAINT">/Complaints</prop>
                 <prop key="ecm.defaultPath.TASK">/Tasks</prop>
                 <prop key="ecm.defaultPath.CASE_FILE">/Case Files</prop>
+                <prop key="ecm.defaultCmisId">alfresco</prop>
             </props>
         </property>
     </bean>
@@ -39,6 +40,7 @@
     <!-- Mule Utility Bean for downloading, updating, adding files -->
     <bean id="ecmFileMuleUtils" class="com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils">
         <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <!-- Bactes specific pipeline pre save handlers -->
@@ -66,7 +68,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
-        
+
     </bean>
     <bean id="ecmFileSendForPdfConversionHandler"
           class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
@@ -74,10 +76,12 @@
         <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
         <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
     </bean>
-    <bean id="ecmFileUpdateContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+    <bean id="ecmFileUpdateContentHandler"
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
-    <bean id="ecmFileUpdateMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+    <bean id="ecmFileUpdateMetadataHandler"
+          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
@@ -121,7 +125,9 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
         <property name="fileEventPublisher" ref="fileEventPublisher"/>
-        <property name="springContextHolder" ref="acmContextHolder"/>
+        <property name="ecmFileUploadPipelineManager" ref="ecmFileUploadPipelineManager"/>
+        <property name="ecmFileUpdatePipelineManager" ref="ecmFileUpdatePipelineManager"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
     <bean id="ecmFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl">
@@ -159,6 +165,7 @@
         </property>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
     </bean>
 
 
@@ -166,6 +173,7 @@
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
         <property name="userDao" ref="userJpaDao"/>
+        <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
     </bean>
 
     <bean id="acmContainerToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmContainerToSolrTransformer">
@@ -173,11 +181,12 @@
     </bean>
 
     <bean id="acmFolderToSolrTransformer" class="com.armedia.acm.plugins.ecm.service.AcmFolderToSolrTransformer">
-        <property name="dao" ref="acmFolderDao"/>
         <property name="searchAccessControlFields" ref="searchAccessControlFields"/>
+        <property name="folderService" ref="acmFolderService"/>
     </bean>
 
-    <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule">
+    <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
+          parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
@@ -194,11 +203,11 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
         <property name="participantDao" ref="acmParticipantDao"/>
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="objectLockService" ref="objectLockService"/>
     </bean>
 
     <bean id="folderAndFilesUtils" class="com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils"/>
-
-    <bean id="ecmTikaFileService" class="com.armedia.acm.plugins.ecm.service.impl.EcmTikaFileServiceImpl"/>
 
     <bean id="fileEventPublisher" class="com.armedia.acm.plugins.ecm.service.FileEventPublisher"/>
 
@@ -209,7 +218,7 @@
     </bean>
 
     <bean id="acmFileTypesService" class="com.armedia.acm.plugins.ecm.service.impl.AcmFileTypesServiceImpl">
-        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="propertyFileManager" ref="propertyFileManager"/>
 
         <property name="propertiesLocation" value="${user.home}/.arkcase/acm/"></property>
         <property name="acmFormsPlainPropertiesFile" value="acm-forms-plain.properties"></property>
@@ -222,7 +231,23 @@
             </list>
         </property>
     </bean>
-    
+
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
-    
+
+    <bean id="fileCreatedWorkflowHandler"
+          class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+    </bean>
+
+    <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">
+        <property name="muleContextManager" ref="muleContextManager"/>
+    </bean>
+
+    <bean id="streamService" class="com.armedia.acm.plugins.ecm.service.impl.StreamServiceImpl">
+        <property name="cmisConfigUtils" ref="cmisConfigUtils"/>
+        <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="ecmFileService" ref="ecmFileService"/>
+    </bean>
 </beans>

@@ -49,7 +49,7 @@ public class AddReferenceAPIController
 
         } catch (Exception e)
         {
-            log.error("Could not add reference: " + e.getMessage(), e);
+            log.error("Could not add reference: {} ", e.getMessage(), e);
             getEventPublisher().publishAddReferenceEvent(ref, auth, false);
 
             throw new AcmUserActionFailedException("reference", e.getMessage(), null, null, e);

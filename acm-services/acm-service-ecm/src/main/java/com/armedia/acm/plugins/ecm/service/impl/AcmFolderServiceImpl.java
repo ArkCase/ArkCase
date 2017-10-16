@@ -4,6 +4,8 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmProgressEvent;
+import com.armedia.acm.data.AcmProgressIndicator;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -12,11 +14,17 @@ import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
+import com.armedia.acm.service.objectlock.model.AcmObjectLock;
+import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
@@ -33,16 +41,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -63,9 +79,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     private FolderAndFilesUtils folderAndFilesUtils;
     private Properties ecmFileServiceProperties;
     private AcmParticipantDao participantDao;
+    private CmisConfigUtils cmisConfigUtils;
+    private AcmObjectLockService objectLockService;
 
     @Override
-    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         AcmFolder folder = getFolderDao().find(parentFolderId);
@@ -74,7 +93,19 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder addNewFolder(AcmFolder parentFolder, String newFolderName) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
+    public AcmFolder addNewFolder(Long parentFolderId, String newFolderName, Long parentId, String parentType)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+
+        AcmFolder folder = getFolderDao().find(parentFolderId);
+
+        return addNewFolder(folder, newFolderName);
+    }
+
+    @Override
+    public AcmFolder addNewFolder(AcmFolder parentFolder, String newFolderName)
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         if (parentFolder == null)
@@ -86,46 +117,42 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getCmisFolderId());
         properties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
+
+        String cmisRepositoryId = getCmisRepositoryId(parentFolder);
+
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         String cmisFolderId = null;
         try
         {
 
             cmisFolderId = createNewFolderAndReturnCmisID(parentFolder, properties);
-            if (log.isDebugEnabled())
-            {
-                log.debug("Folder with name: " + newFolderName + "  exists inside the folder: " + parentFolder.getName());
-            }
-            return prepareFolder(parentFolder, cmisFolderId, newFolderName);
+            log.debug("Folder with name: {}  exists inside the folder: {}", newFolderName, parentFolder.getName());
+            return prepareFolder(parentFolder, cmisFolderId, newFolderName, cmisRepositoryId);
         } catch (NoResultException e)
         {
             AcmFolder newFolder = new AcmFolder();
             if (cmisFolderId != null)
             {
+                newFolder.setCmisRepositoryId(parentFolder.getCmisRepositoryId());
                 newFolder.setCmisFolderId(cmisFolderId);
             } else
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder not added under " + parentFolder.getName() + " successfully" + e.getMessage(), e);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, parentFolder.getId(),
-                        "Folder was no added under " + parentFolder.getName() + " successfully", null);
+
+                log.error("Folder not added under {} successfully {}", parentFolder.getName(), e.getMessage(), e);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        parentFolder.getId(), "Folder was no added under " + parentFolder.getName() + " successfully", null);
             }
             newFolder.setName(newFolderName);
-            newFolder.setParentFolderParticipants(parentFolder.getParticipants());
-            newFolder.setParentFolderId(parentFolder.getId());
+            newFolder.setParentFolder(parentFolder);
 
             AcmFolder result = getFolderDao().save(newFolder);
 
             return result;
         } catch (PersistenceException | AcmFolderException | MuleException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder not added under " + parentFolder.getName() + " successfully" + e.getMessage(), e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, parentFolder.getId(),
-                    "Folder was no added under " + parentFolder.getName() + " successfully", e);
+            log.error("Folder not added under {} successfully {}", parentFolder.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    parentFolder.getId(), "Folder was no added under " + parentFolder.getName() + " successfully", e);
         }
     }
 
@@ -133,7 +160,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     public AcmFolder addNewFolderByPath(String targetObjectType, Long targetObjectId, String newPath)
             throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-        log.info("New folder path: " + newPath);
+        log.info("New folder path: {}", newPath);
 
         AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(targetObjectType, targetObjectId);
         if (container == null)
@@ -152,7 +179,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             newPath = newPath.substring(0, newPath.length() - 1);
         }
 
-        log.info("Trimmed new path: " + newPath);
+        log.info("Trimmed new path: {}", newPath);
 
         String[] targetPathComponents = newPath.split("/");
         AcmFolder parent = container.getFolder();
@@ -162,7 +189,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         }
         for (String targetPathComponent : targetPathComponents)
         {
-            log.info("Checking for folder named " + targetPathComponent);
+            log.info("Checking for folder named {}", targetPathComponent);
             try
             {
                 AcmFolder folder = getFolderDao().findFolderByNameInTheGivenParentFolder(targetPathComponent, parent.getId());
@@ -194,15 +221,25 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, Object> findFolderProperties = new HashMap<>();
         findFolderProperties.put("parentFolderId", cmisFolderObjectId);
-        MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null, findFolderProperties);
+
+        AcmFolder acmFolder = folderDao.findByCmisFolderId(cmisFolderObjectId);
+        if (acmFolder != null && acmFolder.getCmisRepositoryId() != null)
+        {
+            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(acmFolder.getCmisRepositoryId()));
+        } else
+        {
+            String defaultCmisId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+            findFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(defaultCmisId));
+        }
+        MuleMessage findFolderMessage = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, null,
+                findFolderProperties);
         if (findFolderMessage.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
         {
             MuleException muleException = findFolderMessage.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder can not be found " + muleException.getMessage(), muleException);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH, AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder not found", muleException);
+
+            log.error("Folder can not be found {}", muleException.getMessage(), muleException);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_CREATE_FOLDER_BY_PATH,
+                    AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder not found", muleException);
         }
 
         CmisObject containerFolderObject = findFolderMessage.getPayload(CmisObject.class);
@@ -212,7 +249,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder renameFolder(Long folderId, String newFolderName) throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    public AcmFolder renameFolder(Long folderId, String newFolderName)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
 
         AcmFolder folder = getFolderDao().find(folderId);
@@ -225,28 +263,19 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             folder.setName(newFolderName);
             renamedFolder = getFolderDao().save(folder);
-            if (log.isDebugEnabled())
-            {
-                log.debug("Folder name is changed to " + newFolderName);
-            }
+            log.debug("Folder name is changed to {}", newFolderName);
             return renamedFolder;
         } catch (Exception e)
         {
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder " + folder.getName() + " was not renamed successfully" + e.getMessage(), e);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                        "Folder " + folder.getName() + " was not renamed successfully", e);
+                log.error("Folder {} was not renamed successfully", folder.getName(), e.getMessage(), e);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_RENAME_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder " + folder.getName() + " was not renamed successfully", e);
             } else
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder with name " + newFolderName + " already exists " + e.getMessage());
-                }
+                log.error("Folder with name {} already exists {}", newFolderName, e.getMessage());
                 throw new AcmFolderException(e);
             }
         }
@@ -273,31 +302,35 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     }
 
     @Override
-    public AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
+    public AcmFolder moveFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
     {
 
         AcmFolder movedFolder;
 
         if (folderForMoving == null)
         {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be moved not found", null);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be moved not found",
+                    null);
         }
         if (dstFolder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }
-        if (folderForMoving.getParentFolderId() == null)
+        if (folderForMoving.getParentFolder() == null)
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("The folder: " + folderForMoving.getName() + " is a root folder, can not be moved!");
-            }
+            log.info("The folder: {} is a root folder, can not be moved!", folderForMoving.getName());
             throw new AcmFolderException("The folder: " + folderForMoving.getName() + " is a root folder, can not be moved!");
         }
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+
+        String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
+
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
@@ -305,61 +338,60 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder can not be moved successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
-                        "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
+                log.error("Folder can not be moved successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folderForMoving.getId(), "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
             }
 
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String newFolderId = cmisObject.getId();
 
+            folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
-            folderForMoving.setParentFolderId(dstFolder.getId());
-            getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(), new ArrayList<>());
-            folderForMoving.setParentFolderParticipants(dstFolder.getParticipants());
+            folderForMoving.setParentFolder(dstFolder);
+            getParticipantDao().removeAllOtherParticipantsForObject(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
+                    new ArrayList<>());
             movedFolder = getFolderDao().save(folderForMoving);
         } catch (PersistenceException | MuleException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder  " + folderForMoving.getName() + "not moved successfully" + e.getMessage(), e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
-                    "Folder was not moved under " + dstFolder.getName() + " successfully", e);
+            log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folderForMoving.getId(), "Folder was not moved under " + dstFolder.getName() + " successfully", e);
         }
         return movedFolder;
     }
 
     @Override
-    public AcmFolder moveRootFolder(AcmFolder folderForMoving, AcmFolder dstFolder) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
+    public AcmFolder moveRootFolder(AcmFolder folderForMoving, AcmFolder dstFolder)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException
     {
 
         AcmFolder movedFolder;
 
         if (folderForMoving == null)
         {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be moved not found", null);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be moved not found",
+                    null);
         }
         if (dstFolder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }
 
-        if (folderForMoving.getParentFolderId() != null)
+        if (folderForMoving.getParentFolder() != null)
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("The folder: " + folderForMoving.getName() + " is not root folder, can not be moved!");
-            }
+            log.info("The folder: {} is not root folder, can not be moved!", folderForMoving.getName());
             throw new AcmFolderException("The folder: " + folderForMoving.getName() + " is not root folder, can not be moved!");
         }
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folderForMoving.getCmisFolderId());
         properties.put(AcmFolderConstants.DESTINATION_FOLDER_ID, dstFolder.getCmisFolderId());
+
+        String cmisRepositoryId = getCmisRepositoryId(folderForMoving);
+
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
             MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_MOVE_FOLDER, folderForMoving, properties);
@@ -367,28 +399,23 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.MOVE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder can not be moved successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
-                        "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
+                log.error("Folder can not be moved successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folderForMoving.getId(), "Folder " + folderForMoving.getName() + " can not be moved successfully", muleException);
             }
 
             CmisObject cmisObject = message.getPayload(CmisObject.class);
             String newFolderId = cmisObject.getId();
 
+            folderForMoving.setCmisRepositoryId(cmisRepositoryId);
             folderForMoving.setCmisFolderId(newFolderId);
-            folderForMoving.setParentFolderId(dstFolder.getId());
+            folderForMoving.setParentFolder(dstFolder);
             movedFolder = getFolderDao().save(folderForMoving);
         } catch (PersistenceException | MuleException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder  " + folderForMoving.getName() + "not moved successfully" + e.getMessage(), e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderForMoving.getId(),
-                    "Folder was not moved under " + dstFolder.getName() + " successfully", e);
+            log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folderForMoving.getId(), "Folder was not moved under " + dstFolder.getName() + " successfully", e);
         }
         return movedFolder;
     }
@@ -411,27 +438,30 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         if (toBeCopied == null)
         {
-            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be copied not found", null);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Folder that need to be copied not found",
+                    null);
         }
         if (dstFolder == null)
         {
             throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, null, "Destination folder not found", null);
         }
 
-        if (toBeCopied.getParentFolderId() == null)
+        if (toBeCopied.getParentFolder() == null)
         {
-            if (log.isInfoEnabled())
-            {
-                log.info("The folder: " + toBeCopied.getName() + " is a root folder, can not be moved!");
-            }
+            log.info("The folder: {} is a root folder, can not be moved!", toBeCopied.getName());
             throw new AcmFolderException("The folder: " + toBeCopied.getName() + " is a root folder, can not be moved!");
         }
 
         Map<String, Object> toBeCopiedFolderProperties = new HashMap<>();
         toBeCopiedFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, toBeCopied.getCmisFolderId());
 
+        String cmisRepositoryId = getCmisRepositoryId(toBeCopied);
+
+        toBeCopiedFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         Map<String, Object> parentFolderProperties = new HashMap<>();
         parentFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, dstFolder.getCmisFolderId());
+        parentFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         Folder folderToBeCopied;
         Folder parentFolder;
@@ -439,17 +469,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         boolean isFirstFolderFetched = false;
         try
         {
-            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, toBeCopied, toBeCopiedFolderProperties);
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_GET_FOLDER, toBeCopied,
+                    toBeCopiedFolderProperties);
 
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder not fetched successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, toBeCopied.getId(),
-                        "Folder  " + toBeCopied.getName() + "was not fetched successfully", muleException);
+                log.error("Folder not fetched successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        toBeCopied.getId(), "Folder  " + toBeCopied.getName() + "was not fetched successfully", muleException);
             }
             CmisObject cmisObjectNewFolder = message.getPayload(CmisObject.class);
             folderToBeCopied = (Folder) cmisObjectNewFolder;
@@ -461,12 +489,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.GET_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder not fetched successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolder.getId(),
-                        "Folder  " + dstFolder.getName() + "was not fetched successfully", muleException);
+                log.error("Folder not fetched successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        dstFolder.getId(), "Folder  " + dstFolder.getName() + "was not fetched successfully", muleException);
             }
             CmisObject cmisObjectParentFolder = msg.getPayload(CmisObject.class);
             parentFolder = (Folder) cmisObjectParentFolder;
@@ -474,19 +499,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             if (isFirstFolderFetched)
             {
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, dstFolder.getId(),
-                        "Folder  " + dstFolder.getName() + "was not fetched successfully", e);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        dstFolder.getId(), "Folder  " + dstFolder.getName() + "was not fetched successfully", e);
             } else
             {
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, toBeCopied.getId(),
-                        "Folder  " + toBeCopied.getName() + "was not fetched successfully", e);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        toBeCopied.getId(), "Folder  " + toBeCopied.getName() + "was not fetched successfully", e);
             }
         }
-        copiedFolder = copyDir(parentFolder, folderToBeCopied, targetObjectId, targetObjectType);
+        copiedFolder = copyDir(parentFolder, folderToBeCopied, targetObjectId, targetObjectType, cmisRepositoryId);
         return copiedFolder;
     }
 
-    private AcmFolder copyDir(Folder parentFolder, Folder toBeCopiedFolder, Long targetObjectId, String targetObjectType) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    private AcmFolder copyDir(Folder parentFolder, Folder toBeCopiedFolder, Long targetObjectId, String targetObjectType, String cmisRepositoryId)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         Map<String, Object> newFolderProperties = new HashMap<>();
@@ -496,6 +522,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         newFolderProperties.put(AcmFolderConstants.PARENT_FOLDER_ID, parentFolder.getId());
         newFolderProperties.put(AcmFolderConstants.NEW_FOLDER_NAME, uniqueFolderName);
+        newFolderProperties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
 
         Folder newFolder;
         AcmFolder copiedFolder = null;
@@ -507,34 +534,32 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder not added successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                        "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", muleException);
+                log.error("Folder not added successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        null, "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", muleException);
             }
             CmisObject cmisObjectNewFolder = message.getPayload(CmisObject.class);
             newFolder = (Folder) cmisObjectNewFolder;
 
+            acmNewFolder.setCmisRepositoryId(cmisRepositoryId);
             acmNewFolder.setCmisFolderId(newFolder.getId());
             AcmFolder pFolder = getFolderDao().findByCmisFolderId(parentFolder.getId());
-            acmNewFolder.setParentFolderId(pFolder.getId());
+            acmNewFolder.setParentFolder(pFolder);
             acmNewFolder.setName(toCopyFolder.getName());
-            acmNewFolder.setParentFolderParticipants(pFolder.getParticipants());
             copiedFolder = getFolderDao().save(acmNewFolder);
 
         } catch (PersistenceException | MuleException e)
         {
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, null,
-                    "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    null, "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", e);
         }
-        copyChildren(newFolder, toBeCopiedFolder, targetObjectId, targetObjectType);
+        copyChildren(newFolder, toBeCopiedFolder, targetObjectId, targetObjectType, cmisRepositoryId);
 
         return copiedFolder;
     }
 
-    private void copyChildren(Folder parentFolder, Folder toCopyFolder, Long targetObjectId, String targetObjectType) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    private void copyChildren(Folder parentFolder, Folder toCopyFolder, Long targetObjectId, String targetObjectType, String cmisRepositoryId)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         ItemIterable<CmisObject> immediateChildren = toCopyFolder.getChildren();
         for (CmisObject child : immediateChildren)
@@ -549,10 +574,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                     ecmFile = getFileDao().findByCmisFileIdAndFolderId(child.getId(), acmParent.getId());
                 } catch (NoResultException e)
                 {
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("File with cmisId: " + child.getId() + " not found in the DB, but returned from Alfresco!", e);
-                    }
+                    log.debug("File with cmisId: {} not found in the DB, but returned from Alfresco!", child.getId(), e);
                     continue;
                 }
                 if (ecmFile != null)
@@ -567,7 +589,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 }
             } else if (child instanceof Folder)
             {
-                copyDir(parentFolder, (Folder) child, targetObjectId, targetObjectType);
+                copyDir(parentFolder, (Folder) child, targetObjectId, targetObjectType, cmisRepositoryId);
             }
         }
     }
@@ -584,6 +606,11 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         Map<String, Object> properties = new HashMap<>();
         properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
+
+        String cmisRepositoryId = getCmisRepositoryId(folder);
+
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+
         try
         {
 
@@ -592,51 +619,392 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY))
             {
                 MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder not deleted successfully " + muleException.getMessage(), muleException);
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                        "Folder " + folder.getName() + "not deleted successfully", muleException);
+                log.error("Folder not deleted successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder " + folder.getName() + "not deleted successfully", muleException);
             } else if (message.getInboundPropertyNames().contains(AcmFolderConstants.IS_FOLDER_NOT_EMPTY_INBOUND_PROPERTY))
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder " + folder.getName() + " is not empty and is not deleted!");
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                        "Folder " + folder.getName() + " not deleted successfully", null);
+                log.error("Folder {} is not empty and is not deleted!", folder.getName());
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder " + folder.getName() + " not deleted successfully", null);
             }
             getFolderDao().deleteFolder(folderId);
         } catch (PersistenceException | MuleException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder  " + folder.getName() + "not deleted successfully" + e.getMessage(), e);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                    "Folder was no added under " + folder.getName() + " successfully", e);
+            log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Folder was not deleted under " + folder.getName() + " successfully", e);
         }
     }
 
-    private AcmFolder prepareFolder(AcmFolder folder, String cmisFolderId, String folderName) throws AcmUserActionFailedException, PersistenceException, AcmFolderException
+
+    public void deleteFolderTreeSafe(Long folderId, Authentication authentication) throws AcmObjectNotFoundException,
+            AcmUserActionFailedException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        if (folder == null)
+        {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+        }
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+        findFolderChildren(folder, childrenFiles, childrenFolders);
+
+        Function<AcmObject, String> acmObjectToKey = acmObject ->
+                String.format("%s_%d", acmObject.getObjectType(), acmObject.getId());
+
+        Map<String, String> folderContentFolderEntries = childrenFolders.stream()
+                .collect(Collectors.toMap(acmObjectToKey, AcmFolder::getObjectType));
+
+        Map<String, String> folderContentEntries = childrenFiles.stream()
+                .collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
+
+        folderContentFolderEntries.put(acmObjectToKey.apply(folder), folder.getObjectType());
+
+        folderContentEntries.putAll(folderContentFolderEntries);
+
+        lockAndDeleteFolderTree(folderId, authentication, folderContentEntries);
+
+        log.info("Removing object locks");
+        // Remove LOCK for all sub-folders
+        // For FILE the LOCK is removed with deleting the FILE handled with cascade remove
+        removeObjectLocks(folderContentFolderEntries, authentication);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    private void lockAndDeleteFolderTree (Long folderId, Authentication authentication, Map<String, String> folderContentEntries)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        log.info("Putting object locks");
+        putObjectLocks(folderContentEntries, authentication);
+
+        log.info("Deleting folder tree");
+        deleteFolderTree(folderId, authentication);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFolderTree(Long folderId, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        if (folder == null)
+        {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+        }
+
+        deleteFolderContent(folderId, authentication.getName());
+
+        deleteAlfrescoFolderTree(folder);
+    }
+
+    public void deleteAlfrescoFolderTree(AcmFolder folder) throws AcmUserActionFailedException
+    {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(AcmFolderConstants.ACM_FOLDER_ID, folder.getCmisFolderId());
+
+        String cmisRepositoryId = getCmisRepositoryId(folder);
+        properties.put(AcmFolderConstants.CONFIGURATION_REFERENCE, cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
+        try
+        {
+            MuleMessage message = getMuleContextManager().send(AcmFolderConstants.MULE_ENDPOINT_DELETE_FOLDER_TREE, folder, properties);
+            if (message.getInboundPropertyNames().contains(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY))
+            {
+                MuleException muleException = message.getInboundProperty(AcmFolderConstants.DELETE_FOLDER_TREE_EXCEPTION_INBOUND_PROPERTY);
+                log.error("Folder not deleted successfully {}", muleException.getMessage(), muleException);
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder " + folder.getName() + " was not deleted successfully", muleException);
+            }
+        } catch (MuleException e)
+        {
+            log.error("Folder {} not deleted successfully {}", folder.getName(), e.getMessage(), e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_DELETE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Folder was not deleted successfully", e);
+        }
+    }
+
+    private void putObjectLocks(Map<String, String> folderContentEntries, Authentication authentication)
+            throws AcmUserActionFailedException
+    {
+        // Find if any of the files or folders already has a LOCK.
+        // If this is true abort the operation.
+        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
+        {
+            String[] parts = entry.getKey().split("_");
+            Long id = Long.parseLong(parts[1]);
+            AcmObjectLock objectLock = objectLockService.findLock(id, entry.getValue());
+            if (objectLock != null)
+            {
+                log.warn("Object {}: {} already has a lock", entry.getValue(), id);
+                throw new AcmUserActionFailedException("create object lock", entry.getValue(), id,
+                        String.format("Can't add lock. Object %s: %s is already locked", entry.getValue(), id), null);
+            }
+        }
+
+        // None of the files or folders has a LOCK.
+        // Set EXCLUSIVE TREE LOCK to all entries
+        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
+        {
+            String[] parts = entry.getKey().split("_");
+            Long id = Long.parseLong(parts[1]);
+            try
+            {
+                objectLockService.createLock(id, entry.getValue(), AcmObjectLockConstants.EXCLUSIVE_TREE_LOCK,
+                        authentication);
+            } catch (AcmObjectLockException e)
+            {
+                log.warn("Can't add lock to object {}: {} ", entry.getValue(), id, e.getMessage());
+                throw new AcmUserActionFailedException("create object lock", entry.getValue(), id,
+                        String.format("Can't add lock to object %s: %s", entry.getValue(), id), e);
+            }
+        }
+    }
+
+    private void removeObjectLocks(Map<String, String> folderContentEntries, Authentication authentication)
+    {
+        for (Map.Entry<String, String> entry : folderContentEntries.entrySet())
+        {
+            String[] parts = entry.getKey().split("_");
+            Long id = Long.parseLong(parts[1]);
+            try
+            {
+                objectLockService.removeLock(id, entry.getValue(), AcmObjectLockConstants.EXCLUSIVE_TREE_LOCK, authentication);
+            } catch (AcmObjectLockException e)
+            {
+                log.warn("Can't remove locks for object: {} with id: {} ", entry.getValue(), id, e);
+            }
+        }
+    }
+
+    @Override
+    public void deleteContainerSafe(AcmContainer container, Authentication authentication) throws AcmUserActionFailedException
+    {
+        AcmFolder rootFolder = container.getFolder();
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        findFolderChildren(rootFolder, childrenFiles, childrenFolders);
+
+        Function<AcmObject, String> acmObjectToKey = acmObject ->
+                String.format("%s_%d", acmObject.getObjectType(), acmObject.getId());
+
+        Map<String, String> folderContentFolderEntries = childrenFolders.stream()
+                .collect(Collectors.toMap(acmObjectToKey, AcmFolder::getObjectType));
+
+        folderContentFolderEntries.put(acmObjectToKey.apply(rootFolder), rootFolder.getObjectType());
+
+        Map<String, String> folderContentEntries = childrenFiles.stream()
+                .collect(Collectors.toMap(acmObjectToKey, EcmFile::getObjectType));
+
+        folderContentEntries.putAll(folderContentFolderEntries);
+
+        deleteAndLockContainer(container.getId(), authentication, folderContentEntries);
+
+        log.info("Removing object locks");
+        removeObjectLocks(folderContentEntries, authentication);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    private void deleteAndLockContainer(Long containerId, Authentication authentication, Map<String, String> contentEntries)
+            throws AcmUserActionFailedException
+    {
+        log.info("Putting object locks");
+        putObjectLocks(contentEntries, authentication);
+
+        log.info("Deleting container and it's content");
+        deleteContainer(containerId, authentication);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteContainer(Long containerId, Authentication authentication) throws AcmUserActionFailedException
+    {
+        AcmContainer container = containerDao.find(containerId);
+        AcmFolder rootFolder = container.getFolder();
+        deleteContainerAndContent(container, authentication.getName());
+        deleteAlfrescoFolderTree(rootFolder);
+    }
+
+    public void deleteFilesWithProgress(Set<EcmFile> files, AcmProgressIndicator acmProgressIndicator,
+            int progressCounter, int total)
+    {
+        for (EcmFile file : files)
+        {
+            log.info("Delete file with id: [{}]", file.getId());
+            fileDao.deleteFile(file.getId());
+
+            acmProgressIndicator.setProgress(calculateProgress(progressCounter, total));
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+            progressCounter++;
+        }
+    }
+
+    public void deleteFoldersWithProgress(Set<AcmFolder> folders, AcmProgressIndicator acmProgressIndicator,
+            int progressCounter, int total)
+    {
+        for (AcmFolder subFolder : folders)
+        {
+            log.info("Delete folder with id: [{}]", subFolder.getId());
+            folderDao.deleteFolder(subFolder.getId());
+
+            acmProgressIndicator.setProgress(calculateProgress(progressCounter, total));
+            applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+            progressCounter++;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteContainerAndContent(AcmContainer container, String user)
+    {
+        AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
+        acmProgressIndicator.setObjectId(container.getId());
+        acmProgressIndicator.setObjectType(AcmFolderConstants.CONTAINER_OBJECT_TYPE);
+        acmProgressIndicator.setUser(user);
+
+        AcmFolder rootFolder = container.getFolder();
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        findFolderChildren(rootFolder, childrenFiles, childrenFolders);
+        int totalEntriesCount = childrenFiles.size() + childrenFolders.size() + 1;
+        int counter = 1;
+
+        // delete everything from the root folder first
+        // EcmFile has foreign key to the container
+        deleteFilesWithProgress(childrenFiles, acmProgressIndicator, counter, totalEntriesCount);
+
+        counter += childrenFiles.size();
+
+        // sort by latest entry to avoid constraint violation
+        childrenFolders = childrenFolders.stream()
+                .sorted(Comparator.comparing(AcmFolder::getId).reversed())
+                .collect(Collectors.toSet());
+
+        deleteFoldersWithProgress(childrenFolders, acmProgressIndicator, counter, totalEntriesCount);
+
+        // somehow deleting folders and deleting container below are not in the same persistence context
+        // must flush here, otherwise deleting container fails on reference (any sub-folders) to the ROOT folder
+        // of the container
+        getFolderDao().getEm().flush();
+
+        counter += childrenFolders.size();
+
+        // deleting the container will delete the ROOT folder
+        log.info("Delete container with id: [{}]", container.getId());
+        containerDao.delete(container.getId());
+        acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount)); // 100%
+        applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+    }
+
+    @Transactional
+    private void deleteFolderContent(Long folderId, String user)
+    {
+        AcmProgressIndicator acmProgressIndicator = new AcmProgressIndicator();
+        acmProgressIndicator.setObjectId(folderId);
+        acmProgressIndicator.setObjectType(AcmFolderConstants.OBJECT_FOLDER_TYPE);
+        acmProgressIndicator.setUser(user);
+
+        AcmFolder folder = getFolderDao().find(folderId);
+        Set<EcmFile> childrenFiles = new HashSet<>();
+        Set<AcmFolder> childrenFolders = new HashSet<>();
+
+        if (folder == null)
+        {
+            return;
+        }
+        findFolderChildren(folder, childrenFiles, childrenFolders);
+
+        int totalEntriesCount = childrenFiles.size() + childrenFolders.size() + 1;
+        int counter = 1;
+
+        deleteFilesWithProgress(childrenFiles, acmProgressIndicator, counter, totalEntriesCount);
+
+        counter += childrenFiles.size();
+
+        // sort by latest entry to avoid constraint violation
+        childrenFolders = childrenFolders.stream()
+                .sorted(Comparator.comparing(AcmFolder::getId).reversed())
+                .collect(Collectors.toSet());
+
+        counter += childrenFolders.size();
+
+        deleteFoldersWithProgress(childrenFolders, acmProgressIndicator, counter, totalEntriesCount);
+
+        log.info("Delete root folder with id: [{}]", folderId);
+        folderDao.deleteFolder(folderId);
+        acmProgressIndicator.setProgress(calculateProgress(counter, totalEntriesCount)); // 100%
+        applicationEventPublisher.publishEvent(new AcmProgressEvent(acmProgressIndicator));
+    }
+
+    private int calculateProgress(int current, int total)
+    {
+        return (int) (current * 1.0 / total * 100);
+    }
+
+    @Override
+    public String getCmisRepositoryId(AcmFolder folder)
+    {
+        String cmisRepositoryId = folder.getCmisRepositoryId();
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
+        return cmisRepositoryId;
+    }
+
+    @Override
+    public DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException
+    {
+        AcmFolder folder = getFolderDao().find(folderId);
+
+        if (folder == null)
+        {
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found", null);
+        }
+
+        Set<AcmFolder> subFolderList = new HashSet<>();
+        Set<EcmFile> filesList = new HashSet<>();
+        findFolderChildren(folder, filesList, subFolderList);
+
+        DeleteFolderInfo deleteFolderInfo = new DeleteFolderInfo();
+        deleteFolderInfo.setFilesToDeleteNum(filesList.size());
+        deleteFolderInfo.setFoldersToDeleteNum(subFolderList.size());
+        return deleteFolderInfo;
+    }
+
+    void findFolderChildren(AcmFolder folder, Set<EcmFile> childFiles, Set<AcmFolder> childFolders)
+    {
+        if (folder == null)
+            return;
+
+        childFiles.addAll(fileDao.findByFolderId(folder.getId()));
+
+        for (AcmFolder childFolder : folder.getChildrenFolders())
+        {
+            childFolders.add(childFolder);
+            findFolderChildren(childFolder, childFiles, childFolders);
+        }
+    }
+
+    private AcmFolder prepareFolder(AcmFolder folder, String cmisFolderId, String folderName, String cmisRepositoryId)
+            throws AcmUserActionFailedException, PersistenceException, AcmFolderException
     {
         AcmFolder newFolder = new AcmFolder();
         if (cmisFolderId != null)
         {
+            newFolder.setCmisRepositoryId(cmisRepositoryId);
             newFolder.setCmisFolderId(cmisFolderId);
         } else
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder not added under " + folder.getName() + " successfully");
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                    "Folder was no added under " + folder.getName() + " successfully", null);
+            log.error("Folder not added under {} successfully", folder.getName());
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Folder was no added under " + folder.getName() + " successfully", null);
         }
         newFolder.setName(folderName);
-        newFolder.setParentFolderId(folder.getId());
-        newFolder.setParentFolderParticipants(folder.getParticipants());
+        newFolder.setParentFolder(folder);
         AcmFolder result;
         try
         {
@@ -646,25 +1014,20 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
             {
-                if (log.isDebugEnabled())
-                {
-                    log.debug("Folder with name " + folderName + " already exists " + e.getMessage());
-                }
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                        "Folder with name " + folderName + " already exists", e);
+                log.debug("Folder with name {} already exists {}", folderName, e.getMessage());
+                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                        folder.getId(), "Folder with name " + folderName + " already exists", e);
             } else
             {
-                if (log.isErrorEnabled())
-                {
-                    log.error("Folder with name " + folderName + " already exists " + e.getMessage());
-                }
+                log.error("Folder with name {}  already exists {}", folderName, e.getMessage());
                 throw new AcmFolderException(e);
             }
         }
         return result;
     }
 
-    private String createNewFolderAndReturnCmisID(AcmFolder folder, Map<String, Object> properties) throws MuleException, AcmUserActionFailedException
+    private String createNewFolderAndReturnCmisID(AcmFolder folder, Map<String, Object> properties)
+            throws MuleException, AcmUserActionFailedException
     {
 
         String cmisFolderId;
@@ -674,12 +1037,9 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         if (message.getInboundPropertyNames().contains(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY))
         {
             MuleException muleException = message.getInboundProperty(AcmFolderConstants.ADD_NEW_FOLDER_EXCEPTION_INBOUND_PROPERTY);
-            if (log.isErrorEnabled())
-            {
-                log.error("Folder not added successfully " + muleException.getMessage(), muleException);
-            }
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                    "Folder was not created under " + folder.getName() + " successfully", muleException);
+            log.error("Folder not added successfully {}", muleException.getMessage(), muleException);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folder.getId(), "Folder was not created under " + folder.getName() + " successfully", muleException);
         }
 
         CmisObject cmisObject = message.getPayload(CmisObject.class);
@@ -726,7 +1086,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
                     if (isJSONArray(folderJSONObject, AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN))
                     {
-                        addFolderStructure(container, folder, folderJSONObject.getJSONArray(AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN));
+                        addFolderStructure(container, folder,
+                                folderJSONObject.getJSONArray(AcmFolderConstants.FOLDER_STRUCTURE_KEY_CHILDREN));
                     }
                 }
             }
@@ -770,7 +1131,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 }
             } catch (Exception e)
             {
-                log.debug("Element with key=" + key + " in the json=" + json.toString() + " is not JSONObject.");
+                log.debug("Element with key={} in the json={} is not JSONObject.", key, json.toString());
             }
         }
 
@@ -796,7 +1157,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
                 }
             } catch (Exception e)
             {
-                log.debug("Element with key=" + key + " in the json=" + json.toString() + " is not JSONArray.");
+                log.debug("Element with key={} in the json={} is not JSONObject.", key, json.toString());
             }
         }
 
@@ -806,12 +1167,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @Override
     public String getFolderPath(AcmFolder folder) throws AcmObjectNotFoundException
     {
-        if (folder.getParentFolderId() != null)
+        if (folder.getParentFolder() != null)
         {
-            AcmFolder parent = findById(folder.getParentFolderId());
+            AcmFolder parent = findById(folder.getParentFolder().getId());
             if (parent == null)
             {
-                throw new AcmObjectNotFoundException(folder.getObjectType(), folder.getParentFolderId(), "Folder not found in database");
+                throw new AcmObjectNotFoundException(folder.getObjectType(), folder.getParentFolder().getId(),
+                        "Folder not found in database");
             }
             return getFolderPath(parent) + "/" + folder.getName();
         } else
@@ -823,7 +1185,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     @Override
     public boolean folderPathExists(String folderPath, AcmContainer container) throws AcmFolderException
     {
-        log.info("Checking existence of path {} in container id = ", folderPath, container);
+        log.info("Checking existence of path {} in container id = {}", folderPath, container.getId());
 
         Objects.requireNonNull(container, "Container should not be null");
         if (folderPath != null)
@@ -845,14 +1207,14 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderPath = folderPath.substring(0, folderPath.length() - 1);
         }
 
-        log.info("Formatted path: " + folderPath);
+        log.info("Formatted path: {}", folderPath);
 
         String[] targetPathComponents = folderPath.split("/");
         AcmFolder parent = container.getFolder();
 
         for (String targetPathComponent : targetPathComponents)
         {
-            log.info("Checking for folder named " + targetPathComponent);
+            log.info("Checking for folder named {}", targetPathComponent);
             try
             {
                 AcmFolder folder = getFolderDao().findFolderByNameInTheGivenParentFolder(targetPathComponent, parent.getId());
@@ -873,8 +1235,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
 
         AcmFolder folderForCopying = findById(folderId);
-        List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId()).stream()
-                .filter(obj -> obj.getObjectType() != null)
+        List<AcmObject> folderChildren = getFolderChildren(folderForCopying.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
 
         copyFolderChildrenStructure(folderChildren, containerOfCopy, rootFolderOfCopy);
@@ -886,7 +1247,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         AcmFolder folderForCopying = findById(folderId);
 
-        if (folderForCopying.getParentFolderId() == null)
+        if (folderForCopying.getParentFolder() == null)
         {
             return; // cannot copy ROOT folder
         }
@@ -897,7 +1258,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
         copyFolderChildrenStructure(folderChildren, containerOfCopy, copiedFolder);
     }
-    
+
     private void copyFolderChildrenStructure(List<AcmObject> folderChildren, AcmContainer containerOfCopy, AcmFolder destinationFolder)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException, AcmFolderException
     {
@@ -921,7 +1282,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         EcmFile fileForCopying = fileService.findById(documentId);
 
         AcmFolder documentFolder = fileForCopying.getFolder();
-        if (documentFolder.getParentFolderId() == null)
+        if (documentFolder.getParentFolder() == null)
         {
             // recreate folder structure as on source
             // document is under root folder, no need to create additional folders
@@ -930,16 +1291,83 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         {
             // create folder structure in saved case file same as in source for the document
             String folderPath = getFolderPath(fileForCopying.getFolder());
-            log.debug("folder path = '{}' for folder(id={}, name={})", folderPath, fileForCopying.getFolder().getId(), fileForCopying.getFolder().getName());
+            log.debug("folder path = '{}' for folder(id={}, name={})", folderPath, fileForCopying.getFolder().getId(),
+                    fileForCopying.getFolder().getName());
             try
             {
-                AcmFolder createdFolder = addNewFolderByPath(containerOfCopy.getContainerObjectType(), containerOfCopy.getContainerObjectId(), folderPath);
+                AcmFolder createdFolder = addNewFolderByPath(containerOfCopy.getContainerObjectType(),
+                        containerOfCopy.getContainerObjectId(), folderPath);
                 fileService.copyFile(documentId, createdFolder, containerOfCopy);
             } catch (Exception e)
             {
-                log.error("Couldn't create folder structure for document with id=" + documentId + " and will not be copied.", e);
+                log.error("Couldn't create folder structure for document with id={} and will not be copied.", documentId, e);
             }
         }
+    }
+
+    @Override
+    public AcmContainer findContainerByFolderId(Long folderId) throws AcmObjectNotFoundException
+    {
+        AcmFolder acmFolder = folderDao.find(folderId);
+        if (acmFolder != null)
+        {
+            AcmFolder rootFolder = findRootParentFolder(acmFolder);
+            return getContainerDao().findByFolderId(rootFolder.getId());
+        } else
+        {
+            log.warn("Couldn't find folder with id [{}]", folderId);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found");
+        }
+    }
+
+    @Override
+    public AcmContainer findContainerByFolderIdTransactionIndependent(Long folderId) throws AcmObjectNotFoundException
+    {
+        AcmFolder acmFolder = folderDao.find(folderId);
+        if (acmFolder != null)
+        {
+            AcmFolder rootFolder = findRootParentFolder(acmFolder);
+            return getContainerDao().findByFolderIdTransactionIndependent(rootFolder.getId());
+        } else
+        {
+            log.warn("Couldn't find folder with id [{}]", folderId);
+            throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folderId, "Folder not found");
+        }
+    }
+
+    @Override
+    public List<AcmFolder> findModifiedSince(Date lastModified, int start, int pageSize)
+    {
+        return getFolderDao().findModifiedSince(lastModified, start, pageSize);
+    }
+
+    private AcmFolder findRootParentFolder(AcmFolder folder)
+    {
+        if (folder.getParentFolder() == null)
+        {
+            return folder;
+        }
+        return findRootParentFolder(folder.getParentFolder());
+    }
+
+    /**
+     * retrieves root folder
+     *
+     * @param parentObjectId
+     * @param parentObjectType
+     * @return AcmFolder root folder for given objectId, objectType
+     */
+    @Override
+    public AcmFolder getRootFolder(Long parentObjectId, String parentObjectType) throws AcmObjectNotFoundException
+    {
+        log.debug("get root folder for[{},{}] ", parentObjectId, parentObjectType);
+
+        AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(parentObjectType, parentObjectId);
+        if (container == null)
+        {
+            throw new AcmObjectNotFoundException(parentObjectType, parentObjectId, "Container object not found", null);
+        }
+        return container.getFolder();
     }
 
     public EcmFileDao getFileDao()
@@ -952,15 +1380,15 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         this.fileDao = fileDao;
     }
 
+    public ApplicationEventPublisher getApplicationEventPublisher()
+    {
+        return applicationEventPublisher;
+    }
+
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;
-    }
-
-    public ApplicationEventPublisher getApplicationEventPublisher()
-    {
-        return applicationEventPublisher;
     }
 
     public AcmFolderDao getFolderDao()
@@ -1032,4 +1460,25 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         this.participantDao = participantDao;
     }
+
+    public CmisConfigUtils getCmisConfigUtils()
+    {
+        return cmisConfigUtils;
+    }
+
+    public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
+    {
+        this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public AcmObjectLockService getObjectLockService()
+    {
+        return objectLockService;
+    }
+
+    public void setObjectLockService(AcmObjectLockService objectLockService)
+    {
+        this.objectLockService = objectLockService;
+    }
+
 }

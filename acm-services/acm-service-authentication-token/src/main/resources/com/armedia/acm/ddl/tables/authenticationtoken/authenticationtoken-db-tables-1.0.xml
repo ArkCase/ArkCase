@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-acm-authentication-token-table" author="mnj11">
+    <changeSet id="01-create-acm-authentication-token-table" author="mnj11" dbms="oracle,postgresql,mssql">
 
         <createTable tableName="acm_authentication_token">
 
@@ -23,6 +23,57 @@
             </column>
 
             <column name="cm_authentication_token_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_key" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_email" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_password" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cm_authentication_token_status" type="VARCHAR(1024)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="cm_authentication_token_file_id" type="${fkIdType}">
+                <constraints nullable="true"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-create-acm-authentication-token-table" author="mnj11" dbms="mysql">
+
+        <createTable tableName="acm_authentication_token">
+
+            <column name="cm_authentication_token_id" type="${idType}">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_authentication_token"/>
+            </column>
+
+            <column name="cm_authentication_token_created" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cm_authentication_token_modified" type="${timestampType}"
+                    defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
 

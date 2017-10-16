@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "Vérification",
+    "menus": {
+      "leftnav.item": "Vérification"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "fr_Report Name",
+        "inputID": "fr_ID",
+        "dateFrom": "fr_From",
+        "dateTo": "fr_To"
+      },
+      "placeholder": {
+        "selectAudit": "fr_ALL",
+        "inputId": "fr_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "fr_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "fr_Done"
+    }
+  }
+}

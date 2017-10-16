@@ -33,8 +33,19 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-search.xml"
-})
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-object-diff.xml",
+        "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class OrganizationIT
 {
@@ -65,7 +76,6 @@ public class OrganizationIT
         org.setOrganizationType("sample");
         org.setOrganizationValue("tech net");
 
-
         Identification i1 = new Identification();
         i1.setIdentificationIssuer("issuer1");
         i1.setIdentificationNumber("131312312");
@@ -95,14 +105,13 @@ public class OrganizationIT
         org.getContactMethods().add(cm2);
         org.getAddresses().add(pa1);
         org.getAddresses().add(pa2);
-
+        org.setCreator("creator");
 
         Long savedId = organizationDao.save(org).getOrganizationId();
 
         em.flush();
 
         assertNotNull(savedId);
-
 
         Organization saved = organizationDao.find(savedId);
         assertEquals(1, saved.getIdentifications().size());
@@ -112,7 +121,6 @@ public class OrganizationIT
         assertEquals("com.armedia.acm.plugins.person.model.Organization", saved.getClassName());
 
         assertEquals("sample", org.getOrganizationType());
-
 
     }
 }

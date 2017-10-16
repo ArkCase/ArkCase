@@ -1,0 +1,363 @@
+{
+  "tasks": {
+    "title": "任務",
+    "progressNoTask": "[ 無任務數據 ]",
+    "progressLoading": "加載任務數據",
+    "progressError": "加載任務數據失敗"
+  },
+  "tasks.menus": {
+    "leftnav.item": "任務",
+    "topbar.item": "任務"
+  },
+  "tasks.comp.main": {
+    "title": "概述"
+  },
+  "tasks.comp.info": {
+    "title": "信息",
+    "taskId": "任務識別號:",
+    "percentage.label": "完成百分比",
+    "assignee.label": "指定人員",
+    "priority.label": "優先級別",
+    "startDate.label": "開始日期",
+    "dueDate.label": "到期日期",
+    "state.label": "狀態",
+    "overdue.tooltip": "任務已逾期",
+    "deadline.tooltip": "截止日期正在接近",
+    "owningGroup.label": "所屬群體"
+  },
+  "tasks.comp.parentinfo": {
+    "title": "原屬信息",
+    "taskId": "任務識別號:",
+    "case": {
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
+    },
+    "complaint": {
+      "subjectType.label": "對像類型",
+      "incidentDate.label": "事件日期",
+      "priority.label": "優先級別",
+      "assignee.label": "指定人員",
+      "owningGroup.label": "所屬群體"
+    },
+    "costsheet": {
+      "approver.label": "審批者"
+    },
+    "timesheet": {
+      "approver.label": "審批者"
+    }
+  },
+  "tasks.comp.actions": {
+    "title": "行動",
+    "diagram.button": "圖標處理",
+    "eSignature.button": "簽名",
+    "subscribe.button": "訂閱",
+    "unsubscribe.button": "取消訂閱",
+    "reject.button": "回絕",
+    "delete.button": "刪除",
+    "complete.button": "完成",
+    "approve.button": "文件審批",
+    "rework.button": "遣返重做",
+    "claim.button": "申明權益",
+    "unclaim.button": "取消申權",
+    "error.outcomeFieldMissing": "由於缺少必需的值而無法完成任務",
+    "modal": {
+      "errorHeaderText": "錯誤",
+      "btnOk.text": "確定",
+      "btnClose.text": "關閉"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "詳情",
+    "informSaved": "zh-tw_Task details saved",
+    "table.columns": {
+      "details": "zh-tw_Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "重做詳情",
+    "informSaved": "zh-tw_Rework details saved",
+    "table.columns": {
+      "title": "zh-tw_Rework Details",
+      "modified": "zh-tw_Date Last Modified",
+      "modifier": "zh-tw_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "原屬文件",
+    "noParentDataMessage": "zh-tw_No parent documents for standalone task",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
+  },
+  "tasks.comp.attachments": {
+    "title": "附件",
+    "sendEmail": "zh-tw_Send Email",
+    "filterInputPlaceholder": "zh-tw_Filter",
+    "searchInputPlaceholder": "zh-tw_Search"
+  },
+  "tasks.comp.notes": {
+    "title": "註釋",
+    "table.columns": {
+      "note": "zh-tw_Note",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "參考",
+    "table.columns": {
+      "targetName": "zh-tw_Number",
+      "targetTitle": "zh-tw_Title",
+      "modified": "zh-tw_Modified",
+      "targetType": "zh-tw_Reference Type",
+      "status": "zh-tw_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "回絕說明",
+    "table.columns": {
+      "note": "zh-tw_Comment",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "流程概述",
+    "table.columns": {
+      "participant": "zh-tw_Participant",
+      "role": "zh-tw_Role",
+      "status": "zh-tw_Status",
+      "startDateTime": "zh-tw_Start",
+      "endDateTime": "zh-tw_End"
+    }
+  },
+  "tasks.comp.diagram": {
+    "title": "zh-tw_Process Diagram",
+    "error.loading": "zh-tw_Diagram can't be loaded"
+  },
+  "tasks.comp.signatures": {
+    "title": "電子簽名",
+    "table.columns": {
+      "signedDate": "zh-tw_Date",
+      "signedBy": "zh-tw_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "審查文件",
+    "table.columns": {
+      "fileId": "zh-tw_ID",
+      "fileName": "zh-tw_Title",
+      "created": "zh-tw_Created",
+      "creator": "zh-tw_Author",
+      "status": "zh-tw_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "歷史",
+    "table.columns": {
+      "eventType": "zh-tw_Event Name",
+      "eventDate": "zh-tw_Date",
+      "userId": "zh-tw_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "標籤",
+    "table.columns": {
+      "tag": "標籤",
+      "created": "zh-tw_Created",
+      "createdBy": "zh-tw_Created By"
+    },
+    "modal": {
+      "title": "標籤",
+      "search": "zh-tw_Search for Tag",
+      "buttons": {
+        "cancel": "zh-tw_Cancel",
+        "ok": "zh-tw_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-tw_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-tw_already associated",
+      "delete": {
+        "success": "zh-tw_Tag deleted successfully",
+        "error": "zh-tw_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "zh-tw_New Task",
+    "assignee.button": "zh-tw_Choose Assignee",
+    "assignee.label": "zh-tw_Assign To",
+    "assignee.placeholder": "zh-tw_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "zh-tw_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "zh-tw_Select Priority",
+    "priority.label": "zh-tw_Priority",
+    "status.placeholder": "zh-tw_Select Status",
+    "status.label": "zh-tw_Status",
+    "associateNumber.label": "zh-tw_Associate with Complaint or Case",
+    "associateNumber.placeholder": "zh-tw_Complaint or Case #",
+    "associateType.label": "zh-tw_Parent Type",
+    "subject.label": "zh-tw_Subject",
+    "taskStartDate.label": "zh-tw_Start Date",
+    "dueDate.label": "zh-tw_Due Date",
+    "datepicker.close": "zh-tw_Done",
+    "percentComplete.label": "zh-tw_% Complete",
+    "notes.label": "zh-tw_Notes",
+    "saveButton": "zh-tw_Save",
+    "overdue.tooltip": "zh-tw_Task is Overdue",
+    "deadline.tooltip": "zh-tw_Deadline is Approaching",
+    "groupToggle.label": "zh-tw_Group Task?",
+    "group.placeholder": "zh-tw_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "選擇用戶",
+    "title": "zh-tw_User/Group Search",
+    "search": {
+      "btn": "zh-tw_Search",
+      "placeholder": "zh-tw_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "zh-tw_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "zh-tw_Name",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "username": "zh-tw_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "zh-tw_objectSearch",
+    "title": "zh-tw_Object Search",
+    "search": {
+      "btn": "zh-tw_Search",
+      "placeholder": "zh-tw_Search for the case or complaint to this task."
+    },
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Confirm",
+    "enabled": true,
+    "userFacetFilter": "zh-tw_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "zh-tw_Number",
+      "type": "zh-tw_Type",
+      "title": "zh-tw_Title",
+      "username": "zh-tw_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "zh-tw_Add Reference",
+    "cancelButton": "zh-tw_Cancel",
+    "confirmButton": "zh-tw_Add",
+    "search": {
+      "placeholder": "zh-tw_Search for case, complaint, file, task",
+      "btn": "zh-tw_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "zh-tw_Id",
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "參與成員",
+    "table.columns": {
+      "type": "zh-tw_Type",
+      "name": "zh-tw_Name"
+    },
+    "dialogUserPicker": {
+      "header": "zh-tw_Choose User",
+      "table.columns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "id": "zh-tw_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "zh-tw_Choose Group",
+      "table.columns": {
+        "name": "zh-tw_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "zh-tw_Change Assignee",
+    "assigneeNamelabel": "zh-tw_Assignee Name",
+    "btnCancelText": "zh-tw_Cancel",
+    "btnSaveText": "zh-tw_Save",
+    "searchAssigneeHeader": "zh-tw_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "zh-tw_Change Group",
+    "groupNamelabel": "zh-tw_Group Name",
+    "btnCancelText": "zh-tw_Cancel",
+    "btnSaveText": "zh-tw_Save",
+    "searchGroupHeader": "zh-tw_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "批准流程",
+    "addNewTooltip": "zh-tw_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "zh-tw_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "zh-tw_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "過去批准",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "zh-tw_Approval Date",
+      "approverId": "zh-tw_Approver",
+      "approverFullName": "zh-tw_Full Name",
+      "approverDecision": "zh-tw_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "詳情",
+      "reworkDetails.label": "重做詳情",
+      "docReview.label": "審查文件",
+      "parentDoc.label": "原屬文件",
+      "attachments.label": "附件",
+      "references.label": "参考",
+      "notes.label": "註釋",
+      "workflow.label": "流程概述",
+      "history.label": "歷史",
+      "eSignatures.label": "電子簽名",
+      "tags.label": "標籤",
+      "reject.label": "回絕說明"
+    },
+    "filters": {
+      "myTasks": "我的任務",
+      "opened": "所有打開的",
+      "completed": "所有完成的",
+      "dueToday": "所有今天到期的",
+      "myDueToday": "我所有今天到期的",
+      "overdue": "所有逾期的",
+      "myOverdue": "我所有逾期的",
+      "noFilter": "(無限制)"
+    },
+    "sorters": {
+      "createdDateAsc": "按創建日期排序",
+      "createdDateDesc": "按事件日期反排序",
+      "nameAsc": "按任務名稱排序",
+      "nameDesc": "按任務名稱反排序",
+      "noSort": "(不排序)"
+    }
+  }
+}
