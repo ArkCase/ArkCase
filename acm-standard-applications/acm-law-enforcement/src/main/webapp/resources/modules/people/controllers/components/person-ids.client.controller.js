@@ -59,10 +59,6 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
                 return identificationTypes;
             });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         $scope.addNew = function () {
             var identification = {};
             identification.created = Util.dateToIsoString(new Date());

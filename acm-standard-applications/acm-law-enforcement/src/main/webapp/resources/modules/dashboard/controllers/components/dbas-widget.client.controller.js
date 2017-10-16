@@ -76,9 +76,5 @@ angular.module('dashboard.dbas', ['adf.provider'])
                         $scope.dbasTypes = response;
                         return response;
                     });
-
-            $scope.getLookupValue = function(value, key){
-                    return ObjectLookupService.getLookupValue(value, key);
-                };
         }
     ]);

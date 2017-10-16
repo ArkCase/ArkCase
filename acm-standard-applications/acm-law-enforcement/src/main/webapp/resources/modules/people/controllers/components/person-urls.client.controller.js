@@ -54,18 +54,11 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             $scope.gridOptions.data = urls;
         };
 
-        ObjectLookupService.getContactMethodTypes().then(
-            function(contactMethodTypes){
-                var found = _.find(contactMethodTypes, {key: 'url'});
-                if(!Util.isArray(found)){
-                    $scope.urlTypes = found.subLookup;
-                }
+        ObjectLookupService.getSubContactMethodType('email').then(
+            function (contactMethodTypes) {
+                $scope.urlTypes = contactMethodTypes;
                 return contactMethodTypes;
             });
-
-        $scope.getLookupValue = function(value, key){
-          return ObjectLookupService.getLookupValue(value,key);
-        };
 
         $scope.addNew = function () {
             var url = {};

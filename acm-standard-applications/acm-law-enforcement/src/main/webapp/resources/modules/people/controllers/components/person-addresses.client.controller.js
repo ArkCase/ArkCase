@@ -63,10 +63,6 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             $scope.countries = countries;
         });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         //Addresses
         $scope.addNew = function () {
 

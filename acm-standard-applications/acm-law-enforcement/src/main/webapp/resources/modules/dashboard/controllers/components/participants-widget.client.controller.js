@@ -95,11 +95,6 @@ angular.module('dashboard.participants', ['adf.provider'])
                     return participantTypes;
                 }
             );
-
-            $scope.getLookupValue = function(value, key){
-                return ObjectLookupService.getLookupValue(value, key);
-            };
-
         }
 
     ]);

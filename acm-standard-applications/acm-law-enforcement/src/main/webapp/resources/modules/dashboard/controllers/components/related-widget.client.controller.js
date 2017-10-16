@@ -87,9 +87,5 @@ angular.module('dashboard.related', ['adf.provider'])
 
                     return relationshipTypes;
                 });
-
-            $scope.getLookupValue = function(value, key){
-                return ObjectLookupService.getLookupValue(value, key)
-            };
         }
     ]);

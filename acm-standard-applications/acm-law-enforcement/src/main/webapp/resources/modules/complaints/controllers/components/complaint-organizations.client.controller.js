@@ -22,10 +22,6 @@ angular.module('complaints').controller('Complaints.OrganizationsController', ['
                 return organizationTypes;
             });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams

@@ -71,18 +71,10 @@ angular.module('dashboard.emails', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
-            ObjectLookupService.getContactMethodTypes(module.name).then(
+            ObjectLookupService.getSubContactMethodType('email').then(
                     function (contactMethodTypes) {
-                        var found = _.find(contactMethodTypes, {key: 'email'});
-                        if(!Util.isArray(found)){
-                            $scope.emailTypes = found.subLookup;
-                        }
+                        $scope.emailTypes = contactMethodTypes;
                         return contactMethodTypes;
                     });
-
-            $scope.getLookupValue = function(value, key){
-                    return ObjectLookupService.getLookupValue(value, key);
-                };
-
             }
     ]);

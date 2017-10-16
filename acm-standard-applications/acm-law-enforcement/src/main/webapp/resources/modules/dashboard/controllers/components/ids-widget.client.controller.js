@@ -69,7 +69,6 @@ angular.module('dashboard.ids', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
-
             ObjectLookupService.getOrganizationIdTypes().then(
                 function (organizationIdTypes) {
                     $scope.organizationIdTypes = organizationIdTypes;
@@ -81,9 +80,5 @@ angular.module('dashboard.ids', ['adf.provider'])
                     $scope.identificationTypes = identificationTypes;
                     return identificationTypes;
                 });
-
-            $scope.getLookupValue = function(value, key){
-                return ObjectLookupService.getLookupValue(value, key);
-            };
         }
     ]);

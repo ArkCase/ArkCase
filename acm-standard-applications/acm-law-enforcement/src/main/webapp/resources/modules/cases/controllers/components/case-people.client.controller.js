@@ -21,10 +21,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 return personTypes;
             });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams

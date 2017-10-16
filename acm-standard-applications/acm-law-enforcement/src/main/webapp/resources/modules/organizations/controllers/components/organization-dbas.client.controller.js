@@ -63,10 +63,6 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
             $scope.dbasTypes = response;
         });
 
-        $scope.getLookupValue = function(value, key){
-            return ObjectLookupService.getLookupValue(value, key);
-        };
-
         //Aliases
         $scope.addNew = function () {
 

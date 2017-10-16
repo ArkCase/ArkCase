@@ -54,26 +54,17 @@ angular.module('organizations').controller('Organizations.UrlsController', ['$sc
             $scope.gridOptions.data = urls;
         };
 
+        ObjectLookupService.getSubContactMethodType('email').then(
+            function (contactMethodTypes) {
+                $scope.urlTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
+
         $scope.addNew = function () {
             var url = {};
             url.created = Util.dateToIsoString(new Date());
             url.creator = $scope.userId;
             url.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
-
-
-
-        ObjectLookupService.getContactMethodTypes().then(
-                function(contactMethodTypes){
-                    var found = _.find(contactMethodTypes, {key: 'url'});
-                    if(!Util.isArray(found)){
-                        $scope.urlTypes = found.subLookup;
-                    }
-                    return contactMethodTypes;
-                });
-
-        $scope.getLookupValue = function(value, key){
-                return ObjectLookupService.getLookupValue(value,key);
-            };
 
             //put contactMethod to scope, we will need it when we return from popup
             $scope.url = url;
